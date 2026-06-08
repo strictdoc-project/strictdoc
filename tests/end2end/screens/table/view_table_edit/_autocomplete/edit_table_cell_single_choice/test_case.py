@@ -35,6 +35,25 @@ class Test(E2ECase):
             screen_table.do_toggle_edit_mode()
             screen_table.assert_edit_mode_on()
 
+            # Count requests in the browser to verify that blur and the
+            # following outside click produce one logical save.
+            self.execute_script(
+                """
+                window.tableUpdatePostCount = 0;
+                const originalFetch = window.fetch.bind(window);
+                window.fetch = function (...args) {
+                    const [url, options = {}] = args;
+                    if (
+                        url === "/actions/table/update_node_field" &&
+                        options.method === "POST"
+                    ) {
+                        window.tableUpdatePostCount += 1;
+                    }
+                    return originalFetch(...args);
+                };
+                """
+            )
+
             #
             # Text 'act' in field STATUS should be autocompleted to 'Active'.
             #
@@ -44,6 +63,9 @@ class Test(E2ECase):
             self.sleep(0.5)
 
             screen_table.assert_cell_dom_text(node_mid, "STATUS", "Active")
+            assert (
+                self.execute_script("return window.tableUpdatePostCount") == 1
+            )
 
             screen_table.do_toggle_edit_mode()
             screen_table.assert_edit_mode_off()

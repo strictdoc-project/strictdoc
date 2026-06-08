@@ -78,3 +78,19 @@
 - `invoke lint-mypy`: passed, 268 source files checked.
 - `invoke lint` could not start its code checks because the repository contains
   an existing non-conventional commit message: `DOCS: ASDFGHJK`.
+
+## Table edit JavaScript refactoring
+
+- Per-cell editing state now lives in a `WeakMap` instead of custom DOM
+  properties.
+- A cell-specific in-flight promise deduplicates repeated triggers for one
+  logical save while preserving parallel saves of different cells.
+- Autocomplete blur timers are stored per cell and cancelled when an outside
+  click starts the save, preventing a delayed duplicate POST.
+- Event handlers were extracted from `init()` into named feature-local
+  functions.
+- Regression coverage counts POST requests for autocomplete blur/outside-click
+  and repeated Cmd/Ctrl+Enter saves.
+- Focused regression tests passed.
+- Full `invoke test-end2end --focus edit_table --headless` passed:
+  30 passed, 314 deselected.

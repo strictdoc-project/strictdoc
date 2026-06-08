@@ -43,16 +43,49 @@ class Test(E2ECase):
             screen_table.do_toggle_edit_mode()
             screen_table.assert_edit_mode_on()
 
+            # Delay handling of the response so the second keyboard shortcut
+            # runs while the first request is still in flight.
+            self.execute_script(
+                """
+                window.tableUpdatePostCount = 0;
+                const originalFetch = window.fetch.bind(window);
+                window.fetch = function (...args) {
+                    const [url, options = {}] = args;
+                    const responsePromise = originalFetch(...args);
+                    if (
+                        url.includes("/actions/table/update_node") &&
+                        options.method === "POST"
+                    ) {
+                        window.tableUpdatePostCount += 1;
+                        return responsePromise.then(
+                            response => new Promise(
+                                resolve => setTimeout(
+                                    () => resolve(response),
+                                    250
+                                )
+                            )
+                        );
+                    }
+                    return responsePromise;
+                };
+                """
+            )
+
             #
             # Case 1: Open STATEMENT inline, type new value, save by Cmd/Ctrl+Enter — cell updates.
             #
             screen_table.do_open_inline_cell(node_mid, "STATEMENT")
             form.do_fill_in("STATEMENT", "New statement.")
             screen_table.do_save_inline_cell_by_cmd_enter()
+            # Trigger save again while the first request is still in flight.
+            screen_table.do_save_inline_cell_by_cmd_enter()
             self.sleep(0.5)
 
             screen_table.assert_cell_dom_text(
                 node_mid, "STATEMENT", "New statement."
+            )
+            assert (
+                self.execute_script("return window.tableUpdatePostCount") == 1
             )
 
             #
@@ -67,6 +100,9 @@ class Test(E2ECase):
             self.sleep(0.5)
 
             self.assert_text("New comment.")
+            assert (
+                self.execute_script("return window.tableUpdatePostCount") == 2
+            )
 
             screen_table.do_toggle_edit_mode()
             screen_table.assert_edit_mode_off()

@@ -28,6 +28,11 @@
     const FIELD_CONTENTEDITABLE = 'contenteditable';
     const FIELD_COMMENTS = 'comments';
     const FIELD_RELATIONS = 'relations';
+    const INLINE_FIELD_TYPES = new Set([
+        FIELD_CONTENTEDITABLE,
+        FIELD_COMMENTS,
+        FIELD_RELATIONS,
+    ]);
 
     let editMode = false;
     let activeInlineCell = null;
@@ -42,6 +47,28 @@
         targetRow: null,
         position: null,
     };
+    // Keep editing state outside DOM elements. Each cell has an independent
+    // state object, so requests for different cells are allowed to run in
+    // parallel.
+    const cellStates = new WeakMap();
+
+    function getCellState(cell) {
+        let state = cellStates.get(cell);
+        if (!state) {
+            state = {
+                // Display markup restored when editing is cancelled or fails.
+                originalHTML: undefined,
+                // Serialized form used to skip an unchanged inline save.
+                originalFormData: undefined,
+                // Shared by duplicate save triggers for this cell.
+                savePromise: null,
+                // Delayed blur save used by autocomplete dropdown interaction.
+                autocompleteBlurTimer: null,
+            };
+            cellStates.set(cell, state);
+        }
+        return state;
+    }
 
     function getMainContainer() {
         return document.querySelector(`[${ATTR_CONTAINER}]`);
@@ -121,22 +148,41 @@
 
     // Restores cell DOM to its pre-edit state. Call after nulling the active variable.
     function restoreInlineCellDOM(cell) {
+        const state = getCellState(cell);
         updateMode(cell);
         cell.removeAttribute('data-validation-error');
         clearFieldErrors(cell);
-        if (cell._originalHTML !== undefined) {
-            cell.innerHTML = cell._originalHTML;
-            delete cell._originalHTML;
+        if (state.originalHTML !== undefined) {
+            cell.innerHTML = state.originalHTML;
+            state.originalHTML = undefined;
         }
-        delete cell._originalFormData;
+        state.originalFormData = undefined;
     }
 
     // Saves original HTML, marks cell as editing, and fetches the inline form.
     function initInlineCellState(cell) {
-        cell._originalHTML = cell.innerHTML;
+        const state = getCellState(cell);
+        state.originalHTML = cell.innerHTML;
+        state.originalFormData = undefined;
         cell.removeAttribute('data-validation-error');
         updateMode(cell, 'editing');
         fetchTurboStream(cell.dataset.url, cell);
+    }
+
+    async function runCellSave(cell, saveOperation) {
+        const state = getCellState(cell);
+        if (state.savePromise) {
+            // Blur, outside-click, and keyboard handlers may request the same
+            // logical save. Reuse the in-flight request for this cell only.
+            return state.savePromise;
+        }
+
+        state.savePromise = saveOperation();
+        try {
+            return await state.savePromise;
+        } finally {
+            state.savePromise = null;
+        }
     }
 
     // --- Autocomplete cell ---
@@ -162,12 +208,52 @@
         if (!activeAutocompleteCell) return;
         const cell = activeAutocompleteCell;
         activeAutocompleteCell = null;
+        cancelAutocompleteBlurSave(cell);
         restoreInlineCellDOM(cell);
     }
 
-    async function saveAutocompleteCell(cell, ac) {
-        const hiddenInput = ac.nextElementSibling;
-        const rawValue = hiddenInput ? hiddenInput.value : ac.innerText;
+    function cancelAutocompleteBlurSave(cell) {
+        const state = getCellState(cell);
+        if (state.autocompleteBlurTimer !== null) {
+            clearTimeout(state.autocompleteBlurTimer);
+            state.autocompleteBlurTimer = null;
+        }
+    }
+
+    function scheduleAutocompleteBlurSave(cell, autocompleteInput) {
+        const state = getCellState(cell);
+        cancelAutocompleteBlurSave(cell);
+        state.autocompleteBlurTimer = setTimeout(function () {
+            state.autocompleteBlurTimer = null;
+            // Selecting a dropdown option may return focus to the control.
+            // An outside click saves immediately and clears the active cell,
+            // so the delayed blur handler must not submit it again.
+            if (
+                activeAutocompleteCell !== cell ||
+                autocompleteInput === document.activeElement ||
+                autocompleteInput.contains(document.activeElement)
+            ) {
+                return;
+            }
+            saveAutocompleteCell(cell, autocompleteInput);
+        }, 200);
+    }
+
+    function saveAutocompleteCell(cell, autocompleteInput) {
+        if (!cell || !autocompleteInput) return Promise.resolve();
+        cancelAutocompleteBlurSave(cell);
+        return runCellSave(
+            cell,
+            () => performAutocompleteCellSave(cell, autocompleteInput)
+        );
+    }
+
+    async function performAutocompleteCellSave(cell, autocompleteInput) {
+        const state = getCellState(cell);
+        const hiddenInput = autocompleteInput.nextElementSibling;
+        const rawValue = hiddenInput
+            ? hiddenInput.value
+            : autocompleteInput.innerText;
         const newValue = rawValue.trim().replace(/,\s*$/, '').trim();
         const originalValue = (cell.dataset.currentValue || '').trim();
 
@@ -177,9 +263,9 @@
         }
 
         if (newValue === originalValue) {
-            if (cell._originalHTML !== undefined) {
-                cell.innerHTML = cell._originalHTML;
-                delete cell._originalHTML;
+            if (state.originalHTML !== undefined) {
+                cell.innerHTML = state.originalHTML;
+                state.originalHTML = undefined;
             }
             return;
         }
@@ -212,10 +298,10 @@
             cell.dataset.currentValue = originalValue;
         }
 
-        if (!ok && cell._originalHTML !== undefined) {
-            cell.innerHTML = cell._originalHTML;
+        if (!ok && state.originalHTML !== undefined) {
+            cell.innerHTML = state.originalHTML;
         }
-        delete cell._originalHTML;
+        state.originalHTML = undefined;
     }
 
     // --- Stream fetch ---
@@ -235,7 +321,10 @@
                 if (cell) {
                     const form = getFieldForm(cell);
                     if (form) {
-                        cell._originalFormData = new URLSearchParams(new FormData(form)).toString();
+                        const state = getCellState(cell);
+                        state.originalFormData = new URLSearchParams(
+                            new FormData(form)
+                        ).toString();
                     }
                 }
             }
@@ -368,8 +457,13 @@
         form.insertBefore(row, nextSibling);
     }
 
-    async function saveInlineCell(cell) {
-        if (!cell) return;
+    function saveInlineCell(cell) {
+        if (!cell) return Promise.resolve();
+        return runCellSave(cell, () => performInlineCellSave(cell));
+    }
+
+    async function performInlineCellSave(cell) {
+        const state = getCellState(cell);
 
         const form = getFieldForm(cell);
         if (!form) {
@@ -389,8 +483,8 @@
         const currentData = new URLSearchParams(new FormData(form)).toString();
         if (
             !cell.hasAttribute(ATTR_SUBMIT_UNCHANGED) &&
-            cell._originalFormData !== undefined &&
-            currentData === cell._originalFormData
+            state.originalFormData !== undefined &&
+            currentData === state.originalFormData
         ) {
             if (activeInlineCell === cell) activeInlineCell = null;
             restoreInlineCellDOM(cell);
@@ -432,8 +526,8 @@
                 if (activeInlineCell === cell) activeInlineCell = null;
                 cell.removeAttribute('data-mode');
                 cell.removeAttribute('data-validation-error');
-                delete cell._originalHTML;
-                delete cell._originalFormData;
+                state.originalHTML = undefined;
+                state.originalFormData = undefined;
                 renderTurboStream(html);
                 // [FEATURE: passive-open] Open the cell the user clicked while this
                 // save was in flight (set by openInlineCell before starting the save).
@@ -485,204 +579,231 @@
         }
     }
 
-    function init() {
-        const editBtn = getHandler();
-        if (!editBtn) return;
+    // --- Event handlers ---
 
-        editBtn.addEventListener('click', function () {
-            setEditMode(!editMode);
-        });
+    function handleEditModeToggle() {
+        setEditMode(!editMode);
+    }
+
+    function handleMainClick(event) {
+        if (!editMode) return;
+
+        const customMetaDeleteAction = event.target.closest(
+            `[${ATTR_CUSTOM_META_DELETE_ACTION}]`
+        );
+        if (customMetaDeleteAction) {
+            event.preventDefault();
+            deleteCustomMetaRow(customMetaDeleteAction);
+            return;
+        }
+
+        const customMetaDragHandle = event.target.closest(
+            `[${ATTR_CUSTOM_META_DRAG_HANDLE}]`
+        );
+        if (customMetaDragHandle) {
+            event.preventDefault();
+            return;
+        }
+
+        // Add a comment or relation row without following the link.
+        const addFieldLink = event.target.closest(`[${ATTR_ADD_FIELD}]`);
+        if (addFieldLink) {
+            event.preventDefault();
+            fetchTurboStream(addFieldLink.href);
+            return;
+        }
+
+        const editableField = event.target.closest(`[${ATTR_FIELD}]`);
+        if (!editableField) return;
+
+        const fieldType = editableField.getAttribute(ATTR_FIELD);
+        if (fieldType === FIELD_AUTOCOMPLETE) {
+            event.preventDefault();
+            openAutocompleteCell(editableField);
+            return;
+        }
+        if (INLINE_FIELD_TYPES.has(fieldType)) {
+            event.preventDefault();
+            openInlineCell(editableField);
+        }
+    }
+
+    function handleCustomMetaDragStart(event) {
+        if (!editMode || customMetaReorderPending) {
+            event.preventDefault();
+            return;
+        }
+        const row = customMetaDragState.armedRow;
+        if (!row || !row.contains(event.target)) {
+            event.preventDefault();
+            return;
+        }
+
+        if (activeInlineCell) cancelInlineCell();
+        if (activeAutocompleteCell) cancelAutocompleteCell();
+
+        customMetaDragState.row = row;
+        customMetaDragState.originalNextSibling = row.nextSibling;
+        row.setAttribute('data-dragging', 'true');
+        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setData('text/plain', row.dataset.formKey);
+    }
+
+    function handleCustomMetaPointerDown(event) {
+        if (!editMode || customMetaReorderPending) return;
+        const dragHandle = event.target.closest(
+            `[${ATTR_CUSTOM_META_DRAG_HANDLE}]`
+        );
+        const row = dragHandle?.closest(`[${ATTR_CUSTOM_META_ROW}]`);
+        if (!row) return;
+
+        customMetaDragState.armedRow = row;
+    }
+
+    function handleCustomMetaPointerUp() {
+        if (customMetaDragState.row) return;
+        customMetaDragState.armedRow = null;
+    }
+
+    function handleCustomMetaDragOver(event) {
+        const draggedRow = customMetaDragState.row;
+        const targetRow = event.target.closest(`[${ATTR_CUSTOM_META_ROW}]`);
+        if (!draggedRow || !targetRow || draggedRow === targetRow) {
+            setCustomMetaDropTarget(null, null);
+            return;
+        }
+
+        event.preventDefault();
+        event.dataTransfer.dropEffect = 'move';
+        const targetBounds = targetRow.getBoundingClientRect();
+        const position =
+            event.clientY < targetBounds.top + targetBounds.height / 2
+                ? 'before'
+                : 'after';
+        setCustomMetaDropTarget(targetRow, position);
+    }
+
+    function handleCustomMetaDrop(event) {
+        const row = customMetaDragState.row;
+        const targetRow = customMetaDragState.targetRow;
+        const position = customMetaDragState.position;
+        const originalNextSibling = customMetaDragState.originalNextSibling;
+        if (!row || !targetRow || !position) {
+            clearCustomMetaDragState();
+            return;
+        }
+
+        event.preventDefault();
+        const form = row.closest(`[${ATTR_FORM}]`);
+        if (!form) {
+            clearCustomMetaDragState();
+            return;
+        }
+        const originalOrder = Array.from(
+            form.querySelectorAll(`[${ATTR_CUSTOM_META_ROW}]`)
+        );
+        if (position === 'before') {
+            form.insertBefore(row, targetRow);
+        } else {
+            form.insertBefore(row, targetRow.nextSibling);
+        }
+        const reorderedRows = Array.from(
+            form.querySelectorAll(`[${ATTR_CUSTOM_META_ROW}]`)
+        );
+        const orderChanged = originalOrder.some(
+            (originalRow, index) => originalRow !== reorderedRows[index]
+        );
+        clearCustomMetaDragState();
+        if (orderChanged) {
+            saveCustomMetaReorder(row, originalNextSibling);
+        }
+    }
+
+    function handleAutocompleteBlur(event) {
+        if (!editMode) return;
+        const cell = event.target.closest(
+            `[${ATTR_FIELD}="${FIELD_AUTOCOMPLETE}"]`
+        );
+        if (!cell) return;
+        const autocompleteInput = getAutocompleteInput(cell);
+        if (
+            !autocompleteInput ||
+            !autocompleteInput.contains(event.target)
+        ) {
+            return;
+        }
+        scheduleAutocompleteBlurSave(cell, autocompleteInput);
+    }
+
+    function handleDocumentKeydown(event) {
+        if (event.key === 'Escape') {
+            if (activeInlineCell) {
+                event.preventDefault();
+                cancelInlineCell();
+            }
+            if (activeAutocompleteCell) {
+                event.preventDefault();
+                cancelAutocompleteCell();
+            }
+            return;
+        }
+        if (
+            (event.metaKey || event.ctrlKey) &&
+            event.key === 'Enter' &&
+            activeInlineCell
+        ) {
+            const fieldType = activeInlineCell.getAttribute(ATTR_FIELD);
+            if (
+                fieldType === FIELD_CONTENTEDITABLE ||
+                fieldType === FIELD_COMMENTS
+            ) {
+                event.preventDefault();
+                saveInlineCell(activeInlineCell);
+            }
+        }
+    }
+
+    function handleDocumentClick(event) {
+        const eventPath = event.composedPath();
+        if (activeInlineCell && !eventPath.includes(activeInlineCell)) {
+            saveInlineCell(activeInlineCell);
+        }
+        if (
+            activeAutocompleteCell &&
+            !eventPath.includes(activeAutocompleteCell)
+        ) {
+            saveAutocompleteCell(
+                activeAutocompleteCell,
+                getAutocompleteInput(activeAutocompleteCell)
+            );
+        }
+    }
+
+    function init() {
+        const editButton = getHandler();
+        if (!editButton) return;
+
+        editButton.addEventListener('click', handleEditModeToggle);
 
         const main = getMainContainer();
         if (!main) return;
 
         // One delegated click handler for all editable fields in the main table view:
         // both regular table cells and document-level fields above the table.
-        main.addEventListener('click', function (e) {
-            if (!editMode) return;
-
-            const customMetaDeleteAction = e.target.closest(
-                `[${ATTR_CUSTOM_META_DELETE_ACTION}]`
-            );
-            if (customMetaDeleteAction) {
-                e.preventDefault();
-                deleteCustomMetaRow(customMetaDeleteAction);
-                return;
-            }
-
-            const customMetaDragHandle = e.target.closest(
-                `[${ATTR_CUSTOM_META_DRAG_HANDLE}]`
-            );
-            if (customMetaDragHandle) {
-                e.preventDefault();
-                return;
-            }
-
-            // "Add comment" / "Add relation" link inside inline form — fetch stream, don't navigate
-            const addCommentLink = e.target.closest(`[${ATTR_ADD_FIELD}]`);
-            if (addCommentLink) {
-                e.preventDefault();
-                fetchTurboStream(addCommentLink.href);
-                return;
-            }
-
-            const editableField = e.target.closest(`[${ATTR_FIELD}]`);
-            if (!editableField) return;
-
-            const fieldType = editableField.getAttribute(ATTR_FIELD);
-            if (fieldType === FIELD_AUTOCOMPLETE) {
-                e.preventDefault();
-                openAutocompleteCell(editableField);
-                return;
-            }
-            if (
-                fieldType === FIELD_CONTENTEDITABLE ||
-                fieldType === FIELD_COMMENTS ||
-                fieldType === FIELD_RELATIONS
-            ) {
-                e.preventDefault();
-                openInlineCell(editableField);
-                return;
-            }
-        });
-
-        main.addEventListener('dragstart', function (e) {
-            if (!editMode || customMetaReorderPending) {
-                e.preventDefault();
-                return;
-            }
-            const row = customMetaDragState.armedRow;
-            if (!row || !row.contains(e.target)) {
-                e.preventDefault();
-                return;
-            }
-
-            if (activeInlineCell) cancelInlineCell();
-            if (activeAutocompleteCell) cancelAutocompleteCell();
-
-            customMetaDragState.row = row;
-            customMetaDragState.originalNextSibling = row.nextSibling;
-            row.setAttribute('data-dragging', 'true');
-            e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData('text/plain', row.dataset.formKey);
-        });
-
-        main.addEventListener('pointerdown', function (e) {
-            if (!editMode || customMetaReorderPending) return;
-            const dragHandle = e.target.closest(
-                `[${ATTR_CUSTOM_META_DRAG_HANDLE}]`
-            );
-            const row = dragHandle?.closest(`[${ATTR_CUSTOM_META_ROW}]`);
-            if (!row) return;
-
-            customMetaDragState.armedRow = row;
-        });
-
-        main.addEventListener('pointerup', function () {
-            if (customMetaDragState.row) return;
-            customMetaDragState.armedRow = null;
-        });
-
-        main.addEventListener('dragover', function (e) {
-            const draggedRow = customMetaDragState.row;
-            const targetRow = e.target.closest(`[${ATTR_CUSTOM_META_ROW}]`);
-            if (!draggedRow || !targetRow || draggedRow === targetRow) {
-                setCustomMetaDropTarget(null, null);
-                return;
-            }
-
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-            const targetBounds = targetRow.getBoundingClientRect();
-            const position =
-                e.clientY < targetBounds.top + targetBounds.height / 2
-                    ? 'before'
-                    : 'after';
-            setCustomMetaDropTarget(targetRow, position);
-        });
-
-        main.addEventListener('drop', function (e) {
-            const row = customMetaDragState.row;
-            const targetRow = customMetaDragState.targetRow;
-            const position = customMetaDragState.position;
-            const originalNextSibling =
-                customMetaDragState.originalNextSibling;
-            if (!row || !targetRow || !position) {
-                clearCustomMetaDragState();
-                return;
-            }
-
-            e.preventDefault();
-            const form = row.closest(`[${ATTR_FORM}]`);
-            if (!form) {
-                clearCustomMetaDragState();
-                return;
-            }
-            const originalOrder = Array.from(
-                form.querySelectorAll(`[${ATTR_CUSTOM_META_ROW}]`)
-            );
-            if (position === 'before') {
-                form.insertBefore(row, targetRow);
-            } else {
-                form.insertBefore(row, targetRow.nextSibling);
-            }
-            const reorderedRows = Array.from(
-                form.querySelectorAll(`[${ATTR_CUSTOM_META_ROW}]`)
-            );
-            const orderChanged = originalOrder.some(
-                (originalRow, index) => originalRow !== reorderedRows[index]
-            );
-            clearCustomMetaDragState();
-            if (orderChanged) {
-                saveCustomMetaReorder(row, originalNextSibling);
-            }
-        });
-
-        main.addEventListener('dragend', function () {
-            clearCustomMetaDragState();
-        });
+        main.addEventListener('click', handleMainClick);
+        main.addEventListener('dragstart', handleCustomMetaDragStart);
+        main.addEventListener('pointerdown', handleCustomMetaPointerDown);
+        main.addEventListener('pointerup', handleCustomMetaPointerUp);
+        main.addEventListener('dragover', handleCustomMetaDragOver);
+        main.addEventListener('drop', handleCustomMetaDrop);
+        main.addEventListener('dragend', clearCustomMetaDragState);
 
         // Save autocomplete cell on blur (Stimulus handles the dropdown interaction).
         // Uses capture phase to catch blur events from contenteditable sdoc-autocompletable.
-        main.addEventListener('blur', function (e) {
-            if (!editMode) return;
-            const cell = e.target.closest(`[${ATTR_FIELD}="${FIELD_AUTOCOMPLETE}"]`);
-            if (!cell) return;
-            const ac = getAutocompleteInput(cell);
-            if (!ac || !ac.contains(e.target)) return;
-            setTimeout(function () {
-                // If focus returned to this autocompletable (user clicked a dropdown option), skip.
-                if (ac === document.activeElement || ac.contains(document.activeElement)) return;
-                saveAutocompleteCell(cell, ac);
-            }, 200);
-        }, true);
+        main.addEventListener('blur', handleAutocompleteBlur, true);
 
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape') {
-                if (activeInlineCell) { e.preventDefault(); cancelInlineCell(); }
-                if (activeAutocompleteCell) { e.preventDefault(); cancelAutocompleteCell(); }
-                return;
-            }
-            if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
-                const fieldType = activeInlineCell?.getAttribute(ATTR_FIELD);
-                if (activeInlineCell && (
-                    fieldType === FIELD_CONTENTEDITABLE ||
-                    fieldType === FIELD_COMMENTS
-                )) {
-                    e.preventDefault();
-                    saveInlineCell(activeInlineCell);
-                }
-            }
-        });
-
-        document.addEventListener('click', function (e) {
-            if (activeInlineCell && !e.composedPath().includes(activeInlineCell)) {
-                saveInlineCell(activeInlineCell);
-            }
-            if (activeAutocompleteCell && !e.composedPath().includes(activeAutocompleteCell)) {
-                saveAutocompleteCell(activeAutocompleteCell, getAutocompleteInput(activeAutocompleteCell));
-            }
-        });
+        document.addEventListener('keydown', handleDocumentKeydown);
+        document.addEventListener('click', handleDocumentClick);
     }
 
     window.addEventListener('load', init);

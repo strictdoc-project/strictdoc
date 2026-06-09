@@ -2,6 +2,25 @@
     const STORAGE_KEY_PREFIX = 'strictdoc.table.hidden_cols';
     const ROWS_STORAGE_KEY_PREFIX = 'strictdoc.table.hidden_rows';
     const URL_PARAM = 'hidden';
+    const EVENT_BEFORE_STATE_CHANGE =
+        'strictdoc:table-view-before-state-change';
+    const EVENT_AFTER_STATE_CHANGE =
+        'strictdoc:table-view-after-state-change';
+
+    function changeTableState(changeType, callback) {
+        document.dispatchEvent(new CustomEvent(
+            EVENT_BEFORE_STATE_CHANGE,
+            { detail: { changeType } }
+        ));
+        try {
+            callback();
+        } finally {
+            document.dispatchEvent(new CustomEvent(
+                EVENT_AFTER_STATE_CHANGE,
+                { detail: { changeType } }
+            ));
+        }
+    }
 
     /*
      * State I/O
@@ -83,7 +102,7 @@
     function setColumnVisibility(table, index, visible) {
         const ths = table.querySelectorAll(':scope > thead > tr > th');
         if (ths[index]) ths[index].style.display = visible ? '' : 'none';
-        table.querySelectorAll(':scope > tbody > tr').forEach(row => {
+        table.querySelectorAll(':scope > tbody > tr[data-row-type]').forEach(row => {
             const cell = row.children[index];
             if (cell) cell.style.display = visible ? '' : 'none';
         });
@@ -210,60 +229,83 @@
         });
     }
 
-    function initRowsPanel(tbody) {
+    function initRowsPanel(table) {
         const btn = document.querySelector('[data-testid="table-toolbar-rows-btn"]');
         const panel = document.querySelector('[data-testid="table-toolbar-rows-panel"]');
         const resetBtn = document.querySelector('[data-testid="table-toolbar-rows-reset"]');
         const list = document.querySelector('[data-testid="table-toolbar-rows-list"]');
+        const rowsKey = storageKey(ROWS_STORAGE_KEY_PREFIX);
+        let rowTypes = [];
 
         _panels.push({ btn, panel });
 
-        // Collect unique row types from the tbody, preserving first-seen order.
-        const seenTypes = [];
-        tbody.querySelectorAll(':scope > tr[data-row-type]').forEach(row => {
-            const t = row.dataset.rowType;
-            if (!seenTypes.includes(t)) seenTypes.push(t);
-        });
+        function refreshRowsPanel() {
+            const tbody = table.querySelector(':scope > tbody');
+            if (!tbody) return;
 
-        // Restore state from storage.
-        const rowsKey = storageKey(ROWS_STORAGE_KEY_PREFIX);
-        const hiddenTypes = new Set(readJson(rowsKey));
-        seenTypes.forEach(type => {
-            if (hiddenTypes.has(type)) setRowTypeVisibility(tbody, type, false);
-        });
+            list.innerHTML = '';
 
-        const rowTypes = seenTypes.map(type => ({ type, visible: !hiddenTypes.has(type) }));
-
-        rowTypes.forEach(rowType => {
-            list.appendChild(createCheckboxItem(
-                'row-checkbox-' + rowType.type,
-                rowType.visible,
-                rowType.type,
-                (checked) => {
-                    rowType.visible = checked;
-                    setRowTypeVisibility(tbody, rowType.type, checked);
-                    writeJson(rowsKey, rowTypes.filter(r => !r.visible).map(r => r.type));
-                    updateBtnLabel(btn, rowTypes);
-                    syncResetBtn(resetBtn, rowTypes);
-                }
-            ));
-        });
-
-        resetBtn.addEventListener('click', () => {
-            rowTypes.forEach(rowType => {
-                rowType.visible = true;
-                setRowTypeVisibility(tbody, rowType.type, true);
+            // Collect unique row types from the current tbody, preserving order.
+            const seenTypes = [];
+            tbody.querySelectorAll(':scope > tr[data-row-type]').forEach(row => {
+                const type = row.dataset.rowType;
+                if (!seenTypes.includes(type)) seenTypes.push(type);
             });
-            list.querySelectorAll('input[type=checkbox]').forEach(cb => (cb.checked = true));
-            writeJson(rowsKey, []);
+
+            const hiddenTypes = new Set(readJson(rowsKey));
+            rowTypes = seenTypes.map(type => ({
+                type,
+                visible: !hiddenTypes.has(type),
+            }));
+
+            rowTypes.forEach(rowType => {
+                setRowTypeVisibility(tbody, rowType.type, rowType.visible);
+                list.appendChild(createCheckboxItem(
+                    'row-checkbox-' + rowType.type,
+                    rowType.visible,
+                    rowType.type,
+                    (checked) => {
+                        changeTableState('rows', () => {
+                            rowType.visible = checked;
+                            setRowTypeVisibility(tbody, rowType.type, checked);
+                            writeJson(
+                                rowsKey,
+                                rowTypes
+                                    .filter(r => !r.visible)
+                                    .map(r => r.type)
+                            );
+                            updateBtnLabel(btn, rowTypes);
+                            syncResetBtn(resetBtn, rowTypes);
+                        });
+                    }
+                ));
+            });
+
             updateBtnLabel(btn, rowTypes);
             syncResetBtn(resetBtn, rowTypes);
+        }
+
+        resetBtn.addEventListener('click', () => {
+            const tbody = table.querySelector(':scope > tbody');
+            if (!tbody) return;
+            changeTableState('rows', () => {
+                rowTypes.forEach(rowType => {
+                    rowType.visible = true;
+                    setRowTypeVisibility(tbody, rowType.type, true);
+                });
+                list.querySelectorAll('input[type=checkbox]').forEach(
+                    cb => (cb.checked = true)
+                );
+                writeJson(rowsKey, []);
+                updateBtnLabel(btn, rowTypes);
+                syncResetBtn(resetBtn, rowTypes);
+            });
         });
 
         initPanelToggle(btn, panel);
 
-        updateBtnLabel(btn, rowTypes);
-        syncResetBtn(resetBtn, rowTypes);
+        refreshRowsPanel();
+        return refreshRowsPanel;
     }
 
     /*
@@ -276,8 +318,6 @@
 
         const toolbar = document.querySelector('[data-testid="table-toolbar"]');
         const headerCells = Array.from(table.querySelectorAll(':scope > thead > tr > .content-view-th'));
-        const tbody = table.querySelector(':scope > tbody');
-
         const columns = headerCells.map((th, index) => ({
             index,
             name: th.textContent.trim(),
@@ -294,7 +334,38 @@
         }
 
         initColumnsPanel(table, columns, onToggle);
-        initRowsPanel(tbody);
+        const refreshRowsPanel = initRowsPanel(table);
+
+        let originalRows = Array.from(
+            table.querySelectorAll(':scope > tbody > tr')
+        );
+        let sortState = null; // { index, dir: 'asc'|'desc' }
+
+        function getTbody() {
+            return table.querySelector(':scope > tbody');
+        }
+
+        function refreshBodyState() {
+            applyHiddenNames(
+                table,
+                columns,
+                columns.filter(col => !col.visible).map(col => col.name)
+            );
+            refreshRowsPanel();
+            originalRows = Array.from(
+                table.querySelectorAll(':scope > tbody > tr')
+            );
+            if (sortState) {
+                clearSortUI();
+                sortState = null;
+                setSortReset(false);
+            }
+        }
+
+        const bodyObserver = new MutationObserver(() => {
+            refreshBodyState();
+        });
+        bodyObserver.observe(table, { childList: true, subtree: false });
 
         document.addEventListener('click', e => {
             if (toolbar && !toolbar.contains(e.target)) {
@@ -315,9 +386,6 @@
          * Only the sort icon button triggers sorting, not the full <th>.
          */
 
-        const originalRows = Array.from(tbody.querySelectorAll(':scope > tr'));
-        let sortState = null; // { index, dir: 'asc'|'desc' }
-
         const sortResetWrapper = document.querySelector('.table-toolbar__sort-reset');
         const sortResetBtn = document.querySelector('[data-testid="table-toolbar-sort-reset"]');
 
@@ -330,6 +398,8 @@
         }
 
         function applySort(index, dir) {
+            const tbody = getTbody();
+            if (!tbody) return;
             const rows = Array.from(tbody.querySelectorAll(':scope > tr'));
             // Same comparator as source_coverage_screen.js (textContent / localeCompare).
             rows.sort((a, b) => {
@@ -351,28 +421,36 @@
                 const current = headerCell.getAttribute('data-sort'); // null | 'asc' | 'desc'
                 const next = current === null ? 'asc' : current === 'asc' ? 'desc' : null;
 
-                clearSortUI();
+                changeTableState('sorting', () => {
+                    clearSortUI();
 
-                if (next === null) {
-                    // Reset to server-provided order.
-                    originalRows.forEach(row => tbody.appendChild(row));
-                    sortState = null;
-                    setSortReset(false);
-                } else {
-                    headerCell.setAttribute('data-sort', next);
-                    applySort(index, next);
-                    sortState = { index, dir: next };
-                    setSortReset(true);
-                }
+                    if (next === null) {
+                        const tbody = getTbody();
+                        if (!tbody) return;
+                        // Reset to server-provided order.
+                        originalRows.forEach(row => tbody.appendChild(row));
+                        sortState = null;
+                        setSortReset(false);
+                    } else {
+                        headerCell.setAttribute('data-sort', next);
+                        applySort(index, next);
+                        sortState = { index, dir: next };
+                        setSortReset(true);
+                    }
+                });
             });
         });
 
         if (sortResetBtn) {
             sortResetBtn.addEventListener('click', () => {
-                clearSortUI();
-                originalRows.forEach(row => tbody.appendChild(row));
-                sortState = null;
-                setSortReset(false);
+                const tbody = getTbody();
+                if (!tbody) return;
+                changeTableState('sorting', () => {
+                    clearSortUI();
+                    originalRows.forEach(row => tbody.appendChild(row));
+                    sortState = null;
+                    setSortReset(false);
+                });
             });
         }
     }

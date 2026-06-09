@@ -242,7 +242,7 @@ a.action_icon:hover {
   column-gap: 0;
   padding-left: calc(var(--base-rhythm)* 0.75);
   padding-right: calc(var(--base-rhythm)* 0.75);
-  min-height: calc(var(--base-rhythm)*3);
+  min-height: calc(var(--base-rhythm)* 2.75);
 }
 
 .action_button.compact .action_button_compact__arising {

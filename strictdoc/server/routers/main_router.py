@@ -152,6 +152,7 @@ from strictdoc.server.helpers.hierarchical_rw_lock_manager import (
     HierarchicalRWLockManager,
 )
 from strictdoc.server.helpers.http import request_is_for_non_modified_file
+from strictdoc.server.helpers.turbo import render_turbo_stream
 
 HTTP_STATUS_BAD_REQUEST = 400
 HTTP_STATUS_NOT_FOUND = 404
@@ -967,6 +968,191 @@ def create_main_router(
             headers={
                 "Content-Type": "text/vnd.turbo-stream.html",
             },
+        )
+
+    def create_table_view_object(document: SDocDocument) -> DocumentScreenViewObject:
+        assert document.meta is not None
+        link_renderer = LinkRenderer(
+            root_path=document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
+        )
+        markup_renderer = MarkupRenderer.create(
+            markup=document.config.get_markup(),
+            traceability_index=export_action.traceability_index,
+            link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
+            config=project_config,
+            context_document=document,
+        )
+        return DocumentScreenViewObject(
+            document_type=DocumentType.TABLE,
+            document=document,
+            traceability_index=export_action.traceability_index,
+            project_config=project_config,
+            link_renderer=link_renderer,
+            markup_renderer=markup_renderer,
+            jinja_environment=env(),
+            git_client=html_generator.git_client,
+        )
+
+    @write_router.post("/actions/table/add_node")
+    def table__add_node(
+        request_form_data: FormData = Depends(parse_form_data),
+    ) -> Response:
+        request_dict = dict(request_form_data)
+        context_document_mid = request_dict["context_document_mid"]
+        reference_mid = request_dict["reference_mid"]
+        element_type = request_dict["element_type"]
+        whereto = request_dict["whereto"]
+
+        if not NodeCreationOrder.is_valid(whereto):
+            return HTMLResponse(content="Unknown node placement.", status_code=400)
+
+        reference_node = export_action.traceability_index.get_node_by_mid(
+            MID(reference_mid)
+        )
+        if not export_action.traceability_index.can_create_node_at(
+            reference_node, whereto
+        ):
+            return HTMLResponse(
+                content="Adding nodes is disabled for this location.",
+                status_code=403,
+            )
+
+        editing_context_document = export_action.traceability_index.get_node_by_mid(
+            MID(context_document_mid)
+        )
+        if isinstance(reference_node, SDocDocument):
+            if whereto == NodeCreationOrder.CHILD:
+                document = reference_node
+            else:
+                document = editing_context_document
+        else:
+            document = assert_cast(reference_node.get_document(), SDocDocument)
+
+        assert document.grammar is not None
+        if element_type not in document.grammar.elements_by_type:
+            return HTMLResponse(content="Unknown node type.", status_code=400)
+
+        table_view_object = create_table_view_object(document)
+        element = document.grammar.elements_by_type[element_type]
+        blocker = table_view_object.get_table_element_creation_blocker(element)
+        if blocker is not None:
+            return HTMLResponse(content=blocker, status_code=400)
+
+        next_uid: Optional[str] = None
+        if element_type not in ("TEXT", "SECTION"):
+            document_tree_stats: DocumentTreeStats = (
+                DocumentUIDAnalyzer.analyze_document_tree(
+                    export_action.traceability_index
+                )
+            )
+            if (
+                node_prefix := reference_node.get_prefix_for_new_node(
+                    element_type
+                )
+            ) is not None:
+                next_uid = document_tree_stats.get_next_requirement_uid(
+                    node_prefix
+                )
+
+        form_object = RequirementFormObject.create_new(
+            document=document,
+            context_document_mid=context_document_mid,
+            next_uid=next_uid,
+            element_type=element_type,
+        )
+
+        for field_name, fields in form_object.fields.items():
+            if field_name in ("UID", "MID"):
+                continue
+            grammar_field = element.fields_map[field_name]
+            if (
+                grammar_field.required
+                and grammar_field.gef_type == RequirementFieldType.STRING
+            ):
+                for field in fields:
+                    if len(field.field_value) == 0:
+                        field.field_value = "TBD"
+
+        form_object.validate(
+            traceability_index=export_action.traceability_index,
+            context_document=document,
+            config=project_config,
+            existing_revision=0,
+        )
+        if form_object.any_errors():
+            error_messages: List[str] = []
+            for field_errors in form_object.errors.values():
+                error_messages.extend(field_errors)
+            for reference_field in form_object.reference_fields:
+                error_messages.extend(reference_field.validation_messages)
+            return HTMLResponse(
+                content=(
+                    error_messages[0]
+                    if len(error_messages) > 0
+                    else "Unable to create this node."
+                ),
+                status_code=422,
+            )
+
+        create_command = CreateOrUpdateNodeCommand(
+            form_object=form_object,
+            node_info=CreateNodeInfo(
+                whereto=whereto,
+                requirement_mid=form_object.requirement_mid,
+                reference_mid=reference_mid,
+            ),
+            traceability_index=export_action.traceability_index,
+            project_config=project_config,
+        )
+        create_command.perform()
+
+        write_document_to_file(document)
+        if document != editing_context_document:
+            write_document_to_file(editing_context_document)
+
+        html_generator.export_single_document_with_performance(
+            document=document,
+            traceability_index=export_action.traceability_index,
+            specific_documents=(DocumentType.DOCUMENT, DocumentType.TABLE),
+        )
+        if document != editing_context_document:
+            html_generator.export_single_document_with_performance(
+                document=editing_context_document,
+                traceability_index=export_action.traceability_index,
+                specific_documents=(DocumentType.DOCUMENT, DocumentType.TABLE),
+            )
+
+        table_view_object = create_table_view_object(editing_context_document)
+        output = render_turbo_stream(
+            content=env().render_template_as_markup(
+                "screens/document/table/body.jinja",
+                view_object=table_view_object,
+                content_entries=list(
+                    table_view_object.document_content_iterator()
+                ),
+            ),
+            action="replace",
+            target="table-content-body",
+        )
+        output += env().render_template_as_markup(
+            "actions/document/_shared/stream_updated_toc.jinja.html",
+            view_object=table_view_object,
+        )
+        output += render_turbo_stream(
+            content=(
+                '<div id="table-add-node-feedback" hidden '
+                f'data-created-node-mid="{form_object.requirement_mid}">'
+                "</div>"
+            ),
+            action="replace",
+            target="table-add-node-feedback",
+        )
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={"Content-Type": "text/vnd.turbo-stream.html"},
         )
 
     @write_router.post("/actions/table/update_node_field")

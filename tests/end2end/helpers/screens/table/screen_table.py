@@ -19,6 +19,7 @@ _ROWS_BTN_INFO = _ROWS_BTN + " .table-toolbar__btn-info"
 _ROWS_PANEL = '[data-testid="table-toolbar-rows-panel"]'
 _ROWS_RESET = '[data-testid="table-toolbar-rows-reset"]'
 _EDIT_BTN = '[data-testid="table-toolbar-edit-btn"]'
+_ADD_ROW = '[data-testid="table-add-row"]'
 
 
 class Screen_Table(Screen):  # pylint: disable=invalid-name
@@ -38,6 +39,17 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
     def do_click_col_sort_btn(self, col_name: str) -> None:
         self.test_case.click(
             f'[data-testid="col-header-{col_name}"] .content-view-th__sort-btn'
+        )
+
+    def do_click_col_sort_btn_without_scrolling(self, col_name: str) -> None:
+        self.test_case.execute_script(
+            """
+            document.querySelector(
+              `[data-testid="col-header-${arguments[0]}"] `
+              + '.content-view-th__sort-btn'
+            )?.click();
+            """,
+            col_name,
         )
 
     def assert_col_sort_state(self, col_name: str, state) -> None:
@@ -121,6 +133,26 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
     def assert_column_header_hidden(self, name: str) -> None:
         self.test_case.assert_element_not_visible(
             f'[data-testid="col-header-{name}"]'
+        )
+
+    def assert_column_cells_hidden(self, name: str) -> None:
+        cells_are_hidden = self.test_case.execute_script(
+            "const table = document.querySelector('.content-view-table');"
+            "const headers = Array.from("
+            "  table.querySelectorAll(':scope > thead > tr > th')"
+            ");"
+            f"const header = table.querySelector('[data-testid=\"col-header-{name}\"]');"
+            "const index = headers.indexOf(header);"
+            "if (index < 0) return false;"
+            "return Array.from("
+            "  table.querySelectorAll(':scope > tbody > tr[data-row-type]')"
+            ").every(row => {"
+            "  const cell = row.children[index];"
+            "  return !cell || getComputedStyle(cell).display === 'none';"
+            "});"
+        )
+        assert cells_are_hidden, (
+            f"Expected all cells in column {name!r} to be hidden"
         )
 
     def assert_column_header_not_present(self, name: str) -> None:
@@ -224,6 +256,167 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
 
     def do_toggle_edit_mode(self) -> None:
         self.test_case.click(_EDIT_BTN)
+
+    def get_table_row_count(self) -> int:
+        return len(
+            self.test_case.find_elements(
+                ".content-view-table tbody tr[data-row-type]"
+            )
+        )
+
+    def do_open_add_node_menu(self, row_order: int = 1) -> None:
+        self.test_case.click(
+            f"(//*[@data-testid='table-add-node-handle'])[{row_order}]",
+            by=By.XPATH,
+        )
+        self.test_case.wait_for_element(
+            f"(//*[@data-testid='table-add-row'])[{row_order}]"
+            "//*[@data-testid='table-add-node-menu' and not(@hidden)]",
+            by=By.XPATH,
+            timeout=3,
+        )
+
+    def assert_add_node_action_disabled(
+        self, element_type: str, whereto: str, row_order: int = 1
+    ) -> None:
+        self.test_case.assert_element(
+            f"(//*[@data-testid='table-add-row'])[{row_order}]"
+            f"//*[@data-testid='table-add-node-action-{element_type.lower()}-{whereto}' and @disabled]",
+            by=By.XPATH,
+        )
+
+    def assert_add_node_message(
+        self, message: str, row_order: int | None = 1
+    ) -> None:
+        add_node = (
+            f"(//*[@data-testid='table-add-row'])[{row_order}]"
+            if row_order is not None
+            else "//*[@js-table_view_edit-add-node and @data-mode='open']"
+        )
+        self.test_case.assert_element(
+            add_node
+            + f"//*[contains(@class, 'table-add-node__message')][contains(., '{message}')]",
+            by=By.XPATH,
+        )
+
+    def assert_add_node_actions_hidden(
+        self, row_order: int | None = 1
+    ) -> None:
+        add_node = (
+            f"(//*[@data-testid='table-add-row'])[{row_order}]"
+            if row_order is not None
+            else "//*[@js-table_view_edit-add-node and @data-mode='open']"
+        )
+        self.test_case.assert_element_not_visible(
+            add_node + "//*[@js-table_view_edit-add-node-actions]",
+            by=By.XPATH,
+        )
+
+    def assert_add_node_actions_visible(
+        self, row_order: int | None = 1
+    ) -> None:
+        add_node = (
+            f"(//*[@data-testid='table-add-row'])[{row_order}]"
+            if row_order is not None
+            else "//*[@js-table_view_edit-add-node and @data-mode='open']"
+        )
+        self.test_case.assert_element_visible(
+            add_node + "//*[@js-table_view_edit-add-node-actions]",
+            by=By.XPATH,
+        )
+
+    def do_click_add_node_unblock(
+        self, blocker: str, row_order: int | None = 1
+    ) -> None:
+        add_node = (
+            f"(//*[@data-testid='table-add-row'])[{row_order}]"
+            if row_order is not None
+            else "//*[@js-table_view_edit-add-node and @data-mode='open']"
+        )
+        self.test_case.click(
+            add_node
+            + f"//*[@data-testid='table-add-node-unblock-{blocker}']",
+            by=By.XPATH,
+        )
+        self.test_case.sleep(0.1)
+
+    def do_close_add_node_menu_by_escape(self) -> None:
+        self.test_case.send_keys("body", Keys.ESCAPE)
+
+    def do_click_add_node_action(
+        self, element_type: str, whereto: str, row_order: int = 1
+    ) -> None:
+        action = self.test_case.find_element(
+            f"(//*[@data-testid='table-add-row'])[{row_order}]"
+            f"//*[@data-testid='table-add-node-action-{element_type.lower()}-{whereto}']",
+            by=By.XPATH,
+        )
+        self.test_case.execute_script("arguments[0].click();", action)
+
+    def get_open_add_node_menu_viewport_position(self) -> dict:
+        position = self.test_case.execute_script(
+            """
+            const menu = document.querySelector(
+              '[js-table_view_edit-add-node][data-mode="open"] '
+              + '[js-table_view_edit-add-node-menu]'
+            );
+            if (!menu) return null;
+            const bounds = menu.getBoundingClientRect();
+            return {left: bounds.left, top: bounds.top};
+            """
+        )
+        assert position is not None, "Expected an open Add Node menu"
+        return position
+
+    def scroll_open_add_node_menu_to_center(self) -> None:
+        self.test_case.execute_script(
+            """
+            const menu = document.querySelector(
+              '[js-table_view_edit-add-node][data-mode="open"] '
+              + '[js-table_view_edit-add-node-menu]'
+            );
+            const main = menu?.closest('.main');
+            if (!menu || !main) return;
+            const scrollBehavior = main.style.scrollBehavior;
+            main.style.scrollBehavior = 'auto';
+            menu.scrollIntoView({block: 'center'});
+            main.style.scrollBehavior = scrollBehavior;
+            """
+        )
+
+    def scroll_node_row_to_center(self, node_mid: str) -> None:
+        self.test_case.execute_script(
+            """
+            const row = document.querySelector(
+              `tr[data-node-mid="${arguments[0]}"]`
+            );
+            const main = row?.closest('.main');
+            if (!row || !main) return;
+            const scrollBehavior = main.style.scrollBehavior;
+            main.style.scrollBehavior = 'auto';
+            row.scrollIntoView({block: 'center'});
+            main.style.scrollBehavior = scrollBehavior;
+            """,
+            node_mid,
+        )
+
+    def get_node_row_viewport_position(self, node_mid: str) -> dict:
+        position = self.test_case.execute_script(
+            """
+            const row = document.querySelector(
+              `tr[data-node-mid="${arguments[0]}"]`
+            );
+            if (!row) return null;
+            const bounds = row.getBoundingClientRect();
+            return {left: bounds.left, top: bounds.top};
+            """,
+            node_mid,
+        )
+        assert position is not None, f"Expected row for node MID {node_mid!r}"
+        return position
+
+    def assert_add_rows_not_present(self) -> None:
+        self.test_case.assert_element_not_present(_ADD_ROW)
 
     def _cell_sel(self, node_mid: str, field_name: str) -> str:
         return f'[data-node-mid="{node_mid}"][data-field-name="{field_name}"]'

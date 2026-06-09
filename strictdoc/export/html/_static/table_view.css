@@ -24,7 +24,7 @@
 .content-view-table_sticky-header {
   position: sticky;
   top: calc(-6.6 * var(--base-rhythm)); /* = layout .header */
-  z-index: 4; /* above sticky 'type' column */
+  z-index: 102; /* above sticky 'type' column, above content-view__add_new_row-TR */
   background: var(--color-bg-contrast);
 }
 
@@ -128,7 +128,7 @@
 .content-view-td-type {
   position: sticky;
   left: calc(-1 * var(--base-gap) - 1px); /* account for border */
-  z-index: 2;
+  z-index: 11; /* should be over .editable-cell-indicator */
 }
 
 .content-view-td-meta {
@@ -606,4 +606,206 @@
 
 [js-table_view_edit-custom_meta-row][data-drop-position="after"] {
   box-shadow: 0 2px 0 var(--color-accent);
+}
+
+/* add_new_row */
+
+[js-table_view_edit][data-mode="edit"] {
+  overflow-anchor: none;
+  scroll-behavior: auto;
+}
+
+.content-view__add_new_row-TR {
+  position: relative;
+  z-index: 101; /* sticky thead should be above*/
+  display: none;
+}
+
+[js-table_view_edit][data-mode="edit"] .content-view__add_new_row-TR {
+  display: table-row;
+}
+
+.content-view__add_new_row-TD {
+  /* Even though some rows are hidden,
+     the rows containing the “Add New Node” button are still visible
+   */
+  border-left: 1px solid #666;
+  border-right: 1px solid #666;
+  border-bottom: 1px solid #666;
+  background: var(--color-bg-contrast);
+}
+
+.add_new_row_handler {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 0;
+
+  transition: all 0.5s ease;
+  height: 0;
+}
+
+[js-table_view_edit][data-mode="edit"] .add_new_row_handler {
+  height: calc(0.5 * var(--base-rhythm));
+}
+
+.add_new_row_handler::after {
+  content: '+';
+  left: calc(-2 * var(--base-rhythm));
+  z-index: 200;
+
+  cursor: pointer;
+  position: absolute;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 16px;
+  height: 16px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 50%;
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--color-bg-main, White);
+  background: var(--color-bg-main, White);
+  color: var(--color-fg-accent, currentColor);
+  transition: .3s;
+}
+
+.add_new_row_handler:hover {
+  cursor: cell;
+  background-color: var(--color-fg-accent, currentColor);
+}
+
+.add_new_row_handler:hover::after {
+  cursor: pointer;
+  background-color: var(--color-fg-accent, currentColor);
+  color: var(--color-bg-main, White);
+}
+
+/* [data-mode="open"] .add_new_row_handler */
+.add_new_row_handler[aria-expanded="true"] {
+  display: none;
+}
+
+.table-add-node[data-mode="open"] .add_new_row_handler {
+  cursor: cell;
+  background-color: var(--color-fg-accent, currentColor);
+}
+
+.table-add-node[data-mode="open"] .add_new_row_handler::after {
+  background-color: var(--color-fg-accent, currentColor);
+  color: var(--color-bg-main, White);
+}
+
+/* add_new_row menu */
+
+.table-add-node__menu,
+.table-add-node__menu * {
+  /* to activate sticking */
+  width: fit-content;
+}
+
+.table-add-node__menu {
+  z-index: 20;
+
+  position: sticky;
+  left: calc(-1 * var(--base-gap));
+}
+
+.table-add-node__menu-body {
+  padding: var(--table-gap);
+}
+
+.table-add-node__message {
+  margin: 0 0 var(--base-rhythm);
+  color: var(--color-fg-secondary);
+  font-size: 0.9rem;
+}
+
+.table-add-node__message--error {
+  color: var(--color-danger);
+}
+
+.table-add-node__message--hidden {
+  display: none;
+}
+
+.table-add-node__blockers {
+  display: flex;
+  flex-direction: column;
+  gap: var(--base-rhythm);
+}
+
+.table-add-node__blockers[hidden],
+.table-add-node__actions[hidden] {
+  display: none;
+}
+
+.table-add-node__blocker {
+  display: flex;
+  align-items: center;
+  gap: var(--base-rhythm);
+}
+
+.table-add-node__blocker .table-add-node__message {
+  margin: 0;
+}
+
+.table-add-node__unblock-button {
+  flex-shrink: 0;
+}
+
+.table-add-node__actions {
+  display: flex;
+  gap: calc(var(--base-rhythm) * 0.5);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.table-add-node__action {
+  margin: 0;
+}
+
+.table-add-node__action-button {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: calc(var(--base-rhythm) * 0.25);
+  padding: calc(var(--base-rhythm) * 0.75);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-contrast);
+  color: var(--color-fg-main);
+  text-align: left;
+}
+
+.table-add-node__action-button:not(:disabled) {
+  cursor: pointer;
+}
+
+.table-add-node__action-button:not(:disabled):hover {
+  border-color: var(--color-fg-accent);
+  background: var(--color-bg-accent);
+}
+
+.table-add-node__action-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.table-add-node__action-type {
+  font-weight: bold;
+}
+
+.table-add-node__action-placement {
+  font-size: 0.85rem;
+  color: var(--color-fg-secondary);
+}
+
+tr[data-node-created="true"] {
+  border: 2px solid var(--color-bg-ui);
 }

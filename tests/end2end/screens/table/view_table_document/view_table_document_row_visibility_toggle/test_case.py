@@ -52,6 +52,24 @@ class Test(E2ECase):
             screen_table.assert_rows_show_all_enabled()
 
             #
+            # Replace tbody and verify the rows filter targets the new body.
+            #
+            self.execute_script(
+                "const tbody = document.querySelector("
+                "  '.content-view-table > tbody'"
+                ");"
+                "tbody.replaceWith(tbody.cloneNode(true));"
+            )
+            self.sleep(0.1)
+            screen_table.assert_rows_of_type_hidden("SECTION")
+            screen_table.assert_rows_of_type_visible("REQUIREMENT")
+
+            screen_table.do_toggle_row_type("SECTION")
+            screen_table.assert_rows_of_type_visible("SECTION")
+            screen_table.do_toggle_row_type("SECTION")
+            screen_table.assert_rows_of_type_hidden("SECTION")
+
+            #
             # Hide "REQUIREMENT" rows
             #
             screen_table.do_toggle_row_type("REQUIREMENT")

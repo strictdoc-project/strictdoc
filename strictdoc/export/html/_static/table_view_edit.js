@@ -18,6 +18,18 @@
     const ATTR_ADD_FIELD = 'js-table_view_edit-add-field';
     const ATTR_FORM = 'js-table_view_edit-form';
     const ATTR_SUBMIT_UNCHANGED = 'js-table_view_edit-submit-unchanged';
+    const ATTR_ADD_NODE = 'js-table_view_edit-add-node';
+    const ATTR_ADD_NODE_HANDLE = 'js-table_view_edit-add-node-handle';
+    const ATTR_ADD_NODE_MENU = 'js-table_view_edit-add-node-menu';
+    const ATTR_ADD_NODE_ACTION = 'js-table_view_edit-add-node-action';
+    const ATTR_ADD_NODE_ACTIONS = 'js-table_view_edit-add-node-actions';
+    const ATTR_ADD_NODE_BLOCKERS = 'js-table_view_edit-add-node-blockers';
+    const ATTR_ADD_NODE_UNBLOCK = 'js-table_view_edit-add-node-unblock';
+    const ADD_NODE_FEEDBACK_ID = 'table-add-node-feedback';
+    const EVENT_BEFORE_TABLE_STATE_CHANGE =
+        'strictdoc:table-view-before-state-change';
+    const EVENT_AFTER_TABLE_STATE_CHANGE =
+        'strictdoc:table-view-after-state-change';
     const ATTR_CUSTOM_META_ROW = 'js-table_view_edit-custom_meta-row';
     const ATTR_CUSTOM_META_DELETE_ACTION =
         'js-table_view_edit-custom_meta-delete_action';
@@ -37,6 +49,9 @@
     let editMode = false;
     let activeInlineCell = null;
     let activeAutocompleteCell = null;
+    let activeAddNode = null;
+    let addNodeUnblockInProgress = false;
+    let pendingTableStateAnchor = null;
     // [FEATURE: passive-open] Cell to open after the current save resolves.
     let pendingNextCell = null;
     let customMetaReorderPending = false;
@@ -129,6 +144,7 @@
             updateMode(table);
             updateButtonState(btn);
             pendingNextCell = null;
+            closeAddNodeMenu();
             if (activeInlineCell) cancelInlineCell();
             if (activeAutocompleteCell) cancelAutocompleteCell();
             // [FEATURE: passive-open] Close any cells that are open but no longer
@@ -144,6 +160,217 @@
         if (typeof Turbo !== 'undefined' && typeof Turbo.renderStreamMessage === 'function') {
             Turbo.renderStreamMessage(html);
         }
+    }
+
+    function getAddNodeFeedback() {
+        return document.getElementById(ADD_NODE_FEEDBACK_ID);
+    }
+
+    function getAddNodeMenu(addNode) {
+        return addNode?.querySelector(`[${ATTR_ADD_NODE_MENU}]`);
+    }
+
+    function getAddNodeState(addNode) {
+        return addNode?.querySelector('[js-table_view_edit-add-node-state]');
+    }
+
+    function getAddNodeActions(addNode) {
+        return addNode?.querySelector(`[${ATTR_ADD_NODE_ACTIONS}]`);
+    }
+
+    function getAddNodeBlockersContainer(addNode) {
+        return addNode?.querySelector(`[${ATTR_ADD_NODE_BLOCKERS}]`);
+    }
+
+    function captureViewportAnchor(element, preserveLeft = false) {
+        if (!element) return null;
+        const bounds = element.getBoundingClientRect();
+        const scrollContainer =
+            element.closest('.main') || document.scrollingElement;
+        return {
+            element,
+            left: bounds.left,
+            preserveLeft,
+            scrollContainer,
+            top: bounds.top,
+        };
+    }
+
+    function restoreViewportAnchor(anchor, element = anchor?.element) {
+        if (!anchor) return;
+        if (!element?.isConnected) return;
+        const bounds = element.getBoundingClientRect();
+        if (anchor.preserveLeft) {
+            anchor.scrollContainer.scrollLeft += bounds.left - anchor.left;
+        }
+        anchor.scrollContainer.scrollTop += bounds.top - anchor.top;
+    }
+
+    function setAddNodeMessage(addNode, message, isError = false) {
+        const state = getAddNodeState(addNode);
+        if (!state) return;
+        if (!message) {
+            state.textContent = '';
+            state.hidden = true;
+            state.classList.remove('table-add-node__message--error');
+            state.classList.add('table-add-node__message--hidden');
+            return;
+        }
+        state.textContent = message;
+        state.hidden = false;
+        state.classList.remove('table-add-node__message--hidden');
+        state.classList.toggle('table-add-node__message--error', isError);
+    }
+
+    function closeAddNodeMenu() {
+        if (!activeAddNode) return;
+        const menu = getAddNodeMenu(activeAddNode);
+        menu?.setAttribute('hidden', '');
+        activeAddNode.setAttribute('data-mode', 'closed');
+        activeAddNode
+            .querySelector(`[${ATTR_ADD_NODE_HANDLE}]`)
+            ?.setAttribute('aria-expanded', 'false');
+        setAddNodeMessage(activeAddNode, '');
+        activeAddNode = null;
+    }
+
+    function tableHasActiveSort() {
+        return Boolean(
+            document.querySelector('.content-view-table thead th[data-sort]')
+        );
+    }
+
+    function tableHasHiddenRowTypes() {
+        return Array.from(
+            document.querySelectorAll(
+                '.content-view-table tbody tr[data-row-type]'
+            )
+        ).some(row => row.style.display === 'none');
+    }
+
+    function getAddNodeBlockers() {
+        const blockers = [];
+        if (tableHasActiveSort()) {
+            blockers.push({
+                type: 'sorting',
+                message: 'Reset column sorting before adding nodes in Table view.',
+                buttonLabel: 'Reset sorting',
+            });
+        }
+        if (tableHasHiddenRowTypes()) {
+            blockers.push({
+                type: 'rows',
+                message: 'Show all node types before adding nodes in Table view.',
+                buttonLabel: 'Show all nodes',
+            });
+        }
+        return blockers;
+    }
+
+    function renderAddNodeBlockedState(addNode) {
+        const blockers = getAddNodeBlockers();
+        const blockersContainer = getAddNodeBlockersContainer(addNode);
+        const actions = getAddNodeActions(addNode);
+        if (!blockersContainer || !actions) return blockers;
+
+        blockersContainer.replaceChildren();
+        blockers.forEach(blocker => {
+            const row = document.createElement('div');
+            row.className = 'table-add-node__blocker';
+
+            const message = document.createElement('p');
+            message.className = 'table-add-node__message';
+            message.textContent = blocker.message;
+
+            const button = document.createElement('button');
+            button.className = 'table-add-node__unblock-button action_button compact';
+            button.type = 'button';
+            button.textContent = blocker.buttonLabel;
+            button.setAttribute(ATTR_ADD_NODE_UNBLOCK, '');
+            button.dataset.blocker = blocker.type;
+            button.dataset.testid = `table-add-node-unblock-${blocker.type}`;
+
+            row.append(message, button);
+            blockersContainer.append(row);
+        });
+
+        const blocked = blockers.length > 0;
+        blockersContainer.hidden = !blocked;
+        actions.hidden = blocked;
+        return blockers;
+    }
+
+    function getAddNodeBlockedReason() {
+        return getAddNodeBlockers().map(blocker => blocker.message).join(' ');
+    }
+
+    function openAddNodeMenu(addNode) {
+        if (activeAddNode === addNode) {
+            closeAddNodeMenu();
+            return;
+        }
+        closeAddNodeMenu();
+        activeAddNode = addNode;
+        activeAddNode.setAttribute('data-mode', 'open');
+        activeAddNode
+            .querySelector(`[${ATTR_ADD_NODE_HANDLE}]`)
+            ?.setAttribute('aria-expanded', 'true');
+        getAddNodeMenu(activeAddNode)?.removeAttribute('hidden');
+        setAddNodeMessage(activeAddNode, '');
+        renderAddNodeBlockedState(activeAddNode);
+    }
+
+    function clearCreatedRowMarker() {
+        document
+            .querySelectorAll('tr[data-node-created="true"]')
+            .forEach(row => row.removeAttribute('data-node-created'));
+    }
+
+    function positionCreatedNodeFromFeedback(anchor) {
+        const feedback = getAddNodeFeedback();
+        const createdNodeMid = feedback?.dataset.createdNodeMid;
+        if (!createdNodeMid) return;
+
+        clearCreatedRowMarker();
+
+        const row = document.querySelector(
+            `tr[data-node-mid="${createdNodeMid}"]`
+        );
+        if (!row) return;
+        row.setAttribute('data-node-created', 'true');
+        restoreViewportAnchor(anchor, row);
+        feedback.dataset.createdNodeMid = '';
+    }
+
+    function handleBeforeTableStateChange(event) {
+        const changeType = event.detail?.changeType;
+        if (activeAddNode) {
+            pendingTableStateAnchor = captureViewportAnchor(
+                getAddNodeMenu(activeAddNode)
+            );
+            return;
+        }
+        if (changeType !== 'sorting') {
+            pendingTableStateAnchor = null;
+            return;
+        }
+        const activeCell = activeInlineCell || activeAutocompleteCell;
+        pendingTableStateAnchor = captureViewportAnchor(
+            activeCell?.closest('tr[data-row-type]')
+        );
+    }
+
+    function handleAfterTableStateChange() {
+        const anchor = pendingTableStateAnchor;
+        pendingTableStateAnchor = null;
+        if (activeAddNode) {
+            renderAddNodeBlockedState(activeAddNode);
+        }
+        requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+                restoreViewportAnchor(anchor);
+            });
+        });
     }
 
     // Restores cell DOM to its pre-edit state. Call after nulling the active variable.
@@ -588,6 +815,47 @@
     function handleMainClick(event) {
         if (!editMode) return;
 
+        const addNodeHandle = event.target.closest(`[${ATTR_ADD_NODE_HANDLE}]`);
+        if (addNodeHandle) {
+            event.preventDefault();
+            openAddNodeMenu(addNodeHandle.closest(`[${ATTR_ADD_NODE}]`));
+            return;
+        }
+
+        const addNodeAction = event.target.closest(`[${ATTR_ADD_NODE_ACTION}]`);
+        if (addNodeAction) {
+            event.preventDefault();
+            if (addNodeAction.disabled) {
+                setAddNodeMessage(
+                    addNodeAction.closest(`[${ATTR_ADD_NODE}]`),
+                    addNodeAction.dataset.disabledReason || 'This action is disabled.'
+                );
+                return;
+            }
+            createTableNode(addNodeAction);
+            return;
+        }
+
+        const addNodeUnblock = event.target.closest(
+            `[${ATTR_ADD_NODE_UNBLOCK}]`
+        );
+        if (addNodeUnblock) {
+            event.preventDefault();
+            const resetSelector = addNodeUnblock.dataset.blocker === 'sorting'
+                ? '[data-testid="table-toolbar-sort-reset"]'
+                : '[data-testid="table-toolbar-rows-reset"]';
+            addNodeUnblockInProgress = true;
+            try {
+                document.querySelector(resetSelector)?.click();
+            } finally {
+                addNodeUnblockInProgress = false;
+            }
+            renderAddNodeBlockedState(
+                addNodeUnblock.closest(`[${ATTR_ADD_NODE}]`)
+            );
+            return;
+        }
+
         const customMetaDeleteAction = event.target.closest(
             `[${ATTR_CUSTOM_META_DELETE_ACTION}]`
         );
@@ -625,6 +893,84 @@
         if (INLINE_FIELD_TYPES.has(fieldType)) {
             event.preventDefault();
             openInlineCell(editableField);
+        }
+    }
+
+    async function createTableNode(actionButton) {
+        const addNode = actionButton.closest(`[${ATTR_ADD_NODE}]`);
+        const blockedReason = getAddNodeBlockedReason();
+        if (blockedReason) {
+            setAddNodeMessage(addNode, blockedReason, true);
+            return;
+        }
+        if (addNode?.dataset.pending === 'true') {
+            return;
+        }
+
+        addNode.dataset.pending = 'true';
+        setAddNodeMessage(addNode, '');
+        addNode
+            .querySelectorAll(`[${ATTR_ADD_NODE_ACTION}]`)
+            .forEach(button => button.setAttribute('disabled', 'disabled'));
+
+        const formData = new FormData();
+        formData.append(
+            'context_document_mid',
+            actionButton.dataset.contextDocumentMid
+        );
+        formData.append('reference_mid', actionButton.dataset.referenceMid);
+        formData.append('element_type', actionButton.dataset.elementType);
+        formData.append('whereto', actionButton.dataset.whereto);
+
+        const feedback = getAddNodeFeedback();
+        if (feedback) {
+            feedback.dataset.createdNodeMid = '';
+        }
+        const creationAnchor = captureViewportAnchor(
+            getAddNodeMenu(addNode),
+            true
+        );
+        try {
+            const response = await fetch('/actions/table/add_node', {
+                method: 'POST',
+                headers: { Accept: TURBO_ACCEPT },
+                body: formData,
+            });
+            const html = await response.text();
+            if (response.ok) {
+                renderTurboStream(html);
+                closeAddNodeMenu();
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => {
+                        positionCreatedNodeFromFeedback(creationAnchor);
+                    });
+                });
+                return;
+            }
+            console.error('Table add-node failed:', html);
+            setAddNodeMessage(
+                addNode,
+                'Unable to create this node.',
+                true
+            );
+        } catch (error) {
+            console.error('Table add-node error:', error);
+            setAddNodeMessage(
+                addNode,
+                'Unable to create this node.',
+                true
+            );
+        } finally {
+            addNode?.removeAttribute('data-pending');
+            addNode
+                ?.querySelectorAll(`[${ATTR_ADD_NODE_ACTION}]`)
+                .forEach(button => {
+                    if (button.dataset.disabledReason) {
+                        button.setAttribute('disabled', 'disabled');
+                    } else {
+                        button.removeAttribute('disabled');
+                    }
+                });
         }
     }
 
@@ -736,7 +1082,23 @@
     }
 
     function handleDocumentKeydown(event) {
+        const addNodeHandle = event.target.closest?.(
+            `[${ATTR_ADD_NODE_HANDLE}]`
+        );
+        if (
+            editMode &&
+            addNodeHandle &&
+            (event.key === 'Enter' || event.key === ' ')
+        ) {
+            event.preventDefault();
+            openAddNodeMenu(addNodeHandle.closest(`[${ATTR_ADD_NODE}]`));
+            return;
+        }
         if (event.key === 'Escape') {
+            if (activeAddNode) {
+                event.preventDefault();
+                closeAddNodeMenu();
+            }
             if (activeInlineCell) {
                 event.preventDefault();
                 cancelInlineCell();
@@ -765,6 +1127,17 @@
 
     function handleDocumentClick(event) {
         const eventPath = event.composedPath();
+        const tableToolbar = event.target.closest?.(
+            '[data-testid="table-toolbar"]'
+        );
+        if (
+            activeAddNode &&
+            !addNodeUnblockInProgress &&
+            !tableToolbar &&
+            !eventPath.includes(activeAddNode)
+        ) {
+            closeAddNodeMenu();
+        }
         if (activeInlineCell && !eventPath.includes(activeInlineCell)) {
             saveInlineCell(activeInlineCell);
         }
@@ -804,6 +1177,14 @@
 
         document.addEventListener('keydown', handleDocumentKeydown);
         document.addEventListener('click', handleDocumentClick);
+        document.addEventListener(
+            EVENT_BEFORE_TABLE_STATE_CHANGE,
+            handleBeforeTableStateChange
+        );
+        document.addEventListener(
+            EVENT_AFTER_TABLE_STATE_CHANGE,
+            handleAfterTableStateChange
+        );
     }
 
     window.addEventListener('load', init);

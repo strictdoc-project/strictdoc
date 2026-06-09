@@ -2,95 +2,107 @@
 
 ## Current scope
 
-- Task: end-to-end coverage of all inline editing paths in Table view.
+- Task: implement Add Node in Table edit mode.
 - Source of truth:
-  `developer/tasks/20260606_table_view_edit_mode/document_config_custom_meta.md`.
-- Test matrix:
-  `developer/tasks/20260606_table_view_edit_mode/_test_cases.md`.
+  `docs/strictdoc_11_developer_guide.sdoc`,
+  `developer/tasks/20260606_table_view_edit_mode/task.md`,
+  `developer/tasks/20260606_table_view_edit_mode/task__document_config_custom_meta.md`,
+  `developer/tasks/20260606_table_view_edit_mode/task__add_node.md`.
 
-## Coverage decisions
+## Agreed product decisions
 
-- The matrix is grouped into custom metadata, root node fields, and table
-  cells.
-- Shared contenteditable behavior is tested once per distinct implementation
-  path instead of repeating every save mechanism for every field.
-- E2E selectors use `data-testid`; row-specific validation and document title
-  test IDs were added where none existed.
+- Creation is immediate: selecting a menu action creates and persists the node
+  at once.
+- Add separators exist before, between, and after visible table rows.
+- Separator menus may offer `before next`, `after previous`, and
+  `child of previous` where structurally valid.
+- All grammar elements are listed.
+- Required String fields may be auto-filled with `TBD`.
+- Required Choice fields are never auto-selected; such node types are disabled
+  in the Table Add menu.
+- Add actions are blocked while table sorting is active or any node types are
+  hidden through the rows filter.
+- Empty Table view creation is out of scope.
+- Shared router changes are allowed only as minimal Table-specific endpoints.
 
-## Added coverage
+## Implementation notes
 
-- Custom metadata:
-  existing value lifecycle and validation; Add success, cancellation, and
-  validation; deleting the only row; delete/reorder rollback; no-metadata Add;
-  raw submitted value versus rendered display.
-- Root node fields:
-  document TITLE lifecycle and validation; UID, VERSION, CLASSIFICATION, and
-  PREFIX values; direct field switching; optional empty value; read-only DATE.
-- Table cells:
-  generic optional custom String field through the dynamic-field path.
-- The existing delete test now scopes rows and actions through `data-testid`
-  instead of form keys or JavaScript hooks.
+- Reuse `RequirementFormObject.create_new()`, `CreateOrUpdateNodeCommand`,
+  document write/export flow, and Turbo refresh of the document content.
+- Keep most behavior feature-local to the Table templates, CSS, JS, and tests.
+- The existing worktree already contains draft Table add-row template changes;
+  these are treated as in-progress local work, not reverted.
 
-## Regression fixed
+## Progress
 
-- Successful correction after inline validation did not remove
-  `data-validation-error` from the field.
-- `table_view_edit.js` now clears the marker after a successful save.
-
-## Existing metadata name editing
-
-- Existing custom metadata names are editable inline through a dedicated name
-  target inside the existing label.
-- Name and value editors submit the same complete ordered metadata form.
-- `active_field_name` selects the name or value Turbo target for validation and
-  successful updates.
-- Renaming preserves the row value and position and does not introduce a
-  persistent metadata identifier.
-- Add-row validation now splits row errors between `name_errors` and
-  `value_errors`, so `errors="true"` is set only on the affected control.
-- The task specification and test matrix document the new name-editing and
-  field-specific validation behavior.
-
-## Custom metadata row layout follow-up
-
-- Custom metadata display and Add UI now use persistent `sdoc-meta-row`
-  wrappers with the shared CSS subgrid.
-- Opening the Add editor no longer changes its wrapper from flex to
-  `display: contents`, avoiding a full metadata-grid layout reconstruction.
-- Dragging is armed from the move handle but uses the complete metadata row as
-  the native drag source and drop geometry target.
-- Drag/drop indicators are rendered on the row without changing its dimensions.
+- Recreated task `Context.md`.
+- Implemented Table Add separators, feature-local add menu UI, and
+  server-side `/actions/table/add_node`.
+- Added grammar-aware blocking for required choice types and for types that
+  would remain completely empty.
+- Added runtime blocking when sorting is active or row types are hidden.
+- A blocked Add menu hides node-creation actions and lists every active
+  blocker. Each blocker has an inline reset action; the current menu remains
+  open and returns to normal only after all blockers are cleared.
+- Implemented viewport-anchor behavior:
+  - creation does not open or focus a field;
+  - the new row preserves the initiating Add menu area's top-left viewport
+    coordinates;
+  - resetting sorting or the rows filter preserves the open menu's vertical
+    viewport position;
+  - sorting preserves the row position and edit state of an active edit cell
+    when no Add menu is open;
+  - row filtering intentionally does not preserve an active edit cell.
+- `table_view.js` emits before/after DOM events for sorting and row-visibility
+  changes. `table_view_edit.js` consumes this event contract and compensates
+  the `.main` scroll container without importing toolbar internals.
+- Browser-native scroll anchoring is disabled only for the Table edit `.main`
+  container. CSS also disables smooth scrolling while edit mode is active, so
+  the viewport-anchor JavaScript does not need to mutate scrolling styles.
+- Hidden columns do not block node creation. After Turbo replaces the table
+  body, `table_view.js` reapplies the current column visibility state to the
+  new data rows. Add separator rows are excluded from positional column
+  hiding so their handlers remain visible.
+- The rows filter also refreshes against the current table body after Turbo
+  replacement: it rebuilds the available row types, reapplies hidden types
+  from storage, and binds its controls to the new `tbody`.
+- Added Turbo refresh of `table-content-body`, TOC refresh, feedback marker,
+  and post-create viewport positioning without opening an editable field.
+- Added focused end-to-end coverage for:
+  - create requirement before first row;
+  - create requirement as child of a section;
+  - block while sorted;
+  - block while row types are hidden;
+  - show and clear simultaneous sorting and row-filter blockers;
+  - preserve the open menu position across both blocker resets;
+  - preserve an active edit row and edit state during sorting;
+  - confirm that row filtering completes the active cell's existing
+    outside-click lifecycle without preserving its row position;
+  - preserve the Add menu top-left position in the newly created row;
+  - confirm newly created nodes do not open an edit field;
+  - disable required `SingleChoice` node types.
+- Updated `test_cases.md` with the complete Add Node matrix. Existing coverage
+  is marked `[x]`; missing placement, grammar-default, failure, explicit
+  post-create edit-mode, and empty-state checks remain marked `[ ]`.
 
 ## Verification
 
-- `git diff --check`: passed.
-- Jinja template unit test:
-  `pytest -q tests/unit/strictdoc/export/html/test_html_templates.py`:
-  1 passed.
-- Focused custom metadata end-to-end tests:
-  `invoke test-end2end --focus edit_table_document_custom_meta --headless`:
-  9 passed.
-- Full focused Table view end-to-end suite:
-  `invoke test-end2end --focus edit_table --headless`:
-  30 passed, 314 deselected.
-- `invoke lint-ruff-format`: passed.
-- `invoke lint-ruff`: passed.
-- `invoke lint-mypy`: passed, 268 source files checked.
-- `invoke lint` could not start its code checks because the repository contains
-  an existing non-conventional commit message: `DOCS: ASDFGHJK`.
+- `python -m py_compile strictdoc/server/routers/main_router.py strictdoc/export/html/generators/view_objects/document_screen_view_object.py`
+- `pytest -q tests/unit/strictdoc/export/html/test_html_templates.py`
+- `invoke test-end2end --focus add_table_node_blocked_when_sorted
+  --headless`: 1 passed.
+- `invoke test-end2end --focus add_table_node --headless`: 5 passed.
+- `invoke test-end2end --focus view_table_document_column_visibility
+  --headless`: 2 passed.
+- `invoke test-end2end --focus view_table_document_row_visibility_toggle
+  --headless`: 1 passed.
+- `invoke test-end2end --focus edit_table --headless`: 30 passed.
+- `node --check strictdoc/export/html/_static/table_view.js`
+- `node --check strictdoc/export/html/_static/table_view_edit.js`
+- `git diff --check`
+- `invoke lint-ruff`
+- `invoke lint-mypy`: success on 268 source files.
 
-## Table edit JavaScript refactoring
+## Next step
 
-- Per-cell editing state now lives in a `WeakMap` instead of custom DOM
-  properties.
-- A cell-specific in-flight promise deduplicates repeated triggers for one
-  logical save while preserving parallel saves of different cells.
-- Autocomplete blur timers are stored per cell and cancelled when an outside
-  click starts the save, preventing a delayed duplicate POST.
-- Event handlers were extracted from `init()` into named feature-local
-  functions.
-- Regression coverage counts POST requests for autocomplete blur/outside-click
-  and repeated Cmd/Ctrl+Enter saves.
-- Focused regression tests passed.
-- Full `invoke test-end2end --focus edit_table --headless` passed:
-  30 passed, 314 deselected.
+- Stop for user review and an intermediate commit.

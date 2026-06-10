@@ -399,6 +399,46 @@ STATEMENT: This is a statement.
     assert input_sdoc == output
 
 
+def test_171_grammar_relations_with_reverse_role(default_project_config):
+    input_sdoc = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+- TAG: LOW_LEVEL_REQUIREMENT
+  FIELDS:
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  RELATIONS:
+  - TYPE: Parent
+    ROLE: Refines
+    REVERSE_ROLE: Refined by
+  - TYPE: Child
+    ROLE: Verifies
+    REVERSE_ROLE: Verified by
+
+[LOW_LEVEL_REQUIREMENT]
+STATEMENT: This is a statement.
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input_sdoc)
+    assert isinstance(document, SDocDocument)
+
+    writer = SDWriter(default_project_config)
+    output = writer.write(document)
+
+    assert input_sdoc == output
+
+
 def test_180_additional_field_in_grammar():
     input_sdoc = """
 [DOCUMENT]

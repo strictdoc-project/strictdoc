@@ -100,6 +100,156 @@ def test_valid_02_one_document_with_1req():
     assert requirement4_parents == [requirement3]
 
 
+def test_reverse_role_display_label_for_parent_relation():
+    document_builder = DocumentBuilder()
+    parent_requirement = document_builder.add_requirement("REQ-001")
+    child_requirement = document_builder.add_requirement("REQ-002")
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-002",
+        target_requirement_id="REQ-001",
+        role="Refines",
+        reverse_role="Refined by",
+    )
+
+    document = document_builder.build()
+    document_tree = DocumentTree(
+        file_tree=[],
+        document_list=[document],
+        map_docs_by_paths={},
+        map_docs_by_rel_paths={},
+        map_grammars_by_filenames={},
+    )
+    traceability_index = TraceabilityIndexBuilder.create_from_document_tree(
+        document_tree, project_config=document_builder.project_config
+    )
+
+    assert (
+        traceability_index.get_display_role_for_parent_relation(
+            child_requirement, parent_requirement, "Refines"
+        )
+        == "Refines"
+    )
+    assert (
+        traceability_index.get_display_role_for_child_relation(
+            parent_requirement, child_requirement, "Refines"
+        )
+        == "Refined by"
+    )
+
+
+def test_reverse_role_display_label_for_child_relation():
+    document_builder = DocumentBuilder()
+    parent_requirement = document_builder.add_requirement("REQ-001")
+    child_requirement = document_builder.add_requirement("REQ-002")
+    document_builder.add_requirement_relation(
+        relation_type="Child",
+        source_requirement_id="REQ-001",
+        target_requirement_id="REQ-002",
+        role="Verifies",
+        reverse_role="Verified by",
+    )
+
+    document = document_builder.build()
+    document_tree = DocumentTree(
+        file_tree=[],
+        document_list=[document],
+        map_docs_by_paths={},
+        map_docs_by_rel_paths={},
+        map_grammars_by_filenames={},
+    )
+    traceability_index = TraceabilityIndexBuilder.create_from_document_tree(
+        document_tree, project_config=document_builder.project_config
+    )
+
+    assert (
+        traceability_index.get_display_role_for_child_relation(
+            parent_requirement, child_requirement, "Verifies"
+        )
+        == "Verifies"
+    )
+    assert (
+        traceability_index.get_display_role_for_parent_relation(
+            child_requirement, parent_requirement, "Verifies"
+        )
+        == "Verified by"
+    )
+
+
+def test_relation_display_label_falls_back_to_role_for_parent_relation():
+    document_builder = DocumentBuilder()
+    parent_requirement = document_builder.add_requirement("REQ-001")
+    child_requirement = document_builder.add_requirement("REQ-002")
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-002",
+        target_requirement_id="REQ-001",
+        role="Refines",
+    )
+
+    document = document_builder.build()
+    document_tree = DocumentTree(
+        file_tree=[],
+        document_list=[document],
+        map_docs_by_paths={},
+        map_docs_by_rel_paths={},
+        map_grammars_by_filenames={},
+    )
+    traceability_index = TraceabilityIndexBuilder.create_from_document_tree(
+        document_tree, project_config=document_builder.project_config
+    )
+
+    assert (
+        traceability_index.get_display_role_for_parent_relation(
+            child_requirement, parent_requirement, "Refines"
+        )
+        == "Refines"
+    )
+    assert (
+        traceability_index.get_display_role_for_child_relation(
+            parent_requirement, child_requirement, "Refines"
+        )
+        == "Refines"
+    )
+
+
+def test_relation_display_label_falls_back_to_role_for_child_relation():
+    document_builder = DocumentBuilder()
+    parent_requirement = document_builder.add_requirement("REQ-001")
+    child_requirement = document_builder.add_requirement("REQ-002")
+    document_builder.add_requirement_relation(
+        relation_type="Child",
+        source_requirement_id="REQ-001",
+        target_requirement_id="REQ-002",
+        role="Verifies",
+    )
+
+    document = document_builder.build()
+    document_tree = DocumentTree(
+        file_tree=[],
+        document_list=[document],
+        map_docs_by_paths={},
+        map_docs_by_rel_paths={},
+        map_grammars_by_filenames={},
+    )
+    traceability_index = TraceabilityIndexBuilder.create_from_document_tree(
+        document_tree, project_config=document_builder.project_config
+    )
+
+    assert (
+        traceability_index.get_display_role_for_child_relation(
+            parent_requirement, child_requirement, "Verifies"
+        )
+        == "Verifies"
+    )
+    assert (
+        traceability_index.get_display_role_for_parent_relation(
+            child_requirement, parent_requirement, "Verifies"
+        )
+        == "Verifies"
+    )
+
+
 def test__adding_parent_link__01__two_requirements_in_one_document():
     document_builder = DocumentBuilder()
     requirement1 = document_builder.add_requirement("REQ-001")

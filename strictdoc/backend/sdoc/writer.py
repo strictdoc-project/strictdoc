@@ -291,6 +291,11 @@ class SDWriter:
                             )
                             if element_relation.relation_role is not None:
                                 output += f"    ROLE: {element_relation.relation_role}\n"
+                            if (
+                                element_relation.reverse_relation_role
+                                is not None
+                            ):
+                                output += f"    REVERSE_ROLE: {element_relation.reverse_relation_role}\n"
 
         output += "\n"
 

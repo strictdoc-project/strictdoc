@@ -7,6 +7,7 @@ from strictdoc.backend.sdoc.validations.sdoc_validator import (
     multi_choice_regex_match,
 )
 from strictdoc.core.document_iterator import SDocDocumentIterator
+from tests.unit.helpers.fake_document_meta import create_fake_document_meta
 
 
 def test_01_positive():
@@ -103,3 +104,41 @@ RELATIONS:
         "Requirement relation type/role is not registered: Parent / Refines."
     )
     assert exception.hint == "Problematic requirement: REQ-001."
+
+
+def test_22_validate_reverse_role_requires_role():
+    input_sdoc = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+    REVERSE_ROLE: Refined by
+
+[REQUIREMENT]
+UID: REQ-001
+STATEMENT: This is a statement.
+""".lstrip()
+
+    reader = SDReader()
+    document = reader.read(input_sdoc)
+    document.meta = create_fake_document_meta()
+
+    with pytest.raises(StrictDocSemanticError) as exc_info:
+        SDocValidator.validate_document(document)
+
+    exception: StrictDocSemanticError = exc_info.value
+    assert exception.title == (
+        "Grammar element 'REQUIREMENT' defines REVERSE_ROLE without ROLE "
+        "for relation type 'Parent'."
+    )

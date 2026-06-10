@@ -86,6 +86,18 @@ class SDocValidator:
                     path_to_grammar,
                 )
 
+        for relation_ in grammar_element.relations:
+            if (
+                relation_.reverse_relation_role is not None
+                and relation_.relation_role is None
+            ):
+                raise StrictDocSemanticError.grammar_relation_reverse_role_without_role(
+                    grammar_element=grammar_element,
+                    relation_type=relation_.relation_type,
+                    reverse_relation_role=relation_.reverse_relation_role,
+                    path_to_sdoc_file=path_to_grammar,
+                )
+
     @staticmethod
     def _validate_document_config(document: SDocDocument) -> None:
         document_config: DocumentConfig = document.config

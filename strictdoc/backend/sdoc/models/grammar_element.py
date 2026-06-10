@@ -145,7 +145,11 @@ GrammarElementFieldType = Union[
 @auto_described
 class GrammarElementRelationParent:  # noqa: PLW1641
     def __init__(
-        self, parent: Any, relation_type: str, relation_role: Optional[str]
+        self,
+        parent: Any,
+        relation_type: str,
+        relation_role: Optional[str],
+        reverse_relation_role: Optional[str] = None,
     ) -> None:
         assert relation_type == "Parent"
         self.parent: Any = parent
@@ -153,6 +157,12 @@ class GrammarElementRelationParent:  # noqa: PLW1641
         self.relation_role: Optional[str] = (
             relation_role
             if relation_role is not None and len(relation_role) > 0
+            else None
+        )
+        self.reverse_relation_role: Optional[str] = (
+            reverse_relation_role
+            if reverse_relation_role is not None
+            and len(reverse_relation_role) > 0
             else None
         )
         self.mid: MID = MID.create()
@@ -164,13 +174,18 @@ class GrammarElementRelationParent:  # noqa: PLW1641
             self.mid == other.mid
             and self.relation_type == other.relation_type
             and self.relation_role == other.relation_role
+            and self.reverse_relation_role == other.reverse_relation_role
         )
 
 
 @auto_described
 class GrammarElementRelationChild:
     def __init__(
-        self, parent: Any, relation_type: str, relation_role: Optional[str]
+        self,
+        parent: Any,
+        relation_type: str,
+        relation_role: Optional[str],
+        reverse_relation_role: Optional[str] = None,
     ):
         assert relation_type == "Child"
         self.parent: Any = parent
@@ -180,13 +195,23 @@ class GrammarElementRelationChild:
             if relation_role is not None and len(relation_role) > 0
             else None
         )
+        self.reverse_relation_role: Optional[str] = (
+            reverse_relation_role
+            if reverse_relation_role is not None
+            and len(reverse_relation_role) > 0
+            else None
+        )
         self.mid: MID = MID.create()
 
 
 @auto_described
 class GrammarElementRelationFile:
     def __init__(
-        self, parent: Any, relation_type: str, relation_role: Optional[str]
+        self,
+        parent: Any,
+        relation_type: str,
+        relation_role: Optional[str],
+        reverse_relation_role: Optional[str] = None,
     ):
         assert relation_type == "File"
         self.parent: Any = parent
@@ -194,6 +219,12 @@ class GrammarElementRelationFile:
         self.relation_role: Optional[str] = (
             relation_role
             if relation_role is not None and len(relation_role) > 0
+            else None
+        )
+        self.reverse_relation_role: Optional[str] = (
+            reverse_relation_role
+            if reverse_relation_role is not None
+            and len(reverse_relation_role) > 0
             else None
         )
         self.mid: MID = MID.create()
@@ -349,6 +380,7 @@ class GrammarElement:
                 parent=parent,
                 relation_type="Parent",
                 relation_role=None,
+                reverse_relation_role=None,
             ),
         ]
         if include_child:
@@ -357,6 +389,7 @@ class GrammarElement:
                     parent=parent,
                     relation_type="Child",
                     relation_role=None,
+                    reverse_relation_role=None,
                 )
             )
         relations.append(
@@ -364,6 +397,7 @@ class GrammarElement:
                 parent=parent,
                 relation_type="File",
                 relation_role=None,
+                reverse_relation_role=None,
             )
         )
         return relations
@@ -447,6 +481,18 @@ class GrammarElement:
             ):
                 return True
         return False
+
+    def get_relation_reverse_role(
+        self, relation_type: str, relation_role: Optional[str]
+    ) -> Optional[str]:
+        assert relation_role is None or len(relation_role) > 0
+        for relation_ in self.relations:
+            if (
+                relation_.relation_type == relation_type
+                and relation_.relation_role == relation_role
+            ):
+                return relation_.reverse_relation_role
+        return None
 
     def enumerate_table_meta_field_titles(self) -> Generator[str, None, None]:
         for field in self.fields:

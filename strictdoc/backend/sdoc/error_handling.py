@@ -405,6 +405,33 @@ ELEMENTS:
         )
 
     @staticmethod
+    def grammar_relation_reverse_role_without_role(
+        grammar_element: GrammarElement,
+        relation_type: str,
+        reverse_relation_role: str,
+        path_to_sdoc_file: str,
+    ) -> "StrictDocSemanticError":
+        return StrictDocSemanticError(
+            title=(
+                f"Grammar element '{grammar_element.tag}' defines "
+                f"REVERSE_ROLE without ROLE for relation type '{relation_type}'."
+            ),
+            hint=(
+                "REVERSE_ROLE can only be used for a specialized relation "
+                "that also defines ROLE."
+            ),
+            example=(
+                "RELATIONS:\n"
+                f"- TYPE: {relation_type}\n"
+                "  ROLE: Refines\n"
+                f"  REVERSE_ROLE: {reverse_relation_role}\n"
+            ),
+            line=grammar_element.ng_line_start,
+            col=grammar_element.ng_col_start,
+            filename=path_to_sdoc_file,
+        )
+
+    @staticmethod
     def view_references_nonexisting_grammar_element(
         document: SDocDocument,
         document_view: DocumentView,

@@ -36,11 +36,13 @@ GrammarElementRelation[noskipws]:
 GrammarElementRelationParent[noskipws]:
   '  - TYPE: ' relation_type='Parent' '\n'
   ('    ROLE: ' relation_role=/.+/ '\n')?
+  ('    REVERSE_ROLE: ' reverse_relation_role=/.+/ '\n')?
 ;
 
 GrammarElementRelationChild[noskipws]:
   '  - TYPE: ' relation_type='Child' '\n'
   ('    ROLE: ' relation_role=/.+/ '\n')?
+  ('    REVERSE_ROLE: ' reverse_relation_role=/.+/ '\n')?
 ;
 
 GrammarElementRelationFile[noskipws]:

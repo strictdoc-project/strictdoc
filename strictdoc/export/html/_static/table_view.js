@@ -193,6 +193,10 @@
 
         _panels.push({ btn, panel });
 
+        // Disable visibility control for the “Type” column:
+        const typeIndex = columns.findIndex(item => item.name === 'Type');
+        columns.splice(typeIndex, 1);
+
         columns.forEach(col => {
             list.appendChild(createCheckboxItem(
                 'col-checkbox-' + col.name,

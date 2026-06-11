@@ -99,7 +99,7 @@ class Test(E2ECase):
             )
 
             #
-            # Sort ascending again, then use toolbar "Order reset" button.
+            # Sort ascending again, then use toolbar "Reset sort" button.
             #
             screen_table.do_click_col_sort_btn("Title")
             screen_table.assert_sort_reset_visible()

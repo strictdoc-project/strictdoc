@@ -1,3 +1,11 @@
+# The cross-node refresh in main_router.py (table__update_node_relations)
+# walks `affected_related_nodes` with one loop, regardless of how many
+# relations were touched. A 2-relation add exercises that loop the same way
+# a 1-relation add would, plus it additionally proves that several extra
+# turbo-stream blocks in one response are all applied. So this single test
+# stands in for the simpler 1-relation case too -
+# see edit_table_cell_relations_remove_two_links_updates_two_linked_nodes for
+# the matching "remove" side.
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.components.viewtype_selector import ViewType_Selector

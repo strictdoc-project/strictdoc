@@ -1,3 +1,11 @@
+# The cross-node refresh in main_router.py (table__update_node_relations)
+# walks `affected_related_nodes` with one loop, regardless of how many
+# relations were touched. A 2-relation removal exercises that loop the same
+# way a 1-relation removal would, plus it additionally proves that several
+# extra turbo-stream blocks in one response are all applied. So this single
+# test stands in for the simpler 1-relation case too -
+# see edit_table_cell_relations_add_two_links_updates_two_linked_nodes for
+# the matching "add" side.
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.components.viewtype_selector import ViewType_Selector
@@ -32,16 +40,22 @@ class Test(E2ECase):
             screen_table = viewtype_selector.do_go_to_table()
             screen_table.assert_on_screen_table()
 
-            # REQ-001 is in row 1, REQ-002 is in row 2.
+            # REQ-001 is in row 1, REQ-002 is in row 2, REQ-003 is in row 3.
             req001_mid = screen_table.get_node_mid_from_row(row_order=1)
             req002_mid = screen_table.get_node_mid_from_row(row_order=2)
+            req003_mid = screen_table.get_node_mid_from_row(row_order=3)
             assert req001_mid is not None
             assert req002_mid is not None
+            assert req003_mid is not None
 
-            # REQ-002 declares "Parent: REQ-001", so REQ-001 starts out
-            # showing the computed "Children: REQ-002" relation.
+            # REQ-001 declares "Parent: REQ-002" and "Parent: REQ-003", so
+            # REQ-002 and REQ-003 start out showing the computed
+            # "Children: REQ-001" relation.
             screen_table.assert_cell_dom_text_contains(
-                req001_mid, "RELATIONS", "REQ-002"
+                req002_mid, "RELATIONS", "REQ-001"
+            )
+            screen_table.assert_cell_dom_text_contains(
+                req003_mid, "RELATIONS", "REQ-001"
             )
 
             form = Form_EditRequirement(self)
@@ -49,19 +63,25 @@ class Test(E2ECase):
             screen_table.do_toggle_edit_mode()
             screen_table.assert_edit_mode_on()
 
-            screen_table.do_open_inline_cell(req002_mid, "RELATIONS")
+            screen_table.do_open_inline_cell(req001_mid, "RELATIONS")
 
+            # Remove both relations from REQ-001 in one editing session.
             form.assert_form_has_relations()
-            form.do_delete_relation()
+            form.do_delete_relation(1)
+            form.do_delete_relation(1)
             form.assert_form_has_no_relations()
 
             screen_table.do_save_inline_cell_by_outside_click()
             self.sleep(0.5)
 
-            # Once REQ-002 no longer declares "Parent: REQ-001", REQ-001's
-            # computed "Children: REQ-002" relation must disappear too,
-            # without a reload.
+            # REQ-001 no longer declares any relations.
             screen_table.assert_cell_dom_text(req001_mid, "RELATIONS", "")
+
+            # Once REQ-001 no longer declares "Parent: REQ-002"/"Parent:
+            # REQ-003", REQ-002's and REQ-003's computed "Children: REQ-001"
+            # relations must disappear too, without a reload.
+            screen_table.assert_cell_dom_text(req002_mid, "RELATIONS", "")
+            screen_table.assert_cell_dom_text(req003_mid, "RELATIONS", "")
 
             screen_table.do_toggle_edit_mode()
             screen_table.assert_edit_mode_off()

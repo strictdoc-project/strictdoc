@@ -105,12 +105,14 @@ Representative fields: document `TITLE`, `UID`, `VERSION`,
 - `[x]` Existing comment edit.
 - `[x]` Comment add, empty add, and delete.
 - `[x]` Relation add and delete.
-- `[x]` Adding/removing a relation to another node in the same document
-  refreshes that other node's RELATIONS cell with its computed
-  Parent/Child relation, without a reload.
-- `[x]` Adding two relations to two different nodes in one editing session
-  and saving once refreshes the RELATIONS cells of the edited node and both
-  linked nodes.
+- `[x]` Adding/removing two relations to two different nodes in one editing
+  session and saving once refreshes the RELATIONS cells of the edited node
+  and both linked nodes, without a reload. The cross-node refresh in
+  `table__update_node_relations` walks `affected_related_nodes` with one
+  loop regardless of relation count, so the 2-relation add/remove cases
+  exercise the same code path as a 1-relation change would, plus they prove
+  several extra turbo-stream blocks in one response are all applied -
+  a single 2-relation test stands in for the 1-relation case on each side.
 
 ### Remaining gaps
 

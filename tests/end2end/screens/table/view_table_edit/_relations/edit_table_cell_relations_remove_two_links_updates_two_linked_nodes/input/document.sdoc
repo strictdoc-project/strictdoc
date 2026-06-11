@@ -7,6 +7,11 @@ TITLE: Requirement title #1
 STATEMENT: >>>
 Requirement statement #1.
 <<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-002
+- TYPE: Parent
+  VALUE: REQ-003
 
 [REQUIREMENT]
 UID: REQ-002
@@ -14,6 +19,10 @@ TITLE: Requirement title #2
 STATEMENT: >>>
 Requirement statement #2.
 <<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: REQ-001
+
+[REQUIREMENT]
+UID: REQ-003
+TITLE: Requirement title #3
+STATEMENT: >>>
+Requirement statement #3.
+<<<

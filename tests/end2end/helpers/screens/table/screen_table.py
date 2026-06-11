@@ -455,6 +455,32 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
             f"Cell DOM text [{node_mid}][{field_name}]: expected {text!r}, got {actual!r}"
         )
 
+    def assert_cell_dom_text_contains(
+        self, node_mid: str, field_name: str, text: str
+    ) -> None:
+        # textContent (not get_text()/assert_text()) so the check doesn't
+        # depend on the cell being scrolled into view in this wide table,
+        # and doesn't depend on the exact whitespace of the rendered markup.
+        actual = self.test_case.execute_script(
+            f"const c = document.getElementById('cell-{node_mid}-{field_name}');"
+            f"return c ? c.textContent.trim() : null;"
+        )
+        assert actual is not None and text in actual, (
+            f"Cell DOM text [{node_mid}][{field_name}]: expected to contain {text!r}, got {actual!r}"
+        )
+
+    def assert_cell_dom_text_not_contains(
+        self, node_mid: str, field_name: str, text: str
+    ) -> None:
+        # See assert_cell_dom_text_contains for why textContent is used here.
+        actual = self.test_case.execute_script(
+            f"const c = document.getElementById('cell-{node_mid}-{field_name}');"
+            f"return c ? c.textContent.trim() : null;"
+        )
+        assert actual is not None and text not in actual, (
+            f"Cell DOM text [{node_mid}][{field_name}]: expected NOT to contain {text!r}, got {actual!r}"
+        )
+
     def do_click_cell(self, node_mid: str, field_name: str) -> None:
         self.test_case.click(self._cell_sel(node_mid, field_name))
 

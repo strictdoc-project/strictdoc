@@ -105,6 +105,12 @@ Representative fields: document `TITLE`, `UID`, `VERSION`,
 - `[x]` Existing comment edit.
 - `[x]` Comment add, empty add, and delete.
 - `[x]` Relation add and delete.
+- `[x]` Adding/removing a relation to another node in the same document
+  refreshes that other node's RELATIONS cell with its computed
+  Parent/Child relation, without a reload.
+- `[x]` Adding two relations to two different nodes in one editing session
+  and saving once refreshes the RELATIONS cells of the edited node and both
+  linked nodes.
 
 ### Remaining gaps
 

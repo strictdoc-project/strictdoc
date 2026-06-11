@@ -42,7 +42,10 @@ In edit mode, the following become inline-editable:
     unified `contenteditable` field type);
   - `COMMENT` — one or more comment fields edited together;
   - `RELATIONS` — relation rows with autocompletable UID and editable role,
-    alongside read-only computed/derived relations;
+    alongside read-only computed/derived relations. Saving a relation to
+    another node of the same document also refreshes that other node's
+    RELATIONS cell in place, so its computed Parent/Child relation appears
+    (or disappears) immediately, without a page reload;
   - `MultipleChoice` and other autocompletable fields — driven by a Stimulus
     autocomplete controller already present in the DOM;
   - any other grammar-defined dynamic field — a generic single-line
@@ -149,6 +152,17 @@ Every editable field follows the same request/response shape:
    commands) and returns either a success Turbo Stream that re-renders the
    field's display, or a validation Turbo Stream that re-renders only the
    active field together with its `sdoc-form-error` markers.
+
+`update_node_relations` is a special case: setting a relation on a node also
+changes the *other* side of that link — the related node gains (or loses) a
+computed Parent/Child relation, derived from the traceability graph rather
+than stored on that node directly. So the success Turbo Stream for
+`update_node_relations` carries one extra `update` action per node whose
+relations were touched (added or removed) by the edit, each refreshing that
+node's own `cell-{mid}-RELATIONS` via the same
+`field_display_mode/relations.jinja` partial. A target that isn't present in
+the current table (e.g. a node from another document) is simply ignored by
+Turbo.
 
 `"singleline"`, `"multiline"`, `"comments"`, and `"relations"` are handled
 identically client-side via `openInlineCell` / `saveInlineCell`

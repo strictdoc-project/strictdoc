@@ -2250,6 +2250,12 @@ def create_main_router(
                 headers={"Content-Type": "text/vnd.turbo-stream.html"},
             )
 
+        old_related_uids = {
+            r.ref_uid
+            for r in node.relations
+            if hasattr(r, "ref_uid") and r.ref_uid
+        }
+
         update_command = CreateOrUpdateNodeCommand(
             form_object=form_object,
             node_info=UpdateNodeInfo(node_to_update=node),
@@ -2259,6 +2265,25 @@ def create_main_router(
         update_command.perform()
         write_document_to_file(document)
         revisions[node_mid_str] += 1
+
+        new_related_uids = {
+            r.ref_uid
+            for r in node.relations
+            if hasattr(r, "ref_uid") and r.ref_uid
+        }
+        # Linking/unlinking this node also changes the computed Parent/Child
+        # relations shown on the other side of the link, so those rows need
+        # their RELATIONS cell refreshed too.
+        affected_related_nodes = [
+            related_node
+            for uid in old_related_uids | new_related_uids
+            if isinstance(
+                related_node
+                := export_action.traceability_index.get_node_by_uid_weak(uid),
+                SDocNode,
+            )
+            and related_node.reserved_mid != node.reserved_mid
+        ]
 
         assert document.meta is not None
         link_renderer = LinkRenderer(
@@ -2279,6 +2304,7 @@ def create_main_router(
             "actions/table/update_node_relations/stream_update.jinja.html",
             node_mid=node_mid_str,
             requirement=node,
+            affected_related_nodes=affected_related_nodes,
             view_object=view_object_stub,
         )
         return HTMLResponse(

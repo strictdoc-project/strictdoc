@@ -174,6 +174,37 @@ Representative fields: document `TITLE`, `UID`, `VERSION`,
 - `[x]` `add_table_node_blocked_when_rows_hidden`
 - `[x]` `add_table_node_blocked_when_sorted`
 
+## 5. Delete Node
+
+### Rendering and confirmation
+
+- `[x]` Delete actions are hidden outside Table edit mode.
+- `[x]` A deletable requirement exposes a delete action in its `TYPE` cell.
+- `[x]` A deletable section exposes a delete action in its `TYPE` cell.
+- `[x]` Clicking Delete opens the confirmation modal.
+- `[x]` Cancelling confirmation keeps the node and table unchanged.
+
+### Successful deletion
+
+- `[x]` Confirming deletes a requirement row and persists the deletion.
+- `[x]` Confirming deletes a section row and preserves valid document
+  structure.
+- `[x]` Successful deletion refreshes the Table body and TOC.
+- `[x]` Table edit mode remains active after deletion.
+
+### Restrictions and validation
+
+- `[ ]` A node rejected by `can_delete_node()` has a visible disabled delete
+  action.
+- `[x]` A deletion validation error is shown in the confirmation modal.
+- `[x]` A failed validation leaves the node and document unchanged.
+
+### Delete Node E2E files
+
+- `[x]` `delete_table_node_requirement`
+- `[x]` `delete_table_node_section`
+- `[x]` `delete_table_node_validation`
+
 ## Implementation order
 
 ### Custom metadata: completed
@@ -208,3 +239,10 @@ Representative fields: document `TITLE`, `UID`, `VERSION`,
 4. Viewport preservation for menus, active edit rows, and newly created rows.
 5. Remaining placement, grammar-default, failure, and empty-state cases are
    listed above as required gaps.
+
+### Delete Node: completed
+
+1. Extract the `TYPE` cell partial and render the delete action in edit mode.
+2. Add Table-local confirmation and confirmed deletion responses.
+3. Cover requirement deletion, section deletion, cancellation, and validation.
+4. Add dedicated coverage for the disabled permission state.

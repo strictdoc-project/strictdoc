@@ -131,6 +131,31 @@
   z-index: 11; /* should be over .editable-cell-indicator */
 }
 
+[js-table_view_edit][data-mode="edit"] .content-view-td-type {
+  /* Don't hide in edit mode */
+  display: table-cell !important;
+}
+
+.content-view-td-type__content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--base-gap);
+}
+
+.table-node-delete-action {
+  display: none;
+}
+
+[js-table_view_edit][data-mode="edit"] .table-node-delete-action {
+  display: inline-flex;
+}
+
+.table-node-delete-action .action_button {
+  min-height: auto;
+  padding: 0;
+}
+
 .content-view-td-meta {
   background-color: var(--color-bg-main);
   font-size: .85em;

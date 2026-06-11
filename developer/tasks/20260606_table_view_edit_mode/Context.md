@@ -103,6 +103,41 @@
 - `invoke lint-ruff`
 - `invoke lint-mypy`: success on 268 source files.
 
+## Delete Node planning
+
+- Drafted `task__delete_node.md`.
+- Added planned Delete Node coverage to `test_cases.md`.
+- Table view already loads Turbo and `modal_controller.js`.
+- The existing Document delete endpoint renders `frame_document_content` after
+  confirmation. Table view therefore needs a Table-local success response
+  that replaces `table-content-body`.
+- The implementation should reuse `DeleteRequirementCommand`,
+  `can_delete_node()`, and the shared confirm component.
+- Implemented a feature-local `TYPE` cell partial with the shared delete
+  button component.
+- Delete actions are shown only in Table edit mode.
+- `can_delete_node()` restrictions use the same visible disabled-action pattern
+  as Document view.
+- Added `/actions/table/delete_node` for validation, confirmation, deletion,
+  Table body refresh, TOC refresh, and confirm cleanup.
+- Added end-to-end coverage for requirement deletion, cancellation, section
+  deletion, and validation errors.
+- CSS changes are limited to the `TYPE` cell layout, edit-mode visibility, and
+  compact sizing of the delete action.
+
+## Delete Node verification
+
+- `pytest -q tests/unit/strictdoc/export/html/test_html_templates.py`: passed.
+- `invoke test-end2end --focus delete_table_node --headless`: 3 passed.
+- `invoke test-end2end --focus edit_table --headless`: 30 passed.
+- `invoke lint-ruff`: passed.
+- `invoke lint-mypy`: passed on 268 source files.
+- `git diff --check`: passed.
+- `invoke docs`: StrictDoc HTML and RST export passed, but the final Sphinx
+  build failed because the documentation environment lacks the `roman`
+  package. The command also generated unrelated files under
+  `docs/sphinx/source/`; these must not be included in the feature commit.
+
 ## Next step
 
 - Stop for user review and an intermediate commit.

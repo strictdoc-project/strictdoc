@@ -16,9 +16,7 @@
     {%- set requirement = node %}
     <tr data-row-type="{{ node.node_type }}" data-node-mid="{{ requirement.reserved_mid }}">
 
-      <td class="content-view-td content-view-td-type">
-        {{ node.node_type }}
-      </td>
+      {%- include "screens/document/table/type_cell.jinja" %}
       <td class="content-view-td content-view-td-level">
         {{ requirement.context.title_number_string }}
       </td>
@@ -197,7 +195,9 @@
     {%- endfor %}
 
     <tr data-row-type="SECTION" data-node-mid="{{ section.reserved_mid }}">
-      <td class="content-view-td content-view-td-type">Section</td>
+      {%- with node=section -%}
+        {%- include "screens/document/table/type_cell.jinja" %}
+      {%- endwith -%}
       <td class="content-view-td content-view-td-meta">{{ section.context.title_number_string }}</td>
 
       {%- set ns_sec = namespace(past_title=false) %}

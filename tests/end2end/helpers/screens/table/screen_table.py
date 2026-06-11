@@ -565,3 +565,26 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
             f"(//tr[@data-row-type])[{row_order}]", by=By.XPATH
         )
         return row.get_attribute("data-node-mid")
+
+    def assert_delete_action_hidden(self, node_mid: str) -> None:
+        self.test_case.assert_element_not_visible(
+            f'[data-node-mid="{node_mid}"] '
+            '[data-testid="form-delete-action"]'
+        )
+
+    def assert_delete_action_visible(self, node_mid: str) -> None:
+        self.test_case.assert_element_visible(
+            f'[data-node-mid="{node_mid}"] '
+            '[data-testid="form-delete-action"]'
+        )
+
+    def do_click_delete_action(self, node_mid: str) -> None:
+        self.test_case.click(
+            f'[data-node-mid="{node_mid}"] '
+            '[data-testid="form-delete-action"]'
+        )
+
+    def assert_node_row_not_present(self, node_mid: str) -> None:
+        self.test_case.assert_element_not_present(
+            f'[data-node-mid="{node_mid}"]'
+        )

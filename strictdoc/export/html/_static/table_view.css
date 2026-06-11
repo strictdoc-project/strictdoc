@@ -114,14 +114,14 @@
 .table-toolbar__sort-reset .icon_sort .sort-asc   { display: none; }
 .table-toolbar__sort-reset .icon_sort .sort-desc  { display: none; }
 
-.content-view-td-type,
-.content-view-td-level {
+.content-view-td-type {
   background-color: var(--color-bg-ui);
   color: var(--color-bg-main);
   text-align: left;
   font-weight: normal;
   text-transform: uppercase;
-  font-size: .75em;
+  /* font-size: .75em; */
+  font-size: 10px;
   font-weight: bold;
 }
 
@@ -156,6 +156,7 @@
   padding: 0;
 }
 
+.content-view-td-level,
 .content-view-td-meta {
   background-color: var(--color-bg-main);
   font-size: .85em;

@@ -265,10 +265,17 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
         )
 
     def do_open_add_node_menu(self, row_order: int = 1) -> None:
-        self.test_case.click(
+        # The handle is a full-width but near-zero-height row. After a sort
+        # reset the table rows are reordered while the page scroll position
+        # stays put, so this handle can end up positioned behind the sticky
+        # table header (same z-index situation as do_click_add_node_action).
+        # A native click() would then hit the header instead, so dispatch
+        # the click via JS to bypass the visibility/interception check.
+        handle = self.test_case.find_element(
             f"(//*[@data-testid='table-add-node-handle'])[{row_order}]",
             by=By.XPATH,
         )
+        self.test_case.execute_script("arguments[0].click();", handle)
         self.test_case.wait_for_element(
             f"(//*[@data-testid='table-add-row'])[{row_order}]"
             "//*[@data-testid='table-add-node-menu' and not(@hidden)]",

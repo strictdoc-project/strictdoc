@@ -134,13 +134,20 @@
 [js-table_view_edit][data-mode="edit"] .content-view-td-type {
   /* Don't hide in edit mode */
   display: table-cell !important;
+  /* padding-right: 0; */
 }
 
 .content-view-td-type__content {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--base-gap);
+}
+
+.content-view-td-type__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
 }
 
 .table-node-delete-action {
@@ -151,9 +158,20 @@
   display: inline-flex;
 }
 
-.table-node-delete-action .action_button {
+.table-node-delete-action .action_icon {
   min-height: auto;
   padding: 0;
+  border-radius: calc(.5 * var(--base-rhythm));
+  color: var(--color-bg-main) !important;
+  border-color: var(--color-bg-main) !important;
+  opacity: 0.7;
+}
+
+.table-node-delete-action .action_icon:hover {
+  color: var(--color-danger) !important;
+  border-color: var(--color-danger) !important;
+  background-color: var(--color-bg-main);
+  opacity: 1;
 }
 
 .content-view-td-level,

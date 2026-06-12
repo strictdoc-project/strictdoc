@@ -55,4 +55,10 @@ class Test(E2ECase):
                 "TITLE",
             )
 
+            # Column visibility persists to localStorage (and the URL).
+            # Tests run with --reuse-session, so a hidden "Statement"
+            # column would otherwise leak into the next test that doesn't
+            # call clear_local_storage() before opening the table view.
+            self.clear_local_storage()
+
         assert test_setup.compare_sandbox_and_expected_output()

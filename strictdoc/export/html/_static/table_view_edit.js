@@ -1,5 +1,8 @@
 (function () {
     const TURBO_ACCEPT = 'text/vnd.turbo-stream.html';
+    // Delay before an autocomplete blur triggers a save, giving a dropdown
+    // selection time to land before the blur handler checks focus.
+    const AUTOCOMPLETE_BLUR_SAVE_DELAY_MS = 200;
 
     // DOM contract for table-view inline editing.
     // The script is attached to the container marked with js-table_view_edit.
@@ -162,6 +165,22 @@
         }
     }
 
+    // POST a form body to a table-edit action endpoint and read the Turbo Stream response.
+    async function postTurboStream(url, body) {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { Accept: TURBO_ACCEPT },
+            body,
+        });
+        const html = await response.text();
+        return { response, html };
+    }
+
+    // Run fn after the browser has painted the current frame's DOM changes.
+    function afterNextRepaint(fn) {
+        requestAnimationFrame(() => requestAnimationFrame(fn));
+    }
+
     function getAddNodeFeedback() {
         return document.getElementById(ADD_NODE_FEEDBACK_ID);
     }
@@ -180,6 +199,26 @@
 
     function getAddNodeBlockersContainer(addNode) {
         return addNode?.querySelector(`[${ATTR_ADD_NODE_BLOCKERS}]`);
+    }
+
+    function setAddNodeExpanded(addNode, expanded) {
+        addNode
+            ?.querySelector(`[${ATTR_ADD_NODE_HANDLE}]`)
+            ?.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+    }
+
+    // Re-enable add-node action buttons after a create attempt, except those
+    // permanently disabled (e.g. a required single-choice type already in use).
+    function restoreAddNodeActionButtons(addNode) {
+        addNode
+            ?.querySelectorAll(`[${ATTR_ADD_NODE_ACTION}]`)
+            .forEach(button => {
+                if (button.dataset.disabledReason) {
+                    button.setAttribute('disabled', 'disabled');
+                } else {
+                    button.removeAttribute('disabled');
+                }
+            });
     }
 
     function captureViewportAnchor(element, preserveLeft = false) {
@@ -227,9 +266,7 @@
         const menu = getAddNodeMenu(activeAddNode);
         menu?.setAttribute('hidden', '');
         activeAddNode.setAttribute('data-mode', 'closed');
-        activeAddNode
-            .querySelector(`[${ATTR_ADD_NODE_HANDLE}]`)
-            ?.setAttribute('aria-expanded', 'false');
+        setAddNodeExpanded(activeAddNode, false);
         setAddNodeMessage(activeAddNode, '');
         activeAddNode = null;
     }
@@ -241,11 +278,15 @@
     }
 
     function tableHasHiddenRowTypes() {
-        return Array.from(
-            document.querySelectorAll(
-                '.content-view-table tbody tr[data-row-type]'
-            )
-        ).some(row => row.style.display === 'none');
+        const rows = document.querySelectorAll(
+            '.content-view-table tbody tr[data-row-type]'
+        );
+        // Avoid Array.from(): exit on the first hidden row instead of
+        // materializing the whole row list.
+        for (const row of rows) {
+            if (row.style.display === 'none') return true;
+        }
+        return false;
     }
 
     function getAddNodeBlockers() {
@@ -312,9 +353,7 @@
         closeAddNodeMenu();
         activeAddNode = addNode;
         activeAddNode.setAttribute('data-mode', 'open');
-        activeAddNode
-            .querySelector(`[${ATTR_ADD_NODE_HANDLE}]`)
-            ?.setAttribute('aria-expanded', 'true');
+        setAddNodeExpanded(activeAddNode, true);
         getAddNodeMenu(activeAddNode)?.removeAttribute('hidden');
         setAddNodeMessage(activeAddNode, '');
         renderAddNodeBlockedState(activeAddNode);
@@ -366,11 +405,7 @@
         if (activeAddNode) {
             renderAddNodeBlockedState(activeAddNode);
         }
-        requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-                restoreViewportAnchor(anchor);
-            });
-        });
+        afterNextRepaint(() => restoreViewportAnchor(anchor));
     }
 
     // Restores cell DOM to its pre-edit state. Call after nulling the active variable.
@@ -463,7 +498,7 @@
                 return;
             }
             saveAutocompleteCell(cell, autocompleteInput);
-        }, 200);
+        }, AUTOCOMPLETE_BLUR_SAVE_DELAY_MS);
     }
 
     function saveAutocompleteCell(cell, autocompleteInput) {
@@ -486,7 +521,7 @@
 
         if (activeAutocompleteCell === cell) {
             activeAutocompleteCell = null;
-            cell.removeAttribute('data-mode');
+            updateMode(cell);
         }
 
         if (newValue === originalValue) {
@@ -506,12 +541,10 @@
 
         let ok = false;
         try {
-            const response = await fetch('/actions/table/update_node_field', {
-                method: 'POST',
-                headers: { 'Accept': TURBO_ACCEPT },
-                body: formData,
-            });
-            const html = await response.text();
+            const { response, html } = await postTurboStream(
+                '/actions/table/update_node_field',
+                formData
+            );
             if (response.ok) {
                 ok = true;
                 renderTurboStream(html);
@@ -629,12 +662,7 @@
         formData.set('active_form_key', row.dataset.formKey);
 
         try {
-            const response = await fetch(form.action, {
-                method: 'POST',
-                headers: { 'Accept': TURBO_ACCEPT },
-                body: formData,
-            });
-            const html = await response.text();
+            const { response, html } = await postTurboStream(form.action, formData);
             if (response.ok) {
                 renderTurboStream(html);
                 return;
@@ -666,12 +694,7 @@
         formData.set('active_form_key', formKey);
 
         try {
-            const response = await fetch(form.action, {
-                method: 'POST',
-                headers: { 'Accept': TURBO_ACCEPT },
-                body: formData,
-            });
-            const html = await response.text();
+            const { response, html } = await postTurboStream(form.action, formData);
             if (response.ok) {
                 renderTurboStream(html);
                 return;
@@ -682,6 +705,32 @@
         }
 
         form.insertBefore(row, nextSibling);
+    }
+
+    // Render server validation errors for a plain-text response, or a generic
+    // message for a 5xx error page (whose body is a full HTML page, not field errors).
+    function renderInlineFieldErrors(form, cell, response, html) {
+        cell.setAttribute('data-validation-error', 'true');
+        const errorLines = response.status >= 500
+            ? ['Unable to save this field.']
+            : html.trim().split('\n').filter(Boolean);
+        if (response.status >= 500) {
+            console.error('Inline cell server error:', html);
+        }
+        const insertBeforeEl = form.querySelector('sdoc-form-row:last-of-type') || null;
+        errorLines.forEach(line => {
+            const errorEl = document.createElement('sdoc-form-error');
+            errorEl.setAttribute(
+                'data-testid',
+                'table-inline-field-error'
+            );
+            errorEl.textContent = line.trim();
+            if (insertBeforeEl) {
+                form.insertBefore(errorEl, insertBeforeEl);
+            } else {
+                form.appendChild(errorEl);
+            }
+        });
     }
 
     function saveInlineCell(cell) {
@@ -740,18 +789,13 @@
         }
 
         try {
-            const response = await fetch(form.action, {
-                method: 'POST',
-                headers: { 'Accept': TURBO_ACCEPT },
-                body: formData,
-            });
-            const html = await response.text();
+            const { response, html } = await postTurboStream(form.action, formData);
             if (response.ok) {
                 // Only clear activeInlineCell if this cell is still the active one.
                 // When called via openInlineCell, activeInlineCell was already nulled
                 // there — don't overwrite it if it has moved on to another cell.
                 if (activeInlineCell === cell) activeInlineCell = null;
-                cell.removeAttribute('data-mode');
+                updateMode(cell);
                 cell.removeAttribute('data-validation-error');
                 state.originalHTML = undefined;
                 state.originalFormData = undefined;
@@ -774,27 +818,7 @@
                     // Validation responses are currently HTMLResponse objects whose
                     // body is plain text. A 5xx response, however, contains a full
                     // error page and must never be split into field-error elements.
-                    cell.setAttribute('data-validation-error', 'true');
-                    const errorLines = response.status >= 500
-                        ? ['Unable to save this field.']
-                        : html.trim().split('\n').filter(Boolean);
-                    if (response.status >= 500) {
-                        console.error('Inline cell server error:', html);
-                    }
-                    const insertBeforeEl = form.querySelector('sdoc-form-row:last-of-type') || null;
-                    errorLines.forEach(line => {
-                        const errorEl = document.createElement('sdoc-form-error');
-                        errorEl.setAttribute(
-                            'data-testid',
-                            'table-inline-field-error'
-                        );
-                        errorEl.textContent = line.trim();
-                        if (insertBeforeEl) {
-                            form.insertBefore(errorEl, insertBeforeEl);
-                        } else {
-                            form.appendChild(errorEl);
-                        }
-                    });
+                    renderInlineFieldErrors(form, cell, response, html);
                 }
             }
         } catch (err) {
@@ -846,13 +870,14 @@
                 : '[data-testid="table-toolbar-rows-reset"]';
             addNodeUnblockInProgress = true;
             try {
+                // The reset button's click synchronously dispatches
+                // EVENT_AFTER_TABLE_STATE_CHANGE, which already calls
+                // renderAddNodeBlockedState for the still-open activeAddNode
+                // (see handleAfterTableStateChange) — no need to call it again here.
                 document.querySelector(resetSelector)?.click();
             } finally {
                 addNodeUnblockInProgress = false;
             }
-            renderAddNodeBlockedState(
-                addNodeUnblock.closest(`[${ATTR_ADD_NODE}]`)
-            );
             return;
         }
 
@@ -931,20 +956,14 @@
             true
         );
         try {
-            const response = await fetch('/actions/table/add_node', {
-                method: 'POST',
-                headers: { Accept: TURBO_ACCEPT },
-                body: formData,
-            });
-            const html = await response.text();
+            const { response, html } = await postTurboStream(
+                '/actions/table/add_node',
+                formData
+            );
             if (response.ok) {
                 renderTurboStream(html);
                 closeAddNodeMenu();
-                requestAnimationFrame(() => {
-                    requestAnimationFrame(() => {
-                        positionCreatedNodeFromFeedback(creationAnchor);
-                    });
-                });
+                afterNextRepaint(() => positionCreatedNodeFromFeedback(creationAnchor));
                 return;
             }
             console.error('Table add-node failed:', html);
@@ -962,15 +981,7 @@
             );
         } finally {
             addNode?.removeAttribute('data-pending');
-            addNode
-                ?.querySelectorAll(`[${ATTR_ADD_NODE_ACTION}]`)
-                .forEach(button => {
-                    if (button.dataset.disabledReason) {
-                        button.setAttribute('disabled', 'disabled');
-                    } else {
-                        button.removeAttribute('disabled');
-                    }
-                });
+            restoreAddNodeActionButtons(addNode);
         }
     }
 

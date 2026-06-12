@@ -7,21 +7,34 @@
 
         {% include "screens/document/document/frame_document_config.jinja.html" %}
 
-        {%- for node, _ in view_object.document_content_iterator() %}
-
-        {%- if node.is_document() %}
-          {% include "components/section/index_extends_node.jinja" %}
-        {%- elif node.is_requirement() %}
-          {# {%- if node.is_text_node() %}
-            {% include "components/text_node/index_extends_node.jinja" %}
-          {% else %} #}
-            {% include "components/node_content/index_extends_node.jinja" %}
-          {# {% endif %} #}
+        {%- if view_object.is_chunked_rendering() %}
+          {%- for chunk in view_object.document_content_chunks() %}
+            {%- if loop.first %}
+              {%- with chunk_index = chunk.index, from_node = chunk.first_node_mid, count = chunk.size %}
+                {% include "screens/document/document/document_chunk.jinja.html" %}
+              {%- endwith %}
+            {%- else %}
+              {#
+                The placeholder reserves approximate scroll space until Turbo
+                loads the chunk content. See the
+                turbo-frame.document-chunk-placeholder rule in _static/node.css.
+              #}
+              <turbo-frame
+                id="document-chunk-{{ chunk.index }}"
+                class="document-chunk-placeholder"
+                loading="lazy"
+                src="/fragments/document/{{ view_object.document.reserved_mid }}/chunk?from_node={{ chunk.first_node_mid }}&amp;count={{ chunk.size }}&amp;chunk={{ chunk.index }}"
+                style="--document-chunk-size: {{ chunk.size }};"
+                data-testid="document-chunk-placeholder"
+              ></turbo-frame>
+            {%- endif %}
+          {%- endfor %}
         {%- else %}
-          {% assert false, "Must not reach here." %}
-        {%- endif %}
 
+        {%- for node, _ in view_object.document_content_iterator() %}
+        {%- include "screens/document/document/_node_dispatch.jinja.html" %}
         {%- endfor %}
+        {%- endif %}
 
       </div>
 </turbo-frame>

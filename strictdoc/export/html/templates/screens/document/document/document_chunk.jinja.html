@@ -1,0 +1,5 @@
+<turbo-frame id="document-chunk-{{ chunk_index }}">
+  {%- for node, _ in view_object.document_chunk_content_iterator(from_node, count) %}
+  {%- include "screens/document/document/_node_dispatch.jinja.html" %}
+  {%- endfor %}
+</turbo-frame>

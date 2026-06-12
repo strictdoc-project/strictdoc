@@ -16,6 +16,9 @@
   <script src="{{ view_object.render_static_url('collapsible_toc.js') }}"></script>
   <script src="{{ view_object.render_static_url('project_tree_preserve_scroll.js') }}"></script>
   <script src="{{ view_object.render_static_url('toc_highlighting.js') }}"></script>
+  {%- if view_object.is_chunked_rendering() %}
+  <script src="{{ view_object.render_static_url('toc_chunk_navigation.js') }}"></script>
+  {%- endif %}
 
   <script src="{{ view_object.render_static_url('copy_to_clipboard.js') }}"></script>
 
@@ -100,17 +103,31 @@
       });
     }
 
-    // This EventListener will hook to node updates and re-typeset the MathJax expressions (i.e. after saving)...
-    document.addEventListener("turbo:before-stream-render", (event) => {
+    // Full re-typeset of the whole document: required because edits and
+    // late-arriving content can break the 'ams' equation numbering.
+    function retypesetMathJax()
+    {
       if (window.MathJax?.typesetPromise) {
         requestAnimationFrame(() => {
           restoreOriginalMathElements();                 // restore all math divs and spans in the DOM
-          MathJax.texReset();                            // reset all previous tex input state (eq numbering...) 
+          MathJax.texReset();                            // reset all previous tex input state (eq numbering...)
           MathJax.typesetClear();                        // remove all previous output state (typesetting, elements...)
           MathJax.typesetPromise().catch(console.error); // typeset again, this re-creates the equation numbers
         });
       }
-    });  
+    }
+
+    // This EventListener will hook to node updates and re-typeset the MathJax expressions (i.e. after saving)...
+    document.addEventListener("turbo:before-stream-render", (event) => {
+      retypesetMathJax();
+    });
+
+    // Lazily loaded document chunks (see frame_document_content.jinja.html)
+    // arrive after the initial idle-time typeset; re-typeset when one loads.
+    document.addEventListener("turbo:frame-load", (event) => {
+      if (!event.target.id?.startsWith("document-chunk-")) return;
+      retypesetMathJax();
+    });
   </script>
   {%- endif -%}
   {%- endif -%}
@@ -131,9 +148,22 @@
     </script>
   {%- if view_object.is_running_on_server -%}
     <script>
+      // Re-render mermaid diagrams; idempotent for already rendered
+      // diagrams thanks to mermaid's data-processed marker.
+      function rerunMermaid() {
+        requestAnimationFrame(() => mermaid.run());
+      }
+
       // Re-run mermaid after node updates (i.e. after saving)...
       document.addEventListener("turbo:before-stream-render", () => {
-        requestAnimationFrame(() => mermaid.run());
+        rerunMermaid();
+      });
+
+      // Lazily loaded document chunks (see frame_document_content.jinja.html)
+      // arrive after the initial idle-time rendering; re-run when one loads.
+      document.addEventListener("turbo:frame-load", (event) => {
+        if (!event.target.id?.startsWith("document-chunk-")) return;
+        rerunMermaid();
       });
     </script>
   {%- endif -%}

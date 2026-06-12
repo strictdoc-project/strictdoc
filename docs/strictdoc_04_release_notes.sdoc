@@ -338,6 +338,13 @@ are now handled by a single delegated event listener instead of one listener
 per node, and the initial MathJax typesetting and Mermaid diagram rendering are
 deferred to browser idle time so they no longer block the first paint of the
 document.
+
+4\) The web interface now renders large documents in lazily loaded chunks.
+Documents containing more than ``chunked_documents_threshold`` nodes (200 by
+default, configurable in ``strictdoc.toml``, 0 disables chunking) initially
+load only the first chunk of nodes together with the table of contents, and
+the remaining chunks are fetched automatically as the user scrolls. This
+keeps documents with thousands of requirements responsive in the editing GUI.
 <<<
 
 [[/SECTION]]

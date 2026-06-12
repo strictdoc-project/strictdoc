@@ -7,6 +7,7 @@ from datetime import datetime
 from enum import Enum
 from typing import (
     Any,
+    Dict,
     Generator,
     Iterator,
     List,
@@ -46,6 +47,11 @@ from strictdoc.core.file_system.file_tree import File, FileOrFolderEntry, Folder
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
+from strictdoc.export.html.generators.view_objects.document_chunks import (
+    CHUNK_SIZE,
+    DocumentChunk,
+    slice_chunks,
+)
 from strictdoc.export.html.generators.view_objects.helpers import (
     screen_should_display_file,
     screen_should_display_folder,
@@ -106,6 +112,8 @@ class DocumentScreenViewObject:
         )
         self.is_running_on_server: bool = project_config.is_running_on_server
         self.strictdoc_version = __version__
+        self._chunked_rendering: Optional[bool] = None
+        self._chunk_index_by_mid: Optional[Dict[str, int]] = None
 
         self.custom_html2pdf_template: Optional[Template] = None
         if project_config.html2pdf_template is not None:
@@ -484,6 +492,141 @@ class DocumentScreenViewObject:
         yield from self.document_iterator.all_content(
             print_fragments=True,
         )
+
+    def is_chunked_rendering(self) -> bool:
+        """
+        Chunked mode: server edit screen for large documents only.
+
+        Activates only when the document contains strictly more content nodes
+        than the chunked_documents_threshold option value.
+
+        The result is computed once and memoized because the node counting
+        requires a full document walk.
+        """
+        if self._chunked_rendering is not None:
+            return self._chunked_rendering
+
+        threshold = self.project_config.chunked_documents_threshold
+        if (
+            threshold == 0
+            or not self.is_running_on_server
+            or not self.document_type.is_document()
+        ):
+            self._chunked_rendering = False
+        else:
+            self._chunked_rendering = self._count_content_nodes() > threshold
+        return self._chunked_rendering
+
+    def document_chunk_size(self) -> int:
+        """
+        Effective chunk size used by the chunked rendering templates.
+
+        The chunking threshold caps the chunk size: with a threshold lower
+        than CHUNK_SIZE, a document that activates chunked rendering must
+        still be split into more than one chunk.
+        """
+        threshold = self.project_config.chunked_documents_threshold
+        if 0 < threshold < CHUNK_SIZE:
+            return threshold
+        return CHUNK_SIZE
+
+    def document_content_chunks(
+        self, chunk_size: Optional[int] = None
+    ) -> List[DocumentChunk]:
+        """
+        Recomputed per request; chunk cursors are node MIDs — see
+        DocumentChunk.
+
+        When chunk_size is not provided, the effective document chunk size
+        is used, see document_chunk_size().
+        """
+        if chunk_size is None:
+            chunk_size = self.document_chunk_size()
+        node_mids = [
+            assert_cast(node_, (SDocNodeIF, SDocDocumentIF)).reserved_mid
+            for node_, _ in self.document_content_iterator()
+        ]
+        return slice_chunks(node_mids, chunk_size)
+
+    def chunk_frame_id_for(
+        self, node: Union[SDocNodeIF, SDocDocumentIF]
+    ) -> str:
+        """
+        Frame id of the lazy chunk that contains node, e.g.
+        "document-chunk-3", or "" when chunked rendering is inactive or the
+        node is not part of the chunked content (the screen's own document
+        root renders outside the chunk loop).
+
+        Used by toc.jinja to stamp each TOC link so the deep-link script
+        (toc_chunk_navigation.js) can force-load the chunk holding a target
+        before scrolling to it.
+        """
+        if not self.is_chunked_rendering():
+            return ""
+        index = self._chunk_index_by_node_mid().get(node.reserved_mid)
+        if index is None:
+            return ""
+        return f"document-chunk-{index}"
+
+    def _chunk_index_by_node_mid(self) -> Dict[str, int]:
+        # Maps each content node's reserved MID to its chunk index using the
+        # same ordering and effective chunk size as document_content_chunks().
+        # Built once per request and memoized.
+        if self._chunk_index_by_mid is None:
+            chunk_size = self.document_chunk_size()
+            mapping: Dict[str, int] = {}
+            for position, (node_, _) in enumerate(
+                self.document_content_iterator()
+            ):
+                node_mid = assert_cast(
+                    node_, (SDocNodeIF, SDocDocumentIF)
+                ).reserved_mid
+                mapping[node_mid] = position // chunk_size
+            self._chunk_index_by_mid = mapping
+        return self._chunk_index_by_mid
+
+    def document_chunk_content_iterator(
+        self, from_node_mid: str, count: int
+    ) -> Iterator[Tuple[SDocElementIF, DocumentIterationContext]]:
+        """
+        Yield up to count (node, context) pairs, starting from the node whose
+        reserved MID equals from_node_mid.
+
+        The iteration always walks the document from its start because the
+        per-node title numbering context must build up during the traversal.
+        The nodes before the cursor node are skipped. If the cursor MID is not
+        found, e.g., the node was deleted by a concurrent edit, nothing is
+        yielded, and the caller is expected to render an empty fragment.
+        Resolving a successor node for a stale cursor is a documented
+        follow-up.
+
+        ``count`` must be positive; HTTP callers must validate/clamp
+        untrusted input before calling (the fragment route owns that
+        validation).
+        """
+        assert count > 0, count
+        cursor_found = False
+        yielded = 0
+        for node_, context_ in self.document_content_iterator():
+            if not cursor_found:
+                node_mid = assert_cast(
+                    node_, (SDocNodeIF, SDocDocumentIF)
+                ).reserved_mid
+                if node_mid != from_node_mid:
+                    continue
+                cursor_found = True
+            yield node_, context_
+            yielded += 1
+            if yielded == count:
+                return
+
+    def _count_content_nodes(self) -> int:
+        # This is a full document walk: no precomputed node count exists on
+        # the traceability index. It is called once per request thanks to the
+        # is_chunked_rendering() memoization. Note that the underlying
+        # iterator re-patches node.context title numbering during the walk:
+        # an idempotent mutation, the same one the render loop performs.
+        return sum(1 for _ in self.document_content_iterator())
 
     def should_display_folder(self, folder: Folder) -> bool:
         return screen_should_display_folder(

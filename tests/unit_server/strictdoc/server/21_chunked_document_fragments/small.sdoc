@@ -1,0 +1,27 @@
+[DOCUMENT]
+TITLE: Small sample document
+
+[REQUIREMENT]
+UID: SMALL-1
+TITLE: Small requirement 1
+STATEMENT: System shall do small 1.
+
+[REQUIREMENT]
+UID: SMALL-2
+TITLE: Small requirement 2
+STATEMENT: System shall do small 2.
+
+[REQUIREMENT]
+UID: SMALL-3
+TITLE: Small requirement 3
+STATEMENT: System shall do small 3.
+
+[REQUIREMENT]
+UID: SMALL-4
+TITLE: Small requirement 4
+STATEMENT: System shall do small 4.
+
+[REQUIREMENT]
+UID: SMALL-5
+TITLE: Small requirement 5
+STATEMENT: System shall do small 5.

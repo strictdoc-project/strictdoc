@@ -2,8 +2,26 @@
   <sdoc-backdrop>
     <sdoc-modal>
       <sdoc-modal-container data-testid="table-tips-content">
-        <p>Use the <strong>Columns</strong> panel to show or hide individual fields in the table.</p>
-        <p>Use the <strong>Nodes</strong> panel to filter which node types are displayed in the table.</p>
+        <h3>Table View tips</h3>
+        <p><b>Filter view</b></p>
+        <ul>
+          <li>Use the <strong>Columns</strong> panel to show or hide individual fields in the table.</li>
+          <li>Use the <strong>Nodes</strong> panel to filter which node types are displayed in the table.</li>
+        </ul>
+        <p><b>Edit mode</b></p>
+        <ul>
+          <li>Enable <b>Edit mode</b> to edit document content directly in the table.</li>
+          <li>Click a field to edit it. Save with <code>Ctrl/Cmd+Enter</code> or by <i>leaving the field</i>. Press <code>Escape</code> to cancel without changes.</li>
+          <li>Use <b>Add</b> separators between rows to create new nodes.</li>
+          <li>Use the <b>Delete</b> action in the <code>Type</code> column to remove nodes.</li>
+          <li><b>Add Node</b> is unavailable while sorting or row filtering is active.</li>
+        </ul>
+        <p><b>Pan the page</b></p>
+        <ul>
+          <li>Hold <code>Space</code> and drag to move around the table.</li>
+          <li>While editing a text field, <code>Space</code> inserts a space character instead of activating pan mode.</li>
+        </ul>
+
       </sdoc-modal-container>
       {%- with cancel_name="Close" -%}
         {% include "components/button/cancel.jinja" %}

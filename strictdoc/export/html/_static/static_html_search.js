@@ -243,7 +243,11 @@
   class SearchResultsView {
     static PAGE_SIZE = 5;
 
-    constructor(dom, { userinput, searchData, documentLevel }) {
+    constructor(dom, {
+      userinput,
+      searchData,
+      documentLevel
+    }) {
       this.userinput = userinput;
       this.searchData = searchData;
       this.documentLevel = documentLevel;
@@ -470,7 +474,11 @@
 
   // Orchestrate user input events and translate them into search updates.
   class SearchInputController {
-    constructor({ userinput, searchData, searchResultsView }) {
+    constructor({
+      userinput,
+      searchData,
+      searchResultsView
+    }) {
       this.userinput = userinput;
       this.searchData = searchData;
       this.searchResultsView = searchResultsView;
@@ -511,8 +519,8 @@
       // the auto-completed quote pair and clear the field completely.
       if (this.previousInputValue === '""' && this.userinput.value === '"') {
         this.userinput.value = ""
-      // If the user has typed a single quote into an otherwise empty field,
-      // auto-insert the matching closing quote.
+        // If the user has typed a single quote into an otherwise empty field,
+        // auto-insert the matching closing quote.
       } else if (this.userinput.value === '"') {
         const quote = this.userinput.value;
         this.userinput.value = quote + quote;
@@ -834,8 +842,14 @@
   // =========================================================================
 
   // Initialize the UI controllers after all required DOM and meta are present.
-  const { dom, missingSelectors } = collectRequiredDom();
-  const { meta, missingSelectors: missingMetaSelectors } = collectRequiredMeta();
+  const {
+    dom,
+    missingSelectors
+  } = collectRequiredDom();
+  const {
+    meta,
+    missingSelectors: missingMetaSelectors
+  } = collectRequiredMeta();
 
   if (missingSelectors.length > 0) {
     console.assert(
@@ -853,7 +867,9 @@
     return;
   }
 
-  const { userinput } = dom;
+  const {
+    userinput
+  } = dom;
   const documentLevel = parseInt(meta.documentLevel, 10);
 
   // E2E tests rely on this startup event to type only after the async

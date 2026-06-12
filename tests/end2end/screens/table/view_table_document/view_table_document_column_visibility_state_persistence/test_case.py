@@ -33,18 +33,18 @@ class Test(E2ECase):
             screen_table = viewtype_selector.do_go_to_table()
             screen_table.assert_on_screen_table()
 
-            # Hide "Type" via the toolbar — URL gets ?hidden=Type
+            # Hide "Level" via the toolbar — URL gets ?hidden=Level
             screen_table.do_open_toolbar_panel()
-            screen_table.do_toggle_column("Type")
-            self.assert_url_contains("hidden=Type")
-            screen_table.assert_column_header_hidden("Type")
+            screen_table.do_toggle_column("Level")
+            self.assert_url_contains("hidden=Level")
+            screen_table.assert_column_header_hidden("Level")
 
             # Navigate to the same page without query params —
             # state must be restored from localStorage.
             self.reload_page_without_query()
             screen_table.assert_on_screen_table()
-            screen_table.assert_column_header_hidden("Type")
+            screen_table.assert_column_header_hidden("Level")
             # URL should reflect the storage state
-            self.assert_url_contains("hidden=Type")
+            self.assert_url_contains("hidden=Level")
 
         assert test_setup.compare_sandbox_and_expected_output()

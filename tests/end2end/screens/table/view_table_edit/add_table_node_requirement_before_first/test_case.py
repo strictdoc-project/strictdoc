@@ -34,9 +34,9 @@ class Test(E2ECase):
             assert screen_table.get_table_row_count() == 1
 
             screen_table.do_open_toolbar_panel()
-            screen_table.do_toggle_column("Type")
-            screen_table.assert_column_header_hidden("Type")
-            screen_table.assert_column_cells_hidden("Type")
+            screen_table.do_toggle_column("Statement")
+            screen_table.assert_column_header_hidden("Statement")
+            screen_table.assert_column_cells_hidden("Statement")
 
             screen_table.do_open_add_node_menu(row_order=1)
             screen_table.do_click_add_node_action(
@@ -47,8 +47,8 @@ class Test(E2ECase):
             self.sleep(0.5)
 
             assert screen_table.get_table_row_count() == 2
-            screen_table.assert_column_header_hidden("Type")
-            screen_table.assert_column_cells_hidden("Type")
+            screen_table.assert_column_header_hidden("Statement")
+            screen_table.assert_column_cells_hidden("Statement")
             new_node_mid = screen_table.get_node_mid_from_row(row_order=1)
             screen_table.assert_cell_is_not_inline_editing(
                 new_node_mid,

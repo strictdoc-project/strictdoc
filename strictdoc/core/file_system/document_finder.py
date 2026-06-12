@@ -10,6 +10,7 @@ from typing import Dict, List, Tuple, Union
 from strictdoc.backend.gcov.reader import (
     GCovJSONReader,
 )
+from strictdoc.backend.markdown.grammar_reader import MarkdownGrammarReader
 from strictdoc.backend.markdown.reader import SDMarkdownReader
 from strictdoc.backend.reqif.reqif_reader import ReqIFReader
 from strictdoc.backend.sdoc.grammar_reader import SDocGrammarReader
@@ -87,6 +88,13 @@ class DocumentFinder:
                     doc_full_path, project_config
                 )
                 assert isinstance(document_or_grammar, SDocDocument)
+            elif doc_full_path.endswith(".gra.md"):
+                markdown_grammar_reader = MarkdownGrammarReader()
+                document_or_grammar = markdown_grammar_reader.read_from_file(
+                    doc_full_path,
+                    project_config,
+                )
+                assert isinstance(document_or_grammar, DocumentGrammar)
             elif doc_full_path.endswith(".md") or doc_full_path.endswith(
                 ".markdown"
             ):
@@ -309,6 +317,7 @@ class DocumentFinder:
                     ignored_dirs=[project_config.output_dir],
                     extensions=[
                         ".sdoc",
+                        ".gra.md",
                         ".md",
                         ".markdown",
                         ".sgra",

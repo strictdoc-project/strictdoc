@@ -120,7 +120,6 @@ Intro text.
 
     assert isinstance(document, SDocDocument)
     assert document.title == "Document title"
-    assert document.ng_markdown_meta_style == "backslash"
     assert document.config.markup == SDocMarkup.MARKDOWN
 
     assert document.config.custom_metadata is not None
@@ -141,31 +140,6 @@ Intro text.
     assert requirement.node_type == "REQUIREMENT"
     assert requirement.reserved_title == "Requirement title"
     assert requirement.reserved_uid == "REQ-1"
-
-
-def test_004_roundtrip_keeps_detected_bullet_meta_style():
-    input_markdown = """\
-# Document title
-
-## Requirement title
-
-- **UID**: REQ-1
-- **Status**: Draft
-
-System shall do X.
-"""
-    expected_markdown = """\
-# Document title
-
-## Requirement title
-
-- **UID**: REQ-1
-- **Status**: Draft
-
-**Statement**: System shall do X.
-"""
-
-    _assert_markdown_roundtrip(input_markdown, expected_markdown)
 
 
 def test_005_roundtrip_keeps_detected_backslash_meta_style():
@@ -189,31 +163,6 @@ System shall do X.
 
 **Statement**: System shall do X.
 """
-
-    _assert_markdown_roundtrip(input_markdown, expected_markdown)
-
-
-def test_006_roundtrip_keeps_detected_two_space_meta_style():
-    input_markdown = """\
-# Document title
-
-## Requirement title
-
-**UID**: REQ-1{br}
-**Status**: Draft{br}
-
-System shall do X.
-""".replace("{br}", "  ")
-    expected_markdown = """\
-# Document title
-
-## Requirement title
-
-**UID**: REQ-1{br}
-**Status**: Draft{br}
-
-**Statement**: System shall do X.
-""".replace("{br}", "  ")
 
     _assert_markdown_roundtrip(input_markdown, expected_markdown)
 
@@ -391,25 +340,6 @@ line 2
     requirement = document.section_contents[0]
     assert isinstance(requirement, SDocNode)
     assert requirement.node_type == "REQUIREMENT"
-
-
-def test_013_roundtrip_mixed_meta_styles_as_section():
-    input_markdown = """\
-# Document title
-
-## Requirement title
-
-- **UID**: REQ-1
-**Status**: Draft \\
-
-System shall do X.
-"""
-
-    document, _ = _assert_markdown_roundtrip(input_markdown)
-
-    section_node = document.section_contents[0]
-    assert isinstance(section_node, SDocNode)
-    assert section_node.node_type == "SECTION"
 
 
 def test_014_roundtrip_explicit_and_implicit_content_fields():

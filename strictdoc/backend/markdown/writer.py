@@ -6,6 +6,13 @@ from strictdoc.backend.sdoc.models.document_config import (
     DocumentCustomMetadataKeyValuePair,
 )
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.grammar_element import (
+    GrammarElementFieldMultipleChoice,
+    GrammarElementFieldSingleChoice,
+    GrammarElementFieldType,
+    GrammarElementRelationType,
+    RequirementFieldType,
+)
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
@@ -17,16 +24,11 @@ from strictdoc.helpers.cast import assert_cast
 
 
 class SDMarkdownWriter:
-    default_meta_style = "backslash"
-    allowed_meta_styles = {"bullet", "backslash", "two_spaces"}
-
     @staticmethod
     def write(document: SDocDocument) -> str:
-        meta_style = SDMarkdownWriter._resolve_meta_style(document)
-
         top_level_blocks: List[str] = []
         document_meta_block = SDMarkdownWriter._serialize_document_metadata(
-            document, meta_style
+            document
         )
         if document_meta_block is not None and len(document_meta_block) > 0:
             top_level_blocks.append(document_meta_block)
@@ -37,7 +39,6 @@ class SDMarkdownWriter:
             node_block = SDMarkdownWriter._serialize_node(
                 node=node,
                 heading_level=2,
-                meta_style=meta_style,
             )
             if node_block is None or len(node_block) == 0:
                 continue
@@ -62,18 +63,20 @@ class SDMarkdownWriter:
             output_file.write(document_content)
 
     @staticmethod
-    def _resolve_meta_style(document: SDocDocument) -> str:
-        style = document.ng_markdown_meta_style
-        if style in SDMarkdownWriter.allowed_meta_styles:
-            return assert_cast(style, str)
-        return SDMarkdownWriter.default_meta_style
-
-    @staticmethod
     def _serialize_document_metadata(
-        document: SDocDocument, meta_style: str
+        document: SDocDocument,
     ) -> Optional[str]:
         metadata_entries: List[Tuple[str, str]] = []
         seen_keys = set()
+
+        if (
+            document.grammar is not None
+            and document.grammar.import_from_file is not None
+        ):
+            metadata_entries.append(
+                ("Grammar", document.grammar.import_from_file)
+            )
+            seen_keys.add("GRAMMAR")
 
         custom_metadata = document.config.custom_metadata
         if custom_metadata is not None:
@@ -102,14 +105,10 @@ class SDMarkdownWriter:
 
         if len(metadata_entries) == 0:
             return None
-        return SDMarkdownWriter._serialize_meta_fields(
-            metadata_entries, meta_style
-        )
+        return SDMarkdownWriter._serialize_meta_fields(metadata_entries)
 
     @staticmethod
-    def _serialize_node(
-        node: SDocNode, heading_level: int, meta_style: str
-    ) -> Optional[str]:
+    def _serialize_node(node: SDocNode, heading_level: int) -> Optional[str]:
         if node.autogen:
             return None
 
@@ -125,9 +124,7 @@ class SDMarkdownWriter:
         )
 
         body_blocks: List[str] = []
-        own_fields_block = SDMarkdownWriter._serialize_node_fields(
-            node, meta_style
-        )
+        own_fields_block = SDMarkdownWriter._serialize_node_fields(node)
         if own_fields_block is not None and len(own_fields_block) > 0:
             body_blocks.append(own_fields_block)
 
@@ -136,7 +133,6 @@ class SDMarkdownWriter:
                 child_block = SDMarkdownWriter._serialize_node(
                     node=child_node,
                     heading_level=heading_level + 1,
-                    meta_style=meta_style,
                 )
                 if child_block is None or len(child_block) == 0:
                     continue
@@ -148,9 +144,7 @@ class SDMarkdownWriter:
         return heading_text + "\n\n" + "\n\n".join(body_blocks)
 
     @staticmethod
-    def _serialize_node_fields(
-        node: SDocNode, meta_style: str
-    ) -> Optional[str]:
+    def _serialize_node_fields(node: SDocNode) -> Optional[str]:
         meta_fields: List[Tuple[str, str]] = []
         content_fields: List[Tuple[str, str]] = []
 
@@ -190,7 +184,7 @@ class SDMarkdownWriter:
         field_blocks: List[str] = []
         if len(meta_fields) > 0:
             field_blocks.append(
-                SDMarkdownWriter._serialize_meta_fields(meta_fields, meta_style)
+                SDMarkdownWriter._serialize_meta_fields(meta_fields)
             )
         if relations_block is not None:
             relations_field_block = f"**Relations**:\n{relations_block}"
@@ -313,23 +307,9 @@ class SDMarkdownWriter:
 
     @staticmethod
     def _serialize_meta_fields(
-        fields: Sequence[Tuple[str, str]], meta_style: str
+        fields: Sequence[Tuple[str, str]],
     ) -> str:
         lines: List[str] = []
-
-        if meta_style == "bullet":
-            for field_name, field_value in fields:
-                value = SDMarkdownWriter._meta_value_to_single_line(field_value)
-                lines.append(f"- **{field_name}**: {value}")
-            return "\n".join(lines)
-
-        if meta_style == "two_spaces":
-            for field_name, field_value in fields:
-                value = SDMarkdownWriter._meta_value_to_single_line(field_value)
-                lines.append(f"**{field_name}**: {value}  ")
-            return "\n".join(lines)
-
-        # Backslash style (default)
         field_count = len(fields)
         for field_index, (field_name, field_value) in enumerate(fields):
             value = SDMarkdownWriter._meta_value_to_single_line(field_value)
@@ -373,3 +353,94 @@ class SDMarkdownWriter:
     @staticmethod
     def _to_lf(value: str) -> str:
         return value.replace("\r\n", "\n").replace("\r", "\n")
+
+
+class MarkdownGrammarWriter:
+    @staticmethod
+    def write(grammar: DocumentGrammar) -> str:
+        output_blocks: List[str] = ["# StrictDoc Markdown Grammar"]
+
+        for element in grammar.elements:
+            element_lines = [f"## Element: {element.tag}"]
+            element_properties: List[Tuple[str, str]] = []
+            if element.property_is_composite is not None:
+                element_properties.append(
+                    (
+                        "Composite",
+                        "True" if element.property_is_composite else "False",
+                    )
+                )
+            if element.property_prefix is not None:
+                element_properties.append(("Prefix", element.property_prefix))
+            if element.property_view_style is not None:
+                element_properties.append(
+                    ("View Style", element.property_view_style)
+                )
+            if len(element_properties) > 0:
+                element_lines.append(
+                    MarkdownGrammarWriter._serialize_properties(
+                        element_properties
+                    )
+                )
+
+            for field in element.fields:
+                element_lines.append(
+                    MarkdownGrammarWriter._serialize_field(field)
+                )
+
+            if len(element.relations) > 0:
+                relation_blocks = [
+                    MarkdownGrammarWriter._serialize_relation(relation)
+                    for relation in element.relations
+                ]
+                element_lines.append(
+                    "### Relations\n\n" + "\n\n".join(relation_blocks)
+                )
+
+            output_blocks.append("\n\n".join(element_lines))
+
+        return "\n\n".join(output_blocks) + "\n"
+
+    @staticmethod
+    def write_to_file(grammar: DocumentGrammar, file_path: str) -> None:
+        with open(file_path, "w", encoding="utf8") as output_file:
+            output_file.write(MarkdownGrammarWriter.write(grammar))
+
+    @staticmethod
+    def _serialize_field(field: GrammarElementFieldType) -> str:
+        field_properties = [
+            ("Type", MarkdownGrammarWriter._serialize_field_type(field)),
+            ("Required", "True" if field.required else "False"),
+        ]
+        if field.human_title is not None:
+            field_properties.insert(1, ("Human Title", field.human_title))
+        return (
+            f"### Field: {field.title}\n\n"
+            + MarkdownGrammarWriter._serialize_properties(field_properties)
+        )
+
+    @staticmethod
+    def _serialize_field_type(field: GrammarElementFieldType) -> str:
+        if field.gef_type == RequirementFieldType.SINGLE_CHOICE:
+            assert isinstance(field, GrammarElementFieldSingleChoice)
+            return f"SingleChoice({', '.join(field.options)})"
+        if field.gef_type == RequirementFieldType.MULTIPLE_CHOICE:
+            assert isinstance(field, GrammarElementFieldMultipleChoice)
+            return f"MultipleChoice({', '.join(field.options)})"
+        return field.gef_type
+
+    @staticmethod
+    def _serialize_relation(relation: GrammarElementRelationType) -> str:
+        output = f"#### Relation: {relation.relation_type}"
+        if relation.relation_role is not None:
+            output += "\n\n" + MarkdownGrammarWriter._serialize_properties(
+                [("Role", relation.relation_role)]
+            )
+        return output
+
+    @staticmethod
+    def _serialize_properties(fields: List[Tuple[str, str]]) -> str:
+        return "\n".join(
+            f"**{field_name}**: {field_value}"
+            for field_name, field_value in fields
+        )

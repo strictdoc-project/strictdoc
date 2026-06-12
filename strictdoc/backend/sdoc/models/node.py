@@ -265,11 +265,29 @@ class SDocNode(SDocNodeIF):
         node.ng_including_document_reference = DocumentReference()
         node.ng_document_reference = DocumentReference()
         node.ng_document_reference.set_document(document)
-        node.set_field_value(
-            field_name="TITLE",
-            form_field_index=0,
-            value=title,
-        )
+        if (
+            document.grammar is not None
+            and "SECTION" in document.grammar.elements_by_type
+        ):
+            node.set_field_value(
+                field_name="TITLE",
+                form_field_index=0,
+                value=title,
+            )
+        else:
+            # The grammar does not have SECTION yet (e.g., a custom grammar
+            # stub whose file has not been loaded at parse time).
+            # Store TITLE directly; SDocValidator will validate the node type
+            # once the grammar is fully loaded.
+            if title:
+                node.ordered_fields_lookup["TITLE"] = [
+                    SDocNodeField.create_from_string(
+                        node,
+                        field_name="TITLE",
+                        field_value=title,
+                        multiline=False,
+                    )
+                ]
         return node
 
     @staticmethod

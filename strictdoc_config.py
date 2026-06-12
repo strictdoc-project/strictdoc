@@ -27,6 +27,7 @@ def create_config() -> ProjectConfig:
         include_doc_paths=[
             "/docs/",
             "/reports/",
+            "/spec/",
         ],
         exclude_doc_paths=[
             "/.*/",

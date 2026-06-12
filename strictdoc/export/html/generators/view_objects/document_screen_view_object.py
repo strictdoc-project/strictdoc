@@ -520,7 +520,7 @@ class DocumentScreenViewObject:
         Get a stable link for a given node.
 
         An example of a link produced: ../../#SDOC_UG_CONTACT
-        The copy_to_clipboard_controller.js consumes this link and
+        The copy_to_clipboard.js script consumes this link and
         transforms it into a link like: http://127.0.0.1:5111/?a=SDOC_UG_CONTACT.
         """
 

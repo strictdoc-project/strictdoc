@@ -7,8 +7,13 @@ CHECK: Published: Hello world doc
 
 RUN: %check_exists --file "%T/html/_static/mermaid/mermaid.min.js"
 
-RUN: cat %T/html/01_enabled/input.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
+RUN: cat %T/html/01_enabled/input.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML-DOC
 RUN: cat %T/html/01_enabled/input-TABLE.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
 RUN: cat %T/html/01_enabled/input-TRACE.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
 RUN: cat %T/html/01_enabled/input-DEEP-TRACE.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
 CHECK-HTML: mermaid.initialize({ startOnLoad: true });
+
+The document screen defers the initial Mermaid rendering to browser idle
+time, so it initializes with startOnLoad: false and calls mermaid.run() later.
+CHECK-HTML-DOC: mermaid.initialize({ startOnLoad: false });
+CHECK-HTML-DOC: mermaid.run()

@@ -1,13 +1,14 @@
 {#
-  Field with optional copy button — part of the copy_to_clipboard controller (copy_to_clipboard_controller.js).
-  The controller is mounted on the parent sdoc-node, not here.
+  Field with optional copy button — handled by the delegated document-level listener
+  in copy_to_clipboard.js.
 
   To enable the copy button, declare before including this template:
     {% set copy_to_clipboard = True %}
 
-  When enabled, the controller reads the text content of sdoc-field-content at click time.
+  When enabled, the delegated copy_to_clipboard.js script reads the text content of
+  sdoc-field-content at click time.
 
-  Expected structure (used by the controller):
+  Expected structure (used by copy_to_clipboard.js):
     sdoc-field                           — boundary for closest() lookup
     sdoc-field-content                   — source of the text to copy
     sdoc-field-service                   — feedback root for icons and cover animation

@@ -333,6 +333,11 @@ C-only constructs were fed to the C++ parser.
 13\) Fixed: Markdown documents containing exactly one section and one
 requirement now parse correctly. A regression introduced in the Markdown grammar
 work caused this common structure to be rejected.
+14\) The web interface renders large documents faster. Copy-to-clipboard buttons
+are now handled by a single delegated event listener instead of one listener
+per node, and the initial MathJax typesetting and Mermaid diagram rendering are
+deferred to browser idle time so they no longer block the first paint of the
+document.
 <<<
 
 [[/SECTION]]

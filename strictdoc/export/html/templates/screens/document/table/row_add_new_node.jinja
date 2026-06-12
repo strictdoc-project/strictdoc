@@ -45,10 +45,11 @@
             <ul class="table-add-node__actions"
                 js-table_view_edit-add-node-actions>
               {%- for element in view_object.get_grammar_elements() -%}
+                <li class="table-add-node__element">{{ element.tag }}:</li>
                 {%- set creation_blocker = view_object.get_table_element_creation_blocker(element) -%}
                 {%- set element_disabled = creation_blocker is not none -%}
                 {%- if can_add_before_next -%}
-                  <li class="table-add-node__action">
+                  <li class="table-add-node__action" data-whereto="before">
                     <button class="table-add-node__action-button"
                             type="button"
                             js-table_view_edit-add-node-action
@@ -57,17 +58,17 @@
                             data-reference-mid="{{ next_node.reserved_mid }}"
                             data-element-type="{{ element.tag }}"
                             data-whereto="before"
+                            title="Add {{ element.tag }} before next"
                             {% if element_disabled %}
                             disabled
                             data-disabled-reason="{{ creation_blocker }}"
                             {% endif %}>
-                      <span class="table-add-node__action-type">{{ element.tag }}</span>
-                      <span class="table-add-node__action-placement">Before next</span>
+                      {% include "icons/ico16_add_above.svg" %}
                     </button>
                   </li>
                 {%- endif -%}
                 {%- if can_add_after_prev -%}
-                  <li class="table-add-node__action">
+                  <li class="table-add-node__action" data-whereto="after">
                     <button class="table-add-node__action-button"
                             type="button"
                             js-table_view_edit-add-node-action
@@ -76,17 +77,17 @@
                             data-reference-mid="{{ prev_node.reserved_mid }}"
                             data-element-type="{{ element.tag }}"
                             data-whereto="after"
+                            title="Add {{ element.tag }} after previous"
                             {% if element_disabled %}
                             disabled
                             data-disabled-reason="{{ creation_blocker }}"
                             {% endif %}>
-                      <span class="table-add-node__action-type">{{ element.tag }}</span>
-                      <span class="table-add-node__action-placement">After previous</span>
+                      {% include "icons/ico16_add_below.svg" %}
                     </button>
                   </li>
                 {%- endif -%}
                 {%- if can_add_child_of_prev -%}
-                  <li class="table-add-node__action">
+                  <li class="table-add-node__action" data-whereto="child">
                     <button class="table-add-node__action-button"
                             type="button"
                             js-table_view_edit-add-node-action
@@ -95,12 +96,12 @@
                             data-reference-mid="{{ prev_node.reserved_mid }}"
                             data-element-type="{{ element.tag }}"
                             data-whereto="child"
+                            title="Add {{ element.tag }} as child of previous"
                             {% if element_disabled %}
                             disabled
                             data-disabled-reason="{{ creation_blocker }}"
                             {% endif %}>
-                      <span class="table-add-node__action-type">{{ element.tag }}</span>
-                      <span class="table-add-node__action-placement">Child of previous</span>
+                      {% include "icons/ico16_add_child.svg" %}
                     </button>
                   </li>
                 {%- endif -%}

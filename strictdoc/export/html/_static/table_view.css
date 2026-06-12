@@ -803,28 +803,50 @@
 }
 
 .table-add-node__actions {
-  display: flex;
+  display: grid;
+  grid-template-columns:  minmax(min-content, max-content)
+                          minmax(min-content, max-content)
+                          minmax(min-content, max-content)
+                          minmax(min-content, max-content);
+
   gap: calc(var(--base-rhythm) * 0.5);
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
+.table-add-node__element {
+  display: flex;
+  gap: calc(var(--base-rhythm) * 0.5);
+
+  /* padding: var(--base-rhythm); */
+  text-transform: uppercase;
+  color: var(--color-fg-secondary);
+  font-weight: 700;
+  font-size: var(--font-size-xxsm);
+  display: flex;
+  align-items: center;
+
+  grid-column: 1 / 2;
+}
+
+.table-add-node__action[data-whereto="before"] { grid-column: 2 / 3; }
+.table-add-node__action[data-whereto="after"] { grid-column: 3 / 4; }
+.table-add-node__action[data-whereto="child"] { grid-column: 4 / 5; }
+
 .table-add-node__action {
   margin: 0;
 }
 
 .table-add-node__action-button {
-  width: 100%;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: calc(var(--base-rhythm) * 0.25);
-  padding: calc(var(--base-rhythm) * 0.75);
-  border: 1px solid var(--color-border);
-  background: var(--color-bg-contrast);
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--base-rhythm) / 2);
+  border: none;
+  border-radius: calc(var(--base-rhythm) / 2);
+  background: transparent;
   color: var(--color-fg-main);
-  text-align: left;
 }
 
 .table-add-node__action-button:not(:disabled) {
@@ -832,22 +854,13 @@
 }
 
 .table-add-node__action-button:not(:disabled):hover {
-  border-color: var(--color-fg-accent);
-  background: var(--color-bg-accent);
+  background-color: var(--color-bg-secondary);
+  color: var(--color-fg-accent);
 }
 
 .table-add-node__action-button:disabled {
   cursor: not-allowed;
-  opacity: 0.55;
-}
-
-.table-add-node__action-type {
-  font-weight: bold;
-}
-
-.table-add-node__action-placement {
-  font-size: 0.85rem;
-  color: var(--color-fg-secondary);
+  opacity: 0.4;
 }
 
 tr[data-node-created="true"] {

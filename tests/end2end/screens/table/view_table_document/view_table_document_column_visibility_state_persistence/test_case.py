@@ -47,4 +47,9 @@ class Test(E2ECase):
             # URL should reflect the storage state
             self.assert_url_contains("hidden=Level")
 
+            # This test intentionally leaves "Level" hidden in localStorage
+            # to verify persistence. Clear it so it doesn't leak into other
+            # tests sharing this browser session (--reuse-session).
+            self.clear_local_storage()
+
         assert test_setup.compare_sandbox_and_expected_output()

@@ -39,4 +39,10 @@ class Test(E2ECase):
             screen_table.assert_rows_of_type_hidden("SECTION")
             screen_table.assert_rows_of_type_visible("REQUIREMENT")
 
+            # This test intentionally leaves "SECTION" rows hidden in
+            # localStorage to verify persistence. Clear it so it doesn't
+            # leak into other tests sharing this browser session
+            # (--reuse-session).
+            self.clear_local_storage()
+
         assert test_setup.compare_sandbox_and_expected_output()

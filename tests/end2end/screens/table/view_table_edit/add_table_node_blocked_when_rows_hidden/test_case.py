@@ -41,4 +41,9 @@ class Test(E2ECase):
                 row_order=1,
             )
 
+            # "SECTION" rows are left hidden, which persists to
+            # localStorage. Clear it so it doesn't leak into other tests
+            # sharing this browser session (--reuse-session).
+            self.clear_local_storage()
+
         assert test_setup.compare_sandbox_and_expected_output()

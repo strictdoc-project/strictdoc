@@ -61,6 +61,18 @@ This release contains the following enhancements:
 1\) The JUnit XML test report reader now maps testcase ``<properties>`` to
 fields on generated ``TEST_RESULT`` nodes.
 
+2\) The web interface now renders large documents in lazily loaded chunks.
+Documents containing more than ``chunked_documents_threshold`` nodes (200 by
+default, configurable in ``strictdoc.toml``, 0 disables chunking) initially
+load only the first chunk of nodes together with the table of contents, and
+the remaining chunks are fetched automatically as the user scrolls. This
+keeps documents with thousands of requirements responsive in the editing GUI.
+
+3\) Lazily loaded documents preserve the content currently visible to the user
+when placeholders are replaced by rendered chunks of different heights.
+Viewport positioning is also coordinated with node creation, deletion, moving,
+and editing.
+
 4\) Fixed: the TABLE VIEW now renders the Relation cell as non-editable for node
 types whose grammar does not declare relations.
 <<<

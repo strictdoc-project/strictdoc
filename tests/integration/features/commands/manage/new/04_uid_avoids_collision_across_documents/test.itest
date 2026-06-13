@@ -1,0 +1,10 @@
+#
+# When a project tree has multiple documents, manage new shall read all
+# documents before generating the UID to avoid collisions across documents.
+# doc_a has REQ-1 and doc_b has REQ-2, so the new node shall receive REQ-3.
+#
+
+RUN: cp %S/doc_a.sdoc %T/
+RUN: cp %S/doc_b.sdoc %T/
+RUN: %strictdoc manage new %T/ --parent-uid-or-mid SEC-1
+RUN: %diff %S/doc_a.expected.sdoc %T/doc_a.sdoc

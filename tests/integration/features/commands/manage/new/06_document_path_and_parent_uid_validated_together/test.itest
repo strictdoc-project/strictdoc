@@ -1,0 +1,10 @@
+#
+# When both --document-path and --parent-uid-or-mid are given and the parent
+# node is in the specified document, manage new shall succeed.
+#
+
+RUN: cp %S/doc_a.sdoc %T/
+RUN: cp %S/doc_b.sdoc %T/
+RUN: %strictdoc manage new %T/ --document-path %T/doc_a.sdoc --parent-uid-or-mid SEC-A
+RUN: %diff %S/doc_a.expected.sdoc %T/doc_a.sdoc
+RUN: %diff %S/doc_b.sdoc %T/doc_b.sdoc

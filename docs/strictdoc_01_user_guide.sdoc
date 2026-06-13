@@ -2692,6 +2692,44 @@ A section-level requirement mask:
 
 [[/SECTION]]
 
+[[SECTION]]
+MID: b881ce79cf9546aa9019237072b0f1c0
+TITLE: Creating a new node
+
+[TEXT]
+MID: fb2d94f9dbc144d6b545286c3ab08c9d
+STATEMENT: >>>
+To create a new node in a document:
+
+.. code:: text
+
+    strictdoc manage new <path-to-project-tree>
+
+The command adds a new node at the end of the target document. The node receives a unique MID and the next available UID for its document. Required fields (as defined by the document grammar) are set to ``TBD``; non-required fields are left empty.
+
+StrictDoc reads all documents in the project tree before creating the node so that the generated UID does not collide with UIDs in any other document.
+
+**Selecting the target document**
+
+When the project tree contains more than one document, use ``--document-path`` to specify which document to add the node to:
+
+.. code:: text
+
+    strictdoc manage new <path-to-project-tree> --document-path <path-to-document>
+
+**Selecting the parent node**
+
+Use ``--parent-uid-or-mid`` to add the new node inside an existing document or composite (section) node:
+
+.. code:: text
+
+    strictdoc manage new <path-to-project-tree> --parent-uid-or-mid <uid-or-mid>
+
+Both options can be combined. When both are given, StrictDoc validates that the specified parent node is actually present in the specified document.
+<<<
+
+[[/SECTION]]
+
 [[/SECTION]]
 
 [[SECTION]]

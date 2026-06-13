@@ -17,6 +17,7 @@ from strictdoc.commands.launcher_command import (
     is_launcher_available,
 )
 from strictdoc.commands.manage_autouid_command import ManageAutoUIDCommand
+from strictdoc.commands.manage_new_command import ManageNewCommand
 from strictdoc.commands.new_command import NewCommand
 from strictdoc.commands.server import ServerCommand
 from strictdoc.commands.version_command import VersionCommand
@@ -34,7 +35,7 @@ def create_command_registry() -> Dict[str, Any]:
         "about": AboutCommand,
         "export": ExportCommand,
         "import": {"excel": ImportExcelCommand, "reqif": ImportReqIFCommand},
-        "manage": {"auto-uid": ManageAutoUIDCommand},
+        "manage": {"auto-uid": ManageAutoUIDCommand, "new": ManageNewCommand},
         "new": NewCommand,
         "server": ServerCommand,
         "version": VersionCommand,

@@ -1,0 +1,10 @@
+#
+# When --document-path is given and the tree has multiple documents, manage new
+# shall add the new node to the specified document's root level.
+#
+
+RUN: cp %S/doc_a.sdoc %T/
+RUN: cp %S/doc_b.sdoc %T/
+RUN: %strictdoc manage new %T/ --document-path %T/doc_a.sdoc
+RUN: %diff %S/doc_a.expected.sdoc %T/doc_a.sdoc
+RUN: %diff %S/doc_b.sdoc %T/doc_b.sdoc

@@ -1,0 +1,8 @@
+#
+# When a project tree has a single document and no --parent-uid-or-mid is
+# given, manage new shall add a new node at the document root level.
+#
+
+RUN: cp %S/input.sdoc %T/
+RUN: %strictdoc manage new %T/
+RUN: %diff %S/input.expected.sdoc %T/input.sdoc

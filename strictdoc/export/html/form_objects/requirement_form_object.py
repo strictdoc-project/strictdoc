@@ -976,6 +976,7 @@ class RequirementFormObject(ErrorObject):
         if (
             grammar_element_field.gef_type == RequirementFieldType.SINGLE_CHOICE
             and field_0.field_value not in choice_grammar_element_field.options
+            and field_0.field_value not in ("TBD", "TBC")
         ):
             self.add_error(
                 grammar_element_field.title,
@@ -993,6 +994,7 @@ class RequirementFormObject(ErrorObject):
             ]
             if all(
                 choice in choice_grammar_element_field.options
+                or choice in ("TBD", "TBC")
                 for choice in choices
             ):
                 field_0.field_value = ", ".join(choices)

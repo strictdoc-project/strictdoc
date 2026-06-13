@@ -60,14 +60,7 @@
           {%- else %}
           <td class="content-view-td content-view-td-title content-view-td--dimmed"
               data-field-name="TITLE">
-            {%- if requirement.reserved_title %}
-              {%- with sdoc_entity=requirement -%}
-                {% include "components/anchor/index.jinja" %}
-              {%- endwith %}
-              {%- with field_content = requirement.reserved_title %}
-                {%- include "screens/document/table/field_display_mode/title.jinja" -%}
-              {%- endwith -%}
-            {%- endif -%}
+            <div class="content-view-td--dimmed_tips"></div>
           </td>
           {%- endif %}
 
@@ -92,11 +85,7 @@
           {%- else %}
           <td class="content-view-td content-view-td-content content-view-td--dimmed"
               data-field-name="STATEMENT">
-            {%- if requirement.has_reserved_statement() -%}
-              {%- with field_content = view_object.render_node_statement(requirement) %}
-                {%- include "screens/document/table/field_display_mode/statement.jinja" -%}
-              {%- endwith -%}
-            {%- endif -%}
+            <div class="content-view-td--dimmed_tips"></div>
           </td>
           {%- endif %}
 
@@ -121,11 +110,7 @@
           {%- else %}
           <td class="content-view-td content-view-td-content content-view-td--dimmed"
               data-field-name="RATIONALE">
-            {%- if requirement.rationale -%}
-              {%- with field_content = view_object.render_node_rationale(requirement) %}
-                {%- include "screens/document/table/field_display_mode/rationale.jinja" -%}
-              {%- endwith -%}
-            {%- endif -%}
+            <div class="content-view-td--dimmed_tips"></div>
           </td>
           {%- endif %}
 
@@ -150,11 +135,7 @@
           {%- else %}
           <td class="content-view-td content-view-td-content content-view-td--dimmed"
               data-field-name="COMMENT">
-            {%- for comment_field_ in requirement.get_comment_fields() -%}
-            {%- with field_content = view_object.render_node_field(comment_field_) %}
-              {%- include "screens/document/table/field_display_mode/comment.jinja" -%}
-            {%- endwith -%}
-            {%- endfor -%}
+            <div class="content-view-td--dimmed_tips"></div>
           </td>
           {%- endif %}
 

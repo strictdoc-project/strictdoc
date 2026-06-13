@@ -79,10 +79,6 @@
 #}
 <td class="{{ td_class }} content-view-td--dimmed"
     data-field-name="{{ field_title }}">
-  {%- if field_value %}
-    {%- with field_content = field_value %}
-      {%- include "screens/document/table/field_display_mode/_base_field_component.jinja" -%}
-    {%- endwith -%}
-  {%- endif %}
+  <div class="content-view-td--dimmed_tips"></div>
 </td>
 {%- endif %}

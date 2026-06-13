@@ -13,19 +13,39 @@
   /* *** */
   border-collapse: collapse;
   width: 100%;
-  background-color: var(--color-bg-contrast);
   /* for sticky toolbar */
   margin-top:  calc(var(--base-rhythm) * 6);
   /* create a stacking context to contain child z-index values */
   position: relative;
   z-index: 1;
+
+  background-color: var(--color-bg-main);
+background-image:
+
+  radial-gradient(
+    circle,
+    rgba(0, 0, 0, 0.1) 1px,
+    transparent 1px
+  ),
+  radial-gradient(
+    circle,
+    rgba(0, 0, 0, 0.1) 1px,
+    transparent 1px
+  );
+  background-size: 10px 10px;
+  background-position:
+    0 0,
+    5px 5px;
+  }
+
+.content-view-table tr {
+  background-color: transparent;
 }
 
 .content-view-table_sticky-header {
   position: sticky;
   top: calc(-6.6 * var(--base-rhythm)); /* = layout .header */
   z-index: 102; /* above sticky 'type' column, above content-view__add_new_row-TR */
-  background: var(--color-bg-contrast);
 }
 
 .content-view-th,
@@ -36,6 +56,7 @@
 
 .content-view-td {
   padding: var(--table-gap);
+  background-color: var(--color-bg-contrast);
 }
 
 .content-view-th {
@@ -44,75 +65,10 @@
   background-color: var(--color-border);
   font-size: 10px;
   font-weight: bold;
-  background-color: var(--color-bg-ui);
-  color: var(--color-bg-main);
   padding: var(--base-rhythm) var(--table-gap);
-}
-
-.content-view-th__content {
-  display: flex;
-  align-items: center;
-  gap: calc(var(--base-rhythm) * 0.5);
-  white-space: nowrap;
-}
-
-.content-view-th__label {
-  flex: 1;
-}
-
-/* Sort icon button inside <th> */
-.content-view-th__sort-btn {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  border: none;
-  background: none;
-  cursor: pointer;
-  color: inherit;
-  opacity: 0.4;
-  line-height: 0;
-}
-
-.content-view-th__sort-btn:hover {
-  opacity: 1;
-}
-
-.content-view-th[data-sort] {
-  background-color: var(--color-fg-accent);
-  /* color: var(--color-bg-ui); */
-}
-
-.content-view-th[data-sort] .content-view-th__sort-btn {
-  opacity: 1;
-}
-
-/* Three-state sort icon: controlled via CSS on parent <th> data-sort attribute */
-.icon_sort .sort-none  { display: initial; }
-.icon_sort .sort-asc   { display: none; }
-.icon_sort .sort-desc  { display: none; }
-
-.content-view-th[data-sort="asc"] .icon_sort .sort-none  { display: none; }
-.content-view-th[data-sort="asc"] .icon_sort .sort-asc   { display: initial; }
-.content-view-th[data-sort="asc"] .icon_sort .sort-desc  { display: none; }
-
-.content-view-th[data-sort="desc"] .icon_sort .sort-none  { display: none; }
-.content-view-th[data-sort="desc"] .icon_sort .sort-asc   { display: none; }
-.content-view-th[data-sort="desc"] .icon_sort .sort-desc  { display: initial; }
-
-.table-toolbar__sort-reset button {
+  color: var(--color-bg-main);
   background-color: var(--color-bg-ui);
-  color: var(--color-bg-main);
 }
-.table-toolbar__sort-reset button:hover {
-  background-color: var(--color-fg-accent);
-  color: var(--color-bg-main);
-}
-/* Reset sort button in toolbar shows neutral icon (both arrows = "sorted, click to reset") */
-.table-toolbar__sort-reset .icon_sort .sort-none  { display: initial; }
-.table-toolbar__sort-reset .icon_sort .sort-asc   { display: none; }
-.table-toolbar__sort-reset .icon_sort .sort-desc  { display: none; }
 
 .content-view-td-type {
   background-color: var(--color-bg-ui);
@@ -174,10 +130,14 @@
   opacity: 1;
 }
 
-.content-view-td-level,
-.content-view-td-meta {
-  background-color: var(--color-bg-main);
+.content-view-td-level {
   font-size: .85em;
+  background-color: var(--color-bg-main);
+}
+
+.content-view-td-meta {
+  font-size: .85em;
+  /* background-color: var(--color-fg-secondary-invert); */
 }
 
 .content-view-td-title {
@@ -237,14 +197,71 @@
 }
 
 .content-view-td--dimmed {
-  background:repeating-linear-gradient(
-    -45deg,
-    rgba(242, 245, 249, .5),
-    rgba(242, 245, 249, .5) 10px,
-    rgba(242, 245, 249, 1) 10px,
-    rgba(242, 245, 249, 1) 20px
-  );
+  /* inherit from table */
+  background: transparent;
+  position: relative;
 }
+
+.content-view-td--dimmed_tips {
+  position: absolute;
+  inset: 0;
+}
+
+/* sort */
+
+.content-view-th__content {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--base-rhythm) * 0.5);
+  white-space: nowrap;
+}
+
+.content-view-th__label {
+  flex: 1;
+}
+
+/* Sort icon button inside <th> */
+.content-view-th__sort-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: inherit;
+  opacity: 0.4;
+  line-height: 0;
+}
+
+.content-view-th__sort-btn:hover {
+  opacity: 1;
+}
+
+.content-view-th[data-sort] {
+  background-color: var(--color-fg-accent);
+  /* color: var(--color-bg-ui); */
+}
+
+.content-view-th[data-sort] .content-view-th__sort-btn {
+  opacity: 1;
+}
+
+/* Three-state sort icon: controlled via CSS on parent <th> data-sort attribute */
+.icon_sort .sort-none  { display: initial; }
+.icon_sort .sort-asc   { display: none; }
+.icon_sort .sort-desc  { display: none; }
+
+.content-view-th[data-sort="asc"] .icon_sort .sort-none  { display: none; }
+.content-view-th[data-sort="asc"] .icon_sort .sort-asc   { display: initial; }
+.content-view-th[data-sort="asc"] .icon_sort .sort-desc  { display: none; }
+
+.content-view-th[data-sort="desc"] .icon_sort .sort-none  { display: none; }
+.content-view-th[data-sort="desc"] .icon_sort .sort-asc   { display: none; }
+.content-view-th[data-sort="desc"] .icon_sort .sort-desc  { display: initial; }
+
+/* toolbar */
 
 .table-toolbar__btn--edit {
   text-transform: uppercase;
@@ -255,6 +272,21 @@
   color: #fff;
   border-color: transparent;
 }
+
+.table-toolbar__sort-reset button {
+  background-color: var(--color-bg-ui);
+  color: var(--color-bg-main);
+}
+.table-toolbar__sort-reset button:hover {
+  background-color: var(--color-fg-accent);
+  color: var(--color-bg-main);
+}
+/* Reset sort button in toolbar shows neutral icon (both arrows = "sorted, click to reset") */
+.table-toolbar__sort-reset .icon_sort .sort-none  { display: initial; }
+.table-toolbar__sort-reset .icon_sort .sort-asc   { display: none; }
+.table-toolbar__sort-reset .icon_sort .sort-desc  { display: none; }
+
+/* editable */
 
 .editable-cell {
   /* TD class: to position the cell indicator */
@@ -673,10 +705,15 @@
   /* Even though some rows are hidden,
      the rows containing the “Add New Node” button are still visible
    */
-  border-left: 1px solid #666;
-  border-right: 1px solid #666;
+  /* border-left: 1px solid #666; */
+  /* border-right: 1px solid #666; */
   border-bottom: 1px solid #666;
   background: var(--color-bg-contrast);
+  background-color: var(--color-bg-main);
+}
+
+.table-add-node {
+  padding: var(--base-rhythm) 0;
 }
 
 .add_new_row_handler {
@@ -705,9 +742,9 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 16px;
-  height: 16px;
-  font-size: 14px;
+  width: 18px;
+  height: 18px;
+  font-size: 16px;
   font-weight: bold;
   border-radius: 50%;
   border-width: 1px;

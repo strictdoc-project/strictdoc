@@ -119,7 +119,10 @@ class SDocDocumentIterator:
                 for subnode_ in node.section_contents:
                     if subnode_.ng_resolved_custom_level is None and not (
                         isinstance(subnode_, SDocNode)
-                        and subnode_.node_type == "TEXT"
+                        and (
+                            subnode_.node_type == "TEXT"
+                            or subnode_.reserved_title is None
+                        )
                     ):
                         current_number += 1
 
@@ -153,7 +156,10 @@ class SDocDocumentIterator:
             for subnode_ in node.section_contents:
                 if subnode_.ng_resolved_custom_level is None and not (
                     isinstance(subnode_, SDocNode)
-                    and subnode_.node_type == "TEXT"
+                    and (
+                        subnode_.node_type == "TEXT"
+                        or subnode_.reserved_title is None
+                    )
                 ):
                     current_number += 1
                 yield from self.all_node_content(

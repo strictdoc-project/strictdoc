@@ -143,6 +143,41 @@ class DocumentScreenViewObject:
     ) -> str:
         output: str = ""
 
+        if node_updated:
+            # The TOC is rendered before the individual nodes intentionally:
+            # toc.jinja calls table_of_contents() -> all_content(), which
+            # iterates every node and writes the correct title_number_string
+            # into each node's context as a side effect. The node templates
+            # rendered below then read those values and display the right
+            # section numbers. Reversing this order would cause nodes whose
+            # level changed (e.g. a title was added or removed) to render
+            # with stale numbers.
+            #
+            # FIXME: This is a bit hacky. A cleaner solution would be to
+            # separate the calculation of title_number_string from the rendering
+            # of the TOC, so that the side effect is explicit and not tied to
+            # the TOC template.
+            toc_content = self.jinja_environment.render_template_as_markup(
+                "screens/document/_shared/toc.jinja", view_object=self
+            )
+            output += render_turbo_stream(
+                content=toc_content,
+                action="update",
+                target="frame-toc",
+            )
+
+            viewtype_menu_content = (
+                self.jinja_environment.render_template_as_markup(
+                    "screens/document/_shared/viewtype_menu.jinja",
+                    view_object=self,
+                )
+            )
+            output += render_turbo_stream(
+                content=viewtype_menu_content,
+                action="update",
+                target="frame-viewtype-menu",
+            )
+
         for node_ in nodes:
             template_folder: str
             if isinstance(node_, SDocDocument):
@@ -163,28 +198,6 @@ class DocumentScreenViewObject:
                 content=content,
                 action="replace",
                 target=f"article-{node_.reserved_mid}",
-            )
-
-        if node_updated:
-            toc_content = self.jinja_environment.render_template_as_markup(
-                "screens/document/_shared/toc.jinja", view_object=self
-            )
-            output += render_turbo_stream(
-                content=toc_content,
-                action="update",
-                target="frame-toc",
-            )
-
-            viewtype_menu_content = (
-                self.jinja_environment.render_template_as_markup(
-                    "screens/document/_shared/viewtype_menu.jinja",
-                    view_object=self,
-                )
-            )
-            output += render_turbo_stream(
-                content=viewtype_menu_content,
-                action="update",
-                target="frame-viewtype-menu",
             )
 
         return output

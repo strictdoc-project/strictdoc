@@ -74,3 +74,42 @@ def test_07_renders_anchor_link_as_raw_html_not_escaped():
     html_output = MarkdownToHtmlFragmentWriter.write(markdown_input)
 
     assert html_output == '<p><a href="foo.bar">🔗\u00a0Title</a></p>\n'
+
+
+def test_08_renders_inline_math_formula():
+    markdown_input = "The mass is $m_d = 120\\,kg$."
+
+    html_output = MarkdownToHtmlFragmentWriter.write(markdown_input)
+
+    assert (
+        html_output
+        == '<p>The mass is <span class="math notranslate nohighlight">\\( m_d = 120\\,kg \\)</span>.</p>\n'
+    )
+
+
+def test_09_renders_display_math_formula():
+    markdown_input = "The formula $$E = mc^2$$."
+
+    html_output = MarkdownToHtmlFragmentWriter.write(markdown_input)
+
+    assert (
+        html_output
+        == '<p>The formula <div class="math notranslate nohighlight">\\[ E = mc^2 \\]</div>.</p>\n'
+    )
+
+
+def test_10_renders_two_inline_math_formulas_in_one_paragraph():
+    markdown_input = (
+        "The dry mass $m_d = 120\\,kg$ and propellant mass $m_p = 30\\,kg$."
+    )
+
+    html_output = MarkdownToHtmlFragmentWriter.write(markdown_input)
+
+    assert (
+        '<span class="math notranslate nohighlight">\\( m_d = 120\\,kg \\)</span>'
+        in html_output
+    )
+    assert (
+        '<span class="math notranslate nohighlight">\\( m_p = 30\\,kg \\)</span>'
+        in html_output
+    )

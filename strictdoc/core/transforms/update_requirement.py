@@ -24,7 +24,11 @@ from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.free_text import FreeTextContainer
 from strictdoc.backend.sdoc.models.grammar_element import GrammarElement
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
-from strictdoc.backend.sdoc.models.model import SDocDocumentIF, SDocNodeIF
+from strictdoc.backend.sdoc.models.model import (
+    RequirementFieldName,
+    SDocDocumentIF,
+    SDocNodeIF,
+)
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
 from strictdoc.backend.sdoc.models.reference import (
@@ -217,11 +221,13 @@ class CreateOrUpdateNodeCommand:
         document: SDocDocument
         existing_uid: Optional[str]
         existing_node_fields: List[SDocNodeField] = []
+        old_title_is_none: bool = False
         if isinstance(self.node_info, UpdateNodeInfo):
             requirement = self.node_info.node_to_update
             document = assert_cast(requirement.get_document(), SDocDocument)
 
             existing_uid = requirement.reserved_uid
+            old_title_is_none = requirement.reserved_title is None
 
             existing_node_fields = list(requirement.enumerate_fields())
 
@@ -331,6 +337,22 @@ class CreateOrUpdateNodeCommand:
                 requirement, form_object, map_form_to_requirement_fields
             )
             traceability_index.create_requirement(requirement=requirement)
+
+        # Recalculate ng_resolved_custom_level based on new title state.
+        # This mirrors the logic in processor.py which sets it during parsing.
+        # When a title is added/removed via the form, the value must be updated
+        # to keep level numbering consistent.
+        if (
+            RequirementFieldName.LEVEL not in requirement.ordered_fields_lookup
+            and document.config.auto_levels
+        ):
+            if (
+                requirement.reserved_title is None
+                or not document.config.is_requirement_in_toc()
+            ):
+                requirement.ng_resolved_custom_level = "None"
+            else:
+                requirement.ng_resolved_custom_level = None
 
         action_object = UpdateRequirementActionObject()
         action_object.existing_references_uids.update(
@@ -467,10 +489,28 @@ class CreateOrUpdateNodeCommand:
 
         traceability_index.update_last_updated()
 
+        new_title_is_none = requirement.reserved_title is None
+
+        # When a node's title presence changes (added or removed), the TOC
+        # level numbers of all sibling nodes shift. Every node in the document
+        # must be re-rendered so the browser sees the correct numbers.
+        # Nodes whose title presence did not change do not trigger this: only
+        # the edited node (already in the set) needs re-rendering.
+        if old_title_is_none != new_title_is_none:
+            nodes_stack = list(document.section_contents)
+            while nodes_stack:
+                node_ = nodes_stack.pop()
+                if isinstance(node_, SDocNode):
+                    action_object.this_document_requirements_to_update.add(
+                        node_
+                    )
+                    if node_.section_contents is not None:
+                        nodes_stack.extend(node_.section_contents)
+
         return CreateOrUpdateNodeResult(
             this_document_requirements_to_update=list(
                 action_object.this_document_requirements_to_update
-            )
+            ),
         )
 
     def _update_traceability_index_with_links_and_anchors(

@@ -1,0 +1,19 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[REQUIREMENT]
+TITLE: Requirement 1
+STATEMENT: >>>
+Requirement 1 statement.
+<<<
+
+[REQUIREMENT]
+STATEMENT: >>>
+Requirement 2 statement.
+<<<
+
+[REQUIREMENT]
+TITLE: Requirement 3
+STATEMENT: >>>
+Requirement 3 statement.
+<<<

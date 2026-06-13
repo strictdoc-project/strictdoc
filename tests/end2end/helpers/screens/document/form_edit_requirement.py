@@ -141,6 +141,9 @@ class Form_EditRequirement(Form):  # pylint: disable=invalid-name
         assert isinstance(field_value, str)
         super().do_fill_in("TITLE", field_value)
 
+    def do_clear_field_title(self) -> None:
+        super().do_clear_field("TITLE")
+
     def do_fill_in_field_statement(self, field_value: str) -> None:
         assert isinstance(field_value, str)
         super().do_fill_in("STATEMENT", field_value)

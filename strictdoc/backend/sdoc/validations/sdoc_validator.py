@@ -312,7 +312,10 @@ class SDocValidator:
                     document_grammar=document_grammar,
                     path_to_sdoc_file=path_to_sdoc_file,
                 )
-            if requirement_field_text_value not in grammar_field.options:
+            if (
+                requirement_field_text_value not in grammar_field.options
+                and requirement_field_text_value not in ("TBD", "TBC")
+            ):
                 raise StrictDocSemanticError.invalid_choice_field(
                     node=requirement,
                     document_grammar=document_grammar,
@@ -338,7 +341,10 @@ class SDocValidator:
                 requirement_field_text_value.split(", ")
             )
             for component in requirement_field_value_components:
-                if component not in grammar_field.options:
+                if component not in grammar_field.options and component not in (
+                    "TBD",
+                    "TBC",
+                ):
                     raise StrictDocSemanticError.invalid_multiple_choice_field(
                         node=requirement,
                         document_grammar=document_grammar,

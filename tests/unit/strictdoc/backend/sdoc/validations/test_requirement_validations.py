@@ -21,6 +21,166 @@ def test_03_negative():
     assert multi_choice_regex_match("A,B") is False
 
 
+def test_10_single_choice_tbd_accepted():
+    input_sdoc = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: CHOICE_FIELD
+    TYPE: SingleChoice(A, B, C)
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+
+[REQUIREMENT]
+CHOICE_FIELD: TBD
+""".lstrip()
+
+    reader = SDReader()
+    document = reader.read(input_sdoc)
+
+    document_iterator = SDocDocumentIterator(document)
+    for node_, _ in document_iterator.all_content(print_fragments=False):
+        SDocValidator.validate_node(
+            node_,
+            document_grammar=document.grammar,
+            path_to_sdoc_file="test.sdoc",
+        )
+
+
+def test_11_single_choice_tbc_accepted():
+    input_sdoc = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: CHOICE_FIELD
+    TYPE: SingleChoice(A, B, C)
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+
+[REQUIREMENT]
+CHOICE_FIELD: TBC
+""".lstrip()
+
+    reader = SDReader()
+    document = reader.read(input_sdoc)
+
+    document_iterator = SDocDocumentIterator(document)
+    for node_, _ in document_iterator.all_content(print_fragments=False):
+        SDocValidator.validate_node(
+            node_,
+            document_grammar=document.grammar,
+            path_to_sdoc_file="test.sdoc",
+        )
+
+
+def test_12_multiple_choice_tbd_accepted():
+    input_sdoc = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: CHOICE_FIELD
+    TYPE: MultipleChoice(A, B, C)
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+
+[REQUIREMENT]
+CHOICE_FIELD: TBD
+""".lstrip()
+
+    reader = SDReader()
+    document = reader.read(input_sdoc)
+
+    document_iterator = SDocDocumentIterator(document)
+    for node_, _ in document_iterator.all_content(print_fragments=False):
+        SDocValidator.validate_node(
+            node_,
+            document_grammar=document.grammar,
+            path_to_sdoc_file="test.sdoc",
+        )
+
+
+def test_13_multiple_choice_tbc_accepted():
+    input_sdoc = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: CHOICE_FIELD
+    TYPE: MultipleChoice(A, B, C)
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+
+[REQUIREMENT]
+CHOICE_FIELD: TBC
+""".lstrip()
+
+    reader = SDReader()
+    document = reader.read(input_sdoc)
+
+    document_iterator = SDocDocumentIterator(document)
+    for node_, _ in document_iterator.all_content(print_fragments=False):
+        SDocValidator.validate_node(
+            node_,
+            document_grammar=document.grammar,
+            path_to_sdoc_file="test.sdoc",
+        )
+
+
+def test_14_multiple_choice_mixed_with_tbd_accepted():
+    input_sdoc = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: CHOICE_FIELD
+    TYPE: MultipleChoice(A, B, C)
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+
+[REQUIREMENT]
+CHOICE_FIELD: A, TBD
+""".lstrip()
+
+    reader = SDReader()
+    document = reader.read(input_sdoc)
+
+    document_iterator = SDocDocumentIterator(document)
+    for node_, _ in document_iterator.all_content(print_fragments=False):
+        SDocValidator.validate_node(
+            node_,
+            document_grammar=document.grammar,
+            path_to_sdoc_file="test.sdoc",
+        )
+
+
 def test_21_validate_unregistered_child_relation_type():
     input_sdoc = """
 [DOCUMENT]

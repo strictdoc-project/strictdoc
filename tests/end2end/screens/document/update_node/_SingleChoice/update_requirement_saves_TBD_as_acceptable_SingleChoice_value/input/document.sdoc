@@ -1,0 +1,27 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: CUSTOM_FIELD
+    TYPE: SingleChoice(A, B, C)
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+
+[REQUIREMENT]
+CUSTOM_FIELD: A
+STATEMENT: >>>
+This is a requirement.
+<<<

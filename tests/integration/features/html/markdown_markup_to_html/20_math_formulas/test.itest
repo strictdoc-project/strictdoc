@@ -1,0 +1,11 @@
+RUN: %strictdoc export %S --formats=html --enable-mathjax --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Math formulas document
+
+RUN: %check_exists --file "%T/html/_static/mathjax/tex-mml-chtml.js"
+
+RUN: %cat %T/html/20_math_formulas/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+
+CHECK-HTML: MathJax-script
+CHECK-HTML: <span class="math notranslate nohighlight">\( m_d = 120\,kg \)</span>
+CHECK-HTML: <span class="math notranslate nohighlight">\( m_t = m_d + m_p \le 160\,kg \)</span>
+CHECK-HTML: <div class="math notranslate nohighlight">\[ E = mc^2 \]</div>

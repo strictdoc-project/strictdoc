@@ -1,0 +1,8 @@
+#
+# When the document grammar marks fields as required, manage new shall set
+# those fields to "TBD" in the new node.
+#
+
+RUN: cp %S/input.sdoc %T/
+RUN: %strictdoc manage new %T/
+RUN: %diff %S/input.expected.sdoc %T/input.sdoc

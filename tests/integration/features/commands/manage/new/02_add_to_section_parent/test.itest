@@ -1,0 +1,8 @@
+#
+# When --parent-uid-or-mid points to a composite (section) node, manage new
+# shall add the new node inside that section.
+#
+
+RUN: cp %S/input.sdoc %T/
+RUN: %strictdoc manage new %T/ --parent-uid-or-mid SEC-1
+RUN: %diff %S/input.expected.sdoc %T/input.sdoc

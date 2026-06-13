@@ -1,0 +1,12 @@
+[DOCUMENT]
+TITLE: Test Document
+
+[[SECTION]]
+UID: SEC-1
+TITLE: Section 1
+
+[REQUIREMENT]
+UID: REQ-1
+STATEMENT: First requirement.
+
+[[/SECTION]]

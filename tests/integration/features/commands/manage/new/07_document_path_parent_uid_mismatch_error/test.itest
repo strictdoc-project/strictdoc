@@ -1,0 +1,11 @@
+#
+# When --document-path and --parent-uid-or-mid are both given but the parent
+# belongs to a different document, manage new shall print an error and exit 1.
+# Neither document shall be modified.
+#
+
+RUN: cp %S/doc_a.sdoc %T/
+RUN: cp %S/doc_b.sdoc %T/
+RUN: %expect_exit 1 %strictdoc manage new %T/ --document-path %T/doc_a.sdoc --parent-uid-or-mid SEC-B
+RUN: %diff %S/doc_a.sdoc %T/doc_a.sdoc
+RUN: %diff %S/doc_b.sdoc %T/doc_b.sdoc

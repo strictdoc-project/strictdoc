@@ -1,0 +1,11 @@
+[DOCUMENT]
+TITLE: Document A
+
+[[SECTION]]
+UID: SEC-A
+TITLE: Section in A
+
+[REQUIREMENT]
+UID: REQ-2
+
+[[/SECTION]]

@@ -1,0 +1,9 @@
+[DOCUMENT]
+TITLE: Document A
+
+[REQUIREMENT]
+UID: REQ-1
+STATEMENT: Requirement in document A.
+
+[REQUIREMENT]
+UID: REQ-3

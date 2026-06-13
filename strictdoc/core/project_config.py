@@ -21,6 +21,7 @@ from strictdoc.commands.export_config import ExportCommandConfig
 from strictdoc.commands.import_excel_config import ImportExcelCommandConfig
 from strictdoc.commands.import_reqif_config import ImportReqIFCommandConfig
 from strictdoc.commands.manage_autouid_config import ManageAutoUIDCommandConfig
+from strictdoc.commands.manage_new_config import ManageNewCommandConfig
 from strictdoc.commands.server_config import ServerCommandConfig
 from strictdoc.core.environment import SDocRuntimeEnvironment
 from strictdoc.core.plugin import StrictDocPlugin
@@ -814,6 +815,30 @@ class ProjectConfigLoader:
         project_config.autouuid_include_sections = (
             manage_autouid_config.include_sections
         )
+
+        # FIXME: Traceability Index is coupled with HTML output.
+        project_config.export_output_html_root = "NOT_RELEVANT"
+
+        project_config.validate_and_finalize()
+
+        return project_config
+
+    @classmethod
+    def load_using_manage_new_config(
+        cls,
+        manage_new_config: ManageNewCommandConfig,
+    ) -> "ProjectConfig":
+        path_to_config = manage_new_config.get_path_to_config()
+
+        project_config: ProjectConfig = cls.load_from_path_or_get_default(
+            path_to_config=path_to_config
+        )
+
+        project_config.input_paths = [manage_new_config.project_root_path]
+        if project_config.source_root_path is None:
+            project_config.source_root_path = str(
+                Path(manage_new_config.project_root_path).resolve()
+            )
 
         # FIXME: Traceability Index is coupled with HTML output.
         project_config.export_output_html_root = "NOT_RELEVANT"

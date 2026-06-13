@@ -1,0 +1,10 @@
+RUN: %strictdoc export %S --formats=html --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Images in Markdown document
+
+RUN: %check_exists --dir %T/html/20_images_root_level/_assets
+RUN: %check_exists --file %T/html/20_images_root_level/_assets/sandbox1.svg
+
+RUN: %check_exists --file %T/html/20_images_root_level/input.html
+
+RUN: %cat %T/html/20_images_root_level/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: <img src="_assets/sandbox1.svg" alt="Test image">

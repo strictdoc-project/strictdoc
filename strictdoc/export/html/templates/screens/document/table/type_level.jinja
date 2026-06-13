@@ -1,0 +1,10 @@
+{%- set _level = requirement.context.title_number_string %}
+{%- if _level %}
+  <td class="content-view-td content-view-td-level">
+    {{ _level }}
+  </td>
+{%- else %}
+  <td class="content-view-td content-view-td-level content-view-td--dimmed">
+    <div class="content-view-td--dimmed_tips"></div>
+  </td>
+{%- endif %}

@@ -17,10 +17,7 @@
     <tr data-row-type="{{ node.node_type }}" data-node-mid="{{ requirement.reserved_mid }}">
 
       {%- include "screens/document/table/type_cell.jinja" %}
-
-      <td class="content-view-td content-view-td-level">
-        {{ requirement.context.title_number_string }}
-      </td>
+      {%- include "screens/document/table/type_level.jinja" %}
 
       {%- set ns = namespace(past_reserved=false) %}
       {%- for column in view_object.document.enumerate_table_columns() %}

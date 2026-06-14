@@ -143,6 +143,23 @@ class Requirement(Node):  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
+    def assert_requirement_statement_contains_count(
+        self,
+        text: str,
+        count: int,
+    ) -> None:
+        xpath = (
+            f"{self.node_xpath}"
+            "//sdoc-node-field[@data-field-label='statement']"
+            f"//*[normalize-space(.) = '{text}']"
+        )
+        elements = self.test_case.find_elements(xpath, by=By.XPATH)
+        actual = len(elements)
+        assert actual == count, (
+            f"Expected statement to contain '{text}' exactly {count} time(s), "
+            f"but found {actual}."
+        )
+
     def assert_requirement_rationale_contains(
         self,
         text: str,

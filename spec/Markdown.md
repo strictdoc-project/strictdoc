@@ -157,7 +157,10 @@ The meta block uses backslash style: each field except the last ends with ` \`.
 
 **STATEMENT**:
 
-After the meta block, content fields are written as `**FieldName**: value` lines. A single-line value follows the colon directly; a multi-paragraph value follows a blank line after the field header.
+After the meta block, content fields are written as `**FieldName**: value` lines.
+
+- If the value contains only one paragraph (no blank line within the value), the value follows the field name on the same line: `**FieldName**: value`.
+- If the value contains two or more paragraphs (separated by a blank line), or if the value begins with a Markdown structural element (list, code block, blockquote, table, etc.), the value follows a blank line after the field name alone on its line: `**FieldName**:\n\nvalue`.
 
 Prose not starting with a `**Key**:` header is accumulated as an implicit `STATEMENT` field.
 

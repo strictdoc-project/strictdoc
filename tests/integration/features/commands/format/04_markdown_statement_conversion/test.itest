@@ -1,0 +1,18 @@
+REQUIRES: PLATFORM_IS_NOT_WINDOWS
+
+#
+# Verify that the Markdown formatter converts a multi-paragraph STATEMENT
+# written in inline style (**STATEMENT**: first paragraph\n\nsecond paragraph)
+# to the canonical block style (**STATEMENT**:\n\nfirst paragraph\n\nsecond paragraph).
+#
+# The single-paragraph STATEMENT must stay inline.
+#
+
+RUN: mkdir -p %T/test
+RUN: cp %S/input.md %T/test/input.md
+RUN: cp %S/requirements.gra.md %T/test/requirements.gra.md
+RUN: cp %S/strictdoc.toml %T/test/strictdoc.toml
+
+RUN: %strictdoc format %T/test/
+
+RUN: diff %S/input_expected.md %T/test/input.md

@@ -1,0 +1,34 @@
+---
+name: StrictDoc - Dead links check
+on:
+  schedule:
+    - cron: "00 00 * * *"
+  
+  # Disable PR trigger for now. Too many false positives due to random 4xx and
+  # 5xx responses from external sites (Read the Docs, Sphinx, etc.).
+  # pull_request:
+  #   branches: [ "**" ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check_dead_links:
+    name: PIT – Check dead links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Set up Python 3.
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.10'
+
+      - name: Install minimal Python packages
+        run: |
+          pip install -r requirements.bootstrap.txt
+
+      - name: Link Health check
+        run: |
+          invoke check-dead-links

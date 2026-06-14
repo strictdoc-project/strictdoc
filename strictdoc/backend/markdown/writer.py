@@ -353,6 +353,21 @@ class SDMarkdownWriter:
             )
         return "\n\n".join(output_blocks)
 
+    # Lines that start with a Markdown structural element — these cannot follow
+    # a field name on the same line, so they force the block format.
+    _MD_BLOCK_START_RE = re.compile(
+        r"^("
+        r"[-*+] "  # unordered list
+        r"|\d+[.)]\s"  # ordered list
+        r"|#{1,6} "  # ATX heading
+        r"|`{3}"  # fenced code block
+        r"|~{3}"  # fenced code block (tilde)
+        r"|>"  # blockquote
+        r"|\|"  # table cell
+        r"|\s"  # indented block
+        r")"
+    )
+
     @staticmethod
     def _serialize_single_content_field(
         field_name: str,
@@ -362,13 +377,11 @@ class SDMarkdownWriter:
         normalized_value = SDMarkdownWriter._to_lf(field_value).strip("\n")
         if line_width is not None:
             normalized_value = wrap_md_text(normalized_value, line_width)
-        if SDMarkdownWriter._is_multi_paragraph(normalized_value):
-            if len(normalized_value) > 0:
-                return f"**{field_name}**:\n\n{normalized_value}"
+        if len(normalized_value) == 0:
             return f"**{field_name}**:"
-        if len(normalized_value) > 0:
-            return f"**{field_name}**: {normalized_value}"
-        return f"**{field_name}**:"
+        if SDMarkdownWriter._MD_BLOCK_START_RE.match(normalized_value):
+            return f"**{field_name}**:\n\n{normalized_value}"
+        return f"**{field_name}**: {normalized_value}"
 
     @staticmethod
     def _meta_value_to_single_line(field_value: str) -> str:

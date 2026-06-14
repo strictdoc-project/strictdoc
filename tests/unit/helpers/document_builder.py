@@ -6,6 +6,10 @@ from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.grammar_element import (
+    GrammarElementRelationChild,
+    GrammarElementRelationParent,
+)
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
 from strictdoc.backend.sdoc.models.reference import (
@@ -62,6 +66,7 @@ class DocumentBuilder:
         source_requirement_id,
         target_requirement_id,
         role: Optional[str],
+        reverse_role: Optional[str] = None,
     ):
         assert relation_type in ("Parent", "Child")
         requirement: SDocNode = next(
@@ -79,6 +84,31 @@ class DocumentBuilder:
             )
         )
         requirement.relations.append(reference)
+
+        if role is not None:
+            grammar_element = self.document.grammar.elements_by_type[
+                requirement.node_type
+            ]
+            if not grammar_element.has_relation_type_role(
+                relation_type=relation_type,
+                relation_role=role,
+            ):
+                grammar_relation = (
+                    GrammarElementRelationParent(
+                        parent=grammar_element,
+                        relation_type=relation_type,
+                        relation_role=role,
+                        reverse_relation_role=reverse_role,
+                    )
+                    if relation_type == "Parent"
+                    else GrammarElementRelationChild(
+                        parent=grammar_element,
+                        relation_type=relation_type,
+                        relation_role=role,
+                        reverse_relation_role=reverse_role,
+                    )
+                )
+                grammar_element.relations.append(grammar_relation)
 
     def build(self):
         return self.document

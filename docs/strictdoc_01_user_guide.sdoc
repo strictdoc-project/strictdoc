@@ -1540,6 +1540,8 @@ A requirement relation can be specialized with a role. The role must be register
       ROLE: Refines
 
 In this example REQ-1 is the parent of REQ-2 and REQ-2 refines REQ-1.
+
+The reverse name of a role, if needed, is configured in the grammar with ``REVERSE_ROLE``. It is not repeated in individual requirement relations. See [LINK: SECTION-UG-Relation-roles] for the grammar syntax.
 <<<
 
 [[/SECTION]]
@@ -2047,6 +2049,44 @@ StrictDoc's custom grammar support the configuration of relation roles. The Pare
         ROLE: Refines
 
 With this grammar, StrictDoc will only allow creating requirements that have Parent relations with the ``ROLE: Refines`` specified. Any other relations will trigger validation errors.
+
+Optionally, a role can define a reverse display name using ``REVERSE_ROLE``:
+
+.. code:: strictdoc
+
+    [DOCUMENT]
+    TITLE: Test Doc
+
+    [GRAMMAR]
+    ELEMENTS:
+    - TAG: REQUIREMENT
+      FIELDS:
+      - TITLE: UID
+        TYPE: String
+        REQUIRED: True
+      - TITLE: TITLE
+        TYPE: String
+        REQUIRED: True
+      RELATIONS:
+      - TYPE: Parent
+        ROLE: Refines
+        REVERSE_ROLE: Refined by
+
+    [REQUIREMENT]
+    UID: REQ-1
+    TITLE: Parent requirement
+
+    [REQUIREMENT]
+    UID: REQ-2
+    TITLE: Child requirement
+    RELATIONS:
+    - TYPE: Parent
+      VALUE: REQ-1
+      ROLE: Refines
+
+In this example, ``REQ-2`` has a Parent relation to ``REQ-1`` with ``ROLE: Refines``. When the relation is displayed from ``REQ-2`` to ``REQ-1``, StrictDoc shows ``Refines``. When the same relation is displayed from ``REQ-1`` back to ``REQ-2``, StrictDoc shows ``Refined by``.
+
+The ``REVERSE_ROLE`` field is only defined in the grammar. Individual requirement relations still specify only the canonical ``ROLE``. The ``REVERSE_ROLE`` field cannot be used without ``ROLE``. If ``REVERSE_ROLE`` is omitted, StrictDoc displays ``ROLE`` in both directions.
 
 .. note::
 

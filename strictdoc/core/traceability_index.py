@@ -353,6 +353,104 @@ class TraceabilityIndex:
             )
         )
 
+    def get_display_role_for_parent_relation(
+        self,
+        node: SDocNode,
+        parent_node: SDocNode,
+        relation_role: Optional[str],
+    ) -> Optional[str]:
+        return self._get_display_role_for_relation(
+            node=node,
+            related_node=parent_node,
+            forward_relation_type="Parent",
+            reverse_relation_type="Child",
+            relation_role=relation_role,
+        )
+
+    def get_display_role_for_child_relation(
+        self,
+        node: SDocNode,
+        child_node: SDocNode,
+        relation_role: Optional[str],
+    ) -> Optional[str]:
+        return self._get_display_role_for_relation(
+            node=node,
+            related_node=child_node,
+            forward_relation_type="Child",
+            reverse_relation_type="Parent",
+            relation_role=relation_role,
+        )
+
+    def _get_display_role_for_relation(
+        self,
+        node: SDocNode,
+        related_node: SDocNode,
+        forward_relation_type: str,
+        reverse_relation_type: str,
+        relation_role: Optional[str],
+    ) -> Optional[str]:
+        if self._node_has_direct_relation(
+            source_node=node,
+            target_node=related_node,
+            relation_type=forward_relation_type,
+            relation_role=relation_role,
+        ):
+            return relation_role
+
+        if self._node_has_direct_relation(
+            source_node=related_node,
+            target_node=node,
+            relation_type=reverse_relation_type,
+            relation_role=relation_role,
+        ):
+            reverse_role = self._get_reverse_role_from_node_grammar(
+                node=related_node,
+                relation_type=reverse_relation_type,
+                relation_role=relation_role,
+            )
+            return reverse_role if reverse_role is not None else relation_role
+
+        return relation_role
+
+    @staticmethod
+    def _node_has_direct_relation(
+        source_node: SDocNode,
+        target_node: SDocNode,
+        relation_type: str,
+        relation_role: Optional[str],
+    ) -> bool:
+        for relation_ in source_node.relations:
+            if not isinstance(
+                relation_, (ParentReqReference, ChildReqReference)
+            ):
+                continue
+            if (
+                relation_.ref_type == relation_type
+                and relation_.ref_uid == target_node.reserved_uid
+                and relation_.role == relation_role
+            ):
+                return True
+        return False
+
+    @staticmethod
+    def _get_reverse_role_from_node_grammar(
+        node: SDocNode,
+        relation_type: str,
+        relation_role: Optional[str],
+    ) -> Optional[str]:
+        document = assert_optional_cast(node.get_document(), SDocDocument)
+        if document is None or document.grammar is None:
+            return None
+
+        grammar_element = document.grammar.elements_by_type.get(node.node_type)
+        if grammar_element is None:
+            return None
+
+        return grammar_element.get_relation_reverse_role(
+            relation_type=relation_type,
+            relation_role=relation_role,
+        )
+
     def get_children_requirements(
         self, requirement: SDocNode
     ) -> List[SDocNode]:

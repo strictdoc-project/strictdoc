@@ -530,6 +530,24 @@ class ProjectConfig:
                 "It can be safely removed from the project configuration."
             )
 
+        if ProjectFeature.MATHJAX in self.project_features:
+            DEPRECATION_ENGINE.add_message(
+                "MATHJAX_feature_deprecated",
+                "The MATHJAX feature is now enabled by default and no longer "
+                "needs to be listed in the project configuration. "
+                "Please remove it from the project_features list in your "
+                "strictdoc_config.py file.",
+            )
+
+        if ProjectFeature.MERMAID in self.project_features:
+            DEPRECATION_ENGINE.add_message(
+                "MERMAID_feature_deprecated",
+                "The MERMAID feature is now enabled by default and no longer "
+                "needs to be listed in the project configuration. "
+                "Please remove it from the project_features list in your "
+                "strictdoc_config.py file.",
+            )
+
         #
         # Validate HTML2PDF template path.
         #
@@ -661,10 +679,16 @@ class ProjectConfig:
         return ProjectFeature.REQIF in self.project_features
 
     def is_activated_mathjax(self) -> bool:
-        return ProjectFeature.MATHJAX in self.project_features
+        # FIXME: Refactor Jinja templates to not rely on the MathJax feature
+        # flag, since MathJax is now a stable feature that is always included in
+        # the static assets.
+        return True
 
     def is_activated_mermaid(self) -> bool:
-        return ProjectFeature.MERMAID in self.project_features
+        # FIXME: Refactor Jinja templates to not rely on the Mermaid feature
+        # flag, since Mermaid is now a stable feature that is always included
+        # in the static assets.
+        return True
 
     def get_project_root_path(self) -> str:
         if self.input_paths is not None and len(self.input_paths) > 0:
@@ -679,9 +703,6 @@ class ProjectConfig:
 
     def get_static_files_paths(self) -> List[str]:
         return self.environment.get_static_files_paths()
-
-    def get_extra_static_files_path(self) -> str:
-        return self.environment.get_extra_static_files_path()
 
     def get_project_hash(self) -> str:
         assert self.input_paths is not None and len(self.input_paths) > 0

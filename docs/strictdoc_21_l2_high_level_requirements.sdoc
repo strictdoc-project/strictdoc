@@ -517,8 +517,6 @@ StrictDoc's markup language shall support integration with MathJax.
 RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-63
-- TYPE: File
-  VALUE: strictdoc/export/html/_static_extra/mathjax/tex-mml-chtml.js
 
 [REQUIREMENT]
 MID: 39f117b79cfa4a8485c458280b3d36ce

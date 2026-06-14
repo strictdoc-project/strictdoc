@@ -1,0 +1,6 @@
+RUN: %strictdoc export %S --formats=html --output-dir %T | filecheck %s --dump-input=fail
+CHECK: DEPRECATION: This project has the following issues:
+CHECK: Issue #1
+CHECK: The MATHJAX feature is now enabled by default
+CHECK: Issue #2
+CHECK: The MERMAID feature is now enabled by default

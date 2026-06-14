@@ -1,9 +1,0 @@
-#
-# @relation(SDOC-SRS-27, scope=file)
-#
-
-RUN: %strictdoc export %S --enable-mathjax --output-dir %T | filecheck %s --dump-input=fail
-CHECK: Published: Hello world doc
-
-RUN: %check_exists --file "%T/html/_static/mathjax/tex-mml-chtml.js"
-RUN: %check_exists --file "%T/html/_static/mathjax/output/chtml/fonts/tex.js"

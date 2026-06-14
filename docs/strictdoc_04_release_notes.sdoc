@@ -69,12 +69,56 @@ Resolution is crate-qualified (the crate's ``[package]`` name plus the in-crate
 module path), so tests resolve in any module hierarchy, including integration-test
 binaries and multi-crate Cargo workspaces.
 
-2\) GCOV/gcovr coverage reports now handle C++ namespaced member functions more
+3\) GCOV/gcovr coverage reports now handle C++ namespaced member functions more
 reliably. StrictDoc accepts gcovr ``demangled_name`` entries and matches
 gcovr-style function names such as ``test::Adder::add(int const&, int const&)``
 to the names extracted by StrictDoc's C/C++ reader. GCOV report detail links now
 use normalized source paths, keeping coverage anchors and gcovr HTML links
 stable across Linux and Windows.
+
+4\) MathJax and Mermaid are now enabled by default and no longer need to be listed
+in ``project_features`` in ``strictdoc_config.py``. Existing configurations that
+still declare ``MATHJAX`` or ``MERMAID`` in ``project_features`` will display a
+deprecation warning on startup and can safely remove those entries.
+
+5\) A new ``strictdoc manage new`` CLI command generates boilerplate for a new
+node (section or requirement) and appends it to a specified document. Required
+Choice fields are pre-filled with ``TBD`` so the document remains valid
+immediately after insertion.
+
+6\) Markdown documents now support ``$...$`` (inline) and ``$$...$$`` (block)
+math syntax, which is rendered by MathJax. This matches the math delimiter
+convention used by most Markdown-aware editors and documentation tools.
+
+7\) ``TBD`` and ``TBC`` are now accepted as valid values for any ``Choice`` or
+``MultipleChoice`` field, regardless of the declared option set. This allows
+placeholder values to be written in documents while the final value is still
+being determined, without triggering a validation error.
+
+8\) Markdown files can now declare a grammar by referencing an external
+``.gra.md`` grammar file via a ``[GRAMMAR]`` header field. This brings
+Markdown-based documentation to feature parity with SDoc documents that use
+``[GRAMMAR]`` sections, enabling custom node types and fields in Markdown.
+
+9\) Grammar relation roles now support an optional ``REVERSE_ROLE`` display
+name. When a relation is rendered from the opposite direction (e.g., a child
+showing its parent link), the ``REVERSE_ROLE`` label is used instead of the
+canonical ``ROLE`` name. This makes bi-directional traceability views more
+readable without changing the underlying relation identity.
+
+10\) Fixed: the Table of Contents in the web editor now updates immediately when
+a section's title is added or removed, without requiring a page reload.
+
+11\) Fixed: ``InlineLink`` anchors inside Markdown documents are now rendered as
+hyperlinks instead of being escaped as literal text during Markdown export.
+
+12\) Fixed: ``.c`` source files are now parsed with ``tree-sitter-c`` instead of
+``tree-sitter-cpp``. This corrects macro parsing failures that occurred when
+C-only constructs were fed to the C++ parser.
+
+13\) Fixed: Markdown documents containing exactly one section and one requirement
+now parse correctly. A regression introduced in the Markdown grammar work caused
+this common structure to be rejected.
 <<<
 
 [[/SECTION]]

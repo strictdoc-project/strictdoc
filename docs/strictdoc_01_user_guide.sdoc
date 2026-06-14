@@ -2492,21 +2492,7 @@ TITLE: Mathjax support
 [TEXT]
 MID: abdf406fe10847929dd7cb12a030456f
 STATEMENT: >>>
-StrictDoc can include the `MathJax <https://www.mathjax.org/>`_ Javascript library to all of the document templates. To activate MathJax, edit the ``strictdoc_config.py`` config file in the root of your repository with documentation content.
-
-.. code:: python
-
-    from strictdoc.core.project_config import ProjectConfig
-
-
-    def create_config() -> ProjectConfig:
-        config = ProjectConfig(
-            project_title="My project",
-            project_features=[
-                "MATHJAX"
-            ],
-        )
-        return config
+StrictDoc includes the `MathJax <https://www.mathjax.org/>`_ Javascript library in all document templates by default. No configuration is required to use MathJax.
 
 Examples of using MathJax:
 
@@ -3523,21 +3509,7 @@ The Mermaid tool allows to create diagrams inside of StrictDoc/RST markup as fol
         </pre>
     <<<
 
-To activate Mermaid, add/edit the ``strictdoc_config.py`` config file in the root of your repository with documentation content.
-
-.. code:: python
-
-    from strictdoc.core.project_config import ProjectConfig
-
-
-    def create_config() -> ProjectConfig:
-        config = ProjectConfig(
-            project_title="My project",
-            project_features=[
-                "MERMAID"
-            ],
-        )
-        return config
+Mermaid is enabled by default. No configuration is required to use Mermaid diagrams.
 <<<
 
 [[/SECTION]]
@@ -3832,10 +3804,7 @@ The following is an example of the default configuration. The same features are 
                 "TRACEABILITY_SCREEN",
                 "DEEP_TRACEABILITY_SCREEN",
 
-                # Stable features that are disabled by default.
-                # "MATHJAX",
-
-                # Experimental features are disabled by default.
+                # These features are disabled by default.
                 # "REQIF",
                 # "HTML2PDF",
                 # "PROJECT_STATISTICS_SCREEN",

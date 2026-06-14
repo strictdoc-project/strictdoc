@@ -128,9 +128,9 @@ def list_tasks(context):
 @task
 def clean(context):
     # https://unix.stackexchange.com/a/689930/77389
-    clean_command = """
+    clean_command = r"""
         rm -rf output/ docs/sphinx/build/ &&
-        find tests/unit_server -type d -name output -exec rm -rf {} +
+        find tests/ -type d \( -name output -o -name Output \) -exec rm -rf {} +
     """
     run_invoke(context, clean_command)
 
@@ -208,7 +208,7 @@ def docs(context):
     )
 
 
-@task(aliases=["tus"])
+@task(clean, aliases=["tus"])
 def test_unit_server(context, focus=None):
     focus_argument = f"-k {focus}" if focus is not None else ""
 
@@ -428,7 +428,7 @@ def test_unit_report(context):
     )
 
 
-@task(aliases=["ti"])
+@task(clean, aliases=["ti"])
 def test_integration(
     context,
     focus=None,

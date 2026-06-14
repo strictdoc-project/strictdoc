@@ -530,6 +530,24 @@ class ProjectConfig:
                 "It can be safely removed from the project configuration."
             )
 
+        if ProjectFeature.MATHJAX in self.project_features:
+            DEPRECATION_ENGINE.add_message(
+                "MATHJAX_feature_deprecated",
+                "The MATHJAX feature is now enabled by default and no longer "
+                "needs to be listed in the project configuration. "
+                "Please remove it from the project_features list in your "
+                "strictdoc_config.py file.",
+            )
+
+        if ProjectFeature.MERMAID in self.project_features:
+            DEPRECATION_ENGINE.add_message(
+                "MERMAID_feature_deprecated",
+                "The MERMAID feature is now enabled by default and no longer "
+                "needs to be listed in the project configuration. "
+                "Please remove it from the project_features list in your "
+                "strictdoc_config.py file.",
+            )
+
         #
         # Validate HTML2PDF template path.
         #

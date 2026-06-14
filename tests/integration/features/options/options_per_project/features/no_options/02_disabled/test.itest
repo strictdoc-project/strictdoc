@@ -5,6 +5,5 @@ RUN: %check_exists --file "%T/html/02_disabled/input-TABLE.html"
 RUN: %check_exists --file "%T/html/02_disabled/input-TRACE.html"
 RUN: %check_exists --file "%T/html/02_disabled/input-DEEP-TRACE.html"
 
-RUN: %check_exists --invert --file "%T/html/_static/mathjax/tex-mml-chtml.js"
-RUN: %check_exists --invert --file "%T/html/_static/mathjax/output/chtml/fonts/tex.js"
-
+RUN: %check_exists --file "%T/html/_static/mathjax/tex-mml-chtml.js"
+RUN: %check_exists --file "%T/html/_static/mathjax/output/chtml/fonts/tex.js"

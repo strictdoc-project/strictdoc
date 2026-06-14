@@ -51,6 +51,7 @@ class ParsedField:
     name: str
     value: str
     human_name: str
+    is_block_format: bool = False
 
 
 @dataclass
@@ -1001,6 +1002,7 @@ class SDMarkdownReader:
                         name=field_name_upper,
                         human_name=field_name_human,
                         value=field_value,
+                        is_block_format=True,
                     )
                 )
                 continue
@@ -1078,7 +1080,7 @@ class SDMarkdownReader:
                     parent=None,
                     field_name=field.name,
                     field_value=field.value,
-                    multiline="\n" in field.value,
+                    multiline=field.is_block_format,
                 )
             )
 

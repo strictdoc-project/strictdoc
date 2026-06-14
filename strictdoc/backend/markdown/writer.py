@@ -185,8 +185,8 @@ class SDMarkdownWriter:
             field_value = SDMarkdownWriter._to_lf(field.get_text_value())
 
             if element is None or field_name not in element.fields_map:
-                is_content_field = SDMarkdownWriter._is_multi_paragraph(
-                    field_value
+                is_content_field = field.is_multiline() or (
+                    SDMarkdownWriter._is_multi_paragraph(field_value)
                 )
             else:
                 is_content_field = element.is_field_multiline(field_name)
@@ -342,7 +342,8 @@ class SDMarkdownWriter:
 
     @staticmethod
     def _serialize_content_fields(
-        fields: Sequence[Tuple[str, str]], line_width: Optional[int] = None
+        fields: Sequence[Tuple[str, str]],
+        line_width: Optional[int] = None,
     ) -> str:
         output_blocks: List[str] = []
         for field_name, field_value in fields:
@@ -379,7 +380,10 @@ class SDMarkdownWriter:
             normalized_value = wrap_md_text(normalized_value, line_width)
         if len(normalized_value) == 0:
             return f"**{field_name}**:"
-        if SDMarkdownWriter._MD_BLOCK_START_RE.match(normalized_value):
+        use_block = SDMarkdownWriter._is_multi_paragraph(
+            normalized_value
+        ) or SDMarkdownWriter._MD_BLOCK_START_RE.match(normalized_value)
+        if use_block:
             return f"**{field_name}**:\n\n{normalized_value}"
         return f"**{field_name}**: {normalized_value}"
 

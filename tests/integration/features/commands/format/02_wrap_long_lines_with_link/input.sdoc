@@ -1,0 +1,22 @@
+[DOCUMENT]
+TITLE: Test
+
+[TEXT]
+STATEMENT: >>>
+Line 1
+StrictDoc supports two input document formats: SDoc (\*.sdoc) and Markdown (\*.md, see [LINK: SECTION-UG-Markdown-support]).
+Line 3
+<<<
+
+[TEXT]
+STATEMENT: >>>
+- Line 1
+- StrictDoc supports two input document formats: SDoc (\*.sdoc) and Markdown (\*.md, see [LINK: SECTION-UG-Markdown-support]).
+- Line 3
+<<<
+
+[[SECTION]]
+UID: SECTION-UG-Markdown-support
+TITLE: Markdown support
+
+[[/SECTION]]

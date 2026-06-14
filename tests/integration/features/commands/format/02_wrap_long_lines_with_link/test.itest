@@ -1,0 +1,11 @@
+RUN: cp %S/input.sdoc %T/
+RUN: cp %S/strictdoc_config.py %T/
+RUN: %strictdoc format %T/
+
+RUN: %cat %T/input.sdoc | filecheck %s --dump-input=fail
+
+CHECK: StrictDoc supports two input document formats: SDoc (\*.sdoc)
+CHECK-NEXT: see [LINK: SECTION-UG-Markdown-support]).
+
+CHECK: - StrictDoc supports two input document formats: SDoc (\*.sdoc)
+CHECK-NEXT: see [LINK: SECTION-UG-Markdown-support]).

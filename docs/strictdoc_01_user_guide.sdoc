@@ -2759,6 +2759,57 @@ Both options can be combined. When both are given, StrictDoc validates that the 
 [[/SECTION]]
 
 [[SECTION]]
+MID: b7298d44826e4a5d8f5a7d056bf90ec1
+TITLE: Format project tree
+
+[TEXT]
+MID: a93595f44d65475db1d25661db43ce7f
+STATEMENT: >>>
+The ``strictdoc format`` command reads all SDoc and Markdown documents in the
+project tree and writes them back formatted according to the project's
+``document_line_width`` configuration option.
+
+.. code:: text
+
+    strictdoc format <path-to-project-tree>
+
+The command performs in-place formatting: all documents are rewritten at their
+original paths.
+
+The ``document_line_width`` option must be configured in the project config to
+have an effect. If it is not set, the command still rewrites all documents but
+without applying any line-width changes (a normalizing round-trip).
+
+**Configuring the line width**
+
+To enable automatic line-width formatting, set ``document_line_width`` in the
+project config:
+
+.. code:: python
+
+    from strictdoc.core.project_config import ProjectConfig
+
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            document_line_width=80,
+        )
+        return config
+
+The minimum acceptable value is ``80``. When set, the SDoc and Markdown writers
+wrap long text paragraphs to the configured width. Structured content such as
+bullet lists, numbered lists, indented code blocks, RST directives, and Markdown
+fenced code blocks are left unchanged.
+
+**Integration with the web interface**
+
+When ``document_line_width`` is configured, the web server also applies the
+line-width limit when saving node edits back to the file system.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: fa1cc31842144440a8ca310c7c0dedb2
 UID: SECTION-TRACEABILITY-REQS-TO-SOURCE-CODE
 TITLE: Traceability between requirements and source code
@@ -3645,6 +3696,38 @@ When the ``REQUIREMENT_TO_SOURCE_TRACEABILITY`` feature is activated, StrictDoc 
         return config
 
 The ``source_root_path`` option supports relative paths, e.g. ``../source_root/``.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 1ad7ea8831fa4a779d0e5837fb034222
+TITLE: Document line width
+
+[TEXT]
+MID: 6f7162b49f78452ba7aa07930db4b568
+STATEMENT: >>>
+The ``document_line_width`` option sets the maximum line width for document content.
+When set, the SDoc and Markdown writers automatically wrap long text paragraphs
+to the configured number of columns whenever a document is saved.
+
+This affects both the ``strictdoc format`` command and the web server's save
+operations. The minimum accepted value is ``80``.
+
+.. code:: python
+
+    from strictdoc.core.project_config import ProjectConfig
+
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            document_line_width=80,
+        )
+        return config
+
+Structured content is never wrapped: bullet lists, numbered lists, indented
+blocks (code), RST directives (``.. code::``, etc.), and Markdown fenced code
+blocks are preserved as-is.
 <<<
 
 [[/SECTION]]

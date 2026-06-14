@@ -940,11 +940,36 @@ class SDMarkdownReader:
                 line_index += 1
 
                 if len(inline_value) > 0:
+                    continuation_lines: List[str] = []
+                    while line_index < line_count:
+                        candidate_line = body_lines[line_index]
+                        if SDMarkdownReader._is_empty_line(candidate_line):
+                            break
+                        candidate_line_text = (
+                            SDMarkdownReader._line_without_line_ending(
+                                candidate_line
+                            )
+                        )
+                        if (
+                            SDMarkdownReader.plain_field_pattern.match(
+                                candidate_line_text
+                            )
+                            is not None
+                        ):
+                            break
+                        continuation_lines.append(candidate_line)
+                        line_index += 1
+                    if continuation_lines:
+                        field_value = (
+                            inline_value + "\n" + "".join(continuation_lines)
+                        )
+                    else:
+                        field_value = inline_value
                     parsed_fields.append(
                         ParsedField(
                             name=field_name_upper,
                             human_name=field_name_human,
-                            value=inline_value,
+                            value=field_value,
                         )
                     )
                     continue

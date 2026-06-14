@@ -1,0 +1,14 @@
+#
+# Verify that StrictDoc parses a simple requirement nested in a section node.
+#
+
+RUN: %strictdoc export %S --formats=html --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Markdown example
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-FILE
+
+CHECK-HTML-FILE: Markdown example
+CHECK-HTML-FILE: data-testid="node-requirement"
+CHECK-HTML-FILE: data-uid="FMT-1"
+CHECK-HTML-FILE: <sdoc-node-field-label>STATEMENT:</sdoc-node-field-label>
+CHECK-HTML-FILE: The formatter wraps text lines to a configurable maximum line

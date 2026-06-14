@@ -1,0 +1,7 @@
+[DOCUMENT]
+TITLE: Test
+
+[TEXT]
+STATEMENT: >>>
+This is a very long sentence that definitely exceeds the eighty character line width limit and should be wrapped by the formatter.
+<<<

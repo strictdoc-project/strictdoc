@@ -102,3 +102,21 @@ def tokenize(text: str) -> List[str]:
 def strip_bom(s: str) -> str:
     # U+FEFF is the BOM character when in str form
     return s.lstrip(UTF8_BOM)
+
+
+_PROTECTED_INLINE_RE = re.compile(
+    r"\[(LINK|ANCHOR):[^\]]*\]"  # StrictDoc [LINK: UID] and [ANCHOR: UID]
+    r"|`[^`]+<[^>]+>`_{1,2}"  # RST hyperlink: `text <url>`_ or `text <url>`__
+    r"|\[[^\]]+\]\([^)]+\)"  # Markdown inline link: [text](url)
+)
+
+
+def _protect_inline(text: str) -> str:
+    def _protect(m: "re.Match[str]") -> str:
+        return str(m.group(0)).replace(" ", "\x00").replace("-", "\x01")
+
+    return _PROTECTED_INLINE_RE.sub(_protect, text)
+
+
+def _restore_inline(text: str) -> str:
+    return text.replace("\x00", " ").replace("\x01", "-")

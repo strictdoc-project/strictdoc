@@ -1,0 +1,8 @@
+RUN: cp %S/input.sdoc %T/
+RUN: cp %S/strictdoc.toml %T/
+RUN: %strictdoc format %T/
+
+RUN: %cat %T/input.sdoc | filecheck %s
+
+CHECK: This is a very long sentence that definitely exceeds the eighty character line
+CHECK: width limit and should be wrapped by the formatter.

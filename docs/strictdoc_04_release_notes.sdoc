@@ -54,7 +54,15 @@ MID: 055660bc7cf09fbf5d00cf516111e80f
 STATEMENT: >>>
 This release contains the following enhancements:
 
-1\) cargo-nextest test results now link to the requirements their tests verify.
+1\) A new ``document_line_width`` project configuration option and a
+``strictdoc format`` command have been introduced. When
+``document_line_width`` is set in the project config, the SDoc and Markdown
+writers will automatically wrap long text paragraphs to the configured line
+width (minimum: 80). The ``strictdoc format`` command acts like ``black`` or
+``ruff`` for StrictDoc documents, performing in-place reformatting of all
+documents in the project tree according to the configured line width.
+
+2\) cargo-nextest test results now link to the requirements their tests verify.
 A passing or failing test marks its requirement *IsSatisfiedBy* the result, and
 the result's rendered source includes the test's attributes and doc comment.
 Resolution is crate-qualified (the crate's ``[package]`` name plus the in-crate

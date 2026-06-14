@@ -1,6 +1,7 @@
 import re
 from typing import List, Optional, Sequence, Tuple
 
+from strictdoc.backend.markdown.formatter import wrap_md_text
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import (
     DocumentCustomMetadataKeyValuePair,
@@ -25,7 +26,7 @@ from strictdoc.helpers.cast import assert_cast
 
 class SDMarkdownWriter:
     @staticmethod
-    def write(document: SDocDocument) -> str:
+    def write(document: SDocDocument, line_width: Optional[int] = None) -> str:
         top_level_blocks: List[str] = []
         document_meta_block = SDMarkdownWriter._serialize_document_metadata(
             document
@@ -39,6 +40,7 @@ class SDMarkdownWriter:
             node_block = SDMarkdownWriter._serialize_node(
                 node=node,
                 heading_level=2,
+                line_width=line_width,
             )
             if node_block is None or len(node_block) == 0:
                 continue
@@ -52,8 +54,12 @@ class SDMarkdownWriter:
         return SDMarkdownWriter._to_lf(output)
 
     @staticmethod
-    def write_to_file(document: SDocDocument) -> None:
-        document_content = SDMarkdownWriter.write(document)
+    def write_to_file(
+        document: SDocDocument, line_width: Optional[int] = None
+    ) -> None:
+        document_content = SDMarkdownWriter.write(
+            document, line_width=line_width
+        )
         document_meta: DocumentMeta = assert_cast(document.meta, DocumentMeta)
         with open(
             document_meta.input_doc_full_path,
@@ -108,12 +114,18 @@ class SDMarkdownWriter:
         return SDMarkdownWriter._serialize_meta_fields(metadata_entries)
 
     @staticmethod
-    def _serialize_node(node: SDocNode, heading_level: int) -> Optional[str]:
+    def _serialize_node(
+        node: SDocNode,
+        heading_level: int,
+        line_width: Optional[int] = None,
+    ) -> Optional[str]:
         if node.autogen:
             return None
 
         if node.node_type == "TEXT":
-            return SDMarkdownWriter._serialize_text_node(node)
+            return SDMarkdownWriter._serialize_text_node(
+                node, line_width=line_width
+            )
 
         if node.reserved_title is None:
             return None
@@ -124,7 +136,9 @@ class SDMarkdownWriter:
         )
 
         body_blocks: List[str] = []
-        own_fields_block = SDMarkdownWriter._serialize_node_fields(node)
+        own_fields_block = SDMarkdownWriter._serialize_node_fields(
+            node, line_width=line_width
+        )
         if own_fields_block is not None and len(own_fields_block) > 0:
             body_blocks.append(own_fields_block)
 
@@ -133,6 +147,7 @@ class SDMarkdownWriter:
                 child_block = SDMarkdownWriter._serialize_node(
                     node=child_node,
                     heading_level=heading_level + 1,
+                    line_width=line_width,
                 )
                 if child_block is None or len(child_block) == 0:
                     continue
@@ -144,7 +159,9 @@ class SDMarkdownWriter:
         return heading_text + "\n\n" + "\n\n".join(body_blocks)
 
     @staticmethod
-    def _serialize_node_fields(node: SDocNode) -> Optional[str]:
+    def _serialize_node_fields(
+        node: SDocNode, line_width: Optional[int] = None
+    ) -> Optional[str]:
         meta_fields: List[Tuple[str, str]] = []
         content_fields: List[Tuple[str, str]] = []
 
@@ -196,7 +213,9 @@ class SDMarkdownWriter:
                 field_blocks.append(relations_field_block)
         if len(content_fields) > 0:
             field_blocks.append(
-                SDMarkdownWriter._serialize_content_fields(content_fields)
+                SDMarkdownWriter._serialize_content_fields(
+                    content_fields, line_width=line_width
+                )
             )
 
         if len(field_blocks) == 0:
@@ -296,14 +315,18 @@ class SDMarkdownWriter:
         return element.fields_map[field_name].get_field_human_name()
 
     @staticmethod
-    def _serialize_text_node(node: SDocNode) -> Optional[str]:
+    def _serialize_text_node(
+        node: SDocNode, line_width: Optional[int] = None
+    ) -> Optional[str]:
         statement_fields = node.ordered_fields_lookup.get("STATEMENT", None)
         if statement_fields is None or len(statement_fields) == 0:
             return None
         statement_value = SDMarkdownWriter._to_lf(
             statement_fields[0].get_text_value()
-        )
-        return statement_value.strip("\n")
+        ).strip("\n")
+        if line_width is not None:
+            statement_value = wrap_md_text(statement_value, line_width)
+        return statement_value
 
     @staticmethod
     def _serialize_meta_fields(
@@ -318,21 +341,27 @@ class SDMarkdownWriter:
         return "\n".join(lines)
 
     @staticmethod
-    def _serialize_content_fields(fields: Sequence[Tuple[str, str]]) -> str:
+    def _serialize_content_fields(
+        fields: Sequence[Tuple[str, str]], line_width: Optional[int] = None
+    ) -> str:
         output_blocks: List[str] = []
         for field_name, field_value in fields:
             output_blocks.append(
                 SDMarkdownWriter._serialize_single_content_field(
-                    field_name, field_value
+                    field_name, field_value, line_width=line_width
                 )
             )
         return "\n\n".join(output_blocks)
 
     @staticmethod
     def _serialize_single_content_field(
-        field_name: str, field_value: str
+        field_name: str,
+        field_value: str,
+        line_width: Optional[int] = None,
     ) -> str:
         normalized_value = SDMarkdownWriter._to_lf(field_value).strip("\n")
+        if line_width is not None:
+            normalized_value = wrap_md_text(normalized_value, line_width)
         if SDMarkdownWriter._is_multi_paragraph(normalized_value):
             if len(normalized_value) > 0:
                 return f"**{field_name}**:\n\n{normalized_value}"

@@ -13,7 +13,6 @@ def create_config() -> ProjectConfig:
             "DEEP_TRACEABILITY_SCREEN",
             "SEARCH",
             # Stable features but not used by StrictDoc.
-            # "MATHJAX"
             # Experimental features.
             "PROJECT_STATISTICS_SCREEN",
             "TREE_MAP_SCREEN",

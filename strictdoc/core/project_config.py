@@ -18,6 +18,7 @@ from strictdoc import __version__, environment
 from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
 from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.commands.export_config import ExportCommandConfig
+from strictdoc.commands.format_config import FormatCommandConfig
 from strictdoc.commands.import_excel_config import ImportExcelCommandConfig
 from strictdoc.commands.import_reqif_config import ImportReqIFCommandConfig
 from strictdoc.commands.manage_autouid_config import ManageAutoUIDCommandConfig
@@ -151,6 +152,7 @@ class ProjectConfig:
             str
         ] = ProjectConfigDefault.DEFAULT_SECTION_BEHAVIOR,
         statistics_generator: Optional[str] = None,
+        document_line_width: Optional[int] = None,
         # Logo path can be set in the project config to customize the launcher's appearance for a specific project.
         launcher_logo_path: Optional[str] = None,
         user_plugin: Optional[StrictDocPlugin] = None,
@@ -383,6 +385,15 @@ class ProjectConfig:
         self.section_behavior: Optional[str] = section_behavior
 
         self.statistics_generator: Optional[str] = statistics_generator
+
+        if document_line_width is not None:
+            assert isinstance(document_line_width, int), document_line_width
+            assert document_line_width >= 80, (
+                f"config: document_line_width: minimum acceptable value is 80, "
+                f"got: {document_line_width}."
+            )
+        self.document_line_width: Optional[int] = document_line_width
+
         self.user_plugin: Optional[StrictDocPlugin] = user_plugin
 
         # Optional launcher logo path (absolute or workspace-relative).
@@ -845,6 +856,30 @@ class ProjectConfigLoader:
         return project_config
 
     @classmethod
+    def load_using_format_config(
+        cls,
+        format_config: FormatCommandConfig,
+    ) -> "ProjectConfig":
+        path_to_config = format_config.get_path_to_config()
+
+        project_config: ProjectConfig = cls.load_from_path_or_get_default(
+            path_to_config=path_to_config
+        )
+
+        project_config.input_paths = [format_config.input_path]
+        if project_config.source_root_path is None:
+            project_config.source_root_path = str(
+                Path(format_config.input_path).resolve()
+            )
+
+        # FIXME: Traceability Index is coupled with HTML output.
+        project_config.export_output_html_root = "NOT_RELEVANT"
+
+        project_config.validate_and_finalize()
+
+        return project_config
+
+    @classmethod
     def load_using_manage_new_config(
         cls,
         manage_new_config: ManageNewCommandConfig,
@@ -975,6 +1010,7 @@ class ProjectConfigLoader:
 
         section_behavior: str = ProjectConfigDefault.DEFAULT_SECTION_BEHAVIOR
         statistics_generator: Optional[str] = None
+        document_line_width: Optional[int] = None
 
         if "project" in config_dict:
             project_content = config_dict["project"]
@@ -1066,6 +1102,10 @@ class ProjectConfigLoader:
             )
             assert section_behavior in ("[SECTION]", "[[SECTION]]")
 
+            document_line_width = project_content.get(
+                "document_line_width", document_line_width
+            )
+
             if "source_nodes" in project_content:
                 source_nodes_config = project_content["source_nodes"]
                 assert isinstance(source_nodes_config, list)
@@ -1122,5 +1162,6 @@ class ProjectConfigLoader:
             chromedriver=chromedriver,
             section_behavior=section_behavior,
             statistics_generator=statistics_generator,
+            document_line_width=document_line_width,
             _config_last_update=config_last_update,
         )

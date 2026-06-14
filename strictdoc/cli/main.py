@@ -10,6 +10,7 @@ from strictdoc.cli.cli_arg_parser import (
 )
 from strictdoc.commands.about_command import AboutCommand
 from strictdoc.commands.export import ExportCommand
+from strictdoc.commands.format_command import FormatCommand
 from strictdoc.commands.import_excel import ImportExcelCommand
 from strictdoc.commands.import_reqif import ImportReqIFCommand
 from strictdoc.commands.launcher_command import (
@@ -34,6 +35,7 @@ def create_command_registry() -> Dict[str, Any]:
     command_registry: Dict[str, Any] = {
         "about": AboutCommand,
         "export": ExportCommand,
+        "format": FormatCommand,
         "import": {"excel": ImportExcelCommand, "reqif": ImportReqIFCommand},
         "manage": {"auto-uid": ManageAutoUIDCommand, "new": ManageNewCommand},
         "new": NewCommand,

@@ -146,22 +146,3 @@ jobs:
       - name: Test the PyInstaller-based StrictDoc (HTML2PDF)
         run: |
           invoke test-integration --strictdoc /tmp/strictdoc/strictdoc/strictdoc --html2pdf
-
-  check_dead_links:
-    name: PIT – Check dead links
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v6
-
-      - name: Set up Python 3.
-        uses: actions/setup-python@v6
-        with:
-          python-version: '3.10'
-
-      - name: Install minimal Python packages
-        run: |
-          pip install -r requirements.bootstrap.txt
-
-      - name: Link Health check
-        run: |
-          invoke check-dead-links

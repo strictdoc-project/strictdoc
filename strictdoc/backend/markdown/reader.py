@@ -823,29 +823,7 @@ class SDMarkdownReader:
             else:
                 is_last_field = meta_line_index == meta_line_count
                 if not is_last_field:
-                    next_line_text = SDMarkdownReader._line_without_line_ending(
-                        meta_lines[meta_line_index]
-                    )
-                    next_field_match = (
-                        SDMarkdownReader.plain_field_pattern.match(
-                            next_line_text
-                        )
-                    )
-                    next_field_is_relations = (
-                        next_field_match is not None
-                        and next_field_match.group("name").upper()
-                        == "RELATIONS"
-                        and len(
-                            SDMarkdownReader._trim_single_space_prefix(
-                                next_field_match.group("value")
-                            )
-                        )
-                        == 0
-                    )
-                    if not value.endswith(" \\"):
-                        if not next_field_is_relations:
-                            return [], False
-                    else:
+                    if value.endswith(" \\"):
                         value = value[:-2]
                 elif value.endswith("\\"):
                     return [], False
@@ -943,8 +921,6 @@ class SDMarkdownReader:
                     continuation_lines: List[str] = []
                     while line_index < line_count:
                         candidate_line = body_lines[line_index]
-                        if SDMarkdownReader._is_empty_line(candidate_line):
-                            break
                         candidate_line_text = (
                             SDMarkdownReader._line_without_line_ending(
                                 candidate_line
@@ -959,6 +935,13 @@ class SDMarkdownReader:
                             break
                         continuation_lines.append(candidate_line)
                         line_index += 1
+                    while (
+                        continuation_lines
+                        and SDMarkdownReader._is_empty_line(
+                            continuation_lines[-1]
+                        )
+                    ):
+                        continuation_lines.pop()
                     if continuation_lines:
                         field_value = (
                             inline_value + "\n" + "".join(continuation_lines)

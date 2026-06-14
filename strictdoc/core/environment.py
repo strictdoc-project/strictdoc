@@ -32,6 +32,8 @@ HTML_STATIC_DIRS = [
     HTML_STATIC_DIR,
     os.path.join("strictdoc", "features", "diff_and_changelog", "assets"),
     os.path.join("strictdoc", "features", "html2pdf", "assets"),
+    os.path.join("strictdoc", "features", "mathjax", "assets"),
+    os.path.join("strictdoc", "features", "mermaid", "assets"),
     os.path.join("strictdoc", "features", "nestor", "assets"),
     os.path.join("strictdoc", "features", "project_index", "assets"),
     os.path.join("strictdoc", "features", "source_coverage", "assets"),
@@ -106,13 +108,6 @@ class SDocRuntimeEnvironment:
             assert os.path.isdir(path), path
             assert os.path.isabs(path), path
         return static_files_paths
-
-    def get_extra_static_files_path(self) -> str:
-        if self.is_binary_dist:  # pragma: no cover
-            return os.path.join(self.path_to_strictdoc, "_static_extra")
-        return os.path.join(
-            self.path_to_strictdoc, "strictdoc/export/html/_static_extra"
-        )
 
     def get_path_to_rst_templates(self) -> str:
         if self.is_py_installer:  # pragma: no cover

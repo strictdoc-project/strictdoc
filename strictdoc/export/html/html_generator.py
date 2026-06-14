@@ -213,40 +213,6 @@ class HTMLGenerator:
                 message="Copying StrictDoc's assets",
             )
 
-        # Export MathJax.
-        if project_config.is_feature_activated(ProjectFeature.MATHJAX):
-            output_html_mathjax = os.path.join(
-                export_output_html_root,
-                project_config.dir_for_sdoc_assets,
-                "mathjax",
-            )
-            Path(output_html_mathjax).mkdir(parents=True, exist_ok=True)
-            mathjax_src = os.path.join(
-                project_config.get_extra_static_files_path(), "mathjax"
-            )
-            sync_dir(
-                mathjax_src,
-                output_html_mathjax,
-                message="Copying MathJax assets",
-            )
-
-        # Export Mermaid.
-        if project_config.is_feature_activated(ProjectFeature.MERMAID):
-            output_html_mathjax = os.path.join(
-                export_output_html_root,
-                project_config.dir_for_sdoc_assets,
-                "mermaid",
-            )
-            Path(output_html_mathjax).mkdir(parents=True, exist_ok=True)
-            mermaid_src = os.path.join(
-                project_config.get_extra_static_files_path(), "mermaid"
-            )
-            sync_dir(
-                mermaid_src,
-                output_html_mathjax,
-                message="Copying Mermaid assets",
-            )
-
         # Export HTML2PDF.
         if project_config.is_feature_activated(ProjectFeature.HTML2PDF):
             sync_dir(

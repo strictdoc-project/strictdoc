@@ -129,7 +129,8 @@ def list_tasks(context):
 def clean(context):
     # https://unix.stackexchange.com/a/689930/77389
     clean_command = """
-        rm -rf output/ docs/sphinx/build/
+        rm -rf output/ docs/sphinx/build/ &&
+        find tests/unit_server -type d -name output -exec rm -rf {} +
     """
     run_invoke(context, clean_command)
 
@@ -1049,7 +1050,6 @@ def release_pyinstaller(context):
             {html_template_data_options}
             {html_static_data_options}
             --add-data strictdoc/backend/rst/templates:templates/rst
-            --add-data strictdoc/export/html/_static_extra:_static_extra
             strictdoc/cli/main.py
     """
 
@@ -1128,7 +1128,6 @@ def nuitka(context):
             {html_template_data_options}
             {html_static_data_options}
             --include-data-dir=strictdoc/backend/rst/templates=templates/rst
-            --include-data-dir=strictdoc/export/html/_static_extra/mathjax=_static_extra/mathjax
             --include-package-data=docutils
             strictdoc/cli/main.py
         """,

@@ -259,12 +259,6 @@ STATUS: Backlog
 TITLE: Interoperability with Doxygen
 
 [REQUIREMENT]
-MID: 06f16ede826749a389c8d7de9828e0eb
-UID: SDOC-BACKLOG-3
-STATUS: Backlog
-TITLE: Fuzzy search (the whole documentation)
-
-[REQUIREMENT]
 MID: 0e69828e1d914e20852aef7cfc4e87c4
 UID: SDOC-BACKLOG-9
 STATUS: Backlog
@@ -465,13 +459,9 @@ MID: d10cddd846de4961bbb0bc8b8c6550d3
 STATEMENT: >>>
 - Uploading images via Web interface.
 
-- Deleting sections recursively. Correct clean-up of all traceability information.
-
 - Editing remaining document options: Inline/Table, Requirements in TOC, etc.
 
 - **Integration with Git repository.** Make the server commit changes to .sdoc files automatically. To a user, provide visibility to what happens under the hood.
-
-- Option to keep all multi-line text fields to 80 symbols width.
 
 - TBL view: Column filters to show/hide columns.
 
@@ -502,16 +492,12 @@ STATEMENT: >>>
 
   - CLI command to dump default config file
   - Project prefix?
-  - Config options for presenting requirements.
-    - Include/exclude requirements in TOC
 
 - **StrictDoc as a Python library**. Such a use allows a more fine-grained access to the StrictDoc's modules, such as Grammar, Import, Export classes, etc.
 
 - **Data exchange with Capella tool.** The current idea would be to implement this using ReqIF export/import features.
 
 - **Language Server Protocol.** The LSP can enable editing of SDoc files in IDEs like Eclipse, Visual Studio, PyCharm. A smart LSP can enable features like syntax highlighting, autocompletion and easy navigation through requirements. The promising base for the implementation: https://github.com/openlawlibrary/pygls.
-
-- StrictDoc shall support rendering text/code blocks into Markdown syntax.
 
 - Support creation of FMEA/FMECA safety analysis documents.
 

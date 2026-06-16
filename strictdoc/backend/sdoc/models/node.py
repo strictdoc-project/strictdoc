@@ -94,6 +94,24 @@ class SDocNodeField:
             multiline__="multiline" if multiline else None,
         )
 
+    @staticmethod
+    def from_parts(
+        parent: Optional["SDocNode"],
+        field_name: str,
+        parts: List[Any],
+        multiline: bool,
+    ) -> "SDocNodeField":
+        sdoc_node_field = SDocNodeField(
+            parent=parent,
+            field_name=field_name,
+            parts=parts,
+            multiline__="multiline" if multiline else None,
+        )
+        for part in parts:
+            if isinstance(part, (InlineLink, Anchor)):
+                part.parent = sdoc_node_field
+        return sdoc_node_field
+
     def is_multiline(self) -> bool:
         return self.multiline
 

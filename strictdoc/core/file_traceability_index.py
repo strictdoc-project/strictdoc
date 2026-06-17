@@ -19,6 +19,7 @@ from strictdoc.backend.gcov.helpers import convert_function_name_to_gcovr_style
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.free_text_reader import SDFreeTextReader
+from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
 )
@@ -348,6 +349,21 @@ class FileTraceabilityIndex:
                                 rhs_node=created_section,
                             )
                     current_top_node.section_contents.append(sdoc_node)
+
+                # Register [ANCHOR]s from source node fields as linkable targets.
+                for node_field_ in sdoc_node.enumerate_fields():
+                    for part_ in node_field_.parts:
+                        if isinstance(part_, Anchor):
+                            traceability_index.graph_database.create_link(
+                                link_type=GraphLinkType.MID_TO_NODE,
+                                lhs_node=part_.mid,
+                                rhs_node=part_,
+                            )
+                            traceability_index.graph_database.create_link(
+                                link_type=GraphLinkType.UID_TO_NODE,
+                                lhs_node=part_.value,
+                                rhs_node=part_,
+                            )
 
                 self.connect_source_node_function(
                     source_node_, sdoc_node_uid, traceability_info_

@@ -211,3 +211,162 @@ def test_006_markdown_grammar_reader_rejects_unknown_field_type():
     with pytest.raises(StrictDocSemanticError) as exc_info:
         MarkdownGrammarReader.read(input_markdown)
     assert "unknown field Type" in exc_info.value.title
+
+
+def test_007_markdown_writer_auto_writes_mid_when_grammar_has_mid_field():
+    """
+    When a document's grammar declares a MID field and a node doesn't have
+    MID set in the file, the Markdown writer must auto-write the
+    reserved_mid value so that the MID becomes permanent on the next read.
+    """
+    grammar_markdown = """\
+# StrictDoc Markdown Grammar
+
+## Element: REQUIREMENT
+
+### Field: MID
+
+**Type**: String
+**Required**: False
+
+### Field: UID
+
+**Type**: String
+**Required**: False
+
+### Field: STATEMENT
+
+**Type**: String
+**Required**: False
+"""
+    doc_markdown = """\
+# Document
+
+**Grammar**: `requirements.gra.md`
+
+## Requirement title
+
+**UID**: REQ-1
+
+**Statement**: System shall do X.
+"""
+
+    document = SDMarkdownReader.read(doc_markdown, file_path=None)
+    assert document.grammar is not None
+
+    # Simulate grammar resolution (normally done by TraceabilityIndexBuilder).
+    resolved_grammar = MarkdownGrammarReader.read(grammar_markdown)
+    resolved_grammar.import_from_file = "requirements.gra.md"
+    resolved_grammar.parent = document
+    document.grammar = resolved_grammar
+
+    output_markdown = SDMarkdownWriter.write(document)
+
+    # The writer must have inserted a MID field.
+    assert "**MID**:" in output_markdown
+    # UID must still be present.
+    assert "**UID**: REQ-1" in output_markdown
+
+
+def test_008_markdown_writer_preserves_existing_mid_when_grammar_has_mid_field():
+    """
+    When a document's grammar declares MID and a node already has a MID
+    value in the document, the writer must preserve the existing MID value
+    (no duplicate MID field).
+    """
+    grammar_markdown = """\
+# StrictDoc Markdown Grammar
+
+## Element: REQUIREMENT
+
+### Field: MID
+
+**Type**: String
+**Required**: False
+
+### Field: UID
+
+**Type**: String
+**Required**: False
+
+### Field: STATEMENT
+
+**Type**: String
+**Required**: False
+"""
+    doc_markdown = """\
+# Document
+
+**Grammar**: `requirements.gra.md`
+
+## Requirement title
+
+**MID**: abc123 \\
+**UID**: REQ-1
+
+**Statement**: System shall do X.
+"""
+
+    document = SDMarkdownReader.read(doc_markdown, file_path=None)
+    assert document.grammar is not None
+
+    # Simulate grammar resolution.
+    resolved_grammar = MarkdownGrammarReader.read(grammar_markdown)
+    resolved_grammar.import_from_file = "requirements.gra.md"
+    resolved_grammar.parent = document
+    document.grammar = resolved_grammar
+
+    output_markdown = SDMarkdownWriter.write(document)
+
+    # The existing MID must be preserved.
+    assert "**MID**: abc123" in output_markdown
+    # No duplicate MID field: count occurrences.
+    assert output_markdown.count("**MID**") == 1
+    assert "**UID**: REQ-1" in output_markdown
+
+
+def test_009_markdown_writer_no_mid_when_grammar_has_no_mid_field():
+    """
+    When the grammar does not declare a MID field, the writer must not
+    inject any MID field into the output even though nodes carry a
+    reserved_mid internally.
+    """
+    grammar_markdown = """\
+# StrictDoc Markdown Grammar
+
+## Element: REQUIREMENT
+
+### Field: UID
+
+**Type**: String
+**Required**: False
+
+### Field: STATEMENT
+
+**Type**: String
+**Required**: False
+"""
+    doc_markdown = """\
+# Document
+
+**Grammar**: `requirements.gra.md`
+
+## Requirement title
+
+**UID**: REQ-1
+
+**Statement**: System shall do X.
+"""
+
+    document = SDMarkdownReader.read(doc_markdown, file_path=None)
+
+    # Simulate grammar resolution.
+    resolved_grammar = MarkdownGrammarReader.read(grammar_markdown)
+    resolved_grammar.import_from_file = "requirements.gra.md"
+    resolved_grammar.parent = document
+    document.grammar = resolved_grammar
+
+    output_markdown = SDMarkdownWriter.write(document)
+
+    assert "**MID**" not in output_markdown
+    assert "**UID**: REQ-1" in output_markdown

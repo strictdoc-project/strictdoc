@@ -174,6 +174,20 @@ class SDMarkdownWriter:
                 node.node_type, None
             )
 
+        # If a custom (user-defined) grammar declares MID and the node doesn't
+        # have one, auto-write the reserved_mid so it becomes permanent on the
+        # next read. This is the Markdown equivalent of SDoc's ENABLE_MID.
+        # The default grammar also carries MID, so guard with is_default to
+        # avoid injecting MID into plain Markdown documents.
+        if (
+            document_grammar is not None
+            and not document_grammar.is_default
+            and element is not None
+            and "MID" in element.fields_map
+            and "MID" not in node.ordered_fields_lookup
+        ):
+            meta_fields.append(("MID", node.reserved_mid))
+
         for field in node.enumerate_fields():
             if field.field_name == "TITLE":
                 continue

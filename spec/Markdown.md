@@ -139,6 +139,21 @@ With a custom grammar, an H2–H6 heading becomes a REQUIREMENT node when the me
 
 Field validation against the grammar schema is deferred to a later build stage. The heading text is assigned to the `TITLE` field.
 
+### MID auto-generation
+
+**MID**: 00fc24ee2f5c44f08c1d7f543a3677b0 \
+**UID**: MD-24
+
+**STATEMENT**:
+
+When a custom grammar declares a `MID` field for an element type, the writer automatically inserts the node's auto-generated machine identifier into the output for any node of that type that does not already carry a `MID` field.
+
+This is the Markdown equivalent of SDoc's document-level `ENABLE_MID` option. The presence of the `MID` field in the custom grammar is the activation signal — no explicit document-level option is required.
+
+On the first write-back, every node without a `MID` receives a freshly generated UUID. On subsequent reads, the persisted value is loaded and the node's machine identifier is treated as permanent.
+
+This behavior applies only to custom (user-defined) grammars. The built-in default grammar also declares `MID` for the `REQUIREMENT` element, but the default grammar does not trigger auto-generation.
+
 ### Meta-field styles
 
 **MID**: 0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a \

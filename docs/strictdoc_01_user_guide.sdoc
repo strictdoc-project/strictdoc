@@ -1213,6 +1213,37 @@ With the command-line interface, the generation of ``MID`` can be initiated with
 .. note::
 
     StrictDoc provides the ENABLE_MID option on a per-document basis because this allows for the integration of MID-enabled documents alongside third-party documents where the MID feature may not be necessary or possible.
+
+**Markdown documents**
+
+For Markdown documents, the ``ENABLE_MID`` behavior is activated automatically — no document-level option is required. Instead, the presence of a ``MID`` field in a custom grammar element is the activation signal.
+
+When a ``.gra.md`` grammar file declares a ``MID`` field for an element type, the Markdown writer automatically inserts a machine identifier for every node of that type that does not already have one. On the next read, the persisted value is treated as permanent.
+
+Example grammar with MID declared:
+
+.. code-block:: markdown
+
+    # StrictDoc Markdown Grammar
+
+    ## Element: REQUIREMENT
+
+    ### Field: MID
+
+    **Type**: String
+    **Required**: False
+
+    ### Field: UID
+
+    **Type**: String
+    **Required**: False
+
+    ### Field: STATEMENT
+
+    **Type**: String
+    **Required**: False
+
+With this grammar attached (``**Grammar**: requirements.gra.md``), any ``REQUIREMENT`` node that does not yet have a ``**MID**`` field will receive one on the first write-back.
 <<<
 
 [[SECTION]]

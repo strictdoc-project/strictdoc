@@ -314,13 +314,15 @@ class CreateOrUpdateNodeCommand:
                 parent=parent, node_type=form_object.element_type
             )
             requirement.reserved_mid = MID(form_object.requirement_mid)
-            if document.config.enable_mid:
-                requirement.mid_permanent = True
-
             assert document.grammar is not None
             grammar_element: GrammarElement = document.grammar.elements_by_type[
                 form_object.element_type
             ]
+            if (
+                document.config.enable_mid
+                or "MID" in grammar_element.fields_map
+            ):
+                requirement.mid_permanent = True
 
             requirement.is_composite = (
                 grammar_element.property_is_composite is True

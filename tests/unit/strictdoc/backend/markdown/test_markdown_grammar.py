@@ -137,7 +137,66 @@ def test_004_markdown_grammar_custom_grammar_relaxes_uid_and_statement_requireme
     assert "NAME" in field_names
 
 
-def test_005_markdown_grammar_reader_rejects_unknown_field_type():
+def test_005_markdown_grammar_writer_uses_field_key_not_human_title_for_custom_grammar():
+    """
+    Regression test for https://github.com/strictdoc-project/strictdoc/issues/2918.
+
+    When a document has a custom (imported) grammar whose fields carry a
+    Human Title, the writer must serialise each field using the grammar key
+    name (e.g. DERIVED_RATIONALE), not the human-readable title
+    (e.g. "Example Human Title").  The reader canonicalises field names with
+    .upper(), so writing the human title produces an unrecoverable key on
+    the next parse.
+    """
+    grammar_markdown = """\
+# StrictDoc Markdown Grammar
+
+## Element: REQUIREMENT
+
+### Field: UID
+
+**Type**: String
+**Required**: False
+
+### Field: DERIVED_RATIONALE
+
+**Type**: String
+**Human Title**: Example Human Title
+**Required**: False
+
+### Relations
+
+#### Relation: Parent
+"""
+    doc_markdown = """\
+# Document
+
+**Grammar**: `requirements.gra.md`
+
+## Requirement title
+
+**UID**: REQ-1
+**DERIVED_RATIONALE**: Some rationale text.
+"""
+
+    document = SDMarkdownReader.read(doc_markdown, file_path=None)
+    assert document.grammar is not None
+    assert document.grammar.import_from_file == "requirements.gra.md"
+
+    # Simulate grammar resolution (normally done by TraceabilityIndexBuilder).
+    resolved_grammar = MarkdownGrammarReader.read(grammar_markdown)
+    resolved_grammar.import_from_file = "requirements.gra.md"
+    resolved_grammar.parent = document
+    document.grammar = resolved_grammar
+
+    output_markdown = SDMarkdownWriter.write(document)
+
+    # The field key name must appear on disk, not the human title.
+    assert "**DERIVED_RATIONALE**" in output_markdown
+    assert "Example Human Title" not in output_markdown
+
+
+def test_006_markdown_grammar_reader_rejects_unknown_field_type():
     input_markdown = """\
 # StrictDoc Markdown Grammar
 

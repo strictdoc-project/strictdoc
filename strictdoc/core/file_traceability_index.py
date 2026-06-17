@@ -1260,7 +1260,16 @@ class FileTraceabilityIndex:
                 # I currently struggle to update the search index.
                 parent_document = sdoc_node.get_parent_or_including_document()
                 sdoc_node.reserved_mid = MID(sdoc_mid_field)
-                if parent_document.config.enable_mid:
+                assert parent_document.grammar is not None
+                node_grammar_element = (
+                    parent_document.grammar.elements_by_type.get(
+                        sdoc_node.node_type
+                    )
+                )
+                if parent_document.config.enable_mid or (
+                    node_grammar_element is not None
+                    and "MID" in node_grammar_element.fields_map
+                ):
                     sdoc_node.mid_permanent = True
 
         if not traceability_index.graph_database.has_link(

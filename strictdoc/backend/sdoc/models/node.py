@@ -804,6 +804,16 @@ class SDocNode(SDocNodeIF):
         multiline = element.is_field_multiline(field_name)
         if multiline and isinstance(value, str):
             value = ensure_newline(value)
+        elif (
+            multiline
+            and isinstance(value, SDocNodeField)
+            and len(value.parts) > 0
+        ):
+            last_part = value.parts[-1]
+            if isinstance(last_part, str):
+                value.parts[-1] = ensure_newline(last_part)
+            elif isinstance(last_part, InlineLink):
+                value.parts.append("\n")
 
         if field_name in self.ordered_fields_lookup:
             if len(self.ordered_fields_lookup[field_name]) > form_field_index:

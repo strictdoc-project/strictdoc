@@ -1,0 +1,17 @@
+#
+# @relation(SDOC-SRS-141, scope=file)
+#
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s
+
+CHECK: Published: Requirements
+
+RUN: %check_exists --file "%T/html/_source_files/tests/file.c.html"
+
+# The INTENTION field must render [LINK: ...] as a hyperlink, not as raw text.
+# Check for the fragment part of the URL.
+RUN: %cat %T/html/_source_files/tests/file.c.html | filecheck %s --check-prefix CHECK-SOURCE-FILE
+
+CHECK-SOURCE-FILE: <sdoc-node-field-label>INTENTION:</sdoc-node-field-label>
+CHECK-SOURCE-FILE: input.html#REQ-1{{.*}}input.html#REQ-2
+

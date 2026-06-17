@@ -18,6 +18,7 @@ from typing import (
 from strictdoc.backend.gcov.helpers import convert_function_name_to_gcovr_style
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
+from strictdoc.backend.sdoc.free_text_reader import SDFreeTextReader
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
 )
@@ -1149,11 +1150,23 @@ class FileTraceabilityIndex:
     def set_sdoc_node_fields(
         sdoc_node: SDocNode, sdoc_node_fields: dict[str, str]
     ) -> None:
+        document = assert_cast(sdoc_node.get_document(), SDocDocumentIF)
+        grammar = assert_cast(document.grammar, DocumentGrammar)
+        element = grammar.elements_by_type[sdoc_node.node_type]
+
         for field_name, field_value in sdoc_node_fields.items():
+            multiline = element.is_field_multiline(field_name)
+            free_text_container = SDFreeTextReader.read(field_value)
+            sdoc_node_field = SDocNodeField.from_parts(
+                sdoc_node,
+                field_name=field_name,
+                parts=free_text_container.parts,
+                multiline=multiline,
+            )
             sdoc_node.set_field_value(
                 field_name=field_name,
                 form_field_index=0,
-                value=field_value,
+                value=sdoc_node_field,
             )
 
             # As we overwrite the field's content from the source code,

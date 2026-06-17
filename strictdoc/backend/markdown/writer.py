@@ -307,6 +307,15 @@ class SDMarkdownWriter:
         if document is None or document.grammar is None:
             return field_name
         grammar = assert_cast(document.grammar, DocumentGrammar)
+        # For imported (custom) grammars, always write the field key name so
+        # that the reader can recover it via .upper(). Human titles in custom
+        # grammars are arbitrary strings (e.g. "Example Human Title" for key
+        # "DERIVED_RATIONALE") and do not round-trip through the reader's
+        # name.upper() normalisation. For the built-in default grammar the
+        # human title is always a simple capitalisation variant of the key
+        # (e.g. "Statement" for "STATEMENT"), so .upper() recovers it safely.
+        if grammar.import_from_file is not None:
+            return field_name
         element = grammar.elements_by_type.get(node.node_type, None)
         if element is None:
             return field_name

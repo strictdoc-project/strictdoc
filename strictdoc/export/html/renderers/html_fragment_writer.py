@@ -8,4 +8,4 @@ class HTMLFragmentWriter:
 
     @staticmethod
     def write_anchor_link(title: str, href: str) -> str:
-        return f'<a href="{href}">🔗&nbsp;{title}</a>`'
+        return f'<a href="{href}">🔗&nbsp;{title}</a>'

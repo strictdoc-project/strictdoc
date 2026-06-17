@@ -1,6 +1,16 @@
 from strictdoc.export.html.renderers.text_to_html_writer import TextToHtmlWriter
 
 
+def test_write_anchor_link():
+    result = TextToHtmlWriter.write_anchor_link(
+        "REQ-001", "../requirements/REQ-001.html#REQ-001"
+    )
+    assert (
+        result
+        == '<a href="../requirements/REQ-001.html#REQ-001">🔗&nbsp;REQ-001</a>'
+    )
+
+
 def test_01_escapes_html_tags():
     text_input = """
 <a href="url">link</a>

@@ -269,6 +269,22 @@ class DocumentGrammar(SDocGrammarIF):
                 return True
         return False
 
+    def has_custom_elements(self) -> bool:
+        """
+        Return True when the grammar defines element types beyond the
+        built-in set {SECTION, TEXT, REQUIREMENT}.
+
+        When the grammar has not yet been resolved (elements_by_type is
+        empty but import_from_file is set), True is returned so that the
+        Markdown writer can emit TYPE fields for round-trip safety.
+        """
+        if self.is_default:
+            return False
+        _builtin = {"SECTION", "TEXT", "REQUIREMENT"}
+        if len(self.elements_by_type) == 0:
+            return self.import_from_file is not None
+        return any(t not in _builtin for t in self.elements_by_type)
+
     def add_element_first(self, element: GrammarElement) -> None:
         self.elements.insert(0, element)
         self.elements_by_type[element.tag] = element

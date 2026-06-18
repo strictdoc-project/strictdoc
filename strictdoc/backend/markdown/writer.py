@@ -174,6 +174,18 @@ class SDMarkdownWriter:
                 node.node_type, None
             )
 
+        # Emit TYPE for every non-TEXT node when the grammar defines element
+        # types beyond the built-in set (see MD-26). SECTION is included
+        # because the reader treats any heading with a valid meta block as a
+        # typed node when a custom grammar is active; without TYPE: SECTION the
+        # reader would mis-classify a SECTION as a REQUIREMENT on re-read.
+        if (
+            document_grammar is not None
+            and document_grammar.has_custom_elements()
+            and node.node_type != "TEXT"
+        ):
+            meta_fields.append(("TYPE", node.node_type))
+
         # If a custom (user-defined) grammar declares MID and the node doesn't
         # have one, auto-write the reserved_mid so it becomes permanent on the
         # next read. This is the Markdown equivalent of SDoc's ENABLE_MID.
@@ -349,6 +361,33 @@ class SDMarkdownWriter:
         ).strip("\n")
         if line_width is not None:
             statement_value = wrap_md_text(statement_value, line_width)
+
+        # When the grammar's TEXT element declares a MID field, emit
+        # **TYPE**: TEXT \ **MID**: <mid> before the statement body so that
+        # the TEXT node's machine identifier is preserved across read/write cycles.
+        document = node.get_document()
+        if document is not None and document.grammar is not None:
+            grammar = assert_cast(document.grammar, DocumentGrammar)
+            text_element = grammar.elements_by_type.get("TEXT", None)
+            if (
+                text_element is not None
+                and "MID" in text_element.fields_map
+                and not grammar.is_default
+            ):
+                existing_mid_fields = node.ordered_fields_lookup.get(
+                    "MID", None
+                )
+                if existing_mid_fields:
+                    mid_str = existing_mid_fields[0].get_text_value()
+                else:
+                    mid_str = str(node.reserved_mid)
+                meta_block = SDMarkdownWriter._serialize_meta_fields(
+                    [("TYPE", "TEXT"), ("MID", mid_str)]
+                )
+                if len(statement_value) > 0:
+                    return f"{meta_block}\n\n{statement_value}"
+                return meta_block
+
         return statement_value
 
     @staticmethod

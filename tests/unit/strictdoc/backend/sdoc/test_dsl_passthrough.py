@@ -1213,3 +1213,42 @@ Multiline status is not allowed.
         "The node field STATUS is a reserved field and can only be written as "
         "a single-line, not multiline, field."
     )
+
+
+def test_crlf_single_line_field():
+    input_sdoc = (
+        "[DOCUMENT]\r\n"
+        "TITLE: Test Doc\r\n"
+        "\r\n"
+        "[REQUIREMENT]\r\n"
+        "STATEMENT: Test statement.\r\n"
+    )
+
+    reader = SDReader()
+
+    document = reader.read(input_sdoc)
+    assert isinstance(document, SDocDocument)
+    assert document.title == "Test Doc"
+    node = document.section_contents[0]
+    assert isinstance(node, SDocNode)
+    assert node.reserved_statement == "Test statement."
+
+
+def test_crlf_multiline_field():
+    input_sdoc = (
+        "[DOCUMENT]\r\n"
+        "TITLE: Test Doc\r\n"
+        "\r\n"
+        "[REQUIREMENT]\r\n"
+        "STATEMENT: >>>\r\n"
+        "Multiline content.\r\n"
+        "<<<\r\n"
+    )
+
+    reader = SDReader()
+
+    document = reader.read(input_sdoc)
+    assert isinstance(document, SDocDocument)
+    node = document.section_contents[0]
+    assert isinstance(node, SDocNode)
+    assert node.reserved_statement == "Multiline content.\r\n"

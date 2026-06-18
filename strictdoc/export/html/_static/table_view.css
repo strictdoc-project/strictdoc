@@ -97,6 +97,9 @@ background-image:
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  position: sticky;
+  top: 0;
 }
 
 .content-view-td-type__actions {

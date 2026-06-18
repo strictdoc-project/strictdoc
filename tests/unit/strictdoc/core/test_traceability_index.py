@@ -456,22 +456,22 @@ def test_missing_parent_relation_relaxed_mode_collects_diagnostics():
         document_tree, project_config=document_builder.project_config
     )
 
-    assert traceability_index.has_missing_parent_relations()
+    assert traceability_index.has_missing_relations()
     assert traceability_index.get_parent_requirements(requirement2) == []
 
-    missing_relations = traceability_index.get_missing_parent_relations(
-        requirement2
-    )
+    missing_relations = traceability_index.get_missing_relations(requirement2)
     assert len(missing_relations) == 1
     assert missing_relations[0].ref_uid == "REQ-DOES-NOT-EXIST"
     assert missing_relations[0].role == "Refines"
+    assert missing_relations[0].ref_type == "Parent"
 
     missing_document_relations = (
-        traceability_index.get_missing_parent_relations_for_document(document)
+        traceability_index.get_missing_relations_for_document(document)
     )
     assert len(missing_document_relations) == 1
     assert missing_document_relations[0][0] == requirement2
     assert missing_document_relations[0][1].ref_uid == "REQ-DOES-NOT-EXIST"
+    assert missing_document_relations[0][1].ref_type == "Parent"
 
 
 def test_missing_child_relation_relaxed_mode_collects_diagnostics():

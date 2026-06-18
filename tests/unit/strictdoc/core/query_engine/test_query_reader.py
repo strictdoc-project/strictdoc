@@ -3,7 +3,6 @@ from strictdoc.core.query_engine.query_object import (
     InExpression,
     NodeContainsAnyFreeTextExpression,
     NodeHasMissingRelationsExpression,
-    NodeHasMissingParentRelationsExpression,
     NodeFieldExpression,
     NodeHasParentRequirementsExpression,
     NodeIsRequirementExpression,
@@ -133,19 +132,7 @@ node.is_requirement\
     assert isinstance(query_object.root_expression, NodeIsRequirementExpression)
 
 
-def test_62_1_node_has_missing_parent_relations():
-    query = """\
-node.has_missing_parent_relations\
-"""
-    query_object = QueryReader.read(query)
-    assert isinstance(query_object, Query)
-    assert isinstance(
-        query_object.root_expression,
-        NodeHasMissingParentRelationsExpression,
-    )
-
-
-def test_62_2_node_has_missing_relations():
+def test_62_1_node_has_missing_relations():
     query = """\
 node.has_missing_relations\
 """

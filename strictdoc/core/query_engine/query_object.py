@@ -62,11 +62,6 @@ class NodeHasChildRequirementsExpression:
         self.parent: Any = parent
 
 
-class NodeHasMissingParentRelationsExpression:
-    def __init__(self, parent: Any, _: Any):
-        self.parent: Any = parent
-
-
 class NodeHasMissingRelationsExpression:
     def __init__(self, parent: Any, _: Any):
         self.parent: Any = parent
@@ -187,8 +182,6 @@ class QueryObject:
         if isinstance(expression, NodeHasChildRequirementsExpression):
             return self._evaluate_node_has_child_requirements(node)
         if isinstance(expression, NodeHasMissingRelationsExpression):
-            return self._evaluate_node_has_missing_relations(node)
-        if isinstance(expression, NodeHasMissingParentRelationsExpression):
             return self._evaluate_node_has_missing_relations(node)
         if isinstance(expression, NodeIsRequirementExpression):
             return (

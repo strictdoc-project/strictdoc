@@ -375,34 +375,6 @@ class TraceabilityIndex:
             )
         )
 
-    def has_missing_parent_relations_for_requirement(
-        self, requirement: SDocNode
-    ) -> bool:
-        return len(self.get_missing_parent_relations(requirement)) > 0
-
-    def get_missing_parent_relations_for_document(
-        self, document: SDocDocument
-    ) -> List[Tuple[SDocNode, ParentReqReference]]:
-        return list(
-            filter(
-                lambda pair_: isinstance(pair_[1], ParentReqReference),
-                self.get_missing_relations_for_document(document),
-            )
-        )
-
-    def get_all_missing_parent_relations(
-        self,
-    ) -> List[Tuple[SDocNode, ParentReqReference]]:
-        return list(
-            filter(
-                lambda pair_: isinstance(pair_[1], ParentReqReference),
-                self.get_all_missing_relations(),
-            )
-        )
-
-    def has_missing_parent_relations(self) -> bool:
-        return len(self.get_all_missing_parent_relations()) > 0
-
     def get_parent_relations_with_roles(
         self, node: SDocNode
     ) -> List[Tuple[SDocNode, Optional[str]]]:

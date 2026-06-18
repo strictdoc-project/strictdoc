@@ -31,7 +31,6 @@ class ExportCommandConfig:
         generate_diff_dirs: Optional[Tuple[str, str]],
         chromedriver: Optional[str],
         allow_missing_relation_requirements: bool = False,
-        allow_missing_parent_requirements: bool = False,
     ):
         assert isinstance(input_paths, list), f"{input_paths}"
         self.debug: bool = debug
@@ -54,10 +53,7 @@ class ExportCommandConfig:
         self.generate_diff_git: Optional[str] = generate_diff_git
         self.generate_diff_dirs: Optional[Tuple[str, str]] = generate_diff_dirs
         self.chromedriver: Optional[str] = chromedriver
-        self.allow_missing_relation_requirements: bool = (
-            allow_missing_relation_requirements
-            or allow_missing_parent_requirements
-        )
+        self.allow_missing_relation_requirements: bool = allow_missing_relation_requirements
 
     def get_path_to_config(self) -> str:
         # FIXME: The control flow can be improved.

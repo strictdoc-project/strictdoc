@@ -154,7 +154,6 @@ class ProjectConfig:
         statistics_generator: Optional[str] = None,
         document_line_width: Optional[int] = None,
         allow_missing_relation_requirements: bool = False,
-        allow_missing_parent_requirements: Optional[bool] = None,
         # Logo path can be set in the project config to customize the launcher's appearance for a specific project.
         launcher_logo_path: Optional[str] = None,
         user_plugin: Optional[StrictDocPlugin] = None,
@@ -396,21 +395,11 @@ class ProjectConfig:
             )
         self.document_line_width: Optional[int] = document_line_width
 
-        if allow_missing_parent_requirements is not None:
-            allow_missing_relation_requirements = (
-                allow_missing_relation_requirements
-                or allow_missing_parent_requirements
-            )
-
         assert isinstance(
             allow_missing_relation_requirements, bool
         ), allow_missing_relation_requirements
         self.allow_missing_relation_requirements: bool = (
             allow_missing_relation_requirements
-        )
-        # Backward-compatible alias.
-        self.allow_missing_parent_requirements: bool = (
-            self.allow_missing_relation_requirements
         )
 
         self.user_plugin: Optional[StrictDocPlugin] = user_plugin
@@ -471,7 +460,6 @@ class ProjectConfig:
 
         if server_config.allow_missing_relation_requirements:
             self.allow_missing_relation_requirements = True
-            self.allow_missing_parent_requirements = True
 
     def integrate_export_config(
         self, export_config: ExportCommandConfig
@@ -543,7 +531,6 @@ class ProjectConfig:
 
         if export_config.allow_missing_relation_requirements:
             self.allow_missing_relation_requirements = True
-            self.allow_missing_parent_requirements = True
 
     def validate_and_finalize(self) -> None:
         project_path = self.get_project_root_path()
@@ -1136,10 +1123,7 @@ class ProjectConfigLoader:
 
             allow_missing_relation_requirements = project_content.get(
                 "allow_missing_relation_requirements",
-                project_content.get(
-                    "allow_missing_parent_requirements",
-                    allow_missing_relation_requirements,
-                ),
+                allow_missing_relation_requirements,
             )
 
             if "source_nodes" in project_content:

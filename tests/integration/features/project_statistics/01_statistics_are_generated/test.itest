@@ -15,4 +15,5 @@ RUN: %cat "%T/html/project_statistics.html" | filecheck %s --check-prefix CHECK-
 CHECK-HTML: Test project
 CHECK-HTML: Total documents
 CHECK-HTML: Total requirements
+CHECK-HTML-NOT: Requirements with missing relations
 CHECK-HTML-NOT: Requirements status breakdown

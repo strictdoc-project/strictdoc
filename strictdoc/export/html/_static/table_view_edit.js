@@ -377,7 +377,7 @@
         );
         if (!row) return;
         row.setAttribute('data-node-created', 'true');
-        restoreViewportAnchor(anchor, row);
+        // restoreViewportAnchor(anchor, row); // to move new node on menu position
         feedback.dataset.createdNodeMid = '';
     }
 

@@ -1,0 +1,8 @@
+[project]
+title = "Test project"
+
+features = [
+  "PROJECT_STATISTICS_SCREEN",
+]
+
+allow_missing_relation_requirements = true

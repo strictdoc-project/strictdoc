@@ -34,7 +34,6 @@ class ExportCommandConfig:
         chrome_binary: Optional[str],
         disable_ssl_check: bool,
         allow_missing_relation_requirements: bool = False,
-        allow_missing_parent_requirements: bool = False,
     ):
         assert isinstance(input_paths, list), f"{input_paths}"
         self.debug: bool = debug
@@ -62,7 +61,6 @@ class ExportCommandConfig:
         self.disable_ssl_check: bool = disable_ssl_check
         self.allow_missing_relation_requirements: bool = (
             allow_missing_relation_requirements
-            or allow_missing_parent_requirements
         )
 
     def get_path_to_config(self) -> str:

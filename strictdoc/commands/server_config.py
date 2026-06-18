@@ -22,7 +22,6 @@ class ServerCommandConfig:
         port: Optional[int],
         watch: bool = False,
         allow_missing_relation_requirements: bool = False,
-        allow_missing_parent_requirements: bool = False,
     ):
         self.debug: bool = debug
         self.development: bool = development
@@ -36,7 +35,6 @@ class ServerCommandConfig:
         self.watch: bool = watch
         self.allow_missing_relation_requirements: bool = (
             allow_missing_relation_requirements
-            or allow_missing_parent_requirements
         )
 
     def get_full_input_path(self) -> str:

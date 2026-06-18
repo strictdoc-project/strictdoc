@@ -7,7 +7,7 @@
 REGEX_UID = r"([\w]+[\w()\-\/.: ]*)"
 REGEX_FIELD_NAME = r"[A-Z]+[A-Za-z0-9_\-]*"
 
-NEGATIVE_MULTILINE_STRING_START = "(?!>>>\n)"
+NEGATIVE_MULTILINE_STRING_START = "(?!>>>\r?\n)"
 NEGATIVE_MULTILINE_STRING_END = "(?!^<<<)"
 NEGATIVE_RELATIONS = "(?!^RELATIONS)"
 NEGATIVE_UID = "(?!^UID)"
@@ -20,7 +20,7 @@ TextPart[noskipws]:
 ;
 
 SingleLineTextPart[noskipws]:
-  (Anchor | InlineLink | /{NEGATIVE_MULTILINE_STRING_START}\S.*/)
+  (Anchor | InlineLink | /{NEGATIVE_MULTILINE_STRING_START}\S[^\r\n]*/)
 ;
 
 NormalString[noskipws]:
@@ -34,18 +34,18 @@ InlineLink[noskipws]:
 Anchor[noskipws]:
   /^\[ANCHOR: /
   value = /{REGEX_UID}/ (', ' title = /\w+[\s\w+]*/)?
-  /\](\Z|\n)/
+  /\](\Z|\r?\n)/
 ;
 
 // According to the Strict Grammar Rule #3, both SingleLineString and
 // MultiLineString can never be empty strings.
 // Both must eventualy start with a non-space character.
 SingleLineString:
-  /{NEGATIVE_MULTILINE_STRING_START}\S.*$/
+  /{NEGATIVE_MULTILINE_STRING_START}\S[^\r\n]*/
 ;
 
 MultiLineString[noskipws]:
-  />>>\n/-
+  />>>\r?\n/-
     parts*=TextPart
   /^<<</-
 ;
@@ -221,7 +221,7 @@ SDocNodeField[noskipws]:
         (
           ' '
           (
-            multiline__ = />>>\n/
+            multiline__ = />>>\r?\n/
             parts+=TextPart
             /^<<</
           )

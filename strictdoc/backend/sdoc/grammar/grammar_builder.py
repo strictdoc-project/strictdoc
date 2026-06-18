@@ -16,7 +16,7 @@ from strictdoc.backend.sdoc.grammar.type_system import (
 class SDocGrammarBuilder:
     @staticmethod
     def _prep_grammar(grammar: str) -> str:
-        return grammar.replace("'\\n'", "'\n'")
+        return grammar.replace("'\\n'", "/\\r?\\n/")
 
     @staticmethod
     def create_grammar() -> str:

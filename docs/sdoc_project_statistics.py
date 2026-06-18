@@ -11,13 +11,13 @@ from strictdoc.backend.sdoc_source_code.models.source_file_info import (
 )
 from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.project_config import ProjectConfig
-from strictdoc.core.statistics.metric import Metric, MetricSection
 from strictdoc.core.traceability_index import TraceabilityIndex
-from strictdoc.export.html.generators.view_objects.project_statistics_view_object import (
-    ProjectStatisticsViewObject,
-)
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
+from strictdoc.features.project_statistics.metric import Metric, MetricSection
+from strictdoc.features.project_statistics.view_object import (
+    ProjectStatisticsViewObject,
+)
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.git_client import GitClient
 
@@ -50,6 +50,7 @@ class DocumentTreeStats:
     requirements_no_uid: int = 0
     requirements_no_links: int = 0
     requirements_root_no_links: int = 0
+    requirements_missing_relations: int = 0
     requirements_no_rationale: int = 0
 
     # STATUS.
@@ -124,6 +125,11 @@ class SDocStatisticsGenerator:
                                     == 0
                                 ):
                                     document_tree_stats.requirements_no_links += 1
+
+                        if traceability_index.has_missing_relations_for_requirement(
+                            requirement
+                        ):
+                            document_tree_stats.requirements_missing_relations += 1
 
                         # RATIONALE.
                         if (
@@ -252,6 +258,13 @@ class SDocStatisticsGenerator:
                 name="Non-root-level requirements not connected to any parent requirement",
                 value=str(document_tree_stats.requirements_no_links),
                 link='search?q=(node.is_requirement() and not node.is_root and node["STATUS"] != "Backlog" and not node.has_parent_requirements)',
+            )
+        )
+        section.metrics.append(
+            Metric(
+                name="Requirements with missing relations",
+                value=str(document_tree_stats.requirements_missing_relations),
+                link="search?q=(node.is_requirement() and node.has_missing_relations)",
             )
         )
         section.metrics.append(

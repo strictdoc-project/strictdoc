@@ -62,6 +62,16 @@ class NodeHasChildRequirementsExpression:
         self.parent: Any = parent
 
 
+class NodeHasMissingParentRelationsExpression:
+    def __init__(self, parent: Any, _: Any):
+        self.parent: Any = parent
+
+
+class NodeHasMissingRelationsExpression:
+    def __init__(self, parent: Any, _: Any):
+        self.parent: Any = parent
+
+
 class NodeIsRequirementExpression:
     def __init__(self, parent: Any, _: Any):
         self.parent: Any = parent
@@ -176,6 +186,10 @@ class QueryObject:
             return self._evaluate_node_has_parent_requirements(node)
         if isinstance(expression, NodeHasChildRequirementsExpression):
             return self._evaluate_node_has_child_requirements(node)
+        if isinstance(expression, NodeHasMissingRelationsExpression):
+            return self._evaluate_node_has_missing_relations(node)
+        if isinstance(expression, NodeHasMissingParentRelationsExpression):
+            return self._evaluate_node_has_missing_relations(node)
         if isinstance(expression, NodeIsRequirementExpression):
             return (
                 isinstance(node, SDocNode) and node.node_type == "REQUIREMENT"
@@ -311,6 +325,17 @@ class QueryObject:
                 f"the error, prepend your query with node.is_requirement."
             )
         return self.traceability_index.has_children_requirements(node)
+
+    def _evaluate_node_has_missing_relations(
+        self, node: SDocExtendedElementIF
+    ) -> bool:
+        if not isinstance(node, SDocNode):
+            raise TypeError(
+                f"node.has_missing_relations can be only called on "
+                f"Requirement objects, got: {node.__class__.__name__}. To fix "
+                f"the error, prepend your query with node.is_requirement."
+            )
+        return self.traceability_index.has_missing_relations_for_requirement(node)
 
     def _evaluate_node_contains(
         self,

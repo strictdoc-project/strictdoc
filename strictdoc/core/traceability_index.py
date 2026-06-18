@@ -297,6 +297,112 @@ class TraceabilityIndex:
             )
         )
 
+    def get_missing_relations(
+        self, requirement: SDocNode
+    ) -> List[Union[ParentReqReference, ChildReqReference]]:
+        assert isinstance(requirement, SDocNode)
+
+        missing_relations: List[Union[ParentReqReference, ChildReqReference]] = []
+        for relation_ in requirement.relations:
+            if not isinstance(
+                relation_, (ParentReqReference, ChildReqReference)
+            ):
+                continue
+
+            if self.graph_database.get_link_value_weak(
+                link_type=GraphLinkType.UID_TO_NODE,
+                lhs_node=relation_.ref_uid,
+            ) is None:
+                missing_relations.append(relation_)
+
+        return missing_relations
+
+    def has_missing_relations_for_requirement(
+        self, requirement: SDocNode
+    ) -> bool:
+        assert isinstance(requirement, SDocNode)
+        return len(self.get_missing_relations(requirement)) > 0
+
+    def get_missing_relations_for_document(
+        self, document: SDocDocument
+    ) -> List[Tuple[SDocNode, Union[ParentReqReference, ChildReqReference]]]:
+        assert isinstance(document, SDocDocument)
+
+        missing_relations: List[
+            Tuple[SDocNode, Union[ParentReqReference, ChildReqReference]]
+        ] = []
+        document_iterator = self.document_iterators[document]
+        for node_, _ in document_iterator.all_content(print_fragments=False):
+            if not isinstance(node_, SDocNode):
+                continue
+            for relation_ in self.get_missing_relations(node_):
+                missing_relations.append((node_, relation_))
+        return missing_relations
+
+    def get_all_missing_relations(
+        self,
+    ) -> List[Tuple[SDocNode, Union[ParentReqReference, ChildReqReference]]]:
+        missing_relations: List[
+            Tuple[SDocNode, Union[ParentReqReference, ChildReqReference]]
+        ] = []
+        for document_ in self.document_tree.document_list:
+            missing_relations.extend(
+                self.get_missing_relations_for_document(document_)
+            )
+        return missing_relations
+
+    def has_missing_relations(self) -> bool:
+        return len(self.get_all_missing_relations()) > 0
+
+    # Compatibility wrappers for old API.
+    def get_missing_parent_relations(
+        self, requirement: SDocNode
+    ) -> List[ParentReqReference]:
+        return list(
+            filter(
+                lambda relation_: isinstance(relation_, ParentReqReference),
+                self.get_missing_relations(requirement),
+            )
+        )
+
+    def get_missing_child_relations(
+        self, requirement: SDocNode
+    ) -> List[ChildReqReference]:
+        return list(
+            filter(
+                lambda relation_: isinstance(relation_, ChildReqReference),
+                self.get_missing_relations(requirement),
+            )
+        )
+
+    def has_missing_parent_relations_for_requirement(
+        self, requirement: SDocNode
+    ) -> bool:
+        return len(self.get_missing_parent_relations(requirement)) > 0
+
+    def get_missing_parent_relations_for_document(
+        self, document: SDocDocument
+    ) -> List[Tuple[SDocNode, ParentReqReference]]:
+        return list(
+            filter(
+                lambda pair_: isinstance(pair_[1], ParentReqReference),
+                self.get_missing_relations_for_document(document),
+            )
+        )
+
+    def get_all_missing_parent_relations(
+        self,
+    ) -> List[Tuple[SDocNode, ParentReqReference]]:
+        return list(
+            filter(
+                lambda pair_: isinstance(pair_[1], ParentReqReference),
+                self.get_all_missing_relations(),
+            )
+        )
+
+    def has_missing_parent_relations(self) -> bool:
+        return len(self.get_all_missing_parent_relations()) > 0
+
     def get_parent_relations_with_roles(
         self, node: SDocNode
     ) -> List[Tuple[SDocNode, Optional[str]]]:

@@ -51,7 +51,49 @@ class ExportAction:
             print(exc.to_print_message())  # noqa: T201
             sys.exit(1)
         self.traceability_index = traceability_index
+        self._print_missing_relations_warning()
         return traceability_index
+
+    def _print_missing_relations_warning(self) -> None:
+        if not self.project_config.allow_missing_relation_requirements:
+            return
+
+        missing_relations = self.traceability_index.get_all_missing_relations()
+        if len(missing_relations) == 0:
+            return
+
+        print(  # noqa: T201
+            "warning: unresolved requirement relations were "
+            "detected and allowed by configuration."
+        )
+        print(  # noqa: T201
+            f"warning: missing relations count: " f"{len(missing_relations)}"
+        )
+
+        for requirement_, relation_ in missing_relations:
+            requirement_identifier = (
+                requirement_.reserved_uid
+                if requirement_.reserved_uid is not None
+                else requirement_.reserved_mid
+            )
+            document = requirement_.get_document()
+            document_title = (
+                document.reserved_title
+                if isinstance(document, SDocDocument)
+                else "UNKNOWN_DOCUMENT"
+            )
+            role_message = (
+                f", role '{relation_.role}'"
+                if relation_.role is not None
+                else ""
+            )
+            print(  # noqa: T201
+                "warning: "
+                f"requirement '{requirement_identifier}' in document "
+                f"'{document_title}' has a missing relation of type "
+                f"'{relation_.ref_type}' to requirement "
+                f"'{relation_.ref_uid}'{role_message}."
+            )
 
     @timing_decorator("Export SDoc")
     def export(self) -> None:

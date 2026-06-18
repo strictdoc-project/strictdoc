@@ -19,6 +19,8 @@ class ServerCommandConfig:
         reload: bool,
         host: Optional[str],
         port: Optional[int],
+        allow_missing_relation_requirements: bool = False,
+        allow_missing_parent_requirements: bool = False,
     ):
         self.debug: bool = debug
         self.command: str = command
@@ -28,6 +30,10 @@ class ServerCommandConfig:
         self.reload: bool = reload
         self.host: Optional[str] = host
         self.port: Optional[int] = port
+        self.allow_missing_relation_requirements: bool = (
+            allow_missing_relation_requirements
+            or allow_missing_parent_requirements
+        )
 
     def get_full_input_path(self) -> str:
         return os.path.abspath(self._input_path)

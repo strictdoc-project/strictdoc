@@ -1,0 +1,40 @@
+#
+# Regression test for https://github.com/strictdoc-project/strictdoc/issues/2924
+#
+# When a custom grammar declares a MID field for the SECTION element, the writer
+# must auto-inject MID into SECTION nodes AND emit **TYPE**: SECTION alongside
+# it. Without TYPE: SECTION the reader mis-classifies the heading as a
+# REQUIREMENT on the next parse, causing a grammar validation error.
+#
+# Scenario:
+#   pass1: SECTION has no MID and no TYPE → writer injects both TYPE: SECTION
+#          and a fresh MID.
+#   pass2: document is re-read, SECTION is correctly identified, writer
+#          produces identical output (idempotency confirms no mis-classification).
+#
+
+RUN: mkdir -p %T/pass1
+RUN: cp %S/input.md %T/pass1/input.md
+RUN: cp %S/requirements.gra.md %T/pass1/requirements.gra.md
+RUN: cp %S/strictdoc.toml %T/pass1/strictdoc.toml
+
+RUN: %strictdoc format %T/pass1/
+
+RUN: %cat %T/pass1/input.md | filecheck %s --dump-input=fail
+
+# After the first format pass the SECTION heading must carry TYPE: SECTION and
+# a freshly generated MID.
+CHECK: ## Section heading
+CHECK: **TYPE**: SECTION \
+CHECK-NEXT: **MID**:
+
+# The REQUIREMENT inside the section must also carry a freshly generated MID.
+# TYPE is not emitted for built-in element types (see MD-26).
+CHECK: ### Requirement inside section
+CHECK: **MID**:
+
+# A second format pass must produce identical output — proving the reader
+# correctly identifies the SECTION (not as a REQUIREMENT) on re-read.
+RUN: cp -r %T/pass1 %T/pass2
+RUN: %strictdoc format %T/pass2/
+RUN: diff %T/pass1/input.md %T/pass2/input.md

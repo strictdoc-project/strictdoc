@@ -260,13 +260,16 @@ class SDocStatisticsGenerator:
                 link='search?q=(node.is_requirement() and not node.is_root and node["STATUS"] != "Backlog" and not node.has_parent_requirements)',
             )
         )
-        section.metrics.append(
-            Metric(
-                name="Requirements with missing relations",
-                value=str(document_tree_stats.requirements_missing_relations),
-                link="search?q=(node.is_requirement() and node.has_missing_relations)",
+        if project_config.allow_missing_relation_requirements:
+            section.metrics.append(
+                Metric(
+                    name="Requirements with missing relations",
+                    value=str(
+                        document_tree_stats.requirements_missing_relations
+                    ),
+                    link="search?q=(node.is_requirement() and node.has_missing_relations)",
+                )
             )
-        )
         section.metrics.append(
             Metric(
                 name="Requirements with no RATIONALE",

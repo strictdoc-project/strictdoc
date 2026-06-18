@@ -1285,6 +1285,10 @@ def create_main_router(
             field_value, multiline=False
         )
 
+        old_title: Optional[str] = (
+            node.reserved_title if field_name == "TITLE" else None
+        )
+
         revision: int = revisions[node_mid_str]
         form_object: RequirementFormObject = (
             RequirementFormObject.create_from_requirement(
@@ -1320,12 +1324,31 @@ def create_main_router(
         write_document_to_file(document)
         revisions[node_mid_str] += 1
 
-        output = env().render_template_as_markup(
-            "actions/table/update_node_field/stream_update_node_field.jinja.html",
-            node=node,
-            field_name=field_name,
-            field_value=sanitized_value,
-        )
+        table_view_object = create_table_view_object(document)
+
+        if field_name == "TITLE":
+            title_presence_changed = bool(old_title) != bool(sanitized_value)
+            content_entries = (
+                list(table_view_object.document_content_iterator())
+                if title_presence_changed
+                else []
+            )
+            output = env().render_template_as_markup(
+                "actions/table/update_node_field/stream_update_title_field.jinja.html",
+                view_object=table_view_object,
+                node=node,
+                field_value=sanitized_value,
+                title_presence_changed=title_presence_changed,
+                content_entries=content_entries,
+            )
+        else:
+            output = env().render_template_as_markup(
+                "actions/table/update_node_field/stream_update_node_field.jinja.html",
+                view_object=table_view_object,
+                node=node,
+                field_name=field_name,
+                field_value=sanitized_value,
+            )
         return HTMLResponse(
             content=output,
             status_code=200,

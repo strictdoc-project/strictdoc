@@ -164,6 +164,30 @@ node's own `cell-{mid}-RELATIONS` via the same
 the current table (e.g. a node from another document) is simply ignored by
 Turbo.
 
+`update_node_field` for the `TITLE` field is a second special case: a node's
+TITLE determines whether the node participates in the document hierarchy and
+is listed in the TOC.
+
+- **None → text** (title added): `CreateOrUpdateNodeCommand` recalculates
+  `ng_resolved_custom_level`, and the project tree update propagates new level
+  numbers to all sibling nodes. The Turbo Stream from `update_node_field`
+  therefore goes beyond the single `cell-{mid}-TITLE` update — it also carries
+  a `stream_updated_toc` block (updating `frame-toc`) and a
+  `replace` action for every `cell-{mid}-LEVEL` cell in the document, so the
+  level numbers of all affected rows update in-place without a page reload.
+- **text → None** (title removed): same multi-target response; the edited
+  node's `LEVEL` cell becomes empty/dimmed, sibling levels shift, TOC entry
+  disappears.
+- **text → other text** (title text changed): structural hierarchy is
+  unaffected (levels do not shift), so the response contains only the
+  `cell-{mid}-TITLE` update and the TOC refresh — no LEVEL cell updates are
+  emitted.
+
+The handler captures `node.reserved_title` before calling `update_command.perform()`
+(which mutates the node in place), computes `title_presence_changed`, and
+branches to `stream_update_title_field.jinja.html` for TITLE edits vs. the
+generic `stream_update_node_field.jinja.html` for all other fields.
+
 `"singleline"`, `"multiline"`, `"comments"`, and `"relations"` are handled
 identically client-side via `openInlineCell` / `saveInlineCell`
 (`INLINE_FIELD_TYPES`); the difference is entirely server-side — different GET
@@ -242,6 +266,12 @@ The completed feature must be checked with:
 - editing each editable table cell type per node grammar
   (`TITLE`, `STATEMENT`, `RATIONALE`, `COMMENT`, `RELATIONS`,
   `MultipleChoice`/autocomplete, generic dynamic fields);
+- adding a TITLE to a node that had none and confirming the LEVEL cell and TOC
+  entry appear immediately in the same page without a reload;
+- removing a TITLE from a node that had one and confirming the LEVEL cell
+  becomes empty and the TOC entry disappears immediately;
+- changing a TITLE text and confirming the TOC entry updates while the LEVEL
+  cell is unchanged;
 - confirming cells absent from a node's grammar render dimmed and read-only;
 - save triggers: blur, outside click, Ctrl/Cmd+Enter, and Escape to cancel;
 - skip-on-unchanged behavior, and that creation fields still submit when empty;

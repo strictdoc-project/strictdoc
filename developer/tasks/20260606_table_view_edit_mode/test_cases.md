@@ -98,6 +98,23 @@ Representative fields: document `TITLE`, `UID`, `VERSION`,
 - `[x]` Validation recovery with Escape.
 - `[x]` Passive-open and field switching behavior.
 
+### TITLE → level and TOC coherence
+
+A node's TITLE determines its participation in the document hierarchy:
+nodes without TITLE have no level number and are absent from the TOC.
+The `update_node_field` handler for TITLE detects the three change cases and
+returns additional Turbo Streams beyond the TITLE cell itself.
+
+- `[x]` Adding a TITLE (None → text): the LEVEL cell receives the node's new
+  level number and the TOC gains the new entry — both in-place, without a
+  reload. All sibling LEVEL cells that shifted are also updated.
+- `[x]` Removing a TITLE (text → None): the LEVEL cell becomes empty/dimmed,
+  sibling LEVEL cells shift, and the TOC entry disappears — in-place, without
+  a reload.
+- `[x]` Renaming a TITLE (text → other text): only the TOC entry updates to
+  the new text; the LEVEL cell value is unchanged because the structural
+  hierarchy was not affected.
+
 ### Other field types
 
 - `[x]` Single-choice autocomplete save.
@@ -118,6 +135,11 @@ Representative fields: document `TITLE`, `UID`, `VERSION`,
 
 - `[x]` Optional custom String field edit, proving the generic dynamic-field
   path rather than only reserved TITLE/STATEMENT/RATIONALE fields.
+
+### TITLE coherence E2E files
+
+- `[x]` `edit_table_cell_title_level_and_toc` — covers all three TITLE change
+  cases in one fixture: None → text, text → other text, text → None.
 
 ## 4. Add Node
 

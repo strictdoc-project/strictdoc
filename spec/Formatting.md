@@ -61,7 +61,9 @@ document. It only changes line-break positions within wrappable prose.
 **MID**: e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1 \
 **UID**: FMT-6
 
-**STATEMENT**: The formatter preserves the following block types unchanged,
+**STATEMENT**:
+
+The formatter preserves the following block types unchanged,
 regardless of line length:
 
 - Fenced code blocks (Markdown ` ``` ` or `~~~`, and analogous RST forms).
@@ -78,7 +80,9 @@ regardless of line length:
 **MID**: f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2 \
 **UID**: FMT-7
 
-**STATEMENT**: The formatter treats inline links as atomic tokens that are
+**STATEMENT**:
+
+The formatter treats inline links as atomic tokens that are
 never broken across lines:
 
 - Markdown inline links: `[text](url)`
@@ -97,7 +101,9 @@ when no line-break position within the token exists.
 **MID**: 08b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3 \
 **UID**: FMT-MD-1
 
-**STATEMENT**: The formatter recognises and preserves the following unordered
+**STATEMENT**:
+
+The formatter recognises and preserves the following unordered
 Markdown list markers: `-`, `*`, `+`. The following ordered list markers are
 also recognised: digit-based styles such as `1.`, `2.`, `1)`.
 
@@ -109,7 +115,9 @@ preserved.
 **MID**: 19c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4 \
 **UID**: FMT-MD-2
 
-**STATEMENT**: When a Markdown list item is wrapped, continuation lines are
+**STATEMENT**:
+
+When a Markdown list item is wrapped, continuation lines are
 indented to align with the content of the list item, not with the list marker.
 
 Example:
@@ -129,7 +137,9 @@ the marker (including its trailing space). For a `- ` marker the indent is
 **MID**: 2ad1e2f3a4b5c6d7e8f9a0b1c2d3e4f5 \
 **UID**: FMT-MD-3
 
-**STATEMENT**: The formatter does not rewrap the following Markdown constructs:
+**STATEMENT**:
+
+The formatter does not rewrap the following Markdown constructs:
 
 - ATX headings (lines starting with one to six `#` characters).
 - Fenced code blocks (content between ` ``` ` or `~~~` fence lines).
@@ -145,7 +155,9 @@ the marker (including its trailing space). For a `- ` marker the indent is
 **MID**: 3be2f3a4b5c6d7e8f9a0b1c2d3e4f5a6 \
 **UID**: FMT-RST-1
 
-**STATEMENT**: The formatter recognises and preserves the following RST list
+**STATEMENT**:
+
+The formatter recognises and preserves the following RST list
 markers:
 
 - Unordered: `-`, `*`, `+`.
@@ -159,7 +171,9 @@ markers:
 **MID**: 4cf3a4b5c6d7e8f9a0b1c2d3e4f5a6b7 \
 **UID**: FMT-RST-2
 
-**STATEMENT**: When an RST list item is wrapped, continuation lines are
+**STATEMENT**:
+
+When an RST list item is wrapped, continuation lines are
 indented to align with the content of the list item, not with the list marker.
 
 Example:
@@ -180,7 +194,9 @@ the marker (including its trailing space).
 **MID**: 5da4b5c6d7e8f9a0b1c2d3e4f5a6b7c8 \
 **UID**: FMT-RST-3
 
-**STATEMENT**: The formatter does not rewrap the following RST constructs:
+**STATEMENT**:
+
+The formatter does not rewrap the following RST constructs:
 
 - Any line with leading whitespace (indented code, continuation lines, or
   nested content).
@@ -215,7 +231,9 @@ the same line-break rules as FMT-SD-1.
 **MID**: 80d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1 \
 **UID**: FMT-SD-3
 
-**STATEMENT**: If an inline link or a StrictDoc cross-reference keyword
+**STATEMENT**:
+
+If an inline link or a StrictDoc cross-reference keyword
 (`[LINK: uid]` or `[ANCHOR: uid]`) is the first content of a list item —
 immediately following the list marker with no preceding prose — the formatter
 keeps the token on the same line as the list marker, even if the resulting line

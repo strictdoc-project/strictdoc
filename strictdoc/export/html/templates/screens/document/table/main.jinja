@@ -1,5 +1,6 @@
 {%- if view_object.has_any_nodes() -%}
   <div class="main" js-pan_with_space="true">
+    {% include "_shared/missing_parent_relations_warning.jinja.html" %}
     {% include "_shared/tags.jinja.html" %}
       <div class="content">
         <sdoc-node>
@@ -46,18 +47,36 @@
                   </td>
                 {%- endfor -%}
                 <td class="content-view-td content-view-td-meta content-view-td-related">
+                  {%- set missing_parent_relations = view_object.traceability_index.get_missing_parent_relations(requirement) %}
+                  {%- set missing_child_relations = view_object.traceability_index.get_missing_child_relations(requirement) %}
                   {%- if view_object.traceability_index.has_parent_requirements(requirement) %}
                     Parents:
                     <ul class="requirement__link">
-                      {%- for requirement in view_object.traceability_index.get_parent_requirements(requirement) %}
+                      {%- for parent_requirement in view_object.traceability_index.get_parent_requirements(requirement) %}
                         <li>
                           <a class="requirement__link-parent"
-                            href="{{ view_object.render_node_link(requirement) }}">
-                            {%- if requirement.reserved_uid %}
-                              <span class="requirement__parent-uid">{{ requirement.reserved_uid }}</span>
+                            href="{{ view_object.render_node_link(parent_requirement) }}">
+                            {%- if parent_requirement.reserved_uid %}
+                              <span class="requirement__parent-uid">{{ parent_requirement.reserved_uid }}</span>
                             {%- endif %}
-                            {{ requirement.reserved_title if requirement.reserved_title else "" }}
+                            {{ parent_requirement.reserved_title if parent_requirement.reserved_title else "" }}
                           </a>
+                        </li>
+                      {%- endfor %}
+                    </ul>
+                  {%- endif %}
+                  {%- if missing_parent_relations | length > 0 %}
+                    Missing Parents:
+                    <ul class="requirement__link requirement__link--missing">
+                      {%- for missing_relation in missing_parent_relations %}
+                        <li>
+                          <span class="requirement__link-missing">
+                            <span class="requirement__parent-uid">{{ missing_relation.ref_uid }}</span>
+                            Missing parent reference
+                            {%- if missing_relation.role is not none %}
+                              <span class="requirement__type-tag">({{ missing_relation.role }})</span>
+                            {%- endif %}
+                          </span>
                         </li>
                       {%- endfor %}
                     </ul>
@@ -65,15 +84,31 @@
                   {%- if view_object.traceability_index.has_children_requirements(requirement) %}
                     Children:
                     <ul class="requirement__link">
-                      {%- for requirement in view_object.traceability_index.get_children_requirements(requirement) %}
+                      {%- for child_requirement in view_object.traceability_index.get_children_requirements(requirement) %}
                         <li>
                           <a class="requirement__link-child"
-                            href="{{ view_object.render_node_link(requirement) }}">
-                            {%- if requirement.reserved_uid %}
-                              <span class="requirement__child-uid">{{ requirement.reserved_uid }}</span>
+                            href="{{ view_object.render_node_link(child_requirement) }}">
+                            {%- if child_requirement.reserved_uid %}
+                              <span class="requirement__child-uid">{{ child_requirement.reserved_uid }}</span>
                             {%- endif %}
-                            {{ requirement.reserved_title if requirement.reserved_title else "" }}
+                            {{ child_requirement.reserved_title if child_requirement.reserved_title else "" }}
                           </a>
+                        </li>
+                      {%- endfor %}
+                    </ul>
+                  {%- endif %}
+                  {%- if missing_child_relations | length > 0 %}
+                    Missing Children:
+                    <ul class="requirement__link requirement__link--missing">
+                      {%- for missing_relation in missing_child_relations %}
+                        <li>
+                          <span class="requirement__link-missing">
+                            <span class="requirement__child-uid">{{ missing_relation.ref_uid }}</span>
+                            Missing child reference
+                            {%- if missing_relation.role is not none %}
+                              <span class="requirement__type-tag">({{ missing_relation.role }})</span>
+                            {%- endif %}
+                          </span>
                         </li>
                       {%- endfor %}
                     </ul>

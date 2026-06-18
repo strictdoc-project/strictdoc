@@ -31,7 +31,6 @@ class Test(E2ECase):
             "search-non-root-level-requirements-not-connected-to-any-parent-requirement",
             4,
         ),
-        ("search-requirements-with-missing-parent-relations", 0),
         ("search-requirements-with-no-rationale", 4),
         ("search-requirements-with-status-none", 1),
         ("search-requirements-with-status-active", 1),

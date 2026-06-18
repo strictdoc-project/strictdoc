@@ -400,7 +400,16 @@ class RequirementFormObject(ErrorObject):
             form_fields.append(form_field)
             if form_field.field_name == "UID" and next_uid is not None:
                 form_field.field_value = next_uid
-            elif form_field.field_name == "MID" and document.config.enable_mid:
+            elif form_field.field_name == "MID" and (
+                document.config.enable_mid
+                or (
+                    "MID" in element.fields_map
+                    and document.meta is not None
+                    and document.meta.input_doc_full_path.lower().endswith(
+                        (".md", ".markdown")
+                    )
+                )
+            ):
                 form_field.field_value = new_requirement_mid.get_string_value()
 
         return RequirementFormObject(
@@ -522,13 +531,25 @@ class RequirementFormObject(ErrorObject):
                 context_document_mid=context_document_mid,
             )
         )
+        grammar = document.grammar
+        assert grammar is not None
+        grammar_element = grammar.elements_by_type[requirement.node_type]
         form_object.requirement_mid = MID.create()
         for field_name, fields_ in form_object.fields.items():
             field: RequirementFormField
             if field_name == "UID":
                 field = fields_[0]
                 field.field_value = clone_uid
-            elif field_name == "MID" and document.config.enable_mid:
+            elif field_name == "MID" and (
+                document.config.enable_mid
+                or (
+                    "MID" in grammar_element.fields_map
+                    and document.meta is not None
+                    and document.meta.input_doc_full_path.lower().endswith(
+                        (".md", ".markdown")
+                    )
+                )
+            ):
                 field = fields_[0]
                 field.field_value = (
                     form_object.requirement_mid.get_string_value()

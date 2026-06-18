@@ -174,30 +174,33 @@ class SDMarkdownWriter:
                 node.node_type, None
             )
 
-        # Emit TYPE for every non-TEXT node when the grammar defines element
-        # types beyond the built-in set (see MD-26). SECTION is included
-        # because the reader treats any heading with a valid meta block as a
-        # typed node when a custom grammar is active; without TYPE: SECTION the
-        # reader would mis-classify a SECTION as a REQUIREMENT on re-read.
-        if (
-            document_grammar is not None
-            and document_grammar.has_custom_elements()
-            and node.node_type != "TEXT"
-        ):
-            meta_fields.append(("TYPE", node.node_type))
-
-        # If a custom (user-defined) grammar declares MID and the node doesn't
-        # have one, auto-write the reserved_mid so it becomes permanent on the
-        # next read. This is the Markdown equivalent of SDoc's ENABLE_MID.
+        # Determine whether MID will be auto-injected for this node (MD-24).
         # The default grammar also carries MID, so guard with is_default to
         # avoid injecting MID into plain Markdown documents.
-        if (
+        should_inject_mid = (
             document_grammar is not None
             and not document_grammar.is_default
             and element is not None
             and "MID" in element.fields_map
             and "MID" not in node.ordered_fields_lookup
+        )
+
+        # Emit TYPE for every non-TEXT node when:
+        # - the grammar defines element types beyond the built-in set (MD-26), OR
+        # - a SECTION node carries a MID field (MD-24): TYPE: SECTION must
+        #   accompany the MID on every write so the reader does not misidentify
+        #   the heading as a REQUIREMENT on re-read.
+        section_has_mid = node.node_type == "SECTION" and (
+            should_inject_mid or "MID" in node.ordered_fields_lookup
+        )
+        if (
+            document_grammar is not None
+            and node.node_type != "TEXT"
+            and (document_grammar.has_custom_elements() or section_has_mid)
         ):
+            meta_fields.append(("TYPE", node.node_type))
+
+        if should_inject_mid:
             meta_fields.append(("MID", node.reserved_mid))
 
         for field in node.enumerate_fields():

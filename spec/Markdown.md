@@ -172,6 +172,8 @@ On the first write-back, every node without a `MID` receives a freshly generated
 
 This behavior applies only to custom (user-defined) grammars. The built-in default grammar also declares `MID` for the `REQUIREMENT` element, but the default grammar does not trigger auto-generation.
 
+For SECTION nodes, MID auto-generation is triggered only when the grammar's `SECTION` element declares a `MID` field. When MID is written to a SECTION node, the writer also emits `**TYPE**: SECTION` as the first meta field to prevent the reader from misidentifying the section as a requirement node on the next read.
+
 ### Node TYPE field — reader behaviour
 
 **MID**: a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8 \

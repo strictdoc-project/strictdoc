@@ -1,0 +1,7 @@
+{%- set missing_relations = view_object.traceability_index.get_missing_relations_for_document(view_object.document) -%}
+{%- if missing_relations | length > 0 -%}
+  <sdoc-warning-banner data-testid="missing-relations-warning">
+    <strong>Warning:</strong>
+    {{ missing_relations | length }} relation(s) could not be resolved in this document.
+  </sdoc-warning-banner>
+{%- endif -%}

@@ -1,0 +1,27 @@
+REQUIRES: PLATFORM_IS_NOT_WINDOWS
+
+#
+# Verify MD-31: document-level PREFIX declared in the H1 metadata block is
+# preserved across format passes.
+#
+# Pass 1: format the document, check that **PREFIX**: appears in the output.
+# Pass 2: format again and verify identical output (idempotency).
+#
+
+RUN: mkdir -p %T/pass1
+RUN: cp %S/input.md %T/pass1/input.md
+RUN: cp %S/strictdoc.toml %T/pass1/strictdoc.toml
+
+RUN: %strictdoc format %T/pass1/
+
+RUN: %cat %T/pass1/input.md | filecheck %s --dump-input=fail
+
+# Document-level PREFIX must be present in the output.
+CHECK: **PREFIX**: MYDOC-
+
+# The requirement UID that uses the prefix must be preserved.
+CHECK: **UID**: MYDOC-001
+
+RUN: cp -r %T/pass1 %T/pass2
+RUN: %strictdoc format %T/pass2/
+RUN: diff %T/pass1/input.md %T/pass2/input.md

@@ -63,8 +63,10 @@ class ParsedMarkdownNode:
     valid_for_requirement: bool
     has_duplicates: bool
     explicit_node_type: Optional[str] = None
-    # When explicit_node_type == "SECTION", body after the meta block (TYPE
-    # stripped) so the raw **TYPE**: line is not duplicated as a TEXT child.
+    # Body after the meta block stripped, used as effective body for section
+    # TEXT children so that **TYPE**: / **PREFIX**: / **MID**: lines do not
+    # reappear as prose.  None means "use the raw heading body" (fallback for
+    # ambiguous meta blocks such as duplicate-field invalid nodes).
     processed_body: Optional[str] = None
 
 
@@ -294,6 +296,8 @@ class SDMarkdownReader:
                         import_from_file=field_.value,
                     )
                     continue
+                if field_.name == "PREFIX":
+                    document.config.requirement_prefix = field_.value
                 metadata_entries.append(
                     DocumentCustomMetadataKeyValuePair(
                         key=field_.human_name,
@@ -450,17 +454,41 @@ class SDMarkdownReader:
                     section_node.ordered_fields_lookup.update(existing)
                     section_node.reserved_mid = MID(mid_field.value)
                     section_node.mid_permanent = True
+                # Preserve PREFIX from the section meta block.
+                # PREFIX is inserted before TITLE (after MID) to keep the
+                # field order: MID, LEVEL, PREFIX, TITLE.
+                prefix_field = next(
+                    (f for f in parsed_node.fields if f.name == "PREFIX"), None
+                )
+                if prefix_field is not None:
+                    prefix_sdoc_field = SDocNodeField.create_from_string(
+                        parent=section_node,
+                        field_name="PREFIX",
+                        field_value=prefix_field.value,
+                        multiline=False,
+                    )
+                    title_entry = section_node.ordered_fields_lookup.pop(
+                        "TITLE", None
+                    )
+                    section_node.ordered_fields_lookup["PREFIX"] = [
+                        prefix_sdoc_field
+                    ]
+                    if title_entry is not None:
+                        section_node.ordered_fields_lookup["TITLE"] = (
+                            title_entry
+                        )
                 parent_node.section_contents.append(section_node)
 
-                # When TYPE was explicit, use the processed body (meta block
-                # already stripped) to avoid duplicating the **TYPE**: line as
-                # a TEXT child.  Otherwise fall back to the raw heading body.
+                # When processed_body is set the meta block has been stripped;
+                # use it to avoid duplicating **TYPE**: / **PREFIX**: / **MID**:
+                # lines as prose in the TEXT child.  Otherwise fall back to the
+                # raw heading body so ambiguous content is preserved.
                 effective_body = (
                     parsed_node.processed_body
                     if parsed_node.processed_body is not None
                     else heading_node.body
                 )
-                if len(effective_body) > 0:
+                if len(effective_body.strip()) > 0:
                     text_mid, text_statement = (
                         SDMarkdownReader._try_parse_text_meta(effective_body)
                     )
@@ -739,12 +767,17 @@ class SDMarkdownReader:
                 and len(title) > 0
             )
 
-        # For explicit SECTION nodes, record the body after the meta block so
-        # that _create_document_tree can skip the raw **TYPE**: lines when
-        # building the TEXT child (otherwise TYPE would appear both as a field
-        # and as prose inside the section).
+        # Use body_lines_without_meta (meta block stripped) as processed_body
+        # only when the meta block contains section-specific fields (TYPE, MID,
+        # PREFIX) so those lines do not reappear as prose in the TEXT child.
+        # For ambiguous meta blocks (e.g. duplicate UID fields in an invalid
+        # requirement node) fall back to None so _create_document_tree uses the
+        # raw heading body and preserves the content.
+        _parsed_field_names: Set[str] = {f.name for f in parsed_fields}
         processed_body: Optional[str] = None
-        if explicit_node_type == "SECTION":
+        if explicit_node_type is not None or (
+            "MID" in _parsed_field_names or "PREFIX" in _parsed_field_names
+        ):
             processed_body = "".join(body_lines_without_meta)
 
         return ParsedMarkdownNode(

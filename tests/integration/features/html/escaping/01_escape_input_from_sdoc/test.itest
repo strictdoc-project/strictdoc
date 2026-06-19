@@ -45,7 +45,7 @@ CHECK-INPUT: <h1 data-testid="document-title">
 CHECK-INPUT-NEXT:&lt;b&gt;&#34;escaping&#34;&amp;nbsp;&#39;document title&#39;&lt;/b&gt;
 
 CHECK-TABLE: <h1 data-testid="document-title">
-CHECK-TABLE-NEXT: &lt;b&gt;&#34;escaping&#34;&amp;nbsp;&#39;document title&#39;&lt;/b&gt;
+CHECK-TABLE: &lt;b&gt;&#34;escaping&#34;&amp;nbsp;&#39;document title&#39;&lt;/b&gt;
 
 # Main document: Section.
 CHECK-INPUT: <sdoc-autogen>1.&nbsp;&lt;b&gt;&#34;escaping&#34;&amp;nbsp;&#39;section title&#39;&lt;/b&gt;</sdoc-autogen>

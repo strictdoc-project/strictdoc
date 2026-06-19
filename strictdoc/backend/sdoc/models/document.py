@@ -188,7 +188,19 @@ class SDocDocument(SDocDocumentIF):
     def is_document(self) -> bool:
         return True
 
+    @property
+    def node_type(self) -> str:
+        """
+        This is used in UI only for included documents that are rendered as
+        SECTIONS.
+        """
+        assert self.document_is_included()
+        return "SECTION"
+
     def get_display_node_type(self) -> str:
+        """
+        This is only used for validation messages.
+        """
         return "Document"
 
     def get_node_type_string(self) -> Optional[str]:

@@ -13,7 +13,7 @@ the checks used by Document view.
 ## WHAT
 
 In Table edit mode, the `TYPE` cell of each deletable node exposes the shared
-delete button from `components/button/delete.jinja`.
+delete button from `components/button_inline/delete.jinja`.
 
 The behavior is:
 
@@ -37,7 +37,7 @@ rules needed to place the button in `.content-view-td-type`.
 ## HOW
 
 Add a Table-local partial for `.content-view-td-type`. The partial receives the
-node and renders its type together with `components/button/delete.jinja`,
+node and renders its type together with `components/button_inline/delete.jinja`,
 including the node MID and context document MID in the action URL.
 
 Use the existing Turbo and `modal_controller.js` setup already loaded by Table

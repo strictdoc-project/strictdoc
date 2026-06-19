@@ -134,8 +134,9 @@ Every editable field follows the same request/response shape:
 
 1. Clicking a display fetches an inline-edit partial from the URL in the
    field's `data-url` (e.g. `get_node_contenteditable_inline`,
-   `get_node_comments_inline`, `get_node_relations_inline`,
-   `get_document_config_field_inline`, `get_document_custom_meta_inline`).
+   `get_node_autocomplete_inline`, `get_node_comments_inline`,
+   `get_node_relations_inline`, `get_document_config_field_inline`,
+   `get_document_custom_meta_inline`).
    The request is accepted with `Accept: text/vnd.turbo-stream.html`
    (`TURBO_ACCEPT`).
 2. The server returns a Turbo Stream that swaps the field's display content
@@ -192,9 +193,14 @@ generic `stream_update_node_field.jinja.html` for all other fields.
 identically client-side via `openInlineCell` / `saveInlineCell`
 (`INLINE_FIELD_TYPES`); the difference is entirely server-side — different GET
 endpoints inject different form shapes, different POST endpoints process them.
-`"autocomplete"` is the exception: its Stimulus controller is already present
-in the DOM in display mode, edit-mode CSS toggles between `.cell-display` and
-`.cell-edit-ac`, and saving POSTs straight to `update_node_field` via `fetch`.
+`"autocomplete"` shares the same GET step — clicking calls `openAutocompleteCell`,
+which calls `initInlineCellState` → `fetchTurboStream(cell.dataset.url)` to fetch
+the inline form from `get_node_autocomplete_inline`. The fetched form embeds a
+Stimulus `autocompletable` controller that manages the dropdown interaction and
+POSTs the chosen value to `update_node_field`. Autocomplete state is tracked
+separately (`activeAutocompleteCell` vs `activeInlineCell`), which gives it a
+different passive-open behavior: clicking away triggers another save attempt
+rather than a strict block.
 
 ### Root document fields vs. table cells
 

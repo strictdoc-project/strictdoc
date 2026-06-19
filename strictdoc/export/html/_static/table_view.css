@@ -598,7 +598,7 @@ background-image:
   padding: 0 var(--base-rhythm);
   margin: 0; /* override form error margin for meta fields, which are outside the table cells */
   grid-column: 1 / -1; /* span all columns in the meta grid */
-  order: 0;
+  order: 2; /* after fields in grid */
 }
 
 [js-table_view_edit][data-mode="edit"] sdoc-meta sdoc-form-error::before {

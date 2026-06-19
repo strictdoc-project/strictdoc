@@ -29,6 +29,7 @@
     const ATTR_ADD_NODE_BLOCKERS = 'js-table_view_edit-add-node-blockers';
     const ATTR_ADD_NODE_UNBLOCK = 'js-table_view_edit-add-node-unblock';
     const ADD_NODE_FEEDBACK_ID = 'table-add-node-feedback';
+    const ADD_NODE_CREATE_ERROR = 'Unable to create this node.';
     const EVENT_BEFORE_TABLE_STATE_CHANGE =
         'strictdoc:table-view-before-state-change';
     const EVENT_AFTER_TABLE_STATE_CHANGE =
@@ -148,8 +149,7 @@
             updateButtonState(btn);
             pendingNextCell = null;
             closeAddNodeMenu();
-            if (activeInlineCell) cancelInlineCell();
-            if (activeAutocompleteCell) cancelAutocompleteCell();
+            cancelActiveCells();
             // [FEATURE: passive-open] Close any cells that are open but no longer
             // tracked (passive-open after a validation error).
             document.querySelectorAll(`[${ATTR_FIELD}][data-mode="editing"]`).forEach(cell => restoreInlineCellDOM(cell));
@@ -482,6 +482,13 @@
         }
     }
 
+    function deactivateAutocompleteCell(cell) {
+        if (activeAutocompleteCell === cell) {
+            activeAutocompleteCell = null;
+            updateMode(cell);
+        }
+    }
+
     function scheduleAutocompleteBlurSave(cell, autocompleteInput) {
         const state = getCellState(cell);
         cancelAutocompleteBlurSave(cell);
@@ -521,10 +528,7 @@
 
         if (newValue === originalValue) {
             // Unchanged — close editor without saving.
-            if (activeAutocompleteCell === cell) {
-                activeAutocompleteCell = null;
-                updateMode(cell);
-            }
+            deactivateAutocompleteCell(cell);
             cell.removeAttribute('data-validation-error');
             if (state.originalHTML !== undefined) {
                 cell.innerHTML = state.originalHTML;
@@ -546,10 +550,7 @@
                 formData
             );
             if (response.ok) {
-                if (activeAutocompleteCell === cell) {
-                    activeAutocompleteCell = null;
-                    updateMode(cell);
-                }
+                deactivateAutocompleteCell(cell);
                 cell.removeAttribute('data-validation-error');
                 state.originalHTML = undefined;
                 renderTurboStream(html);
@@ -561,26 +562,13 @@
                 clearFieldErrors(cell);
                 const wrapperDiv = cell.querySelector('[wrapper-field-type="autocomplete"]');
                 if (wrapperDiv) {
-                    const errorLines = response.status >= 500
-                        ? ['Unable to save this field.']
-                        : html.trim().split('\n').filter(Boolean);
-                    if (response.status >= 500) {
-                        console.error('Table autocomplete save error:', html);
-                    }
-                    errorLines.forEach(line => {
-                        const errorEl = document.createElement('sdoc-form-error');
-                        errorEl.setAttribute('data-testid', 'table-inline-field-error');
-                        errorEl.textContent = line.trim();
-                        wrapperDiv.appendChild(errorEl);
-                    });
+                    parseErrorLines(response, html, 'Table autocomplete save error:')
+                        .forEach(line => wrapperDiv.appendChild(createFormErrorEl(line)));
                 }
             }
         } catch (err) {
             console.error('Table autocomplete save error:', err);
-            if (activeAutocompleteCell === cell) {
-                activeAutocompleteCell = null;
-                updateMode(cell);
-            }
+            deactivateAutocompleteCell(cell);
             cell.dataset.currentValue = originalValue;
             if (state.originalHTML !== undefined) {
                 cell.innerHTML = state.originalHTML;
@@ -660,6 +648,11 @@
         restoreInlineCellDOM(cell);
     }
 
+    function cancelActiveCells() {
+        if (activeInlineCell) cancelInlineCell();
+        if (activeAutocompleteCell) cancelAutocompleteCell();
+    }
+
     function clearCustomMetaDragState() {
         customMetaDragState.row?.removeAttribute('data-dragging');
         customMetaDragState.targetRow?.removeAttribute('data-drop-position');
@@ -707,8 +700,7 @@
         const form = row?.closest(`[${ATTR_FORM}]`);
         if (!row || !form) return;
 
-        if (activeInlineCell) cancelInlineCell();
-        if (activeAutocompleteCell) cancelAutocompleteCell();
+        cancelActiveCells();
 
         const formKey = row.dataset.formKey;
         const nextSibling = row.nextSibling;
@@ -732,28 +724,32 @@
         form.insertBefore(row, nextSibling);
     }
 
+    function parseErrorLines(response, html, label) {
+        if (response.status >= 500) {
+            console.error(label, html);
+            return ['Unable to save this field.'];
+        }
+        return html.trim().split('\n').filter(Boolean);
+    }
+
+    function createFormErrorEl(text) {
+        const el = document.createElement('sdoc-form-error');
+        el.setAttribute('data-testid', 'table-inline-field-error');
+        el.textContent = text.trim();
+        return el;
+    }
+
     // Render server validation errors for a plain-text response, or a generic
     // message for a 5xx error page (whose body is a full HTML page, not field errors).
     function renderInlineFieldErrors(form, cell, response, html) {
         cell.setAttribute('data-validation-error', 'true');
-        const errorLines = response.status >= 500
-            ? ['Unable to save this field.']
-            : html.trim().split('\n').filter(Boolean);
-        if (response.status >= 500) {
-            console.error('Inline cell server error:', html);
-        }
         const insertBeforeEl = form.querySelector('sdoc-form-row:last-of-type') || null;
-        errorLines.forEach(line => {
-            const errorEl = document.createElement('sdoc-form-error');
-            errorEl.setAttribute(
-                'data-testid',
-                'table-inline-field-error'
-            );
-            errorEl.textContent = line.trim();
+        parseErrorLines(response, html, 'Inline cell server error:').forEach(line => {
+            const el = createFormErrorEl(line);
             if (insertBeforeEl) {
-                form.insertBefore(errorEl, insertBeforeEl);
+                form.insertBefore(el, insertBeforeEl);
             } else {
-                form.appendChild(errorEl);
+                form.appendChild(el);
             }
         });
     }
@@ -992,18 +988,10 @@
                 return;
             }
             console.error('Table add-node failed:', html);
-            setAddNodeMessage(
-                addNode,
-                'Unable to create this node.',
-                true
-            );
+            setAddNodeMessage(addNode, ADD_NODE_CREATE_ERROR, true);
         } catch (error) {
             console.error('Table add-node error:', error);
-            setAddNodeMessage(
-                addNode,
-                'Unable to create this node.',
-                true
-            );
+            setAddNodeMessage(addNode, ADD_NODE_CREATE_ERROR, true);
         } finally {
             addNode?.removeAttribute('data-pending');
             restoreAddNodeActionButtons(addNode);
@@ -1021,8 +1009,7 @@
             return;
         }
 
-        if (activeInlineCell) cancelInlineCell();
-        if (activeAutocompleteCell) cancelAutocompleteCell();
+        cancelActiveCells();
 
         customMetaDragState.row = row;
         customMetaDragState.originalNextSibling = row.nextSibling;

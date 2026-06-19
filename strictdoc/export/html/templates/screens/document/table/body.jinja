@@ -24,7 +24,7 @@
 
         {%- if column == "RELATIONS" %}
           {%- set ns.past_reserved = true %}
-          <td class="editable-cell content-view-td content-view-td-meta content-view-td-related"
+          <td class="content-view-td content-view-td-meta content-view-td-related"
               data-node-mid="{{ requirement.reserved_mid }}"
               data-field-name="RELATIONS"
               data-field-type="relations"
@@ -39,7 +39,7 @@
         {%- elif column == "TITLE" %}
           {%- set ns.past_reserved = true %}
           {%- if view_object.is_table_cell_editable(node.node_type, "TITLE") %}
-          <td class="editable-cell content-view-td content-view-td-title"
+          <td class="content-view-td content-view-td-title"
               data-node-mid="{{ requirement.reserved_mid }}"
               data-field-name="TITLE"
               data-field-type="contenteditable"
@@ -67,7 +67,7 @@
         {%- elif column == "STATEMENT" %}
           {%- set ns.past_reserved = true %}
           {%- if view_object.is_table_cell_editable(node.node_type, "STATEMENT") %}
-          <td class="editable-cell content-view-td content-view-td-content"
+          <td class="content-view-td content-view-td-content"
               data-node-mid="{{ requirement.reserved_mid }}"
               data-field-name="STATEMENT"
               data-field-type="contenteditable"
@@ -92,7 +92,7 @@
         {%- elif column == "RATIONALE" %}
           {%- set ns.past_reserved = true %}
           {%- if view_object.is_table_cell_editable(node.node_type, "RATIONALE") %}
-          <td class="editable-cell content-view-td content-view-td-content"
+          <td class="content-view-td content-view-td-content"
               data-node-mid="{{ requirement.reserved_mid }}"
               data-field-name="RATIONALE"
               data-field-type="contenteditable"
@@ -117,7 +117,7 @@
         {%- elif column == "COMMENT" %}
           {%- set ns.past_reserved = true %}
           {%- if view_object.is_table_cell_editable(node.node_type, "COMMENT") %}
-          <td class="editable-cell content-view-td content-view-td-content"
+          <td class="content-view-td content-view-td-content"
               data-node-mid="{{ requirement.reserved_mid }}"
               data-field-name="COMMENT"
               data-field-type="comments"

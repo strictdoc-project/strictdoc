@@ -31,7 +31,7 @@
   On blur JS saves via /actions/table/update_node_field and the turbo-stream
   response restores the display content.
 #}
-<td class="editable-cell {{ td_class }}"
+<td class="{{ td_class }}"
     data-node-mid="{{ requirement.reserved_mid }}"
     data-field-name="{{ field_title }}"
     data-field-type="autocomplete"
@@ -49,7 +49,7 @@
 </td>
 
 {%- elif cell_edit_mode in ("singleline", "multiline") %}
-<td class="editable-cell {{ td_class }}"
+<td class="{{ td_class }}"
     data-node-mid="{{ requirement.reserved_mid }}"
     data-field-name="{{ field_title }}"
     data-field-type="contenteditable"

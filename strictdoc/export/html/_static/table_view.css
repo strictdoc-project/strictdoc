@@ -57,6 +57,9 @@ background-image:
 .content-view-td {
   padding: var(--table-gap);
   background-color: var(--color-bg-contrast);
+
+  /* to position the cell indicator (.editable-cell-indicator) */
+  position: relative;
 }
 
 .content-view-th {
@@ -291,11 +294,6 @@ background-image:
 
 /* editable */
 
-.editable-cell {
-  /* TD class: to position the cell indicator */
-  position: relative;
-}
-
 .editable-cell-indicator {
   position: absolute;
   inset: 0;
@@ -303,29 +301,29 @@ background-image:
   pointer-events: none;
 }
 
-[js-table_view_edit][data-mode="edit"] .editable-cell:hover {
+[js-table_view_edit][data-mode="edit"] .content-view-td:hover {
   cursor: pointer;
 }
 
-.content-view-table[data-mode="editable"] .editable-cell[data-mode="editing"]:hover {
+.content-view-table[data-mode="editable"] .content-view-td[data-mode="editing"]:hover {
   cursor: default;
 }
 
 [js-table_view_edit][data-mode="edit"] sdoc-meta-field:hover .editable-cell-indicator,
-[js-table_view_edit][data-mode="edit"] .editable-cell:hover .editable-cell-indicator {
+[js-table_view_edit][data-mode="edit"] .content-view-td:hover .editable-cell-indicator {
   background-color: var(--color-bg-accent);
   outline: 2px dotted var(--color-fg-accent);
   outline-offset: -2px;
 }
 
-[js-table_view_edit][data-mode="edit"] .editable-cell[data-mode="editing"] .editable-cell-indicator {
+[js-table_view_edit][data-mode="edit"] .content-view-td[data-mode="editing"] .editable-cell-indicator {
   background-color: transparent;
   outline: 2px solid var(--color-fg-accent);
   outline-offset: -2px;
   cursor: default;
 }
 
-[js-table_view_edit][data-mode="edit"] .editable-cell form {
+[js-table_view_edit][data-mode="edit"] .content-view-td form {
   display: flex;
   flex-direction: column;
   gap: var(--base-rhythm);

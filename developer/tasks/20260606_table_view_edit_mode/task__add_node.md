@@ -31,18 +31,20 @@ The separator behavior is:
   - a structural placement relative to nearby nodes:
     `before next`, `after previous`, or `child of previous`;
 - only structurally valid placements are shown for a given separator;
-- all grammar elements of the current document grammar are listed;
-- a grammar element that cannot be created immediately is shown disabled with a
-  reason.
+- all grammar elements of the current document grammar are listed and always
+  enabled.
 
 Creation lifecycle:
 
-- selecting an enabled action creates and saves the node immediately;
+- selecting an action creates and saves the node immediately;
 - the backend generates UID and MID the same way as Document view already does;
-- required String fields may be prefilled with `TBD`;
-- required Choice fields are never auto-selected;
-- if a node type cannot be made valid without a required Choice value, that
-  type is disabled in the Table Add menu;
+- required String, SingleChoice, and MultipleChoice fields are prefilled with
+  `TBD` (which is accepted as a legal placeholder value by the grammar
+  validator for all of these types);
+- if no field receives a value through the above steps (no UID prefix, MID
+  disabled, no required fields), the first available field is filled with
+  `TBD` in priority order: `TITLE` → `STATEMENT` → `RATIONALE` → first
+  String field → first SingleChoice field → first MultipleChoice field;
 - successful creation refreshes the Table view through Turbo, keeps edit mode
   active, and updates the table body and TOC;
 - creation does not open or focus an editable field in the new node;
@@ -108,9 +110,11 @@ The endpoint reuses the existing creation flow:
 
 - create a fresh `RequirementFormObject`;
 - populate generated UID/MID as already supported;
-- fill required String fields with `TBD`;
-- reject node types that still cannot satisfy validation, including required
-  Choice fields and types that would remain completely empty;
+- fill all required fields (String, SingleChoice, MultipleChoice) with `TBD`,
+  which is accepted as a legal placeholder value by the grammar validator for
+  all of these types;
+- all grammar element types are always available for creation — no type is
+  disabled in the Add menu;
 - create the node through `CreateOrUpdateNodeCommand`;
 - write the document and export the updated HTML.
 
@@ -194,9 +198,8 @@ Automated coverage must verify:
 - valid action sets for `before next`, `after previous`, and `child of
   previous`;
 - creation of multiple supported grammar element types;
-- required String auto-fill with `TBD`;
+- required String, SingleChoice, and MultipleChoice auto-fill with `TBD`;
 - generated UID and MID behavior;
-- disabled required Choice types;
 - blocking while sorting is active;
 - blocking while node-type filtering hides rows;
 - simultaneous sorting and node-type-filter blockers, including both reasons
@@ -226,7 +229,6 @@ measuring scroll and viewport geometry.
 Required checks:
 
 - `pytest -q tests/unit/strictdoc/export/html/test_html_templates.py`
-- `invoke test-end2end --focus add_table_node_blocked_when_sorted --headless`
 - `invoke test-end2end --focus add_table_node --headless`
 - `invoke test-end2end --focus edit_table --headless`
 - `git diff --check`

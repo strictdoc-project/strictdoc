@@ -31,12 +31,16 @@ class Test(E2ECase):
 
             screen_table.do_toggle_edit_mode()
             screen_table.assert_edit_mode_on()
+            assert screen_table.get_table_row_count() == 1
 
             screen_table.do_open_add_node_menu(row_order=1)
-            screen_table.assert_add_node_action_disabled(
-                element_type="TEST_CASE",
+            screen_table.do_click_add_node_action(
+                element_type="TASK",
                 whereto="before",
                 row_order=1,
             )
+            self.sleep(0.5)
+
+            assert screen_table.get_table_row_count() == 2
 
         assert test_setup.compare_sandbox_and_expected_output()

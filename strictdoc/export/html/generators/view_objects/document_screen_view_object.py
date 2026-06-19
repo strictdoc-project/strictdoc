@@ -18,7 +18,6 @@ from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldSingleChoice,
     GrammarElementFieldTag,
-    RequirementFieldType,
 )
 from strictdoc.backend.sdoc.models.model import (
     SDocDocumentIF,
@@ -518,43 +517,6 @@ class DocumentScreenViewObject:
         self, node: Union[SDocDocument, SDocNode]
     ) -> bool:
         return self.traceability_index.can_insert_next_to_node(node)
-
-    def can_create_table_element_immediately(self, element: GrammarElement) -> bool:
-        has_non_empty_value = False
-
-        for field in element.fields:
-            if field.title == "MID" and self.document.config.enable_mid:
-                has_non_empty_value = True
-                continue
-            if field.title == "UID":
-                if self.document.get_prefix_for_new_node(element.tag) is not None:
-                    has_non_empty_value = True
-                continue
-            if not field.required:
-                continue
-            if field.gef_type != RequirementFieldType.STRING:
-                return False
-            has_non_empty_value = True
-        return has_non_empty_value
-
-    def get_table_element_creation_blocker(
-        self, element: GrammarElement
-    ) -> Optional[str]:
-        has_required_non_string = any(
-            field.required and field.gef_type != RequirementFieldType.STRING
-            for field in element.fields
-        )
-        if has_required_non_string:
-            return (
-                "This node type has required choice fields and must be "
-                "created from Document view."
-            )
-        if self.can_create_table_element_immediately(element):
-            return None
-        return (
-            "This node type would still be empty after generated fields and "
-            "cannot be created immediately in Table view."
-        )
 
     def get_table_first_editable_field_name(
         self, element_type: str

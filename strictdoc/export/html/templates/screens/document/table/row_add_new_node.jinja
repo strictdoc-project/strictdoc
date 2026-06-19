@@ -46,8 +46,6 @@
                 js-table_view_edit-add-node-actions>
               {%- for element in view_object.get_grammar_elements() -%}
                 <li class="table-add-node__element">{{ element.tag }}:</li>
-                {%- set creation_blocker = view_object.get_table_element_creation_blocker(element) -%}
-                {%- set element_disabled = creation_blocker is not none -%}
                 {%- if can_add_before_next -%}
                   <li class="table-add-node__action" data-whereto="before">
                     <button class="table-add-node__action-button"
@@ -58,11 +56,7 @@
                             data-reference-mid="{{ next_node.reserved_mid }}"
                             data-element-type="{{ element.tag }}"
                             data-whereto="before"
-                            title="Add {{ element.tag }} before next"
-                            {% if element_disabled %}
-                            disabled
-                            data-disabled-reason="{{ creation_blocker }}"
-                            {% endif %}>
+                            title="Add {{ element.tag }} before next">
                       {% include "icons/ico16_add_above.svg" %}
                     </button>
                   </li>
@@ -77,11 +71,7 @@
                             data-reference-mid="{{ prev_node.reserved_mid }}"
                             data-element-type="{{ element.tag }}"
                             data-whereto="after"
-                            title="Add {{ element.tag }} after previous"
-                            {% if element_disabled %}
-                            disabled
-                            data-disabled-reason="{{ creation_blocker }}"
-                            {% endif %}>
+                            title="Add {{ element.tag }} after previous">
                       {% include "icons/ico16_add_below.svg" %}
                     </button>
                   </li>
@@ -96,11 +86,7 @@
                             data-reference-mid="{{ prev_node.reserved_mid }}"
                             data-element-type="{{ element.tag }}"
                             data-whereto="child"
-                            title="Add {{ element.tag }} as child of previous"
-                            {% if element_disabled %}
-                            disabled
-                            data-disabled-reason="{{ creation_blocker }}"
-                            {% endif %}>
+                            title="Add {{ element.tag }} as child of previous">
                       {% include "icons/ico16_add_child.svg" %}
                     </button>
                   </li>

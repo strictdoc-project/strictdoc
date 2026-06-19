@@ -980,8 +980,17 @@ class RequirementFormObject(ErrorObject):
         self, grammar_element_field: GrammarElementField
     ) -> None:
         field_0 = self.fields[grammar_element_field.title][0]
-        if len(field_0.field_value) == 0 and not grammar_element_field.required:
-            # The empty choice fields are allowed if the field is not REQUIRED.
+        if len(field_0.field_value) == 0:
+            if grammar_element_field.required:
+                self.add_error(
+                    grammar_element_field.title,
+                    (
+                        f"Node's {grammar_element_field.title} must not be empty. "
+                        f"If there is no appropriate value for this field yet, "
+                        f"enter TBD (to be done)."
+                    ),
+                )
+            # Empty non-required fields are valid.
             return
 
         choice_grammar_element_field: Union[

@@ -3,19 +3,19 @@ TITLE: Document
 
 [GRAMMAR]
 ELEMENTS:
-- TAG: TEST_CASE
+- TAG: TASK
   FIELDS:
   - TITLE: UID
     TYPE: String
     REQUIRED: False
-  - TITLE: STATUS
-    TYPE: SingleChoice(Draft, Active)
+  - TITLE: PRIORITY
+    TYPE: String
     REQUIRED: True
   - TITLE: TITLE
     TYPE: String
     REQUIRED: False
 
-[TEST_CASE]
-UID: TEST-1
-STATUS: Draft
-TITLE: Existing test case
+[TASK]
+UID: TASK-1
+PRIORITY: High
+TITLE: Existing task

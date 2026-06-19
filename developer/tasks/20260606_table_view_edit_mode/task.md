@@ -213,16 +213,25 @@ action pairs, and routed through the existing node update commands
 
 ### Validation and error display
 
-Validation errors arrive as `text/vnd.turbo-stream.html` responses scoped to
-the active field (for relations and comments, keyed by field MID rather than
-field name, so multiple comment fields don't collide). The active editor stays
-open, the entered value is preserved, and `sdoc-form-error` elements are
-inserted next to the offending control with `errors="true"` applied only to
-that control. "Passive open" then prevents switching to another field until
-the error is cleared, and a successful correction removes the
-`data-validation-error` marker from the field. Plain `5xx` HTML error pages are
-never treated as field-level errors — the UI shows one generic message and logs
-the response.
+For `contenteditable`, `comments`, and `relations` fields, validation errors
+arrive as `text/vnd.turbo-stream.html` responses scoped to the active field
+(for relations and comments, keyed by field MID rather than field name, so
+multiple comment fields don't collide). The active editor stays open, the
+entered value is preserved, and `sdoc-form-error` elements are inserted next to
+the offending control. "Passive open" then prevents switching to another field
+until the error is cleared, and a successful correction removes the
+`data-validation-error` marker from the field.
+
+For `autocomplete` fields (SingleChoice, MultipleChoice), the `update_node_field`
+endpoint returns a plain-text `422` response. JavaScript inserts `sdoc-form-error`
+elements directly into the DOM (inside the `wrapper-field-type="autocomplete"` div,
+after `sdoc-form-field`), keeps the autocomplete form visible so the user can
+correct the value, and clears the error on a successful save or when the value
+is restored to its last-saved state. Clicking away triggers another save attempt
+rather than enforcing strict passive-open.
+
+Plain `5xx` HTML error pages are never treated as field-level errors for any
+field type — the UI shows one generic message and logs the response.
 
 ### Saving discipline
 

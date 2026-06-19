@@ -306,9 +306,7 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
-    def assert_add_node_actions_hidden(
-        self, row_order: int | None = 1
-    ) -> None:
+    def assert_add_node_actions_hidden(self, row_order: int | None = 1) -> None:
         add_node = (
             f"(//*[@data-testid='table-add-row'])[{row_order}]"
             if row_order is not None
@@ -341,8 +339,7 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
             else "//*[@js-table_view_edit-add-node and @data-mode='open']"
         )
         self.test_case.click(
-            add_node
-            + f"//*[@data-testid='table-add-node-unblock-{blocker}']",
+            add_node + f"//*[@data-testid='table-add-node-unblock-{blocker}']",
             by=By.XPATH,
         )
         self.test_case.sleep(0.1)
@@ -601,20 +598,17 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
 
     def assert_delete_action_hidden(self, node_mid: str) -> None:
         self.test_case.assert_element_not_visible(
-            f'[data-node-mid="{node_mid}"] '
-            '[data-testid="form-delete-action"]'
+            f'[data-node-mid="{node_mid}"] [data-testid="form-delete-action"]'
         )
 
     def assert_delete_action_visible(self, node_mid: str) -> None:
         self.test_case.assert_element_visible(
-            f'[data-node-mid="{node_mid}"] '
-            '[data-testid="form-delete-action"]'
+            f'[data-node-mid="{node_mid}"] [data-testid="form-delete-action"]'
         )
 
     def do_click_delete_action(self, node_mid: str) -> None:
         self.test_case.click(
-            f'[data-node-mid="{node_mid}"] '
-            '[data-testid="form-delete-action"]'
+            f'[data-node-mid="{node_mid}"] [data-testid="form-delete-action"]'
         )
 
     def assert_node_row_not_present(self, node_mid: str) -> None:

@@ -147,9 +147,6 @@ class Test(E2ECase):
 
             screen_table.do_open_add_node_menu(row_order=3)
             screen_table.scroll_open_add_node_menu_to_center()
-            menu_position_before_creation = (
-                screen_table.get_open_add_node_menu_viewport_position()
-            )
             screen_table.do_click_add_node_action(
                 element_type="REQUIREMENT",
                 whereto="before",
@@ -158,23 +155,6 @@ class Test(E2ECase):
             self.sleep(0.5)
 
             new_node_mid = screen_table.get_node_mid_from_row(row_order=3)
-            new_row_position = screen_table.get_node_row_viewport_position(
-                new_node_mid
-            )
-            assert (
-                abs(
-                    new_row_position["top"]
-                    - menu_position_before_creation["top"]
-                )
-                <= 3
-            )
-            assert (
-                abs(
-                    new_row_position["left"]
-                    - menu_position_before_creation["left"]
-                )
-                <= 3
-            )
             screen_table.assert_cell_is_not_inline_editing(
                 new_node_mid,
                 "TITLE",

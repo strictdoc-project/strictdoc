@@ -519,12 +519,13 @@
         const newValue = rawValue.trim().replace(/,\s*$/, '').trim();
         const originalValue = (cell.dataset.currentValue || '').trim();
 
-        if (activeAutocompleteCell === cell) {
-            activeAutocompleteCell = null;
-            updateMode(cell);
-        }
-
         if (newValue === originalValue) {
+            // Unchanged — close editor without saving.
+            if (activeAutocompleteCell === cell) {
+                activeAutocompleteCell = null;
+                updateMode(cell);
+            }
+            cell.removeAttribute('data-validation-error');
             if (state.originalHTML !== undefined) {
                 cell.innerHTML = state.originalHTML;
                 state.originalHTML = undefined;
@@ -539,29 +540,53 @@
         formData.append('field_name', cell.dataset.fieldName);
         formData.append('field_value', newValue);
 
-        let ok = false;
         try {
             const { response, html } = await postTurboStream(
                 '/actions/table/update_node_field',
                 formData
             );
             if (response.ok) {
-                ok = true;
+                if (activeAutocompleteCell === cell) {
+                    activeAutocompleteCell = null;
+                    updateMode(cell);
+                }
+                cell.removeAttribute('data-validation-error');
+                state.originalHTML = undefined;
                 renderTurboStream(html);
             } else {
-                console.error('Table autocomplete save failed:', html);
+                // Validation error — keep the autocomplete form visible (passive-open)
+                // so the user can correct the value. Escape cancels and restores display.
                 cell.dataset.currentValue = originalValue;
                 cell.setAttribute('data-validation-error', 'true');
+                clearFieldErrors(cell);
+                const wrapperDiv = cell.querySelector('[wrapper-field-type="autocomplete"]');
+                if (wrapperDiv) {
+                    const errorLines = response.status >= 500
+                        ? ['Unable to save this field.']
+                        : html.trim().split('\n').filter(Boolean);
+                    if (response.status >= 500) {
+                        console.error('Table autocomplete save error:', html);
+                    }
+                    errorLines.forEach(line => {
+                        const errorEl = document.createElement('sdoc-form-error');
+                        errorEl.setAttribute('data-testid', 'table-inline-field-error');
+                        errorEl.textContent = line.trim();
+                        wrapperDiv.appendChild(errorEl);
+                    });
+                }
             }
         } catch (err) {
             console.error('Table autocomplete save error:', err);
+            if (activeAutocompleteCell === cell) {
+                activeAutocompleteCell = null;
+                updateMode(cell);
+            }
             cell.dataset.currentValue = originalValue;
+            if (state.originalHTML !== undefined) {
+                cell.innerHTML = state.originalHTML;
+            }
+            state.originalHTML = undefined;
         }
-
-        if (!ok && state.originalHTML !== undefined) {
-            cell.innerHTML = state.originalHTML;
-        }
-        state.originalHTML = undefined;
     }
 
     // --- Stream fetch ---

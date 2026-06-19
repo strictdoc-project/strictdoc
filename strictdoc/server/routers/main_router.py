@@ -970,7 +970,9 @@ def create_main_router(
             },
         )
 
-    def create_table_view_object(document: SDocDocument) -> DocumentScreenViewObject:
+    def create_table_view_object(
+        document: SDocDocument,
+    ) -> DocumentScreenViewObject:
         assert document.meta is not None
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),
@@ -1104,7 +1106,9 @@ def create_main_router(
         whereto = request_dict["whereto"]
 
         if not NodeCreationOrder.is_valid(whereto):
-            return HTMLResponse(content="Unknown node placement.", status_code=400)
+            return HTMLResponse(
+                content="Unknown node placement.", status_code=400
+            )
 
         reference_node = export_action.traceability_index.get_node_by_mid(
             MID(reference_mid)
@@ -1117,8 +1121,10 @@ def create_main_router(
                 status_code=403,
             )
 
-        editing_context_document = export_action.traceability_index.get_node_by_mid(
-            MID(context_document_mid)
+        editing_context_document = (
+            export_action.traceability_index.get_node_by_mid(
+                MID(context_document_mid)
+            )
         )
         if isinstance(reference_node, SDocDocument):
             if whereto == NodeCreationOrder.CHILD:
@@ -1132,11 +1138,7 @@ def create_main_router(
         if element_type not in document.grammar.elements_by_type:
             return HTMLResponse(content="Unknown node type.", status_code=400)
 
-        table_view_object = create_table_view_object(document)
         element = document.grammar.elements_by_type[element_type]
-        blocker = table_view_object.get_table_element_creation_blocker(element)
-        if blocker is not None:
-            return HTMLResponse(content=blocker, status_code=400)
 
         next_uid: Optional[str] = None
         if element_type not in ("TEXT", "SECTION"):
@@ -1165,13 +1167,43 @@ def create_main_router(
             if field_name in ("UID", "MID"):
                 continue
             grammar_field = element.fields_map[field_name]
-            if (
-                grammar_field.required
-                and grammar_field.gef_type == RequirementFieldType.STRING
-            ):
+            if grammar_field.required:
                 for field in fields:
                     if len(field.field_value) == 0:
                         field.field_value = "TBD"
+
+        # Fallback: if still no field has a value (including auto-generated
+        # UID/MID), pick the first suitable field by priority so the node is
+        # never completely empty. Mirrors the "at least one non-empty" check in
+        # RequirementFormObject.validate().
+        if not any(
+            len(f.field_value) > 0
+            for fl in form_object.fields.values()
+            for f in fl
+        ):
+            _PRIORITY_NAMES = ("TITLE", "STATEMENT", "RATIONALE")
+            _PRIORITY_TYPES = (
+                RequirementFieldType.STRING,
+                RequirementFieldType.SINGLE_CHOICE,
+                RequirementFieldType.MULTIPLE_CHOICE,
+            )
+            _fallback_field = None
+            for _name in _PRIORITY_NAMES:
+                if _name in form_object.fields:
+                    _fallback_field = form_object.fields[_name][0]
+                    break
+            if _fallback_field is None:
+                for _type in _PRIORITY_TYPES:
+                    for _fn, _fl in form_object.fields.items():
+                        if _fn in ("UID", "MID"):
+                            continue
+                        if element.fields_map[_fn].gef_type == _type:
+                            _fallback_field = _fl[0]
+                            break
+                    if _fallback_field is not None:
+                        break
+            if _fallback_field is not None:
+                _fallback_field.field_value = "TBD"
 
         form_object.validate(
             traceability_index=export_action.traceability_index,

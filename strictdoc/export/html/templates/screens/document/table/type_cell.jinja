@@ -2,6 +2,7 @@
   <div class="content-view-td-type__content">
     <span>{{ node.node_type }}</span>
     <div class="content-view-td-type__actions">
+      {%- if view_object.is_running_on_server -%}
       <span class="table-node-delete-action">
         {%- set delete_name -%}
           {%- include "icons/ico16_delete.svg" -%}
@@ -22,6 +23,7 @@
           >{{ delete_name }}</a>
         {%- endif -%}
       </span>
+      {%- endif -%}
       {# <span class="table-node-highlight-action">
         <span class="action_icon">
           {%- include "icons/ico16_star.svg" -%}

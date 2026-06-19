@@ -1,3 +1,4 @@
+{%- set is_server = view_object.is_running_on_server -%}
 <tbody id="table-content-body" data-testid="table-content-body">
 
   {%- with
@@ -25,12 +26,15 @@
         {%- if column == "RELATIONS" %}
           {%- set ns.past_reserved = true %}
           <td class="content-view-td content-view-td-meta content-view-td-related"
-              data-node-mid="{{ requirement.reserved_mid }}"
               data-field-name="RELATIONS"
+              {%- if is_server %}
+              data-node-mid="{{ requirement.reserved_mid }}"
               data-field-type="relations"
               js-table_view_edit-field="relations"
-              data-url="/actions/table/get_node_relations_inline?node_mid={{ requirement.reserved_mid }}">
-            <div class="editable-cell-indicator"></div>
+              data-url="/actions/table/get_node_relations_inline?node_mid={{ requirement.reserved_mid }}"
+              {%- endif %}
+          >
+            {%- if is_server %}<div class="editable-cell-indicator"></div>{%- endif %}
             <div id="cell-{{ requirement.reserved_mid }}-RELATIONS" wrapper-field-type="contenteditable">
               {%- include "screens/document/table/field_display_mode/relations.jinja" %}
             </div>
@@ -40,12 +44,15 @@
           {%- set ns.past_reserved = true %}
           {%- if view_object.is_table_cell_editable(node.node_type, "TITLE") %}
           <td class="content-view-td content-view-td-title"
-              data-node-mid="{{ requirement.reserved_mid }}"
               data-field-name="TITLE"
+              {%- if is_server %}
+              data-node-mid="{{ requirement.reserved_mid }}"
               data-field-type="contenteditable"
               js-table_view_edit-field="contenteditable"
-              data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&amp;field_name=TITLE">
-            <div class="editable-cell-indicator"></div>
+              data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&amp;field_name=TITLE"
+              {%- endif %}
+          >
+            {%- if is_server %}<div class="editable-cell-indicator"></div>{%- endif %}
             <div id="cell-{{ requirement.reserved_mid }}-TITLE" wrapper-field-type="contenteditable">
               {%- if requirement.reserved_title %}
                 {%- with sdoc_entity=requirement -%}
@@ -68,12 +75,15 @@
           {%- set ns.past_reserved = true %}
           {%- if view_object.is_table_cell_editable(node.node_type, "STATEMENT") %}
           <td class="content-view-td content-view-td-content"
-              data-node-mid="{{ requirement.reserved_mid }}"
               data-field-name="STATEMENT"
+              {%- if is_server %}
+              data-node-mid="{{ requirement.reserved_mid }}"
               data-field-type="contenteditable"
               js-table_view_edit-field="contenteditable"
-              data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&amp;field_name=STATEMENT">
-            <div class="editable-cell-indicator"></div>
+              data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&amp;field_name=STATEMENT"
+              {%- endif %}
+          >
+            {%- if is_server %}<div class="editable-cell-indicator"></div>{%- endif %}
             <div id="cell-{{ requirement.reserved_mid }}-STATEMENT" wrapper-field-type="contenteditable">
               {%- if requirement.has_reserved_statement() -%}
                 {%- with field_content = view_object.render_node_statement(requirement) %}
@@ -93,12 +103,15 @@
           {%- set ns.past_reserved = true %}
           {%- if view_object.is_table_cell_editable(node.node_type, "RATIONALE") %}
           <td class="content-view-td content-view-td-content"
-              data-node-mid="{{ requirement.reserved_mid }}"
               data-field-name="RATIONALE"
+              {%- if is_server %}
+              data-node-mid="{{ requirement.reserved_mid }}"
               data-field-type="contenteditable"
               js-table_view_edit-field="contenteditable"
-              data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&amp;field_name=RATIONALE">
-            <div class="editable-cell-indicator"></div>
+              data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&amp;field_name=RATIONALE"
+              {%- endif %}
+          >
+            {%- if is_server %}<div class="editable-cell-indicator"></div>{%- endif %}
             <div id="cell-{{ requirement.reserved_mid }}-RATIONALE" wrapper-field-type="contenteditable">
               {%- if requirement.rationale -%}
                 {%- with field_content = view_object.render_node_rationale(requirement) %}
@@ -118,12 +131,15 @@
           {%- set ns.past_reserved = true %}
           {%- if view_object.is_table_cell_editable(node.node_type, "COMMENT") %}
           <td class="content-view-td content-view-td-content"
-              data-node-mid="{{ requirement.reserved_mid }}"
               data-field-name="COMMENT"
+              {%- if is_server %}
+              data-node-mid="{{ requirement.reserved_mid }}"
               data-field-type="comments"
               js-table_view_edit-field="comments"
-              data-url="/actions/table/get_node_comments_inline?node_mid={{ requirement.reserved_mid }}">
-            <div class="editable-cell-indicator"></div>
+              data-url="/actions/table/get_node_comments_inline?node_mid={{ requirement.reserved_mid }}"
+              {%- endif %}
+          >
+            {%- if is_server %}<div class="editable-cell-indicator"></div>{%- endif %}
             <div id="cell-{{ requirement.reserved_mid }}-COMMENT" wrapper-field-type="comments">
               {%- for comment_field_ in requirement.get_comment_fields() -%}
               {%- with field_content = view_object.render_node_field(comment_field_) %}

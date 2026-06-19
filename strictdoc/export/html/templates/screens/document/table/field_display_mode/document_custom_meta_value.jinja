@@ -23,4 +23,6 @@
 {%- endfor -%}
 {%- endif -%}
 
+{%- if view_object.is_running_on_server -%}
 {%- include "screens/document/table/field_display_mode/document_custom_meta_add.jinja" -%}
+{%- endif -%}

@@ -2001,6 +2001,7 @@ def create_main_router(
                 field_label=active_metadata_field.field_name,
                 field_value=active_metadata_field.field_value,
                 form_key=form_key,
+                view_object=view_object,
             )
             return HTMLResponse(
                 content=output,

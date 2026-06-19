@@ -6,6 +6,7 @@
   Unlike document/node MIDs, metadata form keys are local transport keys. They
   exist only to group each row's name/value inputs during form serialization.
 #}
+{%- if view_object.is_running_on_server %}
 <form
   id="document-custom-meta-{{ doc_mid }}"
   action="/actions/table/update_document_custom_meta"
@@ -23,3 +24,6 @@
 
   {%- include "screens/document/table/field_display_mode/document_custom_meta_value.jinja" -%}
 </form>
+{%- else %}
+  {%- include "screens/document/table/field_display_mode/document_custom_meta_value.jinja" -%}
+{%- endif %}

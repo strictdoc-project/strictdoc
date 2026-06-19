@@ -325,6 +325,7 @@ sdoc-autocompletable[contenteditable="false"] {
   position: absolute;
   border: 1px solid var(--color-action);
   background-color: var(--color-bg-contrast);
+  color: var(--color-fg-contrast);
   top: 100%;
   left: 0;
   right: 0;

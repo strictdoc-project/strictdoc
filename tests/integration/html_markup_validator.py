@@ -51,7 +51,7 @@ _, tidylib_messages_string = tidy_document(
             # Turbo.js
             "turbo-frame, "
             # SVG
-            "svg, path, line, circle, polyline, "
+            "svg, path, line, circle, polyline, g, "
             # StrictDoc
             "sdoc-scope, "
             "sdoc-autogen, "

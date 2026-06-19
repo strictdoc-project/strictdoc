@@ -25,7 +25,7 @@ jobs:
         itest_group: [ "main_group", "html2pdf_group" ]
 
     steps:
-    - uses: actions/checkout@v6
+    - uses: actions/checkout@v7
       with:
         fetch-depth: 5
 

@@ -35,6 +35,8 @@
     const EVENT_AFTER_TABLE_STATE_CHANGE =
         'strictdoc:table-view-after-state-change';
     const ATTR_CUSTOM_META_ROW = 'js-table_view_edit-custom_meta-row';
+    const ATTR_CUSTOM_META_NAME = 'js-table_view_edit-custom_meta-name';
+    const ATTR_CUSTOM_META_VALUE = 'js-table_view_edit-custom_meta-value';
     const ATTR_CUSTOM_META_DELETE_ACTION =
         'js-table_view_edit-custom_meta-delete_action';
     const ATTR_CUSTOM_META_DRAG_HANDLE =
@@ -112,11 +114,16 @@
     }
 
     function clearFieldErrors(field) {
-        // Most inline editors contain all of their errors inside the active
-        // field. Custom metadata fields share one form, so clearing the whole
-        // form would also remove errors from other still-open metadata rows.
-        const errorScope =
-            field.closest(`[${ATTR_CUSTOM_META_ROW}]`) || field;
+        // For custom metadata name and value fields, scope error clearing to
+        // the field itself so that sibling-field errors within the same row
+        // are not removed. For other fields in a custom meta row, scope to the
+        // row; for all other fields, scope to the field itself.
+        const isCustomMetaNameOrValue =
+            field.hasAttribute(ATTR_CUSTOM_META_NAME) ||
+            field.hasAttribute(ATTR_CUSTOM_META_VALUE);
+        const errorScope = isCustomMetaNameOrValue
+            ? field
+            : field.closest(`[${ATTR_CUSTOM_META_ROW}]`) || field;
         errorScope
             .querySelectorAll('sdoc-form-error')
             .forEach(error => error.remove());

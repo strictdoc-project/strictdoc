@@ -1024,3 +1024,90 @@ A second example shows the TEXT prefix:
     assert isinstance(req, SDocNode)
     statement_fields = req.ordered_fields_lookup.get("STATEMENT", [])
     assert len(statement_fields) == 1
+
+
+def test_026_document_level_prefix_roundtrips():
+    """Document-level PREFIX is preserved across read/write cycles."""
+    input_markdown = """\
+# Requirements specification
+
+**PREFIX**: MYDOC-
+
+## Requirement
+
+**UID**: MYDOC-001
+
+**Statement**: System shall do B.
+"""
+    document, _ = _assert_markdown_roundtrip(input_markdown)
+    assert document.config.requirement_prefix == "MYDOC-"
+
+
+def test_027_section_prefix_without_type_roundtrips():
+    """Section-level PREFIX (no explicit TYPE) is preserved across read/write cycles."""
+    input_markdown = """\
+# Requirements specification
+
+## Chapter 2
+
+**PREFIX**: LEVEL2-REQ-
+
+### Requirement
+
+**UID**: LEVEL2-REQ-001
+
+**Statement**: System shall do B.
+"""
+    document, output = _assert_markdown_roundtrip(input_markdown)
+
+    section = document.section_contents[0]
+    assert isinstance(section, SDocNode)
+    assert section.node_type == "SECTION"
+    assert section.get_prefix() == "LEVEL2-REQ-"
+    # No spurious TEXT child from the meta block.
+    assert not any(
+        n.node_type == "TEXT"
+        for n in section.section_contents
+        if isinstance(n, SDocNode)
+    )
+
+
+def test_028_section_prefix_with_type_drops_type_on_output():
+    """
+    Section-level PREFIX written with explicit TYPE: SECTION is accepted;
+    the writer drops TYPE on output for default-grammar documents (matches
+    the existing TYPE: SECTION normalisation behaviour).
+    """
+    input_markdown = """\
+# Requirements specification
+
+## Chapter 2
+
+**TYPE**: SECTION \\
+**PREFIX**: LEVEL2-REQ-
+
+### Requirement
+
+**UID**: LEVEL2-REQ-001
+
+**Statement**: System shall do B.
+"""
+    expected_markdown = """\
+# Requirements specification
+
+## Chapter 2
+
+**PREFIX**: LEVEL2-REQ-
+
+### Requirement
+
+**UID**: LEVEL2-REQ-001
+
+**Statement**: System shall do B.
+"""
+    document, _ = _assert_markdown_roundtrip(input_markdown, expected_markdown)
+
+    section = document.section_contents[0]
+    assert isinstance(section, SDocNode)
+    assert section.node_type == "SECTION"
+    assert section.get_prefix() == "LEVEL2-REQ-"

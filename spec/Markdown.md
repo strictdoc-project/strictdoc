@@ -1,6 +1,7 @@
 # Markdown Specification
 
 **Grammar**: Markdown.gra.md
+**PREFIX**: MD-
 
 This specification defines a Markdown-based format for writing traceable documentation, including requirements. It covers two file formats: the Markdown document format (`.md`) for content and the Markdown grammar format (`.gra.md`) for schemas. Both are valid CommonMark files.
 
@@ -71,6 +72,54 @@ Immediately after the H1 heading, an optional metadata block may appear, separat
 Recognized document-level keys are `Grammar`, `UID`, `VERSION`, `DATE`, `CLASSIFICATION`, and `PREFIX`. Any other key is stored as custom metadata.
 
 Duplicate key names are not allowed. Values may optionally be enclosed in backticks.
+
+### Document PREFIX field
+
+**MID**: f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6 \
+**UID**: MD-31
+
+**STATEMENT**:
+
+The `PREFIX` metadata key controls the prefix used when auto-generating UIDs for nodes in the document or section. It may be set at the document level or at the section level.
+
+**1. Document-level PREFIX**
+
+A `PREFIX` key in the H1 metadata block sets the default UID prefix for the entire document.
+
+```markdown
+# Requirements specification
+
+**PREFIX**: MYDOC-
+
+## Section
+
+### Requirement
+
+**UID**: MYDOC-001
+
+System A shall do B.
+```
+
+**2. Section-level PREFIX**
+
+A section may declare its own prefix by using the `**PREFIX**` meta field together with `**TYPE**: SECTION`. The section-level prefix overrides the document-level prefix for all nodes within that section.
+
+```markdown
+# Requirements specification
+
+## Chapter 2
+
+**TYPE**: SECTION \
+**PREFIX**: LEVEL2-REQ-
+
+### Requirement
+
+**UID**: LEVEL2-REQ-001
+
+System A shall do B.
+```
+
+The section-level `PREFIX` is parsed out of the meta block and is not forwarded as a regular node field.
 
 ### Grammar attachment
 

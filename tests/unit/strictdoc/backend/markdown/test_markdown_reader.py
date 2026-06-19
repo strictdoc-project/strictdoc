@@ -255,3 +255,77 @@ Requirement shall do B.
     with pytest.raises(StrictDocSemanticError) as exc_info:
         reader.read(input_markdown, file_path=None)
     assert "Relations must directly follow" in exc_info.value.title
+
+
+def test_015_document_level_prefix_sets_requirement_prefix():
+    markdown_content = """\
+# Requirements specification
+
+**PREFIX**: MYDOC-
+
+## Requirement
+
+**UID**: MYDOC-001
+
+System shall do B.
+"""
+
+    reader = SDMarkdownReader()
+    document = reader.read(markdown_content, file_path=None)
+
+    assert document.config.requirement_prefix == "MYDOC-"
+
+
+def test_016_section_level_prefix_is_stored_on_section_node():
+    markdown_content = """\
+# Requirements specification
+
+## Chapter 2
+
+**TYPE**: SECTION \\
+**PREFIX**: LEVEL2-REQ-
+
+### Requirement
+
+**UID**: LEVEL2-REQ-001
+
+System shall do B.
+"""
+
+    reader = SDMarkdownReader()
+    document = reader.read(markdown_content, file_path=None)
+
+    section = document.section_contents[0]
+    assert isinstance(section, SDocNode)
+    assert section.node_type == "SECTION"
+    assert section.get_prefix() == "LEVEL2-REQ-"
+
+
+def test_017_section_immediately_followed_by_child_section_has_no_empty_text_node():
+    # Regression: a blank line between a section heading and its first child
+    # heading was captured as the section body ("\n"), which passed the
+    # `len > 0` guard and produced a spurious empty TEXT node.
+    markdown_content = """\
+# Document title
+
+## Parent section
+
+### Child section
+
+**MID**: aabbccdd11223344aabbccdd11223344 \\
+**UID**: REQ-1
+
+**Statement**: Some statement.
+"""
+
+    reader = SDMarkdownReader()
+    document = reader.read(markdown_content, file_path=None)
+
+    parent_section = document.section_contents[0]
+    assert isinstance(parent_section, SDocNode)
+    assert parent_section.node_type == "SECTION"
+    # Must contain only the child requirement, no spurious empty TEXT node.
+    assert len(parent_section.section_contents) == 1
+    child = parent_section.section_contents[0]
+    assert isinstance(child, SDocNode)
+    assert child.node_type == "REQUIREMENT"

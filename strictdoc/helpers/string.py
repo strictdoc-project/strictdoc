@@ -18,6 +18,28 @@ def unescape(string: str) -> str:
 
 
 def sanitize_html_form_field(field: str, multiline: bool) -> str:
+    r"""
+    Sanitize a value of HTML form field by stripping the leading and trailing
+    whitespace and removing all occurrences of CRLF and LF characters from the
+    string.
+
+    StrictDoc frontend code sends HTML forms with "enctype"
+    "application/x-www-form-urlencoded". When constructed with Turbo or JS,
+    the form field values contain either CRLF (\r\n) or LF (\n) depending on
+    whether the form is created with URLSearchParams or FormData.
+
+    While rather Windows-specific these days, the CRLF characters come from the
+    specification RFC 7578 (Multipart Form Data).
+
+    Example (multipart "comment" field):
+
+    ------WebKitFormBoundary7MA4YWxkTrZu0gW
+    Content-Disposition: form-data; name="comment"
+
+    hello\r\nworld\r\n
+    ------WebKitFormBoundary7MA4YWxkTrZu0gW--
+    """
+
     assert isinstance(field, str)
     sanitized_field: str = field.strip()
     if multiline:
@@ -25,8 +47,9 @@ def sanitize_html_form_field(field: str, multiline: bool) -> str:
             "\r", "\n"
         )
         return REGEX_TRAILING_WHITESPACE_MULTILINE.sub("\n", sanitized_field)
-    sanitized_field = sanitized_field.replace("\r", "").replace("\n", "")
-    return REGEX_TRAILING_WHITESPACE_SINGLELINE.sub(" ", sanitized_field)
+    else:
+        sanitized_field = sanitized_field.replace("\r", "").replace("\n", "")
+        return REGEX_TRAILING_WHITESPACE_SINGLELINE.sub(" ", sanitized_field)
 
 
 def is_uppercase_underscore_string(string: str) -> bool:

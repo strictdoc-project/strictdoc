@@ -71,6 +71,14 @@
     // parallel.
     const cellStates = new WeakMap();
 
+    function createFormData(form) {
+        // NOTE: URLSearchParams ensures that CRLF of the RFC 7578
+        // (Multipart Form Data) is normalized to just LF. This is what Turbo
+        // also does internally. StrictDoc also handles CRLF just in case for
+        // redundancy in strictdoc/helpers/string.py.
+        return new URLSearchParams(new FormData(form))
+    }
+
     function getCellState(cell) {
         let state = cellStates.get(cell);
         if (!state) {
@@ -684,7 +692,7 @@
         if (!form) return;
 
         customMetaReorderPending = true;
-        const formData = new URLSearchParams(new FormData(form));
+        const formData = createFormData(form);
         formData.set('action', 'reorder');
         formData.set('active_form_key', row.dataset.formKey);
 
@@ -715,7 +723,7 @@
         const nextSibling = row.nextSibling;
         row.remove();
 
-        const formData = new URLSearchParams(new FormData(form));
+        const formData = createFormData(form);
         formData.set('action', 'delete');
         formData.set('active_form_key', formKey);
 
@@ -786,7 +794,7 @@
         // [FEATURE: skip-save-if-unchanged]
         // Compare current form state against the snapshot taken when the form loaded.
         // If identical — close the cell without sending a request to the server.
-        const currentData = new URLSearchParams(new FormData(form)).toString();
+        const currentData = createFormData(form).toString();
         if (
             !cell.hasAttribute(ATTR_SUBMIT_UNCHANGED) &&
             state.originalFormData !== undefined &&
@@ -801,7 +809,7 @@
         // Clear only errors belonging to the field being submitted.
         clearFieldErrors(cell);
 
-        const formData = new URLSearchParams(new FormData(form));
+        const formData = createFormData(form);
         const activeFormKey = cell.querySelector(
             'input[name="active_form_key"]'
         )?.value;

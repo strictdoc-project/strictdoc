@@ -1,0 +1,13 @@
+[DOCUMENT]
+TITLE: Nested Document
+
+[TEXT]
+STATEMENT: >>>
+This nested document references an image from the parent directory using a
+wildcard extension.
+
+.. image:: ../_assets/root_image.*
+   :alt: Root image referenced from nested doc via wildcard
+   :class: image
+   :width: 100%
+<<<

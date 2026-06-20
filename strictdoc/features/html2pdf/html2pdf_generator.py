@@ -61,6 +61,20 @@ class HTML2PDFGenerator:
                 root_path=root_path,
                 static_path=project_config.dir_for_sdoc_assets,
             )
+            # The document meta's output_document_dir_full_path points to the
+            # regular HTML output directory, but html2pdf copies assets to a
+            # separate html2pdf/html/ tree. Pass the correct directory so that
+            # RST wildcard image resolution (image.*) finds assets at the right
+            # location. For the bundle (flat_assets=True) all assets sit at the
+            # root of path_to_output_pdf_html_dir; for individual documents they
+            # sit inside each document's own subdirectory.
+            if flat_assets:
+                rst_reference_path = path_to_output_pdf_html_dir
+            else:
+                rst_reference_path = os.path.join(
+                    path_to_output_pdf_html_dir,
+                    document_.meta.output_document_dir_rel_path.relative_path,
+                )
             markup_renderer = MarkupRenderer.create(
                 document_.config.get_markup(),
                 traceability_index,
@@ -68,6 +82,8 @@ class HTML2PDFGenerator:
                 html_templates,
                 project_config,
                 document_,
+                flat_assets=flat_assets,
+                reference_path_override=rst_reference_path,
             )
 
             with measure_performance("Generating printable HTML document"):

@@ -394,3 +394,93 @@ def test_get_node_by_mid():
         traceability_index.get_node_by_mid(MID(document_1.reserved_mid))
         == document_1
     )
+
+
+# Regression test: update_disconnect_two_documents_if_no_links_left used to
+# iterate children as (node, _) tuples and access .document instead of
+# .get_document(), crashing when a requirement in doc-A has a child in doc-B.
+def test__disconnect_two_documents__child_in_other_document_does_not_crash():
+    document_builder_1 = DocumentBuilder("DOC-1")
+    requirement1 = document_builder_1.add_requirement("REQ-001")
+    document_1 = document_builder_1.build()
+
+    document_builder_2 = DocumentBuilder("DOC-2")
+    _ = document_builder_2.add_requirement("REQ-002")
+    document_builder_2.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-002",
+        target_requirement_id="REQ-001",
+        role=None,
+    )
+    document_2 = document_builder_2.build()
+
+    document_tree = DocumentTree(
+        file_tree=[],
+        document_list=[document_1, document_2],
+        map_docs_by_paths={},
+        map_docs_by_rel_paths={},
+        map_grammars_by_filenames={},
+    )
+    traceability_index: TraceabilityIndex = (
+        TraceabilityIndexBuilder.create_from_document_tree(
+            document_tree, project_config=document_builder_1.project_config
+        )
+    )
+
+    # REQ-001 in DOC-1 has REQ-002 (in DOC-2) as its child.
+    # This must not crash (previously crashed due to tuple-unpacking bug).
+    # The method should detect the cross-document child link and return early
+    # without deleting the document-to-document connection.
+    children_before = traceability_index.get_children_requirements(requirement1)
+    assert len(children_before) == 1
+
+    traceability_index.update_disconnect_two_documents_if_no_links_left(
+        document_1, document_2
+    )
+
+    # The link must still be intact because a cross-document child exists.
+    children_after = traceability_index.get_children_requirements(requirement1)
+    assert len(children_after) == 1
+
+
+# Regression test: delete_requirement previously left stale NODE_TO_CHILD_NODES
+# entries on parent nodes, so after deletion the parent still reported the
+# deleted requirement as one of its children.
+def test__delete_requirement__parent_child_links_cleaned_up_symmetrically():
+    document_builder = DocumentBuilder()
+    requirement1 = document_builder.add_requirement("REQ-001")
+    requirement2 = document_builder.add_requirement("REQ-002")
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-002",
+        target_requirement_id="REQ-001",
+        role=None,
+    )
+    document_1 = document_builder.build()
+
+    document_tree = DocumentTree(
+        file_tree=[],
+        document_list=[document_1],
+        map_docs_by_paths={},
+        map_docs_by_rel_paths={},
+        map_grammars_by_filenames={},
+    )
+    traceability_index: TraceabilityIndex = (
+        TraceabilityIndexBuilder.create_from_document_tree(
+            document_tree, project_config=document_builder.project_config
+        )
+    )
+
+    # Precondition: REQ-001 is parent of REQ-002.
+    assert traceability_index.get_children_requirements(requirement1) == [
+        requirement2
+    ]
+    assert traceability_index.get_parent_requirements(requirement2) == [
+        requirement1
+    ]
+
+    traceability_index.delete_requirement(requirement2)
+
+    # After deletion the stale NODE_TO_CHILD_NODES entry on REQ-001 must be
+    # gone; previously it was left in place.
+    assert traceability_index.get_children_requirements(requirement1) == []

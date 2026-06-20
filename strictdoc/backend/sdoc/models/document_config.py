@@ -187,6 +187,7 @@ class DocumentConfig:
         return (
             self.custom_metadata is not None
             and self.custom_metadata.entries is not None
+            and len(self.custom_metadata.entries) > 0
         )
 
     def get_custom_metadata(self) -> List[Tuple[str, str]]:

@@ -35,8 +35,6 @@
     const EVENT_AFTER_TABLE_STATE_CHANGE =
         'strictdoc:table-view-after-state-change';
     const ATTR_CUSTOM_META_ROW = 'js-table_view_edit-custom_meta-row';
-    const ATTR_CUSTOM_META_NAME = 'js-table_view_edit-custom_meta-name';
-    const ATTR_CUSTOM_META_VALUE = 'js-table_view_edit-custom_meta-value';
     const ATTR_CUSTOM_META_DELETE_ACTION =
         'js-table_view_edit-custom_meta-delete_action';
     const ATTR_CUSTOM_META_DRAG_HANDLE =
@@ -114,19 +112,23 @@
     }
 
     function clearFieldErrors(field) {
-        // For custom metadata name and value fields, scope error clearing to
-        // the field itself so that sibling-field errors within the same row
-        // are not removed. For other fields in a custom meta row, scope to the
-        // row; for all other fields, scope to the field itself.
-        const isCustomMetaNameOrValue =
-            field.hasAttribute(ATTR_CUSTOM_META_NAME) ||
-            field.hasAttribute(ATTR_CUSTOM_META_VALUE);
-        const errorScope = isCustomMetaNameOrValue
-            ? field
-            : field.closest(`[${ATTR_CUSTOM_META_ROW}]`) || field;
-        errorScope
-            .querySelectorAll('sdoc-form-error')
-            .forEach(error => error.remove());
+        // Custom metadata errors are placed as siblings after the field element
+        // (via Turbo action="after"), not inside it. Match them by the row's
+        // form-key attribute so only this row's errors are removed, not those
+        // of other rows in the shared form.
+        const customMetaRow = field.closest(`[${ATTR_CUSTOM_META_ROW}]`);
+        if (customMetaRow) {
+            const formKey = customMetaRow.dataset.formKey;
+            if (formKey) {
+                customMetaRow
+                    .querySelectorAll(
+                        `[js-table_view_edit-custom_meta-error="${formKey}"]`
+                    )
+                    .forEach(el => el.remove());
+                return;
+            }
+        }
+        field.querySelectorAll('sdoc-form-error').forEach(el => el.remove());
     }
 
     function updateMode(item, mode) {

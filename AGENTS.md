@@ -2,8 +2,16 @@
 
 ## Declaration of compliance
 
-When starting any work, the AI agent shall print a statement of compliance with
-AGENTS.md and the SDG.
+MANDATORY FIRST ACTION — NO EXCEPTIONS.
+
+Before calling any tool or writing any response content, your very first text
+output MUST be a statement of compliance with AGENTS.md and the SDG.
+
+Do not search files, do not call tools, do not answer the user's question first.
+Print the compliance statement first. Then proceed.
+
+If you are reading this and have not yet printed the compliance statement: stop,
+print it now, then continue.
 
 ## Source of truth
 

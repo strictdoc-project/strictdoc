@@ -28,8 +28,11 @@ The behavior is:
 - Table edit mode remains active after the refresh;
 - nodes rejected by `can_delete_node()` expose a visible disabled delete
   action, consistently with Document view;
-- validation errors are shown in the confirmation modal and leave the document
-  unchanged.
+- validation errors are shown in the confirmation modal; when errors are
+  present the Confirm button in the modal is rendered disabled so the user
+  cannot submit an invalid deletion request;
+- a direct confirmed request (`confirmed=True`) that fails server-side
+  validation must return a `422` response, never a `5xx`.
 
 CSS changes must be limited to the minimum layout and edit-mode visibility
 rules needed to place the button in `.content-view-td-type`.
@@ -51,6 +54,15 @@ The Table response must be local to Table view:
   `#table-content-body`;
 - the response also updates the TOC and clears `#confirm`.
 
+The `stream_confirm.jinja` template must render the Confirm button with the
+`disabled` attribute whenever `errors` is non-empty. This prevents the user
+from submitting a confirmed deletion request that the server would reject.
+
+The confirmed deletion endpoint (`confirmed=True`) must also guard against
+`5xx` responses: if `DeleteRequirementCommand.perform()` raises a validation
+exception, the handler must catch it and return `422`, not propagate it as an
+unhandled server error.
+
 Do not change the Document view deletion behavior as part of this feature.
 
 ## Verification Requirements
@@ -64,7 +76,11 @@ Automated coverage must verify:
 - successful deletion refreshes the Table body and TOC;
 - Table edit mode remains active after deletion;
 - a node rejected by `can_delete_node()` has a visible disabled delete action;
-- a validation failure is shown in the modal and does not delete the node.
+- a validation failure is shown in the modal and does not delete the node;
+- the Confirm button is disabled in the modal when validation errors are
+  present, so a second click cannot reach the server;
+- a direct confirmed request sent when validation fails returns `422`, not
+  `5xx`.
 
 Required checks:
 

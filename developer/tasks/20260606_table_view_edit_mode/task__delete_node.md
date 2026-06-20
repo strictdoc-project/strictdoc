@@ -27,7 +27,10 @@ The behavior is:
   Turbo;
 - Table edit mode remains active after the refresh;
 - nodes rejected by `can_delete_node()` expose a visible disabled delete
-  action, consistently with Document view;
+  action, consistently with Document view. `can_delete_node()` returns
+  `False` in three cases: the node's parent document has `autogen: True`;
+  the node itself is managed by source code (`is_managed_by_source_code()`);
+  or the subject is a document with `autogen: True`;
 - validation errors are shown in the confirmation modal; when errors are
   present the Confirm button in the modal is rendered disabled so the user
   cannot submit an invalid deletion request;

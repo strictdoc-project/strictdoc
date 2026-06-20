@@ -234,10 +234,10 @@ returns additional Turbo Streams beyond the TITLE cell itself.
   action.
 - `[x]` A deletion validation error is shown in the confirmation modal.
 - `[x]` A failed validation leaves the node and document unchanged.
-- `[ ]` The Confirm button is disabled in the modal when validation errors are
+- `[x]` The Confirm button is disabled in the modal when validation errors are
   present (node with incoming relations: clicking Delete opens the modal with
   errors and a disabled Confirm button).
-- `[ ]` A direct confirmed request (`confirmed=True`) for a node that fails
+- `[x]` A direct confirmed request (`confirmed=True`) for a node that fails
   validation returns `422`, not `5xx`.
 
 ### Delete Node E2E files

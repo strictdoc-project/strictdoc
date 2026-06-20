@@ -1,0 +1,27 @@
+# @relation(SDOC-SRS-51, scope=file)
+
+REQUIRES: TEST_HTML2PDF
+
+RUN: %strictdoc export %S --formats=html2pdf --generate-bundle-document --output-dir %T | filecheck %s --dump-input=fail
+CHECK: html2pdf4doc: JS logs from the print session
+
+RUN: %check_exists --file %T/html2pdf/html/bundle-PDF.html
+RUN: %check_exists --file %T/html2pdf/html/%THIS_TEST_FOLDER/input-PDF.html
+RUN: %check_exists --file %T/html2pdf/html/%THIS_TEST_FOLDER/nested/input2-PDF.html
+RUN: %check_exists --file %T/html2pdf/html/%THIS_TEST_FOLDER/nested/subnested/input3-PDF.html
+
+# Individual nested doc (one level deep): Markdown image must keep original
+# '../' path relative to its own output location.
+RUN: %cat %T/html2pdf/html/%THIS_TEST_FOLDER/nested/input2-PDF.html | filecheck %s --check-prefix CHECK-NESTED
+CHECK-NESTED: src="../_assets/root_image.svg"
+
+# Individual subnested doc (two levels deep): must keep original '../../' path.
+RUN: %cat %T/html2pdf/html/%THIS_TEST_FOLDER/nested/subnested/input3-PDF.html | filecheck %s --check-prefix CHECK-SUBNESTED
+CHECK-SUBNESTED: src="../../_assets/root_image.svg"
+
+# Bundle HTML: all '../' prefixes must be stripped from Markdown image src
+# attributes so every image resolves from the bundle root.
+RUN: %cat %T/html2pdf/html/bundle-PDF.html | filecheck %s --check-prefix CHECK-BUNDLE
+CHECK-BUNDLE: src="_assets/root_image.svg"
+CHECK-BUNDLE-NOT: src="../_assets/root_image.svg"
+CHECK-BUNDLE-NOT: src="../../_assets/root_image.svg"

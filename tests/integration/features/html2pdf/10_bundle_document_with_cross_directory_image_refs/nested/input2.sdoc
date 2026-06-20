@@ -1,0 +1,12 @@
+[DOCUMENT]
+TITLE: Nested Document
+
+[TEXT]
+STATEMENT: >>>
+This nested document references an image from the parent directory's assets.
+
+.. image:: ../_assets/root_image.svg
+   :alt: Root image referenced from nested doc
+   :class: image
+   :width: 100%
+<<<

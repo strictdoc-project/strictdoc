@@ -46,7 +46,7 @@ def print_welcome_message(project_config: ProjectConfig) -> None:
     url = f"{host}:{project_config.server_port}"
 
     width = 72
-    border = "═" * width
+    border = "=" * width
 
     lines = [
         f" {strictdoc_version.center(width - 2)} ",
@@ -65,9 +65,9 @@ def print_welcome_message(project_config: ProjectConfig) -> None:
 
     banner = (
         "\n\n"
-        f"╔{border}╗\n"
-        + "\n".join(f"║{line.ljust(width)}║" for line in lines)
-        + f"\n╚{border}╝\n"
+        f"+{border}+\n"
+        + "\n".join(f"|{line.ljust(width)}|" for line in lines)
+        + f"\n+{border}+\n"
     )
 
     LOGGER.info(banner)

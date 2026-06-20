@@ -1,5 +1,10 @@
 # AGENTS.md
 
+## Declaration of compliance
+
+When starting any work, the AI agent shall print a statement of compliance with
+AGENTS.md and the SDG.
+
 ## Source of truth
 
 Follow the StrictDoc Developer Guide (`SDG`) for all tasks in this repository:
@@ -59,6 +64,10 @@ requests it. Those files are task artifacts intended for the user;
 - If changing a shared component appears necessary, stop and request approval
   before editing it.
 
-## End-to-end tests
+## Testing
 
+- Prefer `invoke test-*` commands for all test commands. Only resort to
+running the test commands directly if not possible with Invoke tasks.
 - Always run end-to-end tests with `--headless`.
+- Do not create throw-away "smoke tests". If such a smoke test is needed,
+create proper unit, integration or end2end tests.

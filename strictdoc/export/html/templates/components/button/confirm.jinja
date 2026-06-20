@@ -1,3 +1,9 @@
+{% if confirm_disabled|default(false) %}
+<a
+  class="action_button action_button--disabled"
+  data-testid="confirm-action-disabled"
+>{{ confirm_name|default('Confirm the action') }}</a>
+{% else %}
 <a
   href="{{ confirm_href }}"
   class="action_button"
@@ -6,3 +12,4 @@
   data-action-type="confirm_{{ confirm_action_type|default('delete') }}"
   data-testid="confirm-action"
 >{{ confirm_name|default('Confirm the action') }}</a>
+{% endif %}

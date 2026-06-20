@@ -1,0 +1,9 @@
+[DOCUMENT]
+TITLE: Requirements
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: First Requirement Title
+STATEMENT: >>>
+See [LINK: IMPL-1] for the core implementation.
+<<<

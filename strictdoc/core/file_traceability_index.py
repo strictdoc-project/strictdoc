@@ -18,6 +18,8 @@ from typing import (
 from strictdoc.backend.gcov.helpers import convert_function_name_to_gcovr_style
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
+from strictdoc.backend.sdoc.free_text_reader import SDFreeTextReader
+from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
 )
@@ -347,6 +349,21 @@ class FileTraceabilityIndex:
                                 rhs_node=created_section,
                             )
                     current_top_node.section_contents.append(sdoc_node)
+
+                # Register [ANCHOR]s from source node fields as linkable targets.
+                for node_field_ in sdoc_node.enumerate_fields():
+                    for part_ in node_field_.parts:
+                        if isinstance(part_, Anchor):
+                            traceability_index.graph_database.create_link(
+                                link_type=GraphLinkType.MID_TO_NODE,
+                                lhs_node=part_.mid,
+                                rhs_node=part_,
+                            )
+                            traceability_index.graph_database.create_link(
+                                link_type=GraphLinkType.UID_TO_NODE,
+                                lhs_node=part_.value,
+                                rhs_node=part_,
+                            )
 
                 self.connect_source_node_function(
                     source_node_, sdoc_node_uid, traceability_info_
@@ -1149,11 +1166,23 @@ class FileTraceabilityIndex:
     def set_sdoc_node_fields(
         sdoc_node: SDocNode, sdoc_node_fields: dict[str, str]
     ) -> None:
+        document = assert_cast(sdoc_node.get_document(), SDocDocumentIF)
+        grammar = assert_cast(document.grammar, DocumentGrammar)
+        element = grammar.elements_by_type[sdoc_node.node_type]
+
         for field_name, field_value in sdoc_node_fields.items():
+            multiline = element.is_field_multiline(field_name)
+            free_text_container = SDFreeTextReader.read(field_value)
+            sdoc_node_field = SDocNodeField.from_parts(
+                sdoc_node,
+                field_name=field_name,
+                parts=free_text_container.parts,
+                multiline=multiline,
+            )
             sdoc_node.set_field_value(
                 field_name=field_name,
                 form_field_index=0,
-                value=field_value,
+                value=sdoc_node_field,
             )
 
             # As we overwrite the field's content from the source code,

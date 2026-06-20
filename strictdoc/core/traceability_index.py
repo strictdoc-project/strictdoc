@@ -71,6 +71,7 @@ class TraceabilityIndex:
             file_dependency_manager
         )
         self.node_filter: Optional[NodeFilter] = None
+        self.pending_inline_links: List[InlineLink] = []
 
         self.index_last_updated = datetime.datetime.today()
         self.contains_included_documents = False

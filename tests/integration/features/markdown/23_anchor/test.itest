@@ -1,0 +1,14 @@
+#
+# Verify that [ANCHOR: uid] and [ANCHOR: uid, title] in Markdown section bodies
+# are rendered as named anchors in the exported HTML output, and that [LINK: uid]
+# pointing to them produces hyperlinks.
+#
+
+RUN: %strictdoc export %S --formats=html --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Anchor example
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+
+CHECK-HTML: id="SEC-INTRO"
+CHECK-HTML: id="SEC-DETAILS"
+CHECK-HTML: href="#SEC-INTRO"

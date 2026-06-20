@@ -2,6 +2,8 @@ import pytest
 
 from strictdoc.backend.markdown.reader import SDMarkdownReader
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
+from strictdoc.backend.sdoc.models.anchor import Anchor
+from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode
 
 
@@ -274,6 +276,208 @@ System shall do B.
     document = reader.read(markdown_content, file_path=None)
 
     assert document.config.requirement_prefix == "MYDOC-"
+
+
+def test_016_link_tag_in_statement_creates_inline_link_part():
+    markdown_content = """\
+# Document
+
+## Requirement A
+
+**UID**: REQ-1
+
+System shall do X. See also [LINK: REQ-2].
+"""
+
+    reader = SDMarkdownReader()
+    document = reader.read(markdown_content, file_path=None)
+
+    requirement = document.section_contents[0]
+    assert isinstance(requirement, SDocNode)
+    stmt_field = requirement.ordered_fields_lookup["STATEMENT"][0]
+    inline_link_parts = [
+        p for p in stmt_field.parts if isinstance(p, InlineLink)
+    ]
+    assert len(inline_link_parts) == 1
+    assert inline_link_parts[0].link == "REQ-2"
+    assert inline_link_parts[0].parent is stmt_field
+    assert stmt_field.parent is requirement
+
+
+def test_017_anchor_tag_in_statement_creates_anchor_part():
+    markdown_content = """\
+# Document
+
+## Section
+
+[ANCHOR: SEC-INTRO]
+This section describes the introduction.
+"""
+
+    reader = SDMarkdownReader()
+    document = reader.read(markdown_content, file_path=None)
+
+    section = document.section_contents[0]
+    assert isinstance(section, SDocNode)
+    assert section.node_type == "SECTION"
+    text_node = section.section_contents[0]
+    assert isinstance(text_node, SDocNode)
+    stmt_field = text_node.ordered_fields_lookup["STATEMENT"][0]
+    anchor_parts = [p for p in stmt_field.parts if isinstance(p, Anchor)]
+    assert len(anchor_parts) == 1
+    assert anchor_parts[0].value == "SEC-INTRO"
+    assert anchor_parts[0].parent is stmt_field
+    assert stmt_field.parent is text_node
+
+
+def test_018_anchor_tag_with_title_creates_anchor_with_title():
+    markdown_content = """\
+# Document
+
+## Section
+
+[ANCHOR: SEC-INTRO, Introduction]
+This section describes the introduction.
+"""
+
+    reader = SDMarkdownReader()
+    document = reader.read(markdown_content, file_path=None)
+
+    section = document.section_contents[0]
+    text_node = section.section_contents[0]
+    stmt_field = text_node.ordered_fields_lookup["STATEMENT"][0]
+    anchor_parts = [p for p in stmt_field.parts if isinstance(p, Anchor)]
+    assert len(anchor_parts) == 1
+    assert anchor_parts[0].value == "SEC-INTRO"
+    assert anchor_parts[0].title == "Introduction"
+    assert anchor_parts[0].has_title is True
+
+
+def test_019_link_tag_in_requirement_statement_wires_parent_correctly():
+    markdown_content = """\
+# Document
+
+## Requirement
+
+**UID**: REQ-1
+
+Statement with [LINK: SOME-ANCHOR] inline.
+"""
+
+    reader = SDMarkdownReader()
+    document = reader.read(markdown_content, file_path=None)
+
+    requirement = document.section_contents[0]
+    stmt_field = requirement.ordered_fields_lookup["STATEMENT"][0]
+    inline_links = [p for p in stmt_field.parts if isinstance(p, InlineLink)]
+    assert len(inline_links) == 1
+    link = inline_links[0]
+    assert link.link == "SOME-ANCHOR"
+    # parent chain: InlineLink -> SDocNodeField -> SDocNode
+    assert link.parent is stmt_field
+    assert link.parent_node() is requirement
+
+
+def test_020_link_tag_inside_inline_code_span_is_not_parsed():
+    # [LINK: ...] inside backtick code spans must be treated as plain text,
+    # not as InlineLink objects (the referenced UID may not exist).
+    markdown_content = """\
+# Document
+
+## Requirement
+
+**UID**: MD-1
+
+A `[LINK: NONEXISTENT]` token is written like this.
+"""
+
+    reader = SDMarkdownReader()
+    document = reader.read(markdown_content, file_path=None)
+
+    requirement = document.section_contents[0]
+    assert isinstance(requirement, SDocNode)
+    stmt_field = requirement.ordered_fields_lookup["STATEMENT"][0]
+    inline_links = [p for p in stmt_field.parts if isinstance(p, InlineLink)]
+    assert len(inline_links) == 0
+    full_text = "".join(
+        p if isinstance(p, str) else "" for p in stmt_field.parts
+    )
+    assert "[LINK: NONEXISTENT]" in full_text
+
+
+def test_021_link_tag_inside_fenced_code_block_is_not_parsed():
+    # [LINK: ...] inside a fenced code block must not become an InlineLink.
+    markdown_content = """\
+# Document
+
+## Requirement
+
+**UID**: MD-1
+
+Example usage:
+
+```markdown
+See also [LINK: NONEXISTENT].
+```
+"""
+
+    reader = SDMarkdownReader()
+    document = reader.read(markdown_content, file_path=None)
+
+    requirement = document.section_contents[0]
+    assert isinstance(requirement, SDocNode)
+    stmt_field = requirement.ordered_fields_lookup["STATEMENT"][0]
+    inline_links = [p for p in stmt_field.parts if isinstance(p, InlineLink)]
+    assert len(inline_links) == 0
+
+
+def test_022_link_tag_outside_code_is_still_parsed_when_code_also_present():
+    # [LINK: REAL] outside a code fence must still become an InlineLink even
+    # when there is also a [LINK: FAKE] inside a fenced code block.
+    markdown_content = """\
+# Document
+
+## Requirement
+
+**UID**: MD-1
+
+See [LINK: REAL-1] for details.
+
+```markdown
+Do NOT parse [LINK: FAKE].
+```
+"""
+
+    reader = SDMarkdownReader()
+    document = reader.read(markdown_content, file_path=None)
+
+    requirement = document.section_contents[0]
+    assert isinstance(requirement, SDocNode)
+    stmt_field = requirement.ordered_fields_lookup["STATEMENT"][0]
+    inline_links = [p for p in stmt_field.parts if isinstance(p, InlineLink)]
+    assert len(inline_links) == 1
+    assert inline_links[0].link == "REAL-1"
+
+
+def test_023_anchor_tag_inside_inline_code_span_is_not_parsed():
+    # [ANCHOR: ...] inside a backtick span must not become an Anchor object.
+    markdown_content = """\
+# Document
+
+## Section
+
+Use `[ANCHOR: FAKE-ANCHOR]` to place an anchor.
+"""
+
+    reader = SDMarkdownReader()
+    document = reader.read(markdown_content, file_path=None)
+
+    section = document.section_contents[0]
+    assert isinstance(section, SDocNode)
+    text_node = section.section_contents[0]
+    stmt_field = text_node.ordered_fields_lookup["STATEMENT"][0]
+    anchors = [p for p in stmt_field.parts if isinstance(p, Anchor)]
+    assert len(anchors) == 0
 
 
 def test_016_section_level_prefix_is_stored_on_section_node():

@@ -89,9 +89,20 @@ class MarkupRenderer:
         # performance improvement.
         self.cache: Dict[Tuple[DocumentType, SDocNodeField], Markup] = {}
 
-        self.template_anchor = html_templates.jinja_environment().get_template(
-            "rst/anchor.jinja"
-        )
+        if isinstance(
+            fragment_writer, (MarkdownToHtmlFragmentWriter, HTMLFragmentWriter)
+        ):
+            self.template_anchor = (
+                html_templates.jinja_environment().get_template(
+                    "markup/anchor.jinja"
+                )
+            )
+        else:
+            self.template_anchor = (
+                html_templates.jinja_environment().get_template(
+                    "rst/anchor.jinja"
+                )
+            )
 
     def render_node_statement(
         self, document_type: DocumentType, node: SDocNode

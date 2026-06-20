@@ -1,0 +1,28 @@
+{#
+  Anchor template for Markdown (and HTML) markup.
+  Outputs raw HTML directly, without an RST ".. raw:: html" wrapper.
+  The "anchor_in_rst" CSS class controls inline-text anchor positioning.
+#}
+{%- set local_anchor = link_renderer.render_local_anchor(anchor) %}
+{%- set incoming_links = traceability_index.get_incoming_links(anchor) %}
+{%- set anchor_has_back_links = incoming_links is not none and incoming_links|length > 0 %}
+<sdoc-anchor id="{{ local_anchor }}" data-uid="{{ local_anchor }}" data-anchor="{{ local_anchor }}" class="anchor_in_rst">
+  <div class="anchor_block" data-testid="anchor_hover_button">
+    {% with anchor_button_text=local_anchor %}
+    {% include "components/anchor/anchor_clipboard_button.jinja"%}
+    {% endwith %}
+    {% if anchor_has_back_links %}
+    <div class="anchor_back_links">
+      Incoming link{% if incoming_links|length > 1 %}s{% endif %} from:
+      {% for incoming_link in incoming_links %}
+        {% set incoming_link_parent_node = incoming_link.parent_node() %}
+        {% set incoming_link_href = link_renderer.render_node_link(incoming_link.parent_node(), anchor.get_parent_or_including_document(), document_type) %}
+        <a href="{{ incoming_link_href }}">
+          {{ incoming_link_parent_node.get_display_title() }}
+        </a>
+      {% endfor %}
+    </div>
+    <div class="anchor_back_links_number" data-testid="anchor_links_number">{{ incoming_links|length }}</div>
+    {% endif %}
+  </div>
+</sdoc-anchor>

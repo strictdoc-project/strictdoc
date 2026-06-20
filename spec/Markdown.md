@@ -156,7 +156,7 @@ A node terminates at the next heading or end of file.
 
 **STATEMENT**:
 
-A node without a title is a special case of the node defined by MD-21.
+A node without a title is a special case of the node defined by [LINK: MD-21].
 
 Compared to a node with a title, a node without a title starts directly with a node body.
 
@@ -167,7 +167,7 @@ Compared to a node with a title, a node without a title starts directly with a n
 
 **STATEMENT**:
 
-An H2–H6 heading that does not qualify as a requirement node (see MD-8, MD-9) becomes a section.
+An H2–H6 heading that does not qualify as a requirement node (see [LINK: MD-8], [LINK: MD-9]) becomes a section.
 
 Free-form Markdown prose in a section body is stored as a TEXT node.
 
@@ -230,10 +230,10 @@ For SECTION nodes, MID auto-generation is triggered only when the grammar's `SEC
 
 **STATEMENT**:
 
-The `**TYPE**: <name>` meta field specifies the element type of a node explicitly and takes precedence over the automatic node-type determination rules of MD-7, MD-8, and MD-9.
+The `**TYPE**: <name>` meta field specifies the element type of a node explicitly and takes precedence over the automatic node-type determination rules of [LINK: MD-7], [LINK: MD-8], and [LINK: MD-9].
 
 - `**TYPE**: SECTION` forces the heading to become a SECTION regardless of other fields. Any content following the meta block (after the TYPE line) forms a TEXT child as usual; the TYPE line itself is not included in the TEXT body.
-- Any other `**TYPE**: <name>` value forces the heading to become a node of type `<name>`, bypassing the UID/MID and STATEMENT requirements of MD-8. Grammar field validation is deferred to the build stage as per MD-9.
+- Any other `**TYPE**: <name>` value forces the heading to become a node of type `<name>`, bypassing the UID/MID and STATEMENT requirements of [LINK: MD-8]. Grammar field validation is deferred to the build stage as per [LINK: MD-9].
 
 The TYPE field is parsed out of the meta block and is not forwarded as a regular node field.
 
@@ -358,6 +358,50 @@ After the meta block, content fields are written as `**FieldName**: value` lines
 - If the value contains two or more paragraphs (separated by a blank line), or if the value begins with a Markdown structural element (list, code block, blockquote, table, etc.), the value follows a blank line after the field name alone on its line: `**FieldName**:\n\nvalue`.
 
 Prose not starting with a `**Key**:` header is accumulated as an implicit `STATEMENT` field.
+
+### LINK tag
+
+**MID**: e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3 \
+**UID**: MD-32
+
+**STATEMENT**:
+
+A `[LINK: <uid>]` token may appear anywhere in a content field value (e.g. STATEMENT, RATIONALE, COMMENT). It creates a traceable inline reference to the node or anchor identified by `<uid>`. The UID must match the `REGEX_UID` pattern: `[\w]+[\w()\-\/.: ]*`.
+
+A `[LINK: ...]` token that appears inside an inline code span (`` `[LINK: uid]` ``) or inside a fenced code block is treated as plain text and is **not** resolved as a traceable reference. This allows documentation to describe the LINK syntax itself without triggering UID resolution errors.
+
+Example: a STATEMENT referencing another requirement:
+
+```markdown
+## Requirement A
+
+**UID**: REQ-1
+
+System shall do X. See also [LINK: REQ-2].
+```
+
+### ANCHOR tag
+
+**MID**: f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4 \
+**UID**: MD-33
+
+**STATEMENT**:
+
+An `[ANCHOR: <uid>]` or `[ANCHOR: <uid>, <title>]` token places a named anchor in a content field value. The anchor must appear at the start of a line and occupy the entire line (no other text on the same line). The UID follows the `REGEX_UID` pattern. The optional title is a human-readable label.
+
+An `[ANCHOR: ...]` token that appears inside an inline code span or a fenced code block is treated as plain text and is **not** registered as a named anchor.
+
+Example:
+
+```markdown
+## Section
+
+[ANCHOR: SEC-INTRO]
+This section describes the introduction.
+
+[ANCHOR: SEC-INTRO-ALT, Introduction alternative anchor]
+Additional content.
+```
 
 ### Dictionary format
 

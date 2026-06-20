@@ -5,7 +5,7 @@ Markdown reader for importing CommonMark documents into SDoc objects.
 import os
 import re
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Sequence, Set, Tuple, Union
+from typing import Any, Dict, List, Optional, Sequence, Set, Tuple, Union
 
 from markdown_it import MarkdownIt
 from markdown_it.token import Token
@@ -13,12 +13,15 @@ from markdown_it.token import Token
 from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
+from strictdoc.backend.sdoc.free_text_reader import SDFreeTextReader
+from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import (
     DocumentCustomMetadata,
     DocumentCustomMetadataKeyValuePair,
 )
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
@@ -1222,14 +1225,13 @@ class SDMarkdownReader:
             )
         )
         for field in parsed_content_fields:
-            requirement_fields.append(
-                SDocNodeField.create_from_string(
-                    parent=None,
-                    field_name=field.name,
-                    field_value=field.value,
-                    multiline=field.is_block_format,
-                )
+            sdoc_field = SDocNodeField(
+                parent=None,
+                field_name=field.name,
+                parts=SDMarkdownReader._parse_text_parts(field.value),
+                multiline__="multiline" if field.is_block_format else None,
             )
+            requirement_fields.append(sdoc_field)
 
         requirement = SDocNode(
             parent=parent,
@@ -1237,6 +1239,7 @@ class SDMarkdownReader:
             fields=requirement_fields,
             relations=[],
         )
+        SDMarkdownReader._wire_node_field_parents(requirement)
         if relations_field is not None:
             requirement.relations = SDMarkdownReader._build_references(
                 SDMarkdownReader._parse_bullet_list_of_dicts(
@@ -1308,11 +1311,11 @@ class SDMarkdownReader:
                 )
             )
         fields.append(
-            SDocNodeField.create_from_string(
+            SDocNodeField(
                 parent=None,
                 field_name="STATEMENT",
-                field_value=statement,
-                multiline="\n" in statement,
+                parts=SDMarkdownReader._parse_text_parts(statement),
+                multiline__="multiline" if "\n" in statement else None,
             )
         )
         text_node = SDocNode(
@@ -1321,9 +1324,137 @@ class SDMarkdownReader:
             fields=fields,
             relations=[],
         )
+        SDMarkdownReader._wire_node_field_parents(text_node)
         text_node.ng_document_reference = document_reference
         text_node.ng_including_document_reference = including_document_reference
         return text_node
+
+    @staticmethod
+    def _parse_text_parts(value: str) -> List[Any]:
+        """
+        Parse a field value string into parts (str, InlineLink, Anchor).
+
+        [LINK:] and [ANCHOR:] tokens inside inline code spans or fenced code
+        blocks are treated as plain text and never turned into InlineLink /
+        Anchor objects.
+        """
+        if "[LINK:" not in value and "[ANCHOR:" not in value:
+            return [value]
+
+        # Split into code / non-code segments so that [LINK:] / [ANCHOR:]
+        # inside backtick spans or fenced code blocks are not parsed.
+        segments = SDMarkdownReader._split_by_code_contexts(value)
+        has_link_outside_code = any(
+            not is_code and ("[LINK:" in seg or "[ANCHOR:" in seg)
+            for is_code, seg in segments
+        )
+        if not has_link_outside_code:
+            return [value]
+
+        parts: List[Any] = []
+        for is_code, seg in segments:
+            if is_code:
+                parts.append(seg)
+            elif "[LINK:" in seg or "[ANCHOR:" in seg:
+                parts.extend(SDFreeTextReader.read(seg).parts)
+            else:
+                parts.append(seg)
+
+        # Merge adjacent plain strings so the output is compact.
+        merged: List[Any] = []
+        for part in parts:
+            if isinstance(part, str) and merged and isinstance(merged[-1], str):
+                merged[-1] += part
+            else:
+                merged.append(part)
+        return merged if merged else [value]
+
+    @staticmethod
+    def _split_by_code_contexts(value: str) -> List[Tuple[bool, str]]:
+        """
+        Split a markdown field value into (is_code, text) segment pairs.
+
+        Segments with is_code=True originate from fenced code blocks or inline
+        code spans; their content is opaque and must not be parsed for
+        [LINK:] / [ANCHOR:] tags.
+        """
+        # --- Step 1: mark lines that belong to fenced code blocks ---
+        lines = value.splitlines(keepends=True)
+        line_count = len(lines)
+        fence_open_re = re.compile(r"^(`{3,}|~{3,})")
+
+        in_fence = False
+        fence_close_re: Optional[re.Pattern[str]] = None
+        code_line_set: Set[int] = set()
+
+        for li in range(line_count):
+            line_text = lines[li].rstrip("\r\n")
+            if not in_fence:
+                m = fence_open_re.match(line_text)
+                if m:
+                    fence_char = m.group(1)[0]
+                    fence_min = len(m.group(1))
+                    fence_close_re = re.compile(
+                        rf"^{re.escape(fence_char)}{{{fence_min},}}\s*$"
+                    )
+                    in_fence = True
+                    code_line_set.add(li)
+            else:
+                code_line_set.add(li)
+                if fence_close_re is not None and fence_close_re.match(
+                    line_text
+                ):
+                    in_fence = False
+                    fence_close_re = None
+
+        # --- Step 2: build coarse segments from line groups ---
+        fence_segments: List[Tuple[bool, str]] = []
+        if line_count > 0:
+            current_is_code = 0 in code_line_set
+            current_lines: List[str] = []
+            for li, line in enumerate(lines):
+                is_code = li in code_line_set
+                if is_code != current_is_code:
+                    if current_lines:
+                        fence_segments.append(
+                            (current_is_code, "".join(current_lines))
+                        )
+                    current_lines = [line]
+                    current_is_code = is_code
+                else:
+                    current_lines.append(line)
+            if current_lines:
+                fence_segments.append((current_is_code, "".join(current_lines)))
+        else:
+            fence_segments = [(False, value)]
+
+        # --- Step 3: within non-code segments, find inline code spans ---
+        inline_code_re = re.compile(r"(`+)(.*?)\1", re.DOTALL)
+        result: List[Tuple[bool, str]] = []
+        for is_code, seg in fence_segments:
+            if is_code:
+                result.append((True, seg))
+                continue
+            inner_pos = 0
+            for m in inline_code_re.finditer(seg):
+                if m.start() > inner_pos:
+                    result.append((False, seg[inner_pos : m.start()]))
+                result.append((True, m.group(0)))
+                inner_pos = m.end()
+            if inner_pos < len(seg):
+                result.append((False, seg[inner_pos:]))
+
+        return result
+
+    @staticmethod
+    def _wire_node_field_parents(node: SDocNode) -> None:
+        """Wire SDocNodeField.parent and InlineLink/Anchor.parent for a node."""
+        for fields_list in node.ordered_fields_lookup.values():
+            for field in fields_list:
+                field.parent = node
+                for part in field.parts:
+                    if isinstance(part, (InlineLink, Anchor)):
+                        part.parent = field
 
     @staticmethod
     def _is_empty_line(line: str) -> bool:

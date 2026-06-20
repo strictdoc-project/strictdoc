@@ -4,6 +4,7 @@
 
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.components.confirm import Confirm
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
 )
@@ -38,5 +39,6 @@ class Test(E2ECase):
                 "Cannot remove node '1. Referenced section' with incoming LINKs from: "
                 "'REQUIREMENT with no title/UID' -> 'SDOC_UG_CONTACT'."
             )
+            Confirm(self).assert_confirm_action_disabled()
 
         assert test_setup.compare_sandbox_and_expected_output()

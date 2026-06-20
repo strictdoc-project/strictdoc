@@ -4,6 +4,7 @@
 
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.components.confirm import Confirm
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
 )
@@ -40,5 +41,6 @@ class Test(E2ECase):
             screen_document.assert_text(
                 "Cannot remove node '1. Requirement title' with incoming relations from: '1. Requirement title'."
             )
+            Confirm(self).assert_confirm_action_disabled()
 
         assert test_setup.compare_sandbox_and_expected_output()

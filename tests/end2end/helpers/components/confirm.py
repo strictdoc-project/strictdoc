@@ -30,6 +30,16 @@ class Confirm:  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
+    def assert_confirm_action_disabled(self) -> None:
+        self.test_case.assert_element(
+            '//*[@data-testid="confirm-action-disabled"]',
+            by=By.XPATH,
+        )
+        self.test_case.assert_element_not_visible(
+            '//*[@data-testid="confirm-action"]',
+            by=By.XPATH,
+        )
+
     def do_confirm_action(self) -> None:
         self.test_case.click(
             selector=('//*[@data-testid="confirm-action"]'),

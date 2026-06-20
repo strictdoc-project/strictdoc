@@ -4,7 +4,8 @@
     confirm_title = default,
     confirm_message = "Deleting a document is an unrecoverable action.",
     confirm_name = "Delete document",
-    confirm_href = "/actions/document/delete_document?document_mid="~document_mid~"&confirmed=1"
+    confirm_href = "/actions/document/delete_document?document_mid="~document_mid~"&confirmed=1",
+    confirm_disabled = (errors|length > 0)
   %}
     {% include "components/confirm/index.jinja" %}
   {% endwith %}

@@ -15,6 +15,8 @@ feature must let users edit a document directly on TABLE screen, cell by cell
 and field by field, while keeping the table's compact, scannable layout intact
 in both display and edit states.
 
+## WHAT
+
 Editing must respect the same rules as Document view: only fields declared in
 the document grammar are editable, validation must match the SDOC grammar and
 the existing backend transforms, and Markdown/RST markup handling must remain
@@ -22,13 +24,6 @@ consistent with the rest of the application. The feature must not change the
 SDOC data model or introduce a parallel editing pipeline — it must reuse the
 existing update transforms and validation through new table-specific endpoints
 and forms.
-
-## WHAT
-
-TABLE screen gains an explicit **edit mode**, toggled from the toolbar
-(`[data-testid="table-toolbar-edit-btn"]`). Toggling it switches `.main` to
-`[data-mode="edit"]`; CSS then reveals hover outlines and per-cell edit
-indicators only in that mode. Display mode is unaffected and remains read-only.
 
 In edit mode, the following become inline-editable:
 
@@ -74,16 +69,58 @@ Common behavior across all editable fields:
 Custom metadata additionally supports renaming, adding, deleting, and
 drag-and-drop reordering of entries — this is the subject of the dedicated
 specification
-[document_config_custom_meta.md](document_config_custom_meta.md), because
-metadata is stored as an ordered list without persistent per-entry identifiers
-and therefore cannot reuse the single-field save mechanism as-is.
+[task__document_config_custom_meta.md](task__document_config_custom_meta.md),
+because metadata is stored as an ordered list without persistent per-entry
+identifiers and therefore cannot reuse the single-field save mechanism as-is.
 
 Supporting table UX shipped alongside editing: column visibility driven by the
 grammar union (with dimmed cells for fields absent from a node's own grammar),
 sortable columns, sticky header, min/max column widths, and a TIPS modal
 explaining the available interactions.
 
+### Supporting UI work
+
+- column sorting with sort icons and a reset button;
+- a sticky table header;
+- min/max column width constraints for meta and relation columns;
+- an editable-cell hover indicator;
+- moving the Filter/Edit buttons into the page header;
+- a TIPS modal that documents the available interactions to the user.
+
+## Verification
+
+The completed feature must be checked with:
+
+- toggling edit mode on and off, and confirming display mode stays read-only;
+- editing each root document field (`TITLE`, `UID`, `VERSION`,
+  `CLASSIFICATION`, `PREFIX`) and confirming `DATE` has no editable affordance;
+- editing each editable table cell type per node grammar
+  (`TITLE`, `STATEMENT`, `RATIONALE`, `COMMENT`, `RELATIONS`,
+  `MultipleChoice`/autocomplete, generic dynamic fields);
+- adding a TITLE to a node that had none and confirming the LEVEL cell and TOC
+  entry appear immediately in the same page without a reload;
+- removing a TITLE from a node that had one and confirming the LEVEL cell
+  becomes empty and the TOC entry disappears immediately;
+- changing a TITLE text and confirming the TOC entry updates while the LEVEL
+  cell is unchanged;
+- confirming cells absent from a node's grammar render dimmed and read-only;
+- save triggers: blur, outside click, Ctrl/Cmd+Enter, and Escape to cancel;
+- skip-on-unchanged behavior, and that creation fields still submit when empty;
+- validation error display, field-specific error scoping, passive-open
+  blocking, and marker removal after a successful correction;
+- generic handling of unexpected `5xx` responses;
+- column visibility, sorting, sticky header, and column width constraints;
+- the complete custom metadata lifecycle described in
+  [document_config_custom_meta.md](document_config_custom_meta.md);
+- regression tests for Document view's existing edit forms for the same
+  fields.
+
 ## HOW
+
+TABLE screen gains an explicit **edit mode**, toggled from the toolbar
+(`[data-testid="table-toolbar-edit-btn"]`). Toggling it switches `.main` to
+`[data-mode="edit"]`; CSS then reveals hover outlines and per-cell edit
+indicators only in that mode. Display mode is unaffected and remains read-only.
 
 ### Editability and column layout
 
@@ -262,39 +299,3 @@ reorder, all of which resubmit the complete ordered list. The full design —
 shared form, local form keys, row structure, validation rules, and
 ordering/deletion mechanics — is described in
 [document_config_custom_meta.md](document_config_custom_meta.md).
-
-### Supporting UI work
-
-Alongside the editing mechanics, the branch also added: column sorting with
-sort icons and a reset button; a sticky table header; min/max column width
-constraints for meta and relation columns; an editable-cell hover indicator;
-moving the Filter/Edit buttons into the page header; and a TIPS modal that
-documents the available interactions to the user.
-
-## Verification
-
-The completed feature must be checked with:
-
-- toggling edit mode on and off, and confirming display mode stays read-only;
-- editing each root document field (`TITLE`, `UID`, `VERSION`,
-  `CLASSIFICATION`, `PREFIX`) and confirming `DATE` has no editable affordance;
-- editing each editable table cell type per node grammar
-  (`TITLE`, `STATEMENT`, `RATIONALE`, `COMMENT`, `RELATIONS`,
-  `MultipleChoice`/autocomplete, generic dynamic fields);
-- adding a TITLE to a node that had none and confirming the LEVEL cell and TOC
-  entry appear immediately in the same page without a reload;
-- removing a TITLE from a node that had one and confirming the LEVEL cell
-  becomes empty and the TOC entry disappears immediately;
-- changing a TITLE text and confirming the TOC entry updates while the LEVEL
-  cell is unchanged;
-- confirming cells absent from a node's grammar render dimmed and read-only;
-- save triggers: blur, outside click, Ctrl/Cmd+Enter, and Escape to cancel;
-- skip-on-unchanged behavior, and that creation fields still submit when empty;
-- validation error display, field-specific error scoping, passive-open
-  blocking, and marker removal after a successful correction;
-- generic handling of unexpected `5xx` responses;
-- column visibility, sorting, sticky header, and column width constraints;
-- the complete custom metadata lifecycle described in
-  [document_config_custom_meta.md](document_config_custom_meta.md);
-- regression tests for Document view's existing edit forms for the same
-  fields.

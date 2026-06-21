@@ -4,6 +4,7 @@
 
 from dataclasses import dataclass
 from datetime import datetime
+from enum import Enum
 from typing import (
     Any,
     Generator,
@@ -55,6 +56,13 @@ from strictdoc.helpers.file_system import file_open_read_utf8
 from strictdoc.helpers.git_client import GitClient
 from strictdoc.helpers.string import interpolate_at_pattern_lazy
 from strictdoc.server.helpers.turbo import render_turbo_stream
+
+
+class TableCellEditMode(str, Enum):
+    AUTOCOMPLETE = "autocomplete"
+    SINGLELINE = "singleline"
+    MULTILINE = "multiline"
+    READONLY = "readonly"
 
 
 @dataclass
@@ -570,23 +578,23 @@ class DocumentScreenViewObject:
 
     def get_table_cell_edit_mode(
         self, element_type: str, field_name: str
-    ) -> str:
+    ) -> TableCellEditMode:
         """
         Returns the editing mode for a table cell:
-          "autocomplete" — SingleChoice / MultipleChoice / Tag field
-          "singleline"   — single-line STRING field (meta fields)
-          "multiline"    — multi-line STRING field (STATEMENT, RATIONALE, COMMENT, custom content)
-          "readonly"     — field not declared in grammar for this element type
+          AUTOCOMPLETE — SingleChoice / MultipleChoice / Tag field
+          SINGLELINE   — single-line STRING field (meta fields)
+          MULTILINE    — multi-line STRING field (STATEMENT, RATIONALE, COMMENT, custom content)
+          READONLY     — field not declared in grammar for this element type
         """
         grammar = self.document.grammar
         if grammar is None:
-            return "readonly"
+            return TableCellEditMode.READONLY
         element = grammar.elements_by_type.get(element_type)
         if element is None:
-            return "readonly"
+            return TableCellEditMode.READONLY
         field = element.fields_map.get(field_name)
         if field is None:
-            return "readonly"
+            return TableCellEditMode.READONLY
         if isinstance(
             field,
             (
@@ -595,10 +603,10 @@ class DocumentScreenViewObject:
                 GrammarElementFieldTag,
             ),
         ):
-            return "autocomplete"
+            return TableCellEditMode.AUTOCOMPLETE
         if element.is_field_multiline(field_name):
-            return "multiline"
-        return "singleline"
+            return TableCellEditMode.MULTILINE
+        return TableCellEditMode.SINGLELINE
 
     def is_table_cell_editable(
         self, element_type: str, field_name: str
@@ -606,7 +614,7 @@ class DocumentScreenViewObject:
         """Returns True if the field is declared in grammar and can be edited in the table view."""
         return (
             self.get_table_cell_edit_mode(element_type, field_name)
-            != "readonly"
+            != TableCellEditMode.READONLY
         )
 
     def is_table_cell_multiple_choice(

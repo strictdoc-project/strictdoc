@@ -65,6 +65,30 @@ class E2ECase(BaseCase):
     def assert_element(self, selector, by="css selector", timeout=None):
         super().assert_element(selector, by, timeout)
 
+    def do_paste_text_via_js(self, element, text: str) -> None:
+        # Simulates a paste event on a DOM element with arbitrary text content.
+        # Cross-platform clipboard access is unreliable in headless Selenium.
+        self.execute_script(
+            """
+            const el = arguments[0];
+            el.focus();
+            const range = document.createRange();
+            range.selectNodeContents(el);
+            const sel = window.getSelection();
+            sel.removeAllRanges();
+            sel.addRange(range);
+            const dt = new DataTransfer();
+            dt.setData('text/plain', arguments[1]);
+            el.dispatchEvent(new ClipboardEvent('paste', {
+                bubbles: true,
+                cancelable: true,
+                clipboardData: dt
+            }));
+            """,
+            element,
+            text,
+        )
+
     def paste_text(self) -> str:
         self.driver.set_permissions("clipboard-read", "granted")
         pasted_text = self.execute_script(

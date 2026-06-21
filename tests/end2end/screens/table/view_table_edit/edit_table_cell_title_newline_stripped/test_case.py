@@ -80,29 +80,9 @@ class Test(E2ECase):
             #
             screen_table.do_open_inline_cell(node_mid, "TITLE")
             field_element = self.find_element(field_xpath, by=By.XPATH)
-            # Simulate a paste event with multiline clipboard content via JS
-            # (cross-platform clipboard access is not reliable in headless Selenium).
             # filterSingleLine replaces each \n with a space and collapses
             # consecutive whitespace, so "Pasted\nwith\nnewlines" → "Pasted with newlines".
-            self.execute_script(
-                """
-                const el = arguments[0];
-                el.focus();
-                const range = document.createRange();
-                range.selectNodeContents(el);
-                const sel = window.getSelection();
-                sel.removeAllRanges();
-                sel.addRange(range);
-                const dt = new DataTransfer();
-                dt.setData('text/plain', 'Pasted\\nwith\\nnewlines');
-                el.dispatchEvent(new ClipboardEvent('paste', {
-                    bubbles: true,
-                    cancelable: true,
-                    clipboardData: dt
-                }));
-                """,
-                field_element,
-            )
+            self.do_paste_text_via_js(field_element, "Pasted\nwith\nnewlines")
             screen_table.do_save_inline_cell_by_outside_click()
             screen_table.wait_for_cell_dom_text(
                 node_mid, "TITLE", "Pasted with newlines"

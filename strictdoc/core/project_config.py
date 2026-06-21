@@ -969,6 +969,9 @@ class ProjectConfigLoader:
         )
         project_config = create_config_function()
         assert isinstance(project_config, ProjectConfig)
+        project_config.config_last_update = get_file_modification_time(
+            config_py_path
+        )
         return project_config
 
     @staticmethod

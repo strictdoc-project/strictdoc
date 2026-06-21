@@ -35,7 +35,7 @@ class Test(E2ECase):
             )
             screen_source_coverage.assert_on_screen()
 
-            screen_source_coverage.assert_contains_text("strictdoc.toml")
+            screen_source_coverage.assert_contains_text("strictdoc_config.py")
             screen_source_coverage.assert_contains_text("file.test.py")
 
             screen_source_file_coverage: Screen_SourceFileCoverage = (

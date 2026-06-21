@@ -114,7 +114,7 @@ def test_export_09_config():
     parser = cli_args_parser()
 
     args = parser.parse_args(
-        ["export", "docs", "--config", "/path/to/strictdoc.toml"]
+        ["export", "docs", "--config", "/path/to/strictdoc_config.py"]
     )
     assert args.command == "export"
 

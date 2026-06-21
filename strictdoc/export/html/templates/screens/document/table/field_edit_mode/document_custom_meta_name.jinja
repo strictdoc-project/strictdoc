@@ -1,0 +1,24 @@
+{#
+  Inline editor for one existing custom metadata name.
+
+  The editor belongs to the persistent shared metadata form. active_field_name
+  tells the endpoint and response stream to update the name target.
+#}
+<input type="hidden" name="active_form_key" value="{{ form_key }}"/>
+<input type="hidden" name="active_field_name" value="name"/>
+
+{%- with
+  field_class_name="monospace",
+  field_editable=true,
+  field_required=true,
+  field_input_name="metadata[" ~ form_key ~ "][name]",
+  field_label="Name",
+  field_placeholder="Enter name...",
+  field_type="singleline",
+  field_value=field_label,
+  testid_postfix="metadata-name-" ~ form_key,
+  errors=name_errors,
+  field_render_errors=false
+-%}
+  {%- include "components/form/field/contenteditable/index.jinja" -%}
+{%- endwith -%}

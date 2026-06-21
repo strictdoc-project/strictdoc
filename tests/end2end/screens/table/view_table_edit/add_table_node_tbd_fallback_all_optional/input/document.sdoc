@@ -1,0 +1,17 @@
+[DOCUMENT]
+TITLE: Document
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: NOTE
+  FIELDS:
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TEXT
+    TYPE: String
+    REQUIRED: False
+
+[NOTE]
+TITLE: Existing note
+TEXT: Some text.

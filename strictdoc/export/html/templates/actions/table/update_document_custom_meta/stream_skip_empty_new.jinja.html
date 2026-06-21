@@ -1,0 +1,10 @@
+{#
+  A completely empty new row represents a cancelled Add operation, not metadata.
+  Replace the active editing wrapper with a fresh Add wrapper without writing the
+  empty row to the document.
+#}
+<turbo-stream action="replace" target="document-custom-meta-add">
+  <template>
+    {%- include "screens/document/table/field_display_mode/document_custom_meta_add.jinja" -%}
+  </template>
+</turbo-stream>

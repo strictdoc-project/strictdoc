@@ -1,0 +1,11 @@
+[DOCUMENT]
+TITLE: Document
+
+[REQUIREMENT]
+TITLE: Requirement title
+COMMENT: >>>
+First comment.
+<<<
+COMMENT: >>>
+Second comment.
+<<<

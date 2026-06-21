@@ -242,7 +242,7 @@ a.action_icon:hover {
   column-gap: 0;
   padding-left: calc(var(--base-rhythm)* 0.75);
   padding-right: calc(var(--base-rhythm)* 0.75);
-  min-height: calc(var(--base-rhythm)*3);
+  min-height: calc(var(--base-rhythm)* 2.75);
 }
 
 .action_button.compact .action_button_compact__arising {
@@ -500,8 +500,7 @@ sdoc-anchor.anchor_in_rst {
 }
 
 sdoc-anchor:target + sdoc-node-content sdoc-node-title,
-sdoc-anchor:target + sdoc-section sdoc-section-title,
-sdoc-anchor:target + .requirement__title {
+sdoc-anchor:target + sdoc-section sdoc-section-title {
   background-color: var(--color-highlight);
 }
 

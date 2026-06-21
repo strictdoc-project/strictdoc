@@ -1,4 +1,20 @@
 <div class="table-toolbar" data-testid="table-toolbar">
+  <div class="table-toolbar__dock">
+  <div class="table-toolbar__sort-reset" hidden>
+    <button class="table-toolbar__btn action_button"
+            data-testid="table-toolbar-sort-reset">
+            <span class="table-toolbar__btn-text">Reset sort</span></button>
+  </div>
+  {%- if view_object.is_running_on_server -%}
+  <div class="table-toolbar__edit">
+    <button class="table-toolbar__btn table-toolbar__btn--edit action_button"
+            aria-pressed="false"
+            js-table_view_edit-toggle
+            data-testid="table-toolbar-edit-btn">
+            {%- include "icons/ico16_edit.svg" -%}
+            <span class="table-toolbar__btn-text">Edit</span></button>
+  </div>
+  {%- endif -%}
   <div class="table-toolbar__columns">
     <button class="table-toolbar__btn action_button"
             aria-haspopup="true"
@@ -6,15 +22,16 @@
             data-label="Columns"
             data-testid="table-toolbar-columns-btn">
             {%- include "icons/ico16_dropdown_collapse.svg" -%}
-            <span class="table-toolbar__btn-text">Columns</span></button>
-    <div class="table-toolbar__panel dropdown_menu"
+            <span class="table-toolbar__btn-text">Columns<span class="table-toolbar__btn-info"></span></span>
+    </button>
+    <div class="table-toolbar__dropdown dropdown_menu"
           hidden
           aria-hidden="true"
           role="dialog"
           aria-label="Column visibility"
           data-testid="table-toolbar-columns-panel">
-      <div class="table-toolbar__panel-header">
-        <span class="table-toolbar__panel-title">Visible:</span>
+      <div class="table-toolbar__dropdown-header">
+        <span class="table-toolbar__dropdown-title">Visible:</span>
         <button class="table-toolbar__reset compact action_button"
                 data-testid="table-toolbar-columns-reset">Show all</button>
       </div>
@@ -27,19 +44,40 @@
             aria-expanded="false"
             data-testid="table-toolbar-rows-btn">
             {%- include "icons/ico16_dropdown_collapse.svg" -%}
-            <span class="table-toolbar__btn-text">Nodes</span></button>
-    <div class="table-toolbar__panel dropdown_menu"
+            <span class="table-toolbar__btn-text">Nodes<span class="table-toolbar__btn-info"></span></span>
+    </button>
+    <div class="table-toolbar__dropdown dropdown_menu"
           hidden
           aria-hidden="true"
           role="dialog"
           aria-label="Row visibility"
           data-testid="table-toolbar-rows-panel">
-      <div class="table-toolbar__panel-header">
-        <span class="table-toolbar__panel-title">Visible:</span>
+      <div class="table-toolbar__dropdown-header">
+        <span class="table-toolbar__dropdown-title">Visible:</span>
         <button class="table-toolbar__reset compact action_button"
                 data-testid="table-toolbar-rows-reset">Show all</button>
       </div>
       <ul class="table-toolbar__list" data-testid="table-toolbar-rows-list"></ul>
     </div>
     </div>
+    <div class="table-toolbar__tips">
+      <button class="table-toolbar__btn action_button"
+              data-testid="table-toolbar-tips-btn">
+              <span class="table-toolbar__btn-text">?</span></button>
+    </div>
+  </div>
 </div>
+{# Iconized Checkbox template, used by JS for column|row visibility toggles: #}
+{%- include "components/checkbox/index.jinja" -%}
+
+<template id="table-tips-modal-template">
+  {%- include "screens/document/table/tips.jinja" -%}
+</template>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelector('[data-testid="table-toolbar-tips-btn"]').addEventListener('click', function() {
+    var template = document.getElementById('table-tips-modal-template');
+    document.getElementById('modal').innerHTML = template.innerHTML;
+  });
+});
+</script>

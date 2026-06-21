@@ -1,0 +1,12 @@
+<turbo-stream action="update" target="cell-{{ node_mid }}-COMMENT">
+  <template>
+    {%- for rendered_comment in rendered_comments -%}
+    {%- with field_content = rendered_comment %}
+      {%- include "screens/document/table/field_display_mode/comment.jinja" -%}
+    {%- endwith -%}
+    {%- endfor -%}
+  </template>
+</turbo-stream>
+<turbo-stream action="update" target="modal">
+  <template></template>
+</turbo-stream>

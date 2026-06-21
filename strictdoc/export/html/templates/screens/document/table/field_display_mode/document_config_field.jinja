@@ -1,0 +1,24 @@
+<sdoc-meta-label
+  data-testid="document-config-{{ field_testid }}-label">{{ field_label }}:</sdoc-meta-label>
+<sdoc-meta-field
+  data-testid="document-config-{{ field_testid }}-field"
+  data-field-name="{{ field_name }}"
+  {%- if view_object.is_running_on_server %}
+  data-field-type="contenteditable"
+  js-table_view_edit-field="contenteditable"
+  data-node-mid="{{ doc_mid }}"
+  data-url="/actions/table/get_document_config_field_inline?document_mid={{ doc_mid }}&amp;field_name={{ field_name }}"
+  {%- endif %}
+>
+  {%- if view_object.is_running_on_server %}<div class="editable-cell-indicator"></div>{%- endif %}
+  <div
+    id="doc-field-{{ doc_mid }}-{{ field_name }}"
+    {%- if view_object.is_running_on_server %}
+    {# When this tag is empty, this placeholder is displayed: #}
+    placeholder="Enter {{ field_label }} here..."
+    wrapper-field-type="contenteditable"
+    {%- endif %}
+  >
+    {%- include "screens/document/table/field_display_mode/document_config_field_value.jinja" -%}
+  </div>
+</sdoc-meta-field>

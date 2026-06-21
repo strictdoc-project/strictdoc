@@ -42,3 +42,16 @@
     data-testid="form-delete-field-action-{{ action_button_context.testid_postfix }}"
   >{% include "icons/ico16_delete.svg" %}</button>
 {%- endif -%}
+
+{% if action_button_context.field_actions.move is defined and action_button_context.field_actions.move is sameas true -%}
+  <button
+    class="field_action"
+    mid="{{ action_button_context.mid }}"
+    title="Move this {{ action_button_context.field_name|default('FIELD', true) }}"
+    data-action-type="move"
+    data-js-move-field-action
+    data-turbo-action="replace"
+    data-turbo="false"
+    data-testid="form-move-field-action-{{ action_button_context.testid_postfix }}"
+  >{% include "icons/ico16_6dots.svg" %}</button>
+{%- endif -%}

@@ -1,0 +1,71 @@
+{#
+  Inline Relations form body.
+  Expects: form_object
+  Optional: derived_nodes — read-only computed relations
+
+  js-table_view_edit-form identifies the form submitted by table_view_edit.js.
+#}
+
+<form
+  action="/actions/table/update_node_relations"
+  method="POST"
+  data-turbo="false"
+  js-table_view_edit-form
+>
+  <input type="hidden" name="requirement_mid" value="{{ form_object.requirement_mid }}"/>
+  <input type="hidden" name="document_mid" value="{{ form_object.document_mid }}"/>
+  <input type="hidden" name="context_document_mid" value="{{ form_object.context_document_mid }}"/>
+  <input type="hidden" name="element_type" value="{{ form_object.element_type }}"/>
+  <input type="hidden" name="revision" value="{{ form_object.revision }}"/>
+
+  {%- for field_name_, field_values_ in form_object.fields.items() -%}
+    {%- for field_ in field_values_ -%}
+      <input type="hidden" name="{{ field_.get_input_field_type_name() }}" value="{{ field_name_ }}"/>
+      <input type="hidden" name="{{ field_.get_input_field_name() }}" value="{{ field_.field_value }}"/>
+    {%- endfor -%}
+  {%- endfor -%}
+
+  {%- for error_list in form_object.errors.values() -%}
+    {%- for error_ in error_list -%}
+      <sdoc-form-error>{{ error_ }}</sdoc-form-error>
+    {%- endfor -%}
+  {%- endfor -%}
+
+  {%- set relation_row_context = namespace() %}
+  {%- set requirement_mid = form_object.requirement_mid %}
+  {%- for field_ in form_object.enumerate_reference_fields() %}
+    {%- set relation_row_context.field = field_ %}
+    {%- set relation_row_context.errors = field_.validation_messages %}
+    {%- set relation_row_context.relation_types = form_object.relation_types %}
+    {%- set relation_row_context.form_object = form_object %}
+    {%- include "components/form/row/row_with_relation.jinja" %}
+  {%- endfor %}
+
+  {%- if derived_nodes is defined and derived_nodes %}
+  <div class="relations-computed">
+    <span class="relations-computed__label">Computed:</span>
+    <ul class="requirement__link">
+      {%- for req_ in derived_nodes %}
+      <li>
+        <a class="requirement__link-child" href="{{ view_object.render_node_link(req_) }}">
+          {%- if req_.reserved_uid %}<span class="requirement__child-uid">{{ req_.reserved_uid }}</span>{% endif %}
+          {{ req_.reserved_title if req_.reserved_title else "" }}
+        </a>
+      </li>
+      {%- endfor %}
+    </ul>
+  </div>
+  {%- endif %}
+
+  <div id="requirement_{{ form_object.requirement_mid }}__new_relation"></div>
+  <sdoc-form-row>
+    <a
+      class="action_button"
+      href="/actions/document/new_relation?requirement_mid={{ form_object.requirement_mid }}&document_mid={{ form_object.document_mid }}&context_document_mid={{ form_object.context_document_mid }}&element_type={{ form_object.element_type }}&revision={{ form_object.revision }}"
+      data-action-type="add_field"
+      js-table_view_edit-add-field
+      data-testid="form-action-add-relation"
+    >{% include "icons/ico16_add.svg" %} Add relation</a>
+  </sdoc-form-row>
+
+</form>

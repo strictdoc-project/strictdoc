@@ -1,0 +1,23 @@
+{#
+  The complete custom metadata form was submitted. Remove the active row's
+  errors and update only its active name or value target after a successful
+  save.
+#}
+<turbo-stream
+  action="remove"
+  targets="[js-table_view_edit-custom_meta-error='{{ form_key }}']"
+>
+  <template></template>
+</turbo-stream>
+<turbo-stream
+  action="update"
+  target="document-custom-meta-{{ active_field_name }}-{{ form_key }}"
+>
+  <template>
+    {%- if active_field_name == "name" -%}
+      {%- include "screens/document/table/field_display_mode/document_custom_meta_field_name.jinja" -%}
+    {%- else -%}
+      {%- include "screens/document/table/field_display_mode/document_custom_meta_field_value.jinja" -%}
+    {%- endif -%}
+  </template>
+</turbo-stream>

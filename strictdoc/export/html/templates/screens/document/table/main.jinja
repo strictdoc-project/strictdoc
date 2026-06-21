@@ -1,160 +1,137 @@
+{#
+  TABLE screen — INLINE EDITING OVERVIEW
+  =====================================
+
+  This template renders all nodes as a flat table (requirements and sections).
+  By default the table is in display (read-only) mode.
+
+  ACTIVATING EDIT MODE
+  ---------------------
+  The toolbar button [data-testid="table-toolbar-edit-btn"] toggles edit mode.
+  Clicking it adds the CSS class "table--is-editable" to <table> (not in use),
+  and [data-mode="edit"] to .main container.
+  CSS rules in table_view.css make editable cells show cursor:pointer and a
+  hover outline — only when that class is present.
+
+  CELL EDITING MODES  (data-field-type attribute on <td>)
+  --------------------------------------------------------
+  "singleline"
+      JS fetches the inline form from the URL stored in data-url attribute
+      (GET /actions/table/get_node_singleline_inline).
+      Server returns a turbo-stream that replaces the cell content with a
+      single-line contenteditable form. On blur / outside click: JS POSTs the
+      form to /actions/table/update_node_field, server updates
+      <div id="cell-{mid}-{field}"> via turbo-stream.
+
+  "multiline"
+      JS fetches the inline form from the URL stored in data-url attribute
+      (GET /actions/table/get_node_contenteditable_inline).
+      Server returns a turbo-stream that replaces the cell content with a
+      multi-line contenteditable form. On blur / outside click: JS POSTs the
+      form to /actions/table/update_node_field_multiline, server updates
+      <div id="cell-{mid}-{field}"> via turbo-stream.
+
+  "comments"
+      JS fetches /actions/table/get_node_comments_inline?node_mid=...
+      Server returns an inline form with multiple comment fields.
+      On blur / outside click: JS POSTs the form, server updates
+      <div id="cell-{mid}-COMMENT"> via turbo-stream.
+
+  "relations"
+      JS fetches /actions/table/get_node_relations_inline?node_mid=...
+      Server returns an inline form with relation rows (editable) and
+      computed/derived relations (read-only).
+      On blur / outside click: JS POSTs the form, server updates
+      <div id="cell-{mid}-RELATIONS"> via turbo-stream.
+
+  "autocomplete"
+      A Stimulus controller (autocompletable) is already present in the DOM.
+      Edit mode CSS hides .cell-display and shows .cell-edit-ac (contenteditable).
+      On blur: JS POSTs to /actions/table/update_node_field via fetch.
+
+  JS handles "singleline", "multiline", "comments", "relations" identically
+  (openInlineCell / saveInlineCell). The distinction is purely server-side:
+  different GET endpoints inject different form shapes; different POST endpoints
+  process them.
+
+  CELL EDITABILITY (is_table_cell_editable / get_table_cell_edit_mode)
+  ----------------------------------------------------------------------
+  Whether a field is editable depends on the document grammar for that node
+  type. view_object.is_table_cell_editable() returns True if the field is
+  declared in the grammar. get_table_cell_edit_mode() returns the Python grammar
+  value: "autocomplete" | "singleline" | "multiline" | "readonly".
+  td_by_edit_mode.jinja maps grammar values to data-field-type DOM attributes:
+  "singleline" and "multiline" → data-field-type="contenteditable" (same component, server decides form shape).
+
+  COLUMN VISIBILITY
+  -----------------
+  Columns are driven by view_object.enumerate_table_columns(),
+  which yields only columns present in at least one grammar element.
+  TYPE and LEVEL are always rendered as the two fixed first columns.
+  When a column exists in the document grammar but a specific node's grammar
+  does not declare that field, the cell gets the "content-view-td--dimmed" modifier.
+#}
 {%- if view_object.has_any_nodes() -%}
-  <div class="main" js-pan_with_space="true">
+  <div class="main"
+       js-pan_with_space="true"
+       js-table_view_edit
+  >
     {% include "_shared/tags.jinja.html" %}
       <div class="content">
-        <sdoc-node>
-        {% include "components/node_field/document_title/index.jinja" %}
-        {% include "components/node_field/document_meta/index.jinja" %}
-        </sdoc-node>
+        <div id="table-add-node-feedback" hidden></div>
 
-        {% include "screens/document/table/filter.jinja" %}
+        {# ================================================================ #}
+        {# ROOT NODE / TITLE + META                                         #}
+        {# similar: components/node_field/document_meta/index.jinja         #}
+        {# ================================================================ #}
+        {% include "screens/document/table/root_node.jinja" %}
 
-        <table class="content-view-table">
-          <thead>
+        {# ================================================================ #}
+        {# TABLE                                                            #}
+        {# ================================================================ #}
+        {#
+          column_labels maps internal column IDs to display names.
+          Dynamic fields (meta / non-reserved content) use their title as-is.
+        #}
+        {%- set column_labels = {
+          "RELATIONS": "REFS",
+          "TITLE":     "Title",
+          "STATEMENT": "Statement",
+          "RATIONALE": "Rationale",
+          "COMMENT":   "Comment"
+        } -%}
+        {%- set content_entries = view_object.document_content_iterator() | list -%}
+        <table class="content-view-table" js-table_view_edit-table>
+
+          {# -- Header row ------------------------------------------------ #}
+          <thead class="content-view-table_sticky-header">
             <tr>
-              <th class="content-view-th">Type</th>
-              <th class="content-view-th">Level</th>
-              {%- for meta_field_title in view_object.document.enumerate_table_meta_field_titles() -%}
-                <th class="content-view-th">{{ meta_field_title }}</th>
-              {%- endfor -%}
-              <th class="content-view-th">REFS</th>
-              <th class="content-view-th">Title</th>
-              <th class="content-view-th">Statement</th>
-              <th class="content-view-th">Rationale</th>
-              <th class="content-view-th">Comment</th>
-              {%- for meta_field_title in view_object.document.enumerate_table_non_reserved_content_field_titles() -%}
-                <th class="content-view-th">{{ meta_field_title }}</th>
+              <th class="content-view-th" data-testid="col-header-Type">
+                <div class="content-view-th__content">
+                  <span class="content-view-th__label">Type</span>
+                  <button class="content-view-th__sort-btn" aria-label="Sort by Type">{%- include "icons/ico16_sort.svg" -%}</button>
+                </div>
+              </th>
+              <th class="content-view-th" data-testid="col-header-Level">
+                <div class="content-view-th__content">
+                  <span class="content-view-th__label">Level</span>
+                  <button class="content-view-th__sort-btn" aria-label="Sort by Level">{%- include "icons/ico16_sort.svg" -%}</button>
+                </div>
+              </th>
+              {%- for column in view_object.enumerate_table_columns() -%}
+                {%- set col_label = column_labels.get(column, column) -%}
+                <th class="content-view-th" data-testid="col-header-{{ col_label }}">
+                  <div class="content-view-th__content">
+                    <span class="content-view-th__label">{{ col_label }}</span>
+                    <button class="content-view-th__sort-btn" aria-label="Sort by {{ col_label }}">{%- include "icons/ico16_sort.svg" -%}</button>
+                  </div>
+                </th>
               {%- endfor -%}
             </tr>
           </thead>
-          {%- for node, _ in view_object.document_content_iterator() %}
-            {%- if node.is_requirement() %}
-              {%- set requirement = node %}
-              <tr data-row-type="{{ node.node_type }}">
-                <td class="content-view-td content-view-td-type">
-                  {{ node.node_type }}
-                </td>
-                <td class="content-view-td content-view-td-meta">
-                  {{ requirement.context.title_number_string }}
-                </td>
-                {%- for meta_field_title in view_object.document.enumerate_table_meta_field_titles() -%}
-                  {%- set field_value = requirement.get_meta_field_value_by_title(meta_field_title) %}
-                  <td class="content-view-td content-view-td-meta">
-                    {%- if field_value -%}
-                      {{ field_value }}
-                    {%- endif -%}
-                  </td>
-                {%- endfor -%}
-                <td class="content-view-td content-view-td-meta content-view-td-related">
-                  {%- if view_object.traceability_index.has_parent_requirements(requirement) %}
-                    Parents:
-                    <ul class="requirement__link">
-                      {%- for requirement in view_object.traceability_index.get_parent_requirements(requirement) %}
-                        <li>
-                          <a class="requirement__link-parent"
-                            href="{{ view_object.render_node_link(requirement) }}">
-                            {%- if requirement.reserved_uid %}
-                              <span class="requirement__parent-uid">{{ requirement.reserved_uid }}</span>
-                            {%- endif %}
-                            {{ requirement.reserved_title if requirement.reserved_title else "" }}
-                          </a>
-                        </li>
-                      {%- endfor %}
-                    </ul>
-                  {%- endif %}
-                  {%- if view_object.traceability_index.has_children_requirements(requirement) %}
-                    Children:
-                    <ul class="requirement__link">
-                      {%- for requirement in view_object.traceability_index.get_children_requirements(requirement) %}
-                        <li>
-                          <a class="requirement__link-child"
-                            href="{{ view_object.render_node_link(requirement) }}">
-                            {%- if requirement.reserved_uid %}
-                              <span class="requirement__child-uid">{{ requirement.reserved_uid }}</span>
-                            {%- endif %}
-                            {{ requirement.reserved_title if requirement.reserved_title else "" }}
-                          </a>
-                        </li>
-                      {%- endfor %}
-                    </ul>
-                  {%- endif %}
-                  {%- if view_object.project_config.is_activated_requirements_to_source_traceability() -%}
-                    {%- set requirement_file_links = view_object.traceability_index.get_requirement_file_links(requirement) %}
-                    {%- if requirement_file_links %}
-                      Source files:
-                      <ul class="requirement__link">
-                        {%- for link, markers in requirement_file_links %}
-                          {%- for marker in markers %}
-                            <li>
-                              <a class="requirement__link-file"
-                                  href="{{ view_object.link_renderer.render_source_file_link(requirement, link) }}#{{ requirement.reserved_uid }}#{{ marker.ng_range_line_begin }}#{{ marker.ng_range_line_end }}">
-                                {{ link }}, <i>lines: {{ marker.ng_range_line_begin }}-{{ marker.ng_range_line_end }}</i>
-                              </a>
-                            </li>
-                          {%- endfor -%}
-                        {%- endfor -%}
-                      </ul>
-                    {%- endif %}
-                  {%- endif %}
-                </td>
-                <td class="content-view-td content-view-td-title">
-                  {%- if requirement.reserved_title %}
-                    {%- with sdoc_entity=requirement -%}
-                      {% include "components/anchor/index.jinja" %}
-                    {%- endwith %}
-                    <div class="requirement__title">{{ requirement.reserved_title }}</div>
-                  {%- endif -%}
-                </td>
-                <td class="content-view-td content-view-td-content">
-                  {%- if requirement.has_reserved_statement() -%}
-                    <sdoc-autogen>{{ view_object.render_node_statement(requirement) }}</sdoc-autogen>
-                  {%- endif -%}
-                </td>
-                <td class="content-view-td content-view-td-content">
-                  {%- if requirement.rationale -%}
-                    <sdoc-autogen>{{ view_object.render_node_rationale(requirement) }}</sdoc-autogen>
-                  {%- endif -%}
-                </td>
-                <td class="content-view-td content-view-td-content">
-                  {%- for comment_field_ in requirement.get_comment_fields() -%}
-                  <sdoc-autogen>{{ view_object.render_node_field(comment_field_) }}</sdoc-autogen>
-                  {%- endfor -%}
-                </td>
-                {%- for meta_field_title in view_object.document.enumerate_table_non_reserved_content_field_titles() -%}
-                  {%- set field_value = requirement.get_meta_field_value_by_title(meta_field_title) %}
-                  <td class="content-view-td">
-                    {%- if field_value %}
-                      {{ field_value }}
-                    {%- endif -%}
-                  </td>
-                {%- endfor -%}
-              </tr>
-            {%- elif node.is_document() %}
-              {%- set section = node %}
-              <tr data-row-type="Section">
-                <td class="content-view-td content-view-td-type">Section</td>
-                <td class="content-view-td content-view-td-meta">{{ section.context.title_number_string }}</td>
-                {%- for meta_field_title in view_object.document.enumerate_table_meta_field_titles() -%}
-                  <td class="content-view-td content-view-td-meta"></td>
-                {%- endfor -%}
-                <td class="content-view-td content-view-td-meta">{# Children & Parents #}</td>
-                <td class="content-view-td content-view-td-title" colspan="4">
-                  {%- if section.title %}
-                    {%- with sdoc_entity=section -%}
-                      {% include "components/anchor/index.jinja" %}
-                    {%- endwith %}
-                    <div class="requirement__title">
-                      {{ section.title }}
-                    </div>
-                    {%- for meta_field_title in view_object.document.enumerate_table_non_reserved_content_field_titles() -%}
-                      <td class="content-view-td">
-                      </td>
-                    {%- endfor -%}
-                  {%- endif -%}
-                </td>
-              </tr>
-            {%- endif %}
-          {%- endfor %}
+
+          {# -- Body rows ------------------------------------------------- #}
+          {% include "screens/document/table/body.jinja" %}
         </table>
       </div>
       {# /.content #}
@@ -167,4 +144,3 @@
   the document has no content.
   </sdoc-main-placeholder>
 {%- endif -%}
-

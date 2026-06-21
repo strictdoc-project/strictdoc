@@ -1,0 +1,14 @@
+[DOCUMENT]
+TITLE: Document
+
+[REQUIREMENT]
+TITLE: Banana requirement
+STATEMENT: Statement B.
+
+[REQUIREMENT]
+TITLE: Apple requirement
+STATEMENT: Statement A.
+
+[REQUIREMENT]
+TITLE: Cherry requirement
+STATEMENT: Statement C.

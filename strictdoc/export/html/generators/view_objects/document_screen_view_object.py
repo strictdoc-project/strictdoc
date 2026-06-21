@@ -4,7 +4,18 @@
 
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Iterator, List, Optional, Sequence, Tuple, Union
+from enum import Enum
+from typing import (
+    Any,
+    Generator,
+    Iterator,
+    List,
+    Optional,
+    Sequence,
+    Set,
+    Tuple,
+    Union,
+)
 
 from jinja2 import Template
 from markupsafe import Markup
@@ -13,8 +24,14 @@ from strictdoc import __version__
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_view import ViewElement
-from strictdoc.backend.sdoc.models.grammar_element import GrammarElement
+from strictdoc.backend.sdoc.models.grammar_element import (
+    GrammarElement,
+    GrammarElementFieldMultipleChoice,
+    GrammarElementFieldSingleChoice,
+    GrammarElementFieldTag,
+)
 from strictdoc.backend.sdoc.models.model import (
+    RequirementFieldName,
     SDocDocumentIF,
     SDocElementIF,
     SDocNodeIF,
@@ -31,7 +48,7 @@ from strictdoc.export.html.generators.view_objects.helpers import (
     screen_should_display_file,
     screen_should_display_folder,
 )
-from strictdoc.export.html.html_templates import JinjaEnvironment
+from strictdoc.export.html.html_templates import HTMLTemplates, JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.helpers.cast import assert_cast
@@ -39,6 +56,13 @@ from strictdoc.helpers.file_system import file_open_read_utf8
 from strictdoc.helpers.git_client import GitClient
 from strictdoc.helpers.string import interpolate_at_pattern_lazy
 from strictdoc.server.helpers.turbo import render_turbo_stream
+
+
+class TableCellEditMode(str, Enum):
+    AUTOCOMPLETE = "autocomplete"
+    SINGLELINE = "singleline"
+    MULTILINE = "multiline"
+    READONLY = "readonly"
 
 
 @dataclass
@@ -513,5 +537,182 @@ class DocumentScreenViewObject:
     ) -> bool:
         return self.traceability_index.can_insert_next_to_node(node)
 
+    def get_table_first_editable_field_name(
+        self, element_type: str
+    ) -> Optional[str]:
+        grammar = self.document.grammar
+        if grammar is None:
+            return None
+        element = grammar.elements_by_type.get(element_type)
+        if element is None:
+            return None
+        preferred_fields = (
+            "TITLE",
+            "STATEMENT",
+            "RATIONALE",
+            "DESCRIPTION",
+            "CONTENT",
+            "COMMENT",
+        )
+        for field_name in preferred_fields:
+            if (
+                field_name in element.field_titles
+                and self.is_table_cell_editable(element_type, field_name)
+            ):
+                return field_name
+        for field_name in element.field_titles:
+            if field_name in ("UID", "MID", "LEVEL", "STATUS", "TAGS"):
+                continue
+            if self.is_table_cell_editable(element_type, field_name):
+                return field_name
+        for field_name in element.field_titles:
+            if self.is_table_cell_editable(element_type, field_name):
+                return field_name
+        return None
+
     def can_move_node(self, node: Union[SDocDocument, SDocNode]) -> bool:
         return self.traceability_index.can_move_node(node)
+
+    # Table editing
+    #
+
+    def get_table_cell_edit_mode(
+        self, element_type: str, field_name: str
+    ) -> TableCellEditMode:
+        """
+        Returns the editing mode for a table cell:
+          AUTOCOMPLETE — SingleChoice / MultipleChoice / Tag field
+          SINGLELINE   — single-line STRING field (meta fields)
+          MULTILINE    — multi-line STRING field (STATEMENT, RATIONALE, COMMENT, custom content)
+          READONLY     — field not declared in grammar for this element type
+        """
+        grammar = self.document.grammar
+        if grammar is None:
+            return TableCellEditMode.READONLY
+        element = grammar.elements_by_type.get(element_type)
+        if element is None:
+            return TableCellEditMode.READONLY
+        field = element.fields_map.get(field_name)
+        if field is None:
+            return TableCellEditMode.READONLY
+        if isinstance(
+            field,
+            (
+                GrammarElementFieldSingleChoice,
+                GrammarElementFieldMultipleChoice,
+                GrammarElementFieldTag,
+            ),
+        ):
+            return TableCellEditMode.AUTOCOMPLETE
+        if element.is_field_multiline(field_name):
+            return TableCellEditMode.MULTILINE
+        return TableCellEditMode.SINGLELINE
+
+    def is_table_cell_editable(
+        self, element_type: str, field_name: str
+    ) -> bool:
+        """Returns True if the field is declared in grammar and can be edited on TABLE screen."""
+        return (
+            self.get_table_cell_edit_mode(element_type, field_name)
+            != TableCellEditMode.READONLY
+        )
+
+    def is_table_cell_multiple_choice(
+        self, element_type: str, field_name: str
+    ) -> bool:
+        grammar = self.document.grammar
+        if grammar is None:
+            return False
+        element = grammar.elements_by_type.get(element_type)
+        if element is None:
+            return False
+        field = element.fields_map.get(field_name)
+        if field is None:
+            return False
+        return isinstance(
+            field,
+            (GrammarElementFieldMultipleChoice, GrammarElementFieldTag),
+        )
+
+    def enumerate_table_columns(self) -> Generator[str, None, None]:
+        """
+        Yields column identifiers for the TABLE screen in display order.
+
+        Only yields columns that exist in at least one grammar element.
+        Column order:
+          1. Non-reserved meta fields (before TITLE/STATEMENT)
+          2. RELATIONS  — if any grammar element has relations
+          3. TITLE      — if any grammar element has TITLE
+          4. STATEMENT  — if any grammar element has STATEMENT
+          5. RATIONALE  — if any grammar element has RATIONALE
+          6. COMMENT    — if any grammar element has COMMENT
+          7. Non-reserved content fields (after TITLE/STATEMENT)
+
+        TYPE and LEVEL are not yielded — they are always present and
+        rendered as fixed first columns in the template.
+        """
+        assert self.document.grammar is not None
+        assert self.document.grammar.elements is not None
+        seen: Set[str] = set()
+
+        for element in self.document.grammar.elements:
+            for title in element.enumerate_table_meta_field_titles():
+                if title not in seen:
+                    seen.add(title)
+                    yield title
+
+        if any(element.relations for element in self.document.grammar.elements):
+            yield "RELATIONS"
+
+        for name in (
+            RequirementFieldName.TITLE,
+            RequirementFieldName.STATEMENT,
+            RequirementFieldName.RATIONALE,
+            RequirementFieldName.COMMENT,
+        ):
+            if any(
+                name in element.fields_map
+                for element in self.document.grammar.elements
+            ):
+                yield name
+
+        for element in self.document.grammar.elements:
+            for (
+                title
+            ) in element.enumerate_table_non_reserved_content_field_titles():
+                if title not in seen:
+                    seen.add(title)
+                    yield title
+
+    @staticmethod
+    def create_for_table_screen(
+        document: SDocDocument,
+        traceability_index: TraceabilityIndex,
+        project_config: ProjectConfig,
+        html_templates: HTMLTemplates,
+        git_client: GitClient,
+        jinja_environment: JinjaEnvironment,
+    ) -> "DocumentScreenViewObject":
+        assert document.meta is not None
+        link_renderer = LinkRenderer(
+            root_path=document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
+        )
+        markup_renderer = MarkupRenderer.create(
+            markup=document.config.get_markup(),
+            traceability_index=traceability_index,
+            link_renderer=link_renderer,
+            html_templates=html_templates,
+            config=project_config,
+            context_document=document,
+        )
+        return DocumentScreenViewObject(
+            document_type=DocumentType.TABLE,
+            document=document,
+            traceability_index=traceability_index,
+            project_config=project_config,
+            link_renderer=link_renderer,
+            markup_renderer=markup_renderer,
+            jinja_environment=jinja_environment,
+            git_client=git_client,
+        )

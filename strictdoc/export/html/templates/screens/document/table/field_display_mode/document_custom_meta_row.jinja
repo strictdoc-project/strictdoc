@@ -1,0 +1,82 @@
+{#
+  One custom metadata display row.
+
+  Expects:
+  - form_key: local form/DOM key; it is not a StrictDoc MID.
+  - field_label: raw metadata key.
+  - field_value: raw metadata value submitted by the shared form.
+  - field_content: rendered metadata value shown to the user.
+
+  The row uses the parent sdoc-meta column tracks through CSS subgrid.
+#}
+<sdoc-meta-row
+  data-testid="document-config-metadata-row-{{ form_key }}"
+  {%- if view_object.is_running_on_server %}
+  draggable="true"
+  js-table_view_edit-custom_meta-row
+  data-form-key="{{ form_key }}"
+  {%- endif %}
+>
+
+  {%- if view_object.is_running_on_server %}
+  {# moves the entire line #}
+  <div
+    class="custom_meta-row-move-container"
+    js-table_view_edit-custom_meta-drag_handle
+  >
+    {%- set action_button_context = namespace() %}
+    {%- set action_button_context.field_actions = {"move": true} %}
+    {%- set action_button_context.field_name = "metadata" %}
+    {%- set action_button_context.mid = form_key %}
+    {%- set action_button_context.testid_postfix = "form-field-metadata" %}
+    {%- include "components/form/field_action_button/index.jinja" -%}
+  </div>
+  {%- endif %}
+
+  <sdoc-meta-label
+    id="document-custom-meta-label-{{ form_key }}"
+    data-testid="document-config-metadata-label"
+    {%- if view_object.is_running_on_server %}
+    data-field-type="contenteditable"
+    js-table_view_edit-field="contenteditable"
+    data-url="/actions/table/get_document_custom_meta_inline?document_mid={{ doc_mid }}&amp;form_key={{ form_key }}&amp;field_name=name"
+    {%- endif %}
+  >
+    {%- if view_object.is_running_on_server %}<div class="editable-cell-indicator"></div>{%- endif %}
+    <div id="document-custom-meta-name-{{ form_key }}">
+      {%- include "screens/document/table/field_display_mode/document_custom_meta_field_name.jinja" -%}
+    </div>
+
+  </sdoc-meta-label>
+  <sdoc-meta-field
+    id="document-custom-meta-field-{{ form_key }}"
+    data-testid="document-config-metadata-field"
+    {%- if view_object.is_running_on_server %}
+    data-field-type="contenteditable"
+    js-table_view_edit-field="contenteditable"
+    data-url="/actions/table/get_document_custom_meta_inline?document_mid={{ doc_mid }}&amp;form_key={{ form_key }}&amp;field_name=value"
+    {%- endif %}
+  >
+    {%- if view_object.is_running_on_server %}<div class="editable-cell-indicator"></div>{%- endif %}
+    <div id="document-custom-meta-value-{{ form_key }}">
+      {%- include "screens/document/table/field_display_mode/document_custom_meta_field_value.jinja" -%}
+    </div>
+
+  </sdoc-meta-field>
+
+  {%- if view_object.is_running_on_server %}
+  {# deletes the entire line #}
+  <div
+    class="custom_meta-row-delete-container"
+    js-table_view_edit-custom_meta-delete_action
+  >
+    {%- set action_button_context = namespace() %}
+    {%- set action_button_context.field_actions = {"delete": true} %}
+    {%- set action_button_context.field_name = "metadata" %}
+    {%- set action_button_context.mid = form_key %}
+    {%- set action_button_context.testid_postfix = "form-field-metadata" %}
+    {%- include "components/form/field_action_button/index.jinja" -%}
+  </div>
+  {%- endif %}
+
+</sdoc-meta-row>

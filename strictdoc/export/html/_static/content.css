@@ -18,7 +18,7 @@
   gap: var(--base-rhythm);
 }
 
-/* highlight main layout in special mode */
+/* highlight main layout in special mode (e.g., edit mode) */
 
 .main::after {
   content: '';

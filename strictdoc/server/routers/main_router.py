@@ -970,33 +970,6 @@ def create_main_router(
             },
         )
 
-    def create_table_view_object(
-        document: SDocDocument,
-    ) -> DocumentScreenViewObject:
-        assert document.meta is not None
-        link_renderer = LinkRenderer(
-            root_path=document.meta.get_root_path_prefix(),
-            static_path=project_config.dir_for_sdoc_assets,
-        )
-        markup_renderer = MarkupRenderer.create(
-            markup=document.config.get_markup(),
-            traceability_index=export_action.traceability_index,
-            link_renderer=link_renderer,
-            html_templates=html_generator.html_templates,
-            config=project_config,
-            context_document=document,
-        )
-        return DocumentScreenViewObject(
-            document_type=DocumentType.TABLE,
-            document=document,
-            traceability_index=export_action.traceability_index,
-            project_config=project_config,
-            link_renderer=link_renderer,
-            markup_renderer=markup_renderer,
-            jinja_environment=env(),
-            git_client=html_generator.git_client,
-        )
-
     @write_router.delete("/actions/table/delete_node")
     def table__delete_node(
         node_id: str, context_document_mid: str, confirmed: bool = False
@@ -1068,7 +1041,14 @@ def create_main_router(
                 specific_documents=(DocumentType.DOCUMENT, DocumentType.TABLE),
             )
 
-        table_view_object = create_table_view_object(editing_context_document)
+        table_view_object = DocumentScreenViewObject.create_for_table_screen(
+            document=editing_context_document,
+            traceability_index=export_action.traceability_index,
+            project_config=project_config,
+            html_templates=html_generator.html_templates,
+            git_client=html_generator.git_client,
+            jinja_environment=env(),
+        )
         output = render_turbo_stream(
             content=env().render_template_as_markup(
                 "screens/document/table/body.jinja",
@@ -1254,7 +1234,14 @@ def create_main_router(
                 specific_documents=(DocumentType.DOCUMENT, DocumentType.TABLE),
             )
 
-        table_view_object = create_table_view_object(editing_context_document)
+        table_view_object = DocumentScreenViewObject.create_for_table_screen(
+            document=editing_context_document,
+            traceability_index=export_action.traceability_index,
+            project_config=project_config,
+            html_templates=html_generator.html_templates,
+            git_client=html_generator.git_client,
+            jinja_environment=env(),
+        )
         output = render_turbo_stream(
             content=env().render_template_as_markup(
                 "screens/document/table/body.jinja",
@@ -1356,7 +1343,14 @@ def create_main_router(
         write_document_to_file(document)
         revisions[node_mid_str] += 1
 
-        table_view_object = create_table_view_object(document)
+        table_view_object = DocumentScreenViewObject.create_for_table_screen(
+            document=document,
+            traceability_index=export_action.traceability_index,
+            project_config=project_config,
+            html_templates=html_generator.html_templates,
+            git_client=html_generator.git_client,
+            jinja_environment=env(),
+        )
 
         if field_name == "TITLE":
             title_presence_changed = bool(old_title) != bool(sanitized_value)

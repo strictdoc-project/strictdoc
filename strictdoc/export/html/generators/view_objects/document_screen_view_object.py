@@ -4,7 +4,17 @@
 
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Iterator, List, Optional, Sequence, Tuple, Union
+from typing import (
+    Any,
+    Generator,
+    Iterator,
+    List,
+    Optional,
+    Sequence,
+    Set,
+    Tuple,
+    Union,
+)
 
 from jinja2 import Template
 from markupsafe import Markup
@@ -20,6 +30,7 @@ from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElementFieldTag,
 )
 from strictdoc.backend.sdoc.models.model import (
+    RequirementFieldName,
     SDocDocumentIF,
     SDocElementIF,
     SDocNodeIF,
@@ -36,7 +47,7 @@ from strictdoc.export.html.generators.view_objects.helpers import (
     screen_should_display_file,
     screen_should_display_folder,
 )
-from strictdoc.export.html.html_templates import JinjaEnvironment
+from strictdoc.export.html.html_templates import HTMLTemplates, JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.helpers.cast import assert_cast
@@ -613,4 +624,87 @@ class DocumentScreenViewObject:
         return isinstance(
             field,
             (GrammarElementFieldMultipleChoice, GrammarElementFieldTag),
+        )
+
+    def enumerate_table_columns(self) -> Generator[str, None, None]:
+        """
+        Yields column identifiers for the table view in display order.
+
+        Only yields columns that exist in at least one grammar element.
+        Column order:
+          1. Non-reserved meta fields (before TITLE/STATEMENT)
+          2. RELATIONS  — if any grammar element has relations
+          3. TITLE      — if any grammar element has TITLE
+          4. STATEMENT  — if any grammar element has STATEMENT
+          5. RATIONALE  — if any grammar element has RATIONALE
+          6. COMMENT    — if any grammar element has COMMENT
+          7. Non-reserved content fields (after TITLE/STATEMENT)
+
+        TYPE and LEVEL are not yielded — they are always present and
+        rendered as fixed first columns in the template.
+        """
+        assert self.document.grammar is not None
+        assert self.document.grammar.elements is not None
+        seen: Set[str] = set()
+
+        for element in self.document.grammar.elements:
+            for title in element.enumerate_table_meta_field_titles():
+                if title not in seen:
+                    seen.add(title)
+                    yield title
+
+        if any(element.relations for element in self.document.grammar.elements):
+            yield "RELATIONS"
+
+        for name in (
+            RequirementFieldName.TITLE,
+            RequirementFieldName.STATEMENT,
+            RequirementFieldName.RATIONALE,
+            RequirementFieldName.COMMENT,
+        ):
+            if any(
+                name in element.fields_map
+                for element in self.document.grammar.elements
+            ):
+                yield name
+
+        for element in self.document.grammar.elements:
+            for (
+                title
+            ) in element.enumerate_table_non_reserved_content_field_titles():
+                if title not in seen:
+                    seen.add(title)
+                    yield title
+
+    @staticmethod
+    def create_for_table_screen(
+        document: SDocDocument,
+        traceability_index: TraceabilityIndex,
+        project_config: ProjectConfig,
+        html_templates: HTMLTemplates,
+        git_client: GitClient,
+        jinja_environment: JinjaEnvironment,
+    ) -> "DocumentScreenViewObject":
+        assert document.meta is not None
+        link_renderer = LinkRenderer(
+            root_path=document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
+        )
+        markup_renderer = MarkupRenderer.create(
+            markup=document.config.get_markup(),
+            traceability_index=traceability_index,
+            link_renderer=link_renderer,
+            html_templates=html_templates,
+            config=project_config,
+            context_document=document,
+        )
+        return DocumentScreenViewObject(
+            document_type=DocumentType.TABLE,
+            document=document,
+            traceability_index=traceability_index,
+            project_config=project_config,
+            link_renderer=link_renderer,
+            markup_renderer=markup_renderer,
+            jinja_environment=jinja_environment,
+            git_client=git_client,
         )

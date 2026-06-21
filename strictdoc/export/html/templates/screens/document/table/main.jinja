@@ -65,7 +65,7 @@
 
   COLUMN VISIBILITY
   -----------------
-  Columns are driven by view_object.document.enumerate_table_columns(),
+  Columns are driven by view_object.enumerate_table_columns(),
   which yields only columns present in at least one grammar element.
   TYPE and LEVEL are always rendered as the two fixed first columns.
   When a column exists in the document grammar but a specific node's grammar
@@ -118,7 +118,7 @@
                   <button class="content-view-th__sort-btn" aria-label="Sort by Level">{%- include "icons/ico16_sort.svg" -%}</button>
                 </div>
               </th>
-              {%- for column in view_object.document.enumerate_table_columns() -%}
+              {%- for column in view_object.enumerate_table_columns() -%}
                 {%- set col_label = column_labels.get(column, column) -%}
                 <th class="content-view-th" data-testid="col-header-{{ col_label }}">
                   <div class="content-view-th__content">

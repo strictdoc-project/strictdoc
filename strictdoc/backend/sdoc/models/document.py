@@ -20,7 +20,6 @@ from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElementFieldTag,
 )
 from strictdoc.backend.sdoc.models.model import (
-    RequirementFieldName,
     SDocDocumentFromFileIF,
     SDocDocumentIF,
     SDocElementIF,
@@ -290,64 +289,6 @@ class SDocDocument(SDocDocumentIF):
         assert self.grammar is not None
         assert self.grammar.elements is not None
         seen: Set[str] = set()
-        for element in self.grammar.elements:
-            for (
-                title
-            ) in element.enumerate_table_non_reserved_content_field_titles():
-                if title not in seen:
-                    seen.add(title)
-                    yield title
-
-    def enumerate_table_columns(self) -> Generator[str, None, None]:
-        """
-        Yields column identifiers for the table view in display order.
-
-        Only yields columns that exist in at least one grammar element.
-        Column order:
-          1. Non-reserved meta fields (before TITLE/STATEMENT)
-          2. RELATIONS  — if any grammar element has relations
-          3. TITLE      — if any grammar element has TITLE
-          4. STATEMENT  — if any grammar element has STATEMENT
-          5. RATIONALE  — if any grammar element has RATIONALE
-          6. COMMENT    — if any grammar element has COMMENT
-          7. Non-reserved content fields (after TITLE/STATEMENT)
-
-        TYPE and LEVEL are not yielded — they are always present and
-        rendered as fixed first columns in the template.
-
-        Ordering guarantees:
-        - Meta and non-reserved content field order follows the grammar
-          field declaration order (see GrammarElement.enumerate_table_*).
-          When multiple grammar elements exist, fields from the first element
-          come first; duplicates across elements are skipped via `seen`.
-        - RELATIONS and the reserved content columns (TITLE … COMMENT) are
-          always emitted in the fixed order above, regardless of how they are
-          declared in the grammar.
-        """
-        assert self.grammar is not None
-        assert self.grammar.elements is not None
-        seen: Set[str] = set()
-
-        for element in self.grammar.elements:
-            for title in element.enumerate_table_meta_field_titles():
-                if title not in seen:
-                    seen.add(title)
-                    yield title
-
-        if any(element.relations for element in self.grammar.elements):
-            yield "RELATIONS"
-
-        for name in (
-            RequirementFieldName.TITLE,
-            RequirementFieldName.STATEMENT,
-            RequirementFieldName.RATIONALE,
-            RequirementFieldName.COMMENT,
-        ):
-            if any(
-                name in element.fields_map for element in self.grammar.elements
-            ):
-                yield name
-
         for element in self.grammar.elements:
             for (
                 title

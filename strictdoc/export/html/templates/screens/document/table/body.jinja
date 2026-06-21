@@ -21,7 +21,7 @@
       {%- include "screens/document/table/type_level.jinja" %}
 
       {%- set ns = namespace(past_reserved=false) %}
-      {%- for column in view_object.document.enumerate_table_columns() %}
+      {%- for column in view_object.enumerate_table_columns() %}
 
         {%- if column == "RELATIONS" %}
           {%- set ns.past_reserved = true %}
@@ -180,7 +180,7 @@
   {%- elif node.is_document() %}
     {%- set section = node %}
     {%- set ns_span = namespace(count=0, counting=false) %}
-    {%- for column in view_object.document.enumerate_table_columns() %}
+    {%- for column in view_object.enumerate_table_columns() %}
       {%- if column == "TITLE" %}
         {%- set ns_span.counting = true %}
       {%- endif %}
@@ -196,7 +196,7 @@
       <td class="content-view-td content-view-td-meta">{{ section.context.title_number_string }}</td>
 
       {%- set ns_sec = namespace(past_title=false) %}
-      {%- for column in view_object.document.enumerate_table_columns() %}
+      {%- for column in view_object.enumerate_table_columns() %}
         {%- if ns_sec.past_title %}
         {%- elif column == "TITLE" %}
           {%- set ns_sec.past_title = true %}

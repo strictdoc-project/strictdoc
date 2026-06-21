@@ -29,4 +29,4 @@ CHECK-SOURCE-FILE: file.ml, range
 
 RUN: %cat %T/html/source_coverage.html | filecheck %s --check-prefix CHECK-SOURCE-COVERAGE
 CHECK-SOURCE-COVERAGE: file.ml
-CHECK-SOURCE-COVERAGE: strictdoc.toml
+CHECK-SOURCE-COVERAGE: strictdoc_config.py

@@ -10,7 +10,7 @@ CHECK-C: This function is covered
 RUN: cd %T && gcovr --object-directory ./ --root %S --html --html-details -o coverage.html
 RUN: cd %T && gcovr --object-directory ./ --root %S --json --json-pretty -o coverage.gcov.json
 RUN: cd %T && mkdir docs/ && cp coverage.gcov.json docs/
-RUN: cp %S/strictdoc.toml %T/docs/
+RUN: cp %S/strictdoc_config.py %T/docs/
 RUN: cp -r %S/src %T/docs/
 RUN: cd %T/docs && %strictdoc export .  | filecheck %s
 

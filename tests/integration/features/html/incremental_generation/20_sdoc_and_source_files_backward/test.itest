@@ -4,7 +4,7 @@
 
 # Create a separate input folder to ensure clear management of the SDoc files.
 RUN: %mkdir %S/sandbox
-RUN: %cp %S/strictdoc.toml %S/sandbox/
+RUN: %cp %S/strictdoc_config.py %S/sandbox/
 RUN: %cp %S/child.sdoc %S/sandbox/
 RUN: %cp %S/grandchild.sdoc %S/sandbox/
 RUN: %cp %S/parent.sdoc %S/sandbox/

@@ -1,5 +1,0 @@
-[project]
-
-include_doc_paths = [
-  "prod_requirements/"
-]

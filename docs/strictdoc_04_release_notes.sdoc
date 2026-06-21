@@ -46,6 +46,59 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: 543c64859a9649eebba0b56dbdd3442b
+TITLE: Unreleased
+
+[TEXT]
+MID: c98e785de7b8429bb0e4f2daed3312f5
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) The TABLE screen now supports full inline editing. Every cell type can be
+edited in place: single-line fields are updated directly in the cell, while
+multiline fields (``STATEMENT``, ``RATIONALE``), relations, and comments open
+a compact popup form. ``MultipleChoice`` fields use an inline selector.
+The form is submitted with ``Ctrl+Enter`` / ``Cmd+Enter`` in addition to the
+Save button. Validation errors are shown inline without losing context.
+
+2\) Nodes can now be added and deleted directly from the TABLE screen. The
+``Add node`` menu appears in the row actions area and lets the user insert a
+new section or requirement at the selected position. New nodes are pre-filled
+with ``TBD`` for required ``Choice`` fields so the document stays valid
+immediately. The Delete action opens a confirmation modal that is disabled
+while validation errors are present.
+
+3\) Custom metadata rows in the TABLE screen are now fully manageable inline.
+Users can add new custom metadata fields, edit both the field name and value
+in place, drag-and-drop rows to reorder them, and delete individual rows.
+Validation rules (duplicate names, empty names) are enforced on save.
+
+4\) TABLE screen column visibility is now driven by the union of all grammars
+in the document tree. Columns absent for a particular node type are shown as
+dimmed cells. The ``Type`` column is always visible and cannot be hidden.
+
+5\) Markdown documents now support ``[LINK]`` and ``[ANCHOR]`` syntax,
+matching the SDoc feature set. ``[ANCHOR]``\s defined in source node fields
+are registered as linkable targets, and ``[LINK]``\s in source node fields
+are resolved to the correct destination.
+
+6\) Markdown documents now support ``PREFIX`` mirroring from SDoc: a grammar
+can declare a ``PREFIX`` that is prepended to node UIDs automatically.
+
+7\) Fixed: the SDoc textX grammar is now CRLF-aware. Documents with Windows
+line endings no longer fail to parse.
+
+8\) Fixed: ``strictdoc export --formats=html2pdf`` now resolves relative asset
+paths correctly when printing bundle documents, preventing broken images and
+stylesheets in the generated PDF.
+
+9\) Fixed: custom-grammar Markdown documents now correctly write back field
+names when saving, instead of using the default ``STATEMENT`` key.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: b5181ae005fb1160e73e1fcd4cc972dd
 TITLE: 0.24.0 (2026-06-15)
 

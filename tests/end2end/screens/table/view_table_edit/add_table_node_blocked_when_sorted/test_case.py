@@ -50,11 +50,11 @@ class Test(E2ECase):
             screen_table.scroll_open_add_node_menu_to_center()
             screen_table.assert_add_node_actions_hidden(row_order=3)
             screen_table.assert_add_node_message(
-                "Reset column sorting before adding nodes in Table view.",
+                "Reset column sorting before adding nodes on TABLE screen.",
                 row_order=3,
             )
             screen_table.assert_add_node_message(
-                "Show all node types before adding nodes in Table view.",
+                "Show all node types before adding nodes on TABLE screen.",
                 row_order=3,
             )
 
@@ -75,7 +75,7 @@ class Test(E2ECase):
             )
             screen_table.assert_add_node_actions_hidden(row_order=None)
             screen_table.assert_add_node_message(
-                "Show all node types before adding nodes in Table view.",
+                "Show all node types before adding nodes on TABLE screen.",
                 row_order=None,
             )
 

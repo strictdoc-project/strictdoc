@@ -1,19 +1,19 @@
-# Inline Editing in Table View
+# Inline Editing in TABLE screen
 
 ## WHY
 
-Table view presents a document as a flat, sortable overview of its nodes and
+TABLE screen presents a document as a flat, sortable overview of its nodes and
 their fields. Until now, this view was read-only: any change — a TITLE, a
 STATEMENT, a relation, a comment, document configuration, custom metadata —
 required switching to Document view, locating the corresponding node, and
 opening its edit form there.
 
-This back-and-forth defeats the purpose of Table view as a working surface.
-Table view is most useful exactly when a user reviews many nodes side by side
+This back-and-forth defeats the purpose of TABLE screen as a working surface.
+TABLE screen is most useful exactly when a user reviews many nodes side by side
 and wants to correct or fill in fields without losing that overview. The
-feature must let users edit a document directly in Table view, cell by cell and
-field by field, while keeping the table's compact, scannable layout intact in
-both display and edit states.
+feature must let users edit a document directly on TABLE screen, cell by cell
+and field by field, while keeping the table's compact, scannable layout intact
+in both display and edit states.
 
 Editing must respect the same rules as Document view: only fields declared in
 the document grammar are editable, validation must match the SDOC grammar and
@@ -25,7 +25,7 @@ and forms.
 
 ## WHAT
 
-Table view gains an explicit **edit mode**, toggled from the toolbar
+TABLE screen gains an explicit **edit mode**, toggled from the toolbar
 (`[data-testid="table-toolbar-edit-btn"]`). Toggling it switches `.main` to
 `[data-mode="edit"]`; CSS then reveals hover outlines and per-cell edit
 indicators only in that mode. Display mode is unaffected and remains read-only.

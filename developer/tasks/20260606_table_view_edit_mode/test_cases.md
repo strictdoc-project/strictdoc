@@ -1,4 +1,4 @@
-# Table View Inline Editing Test Matrix
+# TABLE screen Inline Editing Test Matrix
 
 The matrix is organized by behavior contracts. Shared behavior such as Escape,
 blur saving, Cmd/Ctrl+Enter, and passive-open does not need to be repeated for

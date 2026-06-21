@@ -611,7 +611,7 @@ class DocumentScreenViewObject:
     def is_table_cell_editable(
         self, element_type: str, field_name: str
     ) -> bool:
-        """Returns True if the field is declared in grammar and can be edited in the table view."""
+        """Returns True if the field is declared in grammar and can be edited on TABLE screen."""
         return (
             self.get_table_cell_edit_mode(element_type, field_name)
             != TableCellEditMode.READONLY
@@ -636,7 +636,7 @@ class DocumentScreenViewObject:
 
     def enumerate_table_columns(self) -> Generator[str, None, None]:
         """
-        Yields column identifiers for the table view in display order.
+        Yields column identifiers for the TABLE screen in display order.
 
         Only yields columns that exist in at least one grammar element.
         Column order:

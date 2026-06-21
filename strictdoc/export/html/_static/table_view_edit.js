@@ -311,14 +311,14 @@
         if (tableHasActiveSort()) {
             blockers.push({
                 type: 'sorting',
-                message: 'Reset column sorting before adding nodes in Table view.',
+                message: 'Reset column sorting before adding nodes on TABLE screen.',
                 buttonLabel: 'Reset sorting',
             });
         }
         if (tableHasHiddenRowTypes()) {
             blockers.push({
                 type: 'rows',
-                message: 'Show all node types before adding nodes in Table view.',
+                message: 'Show all node types before adding nodes on TABLE screen.',
                 buttonLabel: 'Show all nodes',
             });
         }
@@ -1201,7 +1201,7 @@
         const main = getMainContainer();
         if (!main) return;
 
-        // One delegated click handler for all editable fields in the main table view:
+        // One delegated click handler for all editable fields in the main TABLE screen:
         // both regular table cells and document-level fields above the table.
         main.addEventListener('click', handleMainClick);
         main.addEventListener('dragstart', handleCustomMetaDragStart);

@@ -1,4 +1,4 @@
-# Table View: Delete Node
+# TABLE screen: Delete Node
 
 ## WHY
 
@@ -50,7 +50,7 @@ Use the existing Turbo and `modal_controller.js` setup already loaded by Table
 view. The Table delete action shall reuse `DeleteRequirementCommand` and the
 traceability index deletion checks.
 
-The Table response must be local to Table view:
+The Table response must be local to TABLE screen:
 
 - the initial request updates `#confirm` with the shared confirmation modal;
 - the confirmed request performs deletion and replaces

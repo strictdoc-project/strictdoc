@@ -1,15 +1,16 @@
-# Table View: Add Node
+# TABLE screen: Add Node
 
 ## WHY
 
-Table view is intended to become a real editing surface, not only a read-only
+TABLE screen is intended to become a real editing surface, not only a read-only
 overview of document content. Inline editing of existing fields already reduces
 context switching, but the workflow remains incomplete as long as users must go
 back to Document view to insert new nodes.
 
-The missing capability is creation directly from the flat table. Users should
-be able to place a new node where they are already working, preserve the
-underlying document hierarchy, and continue editing immediately in the table.
+The missing capability is creation of new nodes directly from the TABLE screen.
+Users should be able to place a new node where they are already working,
+preserve the underlying document hierarchy, and continue editing immediately in
+the table.
 
 The feature must reuse the existing node creation and validation pipeline. It
 must not introduce a separate SDOC model, a temporary unsaved node state, or a
@@ -45,18 +46,18 @@ Creation lifecycle:
   disabled, no required fields), the first available field is filled with
   `TBD` in priority order: `TITLE` → `STATEMENT` → `RATIONALE` → first
   String field → first SingleChoice field → first MultipleChoice field;
-- successful creation refreshes the Table view through Turbo, keeps edit mode
+- successful creation refreshes the TABLE screen through Turbo, keeps edit mode
   active, and updates the table body and TOC;
 - creation does not open or focus an editable field in the new node;
 - after creation, the new node occupies the viewport position of the Add menu
   that initiated creation: the menu area's top-left viewport coordinates are
   preserved for the top-left of the new row, so the page does not jump;
-- there is no post-create cancellation path in Table view because the node is
+- there is no post-create cancellation path on TABLE screen because the node is
   already persisted.
 
 Scope limits:
 
-- creation from an empty Table view is out of scope;
+- creation from an empty TABLE screen is out of scope;
 - hidden columns do not block node creation;
 - the active column-visibility state is reapplied after the Table body is
   replaced, so the header and the new body remain aligned;
@@ -74,13 +75,13 @@ separator template. Each separator can therefore compute placement options from
 its previous and next document nodes without inferring structure from the DOM
 at click time.
 
-The menu uses grammar-aware helpers from the table view object:
+The menu uses grammar-aware helpers from the TABLE screen object:
 
 - enumerate current grammar elements;
 - determine whether an element type can be created immediately;
 - return a disable reason when immediate creation is impossible.
 
-The menu remains local to Table view and does not reuse the Document view node
+The menu remains local to TABLE screen and does not reuse the Document view node
 controls component because the Table separator actions are opened between rows
 rather than from an existing node card.
 
@@ -219,7 +220,7 @@ Automated coverage must verify:
   the newly created row;
 - confirmation that creation does not focus or open an editable field;
 - generic handling of server/network failures;
-- confirmation that empty Table view still does not offer creation.
+- confirmation that empty TABLE screen still does not offer creation.
 
 The viewport-position tests must compare element geometry before and after the
 operation with a small browser-rendering tolerance. The existing

@@ -1,8 +1,8 @@
-# Inline Editing of Document Custom Metadata in Table View
+# Inline Editing of Document Custom Metadata on TABLE screen
 
 ## WHY
 
-Document custom metadata must be editable directly in Table view, consistently
+Document custom metadata must be editable directly on TABLE screen, consistently
 with the other document-level fields displayed above the table.
 
 Unlike stable document configuration fields such as `UID`, `VERSION`,
@@ -18,7 +18,7 @@ persistent metadata identifiers or changing the SDOC data model.
 
 ## WHAT
 
-The Table view shall present each custom metadata entry as a regular
+The TABLE screen shall present each custom metadata entry as a regular
 document-level metadata row:
 
 - the key is displayed in `sdoc-meta-label`;
@@ -291,5 +291,5 @@ The completed feature must be checked with:
 - restoration of the previous UI state after failed block actions;
 - display and edit modes;
 - blur and Ctrl/Cmd+Enter saves;
-- regression tests for the existing Table view inline editors;
+- regression tests for the existing TABLE screen inline editors;
 - regression tests for the existing Document view metadata form.

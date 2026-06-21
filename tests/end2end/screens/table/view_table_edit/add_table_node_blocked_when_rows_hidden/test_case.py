@@ -37,7 +37,7 @@ class Test(E2ECase):
 
             screen_table.do_open_add_node_menu(row_order=1)
             screen_table.assert_add_node_message(
-                "Show all node types before adding nodes in Table view.",
+                "Show all node types before adding nodes on TABLE screen.",
                 row_order=1,
             )
 

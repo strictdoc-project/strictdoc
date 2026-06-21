@@ -23,9 +23,9 @@ class Test(E2ECase):
             screen_document = screen_project_index.do_click_on_first_document()
             screen_document.assert_on_screen_document()
 
-            # Clear localStorage before navigating to table view.
+            # Clear localStorage before navigating to TABLE screen.
             # Tests run with --reuse-session (shared browser), so localStorage
-            # persists across test cases. Clearing here ensures the table view
+            # persists across test cases. Clearing here ensures the TABLE screen
             # JS starts with no saved column state and reflects a clean initial state.
             self.clear_local_storage()
 

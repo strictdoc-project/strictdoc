@@ -34,17 +34,9 @@ class Test(E2ECase):
                 f"{second_row} "
                 '[data-testid="form-delete-field-action-form-field-metadata"]'
             )
-            self.sleep(0.5)
+            screen_table.wait_for_metadata_row_labels(["FIRST:", "THIRD:"])
 
-            row_labels = self.execute_script(
-                """
-                return Array.from(document.querySelectorAll(
-                    '[data-testid^="document-config-metadata-row-"]'
-                )).map(row => row.querySelector(
-                    '[data-testid="document-config-metadata-label"]'
-                ).textContent.trim());
-                """
-            )
+            row_labels = screen_table.get_metadata_row_labels()
             assert row_labels == ["FIRST:", "THIRD:"]
 
         assert test_setup.compare_sandbox_and_expected_output()

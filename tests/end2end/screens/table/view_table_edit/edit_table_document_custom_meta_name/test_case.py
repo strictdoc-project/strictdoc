@@ -51,7 +51,6 @@ class Test(E2ECase):
             self.type(editor, "1")
             self.find_element(editor).send_keys(Keys.BACKSPACE)
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
 
             self.assert_exact_text("Key must not be empty.", error)
             assert self.get_attribute(editor, "errors") == "true"
@@ -60,7 +59,6 @@ class Test(E2ECase):
             self.click(label)
             self.type(editor, "RENAMED_FIRST")
             screen_table.do_save_inline_cell_by_cmd_enter()
-            self.sleep(0.5)
 
             self.assert_exact_text("RENAMED_FIRST:", label)
             self.assert_text("First value", selector=row)

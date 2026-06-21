@@ -56,7 +56,6 @@ class Test(E2ECase):
                 "Saved by command",
             )
             screen_table.do_save_inline_cell_by_cmd_enter()
-            self.sleep(0.5)
             self.assert_text("Saved by command", selector=first_row)
 
             second_row = (
@@ -70,17 +69,11 @@ class Test(E2ECase):
                 "Saved by blur",
             )
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
-
-            row_labels = self.execute_script(
-                """
-                return Array.from(document.querySelectorAll(
-                    '[data-testid^="document-config-metadata-row-"]'
-                )).map(row => row.querySelector(
-                    '[data-testid="document-config-metadata-label"]'
-                ).textContent.trim());
-                """
+            screen_table.wait_for_metadata_row_labels(
+                ["FIRST:", "SECOND:", "REVISION:"]
             )
+
+            row_labels = screen_table.get_metadata_row_labels()
             assert row_labels == ["FIRST:", "SECOND:", "REVISION:"]
 
             raw_revision = self.get_attribute(

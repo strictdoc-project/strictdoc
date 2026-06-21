@@ -45,7 +45,6 @@ class Test(E2ECase):
             form.do_delete_comment(field_order=1)
 
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
 
             screen_table.assert_no_text("First comment.")
             screen_table.assert_text("Second comment.")

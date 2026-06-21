@@ -41,7 +41,6 @@ class Test(E2ECase):
                 "Ada",
             )
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
 
             row = '[data-testid="document-config-metadata-row-custom_meta_0"]'
             self.assert_text("AUTHOR:", selector=row)

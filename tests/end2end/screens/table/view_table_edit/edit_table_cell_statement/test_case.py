@@ -44,7 +44,7 @@ class Test(E2ECase):
             screen_table.do_open_inline_cell(node_mid, "STATEMENT")
             form.do_fill_in("STATEMENT", "Cancelled statement.")
             screen_table.do_cancel_inline_cell_by_escape()
-            self.sleep(0.5)
+            screen_table.wait_for_cell_not_editing(node_mid, "STATEMENT")
 
             screen_table.assert_cell_dom_text(
                 node_mid, "STATEMENT", "Old statement."
@@ -56,7 +56,9 @@ class Test(E2ECase):
             screen_table.do_open_inline_cell(node_mid, "STATEMENT")
             form.do_fill_in("STATEMENT", "New statement.")
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
+            screen_table.wait_for_cell_dom_text(
+                node_mid, "STATEMENT", "New statement."
+            )
 
             screen_table.assert_cell_dom_text(
                 node_mid, "STATEMENT", "New statement."
@@ -68,7 +70,9 @@ class Test(E2ECase):
             screen_table.do_open_inline_cell(node_mid, "RATIONALE")
             form.do_fill_in("RATIONALE", "New rationale.")
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
+            screen_table.wait_for_cell_dom_text(
+                node_mid, "RATIONALE", "New rationale."
+            )
 
             screen_table.assert_cell_dom_text(
                 node_mid, "RATIONALE", "New rationale."

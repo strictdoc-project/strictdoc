@@ -44,7 +44,7 @@ class Test(E2ECase):
             screen_table.do_open_inline_cell(node_mid, "TITLE")
             form.do_fill_in("TITLE", "Cancelled title")
             screen_table.do_cancel_inline_cell_by_escape()
-            self.sleep(0.3)
+            screen_table.wait_for_cell_not_editing(node_mid, "TITLE")
 
             screen_table.assert_cell_dom_text(node_mid, "TITLE", "Old title")
 
@@ -54,7 +54,7 @@ class Test(E2ECase):
             screen_table.do_open_inline_cell(node_mid, "TITLE")
             form.do_fill_in("TITLE", "New title")
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
+            screen_table.wait_for_cell_dom_text(node_mid, "TITLE", "New title")
 
             screen_table.assert_cell_dom_text(node_mid, "TITLE", "New title")
 

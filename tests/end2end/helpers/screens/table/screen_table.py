@@ -62,6 +62,22 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
             f"Column {col_name!r} sort state: expected {state!r}, got {actual!r}"
         )
 
+    def wait_for_col_sort_state(
+        self, col_name: str, state, timeout: float = 5
+    ) -> None:
+        # Polls data-sort on the column header until it matches `state`. Use
+        # after do_click_col_sort_btn_without_scrolling, which dispatches the
+        # click via JS (execute_script) rather than a real user click: the DOM
+        # attribute update is asynchronous relative to the script call, so a
+        # plain assert_col_sort_state immediately after would race.
+        sel = f'[data-testid="col-header-{col_name}"]'
+        WebDriverWait(self.test_case.driver, timeout).until(
+            lambda _: (
+                self.test_case.find_element(sel).get_attribute("data-sort")
+                == state
+            )
+        )
+
     def assert_sort_reset_hidden(self) -> None:
         # Use execute_script to read the hidden attribute without waiting for visibility.
         is_hidden = self.test_case.execute_script(
@@ -226,6 +242,22 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
                 f"Expected rows of type {row_type!r} to be hidden"
             )
 
+    def wait_for_rows_of_type_hidden(
+        self, row_type: str, timeout: float = 5
+    ) -> None:
+        # Polls until every row of `row_type` is not displayed. Use after a JS
+        # operation that replaces tbody (e.g. cloneNode), which re-triggers the
+        # MutationObserver that re-applies the row filter: is_displayed() is
+        # immediate and would race the observer callback that sets `hidden` on
+        # the new row elements.
+        def _all_hidden(_):
+            rows = self.test_case.find_elements(
+                f'tr[data-row-type="{row_type}"]'
+            )
+            return rows and all(not r.is_displayed() for r in rows)
+
+        WebDriverWait(self.test_case.driver, timeout).until(_all_hidden)
+
     def do_open_rows_toolbar_panel(self) -> None:
         self.test_case.click(_ROWS_BTN)
         self.assert_rows_toolbar_panel_open()
@@ -262,6 +294,46 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
             self.test_case.find_elements(
                 ".content-view-table tbody tr[data-row-type]"
             )
+        )
+
+    def wait_for_table_row_count(
+        self, expected: int, timeout: float = 10
+    ) -> None:
+        # Polls the table row count until it reaches `expected`. Use after an
+        # add-node action that triggers a server round-trip: find_elements is
+        # immediate and would race the fetch response that inserts the new <tr>
+        # into the DOM, so a plain get_table_row_count immediately after the
+        # trigger would return the old count intermittently.
+        WebDriverWait(self.test_case.driver, timeout).until(
+            lambda _: (
+                len(
+                    self.test_case.find_elements(
+                        ".content-view-table tbody tr[data-row-type]"
+                    )
+                )
+                == expected
+            )
+        )
+
+    def get_metadata_row_labels(self) -> list:
+        return self.test_case.execute_script(
+            "return Array.from(document.querySelectorAll("
+            "  '[data-testid^=\"document-config-metadata-row-\"]'"
+            ")).map(row => row.querySelector("
+            "  '[data-testid=\"document-config-metadata-label\"]'"
+            ").textContent.trim());"
+        )
+
+    def wait_for_metadata_row_labels(
+        self, expected: list, timeout: float = 10
+    ) -> None:
+        # Polls the document-config metadata row labels until they match
+        # `expected`. Use after a delete/reorder/save/rollback action that
+        # triggers a server round-trip: execute_script is immediate and would
+        # race the fetch response that updates the DOM, so a plain label-list
+        # assertion right after the trigger would fail intermittently.
+        WebDriverWait(self.test_case.driver, timeout).until(
+            lambda _: self.get_metadata_row_labels() == expected
         )
 
     def do_open_add_node_menu(self, row_order: int = 1) -> None:
@@ -445,6 +517,55 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
             f"Expected cell [{node_mid}][{field_name}] to have no data-validation-error"
         )
 
+    def wait_for_cell_validation_error(
+        self, node_mid: str, field_name: str, timeout: float = 10
+    ) -> None:
+        # Polls data-validation-error until it becomes 'true'. Use after a save
+        # attempt that triggers a server round-trip returning 422: get_attribute
+        # is immediate and would race the fetch response that sets the error flag,
+        # so a plain assert_cell_has_validation_error right after the trigger would
+        # fail intermittently.
+        sel = self._cell_sel(node_mid, field_name)
+        WebDriverWait(self.test_case.driver, timeout).until(
+            lambda _: (
+                self.test_case.find_element(sel).get_attribute(
+                    "data-validation-error"
+                )
+                == "true"
+            )
+        )
+
+    def wait_for_cell_editing(
+        self, node_mid: str, field_name: str, timeout: float = 5
+    ) -> None:
+        # Polls data-mode until it becomes 'editing'. Use after clicking a cell
+        # to open its inline form: the DOM transition is asynchronous so a plain
+        # assert_cell_is_inline_editing immediately after the click would race.
+        sel = self._cell_sel(node_mid, field_name)
+        WebDriverWait(self.test_case.driver, timeout).until(
+            lambda _: (
+                self.test_case.find_element(sel).get_attribute("data-mode")
+                == "editing"
+            )
+        )
+
+    def wait_for_cell_dom_text(
+        self, node_mid: str, field_name: str, text: str, timeout: float = 10
+    ) -> None:
+        # Polls the cell's textContent until it equals `text`. Use after a save
+        # operation (outside-click or Cmd+Enter) that triggers a server round-trip:
+        # execute_script is immediate and would race against the fetch response
+        # updating the DOM, so a plain assert_cell_dom_text immediately after the
+        # trigger would fail intermittently.
+        def _cell_text_equals(_):
+            actual = self.test_case.execute_script(
+                f"const c = document.getElementById('cell-{node_mid}-{field_name}');"
+                f"return c ? c.textContent.trim() : null;"
+            )
+            return actual == text
+
+        WebDriverWait(self.test_case.driver, timeout).until(_cell_text_equals)
+
     def assert_cell_dom_text(
         self, node_mid: str, field_name: str, text: str
     ) -> None:
@@ -515,6 +636,24 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
     def do_open_inline_cell(self, node_mid: str, field_name: str) -> None:
         self.test_case.click(self._cell_sel(node_mid, field_name))
         self.assert_cell_is_inline_editing(node_mid, field_name)
+
+    def wait_for_cell_not_editing(
+        self, node_mid: str, field_name: str, timeout: float = 5
+    ) -> None:
+        # Polls data-mode until it is no longer 'editing'. Use after Escape
+        # (no network round-trip) or after any JS-local action that closes the
+        # cell: the DOM transition is asynchronous so a plain attribute read
+        # immediately after the trigger would race.
+        sel = self._cell_sel(node_mid, field_name)
+        WebDriverWait(self.test_case.driver, timeout).until(
+            lambda _: (
+                (
+                    self.test_case.find_element(sel).get_attribute("data-mode")
+                    or ""
+                )
+                != "editing"
+            )
+        )
 
     def do_save_inline_cell_by_outside_click(self) -> None:
         # Click the page header: always visible regardless of horizontal scroll.

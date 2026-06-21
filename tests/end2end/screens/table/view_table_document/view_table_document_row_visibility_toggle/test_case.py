@@ -60,7 +60,7 @@ class Test(E2ECase):
                 ");"
                 "tbody.replaceWith(tbody.cloneNode(true));"
             )
-            self.sleep(0.1)
+            screen_table.wait_for_rows_of_type_hidden("SECTION")
             screen_table.assert_rows_of_type_hidden("SECTION")
             screen_table.assert_rows_of_type_visible("REQUIREMENT")
 

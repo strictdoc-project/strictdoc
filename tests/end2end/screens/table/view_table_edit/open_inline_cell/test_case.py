@@ -53,7 +53,7 @@ class Test(E2ECase):
             # Case 3: Press Escape — inline form closes, value NOT changed.
             #
             screen_table.do_cancel_inline_cell_by_escape()
-            self.sleep(0.3)
+            screen_table.wait_for_cell_not_editing(node_mid, "STATEMENT")
 
             screen_table.assert_cell_is_not_inline_editing(
                 node_mid, "STATEMENT"

@@ -79,7 +79,9 @@ class Test(E2ECase):
             screen_table.do_save_inline_cell_by_cmd_enter()
             # Trigger save again while the first request is still in flight.
             screen_table.do_save_inline_cell_by_cmd_enter()
-            self.sleep(0.5)
+            screen_table.wait_for_cell_dom_text(
+                node_mid, "STATEMENT", "New statement."
+            )
 
             screen_table.assert_cell_dom_text(
                 node_mid, "STATEMENT", "New statement."
@@ -97,7 +99,6 @@ class Test(E2ECase):
                 comment_mid, "New comment."
             )
             screen_table.do_save_inline_cell_by_cmd_enter()
-            self.sleep(0.5)
 
             self.assert_text("New comment.")
             assert (

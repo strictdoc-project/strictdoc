@@ -72,7 +72,7 @@ class Test(E2ECase):
             form.assert_form_has_no_relations()
 
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
+            screen_table.wait_for_cell_not_editing(req001_mid, "RELATIONS")
 
             # REQ-001 no longer declares any relations.
             screen_table.assert_cell_dom_text(req001_mid, "RELATIONS", "")

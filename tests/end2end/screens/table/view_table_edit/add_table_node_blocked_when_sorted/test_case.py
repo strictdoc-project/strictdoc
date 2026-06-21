@@ -106,7 +106,7 @@ class Test(E2ECase):
             )
 
             screen_table.do_click_col_sort_btn_without_scrolling("Title")
-            self.sleep(0.1)
+            screen_table.wait_for_col_sort_state("Title", "asc")
             screen_table.assert_col_sort_state("Title", "asc")
             screen_table.assert_cell_is_inline_editing(
                 active_node_mid,
@@ -125,7 +125,7 @@ class Test(E2ECase):
                 screen_table.get_node_row_viewport_position(active_node_mid)
             )
             screen_table.do_toggle_row_type("SECTION")
-            self.sleep(0.5)
+            screen_table.wait_for_cell_not_editing(active_node_mid, "TITLE")
             screen_table.assert_cell_is_not_inline_editing(
                 active_node_mid,
                 "TITLE",
@@ -152,7 +152,7 @@ class Test(E2ECase):
                 whereto="before",
                 row_order=3,
             )
-            self.sleep(0.5)
+            screen_table.wait_for_table_row_count(19)
 
             new_node_mid = screen_table.get_node_mid_from_row(row_order=3)
             screen_table.assert_cell_is_not_inline_editing(

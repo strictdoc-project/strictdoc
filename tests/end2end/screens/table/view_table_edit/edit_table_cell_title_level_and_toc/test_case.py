@@ -48,7 +48,7 @@ class Test(E2ECase):
             screen_table.do_open_inline_cell(node_mid, "TITLE")
             form.do_fill_in("TITLE", "First title")
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
+            screen_table.wait_for_cell_dom_text(node_mid, "LEVEL", "1")
 
             screen_table.assert_cell_dom_text(node_mid, "LEVEL", "1")
             screen_table.assert_toc_contains("First title")
@@ -60,7 +60,7 @@ class Test(E2ECase):
             screen_table.do_open_inline_cell(node_mid, "TITLE")
             form.do_fill_in("TITLE", "Second title")
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
+            screen_table.wait_for_cell_dom_text(node_mid, "LEVEL", "1")
 
             screen_table.assert_cell_dom_text(node_mid, "LEVEL", "1")
             screen_table.assert_toc_contains_not("First title")
@@ -73,7 +73,7 @@ class Test(E2ECase):
             screen_table.do_open_inline_cell(node_mid, "TITLE")
             form.do_clear_field("TITLE")
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
+            screen_table.wait_for_cell_dom_text(node_mid, "LEVEL", "")
 
             screen_table.assert_cell_dom_text(node_mid, "LEVEL", "")
             screen_table.assert_toc_contains_not("Second title")

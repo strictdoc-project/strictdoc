@@ -45,7 +45,6 @@ class Test(E2ECase):
             form.do_form_add_field_comment()
 
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
 
             screen_table.assert_text("Comment #1")
             screen_table.assert_text("Comment #2")

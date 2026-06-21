@@ -31,7 +31,6 @@ class Test(E2ECase):
                 f"{row} "
                 '[data-testid="form-delete-field-action-form-field-metadata"]'
             )
-            self.sleep(0.5)
 
             self.assert_element_not_present(row)
             self.assert_element('[data-testid="document-config-metadata-add"]')

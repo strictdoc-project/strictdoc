@@ -57,7 +57,6 @@ class Test(E2ECase):
                 f"{second_row} "
                 '[data-testid="form-delete-field-action-form-field-metadata"]'
             )
-            self.sleep(0.3)
             self.assert_element(second_row)
 
             self.drag_and_drop(
@@ -66,17 +65,15 @@ class Test(E2ECase):
                 '[data-testid="document-config-metadata-row-custom_meta_0"] '
                 '[data-testid="document-config-metadata-label"]',
             )
-            self.sleep(0.3)
-
-            row_labels = self.execute_script(
-                """
-                return Array.from(document.querySelectorAll(
-                    '[data-testid^="document-config-metadata-row-"]'
-                )).map(row => row.querySelector(
-                    '[data-testid="document-config-metadata-label"]'
-                ).textContent.trim());
-                """
+            # Polls until JS rolls back the reorder after the mocked 500:
+            # execute_script is immediate and would race the rollback that
+            # restores the original row order, so a plain assertion right after
+            # drag_and_drop would see the temporary reordered state.
+            screen_table.wait_for_metadata_row_labels(
+                ["FIRST:", "SECOND:", "THIRD:"]
             )
+
+            row_labels = screen_table.get_metadata_row_labels()
             assert row_labels == ["FIRST:", "SECOND:", "THIRD:"]
 
             self.execute_script(

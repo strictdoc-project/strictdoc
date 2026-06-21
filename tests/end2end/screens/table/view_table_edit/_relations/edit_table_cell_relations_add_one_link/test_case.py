@@ -49,7 +49,7 @@ class Test(E2ECase):
             )
 
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
+            screen_table.wait_for_cell_not_editing(node_mid, "RELATIONS")
 
             screen_table.do_toggle_edit_mode()
             screen_table.assert_edit_mode_off()

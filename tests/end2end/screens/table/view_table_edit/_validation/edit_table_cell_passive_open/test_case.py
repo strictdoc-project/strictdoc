@@ -47,7 +47,7 @@ class Test(E2ECase):
             screen_table.do_open_inline_cell(node_mid, "STATEMENT")
             form.do_clear_field("STATEMENT")
             screen_table.do_click_cell(node_mid, "TITLE")
-            self.sleep(0.5)
+            screen_table.wait_for_cell_validation_error(node_mid, "STATEMENT")
 
             screen_table.assert_cell_is_inline_editing(node_mid, "STATEMENT")
             screen_table.assert_cell_has_validation_error(node_mid, "STATEMENT")
@@ -58,7 +58,7 @@ class Test(E2ECase):
             # Case 2: click outside — STATEMENT stays passive-open, no re-save.
             #
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.3)
+            screen_table.wait_for_cell_validation_error(node_mid, "STATEMENT")
 
             screen_table.assert_cell_is_inline_editing(node_mid, "STATEMENT")
             screen_table.assert_cell_has_validation_error(node_mid, "STATEMENT")
@@ -69,7 +69,7 @@ class Test(E2ECase):
             # STATEMENT stays passive-open alongside it.
             #
             screen_table.do_open_inline_cell(node_mid, "TITLE")
-            self.sleep(0.3)
+            screen_table.wait_for_cell_editing(node_mid, "TITLE")
 
             screen_table.assert_cell_is_inline_editing(node_mid, "TITLE")
             screen_table.assert_cell_is_inline_editing(node_mid, "STATEMENT")
@@ -103,7 +103,7 @@ class Test(E2ECase):
             screen_table.do_open_inline_cell(node_mid, "STATEMENT")
             form.do_clear_field("STATEMENT")
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
+            screen_table.wait_for_cell_validation_error(node_mid, "STATEMENT")
 
             screen_table.assert_cell_is_inline_editing(node_mid, "STATEMENT")
 

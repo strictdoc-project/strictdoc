@@ -40,7 +40,6 @@ class Test(E2ECase):
                 "New document title",
             )
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
             self.assert_text("New document title", selector=title)
 
             uid = '[data-testid="document-config-uid-field"]'
@@ -56,7 +55,6 @@ class Test(E2ECase):
                 "Restricted",
             )
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
 
             version = '[data-testid="document-config-version-field"]'
             self.click(version)
@@ -64,14 +62,12 @@ class Test(E2ECase):
             self.type(version_editor, "1")
             self.find_element(version_editor).send_keys(Keys.BACKSPACE)
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
-            assert self.get_text(version) == ""
+            self.assert_exact_text("", version)
 
             prefix = '[data-testid="document-config-prefix-field"]'
             self.click(prefix)
             self.type('[data-testid="form-field-PREFIX"]', "NEW-")
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
 
             date = '[data-testid="document-config-date-field"]'
             assert self.get_text(date) == "2026-06-08"

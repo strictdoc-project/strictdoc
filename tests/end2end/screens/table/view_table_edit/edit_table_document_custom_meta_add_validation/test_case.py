@@ -38,14 +38,12 @@ class Test(E2ECase):
 
             self.click(add)
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
             self.assert_element(add)
             self.assert_element_not_present(name)
 
             self.click(add)
             self.type(value, "Value without name")
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
             self.assert_exact_text("Key must not be empty.", error)
             assert self.get_attribute(name, "errors") == "true"
             assert self.get_attribute(value, "errors", hard_fail=False) is None
@@ -58,7 +56,6 @@ class Test(E2ECase):
             self.click(add)
             self.type(name, "EMPTY_VALUE")
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
             self.assert_exact_text("Value must not be empty.", error)
             assert self.get_attribute(name, "errors", hard_fail=False) is None
             assert self.get_attribute(value, "errors") == "true"
@@ -70,7 +67,6 @@ class Test(E2ECase):
             self.type(name, "invalid name")
             self.type(value, "Preserved value")
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
             self.assert_text("Key must start", selector=error)
             assert self.get_attribute(name, "errors") == "true"
             assert self.get_attribute(value, "errors", hard_fail=False) is None
@@ -93,7 +89,6 @@ class Test(E2ECase):
             self.click(name)
             self.type(name, "VALID_NAME")
             screen_table.do_save_inline_cell_by_cmd_enter()
-            self.sleep(0.5)
 
             row = '[data-testid="document-config-metadata-row-custom_meta_1"]'
             self.assert_text("VALID_NAME:", selector=row)

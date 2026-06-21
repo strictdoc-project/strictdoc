@@ -60,7 +60,9 @@ class Test(E2ECase):
                 Keys.RETURN + " extra"
             )
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
+            screen_table.wait_for_cell_dom_text(
+                node_mid, "TITLE", "New title extra"
+            )
 
             screen_table.assert_cell_has_no_validation_error(node_mid, "TITLE")
             screen_table.assert_cell_dom_text(
@@ -102,7 +104,9 @@ class Test(E2ECase):
                 field_element,
             )
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
+            screen_table.wait_for_cell_dom_text(
+                node_mid, "TITLE", "Pasted with newlines"
+            )
 
             screen_table.assert_cell_has_no_validation_error(node_mid, "TITLE")
             screen_table.assert_cell_dom_text(

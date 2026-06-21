@@ -32,7 +32,7 @@ class Test(E2ECase):
             screen_table.do_open_inline_cell(node_mid, "RISK")
             Form(self).do_fill_in("RISK", "New risk")
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
+            screen_table.wait_for_cell_dom_text(node_mid, "RISK", "New risk")
 
             screen_table.assert_cell_dom_text(node_mid, "RISK", "New risk")
 

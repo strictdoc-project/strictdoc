@@ -47,7 +47,9 @@ class Test(E2ECase):
             screen_table.do_cell_autocomplete_again("STATUS", "rev")
 
             screen_table.do_submit_cell_autocomplete()
-            self.sleep(0.5)
+            screen_table.wait_for_cell_dom_text(
+                node_mid, "STATUS", "Active, Reviewed"
+            )
 
             screen_table.assert_cell_dom_text(
                 node_mid, "STATUS", "Active, Reviewed"

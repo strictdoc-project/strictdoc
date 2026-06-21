@@ -39,7 +39,7 @@ class Test(E2ECase):
                 whereto="child",
                 row_order=2,
             )
-            self.sleep(0.5)
+            screen_table.wait_for_table_row_count(2)
 
             assert screen_table.get_table_row_count() == 2
             new_node_mid = screen_table.get_node_mid_from_row(row_order=2)

@@ -36,13 +36,18 @@ class Test(E2ECase):
             self.type(editor, "1")
             self.find_element(editor).send_keys(Keys.BACKSPACE)
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
 
-            assert self.get_attribute(title, "data-validation-error") == "true"
             self.assert_exact_text(
                 "Document title must not be empty.",
                 error,
             )
+            # The SeleniumBase methods `assert_text`, `assert_element`,
+            # `assert_element_not_present`, and `assert_exact_text`
+            # have built-in polling (default timeout ~20 seconds).
+            # That's why we know that by the time the attribute is checked,
+            # the element will definitely already be in the DOM,
+            # if it is called after `self.assert_exact_text(...)`.
+            assert self.get_attribute(title, "data-validation-error") == "true"
 
             self.click(title)
             screen_table.do_cancel_inline_cell_by_escape()
@@ -53,12 +58,10 @@ class Test(E2ECase):
             self.type(editor, "1")
             self.find_element(editor).send_keys(Keys.BACKSPACE)
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
 
             self.click(title)
             self.type(editor, "Corrected document")
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
 
             self.assert_text("Corrected document", selector=title)
             self.assert_element_not_present(error)

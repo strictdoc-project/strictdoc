@@ -39,7 +39,7 @@ class Test(E2ECase):
                 whereto="before",
                 row_order=1,
             )
-            self.sleep(0.5)
+            screen_table.wait_for_table_row_count(2)
 
             assert screen_table.get_table_row_count() == 2
 

@@ -39,7 +39,6 @@ class Test(E2ECase):
             self.type(editor, "1")
             self.find_element(editor).send_keys(Keys.BACKSPACE)
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
 
             self.assert_exact_text("Value must not be empty.", error)
             assert self.get_attribute(editor, "errors") == "true"
@@ -62,12 +61,10 @@ class Test(E2ECase):
             self.type(editor, "1")
             self.find_element(editor).send_keys(Keys.BACKSPACE)
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
 
             self.click(field)
             self.type(editor, "Corrected value")
             screen_table.do_save_inline_cell_by_outside_click()
-            self.sleep(0.5)
 
             self.assert_text("Corrected value", selector=row)
             self.assert_element_not_present(error)

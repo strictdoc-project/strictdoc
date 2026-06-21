@@ -11,7 +11,7 @@ REQUIRES: PLATFORM_IS_NOT_WINDOWS
 RUN: mkdir -p %T/test
 RUN: cp %S/input.md %T/test/input.md
 RUN: cp %S/requirements.gra.md %T/test/requirements.gra.md
-RUN: cp %S/strictdoc.toml %T/test/strictdoc.toml
+RUN: cp %S/strictdoc_config.py %T/test/strictdoc_config.py
 
 RUN: %strictdoc format %T/test/
 

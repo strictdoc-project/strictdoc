@@ -1,6 +1,0 @@
-[project]
-title = "StrictDoc Documentation"
-
-features = [
-  "TREE_MAP_SCREEN",
-]

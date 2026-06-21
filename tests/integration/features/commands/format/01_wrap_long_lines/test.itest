@@ -1,5 +1,5 @@
 RUN: cp %S/input.sdoc %T/
-RUN: cp %S/strictdoc.toml %T/
+RUN: cp %S/strictdoc_config.py %T/
 RUN: %strictdoc format %T/
 
 RUN: %cat %T/input.sdoc | filecheck %s

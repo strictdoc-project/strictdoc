@@ -1,7 +1,0 @@
-[project]
-
-include_doc_paths = [
-  "docs1/**"
-]
-
-features = []

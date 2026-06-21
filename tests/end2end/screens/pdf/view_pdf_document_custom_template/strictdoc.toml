@@ -1,7 +1,0 @@
-[project]
-
-features = [
-  "HTML2PDF",
-]
-
-html2pdf_template = "html2pdf_template/index.jinja"

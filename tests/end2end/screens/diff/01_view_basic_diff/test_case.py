@@ -19,7 +19,7 @@ path_to_this_test_file_folder = os.path.dirname(os.path.realpath(__file__))
 class Test(E2ECase):
     def test(self):
         path_to_sdoc_config = os.path.join(
-            path_to_this_test_file_folder, "strictdoc.toml"
+            path_to_this_test_file_folder, "strictdoc_config.py"
         )
         assert os.path.isfile(path_to_sdoc_config)
         path_to_sdoc_input = os.path.join(

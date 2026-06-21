@@ -12,7 +12,7 @@ from strictdoc.core.project_config import ProjectConfig, ProjectConfigLoader
 from strictdoc.server.app import create_app
 
 PATH_TO_THIS_TEST_FOLDER = os.path.dirname(os.path.abspath(__file__))
-PATH_TO_CONFIG = os.path.join(PATH_TO_THIS_TEST_FOLDER, "strictdoc.toml")
+PATH_TO_CONFIG = os.path.join(PATH_TO_THIS_TEST_FOLDER, "strictdoc_config.py")
 assert os.path.exists(PATH_TO_CONFIG)
 
 

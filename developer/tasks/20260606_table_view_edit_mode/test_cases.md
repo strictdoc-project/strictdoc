@@ -152,7 +152,7 @@ returns additional Turbo Streams beyond the TITLE cell itself.
 - `[ ]` Assert the complete valid action set for the first, middle, and last
   separators.
 - `[ ]` Assert that Add separators are hidden outside Table edit mode.
-- `[ ]` Assert that an empty Table does not render Add separators.
+- `[ ]` Assert that an empty Table renders 'Add separators'.
 
 ### Grammar-aware defaults and restrictions
 
@@ -195,8 +195,8 @@ returns additional Turbo Streams beyond the TITLE cell itself.
 - `[x]` The new row preserves the initiating Add menu's top-left viewport
   position.
 - `[x]` Creation does not automatically open an editable field.
-- `[ ]` A generic network or HTTP 5xx failure shows an error without inserting
-  response HTML into the Table body.
+- `[ ]` A generic network or HTTP 5xx failure shows an error in the correct form
+  (e.g. without inserting response HTML into the Table body).
 - `[ ]` A server-side placement or creatability rejection leaves the document
   unchanged and displays the returned error state.
 

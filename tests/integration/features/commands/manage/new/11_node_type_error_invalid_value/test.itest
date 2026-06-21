@@ -1,0 +1,10 @@
+#
+# When --node-type names a type that does not exist in the grammar, manage new
+# shall print an error and exit 1. The document shall not be modified.
+#
+
+RUN: cp %S/input.sdoc %T/
+RUN: %expect_exit 1 %strictdoc manage new %T/ --node-type NONEXISTENT | filecheck %s --dump-input=fail
+RUN: %diff %S/input.sdoc %T/input.sdoc
+
+CHECK: error: The document grammar has no element of type 'NONEXISTENT'.

@@ -14,6 +14,7 @@ class ManageNewCommandConfig:
         project_root_path: str,
         document_path: Optional[str],
         parent_uid_or_mid: Optional[str],
+        node_type: Optional[str],
         config: Optional[str],
     ):
         self.debug: bool = debug
@@ -22,6 +23,7 @@ class ManageNewCommandConfig:
         self.project_root_path: str = project_root_path
         self.document_path: Optional[str] = document_path
         self.parent_uid_or_mid: Optional[str] = parent_uid_or_mid
+        self.node_type: Optional[str] = node_type
         self._config_path: Optional[str] = config
 
     def get_path_to_config(self) -> str:

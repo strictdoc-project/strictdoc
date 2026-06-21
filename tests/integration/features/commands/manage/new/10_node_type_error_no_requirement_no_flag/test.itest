@@ -1,0 +1,11 @@
+#
+# When --node-type is not given and the custom grammar has no REQUIREMENT
+# element, manage new shall print an error and exit 1. The document shall
+# not be modified.
+#
+
+RUN: cp %S/input.sdoc %T/
+RUN: %expect_exit 1 %strictdoc manage new %T/ | filecheck %s --dump-input=fail
+RUN: %diff %S/input.sdoc %T/input.sdoc
+
+CHECK: error: The document has a custom grammar with no REQUIREMENT element. Use --node-type to specify which node type to create.

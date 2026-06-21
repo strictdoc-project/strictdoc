@@ -2783,6 +2783,21 @@ Use ``--parent-uid-or-mid`` to add the new node inside an existing document or c
     strictdoc manage new <path-to-project-tree> --parent-uid-or-mid <uid-or-mid>
 
 Both options can be combined. When both are given, StrictDoc validates that the specified parent node is actually present in the specified document.
+
+**Selecting the node type**
+
+Use ``--node-type`` to specify which grammar element type the new node should use:
+
+.. code:: text
+
+    strictdoc manage new <path-to-project-tree> --node-type <TYPE>
+
+The value must match a grammar element tag defined in the document (for example ``REQUIREMENT``, ``FEATURE``, or any custom type). If the type does not exist in the grammar, the command exits with an error listing the available types.
+
+When ``--node-type`` is omitted, ``manage new`` applies the following default:
+
+- If the document has no explicit grammar, or its grammar includes a ``REQUIREMENT`` element, the node type defaults to ``REQUIREMENT``.
+- If the document has a custom grammar with no ``REQUIREMENT`` element, the command exits with an error and asks the user to specify ``--node-type``.
 <<<
 
 [[/SECTION]]

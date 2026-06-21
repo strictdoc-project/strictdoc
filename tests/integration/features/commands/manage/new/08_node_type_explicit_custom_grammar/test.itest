@@ -1,0 +1,8 @@
+#
+# When --node-type is given and the grammar has that element, manage new shall
+# create a node of that type.
+#
+
+RUN: cp %S/input.sdoc %T/
+RUN: %strictdoc manage new %T/ --node-type FEATURE
+RUN: %diff %S/input.expected.sdoc %T/input.sdoc

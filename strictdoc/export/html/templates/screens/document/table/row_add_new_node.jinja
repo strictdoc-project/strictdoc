@@ -1,4 +1,4 @@
-{%- if view_object.is_running_on_server -%}
+{% assert view_object.is_running_on_server %}
 {%- set table_document_mid = view_object.document.reserved_mid -%}
 {%- set can_use_separator = prev_node is not none or next_node is not none -%}
 {%- set can_add_before_next = next_node is not none and view_object.can_insert_next_to_node(next_node) -%}
@@ -100,4 +100,3 @@
     </div>
   </td>
 </tr>
-{%- endif -%}

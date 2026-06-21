@@ -1,12 +1,14 @@
 {%- set is_server = view_object.is_running_on_server -%}
 <tbody id="table-content-body" data-testid="table-content-body">
 
+  {%- if is_server %}
   {%- with
     prev_node=none,
     next_node=content_entries[0][0] if content_entries else none
   -%}
     {%- include "screens/document/table/row_add_new_node.jinja" -%}
   {%- endwith -%}
+  {%- endif %}
 
 {%- for node, _ in content_entries %}
 
@@ -170,13 +172,19 @@
       {%- endfor %}
 
     </tr>
+
+    {%- if is_server %}
     {%- with
       prev_node=node,
       next_node=loop.nextitem[0] if loop.nextitem is defined else none
     -%}
       {%- include "screens/document/table/row_add_new_node.jinja" -%}
     {%- endwith -%}
+    {%- endif %}
 
+  {# ============================================================ #}
+  {# INCLUDED DOCUMENT ROW                                        #}
+  {# ============================================================ #}
   {%- elif node.is_document() %}
     {%- set section = node %}
     {%- set ns_span = namespace(count=0, counting=false) %}
@@ -218,12 +226,16 @@
       {%- endfor %}
 
     </tr>
+
+    {%- if is_server %}
     {%- with
       prev_node=node,
       next_node=loop.nextitem[0] if loop.nextitem is defined else none
     -%}
       {%- include "screens/document/table/row_add_new_node.jinja" -%}
     {%- endwith -%}
+    {%- endif %}
+
   {%- endif %}
 
 {%- endfor %}

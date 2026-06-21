@@ -522,6 +522,23 @@ background-image:
 /* Doc-config fields (root node above the table)               */
 /* =========================================================== */
 
+/* sdoc-meta has its own border/padding regardless of children, so it
+   renders as an empty box even when every field is hidden. Hide it when
+   empty.
+
+   <sdoc-autogen> wraps every rendered field value (config fields, custom
+   meta) and is only ever included once that value is non-empty; the "Add
+   metadata" control doesn't use it. So "no <sdoc-autogen> inside" means
+   "nothing to show" — no need to check field types individually.
+
+   :has() re-evaluates live, so per-field inline saves are picked up with
+   no extra backend work. :not([data-mode="edit"]) avoids a specificity
+   fight with edit mode, where the wrapper must stay visible regardless of
+   emptiness so the (empty) fields can be filled in. */
+[js-table_view_edit]:not([data-mode="edit"]) sdoc-meta:not(:has(sdoc-autogen)) {
+  display: none;
+}
+
 /* Empty editable document config fields are hidden until edit mode. */
 [js-table_view_edit] sdoc-meta-label:has(+ sdoc-meta-field > [id^="doc-field-"]:empty),
 [js-table_view_edit] sdoc-meta-field:has(> [id^="doc-field-"]:empty),
@@ -709,6 +726,18 @@ background-image:
 
 [js-table_view_edit][data-mode="edit"] .content-view__add_new_row-TR {
   display: table-row;
+}
+
+/* Inverse of .content-view__add_new_row-TR: visible in display mode,
+   hidden in edit mode (where the add-node handler row takes its place). */
+[js-table_view_edit][data-mode="edit"] .content-view__empty-row-TR {
+  display: none;
+}
+
+.content-view__empty-row-TR sdoc-main-placeholder {
+  padding-inline: calc(4 * var(--base-rhythm));
+  padding-block: calc(3 * var(--base-rhythm));
+  width: fit-content; /* to push left */
 }
 
 .content-view__add_new_row-TD {

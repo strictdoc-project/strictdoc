@@ -1,6 +1,7 @@
 {% assert view_object.is_running_on_server %}
 {%- set table_document_mid = view_object.document.reserved_mid -%}
-{%- set can_use_separator = prev_node is not none or next_node is not none -%}
+{%- set can_add_first_node = prev_node is none and next_node is none and view_object.can_add_node(view_object.document) -%}
+{%- set can_use_separator = prev_node is not none or next_node is not none or can_add_first_node -%}
 {%- set can_add_before_next = next_node is not none and view_object.can_insert_next_to_node(next_node) -%}
 {%- set can_add_after_prev = prev_node is not none and view_object.can_insert_next_to_node(prev_node) -%}
 {%- set can_add_child_of_prev = prev_node is not none and (prev_node.is_document() or prev_node.is_composite) and view_object.can_add_node(prev_node) -%}
@@ -47,6 +48,21 @@
                 js-table_view_edit-add-node-actions>
               {%- for element in view_object.get_grammar_elements() -%}
                 <li class="table-add-node__element">{{ element.tag }}:</li>
+                {%- if can_add_first_node -%}
+                  <li class="table-add-node__action" data-whereto="child">
+                    <button class="table-add-node__action-button"
+                            type="button"
+                            js-table_view_edit-add-node-action
+                            data-testid="table-add-node-action-{{ element.tag|lower }}-child"
+                            data-context-document-mid="{{ table_document_mid }}"
+                            data-reference-mid="{{ table_document_mid }}"
+                            data-element-type="{{ element.tag }}"
+                            data-whereto="child"
+                            title="Add first {{ element.tag }}">
+                      {% include "icons/ico16_add.svg" %}
+                    </button>
+                  </li>
+                {%- endif -%}
                 {%- if can_add_before_next -%}
                   <li class="table-add-node__action" data-whereto="before">
                     <button class="table-add-node__action-button"

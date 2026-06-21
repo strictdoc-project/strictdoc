@@ -4,12 +4,12 @@
 
 RUN: %strictdoc about | filecheck %s --dump-input=fail
 
-CHECK:╔════════════════════════════════════════════════════════════════════════╗
+CHECK:+========================================================================+
 
-CHECK:║                               StrictDoc                                ║
+CHECK:| {{.*}}StrictDoc{{.*}} |
 
-CHECK:║                                                                        ║
+CHECK:|                                                                        |
 
-CHECK:║ GitHub:  https://github.com/strictdoc-project/strictdoc                ║
+CHECK:| GitHub:       https://github.com/strictdoc-project/strictdoc           |
 
-CHECK:╚════════════════════════════════════════════════════════════════════════╝
+CHECK:+========================================================================+

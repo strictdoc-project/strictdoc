@@ -198,7 +198,7 @@ TITLE: How StrictDoc compares to other tools?
 [TEXT]
 MID: 45093addf6ec4772a0289fd958ae61dc
 STATEMENT: >>>
-This section offers a comparison of several requirements tools similar to StrictDoc.
+This section compares some requirements management tools that are similar to StrictDoc.
 <<<
 
 [[SECTION]]
@@ -228,10 +228,6 @@ StrictDoc still shares with Doorstop their common underlying design principles:
 - Both Doorstop and StrictDoc encourage collocation of code and documentation.
   When documentation is hosted close to code it has less chances of diverging
   from the actual implementation or becoming outdated.
-- As the free and open source projects, both Doorstop and StrictDoc seem to
-  struggle to find resources for development of specialized GUI interfaces this
-  is why both tools give a preference to supporting exporting documentation
-  pages to HTML format as the primary export feature.
 
 StrictDoc differs from Doorstop in a number of aspects:
 
@@ -270,11 +266,11 @@ Both Sphinx and StrictDoc are both documentation generators but StrictDoc is at
 a higher level of abstraction: StrictDoc's specialization is requirements and
 specifications documents. StrictDoc can generate documentation to a number of
 formats including HTML format as well as the RST format which is a default
-input format for Sphinx. A two-stage generation is therefore possible:
-StrictDoc generates RST documentation which then can be generated to HTML, PDF,
-and other formats using Sphinx.
+input format for Sphinx.
 
-If you are reading this documentation at
+A two-stage generation is therefore possible:
+StrictDoc generates RST documentation which then can be generated to HTML, PDF,
+and other formats using Sphinx. If you are reading this documentation at
 https://strictdoc.readthedocs.io/en/latest,
 you are very close to a `StrictDoc-Sphinx example <https://strictdoc.readthedocs.io/en/latest/sphinx/>`_.
 
@@ -283,94 +279,6 @@ This documentation is first converted to RST format by StrictDoc, which is then 
 The
 ``StrictDoc -> RST -> Sphinx -> PDF`` example is also generated using readthedocs:
 `StrictDoc <https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/>`_.
-<<<
-
-[[/SECTION]]
-
-[[SECTION]]
-MID: 515bcae39d1f48eda0b72562871ab15a
-TITLE: Sphinx-Needs
-
-[TEXT]
-MID: 602327a9b8654e1eab4bc265e172a63d
-STATEMENT: >>>
-`Sphinx-Needs <https://sphinxcontrib-needs.readthedocs.io/en/latest/>`_ is a
-text-based requirements management system based on Sphinx. It is implemented
-as a Sphinx extension which extends the
-`reStructuredText (RST)
-<https://docutils.sourceforge.io/docs/user/rst/quickref.html>`_
-markup language with an additional syntax for writing requirements documents.
-
-Sphinx-Needs was a great source of inspiration for the second version of
-StrictDoc which was first implemented as a Sphinx extension and then as a more
-independent library on top of `docutils <https://docutils.sourceforge.io/>`_
-that Sphinx uses for the underlying RST syntax processing work.
-
-The similarities between Sphinx-Needs and StrictDoc:
-
-- In contrast to Doorstop, both Sphinx-Needs and StrictDoc do not split a
-  document into many small files, one file per single requirement (see
-  discussion
-  `doorstop#401 <https://github.com/doorstop-dev/doorstop/issues/401>`_). Both
-  tools follow the "file per document" approach.
-- Sphinx-Needs has a
-  `well-developed language
-  <https://sphinxcontrib-needs.readthedocs.io/en/latest/directives/index.html>`_
-  based on custom RST directives, such
-  as ``req::``, ``spec::``, ``needtable::``, etc. The RST document is parsed
-  by Sphinx/docutils into RST abstract syntax tree (AST) which allows creating
-  an object graph out for the documents and their requirements from the RST
-  document. StrictDoc uses textX for building an AST from a SDoc document.
-  Essentially, both Sphinx-Needs and StrictDoc work in a similar way but use
-  different markup languages and tooling for the job.
-
-The difference between Sphinx-Needs and StrictDoc:
-
-- RST tooling provided by Sphinx/docutils is very powerful, yet it can also be
-  rather limiting. The RST syntax and underlying docutils tooling do not allow
-  much flexibility needed for creating a language for defining requirements
-  using a custom and explicit grammar, a feature that became a cornerstone of
-  StrictDoc. This was a major reason why the third generation of
-  StrictDoc started with a migration from docutils to
-  `textX <https://github.com/textX/textX>`_ which is a
-  dedicated tool for creating custom Domain-Specific Languages. After the
-  migration to textX, StrictDoc is no longer restricted to the limitations of
-  the RST document but it is still possible to generate SDoc files to RST
-  using StrictDoc and then further generate RST to HTML/PDF and other formats
-  using Sphinx.
-- Sphinx-Needs has an impressive list of config options and features that
-  StrictDoc is missing. Examples: Customizing the look of the requirements,
-  `Roles <https://sphinxcontrib-needs.readthedocs.io/en/latest/roles.html>`_,
-  `Services
-  <https://sphinxcontrib-needs.readthedocs.io/en/latest/services/index.html>`_
-  and
-  `others
-  <https://sphinxcontrib-needs.readthedocs.io/en/latest/index.html>`_.
-<<<
-
-[[/SECTION]]
-
-[[SECTION]]
-MID: 4a77366154d74cf7ab34044bed1cd542
-TITLE: FRET
-
-[TEXT]
-MID: e3eb1be604c6499292339ecbe7620c60
-STATEMENT: >>>
-`FRET <https://github.com/NASA-SW-VnV/fret>`_ is a framework for the
-elicitation, specification, formalization and understanding of requirements.
-
-    - Users enter system requirements in a specialized natural language.
-    - FRET helps understanding and review of semantics by utilizing a variety of forms
-      for each requirement: natural language description, formal mathematical logics,
-      and diagrams.
-    - Requirements can be defined in a hierarchical fashion and can be exported
-      in a variety of forms to be used by analysis tools.
-
-FRET has an impressive list of
-`Publications <https://github.com/NASA-SW-VnV/fret/blob/master/PUBLICATIONS.md>`_.
-
-FRET's user interface is built with Electron.
 <<<
 
 [[/SECTION]]

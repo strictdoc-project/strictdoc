@@ -43,17 +43,12 @@ class Test(E2ECase):
                 "FIRST:",
                 "SECOND:",
             ]
-            row_testids = self.execute_script(
-                """
-                return Array.from(document.querySelectorAll(
-                    '[data-testid^="document-config-metadata-row-"]'
-                )).map(row => row.dataset.testid);
-                """
+            screen_table.wait_for_metadata_row_testids(
+                [
+                    "document-config-metadata-row-custom_meta_0",
+                    "document-config-metadata-row-custom_meta_1",
+                    "document-config-metadata-row-custom_meta_2",
+                ]
             )
-            assert row_testids == [
-                "document-config-metadata-row-custom_meta_0",
-                "document-config-metadata-row-custom_meta_1",
-                "document-config-metadata-row-custom_meta_2",
-            ]
 
         assert test_setup.compare_sandbox_and_expected_output()

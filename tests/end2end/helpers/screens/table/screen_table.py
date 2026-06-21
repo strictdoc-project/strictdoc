@@ -336,6 +336,24 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
             lambda _: self.get_metadata_row_labels() == expected
         )
 
+    def get_metadata_row_testids(self) -> list:
+        return self.test_case.execute_script(
+            "return Array.from(document.querySelectorAll("
+            "  '[data-testid^=\"document-config-metadata-row-\"]'"
+            ")).map(row => row.dataset.testid);"
+        )
+
+    def wait_for_metadata_row_testids(
+        self, expected: list, timeout: float = 10
+    ) -> None:
+        # Polls the document-config metadata row testids until they match
+        # `expected`. Use after a reorder action that triggers a server
+        # round-trip: the testid attributes update asynchronously after the DOM
+        # is rebuilt, so an immediate assertion would race the update.
+        WebDriverWait(self.test_case.driver, timeout).until(
+            lambda _: self.get_metadata_row_testids() == expected
+        )
+
     def do_open_add_node_menu(self, row_order: int = 1) -> None:
         # The handle is a full-width but near-zero-height row. After a sort
         # reset the table rows are reordered while the page scroll position

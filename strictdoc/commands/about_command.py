@@ -23,7 +23,7 @@ class AboutCommand(BaseCommand):
 
     def run(self, parallelizer: Parallelizer) -> None:  # noqa: ARG002
         width = 72
-        border = "═" * width
+        border = "=" * width
 
         lines = [
             f" {'StrictDoc'.center(width - 2)} ",
@@ -38,9 +38,9 @@ class AboutCommand(BaseCommand):
         ]
 
         banner = (
-            f"╔{border}╗\n"
-            + "\n".join(f"║{line.ljust(width)}║" for line in lines)
-            + f"\n╚{border}╝"
+            f"+{border}+\n"
+            + "\n".join(f"|{line.ljust(width)}|" for line in lines)
+            + f"\n+{border}+"
         )
 
         print(banner)  # noqa: T201

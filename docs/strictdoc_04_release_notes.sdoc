@@ -94,6 +94,14 @@ stylesheets in the generated PDF.
 
 9\) Fixed: custom-grammar Markdown documents now correctly write back field
 names when saving, instead of using the default ``STATEMENT`` key.
+
+10\) The ``strictdoc manage new`` command now accepts an optional
+``--node-type`` argument. When provided, it specifies which grammar element
+type the new node should use. When omitted, the command defaults to
+``REQUIREMENT`` if the document grammar includes a ``REQUIREMENT`` element (or
+has no explicit grammar at all). If the grammar is custom and contains no
+``REQUIREMENT`` element, the command exits with an error and prompts the user
+to supply ``--node-type``.
 <<<
 
 [[/SECTION]]

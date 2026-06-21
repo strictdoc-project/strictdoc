@@ -1,6 +1,6 @@
 # Markdown Specification
 
-**Grammar**: Markdown.gra.md
+**Grammar**: Markdown.gra.md \
 **PREFIX**: MD-
 
 This specification defines a Markdown-based format for writing traceable documentation, including requirements. It covers two file formats: the Markdown document format (`.md`) for content and the Markdown grammar format (`.gra.md`) for schemas. Both are valid CommonMark files.

@@ -60,7 +60,7 @@
   </sdoc-autocompletable>
 
   <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}" {% if field_required %}required{% endif %} data-autocompletable-target="hidden"/>
-  <ul class="autocomplete-items {{ result_class_name}}" ></ul>
+  <ul class="autocomplete-items {{ result_class_name}}" aria-live="polite"></ul>
 
   {%- if errors is defined and errors|length > 0 -%}
     {%- for error_ in errors -%}

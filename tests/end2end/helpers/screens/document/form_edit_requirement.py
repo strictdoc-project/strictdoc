@@ -122,6 +122,14 @@ class Form_EditRequirement(Form):  # pylint: disable=invalid-name
             f"form-field-{field_name}", field_value
         )
 
+    def assert_field_autocomplete_no_results(
+        self, field_name: str, field_value: str
+    ) -> None:
+        assert isinstance(field_value, str)
+        super().assert_autocomplete_no_results(
+            f"form-field-{field_name}", field_value
+        )
+
     def do_select_relation_role(self, mid: MID, field_value: str) -> None:
         assert isinstance(mid, MID)
         assert isinstance(field_value, str)

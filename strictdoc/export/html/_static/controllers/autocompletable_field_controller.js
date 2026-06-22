@@ -7,6 +7,8 @@
 
   const optionSelector = "[role='option']:not([aria-disabled])"
   const activeSelector = "[aria-selected='true']"
+  const noResultsItemHTML =
+    '<li class="autocompletable-result-item autocompletable-result-item_no-results" role="option" aria-disabled="true">No matches found</li>'
 
   class AutoCompletable extends Stimulus.Controller {
     static targets = ["name"]
@@ -309,7 +311,8 @@
     }
 
     replaceResults(html) {
-      this.results.innerHTML = html
+      const hasResults = html != null && html.trim().length > 0
+      this.results.innerHTML = hasResults ? html : noResultsItemHTML
       this.identifyOptions()
       if (!!this.options) {
         this.open()

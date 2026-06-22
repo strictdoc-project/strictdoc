@@ -31,12 +31,15 @@ class DeprecationEngine:
         if len(self.deprecations) == 0:
             return
 
+        print()  # noqa: T201
         self._print("DEPRECATION: This project has the following issues:")
         for message_idx_, message_ in enumerate(
             self.deprecations.values(), start=1
         ):
             self._print(f"\nIssue #{message_idx_}\n")
             self._print(message_)
+        print()  # noqa: T201
+
         sys.stdout.flush()
 
     @staticmethod

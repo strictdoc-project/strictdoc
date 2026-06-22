@@ -57,6 +57,28 @@ class RequirementFormFieldType(str, Enum):
     MULTILINE = "MULTILINE"
 
 
+def deduplicate_comma_separated_value(value: str) -> str:
+    """
+    MultipleChoice/Tag field values are a comma-separated set. Existing
+    documents can already contain duplicate entries (hand-edited, or
+    created before the autocomplete duplicate-prevention fix). Remove the
+    duplicates here, case-insensitively, keeping the order and casing of
+    the first occurrence.
+    """
+    seen: Set[str] = set()
+    deduplicated_parts: List[str] = []
+    for raw_part in value.split(","):
+        part = raw_part.strip()
+        if not part:
+            continue
+        key = part.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        deduplicated_parts.append(part)
+    return ", ".join(deduplicated_parts)
+
+
 @auto_described
 class RequirementFormField:
     def __init__(
@@ -142,6 +164,16 @@ class RequirementFormField:
             RequirementFieldType.TAG,
         ):
             field_value = requirement_field.get_text_value()
+            if grammar_field.gef_type in (
+                RequirementFieldType.MULTIPLE_CHOICE,
+                RequirementFieldType.TAG,
+            ):
+                # The document may already contain duplicate values (e.g.
+                # hand-edited, or saved before the autocomplete
+                # duplicate-prevention fix). Deduplicate when loading the
+                # value into the edit form, so saving the form as-is
+                # cleans up the document.
+                field_value = deduplicate_comma_separated_value(field_value)
             return RequirementFormField(
                 field_mid=MID.create(),
                 field_name=grammar_field.title,

@@ -104,6 +104,7 @@ from strictdoc.export.html.form_objects.requirement_form_object import (
     RequirementFormFieldType,
     RequirementFormObject,
     RequirementReferenceFormField,
+    deduplicate_comma_separated_value,
 )
 from strictdoc.export.html.generators.view_objects.document_screen_view_object import (
     DocumentScreenViewObject,
@@ -1496,6 +1497,13 @@ def create_main_router(
             current_value = node.ordered_fields_lookup[field_name][
                 0
             ].get_text_value()
+            if is_multiple_choice:
+                # The document may already contain duplicate values (e.g.
+                # hand-edited, or saved before the autocomplete
+                # duplicate-prevention fix). Deduplicate when loading the
+                # value into the table cell's edit mode, same as the
+                # modal requirement-edit form does.
+                current_value = deduplicate_comma_separated_value(current_value)
 
         output = env().render_template_as_markup(
             "actions/table/get_node_autocomplete_inline/stream_inline_form.jinja.html",
@@ -4390,9 +4398,12 @@ def create_main_router(
                         if choice.lower() not in already_selected
                     ]
                 else:
-                    # SingleChoice: we use the full query and all available options.
+                    # SingleChoice: we use the full query and all available
+                    # options. There is no notion of an "already selected"
+                    # segment, as a SingleChoice field holds only one value.
                     query_words = q.lower().split()
                     filtered_options = all_options
+                    last_part = None
 
                 resulting_values = []
 
@@ -4401,7 +4412,17 @@ def create_main_router(
                     words_ = option_.strip().lower()
 
                     if all(word_ in words_ for word_ in query_words):
-                        resulting_values.append(option_)
+                        # A MultipleChoice/Tag option that exactly matches
+                        # the segment currently being typed is, in fact,
+                        # already a complete value of the field (typed in
+                        # full, with or without a trailing comma). It is
+                        # still shown so the user has visual confirmation,
+                        # but marked as already selected so it can't be
+                        # inserted as a duplicate.
+                        is_selected = last_part is not None and (
+                            words_ == last_part
+                        )
+                        resulting_values.append((option_, is_selected))
                     if len(resulting_values) >= AUTOCOMPLETE_LIMIT:
                         break
 

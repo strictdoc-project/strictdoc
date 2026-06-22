@@ -228,6 +228,48 @@ class Form:  # pylint: disable=invalid-name
         ).perform()
         assert element.text == text_before
 
+    def assert_autocomplete_no_duplicate_on_click(
+        self, test_id: str, already_selected_value: str
+    ) -> None:
+        assert isinstance(test_id, str)
+        assert isinstance(already_selected_value, str)
+
+        field_xpath = f"(//*[@data-testid='{test_id}'])"
+        element = self.test_case.find_element(field_xpath)
+        hidden_input = element.find_element(
+            By.XPATH, 'following-sibling::input[@type="hidden"]'
+        )
+        results_ul = hidden_input.find_element(
+            By.XPATH, "following-sibling::ul[1]"
+        )
+
+        # The field already contains already_selected_value (with no
+        # trailing comma). A click re-opens the dropdown: it must not
+        # offer already_selected_value again.
+        text_before = element.text
+        element.click()
+
+        WebDriverWait(self.test_case.driver, 3).until(
+            lambda _: results_ul.is_displayed()
+        )
+
+        self.test_case.assert_element_not_present(
+            f"{field_xpath}/following-sibling::input[@type='hidden']"
+            "/following-sibling::ul[1]"
+            f"//li[@data-autocompletable-value='{already_selected_value}']",
+            by=By.XPATH,
+        )
+
+        # Selecting whatever is offered (if anything) must not duplicate
+        # already_selected_value in the field.
+        select_action = ActionChains(self.test_case.driver)
+        select_action.send_keys(Keys.ARROW_DOWN).pause(0.1).send_keys(
+            Keys.RETURN
+        ).perform()
+        assert element.text.count(already_selected_value) == text_before.count(
+            already_selected_value
+        )
+
     def do_append_command_and_use_autocomplete_result_again(
         self, test_id: str, field_value: str
     ) -> None:

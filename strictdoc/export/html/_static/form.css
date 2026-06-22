@@ -359,6 +359,11 @@ sdoc-autocompletable[contenteditable="false"] {
   cursor: default;
 }
 
+.autocompletable-result-item_selected {
+  color: var(--color-fg-secondary);
+  cursor: default;
+}
+
 .monospace {
   font-family: var(--code-font-family);
 }

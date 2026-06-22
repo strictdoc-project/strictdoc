@@ -58,16 +58,12 @@
         this.close()
       });
 
-      autocompletable.addEventListener("click", (event) => {      
+      autocompletable.addEventListener("click", (event) => {
         /* Toggle between showing / hiding results. */
         if (this.resultsShown) {
           this.hideAndRemoveOptions();
         } else {
-          /* If minLengthValue is 0, we want to get all possible options (i.e. for SingleChoice).
-             Otherwise, we want narrow-down-as-you-type behavior, and filter on remainig options.
-           */
-          const query = this.minLengthValue == 0 ? "" : this.autocompletable.innerText.trim();
-          this.fetchResults(query);
+          this.fetchResults(this.buildClickQuery());
         }
       });
 
@@ -194,14 +190,7 @@
       this.autocompletable.innerText = suggestion
       this.hidden.value = suggestion
 
-      // Move the cursor to the end of the input. 
-      this.autocompletable.focus();
-      const range = document.createRange();
-      range.selectNodeContents(this.autocompletable);
-      range.collapse(false);
-      const sel = window.getSelection();
-      sel.removeAllRanges();
-      sel.addRange(range);
+      this.moveCursorToEnd()
 
       this.hidden.dispatchEvent(new Event("input"))
       this.hidden.dispatchEvent(new Event("change"))
@@ -215,6 +204,16 @@
           detail: { value: suggestion, textValue: textValue, selected: selected }
         })
       )
+    }
+
+    moveCursorToEnd() {
+      this.autocompletable.focus();
+      const range = document.createRange();
+      range.selectNodeContents(this.autocompletable);
+      range.collapse(false);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
     }
 
     clear() {
@@ -288,6 +287,44 @@
         this.element.dispatchEvent(new CustomEvent("loadend"))
         throw error
       }
+    }
+
+    buildClickQuery() {
+      /* If minLengthValue is greater than 0, narrow-down-as-you-type
+         behavior is in effect: use the current text as the query, same as
+         while typing. */
+      if (this.minLengthValue != 0) {
+        return this.autocompletable.innerText.trim()
+      }
+
+      if (!this.multipleChoiceValue) {
+        /* minLengthValue is 0 and not MultipleChoice/Tag: clicking should
+           act like a drop-down and show all possible options (i.e. for
+           SingleChoice). */
+        return ""
+      }
+
+      const currentText = this.autocompletable.innerText.trim()
+      if (!currentText || currentText.endsWith(",")) {
+        /* Nothing typed yet, or already mid-way through a new entry. */
+        return currentText
+      }
+
+      /* MultipleChoice/Tag with an already-complete value and no trailing
+         comma: clicking to browse more options is equivalent to the user
+         having just typed a separating comma. We actually insert it (not
+         just send it as the query) so that the values already present are
+         excluded from suggestions *and* so that selecting a suggestion
+         afterwards appends a new value via commit() instead of
+         overwriting the existing one. */
+      const newText = `${currentText}, `
+      this.autocompletable.innerText = newText
+      this.hidden.value = newText
+      this.moveCursorToEnd()
+      this.hidden.dispatchEvent(new Event("input"))
+      this.hidden.dispatchEvent(new Event("change"))
+
+      return newText.trim()
     }
 
     buildURL(query) {

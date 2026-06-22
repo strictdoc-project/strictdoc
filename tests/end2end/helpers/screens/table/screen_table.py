@@ -772,3 +772,13 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
         self.test_case.assert_element_not_present(
             f'[data-node-mid="{node_mid}"]'
         )
+
+    def assert_node_row_marked_as_created(self, node_mid: str) -> None:
+        self.test_case.assert_element_present(
+            f'tr[data-node-mid="{node_mid}"][data-node-created="true"]'
+        )
+
+    def assert_node_row_not_marked_as_created(self, node_mid: str) -> None:
+        self.test_case.assert_element_not_present(
+            f'tr[data-node-mid="{node_mid}"][data-node-created="true"]'
+        )

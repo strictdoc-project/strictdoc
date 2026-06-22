@@ -9,6 +9,14 @@ When a user clicks outside this TR, remove this attribute.
 When a user clicks inside this TR (for example, when editing cells within it),
 retain this indicator.
 
+### Test case
+
+- A new row is assigned the attribute `data-node-created=“true”`
+  when it is created.
+- Clicking inside the row (to open or close the cell for editing) -
+  the attribute remains.
+- Clicking outside the row - the attribute is removed.
+
 ## WHY
 
 The thick border does not disappear until a new element is created in the table

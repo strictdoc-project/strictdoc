@@ -35,11 +35,12 @@ window.addEventListener('load', function () {
     console.assert(!!element, "Expected a valid element.");
 
     document.addEventListener("keydown", function (e) {
+      var tag = document.activeElement && document.activeElement.tagName;
+      var isEditable = tag === 'INPUT' || tag === 'TEXTAREA' || document.activeElement.isContentEditable;
+
       if (e.key === ' ' || e.key === 'Spacebar') {
         // ' ' is standard, 'Spacebar' was used by IE9 and Firefox < 37
 
-        var tag = document.activeElement && document.activeElement.tagName;
-        var isEditable = tag === 'INPUT' || tag === 'TEXTAREA' || document.activeElement.isContentEditable;
         if (isEditable) {
           return;
         }
@@ -49,6 +50,13 @@ window.addEventListener('load', function () {
         state.spacePressed = true;
         element.style.cursor = 'grab';
         element.style.scrollBehavior = 'auto';
+        return;
+      }
+
+      // Arrow keys are also used for normal text/caret navigation and for
+      // navigating dropdown options (e.g. the autocomplete field), so they
+      // must not pan the diagram while an editable element has focus.
+      if (isEditable) {
         return;
       }
 

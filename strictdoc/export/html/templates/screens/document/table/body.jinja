@@ -1,6 +1,16 @@
 {%- set is_server = view_object.is_running_on_server -%}
 <tbody id="table-content-body" data-testid="table-content-body">
 
+  {%- if not content_entries %}
+  <tr class="content-view__empty-row-TR" data-testid="table-empty-placeholder">
+    <td class="content-view__empty-row-TD" colspan="100%">
+      <sdoc-main-placeholder data-testid="empty-table-placeholder">
+        This table is empty because the document has no content.
+      </sdoc-main-placeholder>
+    </td>
+  </tr>
+  {%- endif %}
+
   {%- if is_server %}
   {%- with
     prev_node=none,

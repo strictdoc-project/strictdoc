@@ -71,7 +71,6 @@
   When a column exists in the document grammar but a specific node's grammar
   does not declare that field, the cell gets the "content-view-td--dimmed" modifier.
 #}
-{%- if view_object.has_any_nodes() -%}
   <div class="main"
        js-pan_with_space="true"
        js-table_view_edit
@@ -137,10 +136,3 @@
       {# /.content #}
   </div>
   {# /.main #}
-{%- else -%}
-  <sdoc-main-placeholder data-testid="document-main-placeholder">
-  This view is empty because
-  <br />
-  the document has no content.
-  </sdoc-main-placeholder>
-{%- endif -%}

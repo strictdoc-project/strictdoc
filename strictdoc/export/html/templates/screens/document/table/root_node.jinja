@@ -5,6 +5,8 @@
 
 {%- set doc_mid = view_object.document.reserved_mid -%}
 {%- set document_config = view_object.document.config -%}
+{%- set document_version_ = view_object.render_document_version() -%}
+{%- set document_date_ = view_object.render_document_date() -%}
 <sdoc-node>
   <h1 data-testid="document-title">
     {%- with
@@ -32,7 +34,6 @@
     {%- endwith -%}
 
     {# -- VERSION ------------------------------------------------ #}
-    {%- set document_version_ = view_object.render_document_version() -%}
     {%- with
       field_content=document_version_,
       field_label="VERSION",
@@ -43,11 +44,11 @@
     {%- endwith -%}
 
     {# -- DATE (read-only) --------------------------------------- #}
-    {%- set document_date_ = view_object.render_document_date() -%}
     {%- if document_date_ is not none -%}
       {%- with
         field_content=document_date_,
         field_label="DATE",
+        field_name="DATE",
         field_testid="date"
       -%}
         {%- include "screens/document/table/field_display_mode/document_meta_readonly_field.jinja" -%}

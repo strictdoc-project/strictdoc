@@ -80,8 +80,10 @@ class Test(E2ECase):
             # Once REQ-001 no longer declares "Parent: REQ-002"/"Parent:
             # REQ-003", REQ-002's and REQ-003's computed "Children: REQ-001"
             # relations must disappear too, without a reload.
-            screen_table.assert_cell_dom_text(req002_mid, "RELATIONS", "")
-            screen_table.assert_cell_dom_text(req003_mid, "RELATIONS", "")
+            # Use wait_for_* here because these cells are updated by a separate
+            # cross-node turbo-stream that arrives asynchronously after the save.
+            screen_table.wait_for_cell_dom_text(req002_mid, "RELATIONS", "")
+            screen_table.wait_for_cell_dom_text(req003_mid, "RELATIONS", "")
 
             screen_table.do_toggle_edit_mode()
             screen_table.assert_edit_mode_off()

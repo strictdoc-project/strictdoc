@@ -10,6 +10,7 @@ from strictdoc.backend.reqif.reqif_export import ReqIFExport
 from strictdoc.backend.rst.document_rst_generator import DocumentRSTGenerator
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.reference import FileReference
 from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.backend.spdx.spdx_generator import SPDXGenerator
 from strictdoc.core.project_config import ProjectConfig
@@ -63,7 +64,7 @@ class ExportAction:
             return
 
         print(  # noqa: T201
-            "warning: unresolved requirement relations were "
+            "warning: unresolved relations were "
             "detected and allowed by configuration."
         )
         print(  # noqa: T201
@@ -87,12 +88,17 @@ class ExportAction:
                 if relation_.role is not None
                 else ""
             )
+
+            if isinstance(relation_, FileReference):
+                relation_target = f"file '{relation_.get_posix_path()}'"
+            else:
+                relation_target = f"requirement '{relation_.ref_uid}'"
+
             print(  # noqa: T201
                 "warning: "
                 f"requirement '{requirement_identifier}' in document "
                 f"'{document_title}' has a missing relation of type "
-                f"'{relation_.ref_type}' to requirement "
-                f"'{relation_.ref_uid}'{role_message}."
+                f"'{relation_.ref_type}' to {relation_target}{role_message}."
             )
 
     @timing_decorator("Export SDoc")

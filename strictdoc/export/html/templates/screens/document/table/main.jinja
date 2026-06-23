@@ -1,6 +1,5 @@
 {%- if view_object.has_any_nodes() -%}
   <div class="main" js-pan_with_space="true">
-    {% include "_shared/missing_relations_warning.jinja.html" %}
     {% include "_shared/tags.jinja.html" %}
       <div class="content">
         <sdoc-node>
@@ -67,16 +66,15 @@
                   {%- endif %}
                   {%- if missing_parent_relations | length > 0 %}
                     Missing Parents:
-                    <ul class="requirement__link requirement__link--missing">
+                    <ul class="requirement__link">
                       {%- for missing_relation in missing_parent_relations %}
                         <li>
-                          <span class="requirement__link-missing">
+                          <div class="field_issue field_issue-ribbon">
                             <span class="requirement__parent-uid">{{ missing_relation.ref_uid }}</span>
-                            Missing parent reference
                             {%- if missing_relation.role is not none %}
                               <span class="requirement__type-tag">({{ missing_relation.role }})</span>
                             {%- endif %}
-                          </span>
+                          </div>
                         </li>
                       {%- endfor %}
                     </ul>
@@ -99,22 +97,22 @@
                   {%- endif %}
                   {%- if missing_child_relations | length > 0 %}
                     Missing Children:
-                    <ul class="requirement__link requirement__link--missing">
+                    <ul class="requirement__link">
                       {%- for missing_relation in missing_child_relations %}
                         <li>
-                          <span class="requirement__link-missing">
+                          <div class="field_issue field_issue-ribbon">
                             <span class="requirement__child-uid">{{ missing_relation.ref_uid }}</span>
-                            Missing child reference
                             {%- if missing_relation.role is not none %}
                               <span class="requirement__type-tag">({{ missing_relation.role }})</span>
                             {%- endif %}
-                          </span>
+                          </div>
                         </li>
                       {%- endfor %}
                     </ul>
                   {%- endif %}
                   {%- if view_object.project_config.is_activated_requirements_to_source_traceability() -%}
                     {%- set requirement_file_links = view_object.traceability_index.get_requirement_file_links(requirement) %}
+                    {%- set missing_file_relations = view_object.traceability_index.get_missing_file_relations(requirement) %}
                     {%- if requirement_file_links %}
                       Source files:
                       <ul class="requirement__link">
@@ -128,6 +126,21 @@
                             </li>
                           {%- endfor -%}
                         {%- endfor -%}
+                      </ul>
+                    {%- endif %}
+                    {%- if missing_file_relations | length > 0 %}
+                      Missing Source files:
+                      <ul class="requirement__link">
+                        {%- for missing_relation in missing_file_relations %}
+                          <li>
+                            <div class="field_issue field_issue-ribbon">
+                              <span style="position: relative; font-weight: bold;">{{ missing_relation.get_posix_path() }}</span>
+                              {%- if missing_relation.role is not none %}
+                                <span class="requirement__type-tag">({{ missing_relation.role }})</span>
+                              {%- endif %}
+                            </div>
+                          </li>
+                        {%- endfor %}
                       </ul>
                     {%- endif %}
                   {%- endif %}

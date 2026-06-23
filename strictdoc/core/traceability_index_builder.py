@@ -639,9 +639,13 @@ class TraceabilityIndexBuilder:
                             lhs_node=parent_reference.ref_uid,
                         )
                         if parent_requirement is None:
-                            if (
-                                project_config.allow_missing_relation_requirements
-                            ):
+                            if project_config.allow_missing_relation_requirements:
+                                traceability_index.validation_index.add_issue(
+                                    requirement,
+                                    issue=f"Missing parent relation: {parent_reference.ref_uid}",
+                                    field="RELATIONS (Parent)",
+                                    subject=f"Node: {requirement.reserved_title}",
+                                )
                                 continue
                             raise StrictDocException(
                                 f"[DocumentIndex.create] "
@@ -690,9 +694,13 @@ class TraceabilityIndexBuilder:
                             lhs_node=child_reference.ref_uid,
                         )
                         if child_requirement is None:
-                            if (
-                                project_config.allow_missing_relation_requirements
-                            ):
+                            if project_config.allow_missing_relation_requirements:
+                                traceability_index.validation_index.add_issue(
+                                    requirement,
+                                    issue=f"Missing child relation: {child_reference.ref_uid}",
+                                    field="RELATIONS (Child)",
+                                    subject=f"Node: {requirement.reserved_title}",
+                                )
                                 continue
                             raise StrictDocException(
                                 f"[DocumentIndex.create] "

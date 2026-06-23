@@ -1,0 +1,11 @@
+<svg
+  class="svg_icon icon_sort"
+  viewBox="0 0 16 16"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M 8,2.25 5.9433594,5.6679687 2.0566406,6.5683594 4.671875,9.5820313 4.3261719,13.556641 8,12 11.673828,13.556641 11.328125,9.5820313 13.943359,6.5683594 10.056641,5.6679687 Z"/>
+</svg>

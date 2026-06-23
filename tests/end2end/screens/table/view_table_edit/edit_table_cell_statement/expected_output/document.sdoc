@@ -1,0 +1,11 @@
+[DOCUMENT]
+TITLE: Document
+
+[REQUIREMENT]
+TITLE: Requirement title
+STATEMENT: >>>
+New statement.
+<<<
+RATIONALE: >>>
+New rationale.
+<<<

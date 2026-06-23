@@ -1,0 +1,252 @@
+{%- set is_server = view_object.is_running_on_server -%}
+<tbody id="table-content-body" data-testid="table-content-body">
+
+  {%- if not content_entries %}
+  <tr class="content-view__empty-row-TR" data-testid="table-empty-placeholder">
+    <td class="content-view__empty-row-TD" colspan="100%">
+      <sdoc-main-placeholder data-testid="empty-table-placeholder">
+        This table is empty because the document has no content.
+      </sdoc-main-placeholder>
+    </td>
+  </tr>
+  {%- endif %}
+
+  {%- if is_server %}
+  {%- with
+    prev_node=none,
+    next_node=content_entries[0][0] if content_entries else none
+  -%}
+    {%- include "screens/document/table/row_add_new_node.jinja" -%}
+  {%- endwith -%}
+  {%- endif %}
+
+{%- for node, _ in content_entries %}
+
+  {# ============================================================ #}
+  {# REQUIREMENT ROW                                              #}
+  {# ============================================================ #}
+  {%- if node.is_requirement() %}
+    {%- set requirement = node %}
+    <tr data-row-type="{{ node.node_type }}" data-node-mid="{{ requirement.reserved_mid }}">
+
+      {%- include "screens/document/table/type_cell.jinja" %}
+      {%- include "screens/document/table/type_level.jinja" %}
+
+      {%- set ns = namespace(past_reserved=false) %}
+      {%- for column in view_object.enumerate_table_columns() %}
+
+        {%- if column == "RELATIONS" %}
+          {%- set ns.past_reserved = true %}
+          <td class="content-view-td content-view-td-meta content-view-td-related"
+              data-field-name="RELATIONS"
+              {%- if is_server %}
+              data-node-mid="{{ requirement.reserved_mid }}"
+              data-field-type="relations"
+              js-table_view_edit-field="relations"
+              data-url="/actions/table/get_node_relations_inline?node_mid={{ requirement.reserved_mid }}"
+              {%- endif %}
+          >
+            {%- if is_server %}<div class="editable-cell-indicator"></div>{%- endif %}
+            <div id="cell-{{ requirement.reserved_mid }}-RELATIONS" wrapper-field-type="contenteditable">
+              {%- include "screens/document/table/field_display_mode/relations.jinja" %}
+            </div>
+          </td>
+
+        {%- elif column == "TITLE" %}
+          {%- set ns.past_reserved = true %}
+          {%- if view_object.is_table_cell_editable(node.node_type, "TITLE") %}
+          <td class="content-view-td content-view-td-title"
+              data-field-name="TITLE"
+              {%- if is_server %}
+              data-node-mid="{{ requirement.reserved_mid }}"
+              data-field-type="contenteditable"
+              js-table_view_edit-field="contenteditable"
+              data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&amp;field_name=TITLE"
+              {%- endif %}
+          >
+            {%- if is_server %}<div class="editable-cell-indicator"></div>{%- endif %}
+            <div id="cell-{{ requirement.reserved_mid }}-TITLE" wrapper-field-type="contenteditable">
+              {%- if requirement.reserved_title %}
+                {%- with sdoc_entity=requirement -%}
+                  {% include "components/anchor/index.jinja" %}
+                {%- endwith %}
+                {%- with field_content = requirement.reserved_title %}
+                  {%- include "screens/document/table/field_display_mode/title.jinja" -%}
+                {%- endwith -%}
+              {%- endif -%}
+            </div>
+          </td>
+          {%- else %}
+          <td class="content-view-td content-view-td-title content-view-td--dimmed"
+              data-field-name="TITLE">
+            <div class="content-view-td--dimmed_tips"></div>
+          </td>
+          {%- endif %}
+
+        {%- elif column == "STATEMENT" %}
+          {%- set ns.past_reserved = true %}
+          {%- if view_object.is_table_cell_editable(node.node_type, "STATEMENT") %}
+          <td class="content-view-td content-view-td-content"
+              data-field-name="STATEMENT"
+              {%- if is_server %}
+              data-node-mid="{{ requirement.reserved_mid }}"
+              data-field-type="contenteditable"
+              js-table_view_edit-field="contenteditable"
+              data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&amp;field_name=STATEMENT"
+              {%- endif %}
+          >
+            {%- if is_server %}<div class="editable-cell-indicator"></div>{%- endif %}
+            <div id="cell-{{ requirement.reserved_mid }}-STATEMENT" wrapper-field-type="contenteditable">
+              {%- if requirement.has_reserved_statement() -%}
+                {%- with field_content = view_object.render_node_statement(requirement) %}
+                  {%- include "screens/document/table/field_display_mode/statement.jinja" -%}
+                {%- endwith -%}
+              {%- endif -%}
+            </div>
+          </td>
+          {%- else %}
+          <td class="content-view-td content-view-td-content content-view-td--dimmed"
+              data-field-name="STATEMENT">
+            <div class="content-view-td--dimmed_tips"></div>
+          </td>
+          {%- endif %}
+
+        {%- elif column == "RATIONALE" %}
+          {%- set ns.past_reserved = true %}
+          {%- if view_object.is_table_cell_editable(node.node_type, "RATIONALE") %}
+          <td class="content-view-td content-view-td-content"
+              data-field-name="RATIONALE"
+              {%- if is_server %}
+              data-node-mid="{{ requirement.reserved_mid }}"
+              data-field-type="contenteditable"
+              js-table_view_edit-field="contenteditable"
+              data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&amp;field_name=RATIONALE"
+              {%- endif %}
+          >
+            {%- if is_server %}<div class="editable-cell-indicator"></div>{%- endif %}
+            <div id="cell-{{ requirement.reserved_mid }}-RATIONALE" wrapper-field-type="contenteditable">
+              {%- if requirement.rationale -%}
+                {%- with field_content = view_object.render_node_rationale(requirement) %}
+                  {%- include "screens/document/table/field_display_mode/rationale.jinja" -%}
+                {%- endwith -%}
+              {%- endif -%}
+            </div>
+          </td>
+          {%- else %}
+          <td class="content-view-td content-view-td-content content-view-td--dimmed"
+              data-field-name="RATIONALE">
+            <div class="content-view-td--dimmed_tips"></div>
+          </td>
+          {%- endif %}
+
+        {%- elif column == "COMMENT" %}
+          {%- set ns.past_reserved = true %}
+          {%- if view_object.is_table_cell_editable(node.node_type, "COMMENT") %}
+          <td class="content-view-td content-view-td-content"
+              data-field-name="COMMENT"
+              {%- if is_server %}
+              data-node-mid="{{ requirement.reserved_mid }}"
+              data-field-type="comments"
+              js-table_view_edit-field="comments"
+              data-url="/actions/table/get_node_comments_inline?node_mid={{ requirement.reserved_mid }}"
+              {%- endif %}
+          >
+            {%- if is_server %}<div class="editable-cell-indicator"></div>{%- endif %}
+            <div id="cell-{{ requirement.reserved_mid }}-COMMENT" wrapper-field-type="comments">
+              {%- for comment_field_ in requirement.get_comment_fields() -%}
+              {%- with field_content = view_object.render_node_field(comment_field_) %}
+                {%- include "screens/document/table/field_display_mode/comment.jinja" -%}
+              {%- endwith -%}
+              {%- endfor -%}
+            </div>
+          </td>
+          {%- else %}
+          <td class="content-view-td content-view-td-content content-view-td--dimmed"
+              data-field-name="COMMENT">
+            <div class="content-view-td--dimmed_tips"></div>
+          </td>
+          {%- endif %}
+
+        {%- else %}
+          {%- set field_title = column %}
+          {%- set field_value = requirement.get_meta_field_value_by_title(field_title) %}
+          {%- set cell_edit_mode = view_object.get_table_cell_edit_mode(node.node_type, field_title) %}
+          {%- if ns.past_reserved %}
+            {%- set td_class = "content-view-td" %}
+          {%- else %}
+            {%- set td_class = "content-view-td content-view-td-meta" %}
+          {%- endif %}
+          {%- include "screens/document/table/td_by_edit_mode.jinja" %}
+        {%- endif %}
+
+      {%- endfor %}
+
+    </tr>
+
+    {%- if is_server %}
+    {%- with
+      prev_node=node,
+      next_node=loop.nextitem[0] if loop.nextitem is defined else none
+    -%}
+      {%- include "screens/document/table/row_add_new_node.jinja" -%}
+    {%- endwith -%}
+    {%- endif %}
+
+  {# ============================================================ #}
+  {# INCLUDED DOCUMENT ROW                                        #}
+  {# ============================================================ #}
+  {%- elif node.is_document() %}
+    {%- set section = node %}
+    {%- set ns_span = namespace(count=0, counting=false) %}
+    {%- for column in view_object.enumerate_table_columns() %}
+      {%- if column == "TITLE" %}
+        {%- set ns_span.counting = true %}
+      {%- endif %}
+      {%- if ns_span.counting %}
+        {%- set ns_span.count = ns_span.count + 1 %}
+      {%- endif %}
+    {%- endfor %}
+
+    <tr data-row-type="SECTION" data-node-mid="{{ section.reserved_mid }}">
+      {%- with node=section -%}
+        {%- include "screens/document/table/type_cell.jinja" %}
+      {%- endwith -%}
+      <td class="content-view-td content-view-td-meta">{{ section.context.title_number_string }}</td>
+
+      {%- set ns_sec = namespace(past_title=false) %}
+      {%- for column in view_object.enumerate_table_columns() %}
+        {%- if ns_sec.past_title %}
+        {%- elif column == "TITLE" %}
+          {%- set ns_sec.past_title = true %}
+          <td class="content-view-td content-view-td-title" colspan="{{ ns_span.count if ns_span.count > 0 else 1 }}">
+            {%- if section.title %}
+              {%- with sdoc_entity=section -%}
+                {% include "components/anchor/index.jinja" %}
+              {%- endwith %}
+              <sdoc-node-title>
+                {%- with field_content = section.title %}
+                  {%- include "screens/document/table/field_display_mode/_base_field_component.jinja" -%}
+                {%- endwith -%}
+              </sdoc-node-title>
+            {%- endif -%}
+          </td>
+        {%- else %}
+          <td class="content-view-td content-view-td-meta"></td>
+        {%- endif %}
+      {%- endfor %}
+
+    </tr>
+
+    {%- if is_server %}
+    {%- with
+      prev_node=node,
+      next_node=loop.nextitem[0] if loop.nextitem is defined else none
+    -%}
+      {%- include "screens/document/table/row_add_new_node.jinja" -%}
+    {%- endwith -%}
+    {%- endif %}
+
+  {%- endif %}
+
+{%- endfor %}
+</tbody>

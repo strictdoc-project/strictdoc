@@ -33,7 +33,7 @@ class Test(E2ECase):
             #
             # Initial state
             #
-            screen_table.assert_rows_toolbar_btn_label("Nodes")
+            screen_table.assert_rows_toolbar_btn_label("NODES")
             screen_table.assert_rows_toolbar_panel_closed()
 
             # Open rows panel — Show all disabled, both types present
@@ -48,15 +48,33 @@ class Test(E2ECase):
             screen_table.do_toggle_row_type("SECTION")
             screen_table.assert_rows_of_type_hidden("SECTION")
             screen_table.assert_rows_of_type_visible("REQUIREMENT")
-            screen_table.assert_rows_toolbar_btn_label("Nodes (1 hidden)")
+            screen_table.assert_rows_toolbar_btn_label("NODES • 1 hidden")
             screen_table.assert_rows_show_all_enabled()
+
+            #
+            # Replace tbody and verify the rows filter targets the new body.
+            #
+            self.execute_script(
+                "const tbody = document.querySelector("
+                "  '.content-view-table > tbody'"
+                ");"
+                "tbody.replaceWith(tbody.cloneNode(true));"
+            )
+            screen_table.wait_for_rows_of_type_hidden("SECTION")
+            screen_table.assert_rows_of_type_hidden("SECTION")
+            screen_table.assert_rows_of_type_visible("REQUIREMENT")
+
+            screen_table.do_toggle_row_type("SECTION")
+            screen_table.assert_rows_of_type_visible("SECTION")
+            screen_table.do_toggle_row_type("SECTION")
+            screen_table.assert_rows_of_type_hidden("SECTION")
 
             #
             # Hide "REQUIREMENT" rows
             #
             screen_table.do_toggle_row_type("REQUIREMENT")
             screen_table.assert_rows_of_type_hidden("REQUIREMENT")
-            screen_table.assert_rows_toolbar_btn_label("Nodes (2 hidden)")
+            screen_table.assert_rows_toolbar_btn_label("NODES • 2 hidden")
 
             #
             # Show all
@@ -64,7 +82,7 @@ class Test(E2ECase):
             screen_table.do_click_rows_show_all()
             screen_table.assert_rows_of_type_visible("SECTION")
             screen_table.assert_rows_of_type_visible("REQUIREMENT")
-            screen_table.assert_rows_toolbar_btn_label("Nodes")
+            screen_table.assert_rows_toolbar_btn_label("NODES")
             screen_table.assert_rows_show_all_disabled()
 
         assert test_setup.compare_sandbox_and_expected_output()

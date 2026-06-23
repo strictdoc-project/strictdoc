@@ -249,6 +249,24 @@ class TraceabilityIndexBuilder:
             traceability_index.document_tree.attach_source_tree(source_tree)
 
         #
+        # Resolve pending InlineLinks. This depends on UIDs and anchors from
+        # static documents, generated documents and source nodes.
+        #
+        for inline_link in traceability_index.pending_inline_links:
+            if not traceability_index.graph_database.has_any_link(
+                link_type=GraphLinkType.UID_TO_NODE,
+                lhs_node=inline_link.link,
+            ):
+                raise StrictDocException(
+                    "DocumentIndex: "
+                    "the inline link references an object with an UID "
+                    "that does not exist: "
+                    f"{inline_link.link}."
+                )
+            traceability_index.create_inline_link(inline_link)
+        traceability_index.pending_inline_links.clear()
+
+        #
         # Resolve all modification dates to support the incremental generation of
         # all artifacts.
         #
@@ -599,27 +617,10 @@ class TraceabilityIndexBuilder:
                     continue
 
                 requirement = assert_cast(node, SDocNode)
-
-                #
-                # At this point, we resolve LINKs, and the expectation is that
-                # all UIDs or ANCHORS (they also have UIDs) are registered at the
-                # previous pass.
-                #
                 for node_field_ in requirement.enumerate_fields():
                     for part in node_field_.parts:
                         if isinstance(part, InlineLink):
-                            if not graph_database.has_any_link(
-                                link_type=GraphLinkType.UID_TO_NODE,
-                                lhs_node=part.link,
-                            ):
-                                raise StrictDocException(
-                                    "DocumentIndex: "
-                                    "the inline link references an "
-                                    "object with an UID "
-                                    "that does not exist: "
-                                    f"{part.link}."
-                                )
-                            traceability_index.create_inline_link(part)
+                            traceability_index.pending_inline_links.append(part)
                 if requirement.reserved_uid is None:
                     continue
 

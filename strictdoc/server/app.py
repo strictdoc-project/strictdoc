@@ -16,6 +16,7 @@ from starlette.responses import Response
 from strictdoc import __version__
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.coverage import register_code_coverage_hook
+from strictdoc.helpers.deprecation_engine import DEPRECATION_ENGINE
 from strictdoc.helpers.pickle import pickle_load
 from strictdoc.server.config import SDocServerEnvVariable
 from strictdoc.server.helpers.hierarchical_rw_lock_manager import (
@@ -46,7 +47,7 @@ def print_welcome_message(project_config: ProjectConfig) -> None:
     url = f"{host}:{project_config.server_port}"
 
     width = 72
-    border = "═" * width
+    border = "=" * width
 
     lines = [
         f" {strictdoc_version.center(width - 2)} ",
@@ -65,9 +66,9 @@ def print_welcome_message(project_config: ProjectConfig) -> None:
 
     banner = (
         "\n\n"
-        f"╔{border}╗\n"
-        + "\n".join(f"║{line.ljust(width)}║" for line in lines)
-        + f"\n╚{border}╝\n"
+        f"+{border}+\n"
+        + "\n".join(f"|{line.ljust(width)}|" for line in lines)
+        + f"\n+{border}+\n"
     )
 
     LOGGER.info(banner)
@@ -75,6 +76,7 @@ def print_welcome_message(project_config: ProjectConfig) -> None:
 
 def create_app(*, project_config: ProjectConfig) -> FastAPI:
     def lifespan(_: FastAPI) -> Generator[None, None, None]:
+        DEPRECATION_ENGINE.print_all_messages()
         print_welcome_message(project_config)
         yield
 

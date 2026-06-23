@@ -1,0 +1,118 @@
+{% assert view_object.is_running_on_server %}
+{%- set table_document_mid = view_object.document.reserved_mid -%}
+{%- set can_add_first_node = prev_node is none and next_node is none and view_object.can_add_node(view_object.document) -%}
+{%- set can_use_separator = prev_node is not none or next_node is not none or can_add_first_node -%}
+{%- set can_add_before_next = next_node is not none and view_object.can_insert_next_to_node(next_node) -%}
+{%- set can_add_after_prev = prev_node is not none and view_object.can_insert_next_to_node(prev_node) -%}
+{%- set can_add_child_of_prev = prev_node is not none and (prev_node.is_document() or prev_node.is_composite) and view_object.can_add_node(prev_node) -%}
+<tr class="content-view__add_new_row-TR"
+    data-testid="table-add-row"
+    {% if prev_node is not none %}
+    data-prev-node-mid="{{ prev_node.reserved_mid }}"
+    {% endif %}
+    {% if next_node is not none %}
+    data-next-node-mid="{{ next_node.reserved_mid }}"
+    {% endif %}>
+  <td class="content-view__add_new_row-TD" colspan="100%">
+    <div class="table-add-node"
+         js-table_view_edit-add-node
+         data-mode="closed">
+      <div class="add_new_row_handler"
+           js-table_view_edit-add-node-handle
+           data-testid="table-add-node-handle"
+           role="button"
+           tabindex="0"
+           aria-expanded="false"
+           aria-label="Add node"></div>
+      <div class="table-add-node__menu"
+           js-table_view_edit-add-node-menu
+           data-testid="table-add-node-menu"
+           hidden>
+        <div class="table-add-node__menu-body">
+          {%- if not can_use_separator %}
+            <p class="table-add-node__message"
+               js-table_view_edit-add-node-state>
+              Table Add is not available here.
+            </p>
+          {%- else -%}
+            <div class="table-add-node__blockers"
+                 js-table_view_edit-add-node-blockers
+                 data-testid="table-add-node-blockers"
+                 hidden>
+            </div>
+            <p class="table-add-node__message table-add-node__message--hidden"
+               js-table_view_edit-add-node-state
+               hidden>
+            </p>
+            <ul class="table-add-node__actions"
+                js-table_view_edit-add-node-actions>
+              {%- for element in view_object.get_grammar_elements() -%}
+                <li class="table-add-node__element">{{ element.tag }}:</li>
+                {%- if can_add_first_node -%}
+                  <li class="table-add-node__action" data-whereto="child">
+                    <button class="table-add-node__action-button"
+                            type="button"
+                            js-table_view_edit-add-node-action
+                            data-testid="table-add-node-action-{{ element.tag|lower }}-child"
+                            data-context-document-mid="{{ table_document_mid }}"
+                            data-reference-mid="{{ table_document_mid }}"
+                            data-element-type="{{ element.tag }}"
+                            data-whereto="child"
+                            title="Add first {{ element.tag }}">
+                      {% include "icons/ico16_add.svg" %}
+                    </button>
+                  </li>
+                {%- endif -%}
+                {%- if can_add_before_next -%}
+                  <li class="table-add-node__action" data-whereto="before">
+                    <button class="table-add-node__action-button"
+                            type="button"
+                            js-table_view_edit-add-node-action
+                            data-testid="table-add-node-action-{{ element.tag|lower }}-before"
+                            data-context-document-mid="{{ table_document_mid }}"
+                            data-reference-mid="{{ next_node.reserved_mid }}"
+                            data-element-type="{{ element.tag }}"
+                            data-whereto="before"
+                            title="Add {{ element.tag }} before next">
+                      {% include "icons/ico16_add_above.svg" %}
+                    </button>
+                  </li>
+                {%- endif -%}
+                {%- if can_add_after_prev -%}
+                  <li class="table-add-node__action" data-whereto="after">
+                    <button class="table-add-node__action-button"
+                            type="button"
+                            js-table_view_edit-add-node-action
+                            data-testid="table-add-node-action-{{ element.tag|lower }}-after"
+                            data-context-document-mid="{{ table_document_mid }}"
+                            data-reference-mid="{{ prev_node.reserved_mid }}"
+                            data-element-type="{{ element.tag }}"
+                            data-whereto="after"
+                            title="Add {{ element.tag }} after previous">
+                      {% include "icons/ico16_add_below.svg" %}
+                    </button>
+                  </li>
+                {%- endif -%}
+                {%- if can_add_child_of_prev -%}
+                  <li class="table-add-node__action" data-whereto="child">
+                    <button class="table-add-node__action-button"
+                            type="button"
+                            js-table_view_edit-add-node-action
+                            data-testid="table-add-node-action-{{ element.tag|lower }}-child"
+                            data-context-document-mid="{{ table_document_mid }}"
+                            data-reference-mid="{{ prev_node.reserved_mid }}"
+                            data-element-type="{{ element.tag }}"
+                            data-whereto="child"
+                            title="Add {{ element.tag }} as child of previous">
+                      {% include "icons/ico16_add_child.svg" %}
+                    </button>
+                  </li>
+                {%- endif -%}
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  </td>
+</tr>

@@ -2783,6 +2783,21 @@ Use ``--parent-uid-or-mid`` to add the new node inside an existing document or c
     strictdoc manage new <path-to-project-tree> --parent-uid-or-mid <uid-or-mid>
 
 Both options can be combined. When both are given, StrictDoc validates that the specified parent node is actually present in the specified document.
+
+**Selecting the node type**
+
+Use ``--node-type`` to specify which grammar element type the new node should use:
+
+.. code:: text
+
+    strictdoc manage new <path-to-project-tree> --node-type <TYPE>
+
+The value must match a grammar element tag defined in the document (for example ``REQUIREMENT``, ``FEATURE``, or any custom type). If the type does not exist in the grammar, the command exits with an error listing the available types.
+
+When ``--node-type`` is omitted, ``manage new`` applies the following default:
+
+- If the document has no explicit grammar, or its grammar includes a ``REQUIREMENT`` element, the node type defaults to ``REQUIREMENT``.
+- If the document has a custom grammar with no ``REQUIREMENT`` element, the command exits with an error and asks the user to specify ``--node-type``.
 <<<
 
 [[/SECTION]]
@@ -4426,6 +4441,55 @@ Open points for a further implementation:
 
 The Markdown epic is tracked here: https://github.com/strictdoc-project/strictdoc/issues/1321.
 <<<
+
+[[SECTION]]
+MID: 02948e1a50634a3ba993500500380c9e
+TITLE: PREFIX
+
+[TEXT]
+MID: eb5d29a4dc144f0587f25a2bb7d0a420
+STATEMENT: >>>
+The ``PREFIX`` meta field controls the prefix used when auto-generating UIDs. It can be set at the document level or at the section level. See [LINK: SECTION-UG-Automatic-assignment-of-requirements-UID].
+
+**1. Document-level PREFIX:**
+
+The ``PREFIX`` field is placed in the H1 meta block, immediately after the document title.
+
+.. code-block:: markdown
+
+    # Requirements specification
+
+    **PREFIX**: MYDOC-
+
+    ## Section
+
+    ### Requirement
+
+    **UID**: MYDOC-001
+
+    System A shall do B.
+
+**2. Section-level PREFIX:**
+
+A section can declare its own prefix by using the ``**TYPE**: SECTION`` meta field together with ``**PREFIX**``. The section-level prefix overrides the document-level prefix for all requirements within that section.
+
+.. code-block:: markdown
+
+    # Requirements specification
+
+    ## Chapter 2
+
+    **TYPE**: SECTION \
+    **PREFIX**: LEVEL2-REQ-
+
+    ### Requirement
+
+    **UID**: LEVEL2-REQ-001
+
+    System A shall do B.
+<<<
+
+[[/SECTION]]
 
 [[/SECTION]]
 

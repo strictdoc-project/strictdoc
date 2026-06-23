@@ -1,0 +1,11 @@
+{#
+  A successful add turns the active Add wrapper into a normal display row and
+  appends a fresh Add wrapper. replace is required so the old editing wrapper
+  and its table-view editing state do not remain around the saved row.
+#}
+<turbo-stream action="replace" target="document-custom-meta-add">
+  <template>
+    {%- include "screens/document/table/field_display_mode/document_custom_meta_row.jinja" -%}
+    {%- include "screens/document/table/field_display_mode/document_custom_meta_add.jinja" -%}
+  </template>
+</turbo-stream>

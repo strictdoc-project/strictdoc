@@ -1,0 +1,33 @@
+REQUIRES: PLATFORM_IS_NOT_WINDOWS
+
+#
+# Verify MD-27: SECTION with TYPE+MID meta block; grammar TEXT element has MID.
+# The SECTION MID is preserved across format passes.
+# The TEXT child gets TYPE+MID auto-assigned on the first format pass.
+# A second format pass must produce identical output (idempotency).
+#
+
+RUN: mkdir -p %T/pass1
+RUN: cp %S/input.md %T/pass1/input.md
+RUN: cp %S/requirements.gra.md %T/pass1/requirements.gra.md
+RUN: cp %S/strictdoc_config.py %T/pass1/strictdoc_config.py
+
+RUN: %strictdoc format %T/pass1/
+
+RUN: %cat %T/pass1/input.md | filecheck %s --dump-input=fail
+
+# SECTION meta block: TYPE and original MID are preserved.
+CHECK: **TYPE**: SECTION \
+CHECK-NEXT: **MID**: 11111111111111111111111111111111
+
+# TEXT child: TYPE and auto-generated MID are emitted.
+CHECK: **TYPE**: TEXT \
+CHECK-NEXT: **MID**:
+
+# TEXT statement content is preserved.
+CHECK: **STATEMENT**: This is a TEXT node statement, not a SECTION node statement.
+
+# Second pass must produce identical output (idempotency).
+RUN: cp -r %T/pass1 %T/pass2
+RUN: %strictdoc format %T/pass2/
+RUN: diff %T/pass1/input.md %T/pass2/input.md

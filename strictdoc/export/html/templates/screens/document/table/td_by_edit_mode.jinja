@@ -1,0 +1,90 @@
+{#
+  Renders a <td> for a grammar-defined field cell, selected by edit mode.
+  Called from main.jinja for meta field loops and non-reserved content field loops.
+  NOT used for STATEMENT / RATIONALE / COMMENT / RELATIONS — those are hardcoded
+  individually in main.jinja because they occupy fixed columns at specific positions
+  in the table header (between TITLE and the dynamic content fields). Putting them
+  in a loop would break the column order.
+  Additional differences that keep STATEMENT / RATIONALE separate:
+  - Python accessors differ: requirement.reserved_statement / requirement.rationale
+    vs requirement.get_meta_field_value_by_title(field_title) used here.
+  - Renderers differ: view_object.render_node_statement() / render_node_rationale()
+    vs view_object.render_node_field() used here for generic multiline fields.
+
+  Expects: field_title, field_value, cell_edit_mode, td_class, requirement, node
+
+  cell_edit_mode comes from view_object.get_table_cell_edit_mode() and
+  reflects the grammar field type. Maps to data-field-type:
+    "autocomplete" → data-field-type="autocomplete"   (edit form fetched via turbo-stream)
+    "singleline"   → data-field-type="contenteditable" (edit form fetched via turbo-stream)
+    "multiline"    → data-field-type="contenteditable" (edit form fetched via turbo-stream)
+    "readonly"     → plain <td>, no data-field-type
+  singleline and multiline share data-field-type and data-url; the server determines
+  the form shape and POST action from the grammar.
+#}
+
+{%- if cell_edit_mode == "autocomplete" %}
+{#
+  Renders an autocomplete field cell.
+  Initial DOM contains the display value only; the edit form (sdoc-autocompletable)
+  is fetched via turbo-stream on click and injected into the cell div.
+  On blur JS saves via /actions/table/update_node_field and the turbo-stream
+  response restores the display content.
+#}
+<td class="{{ td_class }}"
+    data-field-name="{{ field_title }}"
+    {%- if view_object.is_running_on_server %}
+    data-node-mid="{{ requirement.reserved_mid }}"
+    data-field-type="autocomplete"
+    js-table_view_edit-field="autocomplete"
+    data-current-value="{{ field_value if field_value else '' }}"
+    data-url="/actions/table/get_node_autocomplete_inline?node_mid={{ requirement.reserved_mid }}&amp;field_name={{ field_title }}"
+    {%- endif %}
+>
+  {%- if view_object.is_running_on_server %}<div class="editable-cell-indicator"></div>{%- endif %}
+  <div id="cell-{{ requirement.reserved_mid }}-{{ field_title }}" wrapper-field-type="autocomplete">
+    {%- if field_value %}
+      {%- with field_content = field_value %}
+        {%- include "screens/document/table/field_display_mode/_base_field_component.jinja" -%}
+      {%- endwith -%}
+    {%- endif %}
+  </div>
+</td>
+
+{%- elif cell_edit_mode in ("singleline", "multiline") %}
+<td class="{{ td_class }}"
+    data-field-name="{{ field_title }}"
+    {%- if view_object.is_running_on_server %}
+    data-node-mid="{{ requirement.reserved_mid }}"
+    data-field-type="contenteditable"
+    js-table_view_edit-field="contenteditable"
+    data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&amp;field_name={{ field_title }}"
+    {%- endif %}
+>
+  {%- if view_object.is_running_on_server %}<div class="editable-cell-indicator"></div>{%- endif %}
+  <div id="cell-{{ requirement.reserved_mid }}-{{ field_title }}" wrapper-field-type="contenteditable">
+    {%- if field_value %}
+      {%- if cell_edit_mode == "multiline" %}
+        {%- with field_content = view_object.render_node_field(requirement.ordered_fields_lookup[field_title][0]) %}
+          {%- include "screens/document/table/field_display_mode/_base_field_component.jinja" -%}
+        {%- endwith -%}
+      {%- else %}
+        {%- with field_content = field_value %}
+          {%- include "screens/document/table/field_display_mode/_base_field_component.jinja" -%}
+        {%- endwith -%}
+      {%- endif %}
+    {%- endif %}
+  </div>
+</td>
+
+{%- else %}
+{#
+  "readonly": field not declared in grammar for this element type.
+  Static cell, dimmed to indicate the column exists for other node types
+  but not for this one.
+#}
+<td class="{{ td_class }} content-view-td--dimmed"
+    data-field-name="{{ field_title }}">
+  <div class="content-view-td--dimmed_tips"></div>
+</td>
+{%- endif %}

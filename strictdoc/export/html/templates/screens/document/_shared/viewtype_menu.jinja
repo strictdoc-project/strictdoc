@@ -1,11 +1,12 @@
 {#
   Empty-state flags: a view is "empty" if it would show the placeholder instead of content.
-  - Table and Traceability: no nodes at all in the document.
+  - Table: no longer flagged here — the TABLE screen now supports creating the first
+    node directly from an empty document, so it is never marked "(empty)" (same as Document).
+  - Traceability: no nodes at all in the document.
   - Deep Traceability: uses has_any_requirements() which historically excluded sections,
     but after a refactoring sections now appear in DTR as well.
     TODO: revisit deeptrace_is_empty condition if the DTR output changes to exclude sections again.
 #}
-{%- set table_is_empty = not view_object.has_any_nodes() -%}
 {%- set trace_is_empty = not view_object.has_any_nodes() -%}
 {%- set deeptrace_is_empty = not view_object.document.has_any_requirements() -%}
 
@@ -39,10 +40,10 @@
     <li>
       <a
         data-viewtype_link="table"
-        class="dropdown_menu_item{% if table_is_empty %} empty{% endif %}"
-        title="{% if table_is_empty %}This page has no content{% else %}Go to Table view{% endif %}"
+        class="dropdown_menu_item"
+        title="Go to Table view"
         href="{{ view_object.render_document_link(view_object.document, none, "TABLE") }}">
-      Table{% if table_is_empty %} (empty){% endif %}</a>
+      Table</a>
     </li>
     {%- endif -%}
     {%- if view_object.project_config.is_activated_trace_screen() -%}

@@ -1,0 +1,13 @@
+#
+# Verify that [LINK: uid] in a Markdown requirement STATEMENT is rendered as
+# a hyperlink in the exported HTML output.
+#
+
+RUN: %strictdoc export %S --formats=html --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Link example
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+
+CHECK-HTML: data-uid="REQ-A"
+CHECK-HTML: <a href=
+CHECK-HTML: REQ-B

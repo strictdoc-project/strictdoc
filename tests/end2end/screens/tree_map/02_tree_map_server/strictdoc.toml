@@ -1,6 +1,0 @@
-[project]
-title = "Test project"
-
-features = [
-    "TREE_MAP_SCREEN"
-]

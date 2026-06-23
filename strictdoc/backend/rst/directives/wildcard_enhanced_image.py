@@ -5,6 +5,7 @@ from docutils import nodes
 from docutils.parsers.rst.directives.images import Image
 
 STRICTDOC_REFERENCE_PATH_SETTING = "strictdoc_reference_path"
+STRICTDOC_FLAT_ASSETS_SETTING = "strictdoc_flat_assets"
 
 
 class WildcardEnhancedImage(Image):  # type: ignore[misc]
@@ -44,16 +45,33 @@ class WildcardEnhancedImage(Image):  # type: ignore[misc]
             STRICTDOC_REFERENCE_PATH_SETTING,
             os.getcwd(),
         )
+        flat_assets = getattr(
+            self.state.document.settings,
+            STRICTDOC_FLAT_ASSETS_SETTING,
+            False,
+        )
         rel_path_to_image = self.arguments[0]
+        # When flat_assets is True (bundle document), all project assets are
+        # copied to the root _assets/ directory. Paths like '../_assets/file.svg'
+        # authored relative to a nested document's location must be rebased to
+        # '_assets/file.svg' so they resolve correctly from the bundle root.
+        # This rebasing must happen before wildcard resolution so the file lookup
+        # also uses the correct flat path.
+        if flat_assets:
+            while rel_path_to_image.startswith("../"):
+                rel_path_to_image = rel_path_to_image[3:]
+            self.arguments[0] = rel_path_to_image
         if rel_path_to_image.endswith(".*"):
             rel_path_to_image_no_wc = rel_path_to_image[:-2]
             for extension in WildcardEnhancedImage.WILDCARD_EXTENSIONS:
                 rel_path_to_image_with_extension = (
                     rel_path_to_image_no_wc + "." + extension
                 )
-                full_path_to_image_with_extension = os.path.join(
-                    current_reference_path,
-                    rel_path_to_image_with_extension,
+                full_path_to_image_with_extension = os.path.normpath(
+                    os.path.join(
+                        current_reference_path,
+                        rel_path_to_image_with_extension,
+                    )
                 )
                 if os.path.exists(full_path_to_image_with_extension):
                     # We have found a matching file, let's use it.

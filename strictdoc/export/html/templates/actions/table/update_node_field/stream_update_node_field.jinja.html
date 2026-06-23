@@ -1,0 +1,16 @@
+<turbo-stream action="update" target="cell-{{ node.reserved_mid }}-{{ field_name }}">
+  <template>
+    {%- if field_name == 'TITLE' and field_value -%}
+      {%- with sdoc_entity=node -%}
+        {% include "components/anchor/index.jinja" %}
+      {%- endwith %}
+      {%- with field_content = field_value %}
+        {%- include "screens/document/table/field_display_mode/title.jinja" -%}
+      {%- endwith -%}
+    {%- elif field_value -%}
+      {%- with field_content = field_value %}
+        {%- include "screens/document/table/field_display_mode/_base_field_component.jinja" -%}
+      {%- endwith -%}
+    {%- endif -%}
+  </template>
+</turbo-stream>

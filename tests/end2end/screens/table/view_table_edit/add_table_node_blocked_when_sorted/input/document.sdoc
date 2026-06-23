@@ -1,0 +1,75 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[[SECTION]]
+TITLE: Intro section
+
+[[/SECTION]]
+
+[REQUIREMENT]
+TITLE: Lemon requirement
+STATEMENT: Statement L.
+
+[REQUIREMENT]
+TITLE: Kiwi requirement
+STATEMENT: Statement K.
+
+[REQUIREMENT]
+TITLE: Juniper requirement
+STATEMENT: Statement J.
+
+[REQUIREMENT]
+TITLE: Indigo requirement
+STATEMENT: Statement I.
+
+[REQUIREMENT]
+TITLE: Hazel requirement
+STATEMENT: Statement H.
+
+[REQUIREMENT]
+TITLE: Grape requirement
+STATEMENT: Statement G.
+
+[REQUIREMENT]
+TITLE: Fig requirement
+STATEMENT: Statement F.
+
+[REQUIREMENT]
+TITLE: Elder requirement
+STATEMENT: Statement E.
+
+[REQUIREMENT]
+TITLE: Date requirement
+STATEMENT: Statement D.
+
+[REQUIREMENT]
+TITLE: Cherry requirement
+STATEMENT: Statement C.
+
+[REQUIREMENT]
+TITLE: Banana requirement
+STATEMENT: Statement B.
+
+[REQUIREMENT]
+TITLE: Apple requirement
+STATEMENT: Statement A.
+
+[REQUIREMENT]
+TITLE: Quartz requirement
+STATEMENT: Statement Q.
+
+[REQUIREMENT]
+TITLE: River requirement
+STATEMENT: Statement R.
+
+[REQUIREMENT]
+TITLE: Silver requirement
+STATEMENT: Statement S.
+
+[REQUIREMENT]
+TITLE: Timber requirement
+STATEMENT: Statement T.
+
+[REQUIREMENT]
+TITLE: Violet requirement
+STATEMENT: Statement V.

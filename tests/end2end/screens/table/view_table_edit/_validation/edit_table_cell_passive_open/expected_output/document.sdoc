@@ -1,0 +1,20 @@
+[DOCUMENT]
+TITLE: Document
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+
+[REQUIREMENT]
+TITLE: Requirement title
+STATEMENT: Requirement statement.

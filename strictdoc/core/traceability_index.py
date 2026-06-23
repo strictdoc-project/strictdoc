@@ -72,6 +72,7 @@ class TraceabilityIndex:
             file_dependency_manager
         )
         self.node_filter: Optional[NodeFilter] = None
+        self.pending_inline_links: List[InlineLink] = []
 
         self.index_last_updated = datetime.datetime.today()
         self.contains_included_documents = False
@@ -1095,8 +1096,8 @@ class TraceabilityIndex:
                 lhs_node=requirement_node,
             )
 
-            for child_requirement_, _ in requirement_children:
-                if child_requirement_.document == other_document:
+            for child_requirement_ in requirement_children:
+                if child_requirement_.get_document() == other_document:
                     return
 
     def delete_document(self, document: SDocDocument) -> None:
@@ -1128,6 +1129,21 @@ class TraceabilityIndex:
                 lhs_node=requirement.reserved_uid,
                 rhs_node=requirement,
             )
+            # Remove NODE_TO_CHILD_NODES links that point FROM parent nodes TO
+            # this requirement. delete_all_links only removes links where this
+            # requirement is the lhs_node (its own children), leaving stale
+            # reverse entries on parent nodes that block their own deletion.
+            parent_relations = self.graph_database.get_link_values_with_edges(
+                link_type=GraphLinkType.NODE_TO_PARENT_NODES,
+                lhs_node=requirement,
+            )
+            for parent_node_, role_ in parent_relations:
+                self.graph_database.delete_link(
+                    link_type=GraphLinkType.NODE_TO_CHILD_NODES,
+                    lhs_node=parent_node_,
+                    rhs_node=requirement,
+                    edge=role_,
+                )
             self.graph_database.delete_all_links(
                 link_type=GraphLinkType.NODE_TO_PARENT_NODES,
                 lhs_node=requirement,

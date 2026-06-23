@@ -1,0 +1,17 @@
+<turbo-stream action="update" target="cell-{{ node_mid }}-RELATIONS">
+  <template>
+    {%- include "screens/document/table/field_display_mode/relations.jinja" %}
+  </template>
+</turbo-stream>
+{%- for related_node in affected_related_nodes %}
+<turbo-stream action="update" target="cell-{{ related_node.reserved_mid }}-RELATIONS">
+  <template>
+    {%- with requirement = related_node %}
+      {%- include "screens/document/table/field_display_mode/relations.jinja" %}
+    {%- endwith %}
+  </template>
+</turbo-stream>
+{%- endfor %}
+<turbo-stream action="update" target="modal">
+  <template></template>
+</turbo-stream>

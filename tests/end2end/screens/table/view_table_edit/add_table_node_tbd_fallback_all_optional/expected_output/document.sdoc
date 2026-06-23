@@ -1,0 +1,28 @@
+[DOCUMENT]
+TITLE: Document
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+- TAG: NOTE
+  FIELDS:
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TEXT
+    TYPE: String
+    REQUIRED: False
+
+[NOTE]
+TITLE: TBD
+
+[NOTE]
+TITLE: Existing note
+TEXT: Some text.

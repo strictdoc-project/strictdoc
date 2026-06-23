@@ -174,18 +174,33 @@ class SDMarkdownWriter:
                 node.node_type, None
             )
 
-        # If a custom (user-defined) grammar declares MID and the node doesn't
-        # have one, auto-write the reserved_mid so it becomes permanent on the
-        # next read. This is the Markdown equivalent of SDoc's ENABLE_MID.
+        # Determine whether MID will be auto-injected for this node (MD-24).
         # The default grammar also carries MID, so guard with is_default to
         # avoid injecting MID into plain Markdown documents.
-        if (
+        should_inject_mid = (
             document_grammar is not None
             and not document_grammar.is_default
             and element is not None
             and "MID" in element.fields_map
             and "MID" not in node.ordered_fields_lookup
+        )
+
+        # Emit TYPE for every non-TEXT node when:
+        # - the grammar defines element types beyond the built-in set (MD-26), OR
+        # - a SECTION node carries a MID field (MD-24): TYPE: SECTION must
+        #   accompany the MID on every write so the reader does not misidentify
+        #   the heading as a REQUIREMENT on re-read.
+        section_has_mid = node.node_type == "SECTION" and (
+            should_inject_mid or "MID" in node.ordered_fields_lookup
+        )
+        if (
+            document_grammar is not None
+            and node.node_type != "TEXT"
+            and (document_grammar.has_custom_elements() or section_has_mid)
         ):
+            meta_fields.append(("TYPE", node.node_type))
+
+        if should_inject_mid:
             meta_fields.append(("MID", node.reserved_mid))
 
         for field in node.enumerate_fields():
@@ -349,6 +364,33 @@ class SDMarkdownWriter:
         ).strip("\n")
         if line_width is not None:
             statement_value = wrap_md_text(statement_value, line_width)
+
+        # When the grammar's TEXT element declares a MID field, emit
+        # **TYPE**: TEXT \ **MID**: <mid> before the statement body so that
+        # the TEXT node's machine identifier is preserved across read/write cycles.
+        document = node.get_document()
+        if document is not None and document.grammar is not None:
+            grammar = assert_cast(document.grammar, DocumentGrammar)
+            text_element = grammar.elements_by_type.get("TEXT", None)
+            if (
+                text_element is not None
+                and "MID" in text_element.fields_map
+                and not grammar.is_default
+            ):
+                existing_mid_fields = node.ordered_fields_lookup.get(
+                    "MID", None
+                )
+                if existing_mid_fields:
+                    mid_str = existing_mid_fields[0].get_text_value()
+                else:
+                    mid_str = str(node.reserved_mid)
+                meta_block = SDMarkdownWriter._serialize_meta_fields(
+                    [("TYPE", "TEXT"), ("MID", mid_str)]
+                )
+                if len(statement_value) > 0:
+                    return f"{meta_block}\n\n{statement_value}"
+                return meta_block
+
         return statement_value
 
     @staticmethod

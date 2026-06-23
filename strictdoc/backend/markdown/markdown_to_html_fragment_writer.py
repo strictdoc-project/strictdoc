@@ -2,6 +2,7 @@
 @relation(SDOC-SRS-24, scope=file)
 """
 
+import re
 from html import escape
 from typing import Callable, MutableMapping, Optional, Sequence, Tuple, cast
 
@@ -106,6 +107,16 @@ def _render_math_inline_double(
     return f'<div class="math notranslate nohighlight">\\[ {tokens[idx].content} \\]</div>'
 
 
+def _strip_dotdot_from_img_src(html: str) -> str:
+    def _rebase(m: "re.Match[str]") -> str:
+        src = m.group(1)
+        while src.startswith("../"):
+            src = src[3:]
+        return f'src="{src}"'
+
+    return re.sub(r'src="(\.\./[^"]*)"', _rebase, html)
+
+
 class MarkdownToHtmlFragmentWriter:
     # Use the default preset to support common Markdown extensions such as
     # pipe tables when rendering HTML fragments.
@@ -117,14 +128,17 @@ class MarkdownToHtmlFragmentWriter:
     _MARKDOWN_RENDERER_RULES["math_inline"] = _render_math_inline
     _MARKDOWN_RENDERER_RULES["math_inline_double"] = _render_math_inline_double
 
-    @staticmethod
-    def write(markdown_fragment: str) -> Markup:
+    def __init__(self, flat_assets: bool = False) -> None:
+        self.flat_assets: bool = flat_assets
+
+    def write(self, markdown_fragment: str) -> Markup:
         assert isinstance(markdown_fragment, str), markdown_fragment
-        return Markup(
-            MarkdownToHtmlFragmentWriter.markdown_parser.render(
-                markdown_fragment
-            )
+        html = MarkdownToHtmlFragmentWriter.markdown_parser.render(
+            markdown_fragment
         )
+        if self.flat_assets:
+            html = _strip_dotdot_from_img_src(html)
+        return Markup(html)
 
     @staticmethod
     def write_with_validation(

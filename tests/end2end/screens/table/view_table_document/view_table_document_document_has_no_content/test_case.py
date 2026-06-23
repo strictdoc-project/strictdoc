@@ -33,6 +33,26 @@ class Test(E2ECase):
             viewtype_selector = ViewType_Selector(self)
             screen_table = viewtype_selector.do_go_to_table()
             screen_table.assert_on_screen_table()
-            screen_table.assert_empty_view()
+
+            # Display mode: Title is visible, meta is simply absent (no
+            # placeholder banner — that one belongs to the Document screen
+            # only), the table shows its own empty-state placeholder.
+            self.assert_text("Document title", '[data-testid="document-title"]')
+            self.assert_element_not_visible(
+                '[data-testid="document-config-uid-field"]'
+            )
+            self.assert_element_not_visible(
+                '[data-testid="document-config-version-field"]'
+            )
+            screen_table.assert_empty_view("table-empty-placeholder")
+            self.assert_element_not_visible('[data-testid="table-add-row"]')
+
+            # The Table item in the viewtype menu is never marked "(empty)"
+            # (same as Document).
+            viewtype_selector.do_click_viewtype_handler()
+            viewtype_selector.assert_viewtype_menu_opened()
+            viewtype_selector.assert_menu_item_is_not_empty("table")
+            viewtype_selector.do_click_viewtype_handler()
+            viewtype_selector.assert_viewtype_menu_closed()
 
         assert test_setup.compare_sandbox_and_expected_output()

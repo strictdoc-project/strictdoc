@@ -18,6 +18,22 @@
   gap: var(--base-rhythm);
 }
 
+/* highlight main layout in special mode (e.g., edit mode) */
+
+.main::after {
+  content: '';
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  left: var(--base-gap);
+  right: 0;
+  bottom: calc(var(--base-rhythm) * 4);
+  pointer-events: none;
+  transition: box-shadow 0.2s ease;
+  box-shadow: inset 0 0 16px transparent,
+              inset 0 0 0 2px transparent;
+}
+
 /* redefine main layout grid */
 
 [data-viewtype="diff"] .main {

@@ -1,0 +1,33 @@
+{#
+  Existing row errors are removed, current errors are inserted after the field,
+  and only the selected name or value target is updated. The surrounding row
+  and shared metadata form remain stable.
+#}
+<turbo-stream
+  action="remove"
+  targets="[js-table_view_edit-custom_meta-error='{{ form_key }}']"
+>
+  <template></template>
+</turbo-stream>
+<turbo-stream action="after" target="document-custom-meta-field-{{ form_key }}">
+  <template>
+    {%- for error_ in errors -%}
+      <sdoc-form-error
+        js-table_view_edit-custom_meta-error="{{ form_key }}"
+        data-testid="document-config-metadata-error-{{ form_key }}"
+      >{{ error_ }}</sdoc-form-error>
+    {%- endfor -%}
+  </template>
+</turbo-stream>
+<turbo-stream
+  action="update"
+  target="document-custom-meta-{{ field_name }}-{{ form_key }}"
+>
+  <template>
+    {%- if field_name == "name" -%}
+      {%- include "screens/document/table/field_edit_mode/document_custom_meta_name.jinja" -%}
+    {%- else -%}
+      {%- include "screens/document/table/field_edit_mode/document_custom_meta.jinja" -%}
+    {%- endif -%}
+  </template>
+</turbo-stream>

@@ -17,7 +17,7 @@ Modified statement.
     with pytest.raises(TextXSyntaxError) as exc_info:
         reader.read(free_text_input)
     assert """\
-None:3:13: Expected ', ' or '\\](\\Z|\\n)' => 'NCHOR: AD1*]!!!GARBAG'\
+None:3:13: Expected ', ' or '\\](\\Z|\\r?\\n)' => 'NCHOR: AD1*]!!!GARBAG'\
 """ == str(exc_info.value)
 
 
@@ -124,6 +124,25 @@ Hello world
     assert document.parts[1].value == "AD1"
     assert document.parts[2] == "\n"
     assert document.parts[3].value == "AD2"
+
+
+def test_015_anchor_lf_line_ending():
+    free_text_input = "Section free text.\n\n[ANCHOR: AD1]\n"
+
+    reader = SDFreeTextReader()
+    free_text_container = reader.read(free_text_input)
+    assert free_text_container.parts[0] == "Section free text.\n\n"
+    assert isinstance(free_text_container.parts[1], Anchor)
+    assert free_text_container.parts[1].value == "AD1"
+
+
+def test_016_anchor_crlf_line_ending():
+    free_text_input = "Section free text.\r\n\r\n[ANCHOR: AD1]\r\n"
+
+    reader = SDFreeTextReader()
+    free_text_container = reader.read(free_text_input)
+    assert isinstance(free_text_container.parts[1], Anchor)
+    assert free_text_container.parts[1].value == "AD1"
 
 
 def test_020_link():

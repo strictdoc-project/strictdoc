@@ -1,0 +1,59 @@
+{#
+  Inline editor for one new custom metadata row.
+
+  form_key is a local transport key, not a StrictDoc MID. The name and value
+  controls are rendered in separate sdoc-meta grid areas, while the surrounding
+  Add wrapper remains the one active inline field handled by table_view_edit.js.
+  Row validation errors are attached to the control they describe. Error text
+  is rendered once after both controls.
+#}
+
+
+<input type="hidden" name="active_form_key" value="{{ form_key }}"/>
+<input type="hidden" name="active_field_name" value="new"/>
+
+<sdoc-meta-label>
+  {%- with
+    field_class_name="monospace",
+    field_editable=true,
+    field_required=true,
+    field_input_name="metadata[" ~ form_key ~ "][name]",
+    field_label="Name",
+    field_placeholder="Enter name...",
+    field_type="singleline",
+    field_value=field_name,
+    testid_postfix="metadata-name-" ~ form_key,
+    errors=name_errors,
+    field_render_errors=false
+  -%}
+    {%- include "components/form/field/contenteditable/index.jinja" -%}
+  {%- endwith -%}
+</sdoc-meta-label>
+
+<sdoc-meta-field>
+  {%- with
+    field_class_name=none,
+    field_editable=true,
+    field_required=false,
+    field_input_name="metadata[" ~ form_key ~ "][value]",
+    field_label="Value",
+    field_placeholder="Enter value...",
+    field_type="singleline",
+    field_value=field_value,
+    testid_postfix="metadata-value-" ~ form_key,
+    errors=value_errors,
+    field_render_errors=false
+  -%}
+    {%- include "components/form/field/contenteditable/index.jinja" -%}
+  {%- endwith -%}
+</sdoc-meta-field>
+
+{#
+  field_render_errors=false prevents duplicate error text because the complete
+  row error list is rendered here once.
+#}
+{%- for error_ in errors -%}
+  <sdoc-form-error
+    data-testid="document-config-metadata-error-{{ form_key }}"
+  >{{ error_ }}</sdoc-form-error>
+{%- endfor -%}

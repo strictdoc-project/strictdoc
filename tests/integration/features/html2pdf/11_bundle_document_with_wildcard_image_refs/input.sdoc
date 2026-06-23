@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Root Document
+
+[TEXT]
+STATEMENT: >>>
+.. image:: _assets/root_image.*
+   :alt: Root image
+   :class: image
+   :width: 100%
+<<<

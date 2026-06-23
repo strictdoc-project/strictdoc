@@ -370,3 +370,105 @@ def test_009_markdown_writer_no_mid_when_grammar_has_no_mid_field():
 
     assert "**MID**" not in output_markdown
     assert "**UID**: REQ-1" in output_markdown
+
+
+def test_010_markdown_writer_injects_mid_into_section_nodes_when_grammar_declares_mid():
+    """
+    When a grammar declares a MID field for the SECTION element, the writer
+    auto-injects MID into SECTION nodes that do not already carry one, and
+    also emits TYPE: SECTION as the first meta field so the reader does not
+    misidentify the heading as a REQUIREMENT on the next parse.
+    """
+    grammar_markdown = """\
+# StrictDoc Markdown Grammar
+
+## Element: SECTION
+
+**Composite**: True
+
+### Field: MID
+
+**Type**: String
+**Required**: False
+
+### Field: TITLE
+
+**Type**: String
+**Required**: True
+
+## Element: REQUIREMENT
+
+### Field: MID
+
+**Type**: String
+**Required**: False
+
+### Field: UID
+
+**Type**: String
+**Required**: False
+
+### Field: STATEMENT
+
+**Type**: String
+**Required**: False
+"""
+    doc_markdown = """\
+# Document
+
+**Grammar**: `requirements.gra.md`
+
+## Section heading
+
+### Requirement inside section
+
+**UID**: REQ-1
+
+**Statement**: System shall do X.
+"""
+
+    document = SDMarkdownReader.read(doc_markdown, file_path=None)
+    assert document.grammar is not None
+
+    # Simulate grammar resolution (normally done by TraceabilityIndexBuilder).
+    resolved_grammar = MarkdownGrammarReader.read(grammar_markdown)
+    resolved_grammar.import_from_file = "requirements.gra.md"
+    resolved_grammar.parent = document
+    document.grammar = resolved_grammar
+
+    output_markdown = SDMarkdownWriter.write(document)
+
+    lines = output_markdown.splitlines()
+
+    # The SECTION node must receive TYPE and MID injection.
+    section_idx = next(
+        i for i, line in enumerate(lines) if "Section heading" in line
+    )
+    section_block_lines = []
+    for line in lines[section_idx + 1 :]:
+        if line.startswith("#"):
+            break
+        section_block_lines.append(line)
+    section_block = "\n".join(section_block_lines)
+    assert "**TYPE**: SECTION" in section_block, (
+        f"TYPE: SECTION not found in section block: {section_block!r}"
+    )
+    assert "**MID**:" in section_block, (
+        f"MID not injected into section block: {section_block!r}"
+    )
+
+    # The REQUIREMENT node must also receive TYPE and MID injection.
+    req_idx = next(
+        i
+        for i, line in enumerate(lines)
+        if "Requirement inside section" in line
+    )
+    req_block_lines = []
+    for line in lines[req_idx + 1 :]:
+        if line.startswith("#"):
+            break
+        req_block_lines.append(line)
+    req_block = "\n".join(req_block_lines)
+    assert "**MID**:" in req_block, (
+        f"MID not injected into requirement block: {req_block!r}"
+    )

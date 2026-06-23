@@ -42,6 +42,8 @@ class MarkupRenderer:
         html_templates: HTMLTemplates,
         config: ProjectConfig,
         context_document: Optional[SDocDocument],
+        flat_assets: bool = False,
+        reference_path_override: Optional[str] = None,
     ) -> "MarkupRenderer":
         assert isinstance(html_templates, HTMLTemplates)
         html_fragment_writer: FragmentWriterType
@@ -49,9 +51,13 @@ class MarkupRenderer:
             html_fragment_writer = RstToHtmlFragmentWriter(
                 project_config=config,
                 context_document=context_document,
+                flat_assets=flat_assets,
+                reference_path_override=reference_path_override,
             )
         elif markup == SDocMarkup.MARKDOWN:
-            html_fragment_writer = MarkdownToHtmlFragmentWriter()
+            html_fragment_writer = MarkdownToHtmlFragmentWriter(
+                flat_assets=flat_assets
+            )
         elif markup == SDocMarkup.HTML:
             html_fragment_writer = HTMLFragmentWriter()
         else:
@@ -62,6 +68,8 @@ class MarkupRenderer:
             link_renderer,
             html_templates,
             context_document,
+            flat_assets=flat_assets,
+            primary_markup=markup,
         )
 
     def __init__(
@@ -71,6 +79,8 @@ class MarkupRenderer:
         link_renderer: LinkRenderer,
         html_templates: HTMLTemplates,
         context_document: Optional[SDocDocument],
+        flat_assets: bool = False,
+        primary_markup: Optional[str] = None,
     ) -> None:
         assert isinstance(traceability_index, TraceabilityIndex)
         assert isinstance(link_renderer, LinkRenderer)
@@ -83,15 +93,65 @@ class MarkupRenderer:
         self.traceability_index: TraceabilityIndex = traceability_index
         self.link_renderer: LinkRenderer = link_renderer
         self.context_document: Optional[SDocDocument] = context_document
+        self.flat_assets: bool = flat_assets
+
+        # Cache of fragment writers keyed by markup string. Pre-populated with
+        # the primary writer so the dispatch method reuses it without creating
+        # duplicates for the common case.
+        primary_key: str = primary_markup or SDocMarkup.RST
+        self._writers_by_markup: Dict[str, FragmentWriterType] = {
+            primary_key: fragment_writer
+        }
 
         # FIXME: Now that the underlying RST fragment caching is in place,
         # This caching could be removed. It is unlikely that it adds any serious
         # performance improvement.
         self.cache: Dict[Tuple[DocumentType, SDocNodeField], Markup] = {}
 
-        self.template_anchor = html_templates.jinja_environment().get_template(
-            "rst/anchor.jinja"
-        )
+        if isinstance(
+            fragment_writer, (MarkdownToHtmlFragmentWriter, HTMLFragmentWriter)
+        ):
+            self.template_anchor = (
+                html_templates.jinja_environment().get_template(
+                    "markup/anchor.jinja"
+                )
+            )
+        else:
+            self.template_anchor = (
+                html_templates.jinja_environment().get_template(
+                    "rst/anchor.jinja"
+                )
+            )
+
+    def _get_writer_for_node_field(
+        self, node_field: SDocNodeField
+    ) -> FragmentWriterType:
+        """
+        Return the fragment writer appropriate for the node field's markup.
+
+        When the bundle document (RST by default) contains sub-documents with
+        different markup (e.g. Markdown), nodes from those sub-documents must be
+        rendered with the correct writer, not the bundle's primary RST writer.
+        """
+        if node_field.parent is None:
+            return self.fragment_writer
+        doc = node_field.parent.get_document()
+        if doc is None or doc.config is None:
+            return self.fragment_writer
+        markup = doc.config.markup  # raw value; None means RST
+        key = markup or SDocMarkup.RST
+        if key not in self._writers_by_markup:
+            if not markup or markup == SDocMarkup.RST:
+                self._writers_by_markup[key] = self.fragment_writer
+            elif markup == SDocMarkup.MARKDOWN:
+                self._writers_by_markup[key] = MarkdownToHtmlFragmentWriter(
+                    flat_assets=self.flat_assets
+                )
+            elif markup == SDocMarkup.HTML:
+                self._writers_by_markup[key] = HTMLFragmentWriter()
+            else:
+                self._writers_by_markup[key] = TextToHtmlWriter()
+        return self._writers_by_markup[key]
 
     def render_node_statement(
         self, document_type: DocumentType, node: SDocNode
@@ -124,12 +184,14 @@ class MarkupRenderer:
         if (document_type, node_field) in self.cache:
             return self.cache[(document_type, node_field)]
 
+        fragment_writer = self._get_writer_for_node_field(node_field)
+
         prev_part = None
         parts_output = ""
         for part in node_field.parts:
             if isinstance(part, str):
                 if isinstance(prev_part, InlineLink) and isinstance(
-                    self.fragment_writer, RstToHtmlFragmentWriter
+                    fragment_writer, RstToHtmlFragmentWriter
                 ):
                     parts_output += escape_str_after_inline_markup(part)
                 else:
@@ -141,7 +203,7 @@ class MarkupRenderer:
                 href = self.link_renderer.render_node_link(
                     linkable_node, self.context_document, document_type
                 )
-                parts_output += self.fragment_writer.write_anchor_link(
+                parts_output += fragment_writer.write_anchor_link(
                     linkable_node.get_display_title(), href
                 )
             elif isinstance(part, Anchor):
@@ -155,7 +217,7 @@ class MarkupRenderer:
                 raise NotImplementedError
             prev_part = part
 
-        output = self.fragment_writer.write(parts_output)
+        output = fragment_writer.write(parts_output)
         self.cache[(document_type, node_field)] = output
 
         return output

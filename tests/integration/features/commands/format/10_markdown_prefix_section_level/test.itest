@@ -1,0 +1,31 @@
+REQUIRES: PLATFORM_IS_NOT_WINDOWS
+
+#
+# Verify MD-31: section-level PREFIX declared in a section meta block is
+# preserved across format passes.
+#
+# Pass 1: format the document, check that **PREFIX**: appears in the section.
+# Pass 2: format again and verify identical output (idempotency).
+#
+
+RUN: mkdir -p %T/pass1
+RUN: cp %S/input.md %T/pass1/input.md
+RUN: cp %S/strictdoc_config.py %T/pass1/strictdoc_config.py
+
+RUN: %strictdoc format %T/pass1/
+
+RUN: %cat %T/pass1/input.md | filecheck %s --dump-input=fail
+
+# Section heading must appear.
+CHECK: ## Chapter 2
+
+# Section-level PREFIX must be present directly after the section heading.
+CHECK-NEXT:
+CHECK-NEXT: **PREFIX**: LEVEL2-REQ-
+
+# The requirement UID that uses the section prefix must be preserved.
+CHECK: **UID**: LEVEL2-REQ-001
+
+RUN: cp -r %T/pass1 %T/pass2
+RUN: %strictdoc format %T/pass2/
+RUN: diff %T/pass1/input.md %T/pass2/input.md

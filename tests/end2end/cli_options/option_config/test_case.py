@@ -20,7 +20,7 @@ class Test(E2ECase):
                 path_to_this_test_file_folder,
                 "custom",
                 "folder",
-                "strictdoc.toml",
+                "strictdoc_config.py",
             ),
         ) as test_server:
             self.open(test_server.get_host_and_port())

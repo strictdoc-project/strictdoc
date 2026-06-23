@@ -1,0 +1,8 @@
+#
+# When --node-type is not given and the custom grammar has a REQUIREMENT
+# element, manage new shall default to creating a REQUIREMENT node.
+#
+
+RUN: cp %S/input.sdoc %T/
+RUN: %strictdoc manage new %T/
+RUN: %diff %S/input.expected.sdoc %T/input.sdoc

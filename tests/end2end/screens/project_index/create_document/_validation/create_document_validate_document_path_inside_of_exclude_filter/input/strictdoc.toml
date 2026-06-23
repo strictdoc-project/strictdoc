@@ -1,9 +1,0 @@
-[project]
-
-features = [
-
-]
-
-exclude_doc_paths = [
-  "tests/**",
-]

@@ -1,0 +1,9 @@
+<svg class="svg_icon" viewBox="0 0 16 16">
+  <circle cy="4" cx="10" r="0.25"></circle>
+  <circle cy="8" cx="10" r="0.25"></circle>
+  <circle cy="12" cx="10" r="0.25"></circle>
+
+  <circle cy="4" cx="6" r="0.25"></circle>
+  <circle cy="8" cx="6" r="0.25"></circle>
+  <circle cy="12" cx="6" r="0.25"></circle>
+</svg>

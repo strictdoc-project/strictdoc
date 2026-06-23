@@ -1,6 +1,6 @@
 #
 # This test verifies the following functionality:
-# - that a user can provide a custom statistics generator in the strictdoc.toml.
+# - that a user can provide a custom statistics generator in the strictdoc_config.py.
 # - StrictDoc will import the custom statistics generator and run it instead the default generator.
 # - The resulting statistics HTML has the custom metrics displayed correctly.
 #

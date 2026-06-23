@@ -1,0 +1,11 @@
+[DOCUMENT]
+TITLE: Root Document
+OPTIONS:
+  MARKUP: Markdown
+
+[TEXT]
+STATEMENT: >>>
+This root document has an image in the root assets directory.
+
+![Root image](_assets/root_image.svg)
+<<<

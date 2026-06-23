@@ -23,9 +23,9 @@ class Test(E2ECase):
             screen_document = screen_project_index.do_click_on_first_document()
             screen_document.assert_on_screen_document()
 
-            # Clear localStorage before navigating to table view.
+            # Clear localStorage before navigating to TABLE screen.
             # Tests run with --reuse-session (shared browser), so localStorage
-            # persists across test cases. Clearing here ensures the table view
+            # persists across test cases. Clearing here ensures the TABLE screen
             # JS starts with no saved column state and reflects a clean initial state.
             self.clear_local_storage()
 
@@ -37,22 +37,22 @@ class Test(E2ECase):
             #
             # Initial state
             #
-            screen_table.assert_toolbar_btn_label("Columns")
+            screen_table.assert_toolbar_btn_label("COLUMNS")
             screen_table.assert_toolbar_panel_closed()
 
             # Open panel — Show all disabled, checkboxes present
             screen_table.do_open_toolbar_panel()
             screen_table.assert_show_all_disabled()
-            self.assert_element('[data-testid="col-checkbox-Type"]')
+            self.assert_element('[data-testid="col-checkbox-Level"]')
             self.assert_element('[data-testid="col-checkbox-Statement"]')
 
             #
-            # Hide "Type" column
+            # Hide "Level" column
             #
-            screen_table.do_toggle_column("Type")
-            screen_table.assert_column_header_hidden("Type")
-            self.assert_url_contains("hidden=Type")
-            screen_table.assert_toolbar_btn_label("Columns (1 hidden)")
+            screen_table.do_toggle_column("Level")
+            screen_table.assert_column_header_hidden("Level")
+            self.assert_url_contains("hidden=Level")
+            screen_table.assert_toolbar_btn_label("COLUMNS • 1 hidden")
             screen_table.assert_show_all_enabled()
 
             #
@@ -61,7 +61,7 @@ class Test(E2ECase):
             screen_table.do_toggle_column("Statement")
             screen_table.assert_column_header_hidden("Statement")
             self.assert_url_contains("Statement")
-            screen_table.assert_toolbar_btn_label("Columns (2 hidden)")
+            screen_table.assert_toolbar_btn_label("COLUMNS • 2 hidden")
 
             #
             # Close panel by clicking outside
@@ -73,10 +73,10 @@ class Test(E2ECase):
             #
             screen_table.do_open_toolbar_panel()
             screen_table.do_click_show_all()
-            screen_table.assert_column_header_visible("Type")
+            screen_table.assert_column_header_visible("Level")
             screen_table.assert_column_header_visible("Statement")
             self.assert_url_not_contains("hidden=")
-            screen_table.assert_toolbar_btn_label("Columns")
+            screen_table.assert_toolbar_btn_label("COLUMNS")
             screen_table.assert_show_all_disabled()
 
         assert test_setup.compare_sandbox_and_expected_output()

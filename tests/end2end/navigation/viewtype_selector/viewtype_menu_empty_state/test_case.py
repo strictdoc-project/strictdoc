@@ -29,10 +29,11 @@ class Test(E2ECase):
 
             viewtype_selector = ViewType_Selector(self)
 
-            # Open menu — all views should be marked as empty.
+            # Open menu — Table is never marked empty (same as Document); the
+            # other views should be marked as empty.
             viewtype_selector.do_click_viewtype_handler()
             viewtype_selector.assert_viewtype_menu_opened()
-            viewtype_selector.assert_menu_item_is_empty("table")
+            viewtype_selector.assert_menu_item_is_not_empty("table")
             viewtype_selector.assert_menu_item_is_empty("traceability")
             viewtype_selector.assert_menu_item_is_empty("deep_traceability")
 

@@ -22,7 +22,7 @@ class Test(E2ECase):
             screen_document = screen_project_index.do_click_on_first_document()
             screen_document.assert_on_screen_document()
 
-            # Clear localStorage before navigating to table view.
+            # Clear localStorage before navigating to TABLE screen.
             # Tests run with --reuse-session (shared browser), so localStorage
             # persists across test cases. Clearing here ensures the table JS
             # starts with no saved state — this test explicitly controls what
@@ -33,18 +33,23 @@ class Test(E2ECase):
             screen_table = viewtype_selector.do_go_to_table()
             screen_table.assert_on_screen_table()
 
-            # Hide "Type" via the toolbar — URL gets ?hidden=Type
+            # Hide "Level" via the toolbar — URL gets ?hidden=Level
             screen_table.do_open_toolbar_panel()
-            screen_table.do_toggle_column("Type")
-            self.assert_url_contains("hidden=Type")
-            screen_table.assert_column_header_hidden("Type")
+            screen_table.do_toggle_column("Level")
+            self.assert_url_contains("hidden=Level")
+            screen_table.assert_column_header_hidden("Level")
 
             # Navigate to the same page without query params —
             # state must be restored from localStorage.
             self.reload_page_without_query()
             screen_table.assert_on_screen_table()
-            screen_table.assert_column_header_hidden("Type")
+            screen_table.assert_column_header_hidden("Level")
             # URL should reflect the storage state
-            self.assert_url_contains("hidden=Type")
+            self.assert_url_contains("hidden=Level")
+
+            # This test intentionally leaves "Level" hidden in localStorage
+            # to verify persistence. Clear it so it doesn't leak into other
+            # tests sharing this browser session (--reuse-session).
+            self.clear_local_storage()
 
         assert test_setup.compare_sandbox_and_expected_output()

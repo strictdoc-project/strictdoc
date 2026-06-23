@@ -568,14 +568,12 @@ class CreateOrUpdateNodeCommand:
                     map_form_to_requirement_fields[form_field]
                 )
                 requirement_field: Optional[SDocNodeField] = (
-                    SDocNodeField(
+                    SDocNodeField.from_parts(
                         node,
                         field_name=form_field_name,
                         parts=free_text_content.parts,
-                        multiline__="true"
-                        if form_field.field_type
-                        == RequirementFormFieldType.MULTILINE
-                        else None,
+                        multiline=form_field.field_type
+                        == RequirementFormFieldType.MULTILINE,
                     )
                     if free_text_content is not None
                     else None
@@ -585,11 +583,3 @@ class CreateOrUpdateNodeCommand:
                     form_field_index=form_field_index,
                     value=requirement_field,
                 )
-                if (
-                    requirement_field is not None
-                    and free_text_content is not None
-                ):
-                    for part_ in requirement_field.parts:
-                        if isinstance(part_, str):
-                            continue
-                        part_.parent = requirement_field

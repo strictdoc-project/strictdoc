@@ -1,0 +1,11 @@
+[DOCUMENT]
+TITLE: Subnested Document
+OPTIONS:
+  MARKUP: Markdown
+
+[TEXT]
+STATEMENT: >>>
+This document is two levels deep and references an image using Markdown syntax.
+
+![Root image](../../_assets/root_image.svg)
+<<<

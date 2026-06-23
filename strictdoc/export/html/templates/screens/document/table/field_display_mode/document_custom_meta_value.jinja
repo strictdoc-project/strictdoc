@@ -1,0 +1,28 @@
+{#
+  Renders custom metadata rows inside the persistent document metadata form.
+  The DOM order of these rows defines the order serialized and saved by the form.
+#}
+{%- if document_config.has_custom_metadata() -%}
+{%- for key, value in document_config.get_custom_metadata() -%}
+  {#
+    form_key is a local form/DOM key, not a StrictDoc MID and not a persistent
+    metadata identifier. Underscores are required because the shared form-data
+    parser accepts only letters, digits, and underscores in nested field keys.
+    The backend uses the key only to pair this row's name/value.
+  #}
+  {%- set form_key = "custom_meta_" ~ loop.index0 -%}
+  {%- set metadata_value = view_object.render_metadata_value(value) -%}
+  {%- with
+    field_content=metadata_value,
+    field_label=key,
+    field_value=value,
+    form_key=form_key
+  -%}
+    {%- include "screens/document/table/field_display_mode/document_custom_meta_row.jinja" -%}
+  {%- endwith -%}
+{%- endfor -%}
+{%- endif -%}
+
+{%- if view_object.is_running_on_server -%}
+{%- include "screens/document/table/field_display_mode/document_custom_meta_add.jinja" -%}
+{%- endif -%}

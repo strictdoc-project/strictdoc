@@ -273,6 +273,8 @@ sdoc-form-field-group {
   flex-direction: row;
   flex-wrap: wrap;
 
+  justify-content: space-between;
+
   padding: var(--base-rhythm);
   border: var(--base-border);
   border-radius: var(--base-rhythm);
@@ -320,9 +322,15 @@ sdoc-autocompletable[contenteditable="false"] {
 }
 
 .autocomplete-items {
+  /* reset default ul */
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+  /* autocomplete wrapper */
   position: absolute;
   border: 1px solid var(--color-action);
   background-color: var(--color-bg-contrast);
+  color: var(--color-fg-contrast);
   top: 100%;
   left: 0;
   right: 0;
@@ -343,6 +351,17 @@ sdoc-autocompletable[contenteditable="false"] {
   padding:.25rem 0.25rem;
   margin-bottom:-1px;
   border:1px solid rgba(0,0,0,.125)
+}
+
+.autocompletable-result-item_no-results {
+  color: var(--color-fg-secondary);
+  font-style: italic;
+  cursor: default;
+}
+
+.autocompletable-result-item_selected {
+  color: var(--color-fg-secondary);
+  cursor: default;
 }
 
 .monospace {
@@ -535,6 +554,8 @@ sdoc-form-error {
   display: block;
   color: var(--color-danger);
   font-size: 12px;
+  font-weight: normal;
+  text-transform: none;
   /*
     set 'order' to be displayed after any other items,
     in the context of <sdoc-form-row-main> using flex:

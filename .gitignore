@@ -5,6 +5,7 @@
 /.vscode/
 /build/
 /developer/tasks/**/Context.md
+/developer/tasks/**/_draft/
 /dist/
 /reports/
 /Output/

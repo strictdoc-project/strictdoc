@@ -135,8 +135,7 @@ sdoc-node.nouid {
   /* background-color: rgb(240, 220, 220); */
 }
 
-.nouid sdoc-node-title,
-.nouid .requirement__title {
+.nouid sdoc-node-title {
   color: #502222;
 }
 

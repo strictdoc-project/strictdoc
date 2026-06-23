@@ -1,54 +1,160 @@
+/* highlight main layout in edit mode */
+[js-table_view_edit][data-mode="edit"]::after {
+  box-shadow: inset 0 0 16px var(--color-fg-accent),
+              inset 0 0 0 2px var(--color-fg-accent);
+}
+
 /* ultimate table view */
 
 .content-view-table {
+  /* vars */
+  --table-gap: calc(var(--base-rhythm) * 1.5);
+
+  /* *** */
   border-collapse: collapse;
   width: 100%;
-  background-color: var(--color-bg-contrast);
   /* for sticky toolbar */
-  margin-top:  calc(var(--base-rhythm) * 5);
+  margin-top:  calc(var(--base-rhythm) * 6);
+  /* create a stacking context to contain child z-index values */
+  position: relative;
+  z-index: 1;
+
+  background-color: var(--color-bg-main);
+background-image:
+
+  radial-gradient(
+    circle,
+    rgba(0, 0, 0, 0.1) 1px,
+    transparent 1px
+  ),
+  radial-gradient(
+    circle,
+    rgba(0, 0, 0, 0.1) 1px,
+    transparent 1px
+  );
+  background-size: 10px 10px;
+  background-position:
+    0 0,
+    5px 5px;
+  }
+
+.content-view-table tr {
+  background-color: transparent;
 }
 
-/* .content-view-table td,
-.content-view-table th, */
+.content-view-table_sticky-header {
+  position: sticky;
+  top: calc(-6.6 * var(--base-rhythm)); /* = layout .header */
+  z-index: 102; /* above sticky 'type' column, above content-view__add_new_row-TR */
+}
+
 .content-view-th,
 .content-view-td {
-  padding: .5rem 1rem;
   border: 1px solid #666;
   vertical-align: top;
+}
+
+.content-view-td {
+  padding: var(--table-gap);
+  background-color: var(--color-bg-contrast);
+
+  /* to position the cell indicator (.editable-cell-indicator) */
+  position: relative;
 }
 
 .content-view-th {
   text-align: left;
   text-transform: uppercase;
   background-color: var(--color-border);
-  font-size: .85em;
+  font-size: 10px;
   font-weight: bold;
-}
-
-.content-view-td-type,
-.content-view-td-meta {
-  background-color: var(--color-bg-main);
-  font-size: .85em;
+  padding: var(--base-rhythm) var(--table-gap);
+  color: var(--color-bg-main);
+  background-color: var(--color-bg-ui);
 }
 
 .content-view-td-type {
-  background-color: var(--color-bg-main);
+  background-color: var(--color-bg-ui);
+  color: var(--color-bg-main);
   text-align: left;
   font-weight: normal;
   text-transform: uppercase;
+  /* font-size: .75em; */
+  font-size: 10px;
+  font-weight: bold;
 }
 
-.content-view-table div.document {
-  /* TODO */
-  display: block;
-  max-width: 900px;
+.content-view-td-type {
+  position: sticky;
+  left: calc(-1 * var(--base-gap) - 1px); /* account for border */
+  z-index: 11; /* should be over .editable-cell-indicator */
 }
 
-.content-view-table p:first-child {
+[js-table_view_edit][data-mode="edit"] .content-view-td-type {
+  /* Don't hide in edit mode */
+  display: table-cell !important;
+  /* padding-right: 0; */
+}
+
+.content-view-td-type__content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  position: sticky;
+  top: 0;
+}
+
+.content-view-td-type__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.table-node-delete-action {
+  display: none;
+}
+
+[js-table_view_edit][data-mode="edit"] .table-node-delete-action {
+  display: inline-flex;
+}
+
+.table-node-delete-action .action_icon {
+  min-height: auto;
+  padding: 0;
+  border-radius: calc(.5 * var(--base-rhythm));
+  color: var(--color-bg-main) !important;
+  border-color: var(--color-bg-main) !important;
+  opacity: 0.7;
+}
+
+.table-node-delete-action .action_icon:hover {
+  color: var(--color-danger) !important;
+  border-color: var(--color-danger) !important;
+  background-color: var(--color-bg-main);
+  opacity: 1;
+}
+
+.content-view-td-level {
+  font-size: .85em;
+  background-color: var(--color-bg-main);
+}
+
+.content-view-td-meta {
+  font-size: .85em;
+  /* background-color: var(--color-fg-secondary-invert); */
+}
+
+.content-view-td-title {
+  font-weight: bold;
+}
+
+.content-view-td p:first-child {
   margin-top: 0;
 }
 
-.content-view-table p:last-child {
+.content-view-td p:last-child {
   margin-bottom: 0;
 }
 
@@ -56,18 +162,34 @@
   width: 1%;
 }
 
-.content-view-td-content:not(:empty) {
-  min-width: 333px;
-  width: 30%;
+.content-view-td-content {
+  max-width: 400px;
 }
 
-.content-view-td-title:not(:empty) {
-  font-weight: bold;
-  min-width: 264px;
+.content-view-td [wrapper-field-type="comments"]:not(:empty),
+.content-view-td [wrapper-field-type="contenteditable"]:not(:empty) {
+  min-width: 300px;
 }
 
-.content-view-td-related:not(:empty) {
-  min-width: 264px;
+.content-view-td-meta {
+  min-width: auto;
+  max-width: 300px;
+}
+
+.content-view-td.content-view-td-meta [wrapper-field-type]:not(:empty) {
+  min-width: auto;
+}
+
+.content-view-td-related {
+  min-width: 300px;
+  /* unset .content-view-td-meta constraints */
+  max-width: 400px;
+}
+
+.content-view-td [wrapper-field-type="comments"] {
+  display: flex;
+  flex-direction: column;
+  gap: var(--base-rhythm);
 }
 
 .content-view-td-related,
@@ -80,19 +202,249 @@
   margin-bottom: 0;
 }
 
+.content-view-td--dimmed {
+  /* inherit from table */
+  background: transparent;
+  position: relative;
+}
+
+.content-view-td--dimmed_tips {
+  position: absolute;
+  inset: 0;
+}
+
+/* sort */
+
+.content-view-th__content {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--base-rhythm) * 0.5);
+  white-space: nowrap;
+}
+
+.content-view-th__label {
+  flex: 1;
+}
+
+/* Sort icon button inside <th> */
+.content-view-th__sort-btn {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: inherit;
+  opacity: 0.4;
+  line-height: 0;
+}
+
+.content-view-th__sort-btn:hover {
+  opacity: 1;
+}
+
+.content-view-th[data-sort] {
+  background-color: var(--color-fg-accent);
+  /* color: var(--color-bg-ui); */
+}
+
+.content-view-th[data-sort] .content-view-th__sort-btn {
+  opacity: 1;
+}
+
+/* Three-state sort icon: controlled via CSS on parent <th> data-sort attribute */
+.icon_sort .sort-none  { display: initial; }
+.icon_sort .sort-asc   { display: none; }
+.icon_sort .sort-desc  { display: none; }
+
+.content-view-th[data-sort="asc"] .icon_sort .sort-none  { display: none; }
+.content-view-th[data-sort="asc"] .icon_sort .sort-asc   { display: initial; }
+.content-view-th[data-sort="asc"] .icon_sort .sort-desc  { display: none; }
+
+.content-view-th[data-sort="desc"] .icon_sort .sort-none  { display: none; }
+.content-view-th[data-sort="desc"] .icon_sort .sort-asc   { display: none; }
+.content-view-th[data-sort="desc"] .icon_sort .sort-desc  { display: initial; }
+
+/* toolbar */
+
+.table-toolbar__btn--edit {
+  text-transform: uppercase;
+}
+
+.table-toolbar__btn--edit[aria-pressed="true"] {
+  background-color: var(--color-fg-accent);
+  color: #fff;
+  border-color: transparent;
+}
+
+.table-toolbar__sort-reset button {
+  background-color: var(--color-bg-ui);
+  color: var(--color-bg-main);
+}
+.table-toolbar__sort-reset button:hover {
+  background-color: var(--color-fg-accent);
+  color: var(--color-bg-main);
+}
+/* Reset sort button in toolbar shows neutral icon (both arrows = "sorted, click to reset") */
+.table-toolbar__sort-reset .icon_sort .sort-none  { display: initial; }
+.table-toolbar__sort-reset .icon_sort .sort-asc   { display: none; }
+.table-toolbar__sort-reset .icon_sort .sort-desc  { display: none; }
+
+/* editable */
+
+/*
+  The presence of .editable-cell-indicator determines
+  whether the parent cell appears as editable.
+*/
+*:has(> .editable-cell-indicator) {
+  position: relative;
+}
+
+.editable-cell-indicator {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  pointer-events: none;
+}
+
+[js-table_view_edit][data-mode="edit"] *:has(> .editable-cell-indicator):hover {
+  cursor: pointer;
+}
+
+.content-view-table[data-mode="editable"] *:has(> .editable-cell-indicator)[data-mode="editing"]:hover {
+  cursor: default;
+}
+
+[js-table_view_edit][data-mode="edit"] *:has(> .editable-cell-indicator):hover .editable-cell-indicator {
+  background-color: var(--color-bg-accent);
+  outline: 2px dotted var(--color-fg-accent);
+  outline-offset: -2px;
+}
+
+[js-table_view_edit][data-mode="edit"] *:has(> .editable-cell-indicator)[data-mode="editing"] .editable-cell-indicator {
+  background-color: transparent;
+  outline: 2px solid var(--color-fg-accent);
+  outline-offset: -2px;
+  cursor: default;
+}
+
+[js-table_view_edit][data-mode="edit"] *:has(> .editable-cell-indicator) form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--base-rhythm);
+}
+
+[js-table_view_edit][data-mode="edit"] [data-field-type="autocomplete"] sdoc-form-field,
+[js-table_view_edit][data-mode="edit"] sdoc-form-field {
+    display: block;
+    position: relative;
+    padding: 0;
+    margin: 0;
+    min-width: unset;
+    flex-grow: 1;
+}
+
+[js-table_view_edit][data-mode="edit"] sdoc-form-field-group::before,
+[js-table_view_edit][data-mode="edit"] sdoc-contenteditable::before,
+[js-table_view_edit][data-mode="edit"] sdoc-autocompletable::before {
+  content: "";
+}
+
+[js-table_view_edit][data-mode="edit"] sdoc-form-field[field-type="select"] label {
+  display: none;
+}
+
+[js-table_view_edit][data-mode="edit"] [js-table_view_edit-table] sdoc-form-field:focus-within::after {
+  /* formatting a cell in a table; we don't use this in the document meta */
+  position: absolute;
+  content: "";
+  inset: -4px;
+  border-radius: 4px;
+  box-shadow: inset 0 0 4px var(--color-fg-secondary);
+  pointer-events: none;
+}
+
+[js-table_view_edit][data-mode="edit"] sdoc-form-field-group {
+  padding-top: 0;
+  padding-bottom: 0;
+  padding: var(--base-rhythm);
+  gap: var(--base-rhythm);
+}
+
+[js-table_view_edit][data-mode="edit"] sdoc-form-row {
+  display: flex;
+}
+
+[js-table_view_edit][data-mode="edit"] sdoc-form-row sdoc-form-row-main {
+  flex-grow: 1;
+}
+
+[js-table_view_edit][data-mode="edit"] sdoc-form-row sdoc-form-row-main + sdoc-form-row-aside {
+  margin-left: auto;
+}
+
+[js-table_view_edit][data-mode="edit"] .field_action::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: unset;
+    left: 0;
+    right: 0;
+    height: 24px;
+    border-radius: 4px;
+}
+
+.relations-computed {
+  font-size: .85em;
+  opacity: .65;
+  padding: .25rem 0;
+  border-top: 1px solid currentColor;
+}
+
+.relations-computed__label {
+  font-weight: bold;
+}
+
+.relations-computed__group + .relations-computed__group {
+  margin-top: .25rem;
+}
+
+/* Autocomplete cells */
+
+[js-table_view_edit] [data-field-type="autocomplete"] sdoc-form-field {
+  /*
+    sdoc-form-field has display:block with padding/margin in form.css.
+    Reset to display:contents so it is transparent to table cell layout.
+  */
+  display: contents;
+}
+
+[js-table_view_edit] [data-field-type="autocomplete"] sdoc-autocompletable {
+  /* Inline edit component injected via turbo-stream on click. */
+  white-space: normal;
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+[js-table_view_edit] [data-field-type="autocomplete"] .autocomplete-items {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 1000;
+  min-width: 100%;
+}
+
 /* Column visibility toolbar */
 
 .table-toolbar {
-  position: sticky;
-  top: calc(-5 * var(--base-rhythm));
-  left: calc(-9 * var(--base-rhythm));
-  z-index: 10;
-  width: fit-content;
-  height: 0;
+}
+
+.table-toolbar__dock {
+  --gap: calc(var(--base-rhythm) * 0.5);
   display: flex;
-  column-gap: var(--base-rhythm);
-  padding-inline: calc(4 * var(--base-rhythm));
-  background-color: var(--color-bg-main);
+  column-gap: var(--gap);
 }
 
 .table-toolbar__columns,
@@ -103,6 +455,11 @@
 
 .table-toolbar__btn {
   text-transform: uppercase;
+}
+
+.table-toolbar__btn-info {
+  color: var(--color-fg-main);
+  text-transform: lowercase;
 }
 
 /* .collapsed and .expanded are classes inside SVG .icon_collapse */
@@ -119,22 +476,22 @@
   display: none;
 }
 
-.table-toolbar__panel {
+.table-toolbar__dropdown {
   position: absolute;
-  top: 100%;
-  left: 0;
+  right: 0; /* table-toolbar is the last element in .header  */
+  left: auto;
   z-index: 100;
   min-width: 180px;
 }
 
-.table-toolbar__panel-header {
+.table-toolbar__dropdown-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding-left: calc(var(--base-rhythm) * 0.5);
 }
 
-.table-toolbar__panel-title {
+.table-toolbar__dropdown-title {
   font-weight: bold;
 }
 
@@ -155,17 +512,477 @@
 
 .table-toolbar__item {
   margin: 0;
+  /* to stretch the checkbox label to the full width of the dropdown */
+  display: flex;
+  align-items: stretch;
+  flex-direction: column;
 }
 
-.table-toolbar__label {
+/* =========================================================== */
+/* Doc-config fields (root node above the table)               */
+/* =========================================================== */
+
+/* sdoc-meta has its own border/padding regardless of children, so it
+   renders as an empty box even when every field is hidden. Hide it when
+   empty.
+
+   <sdoc-autogen> wraps every rendered field value (config fields, custom
+   meta) and is only ever included once that value is non-empty; the "Add
+   metadata" control doesn't use it. So "no <sdoc-autogen> inside" means
+   "nothing to show" — no need to check field types individually.
+
+   :has() re-evaluates live, so per-field inline saves are picked up with
+   no extra backend work. :not([data-mode="edit"]) avoids a specificity
+   fight with edit mode, where the wrapper must stay visible regardless of
+   emptiness so the (empty) fields can be filled in. */
+[js-table_view_edit]:not([data-mode="edit"]) sdoc-meta:not(:has(sdoc-autogen)) {
+  display: none;
+}
+
+/* Empty editable document config fields are hidden until edit mode. */
+[js-table_view_edit] sdoc-meta-label:has(+ sdoc-meta-field > [id^="doc-field-"]:empty),
+[js-table_view_edit] sdoc-meta-field:has(> [id^="doc-field-"]:empty),
+[js-table_view_edit] .table-view-custom-metadata-add-button {
+  display: none;
+}
+
+[js-table_view_edit] sdoc-meta {
+  overflow: visible;
+}
+
+[js-table_view_edit] sdoc-meta-row {
+  position: relative;
+}
+
+[js-table_view_edit][data-mode="edit"] sdoc-meta-field {
+  min-width: 100px;
+}
+
+[js-table_view_edit][data-mode="edit"] sdoc-meta-field[data-field-name] {
+  /* to have the reserved (not custom) meta field
+     take the place of the right (delete) button
+  */
+  grid-column: 3 / 5;
+}
+
+[js-table_view_edit][data-mode="edit"] sdoc-meta-label:has(+ sdoc-meta-field > [id^="doc-field-"]:empty),
+[js-table_view_edit][data-mode="edit"] sdoc-meta-field:has(> [id^="doc-field-"]:empty) {
+  display: flex;
+}
+
+[js-table_view_edit][data-mode="edit"] .table-view-custom-metadata-add-button {
+  display: grid;
+}
+
+[js-table_view_edit] .table-view-custom-metadata-add-button > .action_button {
+  grid-column: 2 / 4;
+  padding: calc(var(--base-rhythm)*0.25) var(--base-rhythm);
+  background-color: var(--color-bg-contrast);
+}
+
+/* sdoc-meta-field used as editable cell in the root node. */
+[js-table_view_edit][data-mode="edit"] sdoc-meta-field,
+[js-table_view_edit][data-mode="edit"] sdoc-meta-label {
+  position: relative;
+}
+
+[js-table_view_edit][data-mode="edit"] sdoc-meta-label[data-mode="editing"],
+[js-table_view_edit][data-mode="edit"] sdoc-meta-label[data-mode="editing"]:hover,
+[js-table_view_edit][data-mode="edit"] sdoc-meta-field[data-mode="editing"],
+[js-table_view_edit][data-mode="edit"] sdoc-meta-field[data-mode="editing"]:hover {
+  cursor: default;
+}
+
+/* Give empty meta cells a minimum click target in edit mode */
+[js-table_view_edit][data-mode="edit"] sdoc-meta-field > div:not(.editable-cell-indicator) {
+  min-height: 1.5rem;
+}
+
+/* error in table */
+
+[data-validation-error="true"] {
+  outline: 2px solid var(--color-danger);
+  outline-offset: -2px;
+  color: var(--color-danger);
+}
+
+[js-table_view_edit][data-mode="edit"] sdoc-form-error + sdoc-form-field {
+  outline: 1px dotted var(--color-danger);
+  /* for form with `:focus-within::after` -4px */
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+[js-table_view_edit][data-mode="edit"] sdoc-form-error {
+  min-width: 200px;
+  margin-top: 4px; /* separate error from sdoc-form-field with outline-offset: 4px; */
+}
+
+/* sdoc-meta errors */
+
+[js-table_view_edit][data-mode="edit"] sdoc-meta sdoc-form-error {
+  padding: 0 var(--base-rhythm);
+  margin: 0; /* override form error margin for meta fields, which are outside the table cells */
+  grid-column: 1 / -1; /* span all columns in the meta grid */
+  order: 2; /* after fields in grid */
+}
+
+[js-table_view_edit][data-mode="edit"] sdoc-meta sdoc-form-error::before {
+  content: '⚠ ';
+}
+
+/*
+  The field containing the error is highlighted
+  when it is not in focus (i.e., not being edited)
+  to avoid visual clutter during editing:
+*/
+
+[js-table_view_edit] sdoc-meta-label:has([errors="true"]:not(:focus-within)),
+[js-table_view_edit] sdoc-meta-field:has([errors="true"]:not(:focus-within)) {
+  color: var(--color-danger);
+  outline: 1px solid var(--color-danger);
+  outline-offset: -1px;
+}
+
+[js-table_view_edit] sdoc-meta-field:has([errors="true"]:not(:focus-within)) .editable-cell-indicator {
+  outline: none !important;
+}
+
+[js-table_view_edit] .custom_meta-row-move-container {
+  grid-column: 1 / 2;
+}
+
+[js-table_view_edit] .custom_meta-row-delete-container {
+  grid-column: 4 / 5;
+}
+
+[js-table_view_edit] .custom_meta-row-move-container,
+[js-table_view_edit] .custom_meta-row-delete-container {
+  display: none;
+}
+
+[js-table_view_edit][data-mode="edit"] .custom_meta-row-move-container,
+[js-table_view_edit][data-mode="edit"] .custom_meta-row-delete-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+[js-table_view_edit] sdoc-meta [data-js-move-field-action] {
+  color: var(--color-fg-main);
+  cursor: move;
+}
+
+[js-table_view_edit] sdoc-meta [data-js-move-field-action],
+[js-table_view_edit] sdoc-meta [data-js-delete-field-action] {
+  opacity: 0.5;
+}
+
+[js-table_view_edit] sdoc-meta [data-js-move-field-action]:hover,
+[js-table_view_edit] sdoc-meta [data-js-delete-field-action]:hover {
+  opacity: 1;
+}
+
+[js-table_view_edit] sdoc-meta .custom_meta-row-move-container .field_action:hover::before,
+[js-table_view_edit] sdoc-meta .custom_meta-row-delete-container .field_action:hover::before {
+  /* Reset the row highlighting that was designed for a different form layout */
+  background: transparent;
+}
+
+[js-table_view_edit] sdoc-meta-row:has([data-js-delete-field-action]:hover) sdoc-meta-label,
+[js-table_view_edit] sdoc-meta-row:has([data-js-delete-field-action]:hover) sdoc-meta-field {
+  background-color: var(--color-highlight-danger);
+}
+
+[js-table_view_edit] sdoc-meta-row:has([data-js-move-field-action]:hover) sdoc-meta-label,
+[js-table_view_edit] sdoc-meta-row:has([data-js-move-field-action]:hover) sdoc-meta-field {
+  background-color: var(--color-highlight-secondary);
+}
+
+[js-table_view_edit-custom_meta-row][data-dragging="true"] {
+  opacity: 0.5;
+}
+
+[js-table_view_edit-custom_meta-row][data-drop-position="before"] {
+  box-shadow: 0 -2px 0 var(--color-accent);
+}
+
+[js-table_view_edit-custom_meta-row][data-drop-position="after"] {
+  box-shadow: 0 2px 0 var(--color-accent);
+}
+
+/* add_new_row */
+
+[js-table_view_edit][data-mode="edit"] {
+  overflow-anchor: none;
+  scroll-behavior: auto;
+}
+
+.content-view__add_new_row-TR {
+  position: relative;
+  z-index: 101; /* sticky thead should be above*/
+  display: none;
+}
+
+[js-table_view_edit][data-mode="edit"] .content-view__add_new_row-TR {
+  display: table-row;
+}
+
+/* Inverse of .content-view__add_new_row-TR: visible in display mode,
+   hidden in edit mode (where the add-node handler row takes its place). */
+[js-table_view_edit][data-mode="edit"] .content-view__empty-row-TR {
+  display: none;
+}
+
+.content-view__empty-row-TR sdoc-main-placeholder {
+  padding-inline: calc(4 * var(--base-rhythm));
+  padding-block: calc(3 * var(--base-rhythm));
+  width: fit-content; /* to push left */
+}
+
+.content-view__add_new_row-TD {
+  /* Even though some rows are hidden,
+     the rows containing the “Add New Node” button are still visible
+   */
+  /* border-left: 1px solid #666; */
+  /* border-right: 1px solid #666; */
+  border-bottom: 1px solid #666;
+  background: var(--color-bg-contrast);
+  background-color: var(--color-bg-main);
+}
+
+.table-add-node {
+  padding: var(--base-rhythm) 0;
+}
+
+.add_new_row_handler {
+  /* visible only in [js-table_view_edit][data-mode="edit"] */
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 0;
+
+  transition: all 0.5s ease;
+  height: calc(0.5 * var(--base-rhythm));
+}
+
+.add_new_row_handler::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  top: calc(-1 * var(--base-rhythm));
+  bottom: calc(-1 * var(--base-rhythm));
+}
+
+.add_new_row_handler::after {
+  content: '+';
+  left: calc(-2 * var(--base-rhythm));
+  z-index: 200;
+
+  cursor: pointer;
+  position: absolute;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 22px;
+  height: 22px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 50%;
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--color-bg-main, White);
+  background: var(--color-bg-main, White);
+  color: var(--color-fg-accent, currentColor);
+  transition: .3s;
+}
+
+.add_new_row_handler:hover {
+  cursor: cell;
+  background-color: var(--color-fg-accent, currentColor);
+}
+
+.add_new_row_handler:hover::after {
+  cursor: pointer;
+  background-color: var(--color-fg-accent, currentColor);
+  color: var(--color-bg-main, White);
+}
+
+/* [data-mode="open"] .add_new_row_handler */
+.add_new_row_handler[aria-expanded="true"] {
+  display: none;
+}
+
+.table-add-node[data-mode="open"] .add_new_row_handler {
+  cursor: cell;
+  background-color: var(--color-fg-accent, currentColor);
+}
+
+.table-add-node[data-mode="open"] .add_new_row_handler::after {
+  background-color: var(--color-fg-accent, currentColor);
+  color: var(--color-bg-main, White);
+}
+
+/* new row */
+
+tr[data-node-created="true"] {
+  border: 4px solid var(--color-bg-ui);
+  animation: node-created-border 3s ease-out forwards;
+}
+
+@keyframes node-created-border {
+  from { border-color: var(--color-fg-accent); }
+  to   { border-color: var(--color-bg-ui); }
+}
+
+/* add_new_row menu */
+
+.table-add-node__menu {
+  border: 4px solid var(--color-fg-accent);
+  /* outline-offset: -2px; */
+}
+
+.table-add-node__menu * {
+  /* to activate sticking */
+  width: fit-content;
+}
+
+.table-add-node__menu-body {
+  z-index: 20;
+
+  position: sticky;
+  left: calc(-1 * var(--base-gap));
+
+  padding: var(--table-gap);
+}
+
+@keyframes table-add-node-spin {
+  to { transform: rotate(360deg); }
+}
+
+.table-add-node[data-pending="true"] .table-add-node__menu-body::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-bg-main);
+  opacity: 0.7;
+  z-index: 0;
+}
+
+.table-add-node[data-pending="true"] .table-add-node__menu-body::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  margin-top: -8px;
+  margin-left: -8px;
+  border: 2px solid var(--color-fg-accent);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: table-add-node-spin 0.6s linear infinite;
+  z-index: 1;
+}
+
+.table-add-node__message {
+  margin: 0 0 var(--base-rhythm);
+  color: var(--color-fg-secondary);
+  font-size: 0.9rem;
+}
+
+.table-add-node__message--error {
+  color: var(--color-danger);
+}
+
+.table-add-node__message--hidden {
+  display: none;
+}
+
+.table-add-node__blockers {
+  display: flex;
+  flex-direction: column;
+  gap: var(--base-rhythm);
+}
+
+.table-add-node__blockers[hidden],
+.table-add-node__actions[hidden] {
+  display: none;
+}
+
+.table-add-node__blocker {
   display: flex;
   align-items: center;
-  gap: .5rem;
-  cursor: pointer;
-  user-select: none;
+  gap: var(--base-rhythm);
 }
 
-.table-toolbar__label:hover {
+.table-add-node__blocker .table-add-node__message {
+  margin: 0;
+}
+
+.table-add-node__unblock-button {
+  flex-shrink: 0;
+}
+
+.table-add-node__actions {
+  display: grid;
+  grid-template-columns:  minmax(min-content, max-content)
+                          minmax(min-content, max-content)
+                          minmax(min-content, max-content)
+                          minmax(min-content, max-content);
+
+  gap: calc(var(--base-rhythm) * 0.5);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.table-add-node__element {
+  display: flex;
+  gap: calc(var(--base-rhythm) * 0.5);
+
+  /* padding: var(--base-rhythm); */
+  text-transform: uppercase;
+  color: var(--color-fg-secondary);
+  font-weight: 700;
+  font-size: var(--font-size-xxsm);
+  display: flex;
+  align-items: center;
+
+  grid-column: 1 / 2;
+}
+
+.table-add-node__action[data-whereto="before"] { grid-column: 2 / 3; }
+.table-add-node__action[data-whereto="after"] { grid-column: 3 / 4; }
+.table-add-node__action[data-whereto="child"] { grid-column: 4 / 5; }
+
+.table-add-node__action {
+  margin: 0;
+}
+
+.table-add-node__action-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--base-rhythm) / 2);
+  border: none;
+  border-radius: calc(var(--base-rhythm) / 2);
+  background: transparent;
+  color: var(--color-fg-main);
+}
+
+.table-add-node__action-button:not(:disabled) {
+  cursor: pointer;
+}
+
+.table-add-node__action-button:not(:disabled):hover {
   background-color: var(--color-bg-secondary);
   color: var(--color-fg-accent);
+}
+
+.table-add-node__action-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
 }

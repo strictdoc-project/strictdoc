@@ -1,0 +1,11 @@
+[DOCUMENT]
+TITLE: Nested Document
+OPTIONS:
+  MARKUP: Markdown
+
+[TEXT]
+STATEMENT: >>>
+This nested document references an image from the parent directory using Markdown syntax.
+
+![Root image](../_assets/root_image.svg)
+<<<

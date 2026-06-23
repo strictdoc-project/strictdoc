@@ -1,0 +1,20 @@
+{#
+  Final custom metadata grid row.
+
+  The complete wrapper is one inline-edit field. While it is open, its target
+  contains both the metadata name and value controls, but both still belong to
+  the persistent document metadata form surrounding this partial.
+#}
+<sdoc-meta-row
+  id="document-custom-meta-add"
+  class="table-view-custom-metadata-add-button"
+  js-table_view_edit-field="contenteditable"
+  js-table_view_edit-submit-unchanged
+  data-url="/actions/table/get_document_custom_meta_new_inline?document_mid={{ doc_mid }}"
+  data-testid="document-config-metadata-add"
+>
+  <span class="action_button">
+    {%- include "icons/ico16_add.svg" -%}
+    Add metadata
+  </span>
+</sdoc-meta-row>

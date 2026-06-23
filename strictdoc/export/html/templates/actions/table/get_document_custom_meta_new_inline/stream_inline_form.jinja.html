@@ -1,0 +1,9 @@
+{#
+  The Add wrapper stays the active inline field. Updating its contents preserves
+  table_view_edit.js state while exposing name/value controls in the metadata grid.
+#}
+<turbo-stream action="update" target="document-custom-meta-add">
+  <template>
+    {%- include "screens/document/table/field_edit_mode/document_custom_meta_new.jinja" -%}
+  </template>
+</turbo-stream>

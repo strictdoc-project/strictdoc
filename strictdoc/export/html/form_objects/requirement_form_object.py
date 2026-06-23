@@ -57,6 +57,28 @@ class RequirementFormFieldType(str, Enum):
     MULTILINE = "MULTILINE"
 
 
+def deduplicate_comma_separated_value(value: str) -> str:
+    """
+    MultipleChoice/Tag field values are a comma-separated set. Existing
+    documents can already contain duplicate entries (hand-edited, or
+    created before the autocomplete duplicate-prevention fix). Remove the
+    duplicates here, case-insensitively, keeping the order and casing of
+    the first occurrence.
+    """
+    seen: Set[str] = set()
+    deduplicated_parts: List[str] = []
+    for raw_part in value.split(","):
+        part = raw_part.strip()
+        if not part:
+            continue
+        key = part.lower()
+        if key in seen:
+            continue
+        seen.add(key)
+        deduplicated_parts.append(part)
+    return ", ".join(deduplicated_parts)
+
+
 @auto_described
 class RequirementFormField:
     def __init__(
@@ -142,6 +164,16 @@ class RequirementFormField:
             RequirementFieldType.TAG,
         ):
             field_value = requirement_field.get_text_value()
+            if grammar_field.gef_type in (
+                RequirementFieldType.MULTIPLE_CHOICE,
+                RequirementFieldType.TAG,
+            ):
+                # The document may already contain duplicate values (e.g.
+                # hand-edited, or saved before the autocomplete
+                # duplicate-prevention fix). Deduplicate when loading the
+                # value into the edit form, so saving the form as-is
+                # cleans up the document.
+                field_value = deduplicate_comma_separated_value(field_value)
             return RequirementFormField(
                 field_mid=MID.create(),
                 field_name=grammar_field.title,
@@ -400,7 +432,16 @@ class RequirementFormObject(ErrorObject):
             form_fields.append(form_field)
             if form_field.field_name == "UID" and next_uid is not None:
                 form_field.field_value = next_uid
-            elif form_field.field_name == "MID" and document.config.enable_mid:
+            elif form_field.field_name == "MID" and (
+                document.config.enable_mid
+                or (
+                    "MID" in element.fields_map
+                    and document.meta is not None
+                    and document.meta.input_doc_full_path.lower().endswith(
+                        (".md", ".markdown")
+                    )
+                )
+            ):
                 form_field.field_value = new_requirement_mid.get_string_value()
 
         return RequirementFormObject(
@@ -522,13 +563,25 @@ class RequirementFormObject(ErrorObject):
                 context_document_mid=context_document_mid,
             )
         )
+        grammar = document.grammar
+        assert grammar is not None
+        grammar_element = grammar.elements_by_type[requirement.node_type]
         form_object.requirement_mid = MID.create()
         for field_name, fields_ in form_object.fields.items():
             field: RequirementFormField
             if field_name == "UID":
                 field = fields_[0]
                 field.field_value = clone_uid
-            elif field_name == "MID" and document.config.enable_mid:
+            elif field_name == "MID" and (
+                document.config.enable_mid
+                or (
+                    "MID" in grammar_element.fields_map
+                    and document.meta is not None
+                    and document.meta.input_doc_full_path.lower().endswith(
+                        (".md", ".markdown")
+                    )
+                )
+            ):
                 field = fields_[0]
                 field.field_value = (
                     form_object.requirement_mid.get_string_value()
@@ -959,8 +1012,17 @@ class RequirementFormObject(ErrorObject):
         self, grammar_element_field: GrammarElementField
     ) -> None:
         field_0 = self.fields[grammar_element_field.title][0]
-        if len(field_0.field_value) == 0 and not grammar_element_field.required:
-            # The empty choice fields are allowed if the field is not REQUIRED.
+        if len(field_0.field_value) == 0:
+            if grammar_element_field.required:
+                self.add_error(
+                    grammar_element_field.title,
+                    (
+                        f"Node's {grammar_element_field.title} must not be empty. "
+                        f"If there is no appropriate value for this field yet, "
+                        f"enter TBD (to be done)."
+                    ),
+                )
+            # Empty non-required fields are valid.
             return
 
         choice_grammar_element_field: Union[

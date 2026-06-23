@@ -22,6 +22,17 @@
 {%- endif -%}
 
 {#
+  By default, field errors are rendered inside <sdoc-form-field>, immediately
+  after the input control. Set field_render_errors=false when a parent row
+  renders the same error list in a shared location. The errors collection is
+  still used above to mark the affected <sdoc-contenteditable> with
+  errors="true".
+#}
+{% if field_render_errors is not defined -%}
+{% set field_render_errors=true -%}
+{%- endif -%}
+
+{#
   CSS note:
   Flex order in <sdoc-form-field> should not be used to ensure that the output
   of an error block affects the contenteditable physically following it.
@@ -74,7 +85,11 @@
     </textarea>
   {%- endif -%}
 
-  {%- if errors is defined and errors|length > 0 -%}
+  {%- if
+    field_render_errors
+    and errors is defined
+    and errors|length > 0
+  -%}
     {%- for error_ in errors -%}
     <sdoc-form-error>
       {{ error_ }}

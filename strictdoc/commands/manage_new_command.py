@@ -64,6 +64,16 @@ added to that document's root level.
             ),
         )
         parser.add_argument(
+            "--node-type",
+            type=str,
+            dest="node_type",
+            default=None,
+            help=(
+                "Node type to create (must match a grammar element tag). "
+                "Defaults to REQUIREMENT when the grammar has one."
+            ),
+        )
+        parser.add_argument(
             "--config",
             type=str,
             help="Path to the StrictDoc TOML config file.",
@@ -188,18 +198,32 @@ added to that document's root level.
             )
             sys.exit(1)
 
-        # Determine the node type to create (first non-SECTION, non-TEXT
-        # grammar element, usually REQUIREMENT).
+        # Determine the node type to create.
         assert document.grammar is not None
         node_type: Optional[str] = None
-        for element in document.grammar.elements:
-            if element.tag not in ("SECTION", "TEXT"):
-                node_type = element.tag
-                break
-        if node_type is None:
+        if manage_config.node_type is not None:
+            requested_type = manage_config.node_type
+            if requested_type not in document.grammar.elements_by_type:
+                print(  # noqa: T201
+                    f"error: The document grammar has no element of type "
+                    f"'{requested_type}'. Available types: "
+                    + ", ".join(document.grammar.elements_by_type.keys())
+                    + "."
+                )
+                sys.exit(1)
+            node_type = requested_type
+        elif (
+            document.grammar.is_default
+            or "REQUIREMENT" in document.grammar.elements_by_type
+        ):
+            node_type = "REQUIREMENT"
+        else:
             print(  # noqa: T201
-                "error: The document grammar has no element type suitable for "
-                "creating a new node (no non-SECTION, non-TEXT element found)."
+                "error: The document has a custom grammar with no REQUIREMENT "
+                "element. Use --node-type to specify which node type to create. "
+                "Available types: "
+                + ", ".join(document.grammar.elements_by_type.keys())
+                + "."
             )
             sys.exit(1)
 

@@ -27,6 +27,7 @@ from strictdoc.backend.rst.directives.sphinx_style_math import (
     math_role_for_server,
 )
 from strictdoc.backend.rst.directives.wildcard_enhanced_image import (
+    STRICTDOC_FLAT_ASSETS_SETTING,
     STRICTDOC_REFERENCE_PATH_SETTING,
     WildcardEnhancedImage,
 )
@@ -60,6 +61,8 @@ class RstToHtmlFragmentWriter:
         *,
         project_config: ProjectConfig,
         context_document: Optional[SDocDocument],
+        flat_assets: bool = False,
+        reference_path_override: Optional[str] = None,
     ):
         self.source_path: str
         path_to_output_dir_md5: str = hashlib.md5(
@@ -72,7 +75,14 @@ class RstToHtmlFragmentWriter:
         )
         self.reference_path = os.getcwd()
 
-        if context_document is not None:
+        if reference_path_override is not None:
+            self.reference_path = reference_path_override
+            # See the comment below in the elif branch for why source_path is
+            # set to a file inside the reference directory.
+            self.source_path = os.path.join(
+                reference_path_override, "STRICTDOC-FRAGMENT.rst"
+            )
+        elif context_document is not None:
             assert context_document.meta is not None
             self.reference_path = (
                 context_document.meta.output_document_dir_full_path
@@ -96,6 +106,8 @@ class RstToHtmlFragmentWriter:
             self.source_path = "<string>"
         self.context_document: Optional[SDocDocument] = context_document
 
+        self.flat_assets: bool = flat_assets
+
         if project_config.is_feature_activated(ProjectFeature.MATHJAX):
             if project_config.is_running_on_server:
                 roles.register_canonical_role("eq", eq_role_for_server)
@@ -117,8 +129,11 @@ class RstToHtmlFragmentWriter:
             self.path_to_rst_cache_dir, str(len(rst_fragment))
         )
         fragment_md5 = hashlib.md5(rst_fragment.encode("utf-8")).hexdigest()
+        # flat_assets mode produces different HTML (rebased image paths) for the
+        # same RST fragment, so it needs its own cache entry.
+        cache_key = fragment_md5 + ("_flat" if self.flat_assets else "")
         path_to_cached_fragment = os.path.join(
-            path_to_rst_fragment_bucket_dir, fragment_md5
+            path_to_rst_fragment_bucket_dir, cache_key
         )
         if use_cache and os.path.isdir(path_to_rst_fragment_bucket_dir):
             if os.path.isfile(path_to_cached_fragment):
@@ -180,6 +195,7 @@ class RstToHtmlFragmentWriter:
             **self.BASE_SETTINGS,
             "warning_stream": warning_stream,
             STRICTDOC_REFERENCE_PATH_SETTING: self.reference_path,
+            STRICTDOC_FLAT_ASSETS_SETTING: self.flat_assets,
         }
 
         output = publish_parts(
@@ -231,6 +247,7 @@ class RstToHtmlFragmentWriter:
             **self.BASE_SETTINGS,
             "warning_stream": warning_stream,
             STRICTDOC_REFERENCE_PATH_SETTING: self.reference_path,
+            STRICTDOC_FLAT_ASSETS_SETTING: self.flat_assets,
         }
 
         try:

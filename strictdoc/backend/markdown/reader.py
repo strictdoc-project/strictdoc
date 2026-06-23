@@ -5,7 +5,7 @@ Markdown reader for importing CommonMark documents into SDoc objects.
 import os
 import re
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Sequence, Set, Tuple, Union
+from typing import Any, Dict, List, Optional, Sequence, Set, Tuple, Union
 
 from markdown_it import MarkdownIt
 from markdown_it.token import Token
@@ -13,12 +13,15 @@ from markdown_it.token import Token
 from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
+from strictdoc.backend.sdoc.free_text_reader import SDFreeTextReader
+from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import (
     DocumentCustomMetadata,
     DocumentCustomMetadataKeyValuePair,
 )
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
@@ -33,6 +36,7 @@ from strictdoc.backend.sdoc_source_code.reader_registry import (
 )
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.cast import assert_cast
+from strictdoc.helpers.mid import MID
 from strictdoc.helpers.string import strip_bom
 
 
@@ -61,6 +65,12 @@ class ParsedMarkdownNode:
     fields: List[ParsedField]
     valid_for_requirement: bool
     has_duplicates: bool
+    explicit_node_type: Optional[str] = None
+    # Body after the meta block stripped, used as effective body for section
+    # TEXT children so that **TYPE**: / **PREFIX**: / **MID**: lines do not
+    # reappear as prose.  None means "use the raw heading body" (fallback for
+    # ambiguous meta blocks such as duplicate-field invalid nodes).
+    processed_body: Optional[str] = None
 
 
 class SDMarkdownReader:
@@ -69,6 +79,10 @@ class SDMarkdownReader:
     plain_field_pattern = re.compile(
         r"^\*\*(?P<name>[A-Za-z0-9][A-Za-z0-9 _-]*)\*\*:(?P<value>.*)$"
     )
+    # Patterns for detecting the **TYPE**: TEXT \ **MID**: ... prefix in TEXT
+    # node bodies (used when the grammar's TEXT element declares a MID field).
+    _text_type_line_re = re.compile(r"^\*\*TYPE\*\*: TEXT(?: \\)?$")
+    _text_mid_line_re = re.compile(r"^\*\*MID\*\*: (\S+)$")
     dict_entry_pattern = re.compile(
         r"^\s*\*\*(?P<name>[A-Za-z0-9][A-Za-z0-9 _-]*)\*\*:\s*`?(?P<value>[^`]*)`?\s*(?:\\)?$"
     )
@@ -285,6 +299,8 @@ class SDMarkdownReader:
                         import_from_file=field_.value,
                     )
                     continue
+                if field_.name == "PREFIX":
+                    document.config.requirement_prefix = field_.value
                 metadata_entries.append(
                     DocumentCustomMetadataKeyValuePair(
                         key=field_.human_name,
@@ -390,6 +406,7 @@ class SDMarkdownReader:
                     including_document_reference=including_document_reference,
                     file_path=file_path,
                     project_config=project_config,
+                    node_type=parsed_node.explicit_node_type or "REQUIREMENT",
                 )
                 parent_node.section_contents.append(requirement_node)
                 stack.append((heading_node.level, requirement_node))
@@ -421,14 +438,69 @@ class SDMarkdownReader:
                 section_node.ng_including_document_reference = (
                     including_document_reference
                 )
+                # Preserve MID from the section meta block (e.g. **TYPE**: SECTION \ **MID**: ...).
+                # create_section does not accept fields, so we patch it in afterwards.
+                # MID must be inserted before TITLE to match the grammar field order.
+                mid_field = next(
+                    (f for f in parsed_node.fields if f.name == "MID"), None
+                )
+                if mid_field is not None:
+                    mid_sdoc_field = SDocNodeField.create_from_string(
+                        parent=section_node,
+                        field_name="MID",
+                        field_value=mid_field.value,
+                        multiline=False,
+                    )
+                    existing = list(section_node.ordered_fields_lookup.items())
+                    section_node.ordered_fields_lookup.clear()
+                    section_node.ordered_fields_lookup["MID"] = [mid_sdoc_field]
+                    section_node.ordered_fields_lookup.update(existing)
+                    section_node.reserved_mid = MID(mid_field.value)
+                    section_node.mid_permanent = True
+                # Preserve PREFIX from the section meta block.
+                # PREFIX is inserted before TITLE (after MID) to keep the
+                # field order: MID, LEVEL, PREFIX, TITLE.
+                prefix_field = next(
+                    (f for f in parsed_node.fields if f.name == "PREFIX"), None
+                )
+                if prefix_field is not None:
+                    prefix_sdoc_field = SDocNodeField.create_from_string(
+                        parent=section_node,
+                        field_name="PREFIX",
+                        field_value=prefix_field.value,
+                        multiline=False,
+                    )
+                    title_entry = section_node.ordered_fields_lookup.pop(
+                        "TITLE", None
+                    )
+                    section_node.ordered_fields_lookup["PREFIX"] = [
+                        prefix_sdoc_field
+                    ]
+                    if title_entry is not None:
+                        section_node.ordered_fields_lookup["TITLE"] = (
+                            title_entry
+                        )
                 parent_node.section_contents.append(section_node)
 
-                if len(heading_node.body) > 0:
+                # When processed_body is set the meta block has been stripped;
+                # use it to avoid duplicating **TYPE**: / **PREFIX**: / **MID**:
+                # lines as prose in the TEXT child.  Otherwise fall back to the
+                # raw heading body so ambiguous content is preserved.
+                effective_body = (
+                    parsed_node.processed_body
+                    if parsed_node.processed_body is not None
+                    else heading_node.body
+                )
+                if len(effective_body.strip()) > 0:
+                    text_mid, text_statement = (
+                        SDMarkdownReader._try_parse_text_meta(effective_body)
+                    )
                     text_node = SDMarkdownReader._create_text_node(
                         parent=section_node,
-                        statement=heading_node.body,
+                        statement=text_statement,
                         document_reference=document_reference,
                         including_document_reference=including_document_reference,
+                        mid=text_mid,
                     )
                     section_node.section_contents.append(text_node)
 
@@ -633,6 +705,23 @@ class SDMarkdownReader:
         )
 
         parsed_fields = meta_fields + content_fields
+
+        # Extract TYPE before further validation; it controls the node type and
+        # must not be forwarded as a regular SDoc field.
+        # Only the first TYPE field is honoured: for SECTION nodes the body may
+        # contain a **TYPE**: TEXT \ prefix in the TEXT child content (MD-28),
+        # and that body-level TYPE must not override the meta-block TYPE.
+        explicit_node_type: Optional[str] = None
+        parsed_fields_without_type: List[ParsedField] = []
+        for field_ in parsed_fields:
+            if field_.name == "TYPE":
+                if explicit_node_type is None:
+                    explicit_node_type = field_.value.strip()
+                # Subsequent TYPE fields (e.g. in the TEXT body) are discarded.
+            else:
+                parsed_fields_without_type.append(field_)
+        parsed_fields = parsed_fields_without_type
+
         parsed_field_names = list(
             map(lambda field_: field_.name, parsed_fields)
         )
@@ -648,7 +737,18 @@ class SDMarkdownReader:
             len(field_.value) == 0 for field_ in parsed_fields
         )
 
-        if has_custom_grammar:
+        if explicit_node_type == "SECTION":
+            # Explicit TYPE: SECTION always creates a section, regardless of
+            # whether the body would otherwise qualify as a requirement.
+            valid_for_requirement = False
+        elif explicit_node_type is not None:
+            # Any other explicit TYPE is accepted as long as the markdown syntax
+            # is well-formed and the heading has a non-empty title.  Grammar
+            # field validation is deferred to TraceabilityIndexBuilder.
+            valid_for_requirement = (
+                meta_is_valid and content_is_valid and len(title) > 0
+            )
+        elif has_custom_grammar:
             # When a custom grammar is attached, drop the hardcoded UID/STATEMENT
             # assumptions and defer field validation to TraceabilityIndexBuilder.
             valid_for_requirement = (
@@ -670,10 +770,25 @@ class SDMarkdownReader:
                 and len(title) > 0
             )
 
+        # Use body_lines_without_meta (meta block stripped) as processed_body
+        # only when the meta block contains section-specific fields (TYPE, MID,
+        # PREFIX) so those lines do not reappear as prose in the TEXT child.
+        # For ambiguous meta blocks (e.g. duplicate UID fields in an invalid
+        # requirement node) fall back to None so _create_document_tree uses the
+        # raw heading body and preserves the content.
+        _parsed_field_names: Set[str] = {f.name for f in parsed_fields}
+        processed_body: Optional[str] = None
+        if explicit_node_type is not None or (
+            "MID" in _parsed_field_names or "PREFIX" in _parsed_field_names
+        ):
+            processed_body = "".join(body_lines_without_meta)
+
         return ParsedMarkdownNode(
             fields=parsed_fields,
             valid_for_requirement=valid_for_requirement,
             has_duplicates=has_duplicates,
+            explicit_node_type=explicit_node_type,
+            processed_body=processed_body,
         )
 
     @staticmethod
@@ -864,6 +979,35 @@ class SDMarkdownReader:
         line_index = 0
         line_count = len(body_lines)
 
+        # Pre-compute line indices that fall *inside* fenced code blocks
+        # (between the opening and closing fence markers).  Those lines must
+        # not be matched against plain_field_pattern — they are opaque content.
+        fence_interior: Set[int] = set()
+        _fence_open_re = re.compile(r"^(`{3,}|~{3,})")
+        _fi = 0
+        while _fi < line_count:
+            _m = _fence_open_re.match(
+                SDMarkdownReader._line_without_line_ending(body_lines[_fi])
+            )
+            if _m:
+                _fence_char = _m.group(1)[0]
+                _fence_min = len(_m.group(1))
+                _close_re = re.compile(
+                    rf"^{re.escape(_fence_char)}{{{_fence_min},}}\s*$"
+                )
+                _fi += 1
+                while _fi < line_count:
+                    _inner = SDMarkdownReader._line_without_line_ending(
+                        body_lines[_fi]
+                    )
+                    if _close_re.match(_inner):
+                        _fi += 1
+                        break
+                    fence_interior.add(_fi)
+                    _fi += 1
+            else:
+                _fi += 1
+
         while line_index < line_count:
             line = body_lines[line_index]
             if SDMarkdownReader._is_empty_line(line):
@@ -910,7 +1054,7 @@ class SDMarkdownReader:
 
             line_text = SDMarkdownReader._line_without_line_ending(line)
             plain_match = SDMarkdownReader.plain_field_pattern.match(line_text)
-            if plain_match is not None:
+            if plain_match is not None and line_index not in fence_interior:
                 field_name_upper = plain_match.group("name").upper()
                 field_name_human = plain_match.group("name")
                 inline_value = SDMarkdownReader._trim_single_space_prefix(
@@ -932,6 +1076,7 @@ class SDMarkdownReader:
                                 candidate_line_text
                             )
                             is not None
+                            and line_index not in fence_interior
                         ):
                             break
                         continuation_lines.append(candidate_line)
@@ -987,6 +1132,7 @@ class SDMarkdownReader:
                             candidate_line_text
                         )
                         is not None
+                        and line_index not in fence_interior
                     ):
                         break
                     if is_list_field and SDMarkdownReader._is_empty_line(
@@ -1013,8 +1159,11 @@ class SDMarkdownReader:
                 candidate_line_text = (
                     SDMarkdownReader._line_without_line_ending(candidate_line)
                 )
-                if SDMarkdownReader.plain_field_pattern.match(
-                    candidate_line_text
+                if (
+                    SDMarkdownReader.plain_field_pattern.match(
+                        candidate_line_text
+                    )
+                    and line_index not in fence_interior
                 ):
                     break
                 statement_lines.append(candidate_line)
@@ -1042,8 +1191,9 @@ class SDMarkdownReader:
         including_document_reference: DocumentReference,
         file_path: Optional[str] = None,
         project_config: Optional[ProjectConfig] = None,
+        node_type: str = "REQUIREMENT",
     ) -> SDocNode:
-        """Build a REQUIREMENT SDocNode from parsed fields, attaching relations and document references."""
+        """Build a SDocNode from parsed fields, attaching relations and document references."""
         parsed_meta_fields: List[ParsedField] = []
         parsed_content_fields: List[ParsedField] = []
         relations_field: Optional[ParsedField] = None
@@ -1075,21 +1225,21 @@ class SDMarkdownReader:
             )
         )
         for field in parsed_content_fields:
-            requirement_fields.append(
-                SDocNodeField.create_from_string(
-                    parent=None,
-                    field_name=field.name,
-                    field_value=field.value,
-                    multiline=field.is_block_format,
-                )
+            sdoc_field = SDocNodeField(
+                parent=None,
+                field_name=field.name,
+                parts=SDMarkdownReader._parse_text_parts(field.value),
+                multiline__="multiline" if field.is_block_format else None,
             )
+            requirement_fields.append(sdoc_field)
 
         requirement = SDocNode(
             parent=parent,
-            node_type="REQUIREMENT",
+            node_type=node_type,
             fields=requirement_fields,
             relations=[],
         )
+        SDMarkdownReader._wire_node_field_parents(requirement)
         if relations_field is not None:
             requirement.relations = SDMarkdownReader._build_references(
                 SDMarkdownReader._parse_bullet_list_of_dicts(
@@ -1106,29 +1256,205 @@ class SDMarkdownReader:
         return requirement
 
     @staticmethod
+    def _try_parse_text_meta(body: str) -> Tuple[Optional[str], str]:
+        r"""
+        Detect and extract a **TYPE**: TEXT \\ **MID**: <value> prefix block
+        from a section body string.
+
+        Returns (mid_value, remaining_body) when the prefix is found, or
+        (None, body) when it is not present.  The remaining_body is the content
+        after the blank line that follows the meta block.
+        """
+        lines = body.splitlines(keepends=True)
+        if len(lines) < 2:
+            return None, body
+
+        line0 = lines[0].rstrip("\r\n")
+        if not SDMarkdownReader._text_type_line_re.match(line0):
+            return None, body
+
+        line1 = lines[1].rstrip("\r\n")
+        mid_match = SDMarkdownReader._text_mid_line_re.match(line1)
+        if not mid_match:
+            return None, body
+
+        mid_value = mid_match.group(1)
+
+        idx = 2
+        while idx < len(lines) and not SDMarkdownReader._is_empty_line(
+            lines[idx]
+        ):
+            idx += 1
+        while idx < len(lines) and SDMarkdownReader._is_empty_line(lines[idx]):
+            idx += 1
+
+        remaining = "".join(lines[idx:])
+        return mid_value, remaining
+
+    @staticmethod
     def _create_text_node(
         parent: Union[SDocDocument, SDocNode],
         statement: str,
         document_reference: DocumentReference,
         including_document_reference: DocumentReference,
+        mid: Optional[str] = None,
     ) -> SDocNode:
         """Build a TEXT SDocNode wrapping raw Markdown prose."""
+        fields = []
+        if mid is not None:
+            fields.append(
+                SDocNodeField.create_from_string(
+                    parent=None,
+                    field_name="MID",
+                    field_value=mid,
+                    multiline=False,
+                )
+            )
+        fields.append(
+            SDocNodeField(
+                parent=None,
+                field_name="STATEMENT",
+                parts=SDMarkdownReader._parse_text_parts(statement),
+                multiline__="multiline" if "\n" in statement else None,
+            )
+        )
         text_node = SDocNode(
             parent=parent,
             node_type="TEXT",
-            fields=[
-                SDocNodeField.create_from_string(
-                    parent=None,
-                    field_name="STATEMENT",
-                    field_value=statement,
-                    multiline="\n" in statement,
-                )
-            ],
+            fields=fields,
             relations=[],
         )
+        SDMarkdownReader._wire_node_field_parents(text_node)
         text_node.ng_document_reference = document_reference
         text_node.ng_including_document_reference = including_document_reference
         return text_node
+
+    @staticmethod
+    def _parse_text_parts(value: str) -> List[Any]:
+        """
+        Parse a field value string into parts (str, InlineLink, Anchor).
+
+        [LINK:] and [ANCHOR:] tokens inside inline code spans or fenced code
+        blocks are treated as plain text and never turned into InlineLink /
+        Anchor objects.
+        """
+        if "[LINK:" not in value and "[ANCHOR:" not in value:
+            return [value]
+
+        # Split into code / non-code segments so that [LINK:] / [ANCHOR:]
+        # inside backtick spans or fenced code blocks are not parsed.
+        segments = SDMarkdownReader._split_by_code_contexts(value)
+        has_link_outside_code = any(
+            not is_code and ("[LINK:" in seg or "[ANCHOR:" in seg)
+            for is_code, seg in segments
+        )
+        if not has_link_outside_code:
+            return [value]
+
+        parts: List[Any] = []
+        for is_code, seg in segments:
+            if is_code:
+                parts.append(seg)
+            elif "[LINK:" in seg or "[ANCHOR:" in seg:
+                parts.extend(SDFreeTextReader.read(seg).parts)
+            else:
+                parts.append(seg)
+
+        # Merge adjacent plain strings so the output is compact.
+        merged: List[Any] = []
+        for part in parts:
+            if isinstance(part, str) and merged and isinstance(merged[-1], str):
+                merged[-1] += part
+            else:
+                merged.append(part)
+        return merged if merged else [value]
+
+    @staticmethod
+    def _split_by_code_contexts(value: str) -> List[Tuple[bool, str]]:
+        """
+        Split a markdown field value into (is_code, text) segment pairs.
+
+        Segments with is_code=True originate from fenced code blocks or inline
+        code spans; their content is opaque and must not be parsed for
+        [LINK:] / [ANCHOR:] tags.
+        """
+        # --- Step 1: mark lines that belong to fenced code blocks ---
+        lines = value.splitlines(keepends=True)
+        line_count = len(lines)
+        fence_open_re = re.compile(r"^(`{3,}|~{3,})")
+
+        in_fence = False
+        fence_close_re: Optional[re.Pattern[str]] = None
+        code_line_set: Set[int] = set()
+
+        for li in range(line_count):
+            line_text = lines[li].rstrip("\r\n")
+            if not in_fence:
+                m = fence_open_re.match(line_text)
+                if m:
+                    fence_char = m.group(1)[0]
+                    fence_min = len(m.group(1))
+                    fence_close_re = re.compile(
+                        rf"^{re.escape(fence_char)}{{{fence_min},}}\s*$"
+                    )
+                    in_fence = True
+                    code_line_set.add(li)
+            else:
+                code_line_set.add(li)
+                if fence_close_re is not None and fence_close_re.match(
+                    line_text
+                ):
+                    in_fence = False
+                    fence_close_re = None
+
+        # --- Step 2: build coarse segments from line groups ---
+        fence_segments: List[Tuple[bool, str]] = []
+        if line_count > 0:
+            current_is_code = 0 in code_line_set
+            current_lines: List[str] = []
+            for li, line in enumerate(lines):
+                is_code = li in code_line_set
+                if is_code != current_is_code:
+                    if current_lines:
+                        fence_segments.append(
+                            (current_is_code, "".join(current_lines))
+                        )
+                    current_lines = [line]
+                    current_is_code = is_code
+                else:
+                    current_lines.append(line)
+            if current_lines:
+                fence_segments.append((current_is_code, "".join(current_lines)))
+        else:
+            fence_segments = [(False, value)]
+
+        # --- Step 3: within non-code segments, find inline code spans ---
+        inline_code_re = re.compile(r"(`+)(.*?)\1", re.DOTALL)
+        result: List[Tuple[bool, str]] = []
+        for is_code, seg in fence_segments:
+            if is_code:
+                result.append((True, seg))
+                continue
+            inner_pos = 0
+            for m in inline_code_re.finditer(seg):
+                if m.start() > inner_pos:
+                    result.append((False, seg[inner_pos : m.start()]))
+                result.append((True, m.group(0)))
+                inner_pos = m.end()
+            if inner_pos < len(seg):
+                result.append((False, seg[inner_pos:]))
+
+        return result
+
+    @staticmethod
+    def _wire_node_field_parents(node: SDocNode) -> None:
+        """Wire SDocNodeField.parent and InlineLink/Anchor.parent for a node."""
+        for fields_list in node.ordered_fields_lookup.values():
+            for field in fields_list:
+                field.parent = node
+                for part in field.parts:
+                    if isinstance(part, (InlineLink, Anchor)):
+                        part.parent = field
 
     @staticmethod
     def _is_empty_line(line: str) -> bool:

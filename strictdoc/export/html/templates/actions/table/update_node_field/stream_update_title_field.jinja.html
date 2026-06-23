@@ -1,0 +1,27 @@
+<turbo-stream action="update" target="cell-{{ node.reserved_mid }}-TITLE">
+  <template>
+    {%- if field_value -%}
+      {%- with sdoc_entity=node -%}
+        {% include "components/anchor/index.jinja" %}
+      {%- endwith %}
+      {%- with field_content = field_value %}
+        {%- include "screens/document/table/field_display_mode/title.jinja" -%}
+      {%- endwith -%}
+    {%- endif -%}
+  </template>
+</turbo-stream>
+
+{% include "actions/document/_shared/stream_updated_toc.jinja.html" %}
+
+{%- if title_presence_changed -%}
+  {%- for entry_node, _ in content_entries -%}
+    {%- if entry_node.is_requirement() -%}
+      {%- set requirement = entry_node -%}
+      <turbo-stream action="replace" target="cell-{{ requirement.reserved_mid }}-LEVEL">
+        <template>
+          {%- include "screens/document/table/type_level.jinja" -%}
+        </template>
+      </turbo-stream>
+    {%- endif -%}
+  {%- endfor -%}
+{%- endif -%}

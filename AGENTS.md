@@ -1,5 +1,18 @@
 # AGENTS.md
 
+## Declaration of compliance
+
+MANDATORY FIRST ACTION — NO EXCEPTIONS.
+
+Before calling any tool or writing any response content, your very first text
+output MUST be a statement of compliance with AGENTS.md and the SDG.
+
+Do not search files, do not call tools, do not answer the user's question first.
+Print the compliance statement first. Then proceed.
+
+If you are reading this and have not yet printed the compliance statement: stop,
+print it now, then continue.
+
 ## Source of truth
 
 Follow the StrictDoc Developer Guide (`SDG`) for all tasks in this repository:
@@ -50,3 +63,19 @@ requests it. Those files are task artifacts intended for the user;
   `AGENTS.md`, `SDG`, and repository contents, and stop if they conflict.
 - Stay within the requested scope; ask before deleting files, changing public
   interfaces, or performing broad refactors.
+
+## Change scope
+
+- Do not modify shared components for a local feature unless explicitly
+  approved by the user.
+- Prefer feature-local templates, scripts, and styles.
+- If changing a shared component appears necessary, stop and request approval
+  before editing it.
+
+## Testing
+
+- Prefer `invoke test-*` commands for all test commands. Only resort to
+running the test commands directly if not possible with Invoke tasks.
+- Always run end-to-end tests with `--headless`.
+- Do not create throw-away "smoke tests". If such a smoke test is needed,
+create proper unit, integration or end2end tests.

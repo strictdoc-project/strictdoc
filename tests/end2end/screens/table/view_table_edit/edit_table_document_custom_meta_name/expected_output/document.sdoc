@@ -1,0 +1,9 @@
+[DOCUMENT]
+TITLE: Document
+METADATA:
+  RENAMED_FIRST: First value
+  SECOND: Second value
+
+[REQUIREMENT]
+TITLE: Requirement
+STATEMENT: Requirement statement.

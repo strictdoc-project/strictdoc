@@ -1,0 +1,83 @@
+{# ================================================================ #}
+{# ROOT NODE / TITLE + META                                         #}
+{# similar: components/node_field/document_meta/index.jinja         #}
+{# ================================================================ #}
+
+{%- set doc_mid = view_object.document.reserved_mid -%}
+{%- set document_config = view_object.document.config -%}
+{%- set document_version_ = view_object.render_document_version() -%}
+{%- set document_date_ = view_object.render_document_date() -%}
+<sdoc-node>
+  <h1 data-testid="document-title">
+    {%- with
+      field_content=view_object.document.title,
+      document_title_wrap=true
+    -%}
+      {%- include "screens/document/table/field_display_mode/document_title.jinja" -%}
+    {%- endwith %}
+    {%- with local_anchor = view_object.render_local_anchor(view_object.document) -%}
+      {% include "components/anchor_document/index.jinja" %}
+    {%- endwith %}
+  </h1>
+
+  {{ view_object.render_issues(view_object.document) }}
+
+  <sdoc-meta>
+    {# -- UID ---------------------------------------------------- #}
+    {%- with
+      field_content=document_config.uid,
+      field_label="UID",
+      field_name="UID",
+      field_testid="uid"
+    -%}
+      {%- include "screens/document/table/field_display_mode/document_config_field.jinja" -%}
+    {%- endwith -%}
+
+    {# -- VERSION ------------------------------------------------ #}
+    {%- with
+      field_content=document_version_,
+      field_label="VERSION",
+      field_name="VERSION",
+      field_testid="version"
+    -%}
+      {%- include "screens/document/table/field_display_mode/document_config_field.jinja" -%}
+    {%- endwith -%}
+
+    {# -- DATE (read-only) --------------------------------------- #}
+    {%- if document_date_ is not none -%}
+      {%- with
+        field_content=document_date_,
+        field_label="DATE",
+        field_name="DATE",
+        field_testid="date"
+      -%}
+        {%- include "screens/document/table/field_display_mode/document_meta_readonly_field.jinja" -%}
+      {%- endwith -%}
+    {%- endif -%}
+
+    {# -- CLASSIFICATION ----------------------------------------- #}
+    {%- with
+      field_content=document_config.classification,
+      field_label="CLASSIFICATION",
+      field_name="CLASSIFICATION",
+      field_testid="classification"
+    -%}
+      {%- include "screens/document/table/field_display_mode/document_config_field.jinja" -%}
+    {%- endwith -%}
+
+    {# -- PREFIX ------------------------------------------------- #}
+    {%- with
+      field_content=document_config.requirement_prefix,
+      field_label="PREFIX",
+      field_name="PREFIX",
+      field_testid="prefix"
+    -%}
+      {%- include "screens/document/table/field_display_mode/document_config_field.jinja" -%}
+    {%- endwith -%}
+
+    {# -- CUSTOM METADATA ---------------------------------------- #}
+    {%- include "screens/document/table/field_display_mode/document_custom_meta.jinja" -%}
+
+  </sdoc-meta>
+
+</sdoc-node>

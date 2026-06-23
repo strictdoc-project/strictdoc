@@ -423,7 +423,18 @@ sdoc-section-text:first-child {
 
 sdoc-meta {
   display: grid;
-  grid-template-columns: minmax(min-content, max-content) minmax(min-content, 1fr);
+  /*
+   * Four-column layout:
+   * [move button] [key] [value] [delete button]
+   *
+   * Row controls live in dedicated side columns.
+   * It can also be used with only two columns:
+   *     sdoc-meta-label, sdoc-meta-field
+   */
+  grid-template-columns:  minmax(min-content, max-content)
+                          minmax(min-content, max-content)
+                          minmax(min-content, 1fr)
+                          minmax(min-content, max-content);
   place-items: stretch stretch;
   place-content: stretch stretch;
   position: relative;
@@ -445,6 +456,17 @@ sdoc-meta {
   overflow-x: auto;
 }
 
+sdoc-meta-row {
+  /*
+   * Row-level container needed for :has()-based interactions between
+   * control buttons and key/value cells, while preserving the shared
+   * column sizing defined by the parent grid (sdoc-meta).
+   */
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
+}
+
 sdoc-meta-section,
 sdoc-meta-label,
 sdoc-meta-field {
@@ -455,7 +477,7 @@ sdoc-meta-field {
 }
 
 sdoc-meta-label {
-  grid-column: 1 / 2;
+  grid-column: 2 / 3;
   font-family: var(--code-font-family);
   font-weight: 700;
   text-transform: uppercase;
@@ -464,7 +486,7 @@ sdoc-meta-label {
 }
 
 sdoc-meta-field {
-  grid-column: 2 / 3;
+  grid-column: 3 / 4;
 }
 
 sdoc-meta-section {

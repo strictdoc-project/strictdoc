@@ -16,6 +16,22 @@
     {%- endfor %}
   </ul>
 {%- endif %}
+{%- set missing_parent_relations = view_object.traceability_index.get_missing_parent_relations(requirement) %}
+{%- if missing_parent_relations | length > 0 %}
+  Missing Parents:
+  <ul class="requirement__link">
+    {%- for missing_relation in missing_parent_relations %}
+      <li>
+        <div class="field_issue field_issue-ribbon">
+          <span class="requirement__parent-uid">{{ missing_relation.ref_uid }}</span>
+          {%- if missing_relation.role is not none %}
+            <span class="requirement__type-tag">({{ missing_relation.role }})</span>
+          {%- endif %}
+        </div>
+      </li>
+    {%- endfor %}
+  </ul>
+{%- endif %}
 {%- if view_object.traceability_index.has_children_requirements(requirement) %}
   Children:
   <ul class="requirement__link">
@@ -29,6 +45,22 @@
           {%- endif %}
           {{ requirement.reserved_title if requirement.reserved_title else "" }}
         </a>
+      </li>
+    {%- endfor %}
+  </ul>
+{%- endif %}
+{%- set missing_child_relations = view_object.traceability_index.get_missing_child_relations(requirement) %}
+{%- if missing_child_relations | length > 0 %}
+  Missing Children:
+  <ul class="requirement__link">
+    {%- for missing_relation in missing_child_relations %}
+      <li>
+        <div class="field_issue field_issue-ribbon">
+          <span class="requirement__child-uid">{{ missing_relation.ref_uid }}</span>
+          {%- if missing_relation.role is not none %}
+            <span class="requirement__type-tag">({{ missing_relation.role }})</span>
+          {%- endif %}
+        </div>
       </li>
     {%- endfor %}
   </ul>
@@ -49,6 +81,22 @@
           </li>
         {%- endfor -%}
       {%- endfor -%}
+    </ul>
+  {%- endif %}
+  {%- set missing_file_relations = view_object.traceability_index.get_missing_file_relations(requirement) %}
+  {%- if missing_file_relations | length > 0 %}
+    Missing Source files:
+    <ul class="requirement__link">
+      {%- for missing_relation in missing_file_relations %}
+        <li>
+          <div class="field_issue field_issue-ribbon">
+            <span style="position: relative; font-weight: bold;">{{ missing_relation.get_posix_path() }}</span>
+            {%- if missing_relation.role is not none %}
+              <span class="requirement__type-tag">({{ missing_relation.role }})</span>
+            {%- endif %}
+          </div>
+        </li>
+      {%- endfor %}
     </ul>
   {%- endif %}
 {%- endif %}

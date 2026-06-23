@@ -1,8 +1,7 @@
 {# needs sdoc_entity, see README.txt #}
   {%- set current_sdoc_entity = sdoc_entity -%}
-  {%- set missing_parent_relations = view_object.traceability_index.get_missing_parent_relations(current_sdoc_entity) -%}
-  {%- set missing_child_relations = view_object.traceability_index.get_missing_child_relations(current_sdoc_entity) -%}
-  {%- if view_object.traceability_index.has_parent_requirements(sdoc_entity) or missing_parent_relations | length > 0 %}
+  {%- set has_missing_parent_relations = view_object.traceability_index.get_missing_parent_relations(current_sdoc_entity) | length > 0 -%}
+  {%- if view_object.traceability_index.has_parent_requirements(sdoc_entity) or has_missing_parent_relations %}
     <sdoc-node-field-label>RELATIONS (Parent):</sdoc-node-field-label>
     <sdoc-node-field data-field-label="parent relations">
       <ul class="requirement__link">
@@ -20,22 +19,13 @@
           </a>
         </li>
         {%- endfor %}
-        {%- for missing_relation in missing_parent_relations %}
-        <li>
-          <span class="requirement__link-missing">
-            <span class="requirement__parent-uid">{{ missing_relation.ref_uid }}</span>
-            Missing parent reference
-            {% if missing_relation.role is not none %}
-              <span class="requirement__type-tag">({{ missing_relation.role }})</span>
-            {% endif %}
-          </span>
-        </li>
-        {%- endfor %}
       </ul>
     </sdoc-node-field>
+    {{ view_object.render_issues(sdoc_entity, "RELATIONS (Parent)") }}
   {%- endif %}
 
-  {%- if view_object.traceability_index.has_children_requirements(sdoc_entity) or missing_child_relations | length > 0 %}
+  {%- set has_missing_child_relations = view_object.traceability_index.get_missing_child_relations(current_sdoc_entity) | length > 0 -%}
+  {%- if view_object.traceability_index.has_children_requirements(sdoc_entity) or has_missing_child_relations %}
     <sdoc-node-field-label>RELATIONS (Child):</sdoc-node-field-label>
     <sdoc-node-field data-field-label="child relations">
       <ul class="requirement__link">
@@ -53,17 +43,7 @@
           </a>
         </li>
         {%- endfor %}
-        {%- for missing_relation in missing_child_relations %}
-        <li>
-          <span class="requirement__link-missing">
-            <span class="requirement__child-uid">{{ missing_relation.ref_uid }}</span>
-            Missing child reference
-            {% if missing_relation.role is not none %}
-              <span class="requirement__type-tag">({{ missing_relation.role }})</span>
-            {% endif %}
-          </span>
-        </li>
-        {%- endfor %}
       </ul>
     </sdoc-node-field>
+    {{ view_object.render_issues(sdoc_entity, "RELATIONS (Child)") }}
   {%- endif %}

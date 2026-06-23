@@ -612,6 +612,14 @@ class FileTraceabilityIndex:
                     file_posix_path
                 )
                 if source_file_traceability_info is None:
+                    if project_config.allow_missing_relation_requirements:
+                        traceability_index.validation_index.add_issue(
+                            forward_requirement_,
+                            issue=f"Missing file relation: {file_posix_path}",
+                            field="RELATIONS (File)",
+                            subject=f"Node: {forward_requirement_.reserved_title}",
+                        )
+                        continue
                     raise StrictDocException(
                         f"Requirement {forward_requirement_.reserved_uid} "
                         "references a file that does not exist: "

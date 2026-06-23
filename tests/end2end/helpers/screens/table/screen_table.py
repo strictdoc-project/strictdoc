@@ -584,6 +584,21 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
 
         WebDriverWait(self.test_case.driver, timeout).until(_cell_text_equals)
 
+    def wait_for_cell_dom_text_contains(
+        self, node_mid: str, field_name: str, text: str, timeout: float = 10
+    ) -> None:
+        # Polls the cell's textContent until it contains `text`. Use after a
+        # save that triggers cross-node turbo-stream updates: those arrive
+        # asynchronously, so an immediate substring check would race.
+        def _cell_text_contains(_):
+            actual = self.test_case.execute_script(
+                f"const c = document.getElementById('cell-{node_mid}-{field_name}');"
+                f"return c ? c.textContent.trim() : null;"
+            )
+            return actual is not None and text in actual
+
+        WebDriverWait(self.test_case.driver, timeout).until(_cell_text_contains)
+
     def assert_cell_dom_text(
         self, node_mid: str, field_name: str, text: str
     ) -> None:

@@ -84,10 +84,12 @@ class Test(E2ECase):
 
             # Both REQ-002 and REQ-003 now show the computed
             # "Children: REQ-001" relation, without a reload.
-            screen_table.assert_cell_dom_text_contains(
+            # Use wait_for_* here because these cells are updated by a separate
+            # cross-node turbo-stream that arrives asynchronously after the save.
+            screen_table.wait_for_cell_dom_text_contains(
                 req002_mid, "RELATIONS", "REQ-001"
             )
-            screen_table.assert_cell_dom_text_contains(
+            screen_table.wait_for_cell_dom_text_contains(
                 req003_mid, "RELATIONS", "REQ-001"
             )
 

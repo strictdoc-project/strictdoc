@@ -1190,6 +1190,12 @@
                 getAutocompleteInput(activeAutocompleteCell)
             );
         }
+        const createdRow = document.querySelector(
+            'tr[data-node-created="true"]'
+        );
+        if (createdRow && !eventPath.includes(createdRow)) {
+            clearCreatedRowMarker();
+        }
     }
 
     function init() {

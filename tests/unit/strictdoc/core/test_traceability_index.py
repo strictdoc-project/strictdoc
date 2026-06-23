@@ -2,11 +2,20 @@
 @relation(SDOC-SRS-28, scope=file)
 """
 
+import pytest
+
+from strictdoc.backend.sdoc.models.reference import (
+    ChildReqReference,
+    FileReference,
+    ParentReqReference,
+)
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
+from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.mid import MID
 from tests.unit.helpers.document_builder import DocumentBuilder
+from typing import List
 
 
 def test_valid_01_one_document_with_1req():
@@ -484,3 +493,32 @@ def test__delete_requirement__parent_child_links_cleaned_up_symmetrically():
     # After deletion the stale NODE_TO_CHILD_NODES entry on REQ-001 must be
     # gone; previously it was left in place.
     assert traceability_index.get_children_requirements(requirement1) == []
+
+def test__missing_parent_relation__strict_mode_raises():
+    document_builder = DocumentBuilder()
+    document_builder.add_requirement("REQ-001")
+    document_builder.add_requirement("REQ-002")
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-002",
+        target_requirement_id="REQ-DOES-NOT-EXIST",
+        role=None,
+    )
+    document = document_builder.build()
+
+    document_tree = DocumentTree(
+        file_tree=[],
+        document_list=[document],
+        map_docs_by_paths={},
+        map_docs_by_rel_paths={},
+        map_grammars_by_filenames={},
+    )
+
+    with pytest.raises(StrictDocException) as exception_info:
+        TraceabilityIndexBuilder.create_from_document_tree(
+            document_tree, project_config=document_builder.project_config
+        )
+
+    assert "references parent requirement which doesn't exist" in str(
+        exception_info.value
+    )

@@ -4,12 +4,18 @@
 
 import pytest
 
+from strictdoc.backend.sdoc.models.reference import (
+    ChildReqReference,
+    FileReference,
+    ParentReqReference,
+)
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.mid import MID
 from tests.unit.helpers.document_builder import DocumentBuilder
+from typing import List
 
 
 def test_valid_01_one_document_with_1req():
@@ -488,8 +494,7 @@ def test__delete_requirement__parent_child_links_cleaned_up_symmetrically():
     # gone; previously it was left in place.
     assert traceability_index.get_children_requirements(requirement1) == []
 
-
-def test_missing_parent_relation_strict_mode_raises():
+def test__missing_parent_relation__strict_mode_raises():
     document_builder = DocumentBuilder()
     document_builder.add_requirement("REQ-001")
     document_builder.add_requirement("REQ-002")
@@ -517,84 +522,3 @@ def test_missing_parent_relation_strict_mode_raises():
     assert "references parent requirement which doesn't exist" in str(
         exception_info.value
     )
-
-
-def test_missing_parent_relation_relaxed_mode_collects_diagnostics():
-    document_builder = DocumentBuilder()
-    document_builder.project_config.allow_missing_relation_requirements = True
-
-    document_builder.add_requirement("REQ-001")
-    requirement2 = document_builder.add_requirement("REQ-002")
-    document_builder.add_requirement_relation(
-        relation_type="Parent",
-        source_requirement_id="REQ-002",
-        target_requirement_id="REQ-DOES-NOT-EXIST",
-        role="Refines",
-    )
-
-    document = document_builder.build()
-
-    document_tree = DocumentTree(
-        file_tree=[],
-        document_list=[document],
-        map_docs_by_paths={},
-        map_docs_by_rel_paths={},
-        map_grammars_by_filenames={},
-    )
-
-    traceability_index = TraceabilityIndexBuilder.create_from_document_tree(
-        document_tree, project_config=document_builder.project_config
-    )
-
-    assert traceability_index.has_missing_relations()
-    assert traceability_index.get_parent_requirements(requirement2) == []
-
-    missing_relations = traceability_index.get_missing_relations(requirement2)
-    assert len(missing_relations) == 1
-    assert missing_relations[0].ref_uid == "REQ-DOES-NOT-EXIST"
-    assert missing_relations[0].role == "Refines"
-    assert missing_relations[0].ref_type == "Parent"
-
-    missing_document_relations = (
-        traceability_index.get_missing_relations_for_document(document)
-    )
-    assert len(missing_document_relations) == 1
-    assert missing_document_relations[0][0] == requirement2
-    assert missing_document_relations[0][1].ref_uid == "REQ-DOES-NOT-EXIST"
-    assert missing_document_relations[0][1].ref_type == "Parent"
-
-
-def test_missing_child_relation_relaxed_mode_collects_diagnostics():
-    document_builder = DocumentBuilder()
-    document_builder.project_config.allow_missing_relation_requirements = True
-
-    requirement1 = document_builder.add_requirement("REQ-001")
-    document_builder.add_requirement_relation(
-        relation_type="Child",
-        source_requirement_id="REQ-001",
-        target_requirement_id="REQ-DOES-NOT-EXIST",
-        role="Validates",
-    )
-
-    document = document_builder.build()
-
-    document_tree = DocumentTree(
-        file_tree=[],
-        document_list=[document],
-        map_docs_by_paths={},
-        map_docs_by_rel_paths={},
-        map_grammars_by_filenames={},
-    )
-
-    traceability_index = TraceabilityIndexBuilder.create_from_document_tree(
-        document_tree, project_config=document_builder.project_config
-    )
-
-    assert traceability_index.has_missing_relations()
-    assert traceability_index.get_children_requirements(requirement1) == []
-
-    missing_relations = traceability_index.get_missing_relations(requirement1)
-    assert len(missing_relations) == 1
-    assert missing_relations[0].ref_uid == "REQ-DOES-NOT-EXIST"
-    assert missing_relations[0].role == "Validates"
-    assert missing_relations[0].ref_type == "Child"

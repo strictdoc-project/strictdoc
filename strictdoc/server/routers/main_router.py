@@ -34,6 +34,7 @@ from strictdoc.backend.reqif.p01_sdoc.reqif_to_sdoc_converter import (
 from strictdoc.backend.reqif.p01_sdoc.sdoc_to_reqif_converter import (
     P01_SDocToReqIFObjectConverter,
 )
+from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
@@ -61,6 +62,7 @@ from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.query_engine.query_object import Query, QueryObject
 from strictdoc.core.query_engine.query_reader import QueryReader
+from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
 from strictdoc.core.transforms.constants import NodeCreationOrder
 from strictdoc.core.transforms.delete_requirement import (
     DeleteRequirementCommand,
@@ -148,6 +150,7 @@ from strictdoc.helpers.string import (
     sanitize_html_form_field,
 )
 from strictdoc.helpers.timing import measure_performance
+from strictdoc.server.document_watcher import DocumentWatcher
 from strictdoc.server.error_object import ErrorObject
 from strictdoc.server.helpers.hierarchical_rw_lock_manager import (
     HierarchicalRWLockManager,
@@ -4831,6 +4834,39 @@ def create_main_router(
                 await connection.send_text(message)
 
     manager = ConnectionManager()
+
+    def rebuild_index_after_file_change() -> Optional[str]:
+        try:
+            with lock_manager.acquire_global_write():
+                export_action.traceability_index = (
+                    TraceabilityIndexBuilder.create(
+                        project_config=project_config,
+                        parallelizer=parallelizer,
+                    )
+                )
+            return None
+        except DocumentTreeError as document_tree_error:
+            return document_tree_error.to_print_message()
+        except Exception as build_error:  # noqa: BLE001
+            return str(build_error)
+
+    def notify_clients_after_file_change() -> None:
+        build_error = rebuild_index_after_file_change()
+        message = "reload" if build_error is None else f"error:{build_error}"
+        if build_error is not None:
+            print(f"WATCH:    rebuild failed:\n{build_error}")  # noqa: T201
+        event_loop = getattr(app.state, "event_loop", None)
+        if event_loop is not None:
+            asyncio.run_coroutine_threadsafe(
+                manager.broadcast(message), event_loop
+            )
+
+    if project_config.watch_enabled:
+        app.state.document_watcher = DocumentWatcher(
+            watch_paths=project_config.input_paths or [],
+            output_dir_abs_path=project_config.output_dir,
+            on_documents_changed=notify_clients_after_file_change,
+        )
 
     @router.websocket("/ws/{client_id}")
     async def websocket_endpoint(websocket: WebSocket, client_id: int) -> None:

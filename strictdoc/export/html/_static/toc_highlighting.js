@@ -12,7 +12,7 @@ const TOC_HIGHLIGHT_DEBUG = false;
 const TOC_FRAME_SELECTOR = 'turbo-frame#frame-toc'; // updating
 const TOC_LIST_SELECTOR = 'ul#toc';
 const TOC_ELEMENT_SELECTOR = 'a';
-const CONTENT_FRAME_SELECTOR = 'turbo-frame#frame_document_content'; // action="replace" => parentNode is needed
+const CONTENT_FRAME_SELECTOR = '[js-toc_highlighting-content_root]'; // stable container, never itself replaced by turbo
 const CONTENT_ELEMENT_SELECTOR = 'sdoc-anchor';
 const TOC_STATE_CHANGED_EVENT = strictDoc.events.TOC_STATE_CHANGED;
 const TOC_FRAGMENT_RESOLVED_EVENT = strictDoc.events.TOC_FRAGMENT_RESOLVED;
@@ -55,7 +55,7 @@ window.addEventListener("load",function(){
   // * Frames are stable and we define them once.
   const tocFrame = document.querySelector(TOC_FRAME_SELECTOR);
   const tocList = tocFrame ? tocFrame.querySelector(TOC_LIST_SELECTOR) : null;
-  const contentFrame = document.querySelector(CONTENT_FRAME_SELECTOR)?.parentNode;
+  const contentFrame = document.querySelector(CONTENT_FRAME_SELECTOR);
 
   if (!tocFrame || !contentFrame) { return }
 

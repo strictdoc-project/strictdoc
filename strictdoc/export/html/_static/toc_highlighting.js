@@ -15,6 +15,7 @@ const TOC_ELEMENT_SELECTOR = 'a';
 const CONTENT_FRAME_SELECTOR = 'turbo-frame#frame_document_content'; // action="replace" => parentNode is needed
 const CONTENT_ELEMENT_SELECTOR = 'sdoc-anchor';
 const TOC_STATE_CHANGED_EVENT = strictDoc.events.TOC_STATE_CHANGED;
+const TOC_FRAGMENT_RESOLVED_EVENT = strictDoc.events.TOC_FRAGMENT_RESOLVED;
 
 // Virtual viewport for TOC section highlighting.
 // We do not use the raw screen edges (0..innerHeight): we shrink the effective
@@ -131,6 +132,11 @@ function handleHashChange() {
         TOC_HIGHLIGHT_DEBUG && console.log('handleHashChange(): remapped fragment', fragment, '→', resolved);
         history.replaceState(null, '', '#' + encodeURIComponent(resolved));
         pair = tocHighlightingState.data[resolved];
+        // * history.replaceState() does not fire `hashchange`, so
+        // * collapsible_toc.js's own `hashchange` listener cannot rely on
+        // * seeing this correction by itself - tell it explicitly. See
+        // * app_core.js for the full bus contract.
+        strictDoc.bus.emit(TOC_FRAGMENT_RESOLVED_EVENT, { anchor: resolved });
       }
     }
     if (pair && pair.link) {
@@ -425,6 +431,9 @@ function isElementVisible(element) {
   return !!(element && element.getClientRects().length);
 }
 
+// The TOC link one branch level up from `link`: from its <li>, the parent
+// <ul> is the list it sits in, and the nearest <li> ancestor of that <ul>
+// is the branch one level up (markup pattern: <li><a/><ul>...</ul></li>).
 function getParentTocLink(link) {
   const li = link?.closest('li');
   const parentUl = li?.parentElement;

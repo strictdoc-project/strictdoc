@@ -79,9 +79,7 @@ class Test(E2ECase):
             screen_table.do_save_inline_cell_by_cmd_enter()
             # Trigger save again while the first request is still in flight.
             screen_table.do_save_inline_cell_by_cmd_enter()
-            screen_table.wait_for_cell_dom_text(
-                node_mid, "STATEMENT", "New statement."
-            )
+            screen_table.wait_for_cell_save_applied(node_mid, "STATEMENT")
 
             screen_table.assert_cell_dom_text(
                 node_mid, "STATEMENT", "New statement."

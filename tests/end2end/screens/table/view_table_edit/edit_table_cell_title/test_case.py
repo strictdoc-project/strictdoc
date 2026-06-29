@@ -54,7 +54,7 @@ class Test(E2ECase):
             screen_table.do_open_inline_cell(node_mid, "TITLE")
             form.do_fill_in("TITLE", "New title")
             screen_table.do_save_inline_cell_by_outside_click()
-            screen_table.wait_for_cell_dom_text(node_mid, "TITLE", "New title")
+            screen_table.wait_for_cell_save_applied(node_mid, "TITLE")
 
             screen_table.assert_cell_dom_text(node_mid, "TITLE", "New title")
 

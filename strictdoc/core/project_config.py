@@ -928,7 +928,7 @@ class ProjectConfigLoader:
         if not os.path.isfile(path_to_config):
             return ProjectConfig.default_config()
 
-        if path_to_config.endswith("strictdoc_config.py"):
+        if path_to_config.endswith(".py"):
             return ProjectConfigLoader.load_from_python(
                 config_py_path=path_to_config
             )

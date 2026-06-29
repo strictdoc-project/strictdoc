@@ -56,9 +56,7 @@ class Test(E2ECase):
             screen_table.do_open_inline_cell(node_mid, "STATEMENT")
             form.do_fill_in("STATEMENT", "New statement.")
             screen_table.do_save_inline_cell_by_outside_click()
-            screen_table.wait_for_cell_dom_text(
-                node_mid, "STATEMENT", "New statement."
-            )
+            screen_table.wait_for_cell_save_applied(node_mid, "STATEMENT")
 
             screen_table.assert_cell_dom_text(
                 node_mid, "STATEMENT", "New statement."
@@ -70,9 +68,7 @@ class Test(E2ECase):
             screen_table.do_open_inline_cell(node_mid, "RATIONALE")
             form.do_fill_in("RATIONALE", "New rationale.")
             screen_table.do_save_inline_cell_by_outside_click()
-            screen_table.wait_for_cell_dom_text(
-                node_mid, "RATIONALE", "New rationale."
-            )
+            screen_table.wait_for_cell_save_applied(node_mid, "RATIONALE")
 
             screen_table.assert_cell_dom_text(
                 node_mid, "RATIONALE", "New rationale."

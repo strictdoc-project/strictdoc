@@ -60,7 +60,7 @@ class Test(E2ECase):
             screen_table.do_cell_autocomplete(node_mid, "STATUS", "act")
 
             screen_table.do_submit_cell_autocomplete()
-            screen_table.wait_for_cell_dom_text(node_mid, "STATUS", "Active")
+            screen_table.wait_for_cell_save_applied(node_mid, "STATUS")
 
             screen_table.assert_cell_dom_text(node_mid, "STATUS", "Active")
             assert (

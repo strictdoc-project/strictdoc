@@ -5,21 +5,20 @@ from typing import Dict, List, Optional, Union
 
 from markupsafe import Markup
 
-from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.backend.sdoc_source_code.models.source_file_info import (
-    SourceFileTraceabilityInfo,
-)
-from strictdoc.core.document_iterator import SDocDocumentIterator
-from strictdoc.core.project_config import ProjectConfig
-from strictdoc.core.statistics.metric import Metric, MetricSection
-from strictdoc.core.traceability_index import TraceabilityIndex
-from strictdoc.export.html.generators.view_objects.project_statistics_view_object import (
+from strictdoc.api import (
+    GitClient,
+    HTMLTemplates,
+    LinkRenderer,
+    Metric,
+    MetricSection,
+    ProjectConfig,
     ProjectStatisticsViewObject,
+    SDocDocumentIterator,
+    SDocNode,
+    SourceFileTraceabilityInfo,
+    TraceabilityIndex,
+    assert_cast,
 )
-from strictdoc.export.html.html_templates import HTMLTemplates
-from strictdoc.export.html.renderers.link_renderer import LinkRenderer
-from strictdoc.helpers.cast import assert_cast
-from strictdoc.helpers.git_client import GitClient
 
 
 @dataclass

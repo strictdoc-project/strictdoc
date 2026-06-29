@@ -1059,6 +1059,14 @@ def release_pyinstaller(context):
     # Compatibility modules can be imported by user-provided statistics
     # generators at runtime. PyInstaller cannot discover these imports
     # statically because the generators live outside of StrictDoc's package.
+    #
+    # --hidden-import strictdoc.api is needed for the same reason:
+    # strictdoc.api is never imported anywhere inside StrictDoc's own
+    # package (only by dynamically-loaded, external files such as a
+    # project's own strictdoc_config.py, custom statistics generators, or
+    # custom plugins), so PyInstaller's static analysis -- which walks
+    # imports starting from strictdoc/cli/main.py -- never discovers it on
+    # its own.
     command = f"""
         pyinstaller
             --clean
@@ -1066,6 +1074,7 @@ def release_pyinstaller(context):
             --noconfirm
             --additional-hooks-dir developer/pyinstaller_hooks
             --distpath {path_to_pyi_dist}
+            --hidden-import strictdoc.api
             --hidden-import strictdoc.backend.rst.strictdoc_lexer
             --hidden-import strictdoc.core.statistics.metric
             --hidden-import strictdoc.export.html.generators.project_statistics

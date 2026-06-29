@@ -11,7 +11,7 @@ import types
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
 
 import toml
 
@@ -25,6 +25,7 @@ from strictdoc.commands.manage_autouid_config import ManageAutoUIDCommandConfig
 from strictdoc.commands.manage_new_config import ManageNewCommandConfig
 from strictdoc.commands.server_config import ServerCommandConfig
 from strictdoc.core.environment import SDocRuntimeEnvironment
+from strictdoc.core.feature import Feature
 from strictdoc.core.plugin import StrictDocPlugin
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.deprecation_engine import DEPRECATION_ENGINE
@@ -129,7 +130,7 @@ class ProjectConfig:
         project_title: str = ProjectConfigDefault.DEFAULT_PROJECT_TITLE,
         dir_for_sdoc_assets: str = ProjectConfigDefault.DEFAULT_DIR_FOR_SDOC_ASSETS,
         dir_for_sdoc_cache: str = ProjectConfigDefault.DEFAULT_DIR_FOR_SDOC_CACHE,
-        project_features: Optional[List[str]] = None,
+        project_features: Optional[List[Union[str, Feature]]] = None,
         server_host: str = ProjectConfigDefault.DEFAULT_SERVER_HOST,
         server_port: int = ProjectConfigDefault.DEFAULT_SERVER_PORT,
         input_paths: Optional[List[str]] = None,
@@ -209,27 +210,34 @@ class ProjectConfig:
         #
         # project_features
         #
-        project_features = (
+        project_features_: List[Union[str, Feature]] = (
             project_features
             if project_features is not None
-            else ProjectConfigDefault.DEFAULT_FEATURES
+            else list(ProjectConfigDefault.DEFAULT_FEATURES)
         )
 
-        assert isinstance(project_features, list), (
+        assert isinstance(project_features_, list), (
             f"config: project_features: parameter must be an "
-            f"array: '{project_features}'."
+            f"array: '{project_features_}'."
         )
 
-        for feature in project_features:
+        for feature in project_features_:
+            if isinstance(feature, Feature):
+                continue
             assert feature in ProjectFeature.all(), (
                 f"config: project_features: unknown feature declared: "
                 f"'{feature}'."
             )
 
-        if ProjectFeature.ALL_FEATURES in project_features:
-            project_features = ProjectFeature.all()
+        if ProjectFeature.ALL_FEATURES in project_features_:
+            custom_features = [
+                feature
+                for feature in project_features_
+                if isinstance(feature, Feature)
+            ]
+            project_features_ = [*ProjectFeature.all(), *custom_features]
 
-        self.project_features: List[str] = project_features
+        self.project_features: List[Union[str, Feature]] = project_features_
 
         #
         # server_host and server_port
@@ -497,6 +505,41 @@ class ProjectConfig:
             RobotXMLFormat(),
             JSONFormat(),
         ]
+
+    @staticmethod
+    def _builtin_features_by_handle() -> Dict[str, Feature]:
+        # Imported locally to avoid a circular import, mirroring
+        # default_formats() above.
+        from strictdoc.features.project_statistics.feature import (  # noqa: PLC0415
+            ProjectStatisticsFeature,
+        )
+
+        return {
+            feature.HANDLE: feature for feature in [ProjectStatisticsFeature()]
+        }
+
+    def get_features(self) -> List[Feature]:
+        """
+        Resolve self.project_features (a mix of built-in string handles and
+        directly-registered Feature instances) into concrete Feature
+        instances. A string handle that isn't backed by a built-in Feature
+        yet (i.e. most ProjectFeature enum members, which have not been
+        migrated to the Feature abstraction) resolves to nothing here.
+        """
+        builtin_features_by_handle = ProjectConfig._builtin_features_by_handle()
+        resolved_features: List[Feature] = []
+        for feature in self.project_features:
+            if isinstance(feature, Feature):
+                resolved_features.append(feature)
+            elif feature in builtin_features_by_handle:
+                resolved_features.append(builtin_features_by_handle[feature])
+        return resolved_features
+
+    def get_feature(self, handle: str) -> Optional[Feature]:
+        for feature in self.get_features():
+            if feature.HANDLE == handle:
+                return feature
+        return None
 
     # Some server command settings can override the project config settings.
     def integrate_server_config(
@@ -788,7 +831,10 @@ class ProjectConfig:
         return ProjectFeature.DEEP_TRACEABILITY_SCREEN in self.project_features
 
     def is_activated_project_statistics(self) -> bool:
-        return ProjectFeature.PROJECT_STATISTICS_SCREEN in self.project_features
+        return (
+            self.get_feature(ProjectFeature.PROJECT_STATISTICS_SCREEN)
+            is not None
+        )
 
     def is_activated_requirements_to_source_traceability(self) -> bool:
         return (
@@ -1100,7 +1146,9 @@ class ProjectConfigLoader:
         project_title = ProjectConfigDefault.DEFAULT_PROJECT_TITLE
         dir_for_sdoc_assets = ProjectConfigDefault.DEFAULT_DIR_FOR_SDOC_ASSETS
         dir_for_sdoc_cache = ProjectConfigDefault.DEFAULT_DIR_FOR_SDOC_CACHE
-        project_features = ProjectConfigDefault.DEFAULT_FEATURES
+        project_features: List[Union[str, Feature]] = list(
+            ProjectConfigDefault.DEFAULT_FEATURES
+        )
         server_host = ProjectConfigDefault.DEFAULT_SERVER_HOST
         server_port = ProjectConfigDefault.DEFAULT_SERVER_PORT
         include_doc_paths: List[str] = []

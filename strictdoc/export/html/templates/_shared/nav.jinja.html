@@ -12,7 +12,8 @@
     {% include "icons/ico16_index.svg" %}
   </a>
 
-{%- if view_object.project_config.is_activated_project_statistics() -%}
+{%- set project_statistics_feature = view_object.project_config.get_feature("PROJECT_STATISTICS_SCREEN") -%}
+{%- if project_statistics_feature is not none -%}
   <a
     data-link="project_information"
     class="nav_button"
@@ -20,7 +21,7 @@
     title="Project statistics"
     data-testid="project-tree-link-project-statistics"
   >
-    {% include "icons/ico16_stat.svg" %}
+    {% include project_statistics_feature.screen_icon() %}
   </a>
 {%- endif -%}
 

@@ -1,6 +1,13 @@
+import os
+import tempfile
+
 import pytest
 
-from strictdoc.core.project_config import ProjectConfig, ProjectFeature
+from strictdoc.core.project_config import (
+    ProjectConfig,
+    ProjectConfigLoader,
+    ProjectFeature,
+)
 
 
 def test_01_default_config():
@@ -61,3 +68,48 @@ def test_61_validate_invalid_host():
 def test_62_validate_invalid_port():
     with pytest.raises(AssertionError):
         _ = ProjectConfig(server_port=1000000)
+
+
+#
+# Config loading from Python files.
+#
+def test_70_load_python_config_with_canonical_filename():
+    config_content = """\
+from strictdoc.core.project_config import ProjectConfig
+
+def create_config():
+    return ProjectConfig(project_title="Canonical")
+"""
+    with tempfile.NamedTemporaryFile(
+        suffix="_strictdoc_config.py", mode="w", delete=False
+    ) as f:
+        f.write(config_content)
+        path = f.name
+    try:
+        config = ProjectConfigLoader.load_from_path_or_get_default(
+            path_to_config=path
+        )
+        assert config.project_title == "Canonical"
+    finally:
+        os.unlink(path)
+
+
+def test_71_load_python_config_with_non_canonical_filename():
+    config_content = """\
+from strictdoc.core.project_config import ProjectConfig
+
+def create_config():
+    return ProjectConfig(project_title="NonCanonical")
+"""
+    with tempfile.NamedTemporaryFile(
+        suffix="_my_custom_config.py", mode="w", delete=False
+    ) as f:
+        f.write(config_content)
+        path = f.name
+    try:
+        config = ProjectConfigLoader.load_from_path_or_get_default(
+            path_to_config=path
+        )
+        assert config.project_title == "NonCanonical"
+    finally:
+        os.unlink(path)

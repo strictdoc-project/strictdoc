@@ -79,6 +79,7 @@ class DocumentWatcher:
         self._debounce_timer: Optional[threading.Timer] = None
         self._lock = threading.Lock()
         self._pending_paths: Set[str] = set()
+        self._inhibited_paths: Set[str] = set()
         self._content_hashes: Dict[str, Optional[str]] = {}
 
     def is_watched_document(self, path: str) -> bool:
@@ -144,7 +145,11 @@ class DocumentWatcher:
         content_changed = False
         for path in pending_paths:
             new_hash = _hash_file(path)
-            if new_hash != self._content_hashes.get(path):
+            with self._lock:
+                inhibited = path in self._inhibited_paths
+                if inhibited:
+                    self._inhibited_paths.discard(path)
+            if not inhibited and new_hash != self._content_hashes.get(path):
                 content_changed = True
             self._content_hashes[path] = new_hash
         if content_changed:
@@ -163,6 +168,19 @@ class DocumentWatcher:
         observer.daemon = True
         observer.start()
         self._observer = observer
+
+    def inhibit_next_change(self, path: str) -> None:
+        """
+        Suppress the rebuild that would otherwise be triggered by the watchdog
+        event caused by an imminent server-side write to *path*.
+
+        Must be called **before** writing the file.  Because the inhibition is
+        registered before the write, the debounce timer always fires into an
+        already-inhibited state — there is no race window between the write and
+        the hash update that exists with a post-write approach.
+        """
+        with self._lock:
+            self._inhibited_paths.add(os.path.abspath(path))
 
     def stop(self) -> None:
         with self._lock:

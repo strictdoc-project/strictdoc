@@ -150,6 +150,7 @@ def server(context, input_path=".", config=None):
                 server {input_path} {config_argument}
                     --host 127.0.0.1
                     --reload
+                    --watch
         """,
     )
 

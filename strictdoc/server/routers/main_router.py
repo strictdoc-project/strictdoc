@@ -281,6 +281,15 @@ def create_main_router(
 
         assert isinstance(document, SDocDocument)
 
+        # Inhibit before writing so the watcher's debounce always fires into
+        # an already-suppressed state — no race window between write and hash.
+        if document.meta is not None:
+            document_watcher = getattr(app.state, "document_watcher", None)
+            if document_watcher is not None:
+                document_watcher.inhibit_next_change(
+                    document.meta.input_doc_full_path
+                )
+
         if (
             document.meta is not None
             and document.meta.input_doc_full_path.lower().endswith(
@@ -290,9 +299,8 @@ def create_main_router(
             SDMarkdownWriter.write_to_file(
                 document, line_width=project_config.document_line_width
             )
-            return
-
-        sdoc_writer.write_to_file(document)
+        else:
+            sdoc_writer.write_to_file(document)
 
     def env() -> JinjaEnvironment:
         return html_templates.jinja_environment()

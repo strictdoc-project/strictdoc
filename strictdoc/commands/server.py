@@ -37,6 +37,15 @@ class ServerCommand(BaseCommand):
             help=argparse.SUPPRESS,
         )
         command_parser_server.add_argument(
+            "--watch",
+            default=False,
+            action="store_true",
+            help=(
+                "Watch project files and live-reload connected browsers when "
+                "documents change on disk."
+            ),
+        )
+        command_parser_server.add_argument(
             "--config",
             type=str,
             help="Path to the StrictDoc TOML config file.",

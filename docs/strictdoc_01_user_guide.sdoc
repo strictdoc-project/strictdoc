@@ -460,6 +460,28 @@ StrictDoc uses ``127.0.0.1`` as a default host and ``5111`` as a default port. W
     See [LINK: SDOC_UG_LIMIT_WEB] for an overview of the existing limitations.
 <<<
 
+[[SECTION]]
+MID: 3556cc0790954c0dadab5da0c80cdfcc
+TITLE: Live reload (--watch)
+
+[TEXT]
+MID: f48a8731afa84849af3c06f302d24c98
+STATEMENT: >>>
+The ``--watch`` option enables automatic detection of file changes and live reload of all connected browsers:
+
+.. code:: text
+
+    strictdoc server --watch .
+
+When ``--watch`` is active, StrictDoc monitors the input document files for changes. If a file is modified by an external tool (such as a text editor or a version control operation), StrictDoc rebuilds the documentation tree and sends a reload signal to all connected browser tabs.
+
+.. note::
+
+    Live reload is triggered only by external changes to the watched files. Edits made through the StrictDoc web interface itself do not trigger a reload, since the server already handles those changes internally.
+<<<
+
+[[/SECTION]]
+
 [[/SECTION]]
 
 [[SECTION]]
@@ -4973,7 +4995,6 @@ The currently supported workflow for the ``server`` command must be hybrid:
 - In one terminal window: run the server.
 - In another window: check the changes made by the server in the .sdoc files. Commit the .sdoc files to Git.
 
-Currently StrictDoc server maintains an in-memory state of a documentation tree, and it does not watch over the changes made in the .sdoc files. If you make a change in an ``.sdoc`` file manually, you have to restart the server in order for your changes to show up in the web user interface.
 
 The following essential features are still missing and will be worked on in the future:
 

@@ -46,6 +46,18 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: 68a0524db27443c1a5bb0785dd595c1b
+TITLE: Unreleased
+
+[TEXT]
+MID: 2f8bb0831a3d4c5a9cf97303f50b771e
+STATEMENT: >>>
+The StrictDoc server gained an opt-in ``--watch`` mode. When the server is started with ``strictdoc server --watch``, it watches the project's document files and automatically rebuilds and live-reloads the connected browsers when a document changes on disk. Build errors encountered during the rebuild are surfaced in the browser and printed to the terminal, and the server keeps running.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 543c64859a9649eebba0b56dbdd3442b
 TITLE: 0.25.0 (2026-06-23)
 

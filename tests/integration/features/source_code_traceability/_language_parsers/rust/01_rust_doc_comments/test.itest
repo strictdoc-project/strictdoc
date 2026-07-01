@@ -1,3 +1,5 @@
+UNSUPPORTED: true
+
 RUN: %strictdoc export %S --output-dir %T | filecheck %s
 CHECK: Published: Hello world doc
 

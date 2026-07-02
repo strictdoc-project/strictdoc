@@ -47,12 +47,31 @@ This document maintains a record of all changes to StrictDoc since November 2023
 
 [[SECTION]]
 MID: 68a0524db27443c1a5bb0785dd595c1b
-TITLE: Unreleased
+TITLE: 0.25.1 (2026-07-02)
 
 [TEXT]
 MID: 2f8bb0831a3d4c5a9cf97303f50b771e
 STATEMENT: >>>
-The StrictDoc server gained an opt-in ``--watch`` mode. When the server is started with ``strictdoc server --watch``, it watches the project's document files and automatically rebuilds and live-reloads the connected browsers when a document changes on disk. Build errors encountered during the rebuild are surfaced in the browser and printed to the terminal, and the server keeps running.
+This release contains the following enhancements:
+
+1\) The StrictDoc server gained an opt-in ``--watch`` mode. When the server is
+started with ``strictdoc server --watch``, it watches the project's document
+files and automatically rebuilds and live-reloads the connected browsers when
+a document changes on disk. Build errors encountered during the rebuild are
+surfaced in the browser and printed to the terminal, and the server keeps
+running. The watcher no longer triggers a reload when a document is edited
+through the UI itself.
+
+2\) The TOC branch now expands automatically to reveal the active anchor, and
+the TABLE screen's TOC now highlights the currently active node.
+
+3\) The ``--config`` argument now accepts any Python file, not just a path
+with the default name ``strictdoc_config.py``. Names like ``my_config.py`` or
+``config.py`` are now valid.
+
+4\) Fixed: pinned ``py-tree-sitter`` to 0.25.2 to avoid a dangling-pointer bug
+introduced upstream in 0.26.0 that could crash parsing of source files with
+doc comments.
 <<<
 
 [[/SECTION]]

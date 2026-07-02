@@ -1,0 +1,17 @@
+[DOCUMENT]
+TITLE: Anchor title punctuation
+
+[TEXT]
+STATEMENT: >>>
+[ANCHOR: A-PLAIN, Plain title]
+
+[ANCHOR: A-HYPHEN, Human-readable title]
+
+[ANCHOR: A-MIXED, Title with hyphens. And (parens)]
+
+Link to plain: [LINK: A-PLAIN].
+
+Link to hyphenated: [LINK: A-HYPHEN].
+
+Link to mixed: [LINK: A-MIXED].
+<<<

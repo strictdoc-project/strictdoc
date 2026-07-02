@@ -2368,6 +2368,8 @@ MID: 294d6a0e96424dc8a93d6502c43e8501
 STATEMENT: >>>
 The ``[ANCHOR: <anchor uid>, <optional anchor title>]`` tag creates an anchor that can be referenced from other pages using ``[LINK <Anchor UID>]``.
 
+The optional title can be an unquoted string, but must be enclosed in double quotes if it contains special characters.
+
 Example:
 
 This is a link to anchor: [LINK: ANCHOR-EXAMPLE].

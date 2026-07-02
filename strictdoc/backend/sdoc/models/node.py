@@ -129,7 +129,7 @@ class SDocNodeField:
                 text += part.value
                 if part.has_title:
                     text += ", "
-                    text += part.title
+                    text += part.get_source_title()
                 text += "]"
                 text += "\n"
             else:

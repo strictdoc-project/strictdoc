@@ -1,0 +1,16 @@
+#
+# Verify that [ANCHOR: uid, title] accepts titles containing hyphens and other
+# punctuation characters that are common in human-readable labels.
+#
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Anchor title punctuation
+
+RUN: %cat %T/html/05_anchor_title_with_punctuation/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+
+CHECK-HTML: <sdoc-anchor id="A-PLAIN"
+CHECK-HTML: <sdoc-anchor id="A-HYPHEN"
+CHECK-HTML: <sdoc-anchor id="A-MIXED"
+CHECK-HTML: Plain title
+CHECK-HTML: Human-readable title
+CHECK-HTML: Title with hyphens. And (parens)

@@ -1252,3 +1252,47 @@ def test_crlf_multiline_field():
     node = document.section_contents[0]
     assert isinstance(node, SDocNode)
     assert node.reserved_statement == "Multiline content.\r\n"
+
+
+def test_anchor_title_with_quoted_comma_roundtrip(default_project_config):
+    input_sdoc = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[TEXT]
+STATEMENT: >>>
+[ANCHOR: A1, "Title with, a comma"]
+<<<
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input_sdoc)
+    assert isinstance(document, SDocDocument)
+
+    writer = SDWriter(default_project_config)
+    output = writer.write(document)
+
+    assert input_sdoc == output
+
+
+def test_anchor_title_with_quoted_bracket_roundtrip(default_project_config):
+    input_sdoc = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[TEXT]
+STATEMENT: >>>
+[ANCHOR: A1, "Title [with] brackets"]
+<<<
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input_sdoc)
+    assert isinstance(document, SDocDocument)
+
+    writer = SDWriter(default_project_config)
+    output = writer.write(document)
+
+    assert input_sdoc == output

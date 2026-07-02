@@ -33,8 +33,12 @@ InlineLink[noskipws]:
 
 Anchor[noskipws]:
   /^\[ANCHOR: /
-  value = /{REGEX_UID}/ (', ' title = /\w+[\s\w+]*/)?
+  value = /{REGEX_UID}/ (', ' title = AnchorTitle)?
   /\](\Z|\r?\n)/
+;
+
+AnchorTitle[noskipws]:
+  /(["])[^"\r\n]+\1|[^,\]\r\n]+/
 ;
 
 // According to the Strict Grammar Rule #3, both SingleLineString and

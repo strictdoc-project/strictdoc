@@ -1,0 +1,13 @@
+[DOCUMENT]
+TITLE: Anchor title quoted comma
+
+[TEXT]
+STATEMENT: >>>
+[ANCHOR: A-QUOTED, "Title with, a comma"]
+
+[ANCHOR: A-BRACKET, "Title [with] brackets"]
+
+Link to quoted: [LINK: A-QUOTED].
+
+Link to bracketed: [LINK: A-BRACKET].
+<<<

@@ -145,7 +145,51 @@ def test_016_anchor_crlf_line_ending():
     assert free_text_container.parts[1].value == "AD1"
 
 
-def test_020_link():
+def test_017_anchor_title_with_quoted_comma():
+    free_text_input = '[ANCHOR: AD1, "Title with, a comma"]\n'
+
+    reader = SDFreeTextReader()
+    free_text_container = reader.read(free_text_input)
+    anchor = free_text_container.parts[0]
+    assert isinstance(anchor, Anchor)
+    assert anchor.value == "AD1"
+    assert anchor.title == "Title with, a comma"
+    assert anchor.has_title is True
+
+
+def test_018_anchor_title_with_quoted_closing_bracket():
+    free_text_input = '[ANCHOR: AD1, "Title [with] brackets"]\n'
+
+    reader = SDFreeTextReader()
+    free_text_container = reader.read(free_text_input)
+    anchor = free_text_container.parts[0]
+    assert isinstance(anchor, Anchor)
+    assert anchor.value == "AD1"
+    assert anchor.title == "Title [with] brackets"
+    assert anchor.has_title is True
+
+
+def test_019_anchor_title_with_unquoted_comma_raises():
+    free_text_input = "[ANCHOR: AD1, Unquoted, comma title]\n"
+
+    reader = SDFreeTextReader()
+    with pytest.raises(TextXSyntaxError):
+        reader.read(free_text_input)
+
+
+def test_020_anchor_without_title_has_no_title():
+    free_text_input = "[ANCHOR: AD1]\n"
+
+    reader = SDFreeTextReader()
+    free_text_container = reader.read(free_text_input)
+    anchor = free_text_container.parts[0]
+    assert isinstance(anchor, Anchor)
+    assert anchor.value == "AD1"
+    assert anchor.title == "AD1"
+    assert anchor.has_title is False
+
+
+def test_021_link():
     free_text_input = """
 Hello world [LINK: FOO] Part
 """.lstrip()

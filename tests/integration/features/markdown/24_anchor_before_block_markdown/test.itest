@@ -1,0 +1,12 @@
+# Block-level markdown (e.g. a table) immediately following an [ANCHOR:]
+# tag must not be swallowed as part of a raw HTML block.
+
+RUN: %strictdoc export %S --formats=html --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Anchor before block markdown
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+
+CHECK-HTML: id="ANCHOR-BEFORE-BLOCK"
+CHECK-HTML: <table>
+CHECK-HTML: Column A
+CHECK-HTML: cell A1

@@ -26,7 +26,7 @@ from strictdoc.backend.sdoc.models.model import (
     SDocElementIF,
     SDocNodeIF,
 )
-from strictdoc.backend.sdoc.models.node import SDocNode
+from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     ParentReqReference,
@@ -257,6 +257,30 @@ class TraceabilityIndexBuilder:
                 link_type=GraphLinkType.UID_TO_NODE,
                 lhs_node=inline_link.link,
             ):
+                if project_config.allow_missing_relation_requirements:
+                    # Relaxed mode: an inline link may reference a target that
+                    # does not exist. Record a validation issue (which prints a
+                    # warning and highlights the owning field) instead of
+                    # failing the whole build.
+                    inline_link_field = inline_link.parent
+                    inline_link_node = inline_link.parent_node()
+                    field_name: Optional[str] = (
+                        inline_link_field.field_name
+                        if isinstance(inline_link_field, SDocNodeField)
+                        else None
+                    )
+                    node_title = (
+                        inline_link_node.reserved_title
+                        if isinstance(inline_link_node, SDocNode)
+                        else None
+                    )
+                    traceability_index.validation_index.add_issue(
+                        inline_link_node,
+                        issue=f"Missing link: {inline_link.link}",
+                        field=field_name,
+                        subject=f"Node: {node_title}",
+                    )
+                    continue
                 raise StrictDocException(
                     "DocumentIndex: "
                     "the inline link references an object with an UID "

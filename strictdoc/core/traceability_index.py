@@ -388,6 +388,44 @@ class TraceabilityIndex:
     def has_missing_relations(self) -> bool:
         return len(self.get_all_missing_relations()) > 0
 
+    def get_unresolved_inline_links(
+        self, node: SDocNode
+    ) -> List[InlineLink]:
+        assert isinstance(node, SDocNode)
+
+        unresolved_inline_links: List[InlineLink] = []
+        for node_field_ in node.enumerate_fields():
+            for part_ in node_field_.parts:
+                if not isinstance(part_, InlineLink):
+                    continue
+                if (
+                    self.graph_database.get_link_value_weak(
+                        link_type=GraphLinkType.UID_TO_NODE,
+                        lhs_node=part_.link,
+                    )
+                    is None
+                ):
+                    unresolved_inline_links.append(part_)
+        return unresolved_inline_links
+
+    def get_all_unresolved_inline_links(
+        self,
+    ) -> List[Tuple[SDocNode, InlineLink]]:
+        unresolved_inline_links: List[Tuple[SDocNode, InlineLink]] = []
+        for document_ in self.document_tree.document_list:
+            document_iterator = self.document_iterators[document_]
+            for node_, _ in document_iterator.all_content(
+                print_fragments=False
+            ):
+                if not isinstance(node_, SDocNode):
+                    continue
+                for inline_link_ in self.get_unresolved_inline_links(node_):
+                    unresolved_inline_links.append((node_, inline_link_))
+        return unresolved_inline_links
+
+    def has_unresolved_inline_links(self) -> bool:
+        return len(self.get_all_unresolved_inline_links()) > 0
+
     # Compatibility wrappers for old API.
     def get_missing_parent_relations(
         self, requirement: SDocNode

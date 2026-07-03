@@ -21,10 +21,6 @@ class Anchor:
     def __init__(
         self, parent: SDocNodeFieldIF, value: str, title: Optional[str]
     ) -> None:
-        # In the grammar, the title is optional but textX passes it as an empty
-        # string. Putting an assert to monitor the regressions/changes if the
-        # grammar gets changed.
-        assert title is not None
         # FIXME: Cannot enable this assert because the parent can also be
         #        FreeTextContainer. Refactor the types.
         # assert isinstance(parent, SDocNodeFieldIF), parent  # noqa: ERA001
@@ -32,9 +28,12 @@ class Anchor:
         self.parent: SDocNodeFieldIF = parent
         self.value: str = value
 
-        has_title = len(title) > 0
-        self.title: str = title if has_title else value
-        self.has_title = has_title
+        if title is not None and len(title) > 0:
+            self.title: str = title.strip('"')
+            self.has_title = True
+        else:
+            self.title = value
+            self.has_title = False
 
         # FIXME: Remove either mid or reserved_mid.
         self.mid: MID = MID.create()
@@ -44,6 +43,11 @@ class Anchor:
         self,
         include_toc_number: bool = True,  # noqa: ARG002
     ) -> str:
+        return self.title
+
+    def get_source_title(self) -> str:
+        if "," in self.title or "]" in self.title:
+            return f'"{self.title}"'
         return self.title
 
     def get_document(self) -> SDocDocumentIF:

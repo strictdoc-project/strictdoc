@@ -1,0 +1,7 @@
+[DOCUMENT]
+TITLE: Anchor title unquoted comma is rejected
+
+[TEXT]
+STATEMENT: >>>
+[ANCHOR: A-BAD, Unquoted, comma title]
+<<<

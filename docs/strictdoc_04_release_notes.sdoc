@@ -46,6 +46,18 @@ This document maintains a record of all changes to StrictDoc since November 2023
 <<<
 
 [[SECTION]]
+MID: 650087b6a70d4451af7ddffde5e8b567
+TITLE: Unreleased
+
+[TEXT]
+MID: 39b43201403544e585fa3dda188e24ec
+STATEMENT: >>>
+An ``[ANCHOR: uid, title]`` title can now contain hyphens and most other punctuation. Special characters are supported by quoting.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 68a0524db27443c1a5bb0785dd595c1b
 TITLE: 0.25.1 (2026-07-02)
 

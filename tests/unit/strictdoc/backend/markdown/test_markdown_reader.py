@@ -533,3 +533,12 @@ def test_017_section_immediately_followed_by_child_section_has_no_empty_text_nod
     child = parent_section.section_contents[0]
     assert isinstance(child, SDocNode)
     assert child.node_type == "REQUIREMENT"
+
+
+def test_024_markdown_reader_registers_document_level_uid():
+    markdown_content = "# Document title\n\n**UID**: DOC-1\n"
+
+    reader = SDMarkdownReader()
+    document = reader.read(markdown_content, file_path=None)
+
+    assert document.config.uid == "DOC-1"

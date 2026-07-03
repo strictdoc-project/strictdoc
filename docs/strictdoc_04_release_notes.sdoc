@@ -52,7 +52,9 @@ TITLE: Unreleased
 [TEXT]
 MID: 39b43201403544e585fa3dda188e24ec
 STATEMENT: >>>
-An ``[ANCHOR: uid, title]`` title can now contain hyphens and most other punctuation. Special characters are supported by quoting.
+1\) An ``[ANCHOR: uid, title]`` title can now contain hyphens and most other punctuation. Special characters are supported by quoting.
+
+2\) Fixed: a document-level ``UID`` declared in a Markdown document's H1 metadata block (``**UID**: ...``) is now registered correctly, so other documents can link to it via ``[LINK <uid>]``.
 <<<
 
 [[/SECTION]]

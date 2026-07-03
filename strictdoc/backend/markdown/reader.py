@@ -301,6 +301,8 @@ class SDMarkdownReader:
                     continue
                 if field_.name == "PREFIX":
                     document.config.requirement_prefix = field_.value
+                if field_.name == "UID":
+                    document.config.uid = field_.value
                 metadata_entries.append(
                     DocumentCustomMetadataKeyValuePair(
                         key=field_.human_name,

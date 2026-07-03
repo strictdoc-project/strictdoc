@@ -184,20 +184,28 @@ class DocumentConfig:
         )
 
     def has_custom_metadata(self) -> bool:
-        return (
-            self.custom_metadata is not None
-            and self.custom_metadata.entries is not None
-            and len(self.custom_metadata.entries) > 0
-        )
+        return len(self.get_custom_metadata()) > 0
 
     def get_custom_metadata(self) -> List[Tuple[str, str]]:
         if (
             self.custom_metadata is not None
             and self.custom_metadata.entries is not None
         ):
+            reserved_keys = {
+                key
+                for key, value in (
+                    ("UID", self.uid),
+                    ("VERSION", self.version),
+                    ("DATE", self.date),
+                    ("CLASSIFICATION", self.classification),
+                )
+                if value is not None and len(value) > 0
+            }
             return [
                 (entry.key, entry.value)
                 for entry in self.custom_metadata.entries
-                if entry.key is not None and entry.value is not None
+                if entry.key is not None
+                and entry.value is not None
+                and entry.key.upper() not in reserved_keys
             ]
         return []

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 7.2.2 (Python 3.11.2 on linux)" generated="2025-05-15T22:23:03.446474" rpa="false" schemaversion="5">
+<suite id="s1" name="System Test" source="/home/user/strictdoc/tests/integration/features/test_reports/robot_xml/02_source_node_link_without_relation_marker/tests">
+<suite id="s1-s1" name="Feature" source="/home/user/strictdoc/tests/integration/features/test_reports/robot_xml/02_source_node_link_without_relation_marker/tests/feature.robot">
+<test id="s1-s1-t1" name="Check Valid Login" line="1">
+<kw name="Log To Console" owner="BuiltIn">
+<arg>Simulate login</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="PASS" start="2025-05-15T22:23:03.464943" elapsed="0.000157"/>
+</kw>
+<doc>UID: TC-AUTH-001
+INTENTION: Verify that valid credentials grant access.</doc>
+<status status="PASS" start="2025-05-15T22:23:03.464352" elapsed="0.000884"/>
+</test>
+<status status="PASS" start="2025-05-15T22:23:03.463504" elapsed="0.003037"/>
+</suite>
+<status status="PASS" start="2025-05-15T22:23:03.447306" elapsed="0.025562"/>
+</suite>
+<statistics>
+<total>
+<stat pass="1" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat name="System Test" id="s1" pass="1" fail="0" skip="0">System Test</stat>
+<stat name="Feature" id="s1-s1" pass="1" fail="0" skip="0">System Test.Feature</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

@@ -521,6 +521,25 @@ class FileTraceabilityIndex:
                                 rhs_node=forward_requirement_,
                                 edge="IsSatisfiedBy",
                             )
+
+                    for source_node_ in function.parent.source_nodes:
+                        if (
+                            source_node_.function is function
+                            and source_node_.sdoc_node is not None
+                        ):
+                            testcase_node = source_node_.sdoc_node
+                            traceability_index.graph_database.create_link(
+                                link_type=GraphLinkType.NODE_TO_PARENT_NODES,
+                                lhs_node=forward_requirement_,
+                                rhs_node=testcase_node,
+                                edge="Tests",
+                            )
+                            traceability_index.graph_database.create_link(
+                                link_type=GraphLinkType.NODE_TO_CHILD_NODES,
+                                lhs_node=testcase_node,
+                                rhs_node=forward_requirement_,
+                                edge="TestedBy",
+                            )
                 #
                 # Validate that all requirements reference existing files.
                 #
@@ -1106,6 +1125,7 @@ class FileTraceabilityIndex:
         ):
             sdoc_node_fields["TITLE"] = source_node.entity_name
         FileTraceabilityIndex.set_sdoc_node_fields(sdoc_node, sdoc_node_fields)
+        source_node.sdoc_node = sdoc_node
         return sdoc_node
 
     @staticmethod

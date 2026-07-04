@@ -6,6 +6,7 @@ import pytest
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.grammar_element import ReferenceType
+from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import (
     SDocNode,
 )
@@ -566,6 +567,7 @@ METADATA:
   AUTHOR: James T. Kirk
   CHECKED-BY: Chuck Norris
   APPROVED-BY: Wile E. Coyote
+  OWNER: [LINK: FOO]
 
 [REQUIREMENT]
 UID: FOO
@@ -575,6 +577,14 @@ UID: FOO
 
     document = reader.read(input_sdoc)
     assert isinstance(document, SDocDocument)
+
+    custom_metadata = document.config.custom_metadata
+    assert custom_metadata is not None
+    owner_entry = custom_metadata.entries[-1]
+    assert owner_entry.key == "OWNER"
+    assert len(owner_entry.parts) == 1
+    assert isinstance(owner_entry.parts[0], InlineLink)
+    assert owner_entry.parts[0].link == "FOO"
 
     writer = SDWriter(default_project_config)
     output = writer.write(document)

@@ -19,4 +19,4 @@ class InlineLink:
         self.reserved_mid: MID = self.mid
 
     def parent_node(self) -> Any:
-        return self.parent.parent
+        return self.parent.get_owning_node()

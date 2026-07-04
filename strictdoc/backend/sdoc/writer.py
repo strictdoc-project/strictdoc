@@ -199,15 +199,12 @@ class SDWriter:
                 output += "\n"
 
                 for keyvalue_pair in custom_metadata.entries:
-                    if (
-                        keyvalue_pair.key is not None
-                        and keyvalue_pair.value is not None
-                    ):
+                    if keyvalue_pair.key is not None:
                         output += (
                             "  "
                             + keyvalue_pair.key
                             + ": "
-                            + keyvalue_pair.value
+                            + keyvalue_pair.get_text_value()
                         )
                         output += "\n"
 

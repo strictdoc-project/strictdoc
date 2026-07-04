@@ -6,6 +6,8 @@ import re
 from collections import defaultdict
 from typing import Dict, List, Optional
 
+from strictdoc.backend.sdoc.free_text_reader import SDFreeTextReader
+from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import (
     DocumentCustomMetadata,
@@ -65,17 +67,28 @@ class UpdateDocumentConfigTransform:
             and len(form_object.document_requirement_prefix) > 0
             else None
         )
+        existing_custom_metadata = document.config.custom_metadata
         if len(form_object.custom_metadata_fields):
             entries = [
                 DocumentCustomMetadataKeyValuePair(
-                    key=field.field_name, value=field.field_value
+                    key=field.field_name,
+                    parts=SDFreeTextReader.read(field.field_value).parts,
                 )
                 for field in form_object.custom_metadata_fields
             ]
-            document.config.custom_metadata = DocumentCustomMetadata(
-                entries=entries
+            self._update_traceability_index_with_metadata_links(
+                existing_custom_metadata, entries
             )
+            new_custom_metadata = DocumentCustomMetadata(
+                parent=document.config, entries=entries
+            )
+            for entry_ in entries:
+                entry_.parent = new_custom_metadata
+            document.config.custom_metadata = new_custom_metadata
         else:
+            self._update_traceability_index_with_metadata_links(
+                existing_custom_metadata, []
+            )
             document.config.custom_metadata = None
 
         self.traceability_index.delete_document(document)
@@ -88,6 +101,21 @@ class UpdateDocumentConfigTransform:
         )
 
         self.traceability_index.create_document(document)
+
+    def _update_traceability_index_with_metadata_links(
+        self,
+        existing_custom_metadata: Optional[DocumentCustomMetadata],
+        new_entries: List[DocumentCustomMetadataKeyValuePair],
+    ) -> None:
+        if existing_custom_metadata is not None:
+            for existing_entry_ in existing_custom_metadata.entries:
+                for part_ in existing_entry_.parts:
+                    if isinstance(part_, InlineLink):
+                        self.traceability_index.remove_inline_link(part_)
+        for new_entry_ in new_entries:
+            for part_ in new_entry_.parts:
+                if isinstance(part_, InlineLink):
+                    self.traceability_index.create_inline_link(part_)
 
     def validate(
         self,
@@ -140,6 +168,27 @@ class UpdateDocumentConfigTransform:
                 )
             if len(metadata_field.field_value) == 0:
                 errors[metadata_error_key].append("Value must not be empty.")
+            else:
+                free_text_container = SDFreeTextReader.read(
+                    metadata_field.field_value
+                )
+                for part_ in free_text_container.parts:
+                    if isinstance(part_, InlineLink):
+                        if (
+                            self.traceability_index.get_linkable_node_by_uid_weak(
+                                part_.link
+                            )
+                            is None
+                        ):
+                            errors[metadata_error_key].append(
+                                "METADATA value references a UID "
+                                f"that does not exist: {part_.link}."
+                            )
+                    elif isinstance(part_, Anchor):
+                        errors[metadata_error_key].append(
+                            "METADATA values do not support "
+                            "[ANCHOR: ...] markers, only [LINK: UID]."
+                        )
 
         if len(errors):
             raise MultipleValidationError(

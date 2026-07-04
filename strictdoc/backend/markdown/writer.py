@@ -90,10 +90,9 @@ class SDMarkdownWriter:
                 if (
                     not isinstance(entry, DocumentCustomMetadataKeyValuePair)
                     or entry.key is None
-                    or entry.value is None
                 ):
                     continue
-                metadata_entries.append((entry.key, entry.value))
+                metadata_entries.append((entry.key, entry.get_text_value()))
                 seen_keys.add(entry.key.upper())
 
         default_config_entries: Sequence[Tuple[str, Optional[str]]] = (

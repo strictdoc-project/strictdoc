@@ -610,6 +610,12 @@ class TraceabilityIndexBuilder:
 
             document_iterator = d_01_document_iterators[document]
 
+            if document.config.custom_metadata is not None:
+                for metadata_entry_ in document.config.custom_metadata.entries:
+                    for part in metadata_entry_.parts:
+                        if isinstance(part, InlineLink):
+                            traceability_index.pending_inline_links.append(part)
+
             for node, _ in document_iterator.all_content(
                 print_fragments=False,
             ):

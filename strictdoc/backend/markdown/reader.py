@@ -306,12 +306,15 @@ class SDMarkdownReader:
                 metadata_entries.append(
                     DocumentCustomMetadataKeyValuePair(
                         key=field_.human_name,
-                        value=field_.value,
+                        parts=SDMarkdownReader._parse_text_parts(field_.value),
                     )
                 )
-            document.config.custom_metadata = DocumentCustomMetadata(
-                entries=metadata_entries
+            custom_metadata = DocumentCustomMetadata(
+                parent=document.config, entries=metadata_entries
             )
+            for entry_ in metadata_entries:
+                entry_.parent = custom_metadata
+            document.config.custom_metadata = custom_metadata
         else:
             root_body_lines_without_meta = root_body_lines
             document.config.custom_metadata = None

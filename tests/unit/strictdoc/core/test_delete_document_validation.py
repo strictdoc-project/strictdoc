@@ -40,7 +40,7 @@ def test_validate_can_remove_document_with_incoming_link():
     )
     traceability_index.create_inline_link(
         InlineLink(
-            parent=SimpleNamespace(parent=requirement_1),
+            parent=SimpleNamespace(get_owning_node=lambda: requirement_1),
             value=requirement_2.reserved_uid,
         )
     )

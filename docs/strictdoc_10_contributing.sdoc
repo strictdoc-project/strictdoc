@@ -84,11 +84,14 @@ TITLE: Spread the word
 [TEXT]
 MID: 07462b02027a423a85ab68525b78ac67
 STATEMENT: >>>
-If you like the StrictDoc project and use it in your daily work, there are several things you could do besides contributing Pull Requests:
+If you like the StrictDoc project and use it in your daily work, there are
+several things you could do besides contributing Pull Requests:
 
 - Star the StrictDoc repository to show your appreciation of the project.
 - Write a blog post or a tutorial about using StrictDoc to achieve some goal.
-- Write an email to s.pankevich@gmail.com and mettta@gmail.com and tell us how you are using StrictDoc and which features you are missing. We somewhat lack enough feedback from our users.
+- Write an email to s.pankevich@gmail.com and mettta@gmail.com and tell us how
+  you are using StrictDoc and which features you are missing. We somewhat lack
+  enough feedback from our users.
 <<<
 
 [[/SECTION]]
@@ -100,9 +103,16 @@ TITLE: ReqIF users
 [TEXT]
 MID: 9cfbb025525f41c5a195be0e637dffee
 STATEMENT: >>>
-The existing capability of StrictDoc to export/import SDoc to ReqIF is very basic. If you have to deal with ReqIF and you experience errors/crashes when using StrictDoc against ReqIF files, feel free to contribute the anonymized ReqIF files via StrictDoc Issues on GitHub, and we will take care of your specific case.
+The existing capability of StrictDoc to export/import SDoc to ReqIF is very
+basic. If you have to deal with ReqIF and you experience errors/crashes when
+using StrictDoc against ReqIF files, feel free to contribute the anonymized
+ReqIF files via StrictDoc Issues on GitHub, and we will take care of your
+specific case.
 
-It is straightforward to create an anonymized version of a ReqIF file. Just reduce your file to the section that causes troubles in import or export and replace all your business-specific titles/texts to some ``Lorem ipsum...`` boilerplate, see https://www.loremipsum.de/.
+It is straightforward to create an anonymized version of a ReqIF file. Just
+reduce your file to the section that causes troubles in import or export and
+replace all your business-specific titles/texts to some ``Lorem ipsum...``
+boilerplate, see https://www.loremipsum.de/.
 <<<
 
 [[/SECTION]]
@@ -114,11 +124,18 @@ TITLE: TeX / LaTeX / Sphinx experts
 [TEXT]
 MID: 75ed9362d86748269f62f5920514b7c2
 STATEMENT: >>>
-The existing template for generating PDF documents using Sphinx looks like this: https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/. The template is maintained in a separate repository: https://github.com/strictdoc-project/sphinx-latex-reqspec-template and does a good job but could be improved in terms of look and structure used.
+The existing template for generating PDF documents using Sphinx looks like this:
+https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/. The template is
+maintained in a separate repository:
+https://github.com/strictdoc-project/sphinx-latex-reqspec-template and does a
+good job but could be improved in terms of look and structure used.
 
-If you are an expert and have experience of customizing Sphinx/TeX templates, consider providing feedback or contributing patches.
+If you are an expert and have experience of customizing Sphinx/TeX templates,
+consider providing feedback or contributing patches.
 
-One extreme way of improving the generated output could be to take the Sphinx template for TeX files and fully customize what Sphinx does to produce a PDF. See https://www.sphinx-doc.org/en/master/latex.html.
+One extreme way of improving the generated output could be to take the Sphinx
+template for TeX files and fully customize what Sphinx does to produce a PDF.
+See https://www.sphinx-doc.org/en/master/latex.html.
 <<<
 
 [[/SECTION]]

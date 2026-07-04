@@ -56,11 +56,15 @@ MID: d8d92e4eb8254cbda8dcb37709a9df45
 STATEMENT: >>>
 StrictDoc is software for writing technical requirements specifications.
 
-StrictDoc is a spare-time open-source project developed by Stanislav Pankevich (@stanislaw) and Maryna Balioura (@mettta) with contributions from the Open Source community.
+StrictDoc is a spare-time open-source project developed by Stanislav Pankevich
+(@stanislaw) and Maryna Balioura (@mettta) with contributions from the Open
+Source community.
 
 The project exists since mid-2019.
 
-For a quick overview of the project, check out the `StrictDoc project <https://github.com/strictdoc-project/strictdoc/blob/main/about/StrictDoc.pdf>`_ slide deck.
+For a quick overview of the project, check out the
+`StrictDoc project <https://github.com/strictdoc-project/strictdoc/blob/main/about/StrictDoc.pdf>`_
+slide deck.
 <<<
 
 [[/SECTION]]
@@ -76,31 +80,51 @@ TITLE: Presentations
 [TEXT]
 MID: 52342105083e4f80884959d4ca7f4dba
 STATEMENT: >>>
-1\) `StrictDoc project <https://github.com/strictdoc-project/strictdoc/blob/main/about/StrictDoc.pdf>`_
+1\)
+`StrictDoc project <https://github.com/strictdoc-project/strictdoc/blob/main/about/StrictDoc.pdf>`_
 
-This slide deck provides a concise overview of the project, including its goals, real-world case studies, the motivation behind its creation, implementation details, and the development roadmap.
+This slide deck provides a concise overview of the project, including its goals,
+real-world case studies, the motivation behind its creation, implementation
+details, and the development roadmap.
 
-2\) `WHAT-WHY-HOW. A practical model for understanding software requirements <https://github.com/strictdoc-project/strictdoc/blob/main/about/2026_WHAT_WHY_HOW_model.pdf>`_
+2\)
+`WHAT-WHY-HOW. A practical model for understanding software requirements <https://github.com/strictdoc-project/strictdoc/blob/main/about/2026_WHAT_WHY_HOW_model.pdf>`_
 
-The training material from a small introductory course on requirements and systems engineering. It is the one that comes before the actual requirements training.
+The training material from a small introductory course on requirements and
+systems engineering. It is the one that comes before the actual requirements
+training.
 
-3\) `Achieving end-to-end traceability in software projects using open source tools (2025) <https://github.com/strictdoc-project/strictdoc/blob/main/about/2025_ESA_SW_Product_Assurance_Workshop.pdf>`_
+3\)
+`Achieving end-to-end traceability in software projects using open source tools (2025) <https://github.com/strictdoc-project/strictdoc/blob/main/about/2025_ESA_SW_Product_Assurance_Workshop.pdf>`_
 
-This is a short presentation about StrictDoc, delivered at the ESA Software Product Assurance Workshop 2025.
+This is a short presentation about StrictDoc, delivered at the ESA Software
+Product Assurance Workshop 2025.
 
-4\) `Exploring possibilities for integrating
-StrictDoc and ELISA’s requirements
+4\) `Exploring possibilities for integrating StrictDoc and ELISA’s requirements
 template approach for the Linux kernel' <https://lpc.events/event/19/contributions/2198/attachments/1884/4056/Linux%20Requirements%20with%20StrictDoc.pdf>`_
 
-The talk argues that ELISA's Linux kernel safety documentation model and StrictDoc's requirements tooling are largely compatible and could be unified, with StrictDoc filling remaining gaps like drift detection and ELISA adopting it as a reference tool.
+The talk argues that ELISA's Linux kernel safety documentation model and
+StrictDoc's requirements tooling are largely compatible and could be unified,
+with StrictDoc filling remaining gaps like drift detection and ELISA adopting it
+as a reference tool.
 
-5\) `Integrating StrictDoc with ELISA's Linux kernel requirements approach - ELISA Project Workshop 2025 <https://www.youtube.com/watch?v=f5v6q3OFv88>`_
+5\)
+`Integrating StrictDoc with ELISA's Linux kernel requirements approach - ELISA Project Workshop 2025 <https://www.youtube.com/watch?v=f5v6q3OFv88>`_
 
-The talk introduces the StrictDoc project, demonstrates a traceability use case at Linutronix, and provides a hands-on showcase of how StrictDoc could support structured, maintainable requirements workflows for the Linux kernel. The session explores how requirements engineering practices can be enhanced within the kernel ecosystem, with an emphasis on improving traceability, documentation quality, and alignment with ELISA's requirements template approach.
+The talk introduces the StrictDoc project, demonstrates a traceability use case
+at Linutronix, and provides a hands-on showcase of how StrictDoc could support
+structured, maintainable requirements workflows for the Linux kernel. The
+session explores how requirements engineering practices can be enhanced within
+the kernel ecosystem, with an emphasis on improving traceability, documentation
+quality, and alignment with ELISA's requirements template approach.
 
-6\) `Application of the SPDX Safety Profile in the Safety Scope of the Zephyr Project (2024) <https://ftp.fau.de/fosdem/2024/k4401/fosdem-2024-3211-application-of-the-spdx-safety-profile-in-the-safety-scope-of-the-zephyr-project.mp4>`_
+6\)
+`Application of the SPDX Safety Profile in the Safety Scope of the Zephyr Project (2024) <https://ftp.fau.de/fosdem/2024/k4401/fosdem-2024-3211-application-of-the-spdx-safety-profile-in-the-safety-scope-of-the-zephyr-project.mp4>`_
 
-This presentation introduces the SPDX Safety Profile and details its application within the context of the Zephyr Project. There is also a presentation of the Zephyr project's methodology for capturing requirements using StrictDoc and a discussion of the upcoming plans for the integration of SPDX into StrictDoc.
+This presentation introduces the SPDX Safety Profile and details its application
+within the context of the Zephyr Project. There is also a presentation of the
+Zephyr project's methodology for capturing requirements using StrictDoc and a
+discussion of the upcoming plans for the integration of SPDX into StrictDoc.
 <<<
 
 [[/SECTION]]
@@ -112,11 +136,17 @@ TITLE: Blog posts
 [TEXT]
 MID: b2f5aea77e504ee1b64a67be24bd3c58
 STATEMENT: >>>
-1\) `From Code to Compliance – Part1: IEC 62443 Certification with Industrial Grade Linux Operating System <https://www.linutronix.de/blog/From-Code-to-Compliance-Part1-IEC-62443-Certification-with>`_ by Linutronix.
+1\)
+`From Code to Compliance – Part1: IEC 62443 Certification with Industrial Grade Linux Operating System <https://www.linutronix.de/blog/From-Code-to-Compliance-Part1-IEC-62443-Certification-with>`_
+by Linutronix.
 
-The blog post outlines how Linutronix achieved security certification for Linux-based industrial software, with StrictDoc serving as an important building block in their development workflow.
+The blog post outlines how Linutronix achieved security certification for
+Linux-based industrial software, with StrictDoc serving as an important building
+block in their development workflow.
 
-2\) `Requirement Traceability with All Substance and No Fuss <https://www.bugseng.com/requirement-traceability-with-all-substance-and-no-fuss/>`_ by BUGSENG.
+2\)
+`Requirement Traceability with All Substance and No Fuss <https://www.bugseng.com/requirement-traceability-with-all-substance-and-no-fuss/>`_
+by BUGSENG.
 <<<
 
 [[/SECTION]]
@@ -128,7 +158,8 @@ TITLE: Screencasts / tutorials
 [TEXT]
 MID: 9d23e77aa7f848cb8efca49f5cf41f77
 STATEMENT: >>>
-`Automotive SPICE in opensource StrictDoc tool, with System Architecure ideas <https://www.youtube.com/watch?v=k2MCFWvCs7E>`_ by Lukasz Juranek.
+`Automotive SPICE in opensource StrictDoc tool, with System Architecure ideas <https://www.youtube.com/watch?v=k2MCFWvCs7E>`_
+by Lukasz Juranek.
 <<<
 
 [[/SECTION]]
@@ -142,15 +173,28 @@ TITLE: Which web server is recommended for StrictDoc documentation?
 [TEXT]
 MID: 966a5c3babf84fc7a1454b2799d13470
 STATEMENT: >>>
-This question can be answered in two ways. First of all, StrictDoc has its own web server that can be run with ``strictdoc server ...``. Refer to the User Guide for further information.
+This question can be answered in two ways. First of all, StrictDoc has its own
+web server that can be run with ``strictdoc server ...``. Refer to the User
+Guide for further information.
 
-The following suggestions assume that you are looking to using a web server to host the StrictDoc's static HTML export, without using StrictDoc's own web server.
+The following suggestions assume that you are looking to using a web server to
+host the StrictDoc's static HTML export, without using StrictDoc's own web
+server.
 
-Is your project public or private? If it is public, you could simply use `GitHub pages <https://pages.github.com>`_. See how one user of StrictDoc is doing it here: `nmfta-repo/vcr-experiment <https://github.com/nmfta-repo/vcr-experiment>`_ and the resulting static website: `nmfta-repo.github.io/vcr-experiment <https://nmfta-repo.github.io/vcr-experiment>`_.
+Is your project public or private? If it is public, you could simply use
+`GitHub pages <https://pages.github.com>`_. See how one user of StrictDoc is
+doing it here:
+`nmfta-repo/vcr-experiment <https://github.com/nmfta-repo/vcr-experiment>`_ and
+the resulting static website:
+`nmfta-repo.github.io/vcr-experiment <https://nmfta-repo.github.io/vcr-experiment>`_.
 
-A very good alternative to GitHub pages is `Read the Docs <https://readthedocs.org>`_.
+A very good alternative to GitHub pages is
+`Read the Docs <https://readthedocs.org>`_.
 
-If the project is private, you could use any server that reads HTML files from a folder. For example, Python has an embedded Web Server, see `this for example <https://pythonbasics.org/webserver>`_. Also you could try any web server based on Node.JS.
+If the project is private, you could use any server that reads HTML files from a
+folder. For example, Python has an embedded Web Server, see
+`this for example <https://pythonbasics.org/webserver>`_. Also you could try any
+web server based on Node.JS.
 <<<
 
 [[/SECTION]]
@@ -164,16 +208,26 @@ MID: ac35a712b4a84f4ab2b61feb15c1550d
 STATEMENT: >>>
 StrictDoc is only partially compatible with Sphinx.
 
-StrictDoc does not have Sphinx in its dependency tree, and it does not use any of Sphinx API. Instead, StrictDoc uses Docutils for RST markup support. Using Docutils, StrictDoc can generate SDoc files to RST files.
+StrictDoc does not have Sphinx in its dependency tree, and it does not use any
+of Sphinx API. Instead, StrictDoc uses Docutils for RST markup support. Using
+Docutils, StrictDoc can generate SDoc files to RST files.
 
-There are users of StrictDoc who use both StrictDoc and Sphinx. The following workflow is known to work:
+There are users of StrictDoc who use both StrictDoc and Sphinx. The following
+workflow is known to work:
 
 - Write some documentation in SDoc files.
 - Export an SDoc documentation tree to an RST documentation tree.
 - Connect RST documentation tree with a Sphinx setup.
-- Run Sphinx against an RST documentation tree, obtain a Sphinx documentation website or LaTex PDF.
+- Run Sphinx against an RST documentation tree, obtain a Sphinx documentation
+  website or LaTex PDF.
 
-There is a GitHub issue `Unexpected restriction on specific RST directives / compatibility with Breathe Sphinx Plugin #1093 <https://github.com/strictdoc-project/strictdoc/issues/1093>`_ where a closer bridging between StrictDoc and Sphinx was discussed with no specific and actionable outcome. This comment is `especially relevant <https://github.com/strictdoc-project/strictdoc/issues/1093#issuecomment-1505108384>`_ as well as the one about a `possible implementation <https://github.com/strictdoc-project/strictdoc/issues/1093#issuecomment-1545599711>`_.
+There is a GitHub issue
+`Unexpected restriction on specific RST directives / compatibility with Breathe Sphinx Plugin #1093 <https://github.com/strictdoc-project/strictdoc/issues/1093>`_
+where a closer bridging between StrictDoc and Sphinx was discussed with no
+specific and actionable outcome. This comment is
+`especially relevant <https://github.com/strictdoc-project/strictdoc/issues/1093#issuecomment-1505108384>`_
+as well as the one about a
+`possible implementation <https://github.com/strictdoc-project/strictdoc/issues/1093#issuecomment-1545599711>`_.
 <<<
 
 [[/SECTION]]
@@ -198,7 +252,8 @@ TITLE: How StrictDoc compares to other tools?
 [TEXT]
 MID: 45093addf6ec4772a0289fd958ae61dc
 STATEMENT: >>>
-This section compares some requirements management tools that are similar to StrictDoc.
+This section compares some requirements management tools that are similar to
+StrictDoc.
 <<<
 
 [[SECTION]]
@@ -214,7 +269,8 @@ The StrictDoc project is a close successor of another project called
     Doorstop is a requirements management tool that facilitates the storage of
     textual requirements alongside source code in version control.
 
-The author of Doorstop has published a `paper about Doorstop <http://www.scirp.org/journal/PaperInformation.aspx?PaperID=44268#.UzYtfWRdXEZ>`_
+The author of Doorstop has published a
+`paper about Doorstop <http://www.scirp.org/journal/PaperInformation.aspx?PaperID=44268#.UzYtfWRdXEZ>`_
 where the rationale behind text-based requirements management is provided.
 
 The first version of StrictDoc had started as a fork of the Doorstop project.
@@ -268,16 +324,17 @@ specifications documents. StrictDoc can generate documentation to a number of
 formats including HTML format as well as the RST format which is a default
 input format for Sphinx.
 
-A two-stage generation is therefore possible:
-StrictDoc generates RST documentation which then can be generated to HTML, PDF,
-and other formats using Sphinx. If you are reading this documentation at
-https://strictdoc.readthedocs.io/en/latest,
-you are very close to a `StrictDoc-Sphinx example <https://strictdoc.readthedocs.io/en/latest/sphinx/>`_.
+A two-stage generation is therefore possible: StrictDoc generates RST
+documentation which then can be generated to HTML, PDF, and other formats using
+Sphinx. If you are reading this documentation at
+https://strictdoc.readthedocs.io/en/latest, you are very close to a
+`StrictDoc-Sphinx example <https://strictdoc.readthedocs.io/en/latest/sphinx/>`_.
 
-This documentation is first converted to RST format by StrictDoc, which is then processed by Read the Docs using Sphinx to generate the HTML website.
+This documentation is first converted to RST format by StrictDoc, which is then
+processed by Read the Docs using Sphinx to generate the HTML website.
 
-The
-``StrictDoc -> RST -> Sphinx -> PDF`` example is also generated using readthedocs:
+The ``StrictDoc -> RST -> Sphinx -> PDF`` example is also generated using
+readthedocs:
 `StrictDoc <https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/>`_.
 <<<
 
@@ -290,7 +347,8 @@ TITLE: Other tools
 [TEXT]
 MID: ad24dca8ed9c449ab76c1798f38eb37c
 STATEMENT: >>>
-See also this GitHub gist for an overview of more tools available on GitHub: https://gist.github.com/stanislaw/aa40eb7de9f522ad482e5d239c435ff8.
+See also this GitHub gist for an overview of more tools available on GitHub:
+https://gist.github.com/stanislaw/aa40eb7de9f522ad482e5d239c435ff8.
 <<<
 
 [[/SECTION]]
@@ -317,25 +375,36 @@ The first StrictDoc commit dates back to ``2019-08-10``.
 **2019 – July – August**
 
 StrictDoc is a result of several attempts to find a solution for working with
-text-based requirements. The first version of StrictDoc had started as a fork of the Doorstop project. However, after a while, StrictDoc was started from scratch as a separate project.
+text-based requirements. The first version of StrictDoc had started as a fork of
+the Doorstop project. However, after a while, StrictDoc was started from scratch
+as a separate project.
 
 **2019 – August**
 
-StrictDoc, first generation, the first commit dates to ``2019-08-10``. Markdown-based C++ program. Custom requirements metadata in YAML.
+StrictDoc, first generation, the first commit dates to ``2019-08-10``.
+Markdown-based C++ program. Custom requirements metadata in YAML.
 
 **2020 – January**
 
-StrictDoc, second generation: RST/Sphinx-based Python program. Using Sphinx extensions to manage meta information.
+StrictDoc, second generation: RST/Sphinx-based Python program. Using Sphinx
+extensions to manage meta information.
 
 **2020 – May**
 
-The current StrictDoc repository was created on GitHub: the first commit dates back ``2020-05-14``. The code still uses RST for parsing requirements meta information and PySide for GUI.
+The current StrictDoc repository was created on GitHub: the first commit dates
+back ``2020-05-14``. The code still uses RST for parsing requirements meta
+information and PySide for GUI.
 
-The result of these efforts was the realization that a text-based requirements and specifications management tool could be built on top of a domain-specific language (DSL) created specifically for the purpose of writing requirements and specifications documents. Such a language allows explicit definition of a document data model which is called "grammar".
+The result of these efforts was the realization that a text-based requirements
+and specifications management tool could be built on top of a domain-specific
+language (DSL) created specifically for the purpose of writing requirements and
+specifications documents. Such a language allows explicit definition of a
+document data model which is called "grammar".
 
 **2020 – July**
 
-The custom RST parser was replaced with a TextX-based DSL. Since then, StrictDoc has been using TextX for parsing SDoc files.
+The custom RST parser was replaced with a TextX-based DSL. Since then, StrictDoc
+has been using TextX for parsing SDoc files.
 <<<
 
 [[/SECTION]]
@@ -351,7 +420,8 @@ Most relevant GitHub statistics:
 
 - `StrictDoc contributors <https://github.com/strictdoc-project/strictdoc/graphs/contributors>`_
 
-- The `pip trends <https://piptrends.com>`_ helps to visualize the Pip package download stats.
+- The `pip trends <https://piptrends.com>`_ helps to visualize the Pip package
+  download stats.
 
   - The ``reqif`` satellite project is included for comparison as well: `strictdoc vs reqif <https://piptrends.com/compare/strictdoc-vs-reqif>`_.
 

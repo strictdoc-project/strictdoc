@@ -472,3 +472,39 @@ def test_010_markdown_writer_injects_mid_into_section_nodes_when_grammar_declare
     assert "**MID**:" in req_block, (
         f"MID not injected into requirement block: {req_block!r}"
     )
+
+
+def test_011_markdown_grammar_reader_and_writer_roundtrip_reverse_role():
+    grammar_markdown = """\
+# StrictDoc Markdown Grammar
+
+## Element: REQUIREMENT
+
+### Field: UID
+
+**Type**: String
+**Required**: False
+
+### Relations
+
+#### Relation: Parent
+
+**Role**: Refines
+**Reverse Role**: Refined by
+"""
+
+    grammar = MarkdownGrammarReader.read(grammar_markdown)
+    relation = grammar.elements_by_type["REQUIREMENT"].relations[0]
+    assert relation.relation_role == "Refines"
+    assert relation.reverse_relation_role == "Refined by"
+
+    output_markdown = MarkdownGrammarWriter.write(grammar)
+    assert "**Role**: Refines" in output_markdown
+    assert "**Reverse Role**: Refined by" in output_markdown
+
+    roundtrip_grammar = MarkdownGrammarReader.read(output_markdown)
+    roundtrip_relation = roundtrip_grammar.elements_by_type[
+        "REQUIREMENT"
+    ].relations[0]
+    assert roundtrip_relation.relation_role == "Refines"
+    assert roundtrip_relation.reverse_relation_role == "Refined by"

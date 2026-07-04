@@ -66,6 +66,9 @@ swallowed as plain text.
 3\) Fixed: a document-level ``UID`` declared in a Markdown document's H1
 metadata block (``**UID**: ...``) is now registered correctly, so other
 documents can link to it via ``[LINK <uid>]``.
+
+4\) Markdown custom grammars now support ``**Reverse Role**`` on ``Parent`` and
+``Child`` relations.
 <<<
 
 [[/SECTION]]

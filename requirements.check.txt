@@ -28,6 +28,9 @@ openpyxl>=3.0.5
 # End2end tests
 seleniumbase
 
+# Screencast video generation (tests/screencast)
+playwright
+
 # psutil is needed to reap Uvicorn's zombie processes when running end2end
 # tests. One day someone finds a better solution.
 psutil

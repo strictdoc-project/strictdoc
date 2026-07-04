@@ -1,6 +1,6 @@
 import os
 from copy import deepcopy
-from typing import Type
+from typing import List, Optional, Type
 
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
@@ -33,6 +33,10 @@ class ChangeGenerator:
         path_to_rhs_tree: str,
         project_config: ProjectConfig,
         html_templates: HTMLTemplates,
+        left_revision_display: Optional[str] = None,
+        right_revision_display: Optional[str] = None,
+        left_revision_tags: Optional[List[str]] = None,
+        right_revision_tags: Optional[List[str]] = None,
     ) -> None:
         assert isinstance(project_config, ProjectConfig)
 
@@ -55,6 +59,21 @@ class ChangeGenerator:
         project_config_copy_lhs.input_paths = [lhs_export_input_abs_path]
         project_config_copy_rhs.input_paths = [rhs_export_input_abs_path]
 
+        # generate_from_revisions() supplies a "<expression> (<short-hash>)"
+        # display string here. Falling back to the absolute input path keeps
+        # --generate-diff-dirs (which calls this method directly, with no
+        # Git revision to describe) working as before.
+        left_revision = (
+            left_revision_display
+            if left_revision_display is not None
+            else lhs_export_input_abs_path
+        )
+        right_revision = (
+            right_revision_display
+            if right_revision_display is not None
+            else rhs_export_input_abs_path
+        )
+
         change_container: ChangeContainer = ChangeGenerator.generate(
             lhs_project_config=project_config_copy_lhs,
             rhs_project_config=project_config_copy_rhs,
@@ -70,8 +89,10 @@ class ChangeGenerator:
             document_tree_rhs=change_container.traceability_index_rhs.document_tree,
             documents_iterator_lhs=change_container.documents_iterator_lhs,
             documents_iterator_rhs=change_container.documents_iterator_rhs,
-            left_revision=lhs_export_input_abs_path,
-            right_revision=rhs_export_input_abs_path,
+            left_revision=left_revision,
+            right_revision=right_revision,
+            left_revision_tags=left_revision_tags,
+            right_revision_tags=right_revision_tags,
             lhs_stats=change_container.lhs_stats,
             rhs_stats=change_container.rhs_stats,
             change_stats=change_container.change_stats,
@@ -96,8 +117,10 @@ class ChangeGenerator:
             document_tree_rhs=change_container.traceability_index_rhs.document_tree,
             documents_iterator_lhs=change_container.documents_iterator_lhs,
             documents_iterator_rhs=change_container.documents_iterator_rhs,
-            left_revision=lhs_export_input_abs_path,
-            right_revision=rhs_export_input_abs_path,
+            left_revision=left_revision,
+            right_revision=right_revision,
+            left_revision_tags=left_revision_tags,
+            right_revision_tags=right_revision_tags,
             lhs_stats=change_container.lhs_stats,
             rhs_stats=change_container.rhs_stats,
             change_stats=change_container.change_stats,
@@ -209,6 +232,30 @@ class ChangeGenerator:
         assert left_revision_resolved is not None
         assert right_revision_resolved is not None
 
+        # These "<expression> (<short-hash>)" strings are only used for the
+        # static HTML export (there is no server to resubmit a revision to
+        # here, unlike other_router.py), so it is safe to make them
+        # human-readable instead of passing raw revision expressions through.
+        left_revision_tags = git_client.get_tags_for_revision(
+            left_revision_resolved
+        )
+        left_revision_display = (
+            f"{left_revision} "
+            f"({git_client.get_short_revision(left_revision_resolved)})"
+        )
+
+        if right_revision_resolved == "HEAD+":
+            right_revision_tags: List[str] = []
+            right_revision_display = right_revision
+        else:
+            right_revision_tags = git_client.get_tags_for_revision(
+                right_revision_resolved
+            )
+            right_revision_display = (
+                f"{right_revision} "
+                f"({git_client.get_short_revision(right_revision_resolved)})"
+            )
+
         git_client_lhs = GitClient.create_repo_from_local_copy(
             left_revision_resolved, project_config
         )
@@ -233,4 +280,8 @@ class ChangeGenerator:
             export_input_abs_path_rhs,
             project_config=project_config,
             html_templates=html_templates,
+            left_revision_display=left_revision_display,
+            right_revision_display=right_revision_display,
+            left_revision_tags=left_revision_tags,
+            right_revision_tags=right_revision_tags,
         )

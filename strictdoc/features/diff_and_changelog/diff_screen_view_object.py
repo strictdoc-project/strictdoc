@@ -4,7 +4,7 @@
 
 import urllib
 from dataclasses import dataclass
-from typing import Optional
+from typing import List, Optional
 
 from markupsafe import Markup
 
@@ -30,6 +30,10 @@ class DiffScreenViewObject:
         self.results: bool = results
         self.left_revision: Optional[str] = left_revision
         self.right_revision: Optional[str] = right_revision
+        # This screen (no results yet) never resolves tags, but form.jinja is
+        # shared with DiffScreenResultsViewObject, so these must exist too.
+        self.left_revision_tags: List[str] = []
+        self.right_revision_tags: List[str] = []
         self.error_message: Optional[str] = error_message
         self.tab: str = tab
 

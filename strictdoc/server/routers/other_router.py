@@ -221,6 +221,15 @@ def create_other_router(
         assert left_revision_resolved is not None
         assert right_revision_resolved is not None
 
+        left_revision_tags = git_client.get_tags_for_revision(
+            left_revision_resolved
+        )
+        right_revision_tags = (
+            git_client.get_tags_for_revision(right_revision_resolved)
+            if right_revision_resolved != "HEAD+"
+            else []
+        )
+
         def open_git_client_for_revision(revision: str) -> GitClient:
             if revision == "HEAD+":
                 # Serialize HEAD+ snapshot creation with main router writes.
@@ -278,6 +287,12 @@ def create_other_router(
                 change_container.traceability_index_rhs.document_tree
                 is not None
             )
+            # Unlike change_generator.py's static export, left_revision/
+            # right_revision here must stay the raw expressions the user
+            # submitted (e.g. "HEAD^"): the form/turbo-frame/nav-tab links
+            # resubmit these exact values back to this route, so replacing
+            # them with a "<expression> (<short-hash>)" display string would
+            # break re-diffing from the results screen.
             view_object = DiffScreenResultsViewObject(
                 project_config=project_config,
                 change_container=change_container,
@@ -287,6 +302,8 @@ def create_other_router(
                 documents_iterator_rhs=change_container.documents_iterator_rhs,
                 left_revision=left_revision,
                 right_revision=right_revision,
+                left_revision_tags=left_revision_tags,
+                right_revision_tags=right_revision_tags,
                 lhs_stats=change_container.lhs_stats,
                 rhs_stats=change_container.rhs_stats,
                 change_stats=change_container.change_stats,

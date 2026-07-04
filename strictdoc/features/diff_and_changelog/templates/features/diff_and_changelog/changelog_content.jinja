@@ -15,6 +15,17 @@
       {% include "components/table_key_value/index.jinja" %}
     {% endwith %}
 
+    {% if view_object.left_revision_tags %}
+      {% with key_value_pair =
+          {
+            "Key":"Left tags",
+            "Value": view_object.left_revision_tags|join(", "),
+          }
+      %}
+        {% include "components/table_key_value/index.jinja" %}
+      {% endwith %}
+    {% endif %}
+
     {% with key_value_pair =
         {
           "Key":"Right",
@@ -23,6 +34,17 @@
     %}
       {% include "components/table_key_value/index.jinja" %}
     {% endwith %}
+
+    {% if view_object.right_revision_tags %}
+      {% with key_value_pair =
+          {
+            "Key":"Right tags",
+            "Value": view_object.right_revision_tags|join(", "),
+          }
+      %}
+        {% include "components/table_key_value/index.jinja" %}
+      {% endwith %}
+    {% endif %}
 
     {% with key_value_pair =
         {"Section":"Summary of the changes"}

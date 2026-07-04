@@ -542,9 +542,14 @@ class MarkdownGrammarWriter:
     @staticmethod
     def _serialize_relation(relation: GrammarElementRelationType) -> str:
         output = f"#### Relation: {relation.relation_type}"
+        properties: List[Tuple[str, str]] = []
         if relation.relation_role is not None:
+            properties.append(("Role", relation.relation_role))
+        if relation.reverse_relation_role is not None:
+            properties.append(("Reverse Role", relation.reverse_relation_role))
+        if len(properties) > 0:
             output += "\n\n" + MarkdownGrammarWriter._serialize_properties(
-                [("Role", relation.relation_role)]
+                properties
             )
         return output
 

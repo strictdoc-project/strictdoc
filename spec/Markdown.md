@@ -534,3 +534,6 @@ Supported field types:
 Within an element, `### Relations` opens the relations section. Each permitted relation type is declared as `#### Relation: <TYPE>` where `<TYPE>` is `Parent`, `Child`, or `File`.
 
 An optional `**Role**: <role>` property names the relation role.
+
+For `Parent` and `Child` relations, an optional `**Reverse Role**: <role>` defines the role name used when the relation is shown from the opposite direction (e.g. a parent showing its derived child link).
+`**Reverse Role**` requires `**Role**` to also be set. If `**Reverse Role**` is omitted, the `**Role**` value is shown in both directions.

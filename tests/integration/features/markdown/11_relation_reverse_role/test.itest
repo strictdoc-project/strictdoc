@@ -1,0 +1,24 @@
+#
+# This test verifies that a Markdown custom grammar can declare REVERSE_ROLE
+# on a Parent relation, and that the reverse-direction display label is used
+# when the derived Child relation is rendered on the parent's side.
+#
+
+RUN: %strictdoc export %S --formats=html --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Reverse role document
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+
+# REQ-1 gets a derived Child relation back to REQ-2. Since the grammar
+# defines REVERSE_ROLE: Refined by for Parent/Refines, that label is shown
+# instead of the canonical Refines.
+CHECK-HTML: id="REQ-1"
+CHECK-HTML: RELATIONS (Child):
+CHECK-HTML: class="requirement__link-child" href="#REQ-2"
+CHECK-HTML: (Refined by)
+
+# REQ-2 has an explicit Parent relation to REQ-1 with ROLE: Refines.
+CHECK-HTML: id="REQ-2"
+CHECK-HTML: RELATIONS (Parent):
+CHECK-HTML: class="requirement__link-parent" href="#REQ-1"
+CHECK-HTML: (Refines)

@@ -325,7 +325,7 @@ class MarkdownGrammarReader:
         properties = MarkdownGrammarReader._parse_properties(
             body, file_path, heading_node
         )
-        unknown_properties = set(properties.keys()) - {"ROLE"}
+        unknown_properties = set(properties.keys()) - {"ROLE", "REVERSE ROLE"}
         if len(unknown_properties) > 0:
             MarkdownGrammarReader._raise_error(
                 "unknown relation propertie(s): "
@@ -334,10 +334,15 @@ class MarkdownGrammarReader:
                 file_path,
             )
         role = properties.get("ROLE")
+        reverse_role = properties.get("REVERSE ROLE")
         if relation_type == "Parent":
-            return GrammarElementRelationParent(parent, relation_type, role)
+            return GrammarElementRelationParent(
+                parent, relation_type, role, reverse_role
+            )
         if relation_type == "Child":
-            return GrammarElementRelationChild(parent, relation_type, role)
+            return GrammarElementRelationChild(
+                parent, relation_type, role, reverse_role
+            )
         if relation_type == "File":
             return GrammarElementRelationFile(parent, relation_type, role)
         MarkdownGrammarReader._raise_error(

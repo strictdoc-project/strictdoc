@@ -19,4 +19,11 @@ CHECK-DOC-HTML: MY_BUNDLE_DOC_UID
 CHECK-DOC-HTML: v1.2.3
 CHECK-DOC-HTML: 2026-01-01
 
+# This ensures that a document's custom METADATA field's [LINK: ...] is also
+# resolved correctly when the document is rendered as part of a PDF bundle
+# (the sub-document keeps its own METADATA on its own page).
+RUN: %cat %T/html2pdf/html/%THIS_TEST_FOLDER/input-PDF.html | filecheck %s --check-prefix CHECK-SUBDOC-HTML
+CHECK-SUBDOC-HTML: OWNER:
+CHECK-SUBDOC-HTML: <a href="#SEC-1">🔗&nbsp;1. Section #1</a>
+
 RUN: python %S/test_pdf.py

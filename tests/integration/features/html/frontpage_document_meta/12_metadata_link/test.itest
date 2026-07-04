@@ -1,0 +1,6 @@
+RUN: %strictdoc export %S --output-dir Output/
+RUN: %cat "Output/html/12_metadata_link/input.html" | filecheck %s --dump-input=fail
+
+CHECK: OWNER:
+CHECK: <a href="#REQ-1">
+CHECK: The owning requirement

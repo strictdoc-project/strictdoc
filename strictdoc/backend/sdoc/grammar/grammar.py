@@ -153,7 +153,7 @@ DocumentCustomMetadata[noskipws]:
 ;
 
 DocumentCustomMetadataKeyValuePair[noskipws]:
-  '  ' key=DocumentCustomMetadataKey ': ' value=SingleLineString '\n'
+  '  ' key=DocumentCustomMetadataKey ': ' parts+=SingleLineTextPart '\n'
 ;
 
 DocumentCustomMetadataKey: /[a-zA-Z_][a-zA-Z0-9_-]*/;

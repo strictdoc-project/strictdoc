@@ -6,6 +6,7 @@ from strictdoc.backend.markdown.reader import SDMarkdownReader
 from strictdoc.backend.markdown.writer import SDMarkdownWriter
 from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.reader import SDReader
 
@@ -124,7 +125,7 @@ Intro text.
 
     assert document.config.custom_metadata is not None
     metadata = {
-        entry.key: entry.value
+        entry.key: entry.get_text_value()
         for entry in document.config.custom_metadata.entries
     }
     assert metadata == {"UID": "DOC-1", "Author": "John Doe"}
@@ -140,6 +141,36 @@ Intro text.
     assert requirement.node_type == "REQUIREMENT"
     assert requirement.reserved_title == "Requirement title"
     assert requirement.reserved_uid == "REQ-1"
+
+
+def test_003_1_roundtrip_root_metadata_link():
+    input_markdown = """\
+# Document title
+
+**UID**: DOC-1 \\
+**Owner**: [LINK: REQ-1]
+
+## Requirement title
+
+**UID**: REQ-1
+
+**Statement**: System shall do X.
+"""
+
+    document, _ = _assert_markdown_roundtrip(input_markdown)
+
+    assert isinstance(document, SDocDocument)
+    assert document.config.custom_metadata is not None
+    owner_entry = document.config.custom_metadata.entries[-1]
+    assert owner_entry.key == "Owner"
+    assert len(owner_entry.parts) == 1
+    assert isinstance(owner_entry.parts[0], InlineLink)
+    assert owner_entry.parts[0].link == "REQ-1"
+
+    # Regression: the parent chain must be wired so that InlineLink.parent_node()
+    # (used by the incoming-links UI panel and validations) does not crash.
+    assert owner_entry.get_owning_node() is document
+    assert owner_entry.parts[0].parent_node() is document
 
 
 def test_005_roundtrip_keeps_detected_backslash_meta_style():

@@ -2,9 +2,10 @@
 @relation(SDOC-SRS-110, SDOC-SRS-151, scope=file)
 """
 
-from typing import TYPE_CHECKING, List, Optional, Tuple
+from typing import TYPE_CHECKING, Any, List, Optional, Tuple
 
 from strictdoc.backend.sdoc.constants import SDocMarkup
+from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.helpers.auto_described import auto_described
 
 if TYPE_CHECKING:
@@ -18,11 +19,34 @@ class DocumentCustomMetadataKeyValuePair:
         *,
         parent: Optional["DocumentCustomMetadata"] = None,
         key: Optional[str],
-        value: Optional[str],
+        parts: List[Any],
     ) -> None:
-        _ = parent
+        self.parent: Optional[DocumentCustomMetadata] = parent
         self.key = key
-        self.value = value
+        self.parts: List[Any] = parts
+        for part in parts:
+            if isinstance(part, InlineLink):
+                part.parent = self
+
+    def get_text_value(self) -> str:
+        text = ""
+        for part in self.parts:
+            if isinstance(part, str):
+                text += part
+            elif isinstance(part, InlineLink):
+                text += "[LINK: "
+                text += part.link
+                text += "]"
+            else:
+                raise NotImplementedError(part)  # pragma: no cover
+        return text
+
+    def get_owning_node(self) -> "SDocDocument":
+        assert self.parent is not None
+        assert self.parent.parent is not None
+        document = self.parent.parent.parent
+        assert document is not None
+        return document
 
 
 @auto_described
@@ -33,7 +57,7 @@ class DocumentCustomMetadata:
         parent: Optional["DocumentConfig"] = None,
         entries: List[DocumentCustomMetadataKeyValuePair],
     ) -> None:
-        _ = parent
+        self.parent: Optional[DocumentConfig] = parent
         self.entries: List[DocumentCustomMetadataKeyValuePair] = entries
 
 
@@ -202,10 +226,9 @@ class DocumentConfig:
                 if value is not None and len(value) > 0
             }
             return [
-                (entry.key, entry.value)
+                (entry.key, entry.get_text_value())
                 for entry in self.custom_metadata.entries
                 if entry.key is not None
-                and entry.value is not None
                 and entry.key.upper() not in reserved_keys
             ]
         return []

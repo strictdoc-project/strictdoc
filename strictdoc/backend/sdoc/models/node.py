@@ -115,6 +115,9 @@ class SDocNodeField:
     def is_multiline(self) -> bool:
         return self.multiline
 
+    def get_owning_node(self) -> Optional["SDocNode"]:
+        return self.parent
+
     def get_text_value(self) -> str:
         text = ""
         for part in self.parts:

@@ -15,7 +15,7 @@ def test_has_custom_metadata_returns_true_when_entries_are_present():
     config = DocumentConfig.default_config(document=None)
     config.custom_metadata = DocumentCustomMetadata(
         entries=[
-            DocumentCustomMetadataKeyValuePair(key="FOO", value="bar"),
+            DocumentCustomMetadataKeyValuePair(key="FOO", parts=["bar"]),
         ]
     )
     assert config.has_custom_metadata() is True
@@ -31,8 +31,8 @@ def test_get_custom_metadata_excludes_entry_present_in_config():
     config.uid = "DOC-1"
     config.custom_metadata = DocumentCustomMetadata(
         entries=[
-            DocumentCustomMetadataKeyValuePair(key="UID", value="DOC-1"),
-            DocumentCustomMetadataKeyValuePair(key="Author", value="Jane"),
+            DocumentCustomMetadataKeyValuePair(key="UID", parts=["DOC-1"]),
+            DocumentCustomMetadataKeyValuePair(key="Author", parts=["Jane"]),
         ]
     )
 
@@ -43,7 +43,7 @@ def test_get_custom_metadata_keeps_entry_not_present_in_config():
     config = DocumentConfig.default_config(document=None)
     config.custom_metadata = DocumentCustomMetadata(
         entries=[
-            DocumentCustomMetadataKeyValuePair(key="UID", value="DOC-1"),
+            DocumentCustomMetadataKeyValuePair(key="UID", parts=["DOC-1"]),
         ]
     )
 

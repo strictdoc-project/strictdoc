@@ -542,3 +542,24 @@ def test_024_markdown_reader_registers_document_level_uid():
     document = reader.read(markdown_content, file_path=None)
 
     assert document.config.uid == "DOC-1"
+
+
+def test_025_markdown_reader_empty_heading_produces_no_title_field():
+    markdown_content = """\
+# Document title
+
+##
+
+**TYPE**: REQUIREMENT \\
+**UID**: REQ-1
+"""
+
+    reader = SDMarkdownReader()
+    document = reader.read(markdown_content, file_path=None)
+
+    requirement = document.section_contents[0]
+    assert isinstance(requirement, SDocNode)
+    assert requirement.node_type == "REQUIREMENT"
+    assert requirement.reserved_uid == "REQ-1"
+    assert requirement.reserved_title is None
+    assert "TITLE" not in requirement.ordered_fields_lookup

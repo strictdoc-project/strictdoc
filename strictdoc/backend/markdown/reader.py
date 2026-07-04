@@ -747,9 +747,7 @@ class SDMarkdownReader:
             # Any other explicit TYPE is accepted as long as the markdown syntax
             # is well-formed and the heading has a non-empty title.  Grammar
             # field validation is deferred to TraceabilityIndexBuilder.
-            valid_for_requirement = (
-                meta_is_valid and content_is_valid and len(title) > 0
-            )
+            valid_for_requirement = meta_is_valid and content_is_valid
         elif has_custom_grammar:
             # When a custom grammar is attached, drop the hardcoded UID/STATEMENT
             # assumptions and defer field validation to TraceabilityIndexBuilder.
@@ -759,7 +757,6 @@ class SDMarkdownReader:
                 and has_only_known_fields
                 and not has_empty_field_values
                 and len(parsed_fields) > 0
-                and len(title) > 0
             )
         else:
             valid_for_requirement = (
@@ -1218,14 +1215,15 @@ class SDMarkdownReader:
                     multiline="\n" in field.value,
                 )
             )
-        requirement_fields.append(
-            SDocNodeField.create_from_string(
-                parent=None,
-                field_name="TITLE",
-                field_value=title,
-                multiline=False,
+        if len(title) > 0:
+            requirement_fields.append(
+                SDocNodeField.create_from_string(
+                    parent=None,
+                    field_name="TITLE",
+                    field_value=title,
+                    multiline=False,
+                )
             )
-        )
         for field in parsed_content_fields:
             sdoc_field = SDocNodeField(
                 parent=None,

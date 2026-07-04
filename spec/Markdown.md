@@ -160,6 +160,13 @@ A node without a title is a special case of the node defined by [LINK: MD-21].
 
 Compared to a node with a title, a node without a title starts directly with a node body.
 
+The resulting node shall have no `TITLE` (as opposed to a node where the title is an empty string).
+
+**RATIONALE**:
+
+No-title nodes are a valid use-case in scenarios where a title is automatically derived and merged from related source code.
+They rely on empty headings, which is uncommon but valid syntax in CommonMark.
+
 ### SECTION node
 
 **MID**: 7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d \

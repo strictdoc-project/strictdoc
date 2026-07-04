@@ -37,3 +37,8 @@
 
 **Type**: String
 **Required**: False
+
+### Field: RATIONALE
+
+**Type**: String
+**Required**: False

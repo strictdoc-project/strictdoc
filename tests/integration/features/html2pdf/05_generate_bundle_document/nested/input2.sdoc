@@ -1,5 +1,11 @@
 [DOCUMENT]
 TITLE: Dummy Software Requirements Specification #2
+UID: DOC-2
+VERSION: 2.0
+DATE: 2026-02-02
+CLASSIFICATION: Internal
+METADATA:
+  AUTHOR: Jane Doe
 
 [TEXT]
 STATEMENT: >>>

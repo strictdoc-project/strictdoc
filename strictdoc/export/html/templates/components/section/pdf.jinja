@@ -1,10 +1,21 @@
 {#
   In this template:
   sdoc_entity = section
+
+  sdoc_entity.is_document() is true when this template is rendering an
+  included document (e.g., a member document inside a bundle PDF export)
+  rather than a regular [[SECTION]] node. In that case, show the full
+  document metadata block instead of just the UID.
 #}
 
 <sdoc-section>
   {# Use h/print, it contains anchor: #}
   {% include "components/node_field/section_h/pdf.jinja" %}
-  {% include "components/node_field/uid_standalone/index.jinja" %}
+  {%- if sdoc_entity.is_document() %}
+    {%- with document = sdoc_entity %}
+      {% include "components/node_field/document_meta/index.jinja" %}
+    {%- endwith %}
+  {%- else %}
+    {% include "components/node_field/uid_standalone/index.jinja" %}
+  {%- endif %}
 </sdoc-section>

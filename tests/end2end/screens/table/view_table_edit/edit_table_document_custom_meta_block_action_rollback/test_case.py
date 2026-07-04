@@ -1,3 +1,5 @@
+from selenium.webdriver.support.wait import WebDriverWait
+
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.components.viewtype_selector import ViewType_Selector
@@ -29,6 +31,7 @@ class Test(E2ECase):
             self.execute_script(
                 """
                 window.__tableEditOriginalFetch = window.fetch;
+                window.__tableEditReorderAttempts = 0;
                 window.fetch = function(input, init) {
                     const body = init?.body?.toString() || '';
                     if (
@@ -40,6 +43,14 @@ class Test(E2ECase):
                             body.includes('action=reorder')
                         )
                     ) {
+                        if (body.includes('action=reorder')) {
+                            // Marked synchronously, before the mocked response
+                            // promise settles: proof the drop already fired and
+                            // the reorder round trip has actually started, so a
+                            // later poll on the rolled-back row order can't be
+                            // confused with the untouched pre-drag order.
+                            window.__tableEditReorderAttempts += 1;
+                        }
                         return Promise.resolve(new Response(
                             'Forced block action failure.',
                             {status: 500}
@@ -65,6 +76,24 @@ class Test(E2ECase):
                 '[data-testid="document-config-metadata-row-custom_meta_0"] '
                 '[data-testid="document-config-metadata-label"]',
             )
+            # SeleniumBase's drag_and_drop dispatches pointerdown/mousedown
+            # synchronously, but chains dragstart/dragover/drop via setTimeout,
+            # so the drop (and the reorder it triggers) may not have happened
+            # yet once drag_and_drop() returns. The rolled-back order below is
+            # identical to the pre-drag order, so polling for it directly could
+            # match on the untouched pre-drag state before the drop ever fires
+            # -- racing the real drop+rollback into the gap before the final
+            # assertion. Wait for the mocked reorder request to actually fire
+            # first, proving the drop already happened.
+            WebDriverWait(self.driver, 10).until(
+                lambda _: (
+                    self.execute_script(
+                        "return window.__tableEditReorderAttempts"
+                    )
+                    >= 1
+                )
+            )
+
             # Polls until JS rolls back the reorder after the mocked 500:
             # execute_script is immediate and would race the rollback that
             # restores the original row order, so a plain assertion right after

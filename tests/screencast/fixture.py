@@ -7,6 +7,8 @@ SCREENCAST_DIR = Path(__file__).resolve().parent
 FIXTURE_DIR = SCREENCAST_DIR / "fixtures" / "strictdoc-demo-project"
 FIXTURE_CONFIG = FIXTURE_DIR / "strictdoc_config.py"
 
+OUTPUT_DIR = SCREENCAST_DIR / "output"
+
 # Manual dev server: kept open while developing/inspecting a scene in the
 # browser.
 DEV_SERVER_PORT = 5111

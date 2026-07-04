@@ -76,6 +76,7 @@ class Test(E2ECase):
             screen_table.assert_cell_has_validation_error(node_mid, "STATEMENT")
 
             screen_table.do_cancel_inline_cell_by_escape()
+            screen_table.wait_for_cell_not_editing(node_mid, "TITLE")
             screen_table.assert_cell_is_not_inline_editing(node_mid, "TITLE")
 
             #
@@ -85,6 +86,7 @@ class Test(E2ECase):
             #
             screen_table.do_open_inline_cell(node_mid, "STATEMENT")
             screen_table.do_cancel_inline_cell_by_escape()
+            screen_table.wait_for_cell_not_editing(node_mid, "STATEMENT")
 
             screen_table.assert_cell_is_not_inline_editing(
                 node_mid, "STATEMENT"

@@ -256,8 +256,17 @@ class DocumentScreenViewObject:
 
         return output
 
-    def render_document_version(self) -> Optional[str]:
-        if self.document.config.version is None:
+    def render_document_version(
+        self, included_document: Optional[SDocDocument] = None
+    ) -> Optional[str]:
+        # 'document' is the main view document or an included document
+        # (e.g., a bundle PDF member); defaults to the main view document.
+        document_ = (
+            included_document
+            if included_document is not None
+            else self.document
+        )
+        if document_.config.version is None:
             return None
 
         def resolver(variable_name: str) -> str:
@@ -267,12 +276,19 @@ class DocumentScreenViewObject:
                 return self.git_client.get_branch()
             return variable_name
 
-        return interpolate_at_pattern_lazy(
-            self.document.config.version, resolver
-        )
+        return interpolate_at_pattern_lazy(document_.config.version, resolver)
 
-    def render_document_date(self) -> Optional[str]:
-        if self.document.config.date is None:
+    def render_document_date(
+        self, included_document: Optional[SDocDocument] = None
+    ) -> Optional[str]:
+        # 'document' is the main view document or an included document
+        # (e.g., a bundle PDF member); defaults to the main view document.
+        document_ = (
+            included_document
+            if included_document is not None
+            else self.document
+        )
+        if document_.config.date is None:
             return None
 
         def resolver(variable_name: str) -> str:
@@ -282,7 +298,7 @@ class DocumentScreenViewObject:
                 return self.git_client.get_commit_datetime()
             return variable_name
 
-        return interpolate_at_pattern_lazy(self.document.config.date, resolver)
+        return interpolate_at_pattern_lazy(document_.config.date, resolver)
 
     def render_metadata_value(self, metadata_value: str) -> str:
         """

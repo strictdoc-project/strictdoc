@@ -1,19 +1,25 @@
-{%- set document_config = view_object.document.config -%}
+{#
+  Optional 'document': the main view document or an included document
+  (e.g., a bundle PDF member, passed in by components/section/pdf.jinja).
+  Defaults to view_object.document when not provided.
+#}
+{%- set document = document if document is defined else view_object.document -%}
+{%- set document_config = document.config -%}
 
-{{ view_object.render_issues(view_object.document) }}
+{{ view_object.render_issues(document) }}
 
 {%- if document_config.has_meta() or document_config.has_custom_metadata() -%}
   <sdoc-meta>
-    {%- if view_object.document.config.uid -%}
+    {%- if document.config.uid -%}
     <sdoc-meta-label data-testid="document-config-uid-label">UID:</sdoc-meta-label>
     <sdoc-meta-field data-testid="document-config-uid-field">
-      {%- with field_content = view_object.document.config.uid %}
+      {%- with field_content = document.config.uid %}
         {%- include "components/field/index.jinja" -%}
       {%- endwith -%}
     </sdoc-meta-field>
     {%- endif -%}
 
-    {% set document_version_ = view_object.render_document_version() %}
+    {% set document_version_ = view_object.render_document_version(document) %}
     {%- if document_version_ is not none -%}
     <sdoc-meta-label data-testid="document-config-version-label">VERSION:</sdoc-meta-label>
     <sdoc-meta-field data-testid="document-config-version-field">
@@ -23,7 +29,7 @@
     </sdoc-meta-field>
     {%- endif -%}
 
-    {% set document_date_ = view_object.render_document_date() %}
+    {% set document_date_ = view_object.render_document_date(document) %}
     {%- if document_date_ is not none -%}
     <sdoc-meta-label data-testid="document-config-date-label">DATE:</sdoc-meta-label>
     <sdoc-meta-field data-testid="document-config-date-field">
@@ -33,10 +39,10 @@
     </sdoc-meta-field>
     {%- endif -%}
 
-    {%- if view_object.document.config.classification -%}
+    {%- if document.config.classification -%}
     <sdoc-meta-label data-testid="document-config-classification-label">CLASSIFICATION:</sdoc-meta-label>
     <sdoc-meta-field data-testid="document-config-classification-field">
-      {%- with field_content = view_object.document.config.classification %}
+      {%- with field_content = document.config.classification %}
         {%- include "components/field/index.jinja" -%}
       {%- endwith -%}
     </sdoc-meta-field>

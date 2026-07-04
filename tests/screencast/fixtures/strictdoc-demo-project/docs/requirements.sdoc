@@ -1,0 +1,7 @@
+[DOCUMENT]
+TITLE: StrictDoc
+
+[REQUIREMENT]
+UID: SDOC-HIGH-REQS-MANAGEMENT
+TITLE: Requirements management
+STATEMENT: StrictDoc shall enable requirements management.

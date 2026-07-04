@@ -84,6 +84,48 @@ def test_002_markdown_grammar_writer_roundtrips_default_markdown_grammar():
     )
 
 
+def test_002b_markdown_grammar_writer_roundtrips_composite_true_and_false():
+    input_markdown = """\
+# StrictDoc Markdown Grammar
+
+## Element: REQUIREMENT
+
+**Composite**: True
+
+### Field: UID
+
+**Type**: String
+**Required**: False
+
+## Element: TEXT
+
+**Composite**: False
+
+### Field: STATEMENT
+
+**Type**: String
+**Required**: False
+"""
+
+    grammar = MarkdownGrammarReader.read(input_markdown)
+
+    requirement_element = grammar.elements_by_type["REQUIREMENT"]
+    text_element = grammar.elements_by_type["TEXT"]
+    assert requirement_element.property_is_composite is True
+    assert text_element.property_is_composite is False
+
+    output_markdown = MarkdownGrammarWriter.write(grammar)
+    assert output_markdown == input_markdown
+
+    grammar_roundtrip = MarkdownGrammarReader.read(output_markdown)
+    requirement_element_roundtrip = grammar_roundtrip.elements_by_type[
+        "REQUIREMENT"
+    ]
+    text_element_roundtrip = grammar_roundtrip.elements_by_type["TEXT"]
+    assert requirement_element_roundtrip.property_is_composite is True
+    assert text_element_roundtrip.property_is_composite is False
+
+
 def test_003_markdown_document_grammar_metadata_sets_import_from_file():
     input_markdown = """\
 # Document example

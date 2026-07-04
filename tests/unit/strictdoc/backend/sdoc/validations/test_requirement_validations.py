@@ -302,3 +302,85 @@ STATEMENT: This is a statement.
         "Grammar element 'REQUIREMENT' defines REVERSE_ROLE without ROLE "
         "for relation type 'Parent'."
     )
+
+
+def test_23_validate_text_element_must_not_be_composite():
+    input_sdoc = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  PROPERTIES:
+    IS_COMPOSITE: True
+  FIELDS:
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+
+[REQUIREMENT]
+UID: REQ-001
+STATEMENT: This is a statement.
+""".lstrip()
+
+    reader = SDReader()
+    document = reader.read(input_sdoc)
+    document.meta = create_fake_document_meta()
+
+    with pytest.raises(StrictDocSemanticError) as exc_info:
+        SDocValidator.validate_document(document)
+
+    exception: StrictDocSemanticError = exc_info.value
+    assert exception.title == (
+        "The TEXT grammar element must not be declared as composite."
+    )
+
+
+def test_24_validate_section_element_must_be_composite():
+    input_sdoc = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: SECTION
+  PROPERTIES:
+    IS_COMPOSITE: False
+  FIELDS:
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+
+[REQUIREMENT]
+UID: REQ-001
+STATEMENT: This is a statement.
+""".lstrip()
+
+    reader = SDReader()
+    document = reader.read(input_sdoc)
+    document.meta = create_fake_document_meta()
+
+    with pytest.raises(StrictDocSemanticError) as exc_info:
+        SDocValidator.validate_document(document)
+
+    exception: StrictDocSemanticError = exc_info.value
+    assert exception.title == (
+        "The SECTION grammar element must be declared as composite."
+    )

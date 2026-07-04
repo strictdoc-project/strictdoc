@@ -39,4 +39,16 @@ class Test(E2ECase):
             row_labels = screen_table.get_metadata_row_labels()
             assert row_labels == ["FIRST:", "THIRD:"]
 
+            # The label list already matches right after the optimistic
+            # client-side row removal, before the delete's server round-trip
+            # (and the file save) has completed. Wait for the canonical
+            # renumbered testids (the server response) so the sandbox file
+            # comparison below doesn't race the pending save.
+            screen_table.wait_for_metadata_row_testids(
+                [
+                    "document-config-metadata-row-custom_meta_0",
+                    "document-config-metadata-row-custom_meta_1",
+                ]
+            )
+
         assert test_setup.compare_sandbox_and_expected_output()

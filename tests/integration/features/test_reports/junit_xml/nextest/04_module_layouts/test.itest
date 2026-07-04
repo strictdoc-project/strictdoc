@@ -1,27 +1,27 @@
 # Tests in module files, a nested module, and an integration-test submodule;
 # the two `dup` tests share a file stem and test name. Each requirement renders
-# IsSatisfiedBy its test under the crate-qualified path.
+# satisfied by its test under the crate-qualified path.
 
 RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Published: Module layouts
 
-# Each requirement renders IsSatisfiedBy its test, resolved crate-qualified.
+# Each requirement renders as satisfied by its test, resolved crate-qualified.
 RUN: %cat "%T/html/%THIS_TEST_FOLDER/docs/input.html" | filecheck %s --check-prefix CHECK-REQS
 CHECK-REQS: REQ-MODULE
 CHECK-REQS: widget_lib::model::tests::model_works
-CHECK-REQS: (IsSatisfiedBy)
+CHECK-REQS: (is satisfied by)
 CHECK-REQS: REQ-DEEP
 CHECK-REQS: widget_lib::deep::inner::tests::deep_works
-CHECK-REQS: (IsSatisfiedBy)
+CHECK-REQS: (is satisfied by)
 CHECK-REQS: REQ-DUP-A
 CHECK-REQS: widget_lib::dup::tests::dup_works
-CHECK-REQS: (IsSatisfiedBy)
+CHECK-REQS: (is satisfied by)
 CHECK-REQS: REQ-DUP-B
 CHECK-REQS: widget_lib::sub::dup::tests::dup_works
-CHECK-REQS: (IsSatisfiedBy)
+CHECK-REQS: (is satisfied by)
 CHECK-REQS: REQ-IT
 CHECK-REQS: widget_lib::it::it_works
-CHECK-REQS: (IsSatisfiedBy)
+CHECK-REQS: (is satisfied by)
 CHECK-REQS: REQ-IT-SUB
 CHECK-REQS: widget_lib::it::helper::helper_works
-CHECK-REQS: (IsSatisfiedBy)
+CHECK-REQS: (is satisfied by)

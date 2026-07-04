@@ -1,0 +1,34 @@
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK-DAG: Published: Requirements
+CHECK-DAG: Published: Test Specification
+CHECK: Export completed
+
+# The TEST_CASE node auto-linked to both the requirement it verifies
+# (via the @relation marker) and to its test result (automatically,
+# via the source_node <-> function match):
+# [REQUIREMENT] <-> [TEST_CASE] <-> [TEST_RESULT]
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/testcases.html | filecheck %s --dump-input=fail --check-prefix CHECK-TESTCASE
+CHECK-TESTCASE: RELATIONS (Parent):
+CHECK-TESTCASE: href="../03_source_node_and_relation_marker_combined/requirements.html#REQ-1">{{.*}}
+CHECK-TESTCASE: (verifies)
+CHECK-TESTCASE-NOT: href="../03_source_node_and_relation_marker_combined/requirements.html#REQ-1"
+CHECK-TESTCASE: RELATIONS (Child):
+CHECK-TESTCASE: href="../03_source_node_and_relation_marker_combined/test_report/output.robot.html#SYSTEM-TEST-FEATURE-CHECK-VALID-LOGIN">{{.*}}
+CHECK-TESTCASE: (has result)
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/requirements.html | filecheck %s --dump-input=fail --check-prefix CHECK-REQ
+CHECK-REQ: RELATIONS (Child):
+CHECK-REQ: href="../03_source_node_and_relation_marker_combined/testcases.html#TC-AUTH-001">{{.*}}
+CHECK-REQ: Check Valid Login
+
+# REGRESSION: Verify that the relation is not duplicated with two nodes:
+# One with and one without a correct "is verified" edge.
+CHECK-REQ-NOT: Check Valid Login
+
+CHECK-REQ: (is verified by)
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/test_report/output.robot.html | filecheck %s --dump-input=fail --check-prefix CHECK-RESULT
+CHECK-RESULT: RELATIONS (Parent):
+CHECK-RESULT: href="../../03_source_node_and_relation_marker_combined/testcases.html#TC-AUTH-001">{{.*}}
+CHECK-RESULT: (is result of)

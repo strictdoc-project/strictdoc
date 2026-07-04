@@ -14,9 +14,9 @@ CHECK-TEST-REPORT: PASSED
 CHECK-TEST-REPORT: href="../../_source_files/src/lib.rs.html#hello_world_crate::tests::add_works#9#13"
 CHECK-TEST-REPORT: src/lib.rs, <i>lines: 9-13</i>, function hello_world_crate::tests::add_works()
 
-# REQ-1 renders IsSatisfiedBy the nextest test result.
+# REQ-1 renders as satisfied by the nextest test result.
 RUN: %cat "%T/html/%THIS_TEST_FOLDER/docs/input.html" | filecheck %s --check-prefix CHECK-REQ-DOC
 CHECK-REQ-DOC: RELATIONS (Child):
 CHECK-REQ-DOC: reports/tests_unit.nextest.junit.html#hello_world_crate-tests-add_works
 CHECK-REQ-DOC: hello_world_crate::tests::add_works
-CHECK-REQ-DOC: (IsSatisfiedBy)
+CHECK-REQ-DOC: (is satisfied by)

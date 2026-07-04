@@ -432,6 +432,52 @@ ELEMENTS:
         )
 
     @staticmethod
+    def text_element_must_not_be_composite(
+        grammar_element: GrammarElement,
+        path_to_sdoc_file: str,
+    ) -> "StrictDocSemanticError":
+        return StrictDocSemanticError(
+            title="The TEXT grammar element must not be declared as composite.",
+            hint=(
+                "TEXT nodes cannot have nested children, so "
+                "PROPERTIES/IS_COMPOSITE must be False or omitted for TEXT."
+            ),
+            example="""\
+- TAG: TEXT
+  PROPERTIES:
+    IS_COMPOSITE: False
+  FIELDS:
+  ...
+""",
+            line=grammar_element.ng_line_start,
+            col=grammar_element.ng_col_start,
+            filename=path_to_sdoc_file,
+        )
+
+    @staticmethod
+    def section_element_must_be_composite(
+        grammar_element: GrammarElement,
+        path_to_sdoc_file: str,
+    ) -> "StrictDocSemanticError":
+        return StrictDocSemanticError(
+            title="The SECTION grammar element must be declared as composite.",
+            hint=(
+                "SECTION nodes always nest children, so "
+                "PROPERTIES/IS_COMPOSITE must be True for SECTION."
+            ),
+            example="""\
+- TAG: SECTION
+  PROPERTIES:
+    IS_COMPOSITE: True
+  FIELDS:
+  ...
+""",
+            line=grammar_element.ng_line_start,
+            col=grammar_element.ng_col_start,
+            filename=path_to_sdoc_file,
+        )
+
+    @staticmethod
     def view_references_nonexisting_grammar_element(
         document: SDocDocument,
         document_view: DocumentView,

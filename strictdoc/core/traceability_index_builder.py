@@ -11,6 +11,8 @@ from typing import Any, Dict, Iterator, List, Optional, Set, Union
 
 from textx import TextXSyntaxError
 
+from strictdoc.backend.markdown.reader import SDMarkdownReader
+from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -449,6 +451,9 @@ class TraceabilityIndexBuilder:
             # normal grammar vs imported grammar, the parent may not be set at
             # this point.
             document.grammar.parent = document
+
+            if document.config.markup == SDocMarkup.MARKDOWN:
+                SDMarkdownReader.fixup_composite_nodes(document)
 
             try:
                 SDocValidator.validate_document(document)

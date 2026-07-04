@@ -86,6 +86,24 @@ class SDocValidator:
                     path_to_grammar,
                 )
 
+        if (
+            grammar_element.tag == "TEXT"
+            and grammar_element.property_is_composite
+        ):
+            raise StrictDocSemanticError.text_element_must_not_be_composite(
+                grammar_element,
+                path_to_grammar,
+            )
+
+        if (
+            grammar_element.tag == "SECTION"
+            and grammar_element.property_is_composite is not True
+        ):
+            raise StrictDocSemanticError.section_element_must_be_composite(
+                grammar_element,
+                path_to_grammar,
+            )
+
         for relation_ in grammar_element.relations:
             if (
                 relation_.reverse_relation_role is not None

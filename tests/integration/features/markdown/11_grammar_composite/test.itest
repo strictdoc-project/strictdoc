@@ -1,0 +1,7 @@
+RUN: %strictdoc export %S --formats=html --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Composite requirement document
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-FILE
+
+CHECK-HTML-FILE: data-uid="REQ-1"
+CHECK-HTML-FILE: data-uid="REQ-2"

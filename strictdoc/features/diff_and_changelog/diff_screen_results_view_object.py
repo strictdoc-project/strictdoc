@@ -46,6 +46,8 @@ class DiffScreenResultsViewObject:
         traceability_index_lhs: TraceabilityIndex,
         traceability_index_rhs: TraceabilityIndex,
         tab: str,
+        left_revision_tags: Optional[List[str]] = None,
+        right_revision_tags: Optional[List[str]] = None,
     ):
         self.project_config: ProjectConfig = project_config
         self.change_container: ChangeContainer = change_container
@@ -55,6 +57,8 @@ class DiffScreenResultsViewObject:
         self.documents_iterator_rhs = documents_iterator_rhs
         self.left_revision: Optional[str] = left_revision
         self.right_revision: Optional[str] = right_revision
+        self.left_revision_tags: List[str] = left_revision_tags or []
+        self.right_revision_tags: List[str] = right_revision_tags or []
         self.lhs_stats = lhs_stats
         self.rhs_stats = rhs_stats
         self.change_stats = change_stats

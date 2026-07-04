@@ -5,7 +5,7 @@ import tempfile
 import threading
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Dict, Iterator, Optional
+from typing import Any, Dict, Iterator, List, Optional
 
 fcntl: Optional[Any]
 try:  # pragma: no cover
@@ -398,6 +398,34 @@ class GitClient:
         if result.returncode == 0:
             return result.stdout.strip()
         raise LookupError(f"Non-existing Git revision: {revision}.")
+
+    def get_short_revision(self, revision: str) -> str:
+        assert isinstance(revision, str)
+        assert len(revision) > 0
+        result = subprocess.run(
+            ["git", "rev-parse", "--short", revision],
+            cwd=self.path_to_git_root,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if result.returncode == 0:
+            return result.stdout.strip()
+        raise LookupError(f"Non-existing Git revision: {revision}.")
+
+    def get_tags_for_revision(self, revision: str) -> List[str]:
+        assert isinstance(revision, str)
+        assert len(revision) > 0
+        result = subprocess.run(
+            ["git", "tag", "--points-at", revision],
+            cwd=self.path_to_git_root,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if result.returncode != 0:
+            return []
+        return [tag for tag in result.stdout.splitlines() if len(tag) > 0]
 
     def hard_reset(self, revision: Optional[str] = None) -> None:
         reset_args = ["git", "reset", "--hard"]

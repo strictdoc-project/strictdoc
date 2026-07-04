@@ -72,9 +72,13 @@ MID: 35bc1e28ec724aefbcff864c89399877
 STATEMENT: >>>
 This document outlines the future work items for StrictDoc.
 
-The following items are listed in descending order of priority, with the topmost items either currently in progress or scheduled to be implemented next.
+The following items are listed in descending order of priority, with the topmost
+items either currently in progress or scheduled to be implemented next.
 
-While this backlog overlaps with StrictDoc's `GitHub issues tracker <https://github.com/strictdoc-project/strictdoc/issues>`_ by more than 50%, it includes more strategic items compared to the GitHub issues, which are primarily focused on actual implementation work.
+While this backlog overlaps with StrictDoc's
+`GitHub issues tracker <https://github.com/strictdoc-project/strictdoc/issues>`_
+by more than 50%, it includes more strategic items compared to the GitHub
+issues, which are primarily focused on actual implementation work.
 <<<
 
 [[SECTION]]
@@ -86,7 +90,8 @@ TITLE: StrictDoc challenges
 MID: d65fe32e8ea444ceb99c174bfc06df7d
 STATEMENT: >>>
 - Limited development time.
-- Not easy to develop certain capabilities and scale to a multi-user environment quickly.
+- Not easy to develop certain capabilities and scale to a multi-user environment
+  quickly.
 <<<
 
 [REQUIREMENT]
@@ -95,10 +100,14 @@ UID: SDOC-SRS-13
 STATUS: Backlog
 TITLE: Real-time editing out of scope
 STATEMENT: >>>
-StrictDoc shall not implement the real-time editing capability to its web interface.
+StrictDoc shall not implement the real-time editing capability to its web
+interface.
 <<<
 RATIONALE: >>>
-The real-time editing feature is hard to achieve with a small part-time involvement from the development team. This requirement can only be reconsidered, if StrictDoc would experience a significant increase in the development power.
+The real-time editing feature is hard to achieve with a small part-time
+involvement from the development team. This requirement can only be
+reconsidered, if StrictDoc would experience a significant increase in the
+development power.
 <<<
 
 [[/SECTION]]
@@ -174,7 +183,8 @@ UID: SDOC-RMC-27
 STATUS: Backlog
 TITLE: Integration with other systems engineering processes
 STATEMENT: >>>
-The Requirements Tool shall provide capabilities for integration with other systems engineering tools.
+The Requirements Tool shall provide capabilities for integration with other
+systems engineering tools.
 <<<
 
 [REQUIREMENT]
@@ -186,10 +196,13 @@ STATEMENT: >>>
 The Requirements Tool shall provide integration with Capella MBSE tool.
 <<<
 RATIONALE: >>>
-Eclipse Capella is a capable open-source tool for Model-Based Systems Engineering, https://www.eclipse.org/capella/. It should be beneficial for the requirements tool to interface with the Capella engineering community.
+Eclipse Capella is a capable open-source tool for Model-Based Systems
+Engineering, https://www.eclipse.org/capella/. It should be beneficial for the
+requirements tool to interface with the Capella engineering community.
 <<<
 COMMENT: >>>
-At the very least, the integration can happen through the ReqIF interface that Capella is known to support.
+At the very least, the integration can happen through the ReqIF interface that
+Capella is known to support.
 <<<
 
 [REQUIREMENT]
@@ -207,7 +220,8 @@ UID: SDOC-RMC-28
 STATUS: Backlog
 TITLE: Formalized statements
 STATEMENT: >>>
-The Requirements Tool shall provide capabilities for hardening requirements content with formal semantics.
+The Requirements Tool shall provide capabilities for hardening requirements
+content with formal semantics.
 <<<
 COMMENT: >>>
 The directions to explore:
@@ -246,10 +260,12 @@ UID: SDOC-BACKLOG-1
 STATUS: Backlog
 TITLE: Focused mode: Edit a single section / requirement
 STATEMENT: >>>
-StrictDoc shall allow focused editing of single sections and requirements on a dedicated screen.
+StrictDoc shall allow focused editing of single sections and requirements on a
+dedicated screen.
 <<<
 COMMENT: >>>
-This is partially implemented with the composable documents feature. An included document can be edited as a standalone document.
+This is partially implemented with the composable documents feature. An included
+document can be edited as a standalone document.
 <<<
 
 [REQUIREMENT]
@@ -291,7 +307,8 @@ STATEMENT: >>>
 StrictDoc shall provide a web API.
 <<<
 RATIONALE: >>>
-A web API allows integration with tools and workflows external to StrictDoc itself.
+A web API allows integration with tools and workflows external to StrictDoc
+itself.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -339,7 +356,8 @@ UID: SDOC-SRS-116
 STATUS: Backlog
 TITLE: Requirement validation according to EARS syntax
 STATEMENT: >>>
-The SDoc model shall provide validation of requirements according to the EARS syntax.
+The SDoc model shall provide validation of requirements according to the EARS
+syntax.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -351,7 +369,8 @@ UID: SDOC-SRS-121
 STATUS: Backlog
 TITLE: WYSIWYG editing
 STATEMENT: >>>
-StrictDoc shall provide WYSIWYG kind of editing for all multiline text input fields.
+StrictDoc shall provide WYSIWYG kind of editing for all multiline text input
+fields.
 <<<
 RATIONALE: >>>
 WYSIWYG improves the user experience, especially for non-programmer users.
@@ -377,10 +396,12 @@ UID: SDOC-SRS-94
 STATUS: Backlog
 TITLE: Move requirement / section nodes between documents
 STATEMENT: >>>
-StrictDoc's Document screen shall provide a capability to move the nodes between documents.
+StrictDoc's Document screen shall provide a capability to move the nodes between
+documents.
 <<<
 RATIONALE: >>>
-Moving the nodes within a document is a convenience feature that speeds up the requirements editing process significantly.
+Moving the nodes within a document is a convenience feature that speeds up the
+requirements editing process significantly.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -413,7 +434,8 @@ UID: SDOC-SRS-64
 STATUS: Backlog
 TITLE: TBL: Select/deselect tags
 STATEMENT: >>>
-StrictDoc's Table screen shall allow filtering content based on the selection/deselection of available tags.
+StrictDoc's Table screen shall allow filtering content based on the
+selection/deselection of available tags.
 <<<
 
 [[SECTION]]
@@ -428,10 +450,15 @@ TITLE: Impact analysis
 STATEMENT: >>>
 StrictDoc shall provide the Impact Analysis screen.
 
-NOTE: The Impact Analysis screen helps to get information about the impact that a given change to a requirement has on the other requirements in the project tree.
+NOTE: The Impact Analysis screen helps to get information about the impact that
+a given change to a requirement has on the other requirements in the project
+tree.
 <<<
 RATIONALE: >>>
-The impact analysis is one of the core functions of a requirements management tool. Analyzing the impact that a requirement has on other requirements and an overall project's technical definition helps to perform effective change management.
+The impact analysis is one of the core functions of a requirements management
+tool. Analyzing the impact that a requirement has on other requirements and an
+overall project's technical definition helps to perform effective change
+management.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -461,7 +488,9 @@ STATEMENT: >>>
 
 - Editing remaining document options: Inline/Table, Requirements in TOC, etc.
 
-- **Integration with Git repository.** Make the server commit changes to .sdoc files automatically. To a user, provide visibility to what happens under the hood.
+- **Integration with Git repository.** Make the server commit changes to .sdoc
+  files automatically. To a user, provide visibility to what happens under the
+  hood.
 
 - TBL view: Column filters to show/hide columns.
 
@@ -470,9 +499,12 @@ STATEMENT: >>>
 - Contextual help about the RST markup.
 - How to edit tables conveniently?
 
-- What to do with web content going out of sync with the server/file system state?
+- What to do with web content going out of sync with the server/file system
+  state?
 
-- Issue when adding a child section from a nested section. The child section appears right after the nested section, not after its farthest descendant child.
+- Issue when adding a child section from a nested section. The child section
+  appears right after the nested section, not after its farthest descendant
+  child.
 
 - ReqIF: Export complete documentation tree or a single document.
 - ReqIF: Import complete documentation tree or a single document.
@@ -493,25 +525,37 @@ STATEMENT: >>>
   - CLI command to dump default config file
   - Project prefix?
 
-- **StrictDoc as a Python library**. Such a use allows a more fine-grained access to the StrictDoc's modules, such as Grammar, Import, Export classes, etc.
+- **StrictDoc as a Python library**. Such a use allows a more fine-grained
+  access to the StrictDoc's modules, such as Grammar, Import, Export classes,
+  etc.
 
-- **Data exchange with Capella tool.** The current idea would be to implement this using ReqIF export/import features.
+- **Data exchange with Capella tool.** The current idea would be to implement
+  this using ReqIF export/import features.
 
-- **Language Server Protocol.** The LSP can enable editing of SDoc files in IDEs like Eclipse, Visual Studio, PyCharm. A smart LSP can enable features like syntax highlighting, autocompletion and easy navigation through requirements. The promising base for the implementation: https://github.com/openlawlibrary/pygls.
+- **Language Server Protocol.** The LSP can enable editing of SDoc files in IDEs
+  like Eclipse, Visual Studio, PyCharm. A smart LSP can enable features like
+  syntax highlighting, autocompletion and easy navigation through requirements.
+  The promising base for the implementation:
+  https://github.com/openlawlibrary/pygls.
 
 - Support creation of FMEA/FMECA safety analysis documents.
 
-- Calculation of checksums for requirements. This feature is relatively easy to implement, but the implementation is postponed until the linking between requirements and files is implemented.
+- Calculation of checksums for requirements. This feature is relatively easy to
+  implement, but the implementation is postponed until the linking between
+  requirements and files is implemented.
 
 - Filtering of requirements by tags.
 
 - Import/export: PlantUML, Confluence, Tex, Doorstop.
 
-- **Partial evaluation of Jinja templates.** Many of the template variables could be made to be evaluated once, for example, config object's variables.
+- **Partial evaluation of Jinja templates.** Many of the template variables
+  could be made to be evaluated once, for example, config object's variables.
 
 - UI version for mobile devices (at least some basic tweaks).
 
-- Similar to the possibility of creating a child requirement to a section, one could provide a button for each of the relations defined in the grammar which would allow to quickly build a tree structure.
+- Similar to the possibility of creating a child requirement to a section, one
+  could provide a button for each of the relations defined in the grammar which
+  would allow to quickly build a tree structure.
 <<<
 
 [[/SECTION]]
@@ -524,10 +568,25 @@ TITLE: Backlog: Technical debt
 [TEXT]
 MID: 85e94802132048d29ca73cf2096c6758
 STATEMENT: >>>
-- When a document is added, the whole documentation is rebuilt from the file system from scratch. A more fine-grained re-indexing of documentation tree can be implemented. The current idea is to introduce a layer of pickled cached data: preserve the whole in-memory traceability graph in a cache, and then use the cached data for making decisions about what should be regenerated.
-- The "no framework" approach with FastAPI and Turbo/Stimulus allows writing almost zero Javascript, however some proto-framework conventions are still needed. Currently, all code is written in the ``main_controller`` which combines all responsibilities, such as parsing HTTP request fields, accessing traceability graph, validations, rendering back the updated AJAX templates. A lack of abstraction is better than a poor abstraction, but some solution has to be found.
-- Request form object vs Response form object. The workflow of form validations is not optimal.
-- For Web development, the responsibilities of the ``TraceabilityIndex`` class compared to the ``ExportAction``, ``MarkupRenderer``, ``LinkRenderer`` classes are unstable. A more ecological composition of classes has to be found. ``Traceability`` index is rightfully a "god object" because it contains all information about the in-memory documentation graph.
+- When a document is added, the whole documentation is rebuilt from the file
+  system from scratch. A more fine-grained re-indexing of documentation tree can
+  be implemented. The current idea is to introduce a layer of pickled cached
+  data: preserve the whole in-memory traceability graph in a cache, and then use
+  the cached data for making decisions about what should be regenerated.
+- The "no framework" approach with FastAPI and Turbo/Stimulus allows writing
+  almost zero Javascript, however some proto-framework conventions are still
+  needed. Currently, all code is written in the ``main_controller`` which
+  combines all responsibilities, such as parsing HTTP request fields, accessing
+  traceability graph, validations, rendering back the updated AJAX templates. A
+  lack of abstraction is better than a poor abstraction, but some solution has
+  to be found.
+- Request form object vs Response form object. The workflow of form validations
+  is not optimal.
+- For Web development, the responsibilities of the ``TraceabilityIndex`` class
+  compared to the ``ExportAction``, ``MarkupRenderer``, ``LinkRenderer`` classes
+  are unstable. A more ecological composition of classes has to be found.
+  ``Traceability`` index is rightfully a "god object" because it contains all
+  information about the in-memory documentation graph.
 <<<
 
 [[/SECTION]]
@@ -547,9 +606,8 @@ MID: b778a18ede89464c936be2b2af492e24
 STATEMENT: >>>
 StrictDoc supports this for HTML already but not for RST.
 
-When passed
-``strictdoc export ... /path/to/doctree1, /path/to/doctree2, /path/to/doctree3``,
-the following is generated:
+When passed ``strictdoc export ... /path/to/doctree1, /path/to/doctree2,
+/path/to/doctree3``, the following is generated:
 
 .. code-block:: text
 

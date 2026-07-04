@@ -76,11 +76,13 @@ STATEMENT: >>>
 StrictDoc shall be based on a data model.
 <<<
 RATIONALE: >>>
-Designing StrictDoc with a goal of having a consistent data model ensures that the tool:
+Designing StrictDoc with a goal of having a consistent data model ensures that
+the tool:
 
 1) can support a rich set of use cases,
 2) model the existing documentation templates used by the industries,
-3) interface well with other formats for storing documentation and requirements, e.g., ReqIF and SPDX.
+3) interface well with other formats for storing documentation and requirements,
+   e.g., ReqIF and SPDX.
 <<<
 COMMENT: >>>
 Verification: data model diagram TBD.
@@ -156,7 +158,8 @@ UID: SDOC-SRS-110
 STATUS: Active
 TITLE: Document metadata
 STATEMENT: >>>
-StrictDoc's data model shall support a Document metadata model including at least:
+StrictDoc's data model shall support a Document metadata model including at
+least:
 
 - UID
 - Document version
@@ -195,10 +198,12 @@ UID: SDOC-SRS-99
 STATUS: Active
 TITLE: Section model
 STATEMENT: >>>
-StrictDoc's data model shall support a concept of a "Section" which nests other Sections, Requirements, Texts.
+StrictDoc's data model shall support a concept of a "Section" which nests other
+Sections, Requirements, Texts.
 <<<
 RATIONALE: >>>
-"Section" corresponds to a chapter or a section in a document and helps to organize a document by grouping text nodes, requirements and other sections.
+"Section" corresponds to a chapter or a section in a document and helps to
+organize a document by grouping text nodes, requirements and other sections.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -210,10 +215,16 @@ UID: SDOC-SRS-135
 STATUS: Active
 TITLE: Free text
 STATEMENT: >>>
-StrictDoc's data model shall support a "Free Text" model, representing non-normative documentation content.
+StrictDoc's data model shall support a "Free Text" model, representing
+non-normative documentation content.
 <<<
 RATIONALE: >>>
-Documentation comprises normative components, such as uniquely identifiable elements like requirements or design items, and non-normative components, including introductory text, overview chapters, and other content. The non-normative parts help provide a general understanding for the reader but do not contribute to traceability information. StrictDoc's free text is designed to store this type of non-normative information in SDoc documents.
+Documentation comprises normative components, such as uniquely identifiable
+elements like requirements or design items, and non-normative components,
+including introductory text, overview chapters, and other content. The
+non-normative parts help provide a general understanding for the reader but do
+not contribute to traceability information. StrictDoc's free text is designed to
+store this type of non-normative information in SDoc documents.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -228,7 +239,12 @@ STATEMENT: >>>
 StrictDoc's data model shall allow composing a Document from other Documents.
 <<<
 RATIONALE: >>>
-The logic behind the parent requirement remains fully relevant. Additionally, an alternative approach could involve using a dedicated entity, like "Fragment", to allow a Document to be composed of includable sections or document fragments. Managing composition at the Document level eliminates the need in additional entities like "Fragment", streamlining both the conceptual understanding and the practical implementation of composability.
+The logic behind the parent requirement remains fully relevant. Additionally, an
+alternative approach could involve using a dedicated entity, like "Fragment", to
+allow a Document to be composed of includable sections or document fragments.
+Managing composition at the Document level eliminates the need in additional
+entities like "Fragment", streamlining both the conceptual understanding and the
+practical implementation of composability.
 <<<
 COMMENT: >>>
 The corresponding UI capability for Fragments CRUD is TBD.
@@ -245,10 +261,15 @@ UID: SDOC-SRS-31
 STATUS: Active
 TITLE: Requirement relations
 STATEMENT: >>>
-The StrictDoc data model shall support connecting requirements using Parent and Child relations.
+The StrictDoc data model shall support connecting requirements using Parent and
+Child relations.
 <<<
 RATIONALE: >>>
-Support of both Parent and Child relations allows to build typical requirements relations such as child-to-parent and less common relations when one document can have parent links to a parent document and child links to a child document (e.g., the so-called "compliance" or "tailoring matrix" documents may use this structure).
+Support of both Parent and Child relations allows to build typical requirements
+relations such as child-to-parent and less common relations when one document
+can have parent links to a parent document and child links to a child document
+(e.g., the so-called "compliance" or "tailoring matrix" documents may use this
+structure).
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -264,7 +285,8 @@ TITLE: Requirement relation roles
 STATEMENT: >>>
 Each SDoc relation shall be optionally configurable with a relation role.
 
-NOTE: A relation role is a string value. Typical examples: "refines", "verifies", "implements".
+NOTE: A relation role is a string value. Typical examples: "refines",
+"verifies", "implements".
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -276,10 +298,13 @@ UID: SDOC-SRS-149
 STATUS: Active
 TITLE: Inline links
 STATEMENT: >>>
-StrictDoc shall support referencing any node by embedding a hyperlink within the text content of another node.
+StrictDoc shall support referencing any node by embedding a hyperlink within the
+text content of another node.
 <<<
 RATIONALE: >>>
-The inline links do not replace the relations between SDoc nodes. Instead, an inline link could be an easy way to refer from one textual node to a chapter or a document. A common use case is "See section ABC for more details".
+The inline links do not replace the relations between SDoc nodes. Instead, an
+inline link could be an easy way to refer from one textual node to a chapter or
+a document. A common use case is "See section ABC for more details".
 <<<
 
 [REQUIREMENT]
@@ -288,10 +313,12 @@ UID: SDOC-SRS-150
 STATUS: Active
 TITLE: Inline anchors
 STATEMENT: >>>
-StrictDoc shall support adding anchors within the text content of any node, such that these anchors can be referenced by inline links from other nodes.
+StrictDoc shall support adding anchors within the text content of any node, such
+that these anchors can be referenced by inline links from other nodes.
 <<<
 RATIONALE: >>>
-Anchors allow authors to define precise reference points within SDoc node fields.
+Anchors allow authors to define precise reference points within SDoc node
+fields.
 <<<
 
 [[/SECTION]]
@@ -306,10 +333,17 @@ UID: SDOC-SRS-20
 STATUS: Active
 TITLE: SDoc markup language
 STATEMENT: >>>
-StrictDoc shall implement its own text markup language called S-Doc (strict-doc).
+StrictDoc shall implement its own text markup language called S-Doc
+(strict-doc).
 <<<
 RATIONALE: >>>
-The most commonly used Markdown format lacks the ability to store requirements metadata. While the RST syntax does allow for customization with directives to implement metadata extensions, its visual appearance contradicts other requirements of StrictDoc, such as the type-safety of the grammar and visual readability. Therefore, a markup language tailored specifically to the needs of the requirements tool provides direct control over the capabilities implemented in both the markup and the user interface.
+The most commonly used Markdown format lacks the ability to store requirements
+metadata. While the RST syntax does allow for customization with directives to
+implement metadata extensions, its visual appearance contradicts other
+requirements of StrictDoc, such as the type-safety of the grammar and visual
+readability. Therefore, a markup language tailored specifically to the needs of
+the requirements tool provides direct control over the capabilities implemented
+in both the markup and the user interface.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -331,10 +365,12 @@ UID: SDOC-SRS-136
 STATUS: Active
 TITLE: Identical SDoc content by import/export roundtrip
 STATEMENT: >>>
-StrictDoc shall ensure that identical SDoc content is produced every time StrictDoc reads an SDoc file and then writes it to another SDoc file.
+StrictDoc shall ensure that identical SDoc content is produced every time
+StrictDoc reads an SDoc file and then writes it to another SDoc file.
 <<<
 RATIONALE: >>>
-A consistent import/export roundtrip implementation and testing reduces the risk of the SDoc bi-directional import/export corruption.
+A consistent import/export roundtrip implementation and testing reduces the risk
+of the SDoc bi-directional import/export corruption.
 <<<
 RELATIONS:
 - TYPE: File
@@ -358,7 +394,8 @@ UID: SDOC-SRS-127
 STATUS: Active
 TITLE: SDoc and Git storage
 STATEMENT: >>>
-StrictDoc shall assume and implement capabilities for storage of SDoc files using Git version control system.
+StrictDoc shall assume and implement capabilities for storage of SDoc files
+using Git version control system.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -379,7 +416,9 @@ STATEMENT: >>>
 The SDoc markup content shall be stored in files with .sdoc extension.
 <<<
 RATIONALE: >>>
-Given that the name of the model is S-Doc (strict-doc), it is reasonable to make the document files have the ``.sdoc`` extension. This helps to identify the document files.
+Given that the name of the model is S-Doc (strict-doc), it is reasonable to make
+the document files have the ``.sdoc`` extension. This helps to identify the
+document files.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -426,7 +465,8 @@ UID: SDOC-SRS-93
 STATUS: Active
 TITLE: Default grammar fields
 STATEMENT: >>>
-The StrictDoc grammar shall have at least the following fields activated by default:
+The StrictDoc grammar shall have at least the following fields activated by
+default:
 
 - UID
 - STATUS
@@ -449,7 +489,8 @@ STATEMENT: >>>
 The SDoc markup shall support custom grammars.
 <<<
 RATIONALE: >>>
-A custom grammar allows a user to define their own configuration of requirement fields.
+A custom grammar allows a user to define their own configuration of requirement
+fields.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -464,7 +505,9 @@ STATEMENT: >>>
 StrictDoc shall support an inclusion of a grammar stored in a separate file.
 <<<
 RATIONALE: >>>
-A single grammar defined for several documents helps to standardize the structure of all documents in a documentation tree and removes the effort needed to create identical grammars all the time.
+A single grammar defined for several documents helps to standardize the
+structure of all documents in a documentation tree and removes the effort needed
+to create identical grammars all the time.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -482,10 +525,13 @@ UID: SDOC-SRS-22
 STATUS: Active
 TITLE: UID identifier format
 STATEMENT: >>>
-The SDoc markup shall only accept UID identifiers that consist of alphanumeric characters separated by a limited set of ("_", "-", ".") characters (TBD).
+The SDoc markup shall only accept UID identifiers that consist of alphanumeric
+characters separated by a limited set of ("_", "-", ".") characters (TBD).
 <<<
 RATIONALE: >>>
-A standardized UID format supports easier unique identification of requirements. It is easier to visually identify UIDs that look similar and common to a given industry.
+A standardized UID format supports easier unique identification of requirements.
+It is easier to visually identify UIDs that look similar and common to a given
+industry.
 <<<
 COMMENT: >>>
 This requirement may need a revision to accommodate for more UID formats.
@@ -500,7 +546,8 @@ UID: SDOC-SRS-24
 STATUS: Active
 TITLE: Format-specific markup-to-HTML fragment writers
 STATEMENT: >>>
-StrictDoc shall render supported markup formats (at least RST and Markdown) to HTML fragments via dedicated format-specific writers selected by markup type.
+StrictDoc shall render supported markup formats (at least RST and Markdown) to
+HTML fragments via dedicated format-specific writers selected by markup type.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -524,7 +571,8 @@ UID: SDOC-SRS-23
 STATUS: Active
 TITLE: No indentation
 STATEMENT: >>>
-SDoc text markup blocks shall all start from column 1, i.e., the nesting of the blocks is not allowed.
+SDoc text markup blocks shall all start from column 1, i.e., the nesting of the
+blocks is not allowed.
 <<<
 RATIONALE: >>>
 Nesting large text blocks of free text and requirements compromises readability.
@@ -541,7 +589,8 @@ TITLE: Type-safe fields
 STATEMENT: >>>
 SDoc markup shall provide "type safety" for all fields.
 
-NOTE: "Type safety" means that each field has a type and a corresponding set of validation checks.
+NOTE: "Type safety" means that each field has a type and a corresponding set of
+validation checks.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -567,7 +616,10 @@ STATEMENT: >>>
 StrictDoc shall support Markdown markup.
 <<<
 RATIONALE: >>>
-Markdown is the most popular markup language among programmers. Compared to the StrictDoc native SDoc markup, Markdown is much more familiar to developers, which lowers the entry barrier for writing formal requirements with StrictDoc or other tools. It is also used extensively by AI tools.
+Markdown is the most popular markup language among programmers. Compared to the
+StrictDoc native SDoc markup, Markdown is much more familiar to developers,
+which lowers the entry barrier for writing formal requirements with StrictDoc or
+other tools. It is also used extensively by AI tools.
 <<<
 
 [[/SECTION]]
@@ -583,7 +635,8 @@ UID: SDOC-SRS-28
 STATUS: Active
 TITLE: Traceability index
 STATEMENT: >>>
-StrictDoc shall maintain a complete Traceability Index of all documentation- and requirements-related information available in a project tree.
+StrictDoc shall maintain a complete Traceability Index of all documentation- and
+requirements-related information available in a project tree.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -595,10 +648,12 @@ UID: SDOC-SRS-29
 STATUS: Active
 TITLE: Uniqueness UID in tree
 STATEMENT: >>>
-For each requirement node, the Traceability Index shall ensure its uniqueness throughout the node's lifecycle.
+For each requirement node, the Traceability Index shall ensure its uniqueness
+throughout the node's lifecycle.
 <<<
 RATIONALE: >>>
-The requirement ensures that the Traceability Index takes of care of validating the uniqueness of all nodes in a document/requirements graph.
+The requirement ensures that the Traceability Index takes of care of validating
+the uniqueness of all nodes in a document/requirements graph.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -629,10 +684,12 @@ UID: SDOC-SRS-32
 STATUS: Active
 TITLE: Link document nodes
 STATEMENT: >>>
-The Traceability Index shall recognize and maintain the relations between all documents of a project tree.
+The Traceability Index shall recognize and maintain the relations between all
+documents of a project tree.
 <<<
 RATIONALE: >>>
-The relations between all documents are a summary of all relations between these documents' requirements. This information is useful for:
+The relations between all documents are a summary of all relations between these
+documents' requirements. This information is useful for:
 
 1) Structural analysis of a requirements/documents graph.
 2) Incremental regeneration of only those documents whose content was modified.
@@ -651,16 +708,23 @@ UID: SDOC-SRS-102
 STATUS: Active
 TITLE: Automatic resolution of reverse relations
 STATEMENT: >>>
-The StrictDoc's graph database shall maintain the requirement relations and their reverse relations as follows:
+The StrictDoc's graph database shall maintain the requirement relations and
+their reverse relations as follows:
 
-- For a Parent relation, the database shall calculate the reverse Child relation.
-- For a Child relation, the database shall calculate the reverse Parent relation.
+- For a Parent relation, the database shall calculate the reverse Child
+  relation.
+- For a Child relation, the database shall calculate the reverse Parent
+  relation.
 <<<
 RATIONALE: >>>
-The calculation of the reverse relations allows the user interface code to get and display both requirement's parent and child relations.
+The calculation of the reverse relations allows the user interface code to get
+and display both requirement's parent and child relations.
 <<<
 COMMENT: >>>
-Example: If a child requirement REQ-002 has a parent requirement REQ-001, the graph database first reads the link ``REQ-002 -Parent> REQ-001``, then it creates a corresponding ``REQ-001 -Child> REQ-002`` on the go. Both relations can be queried as follows, in pseudocode:
+Example: If a child requirement REQ-002 has a parent requirement REQ-001, the
+graph database first reads the link ``REQ-002 -Parent> REQ-001``, then it
+creates a corresponding ``REQ-001 -Child> REQ-002`` on the go. Both relations
+can be queried as follows, in pseudocode:
 
 .. code-block::
 
@@ -685,10 +749,12 @@ UID: SDOC-SRS-115
 STATUS: Active
 TITLE: Finding documents recursively
 STATEMENT: >>>
-StrictDoc shall discover SDoc documents recursively based on a specified input path.
+StrictDoc shall discover SDoc documents recursively based on a specified input
+path.
 <<<
 RATIONALE: >>>
-Recursive search allows working with documents located in multiple folders, potentially spanning over several Git repositories.
+Recursive search allows working with documents located in multiple folders,
+potentially spanning over several Git repositories.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -750,7 +816,8 @@ UID: SDOC-SRS-123
 STATUS: Active
 TITLE: Multi-user editing of documents
 STATEMENT: >>>
-StrictDoc shall support concurrent use and editing of a single StrictDoc web server instance by multiple users.
+StrictDoc shall support concurrent use and editing of a single StrictDoc web
+server instance by multiple users.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -764,10 +831,12 @@ UID: SDOC-SRS-48
 STATUS: Active
 TITLE: Preserve generated file names
 STATEMENT: >>>
-For all export operations, StrictDoc shall maintain the original filenames of the documents when producing output files.
+For all export operations, StrictDoc shall maintain the original filenames of
+the documents when producing output files.
 <<<
 RATIONALE: >>>
-Name preservation helps to visually identify which input file an output file corresponds to.
+Name preservation helps to visually identify which input file an output file
+corresponds to.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -786,7 +855,8 @@ UID: SDOC-SRS-53
 STATUS: Active
 TITLE: View project tree
 STATEMENT: >>>
-StrictDoc's "Project tree" screen shall provide browsing of a documentation project tree.
+StrictDoc's "Project tree" screen shall provide browsing of a documentation
+project tree.
 <<<
 RATIONALE: >>>
 This screen is the main tool for visualizing the project tree structure.
@@ -832,9 +902,11 @@ UID: SDOC-SRS-201
 STATUS: Active
 TITLE: Format-specific document handling
 STATEMENT: >>>
-StrictDoc's Document screen shall arrange all CRUD operations according to the input document format.
+StrictDoc's Document screen shall arrange all CRUD operations according to the
+input document format.
 
-Example: If an SDoc document is read from a Markdown file using a dedicated reader, it shall be written back using a Markdown writer.
+Example: If an SDoc document is read from a Markdown file using a dedicated
+reader, it shall be written back using a Markdown writer.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -927,10 +999,12 @@ UID: SDOC-SRS-92
 STATUS: Active
 TITLE: Move requirement / section nodes within document
 STATEMENT: >>>
-StrictDoc's Document screen shall provide a capability to move the nodes within a document.
+StrictDoc's Document screen shall provide a capability to move the nodes within
+a document.
 <<<
 RATIONALE: >>>
-Moving the nodes within a document is a convenience feature that speeds up the requirements editing process significantly.
+Moving the nodes within a document is a convenience feature that speeds up the
+requirements editing process significantly.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -957,7 +1031,8 @@ UID: SDOC-SRS-57
 STATUS: Active
 TITLE: Edit Document options
 STATEMENT: >>>
-StrictDoc's Document screen shall provide controls for configuring the document-specific options.
+StrictDoc's Document screen shall provide controls for configuring the
+document-specific options.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -969,7 +1044,8 @@ UID: SDOC-SRS-96
 STATUS: Active
 TITLE: Auto-generate requirements UIDs
 STATEMENT: >>>
-StrictDoc's Document screen shall provide controls for automatic generation of requirements UIDs.
+StrictDoc's Document screen shall provide controls for automatic generation of
+requirements UIDs.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -989,10 +1065,12 @@ UID: SDOC-SRS-120
 STATUS: Active
 TITLE: Auto-completion for requirements UIDs
 STATEMENT: >>>
-StrictDoc's Document screen shall provide controls for automatic completion of requirements UIDs.
+StrictDoc's Document screen shall provide controls for automatic completion of
+requirements UIDs.
 <<<
 COMMENT: >>>
-The automatic completion can be especially useful when a user has to fill in a parent relation UID.
+The automatic completion can be especially useful when a user has to fill in a
+parent relation UID.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -1008,7 +1086,8 @@ UID: SDOC-SRS-59
 STATUS: Active
 TITLE: Buttons to copy text to buffer
 STATEMENT: >>>
-StrictDoc shall provide a "copy text to buffer" button for all requirement's text fields.
+StrictDoc shall provide a "copy text to buffer" button for all requirement's
+text fields.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -1052,7 +1131,9 @@ TITLE: View TR screen
 STATEMENT: >>>
 StrictDoc shall provide a single document-level traceability screen.
 
-NOTE: This screen helps to read a document like a normal document while the traceability to this document's parent and child elements is visible at the same time.
+NOTE: This screen helps to read a document like a normal document while the
+traceability to this document's parent and child elements is visible at the same
+time.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -1092,7 +1173,8 @@ STATEMENT: >>>
 StrictDoc shall allow exporting documents and entire documentation trees to PDF.
 <<<
 RATIONALE: >>>
-As required by the parent requirement, PDF is one of the most common documentation formats.
+As required by the parent requirement, PDF is one of the most common
+documentation formats.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -1106,10 +1188,13 @@ UID: SDOC-SRS-203
 STATUS: Active
 TITLE: Cross-linking PDF documents from same project tree
 STATEMENT: >>>
-When exporting multiple HTML documents from a same project tree into PDF, StrictDoc shall preserve all cross-document linking in the output PDF documents.
+When exporting multiple HTML documents from a same project tree into PDF,
+StrictDoc shall preserve all cross-document linking in the output PDF documents.
 <<<
 RATIONALE: >>>
-This enables navigation between PDF documents within the same project tree, which can be useful for simplifying the review and tracing work performed by readers.
+This enables navigation between PDF documents within the same project tree,
+which can be useful for simplifying the review and tracing work performed by
+readers.
 <<<
 
 [REQUIREMENT]
@@ -1133,7 +1218,8 @@ UID: SDOC-SRS-97
 STATUS: Active
 TITLE: Display project statistics
 STATEMENT: >>>
-StrictDoc shall provide a Project Statistics screen that displays the following project information:
+StrictDoc shall provide a Project Statistics screen that displays the following
+project information:
 
 - Project title
 - Date of generation
@@ -1160,10 +1246,13 @@ UID: SDOC-SRS-154
 STATUS: Active
 TITLE: Support for user-provided custom statistics generators
 STATEMENT: >>>
-StrictDoc shall support customization of the project statistics screen, enabling users to define and display their own project-specific statistics.
+StrictDoc shall support customization of the project statistics screen, enabling
+users to define and display their own project-specific statistics.
 <<<
 RATIONALE: >>>
-Projects often have unique traceability and reporting requirements, and supporting custom statistics allows StrictDoc to display metrics that are most relevant to each project's context.
+Projects often have unique traceability and reporting requirements, and
+supporting custom statistics allows StrictDoc to display metrics that are most
+relevant to each project's context.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -1181,14 +1270,16 @@ UID: SDOC-SRS-157
 STATUS: Active
 TITLE: Tree map
 STATEMENT: >>>
-StrictDoc shall provide a tree map screen, visualizing the following information:
+StrictDoc shall provide a tree map screen, visualizing the following
+information:
 
 - Document tree map
 - Requirements coverage by source code
 - Requirements coverage by test files.
 <<<
 RATIONALE: >>>
-Enables the visualization and browsing of the overall document tree and requirements coverage information.
+Enables the visualization and browsing of the overall document tree and
+requirements coverage information.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -1208,7 +1299,8 @@ TITLE: Project source code coverage
 STATEMENT: >>>
 StrictDoc shall generate project source code coverage information.
 
-NOTE: Source code information can be visualized using both web or CLI interfaces.
+NOTE: Source code information can be visualized using both web or CLI
+interfaces.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -1231,7 +1323,9 @@ STATEMENT: >>>
 StrictDoc shall generate single file traceability information.
 <<<
 RATIONALE: >>>
-With this capability in place, it is possible to focus on a single implementation file's links to requirements which helps in the code reviews and inspections.
+With this capability in place, it is possible to focus on a single
+implementation file's links to requirements which helps in the code reviews and
+inspections.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -1293,10 +1387,13 @@ UID: SDOC-SRS-155
 STATUS: Active
 TITLE: Content search
 STATEMENT: >>>
-StrictDoc shall provide searching documentation content with queries via a search bar.
+StrictDoc shall provide searching documentation content with queries via a
+search bar.
 <<<
 RATIONALE: >>>
-As per the parent requirement, a search bar with query support enables users to interactively find specific content without navigating the entire documentation tree.
+As per the parent requirement, a search bar with query support enables users to
+interactively find specific content without navigating the entire documentation
+tree.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -1332,12 +1429,14 @@ MID: 79a8080f6e41485f9835ccda067b34bc
 UID: SDOC-SRS-142
 TITLE: Language-aware parsing of source code
 STATEMENT: >>>
-StrictDoc shall support parsing the most commonly used formats and programming languages to the Abstract Syntax Tree (AST) level.
+StrictDoc shall support parsing the most commonly used formats and programming
+languages to the Abstract Syntax Tree (AST) level.
 
 The format examples: C, C++, Python, Rust, Ada, Robot, Gherkin, etc.
 <<<
 RATIONALE: >>>
-StrictDoc must be capable of traversing the AST of common formats and programming languages to identify and extract function and class markers.
+StrictDoc must be capable of traversing the AST of common formats and
+programming languages to identify and extract function and class markers.
 <<<
 
 [REQUIREMENT]
@@ -1352,7 +1451,9 @@ StrictDoc shall support parsing the C and C++ source files which includes:
 - Recognizing function declarations and function definitions.
 <<<
 RATIONALE: >>>
-C and C++ languages are common languages for embedded and general systems programming. These languages have to be handled with a dedicated parser because of these languages' specifics.
+C and C++ languages are common languages for embedded and general systems
+programming. These languages have to be handled with a dedicated parser because
+of these languages' specifics.
 <<<
 
 [REQUIREMENT]
@@ -1368,7 +1469,8 @@ StrictDoc shall support parsing the Python source files which includes:
 - Recognizing decorated functions.
 <<<
 RATIONALE: >>>
-Python language has to be handled with a dedicated parser because of this language's specifics.
+Python language has to be handled with a dedicated parser because of this
+language's specifics.
 <<<
 
 [REQUIREMENT]
@@ -1380,7 +1482,8 @@ STATEMENT: >>>
 StrictDoc shall support parsing the Rust source files.
 <<<
 RATIONALE: >>>
-Rust language has to be handled with a dedicated parser because of this language's specifics.
+Rust language has to be handled with a dedicated parser because of this
+language's specifics.
 <<<
 
 [REQUIREMENT]
@@ -1392,7 +1495,8 @@ STATEMENT: >>>
 StrictDoc shall support parsing the Robot framework test files.
 <<<
 RATIONALE: >>>
-Robot framework's markup has to be handled with a dedicated parser because of this language's specifics.
+Robot framework's markup has to be handled with a dedicated parser because of
+this language's specifics.
 <<<
 
 [[/SECTION]]
@@ -1403,10 +1507,12 @@ UID: SDOC-SRS-143
 STATUS: Active
 TITLE: Link requirements with test files and test reports
 STATEMENT: >>>
-StrictDoc shall support bi-directional linking between requirements, test files, and test reports.
+StrictDoc shall support bi-directional linking between requirements, test files,
+and test reports.
 <<<
 RATIONALE: >>>
-Tracing requirements to not just test files but also the test report information closes the verification cycle more completely.
+Tracing requirements to not just test files but also the test report information
+closes the verification cycle more completely.
 <<<
 
 [REQUIREMENT]
@@ -1415,10 +1521,12 @@ UID: SDOC-SRS-144
 STATUS: Active
 TITLE: Link requirements with code coverage information
 STATEMENT: >>>
-StrictDoc shall support linking between requirements, source files, and code coverage information.
+StrictDoc shall support linking between requirements, source files, and code
+coverage information.
 <<<
 RATIONALE: >>>
-Tracing requirements to not just test files but also to the code coverage information closes the verification cycle more completely.
+Tracing requirements to not just test files but also to the code coverage
+information closes the verification cycle more completely.
 <<<
 
 [[SECTION]]
@@ -1433,7 +1541,11 @@ STATEMENT: >>>
 StrictDoc shall support forward linking from SDoc nodes to source files.
 <<<
 RATIONALE: >>>
-There are cases when it is not possible to modify source code directly. The forward linking enables to refer to the files or their parts from SDoc nodes. Depending on a project structure, the forward linking from requirements to source files can replace the backward linking from source code back to requirements, or both approaches can co-exist.
+There are cases when it is not possible to modify source code directly. The
+forward linking enables to refer to the files or their parts from SDoc nodes.
+Depending on a project structure, the forward linking from requirements to
+source files can replace the backward linking from source code back to
+requirements, or both approaches can co-exist.
 <<<
 
 [[/SECTION]]
@@ -1448,7 +1560,8 @@ UID: SDOC-SRS-34
 STATUS: Active
 TITLE: Relation markers syntax
 STATEMENT: >>>
-StrictDoc shall support annotating source code with links that reference the requirements.
+StrictDoc shall support annotating source code with links that reference the
+requirements.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -1472,12 +1585,15 @@ UID: SDOC-SRS-124
 STATUS: Active
 TITLE: Line marker
 STATEMENT: >>>
-StrictDoc's shall support line markers that can be attached to single source code lines.
+StrictDoc's shall support line markers that can be attached to single source
+code lines.
 
 NOTE: A single-line marker points to a single line in a source file.
 <<<
 RATIONALE: >>>
-Sometimes a requirement can influence only a single line in the source code. The advantage of a single-line marker compared to a range marker is that a single-line marker is not intrusive and does not clutter source code.
+Sometimes a requirement can influence only a single line in the source code. The
+advantage of a single-line marker compared to a range marker is that a
+single-line marker is not intrusive and does not clutter source code.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -1489,19 +1605,22 @@ UID: SDOC-SRS-137
 STATUS: Active
 TITLE: Language element marker
 STATEMENT: >>>
-StrictDoc shall support relation markers that can be attached to individual source code elements. StrictDoc shall
-support an optional scope attribute to disambiguate the target element where StrictDoc can't infer it solely from the
+StrictDoc shall support relation markers that can be attached to individual
+source code elements. StrictDoc shall support an optional scope attribute to
+disambiguate the target element where StrictDoc can't infer it solely from the
 marker position.
 
-Note: The most basic example of such traceable elements are functions and classes, but generally supported elements
-and available scope attributes depend on the programming language.
+Note: The most basic example of such traceable elements are functions and
+classes, but generally supported elements and available scope attributes depend
+on the programming language.
 <<<
 RATIONALE: >>>
-Source code elements can often be considered as the next level to trace from a requirement. For example, a low level element
-is implemented by a function, or a test case is implemented by a test function.
+Source code elements can often be considered as the next level to trace from a
+requirement. For example, a low level element is implemented by a function, or a
+test case is implemented by a test function.
 
-Sometimes it's also feasible to consider the source code elements as lean replacement for prose requirement or test-case
-definitions.
+Sometimes it's also feasible to consider the source code elements as lean
+replacement for prose requirement or test-case definitions.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -1513,7 +1632,8 @@ UID: SDOC-SRS-139
 STATUS: Active
 TITLE: File marker
 STATEMENT: >>>
-StrictDoc's shall support file markers that can be attached to entire source files.
+StrictDoc's shall support file markers that can be attached to entire source
+files.
 <<<
 RATIONALE: >>>
 There are cases when a requirement can be attached to an entire file.
@@ -1528,12 +1648,15 @@ UID: SDOC-SRS-138
 STATUS: Active
 TITLE: Range marker
 STATEMENT: >>>
-StrictDoc shall support relation markers that can be attached to source code ranges.
+StrictDoc shall support relation markers that can be attached to source code
+ranges.
 
-NOTE: Compared to other marker types, to indicate a range, two markers are needed: one to start a range and one to end a range.
+NOTE: Compared to other marker types, to indicate a range, two markers are
+needed: one to start a range and one to end a range.
 <<<
 RATIONALE: >>>
-There are cases when a requirement implementation results in the requirement affecting only a range/block of source code.
+There are cases when a requirement implementation results in the requirement
+affecting only a range/block of source code.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -1554,9 +1677,12 @@ STATEMENT: >>>
 StrictDoc shall support parsing nodes from source code.
 <<<
 RATIONALE: >>>
-It can be practical to define the requirement and other nodes directly in source comments and then let a requirements tool generate documents from these nodes' content automatically.
+It can be practical to define the requirement and other nodes directly in source
+comments and then let a requirements tool generate documents from these nodes'
+content automatically.
 
-A reference example: Generating test specifications from the TEST_SPEC nodes which are defined directly in source code comments.
+A reference example: Generating test specifications from the TEST_SPEC nodes
+which are defined directly in source code comments.
 <<<
 
 [[/SECTION]]
@@ -1626,7 +1752,8 @@ UID: SDOC-SRS-72
 STATUS: Active
 TITLE: Export/import from/to ReqIF
 STATEMENT: >>>
-StrictDoc shall support exporting/importing requirements content from/to ReqIF format.
+StrictDoc shall support exporting/importing requirements content from/to ReqIF
+format.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -1638,10 +1765,13 @@ UID: SDOC-SRS-73
 STATUS: Active
 TITLE: Standalone ReqIF layer
 STATEMENT: >>>
-StrictDoc shall maintain the core ReqIF implementation as a separate software component.
+StrictDoc shall maintain the core ReqIF implementation as a separate software
+component.
 <<<
 RATIONALE: >>>
-ReqIF is a well-defined standard which exists independently of StrictDoc's development. It is reasonable to maintain the ReqIF codebase as a separate software component to allow independent development and easier maintainability.
+ReqIF is a well-defined standard which exists independently of StrictDoc's
+development. It is reasonable to maintain the ReqIF codebase as a separate
+software component to allow independent development and easier maintainability.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -1660,7 +1790,8 @@ UID: SDOC-SRS-74
 STATUS: Active
 TITLE: Export to Excel
 STATEMENT: >>>
-StrictDoc shall allow exporting SDoc documents to Excel, one Excel sheet per document.
+StrictDoc shall allow exporting SDoc documents to Excel, one Excel sheet per
+document.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -1678,7 +1809,8 @@ UID: SDOC-SRS-152
 STATUS: Active
 TITLE: Import from Excel
 STATEMENT: >>>
-StrictDoc shall allow importing Excel documents to SDoc documents, one Excel sheet per document.
+StrictDoc shall allow importing Excel documents to SDoc documents, one Excel
+sheet per document.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -1696,7 +1828,8 @@ UID: SDOC-SRS-134
 STATUS: Active
 TITLE: Selected fields export
 STATEMENT: >>>
-StrictDoc Excel export shall allow exporting SDoc documents to Excel with only selected fields.
+StrictDoc Excel export shall allow exporting SDoc documents to Excel with only
+selected fields.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -1805,7 +1938,9 @@ STATEMENT: >>>
 StrictDoc shall provide a web server.
 <<<
 RATIONALE: >>>
-A web server is a precondition for StrictDoc's web interface. A web server can be available to a single user on their local machine or it can be deployed to a network and be made accessible by several computers.
+A web server is a precondition for StrictDoc's web interface. A web server can
+be available to a single user on their local machine or it can be deployed to a
+network and be made accessible by several computers.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -1823,7 +1958,8 @@ UID: SDOC-SRS-163
 STATUS: Active
 TITLE: StrictDoc identification
 STATEMENT: >>>
-StrictDoc shall provide 'about' and 'version' commands that display the project's title, current version, license, and links to the project's web pages.
+StrictDoc shall provide 'about' and 'version' commands that display the
+project's title, current version, license, and links to the project's web pages.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -1843,7 +1979,8 @@ STATEMENT: >>>
 StrictDoc's default mode of operation shall treat all warnings as errors.
 <<<
 RATIONALE: >>>
-When warnings are treated as errors, the user becomes aware of potential issues as soon as they appear.
+When warnings are treated as errors, the user becomes aware of potential issues
+as soon as they appear.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -1864,7 +2001,8 @@ UID: SDOC-SRS-37
 STATUS: Active
 TITLE: strictdoc.toml file
 STATEMENT: >>>
-StrictDoc shall support a configuration of project-level options through a TOML file named ``strictdoc.toml``.
+StrictDoc shall support a configuration of project-level options through a TOML
+file named ``strictdoc.toml``.
 <<<
 RELATIONS:
 - TYPE: File
@@ -1879,7 +2017,8 @@ UID: SDOC-SRS-39
 STATUS: Active
 TITLE: Feature toggles
 STATEMENT: >>>
-StrictDoc shall allow a user to select a subset of StrictDoc's available features by listing them in the ``strictdoc.toml`` file.
+StrictDoc shall allow a user to select a subset of StrictDoc's available
+features by listing them in the ``strictdoc.toml`` file.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -1891,7 +2030,8 @@ UID: SDOC-SRS-119
 STATUS: Active
 TITLE: 'Host' parameter
 STATEMENT: >>>
-StrictDoc shall support configuring a host/port on which the StrictDoc web server is run.
+StrictDoc shall support configuring a host/port on which the StrictDoc web
+server is run.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -1913,7 +2053,8 @@ STATEMENT: >>>
 StrictDoc shall support process-based parallelization for time-critical tasks.
 <<<
 RATIONALE: >>>
-Process-based parallelization can provide a good speed-up when several large documents have to be generated.
+Process-based parallelization can provide a good speed-up when several large
+documents have to be generated.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -1943,7 +2084,8 @@ TITLE: Incremental generation of documents
 STATEMENT: >>>
 StrictDoc shall support incremental generation of documents.
 
-NOTE: "Incremental" means that only the modified documents are regenerated when StrictDoc is run repeatedly against the same project tree.
+NOTE: "Incremental" means that only the modified documents are regenerated when
+StrictDoc is run repeatedly against the same project tree.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -1960,7 +2102,9 @@ STATEMENT: >>>
 StrictDoc shall cache the RST fragments rendered to HTML.
 <<<
 RATIONALE: >>>
-Conversion of RST markup to HTML is a time consuming process. Caching the rendered HTML of each fragment helps to save time when rendering the HTML content.
+Conversion of RST markup to HTML is a time consuming process. Caching the
+rendered HTML of each fragment helps to save time when rendering the HTML
+content.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -1974,10 +2118,13 @@ UID: SDOC-SRS-4
 STATUS: Active
 TITLE: On-demand loading of HTML pages
 STATEMENT: >>>
-StrictDoc's web interface shall generate the HTML content only when it is directly requested by a user.
+StrictDoc's web interface shall generate the HTML content only when it is
+directly requested by a user.
 <<<
 RATIONALE: >>>
-Generating a whole documentation tree for a user project can be time consuming. The on-demand loading ensures the "do less work" approach when it comes to rendering the HTML pages.
+Generating a whole documentation tree for a user project can be time consuming.
+The on-demand loading ensures the "do less work" approach when it comes to
+rendering the HTML pages.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -1994,7 +2141,9 @@ STATEMENT: >>>
 StrictDoc shall support a precompilation of HTML templates.
 <<<
 RATIONALE: >>>
-The StrictDoc-exported HTML content visible to a user is assembled from numerous small HTML fragments. Precompiling the HTML templates from which the content gets rendered improves the performance of the HTML rendering.
+The StrictDoc-exported HTML content visible to a user is assembled from numerous
+small HTML fragments. Precompiling the HTML templates from which the content
+gets rendered improves the performance of the HTML rendering.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -2022,10 +2171,12 @@ UID: SDOC-SRS-133
 STATUS: Active
 TITLE: Priority handling of critical issues in StrictDoc
 STATEMENT: >>>
-All critical issues reported in relation to StrictDoc shall be addressed with utmost priority.
+All critical issues reported in relation to StrictDoc shall be addressed with
+utmost priority.
 <<<
 RATIONALE: >>>
-Prioritizing major issues ensures StrictDoc remains stable and reliable, preventing serious problems that could compromise its performance and integrity.
+Prioritizing major issues ensures StrictDoc remains stable and reliable,
+preventing serious problems that could compromise its performance and integrity.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -2087,7 +2238,9 @@ STATEMENT: >>>
 StrictDoc shall be written in Python.
 <<<
 RATIONALE: >>>
-Python has an excellent package ecosystem. It is a widely used language. It is most often the next language for C/C++ programming community when it comes to the tools development and scripting tasks.
+Python has an excellent package ecosystem. It is a widely used language. It is
+most often the next language for C/C++ programming community when it comes to
+the tools development and scripting tasks.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -2154,7 +2307,8 @@ STATEMENT: >>>
 StrictDoc shall be built using only open source software components.
 <<<
 RATIONALE: >>>
-No commercial/proprietary dependency chain ensures that StrictDoc remain free and open for everyone.
+No commercial/proprietary dependency chain ensures that StrictDoc remain free
+and open for everyone.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -2172,7 +2326,8 @@ TITLE: No heavy UI frameworks
 STATEMENT: >>>
 StrictDoc shall avoid using large and demanding UI frameworks.
 
-NOTE: An example of frameworks that require a very specific architecture: React JS, AngularJS.
+NOTE: An example of frameworks that require a very specific architecture: React
+JS, AngularJS.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -2184,10 +2339,14 @@ UID: SDOC-SRS-15
 STATUS: Active
 TITLE: No use of NPM
 STATEMENT: >>>
-StrictDoc shall avoid extending its infrastructure with anything based on NPM-ecosystem.
+StrictDoc shall avoid extending its infrastructure with anything based on
+NPM-ecosystem.
 <<<
 RATIONALE: >>>
-StrictDoc already deals with the Python/Pip/Pypi ecosystem. The amount of necessary maintenance is already quite high. NPM is known for splitting its projects into very small parts, which increases the complexity of maintaining all dependencies.
+StrictDoc already deals with the Python/Pip/Pypi ecosystem. The amount of
+necessary maintenance is already quite high. NPM is known for splitting its
+projects into very small parts, which increases the complexity of maintaining
+all dependencies.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -2202,7 +2361,8 @@ STATEMENT: >>>
 StrictDoc shall avoid using JavaScript-based programming languages.
 <<<
 RATIONALE: >>>
-The development team does not have specific experience with any of the JS alternatives. Staying with a general subset of JavaScript is a safer choice.
+The development team does not have specific experience with any of the JS
+alternatives. Staying with a general subset of JavaScript is a safer choice.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -2239,7 +2399,8 @@ RATIONALE: >>>
 Containers are significant extra layer of complexity. They are hard to debug.
 <<<
 COMMENT: >>>
-This constraint does not block a StrictDoc user from wrapping StrictDoc into their containers.
+This constraint does not block a StrictDoc user from wrapping StrictDoc into
+their containers.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -2258,7 +2419,8 @@ UID: SDOC-SRS-40
 STATUS: Active
 TITLE: Use of asserts
 STATEMENT: >>>
-StrictDoc's development shall ensure a use of assertions throughout the project codebase.
+StrictDoc's development shall ensure a use of assertions throughout the project
+codebase.
 
 NOTE: At a minimum, the function input parameters must be checked for validity.
 <<<
@@ -2272,7 +2434,8 @@ UID: SDOC-SRS-41
 STATUS: Active
 TITLE: Use of type annotations in Python code
 STATEMENT: >>>
-StrictDoc's development shall ensure a use of type annotations throughout the project's Python codebase.
+StrictDoc's development shall ensure a use of type annotations throughout the
+project's Python codebase.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -2291,7 +2454,8 @@ UID: SDOC-SRS-42
 STATUS: Active
 TITLE: Compliance with Python community practices (PEP8 etc)
 STATEMENT: >>>
-StrictDoc's development shall ensure that the project's codebase is compliant with the Python community's modern practices.
+StrictDoc's development shall ensure that the project's codebase is compliant
+with the Python community's modern practices.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -2310,7 +2474,8 @@ UID: SDOC-SRS-43
 STATUS: Active
 TITLE: Static type checking
 STATEMENT: >>>
-StrictDoc's development shall include a continuous type checking of StrictDoc's codebase.
+StrictDoc's development shall include a continuous type checking of StrictDoc's
+codebase.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -2345,7 +2510,8 @@ UID: SDOC-SRS-45
 STATUS: Active
 TITLE: CLI interface black-box integration testing
 STATEMENT: >>>
-StrictDoc's development shall provide complete black-box integration testing of its command-line interface.
+StrictDoc's development shall provide complete black-box integration testing of
+its command-line interface.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -2359,7 +2525,8 @@ UID: SDOC-SRS-46
 STATUS: Active
 TITLE: Web end-to-end testing
 STATEMENT: >>>
-StrictDoc's development shall provide complete end-to-end testing of the web interface.
+StrictDoc's development shall provide complete end-to-end testing of the web
+interface.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -2373,16 +2540,19 @@ UID: SDOC-SRS-47
 STATUS: Active
 TITLE: At least one integration or end-to-end test
 STATEMENT: >>>
-Every update to the StrictDoc codebase shall be complemented with a corresponding provision of at least one test as follows:
+Every update to the StrictDoc codebase shall be complemented with a
+corresponding provision of at least one test as follows:
 
 - For web interface: at least one end-to-end test.
 - For command-line interface: at least one black-box integration test.
 - For internal Python functions: at least one unit test.
 
-NOTE: This requirement implies that no modifications to StrictDoc's functionality can be merged unless accompanied by at least one test.
+NOTE: This requirement implies that no modifications to StrictDoc's
+functionality can be merged unless accompanied by at least one test.
 <<<
 RATIONALE: >>>
-This requirement ensures that every new feature or a chance in the codebase is covered/stressed by at least one test, according to the change type.
+This requirement ensures that every new feature or a chance in the codebase is
+covered/stressed by at least one test, according to the change type.
 <<<
 RELATIONS:
 - TYPE: Parent

@@ -66,11 +66,19 @@ ELEMENTS:
 [TEXT]
 MID: 1ea652f0284940b6913a0a224492759f
 STATEMENT: >>>
-The level 3 low-level requirements specification of StrictDoc (L3/LLR) is derived from StrictDoc's L2 high-level (L2/HLR) requirements specification. The purpose of L3/LLR is to provide the lowest-level requirements from which StrictDoc's source code can be directly implemented without further information.
+The level 3 low-level requirements specification of StrictDoc (L3/LLR) is
+derived from StrictDoc's L2 high-level (L2/HLR) requirements specification. The
+purpose of L3/LLR is to provide the lowest-level requirements from which
+StrictDoc's source code can be directly implemented without further information.
 
-It is at the L3 level that the StrictDoc requirements are specified for the actual software implementers, including both the StrictDoc developers and AI agents such as Codex. At the same time, the L2/HLR requirements provide the framework for the WHAT and WHY of the implementation instructions that are specified by this L3/LLR.
+It is at the L3 level that the StrictDoc requirements are specified for the
+actual software implementers, including both the StrictDoc developers and AI
+agents such as Codex. At the same time, the L2/HLR requirements provide the
+framework for the WHAT and WHY of the implementation instructions that are
+specified by this L3/LLR.
 
-NOTE: This specification level is under construction. Many L2/HLR requirements will be gradually moved to be here at the L3/HLR level.
+NOTE: This specification level is under construction. Many L2/HLR requirements
+will be gradually moved to be here at the L3/HLR level.
 <<<
 
 [[SECTION]]
@@ -107,7 +115,8 @@ UID: SDOC-LLR-192
 STATUS: Active
 TITLE: Markdown files discovery
 STATEMENT: >>>
-StrictDoc shall discover Markdown files ``*.md`` and ``*.markdown`` using the same mechanism as used for SDoc files.
+StrictDoc shall discover Markdown files ``*.md`` and ``*.markdown`` using the
+same mechanism as used for SDoc files.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -121,23 +130,32 @@ UID: SDOC-LLR-196
 STATUS: Active
 TITLE: Identical Markdown content by import/export roundtrip
 STATEMENT: >>>
-StrictDoc shall ensure that identical Markdown content is produced every time StrictDoc reads a Markdown file and then writes it to another Markdown file.
+StrictDoc shall ensure that identical Markdown content is produced every time
+StrictDoc reads a Markdown file and then writes it to another Markdown file.
 
 The following aspects shall additionally apply:
 
-- For MVP, line-endings should support both LF (Linux/macOS-style) and CRLF (Windows-style).
-- The ``export --formats=markdown`` shall work for any format readable by StrictDoc, including Markdown itself, SDoc, RDF (future growth), ReqIF, etc.
+- For MVP, line-endings should support both LF (Linux/macOS-style) and CRLF
+  (Windows-style).
+- The ``export --formats=markdown`` shall work for any format readable by
+  StrictDoc, including Markdown itself, SDoc, RDF (future growth), ReqIF, etc.
 
-NOTE: The write-back to Markdown file must happen through proper AST serialization, not just by giving back the original read Markdown source.
+NOTE: The write-back to Markdown file must happen through proper AST
+serialization, not just by giving back the original read Markdown source.
 
 Exceptions:
 
-Edge cases related to handling non-default input formats are postponed after the Markdown MVP is implemented. For example:
+Edge cases related to handling non-default input formats are postponed after the
+Markdown MVP is implemented. For example:
 
-- Markdown reader encounters content format #3 (implicit field; see the Markdown Specification in spec/Markdown.md), but writer always emits #1/#2 for content via [LINK: SDOC-LLR-198]. In this case the content will not be identical, but it is accepted for an MVP implementation.
+- Markdown reader encounters content format #3 (implicit field; see the Markdown
+  Specification in spec/Markdown.md), but writer always emits #1/#2 for content
+  via [LINK: SDOC-LLR-198]. In this case the content will not be identical, but
+  it is accepted for an MVP implementation.
 <<<
 RATIONALE: >>>
-A consistent import/export roundtrip implementation and testing reduces the risk of the Markdown bi-directional import/export corruption.
+A consistent import/export roundtrip implementation and testing reduces the risk
+of the Markdown bi-directional import/export corruption.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -149,7 +167,8 @@ UID: SDOC-LLR-189
 STATUS: Active
 TITLE: One Markdown file — One SDoc document
 STATEMENT: >>>
-StrictDoc shall parse Markdown files using the "one Markdown file — one SDoc document" principle.
+StrictDoc shall parse Markdown files using the "one Markdown file — one SDoc
+document" principle.
 <<<
 
 [REQUIREMENT]
@@ -158,16 +177,32 @@ UID: SDOC-LLR-190
 STATUS: Active
 TITLE: Reading rules — Default grammar for MVP
 STATEMENT: >>>
-When a parsing Markdown file, StrictDoc shall generate an SDoc document using the default SDoc grammar according to the following rules:
+When a parsing Markdown file, StrictDoc shall generate an SDoc document using
+the default SDoc grammar according to the following rules:
 
-- The only supported node for MVP shall be REQUIREMENT, TEXT and SECTION nodes with no other nodes supported.
-- A valid SDoc node shall be recognized as REQUIREMENT. The Markdown's node title becomes the REQUIREMENT node's TITLE.
-- If a Markdown node cannot be recognized as a valid SDoc node, the node shall recognize the said Markdown node's title as a SECTION node with a TITLE field set to the title and the node's body as a regular (non-normative) TEXT SDoc node, not as a normative SDoc node. The TEXT node's statement shall contain the Markdown node's body.
-- All field names shall be capitalized when created to SDoc field objects. For example, ``Statement`` becomes ``STATEMENT``. At the same time, the original field names must be written to the document's grammar as-is. For example, a ``**Rationale**:`` becomes ``RATIONALE`` in the SDoc field name and ``Rationale`` in the human title.
-- StrictDoc shall defer the validation of MID/UID uniqueness across nodes to the TraceabilityIndexBuilder class.
-- If a given field name appears more than once in a node, StrictDoc shall raise a StrictDocSemanticError.
-- If a node is otherwise invalid and also has duplicate fields, the parser shall treat this node as SECTION and TEXT without raising errors.
-- All SDoc node fields, REQUIREMENT/TEXT/SECTION, must store all field values' Markdown content verbatim, without any pre-processing. This includes preserving original whitespace/line endings exactly.
+- The only supported node for MVP shall be REQUIREMENT, TEXT and SECTION nodes
+  with no other nodes supported.
+- A valid SDoc node shall be recognized as REQUIREMENT. The Markdown's node
+  title becomes the REQUIREMENT node's TITLE.
+- If a Markdown node cannot be recognized as a valid SDoc node, the node shall
+  recognize the said Markdown node's title as a SECTION node with a TITLE field
+  set to the title and the node's body as a regular (non-normative) TEXT SDoc
+  node, not as a normative SDoc node. The TEXT node's statement shall contain
+  the Markdown node's body.
+- All field names shall be capitalized when created to SDoc field objects. For
+  example, ``Statement`` becomes ``STATEMENT``. At the same time, the original
+  field names must be written to the document's grammar as-is. For example, a
+  ``**Rationale**:`` becomes ``RATIONALE`` in the SDoc field name and
+  ``Rationale`` in the human title.
+- StrictDoc shall defer the validation of MID/UID uniqueness across nodes to the
+  TraceabilityIndexBuilder class.
+- If a given field name appears more than once in a node, StrictDoc shall raise
+  a StrictDocSemanticError.
+- If a node is otherwise invalid and also has duplicate fields, the parser shall
+  treat this node as SECTION and TEXT without raising errors.
+- All SDoc node fields, REQUIREMENT/TEXT/SECTION, must store all field values'
+  Markdown content verbatim, without any pre-processing. This includes
+  preserving original whitespace/line endings exactly.
 <<<
 
 [REQUIREMENT]
@@ -176,20 +211,31 @@ UID: SDOC-LLR-198
 STATUS: Active
 TITLE: Writing rules — Default grammar for MVP
 STATEMENT: >>>
-When writing an SDoc document to a markdown file, StrictDoc shall generate the Markdown markup according to the following rules:
+When writing an SDoc document to a markdown file, StrictDoc shall generate the
+Markdown markup according to the following rules:
 
 - The meta fields shall be written:
 
   - Using the format #2 for new documents not coming from file system (using backslashes for all meta-field lines but last one).
   - Using the format that was auto-detected during reading a Markdown file in case the file is already on the disk and follows a certain convention. The detection shall be detected at a file level and memorized individually by each SDoc document.
 
-- The content fields shall be written using formats #1 (Explicit field name) for single-paragraph fields and #2 (Explicit field name with a line break) for multi-paragraph fields. A multi-paragraph field is one that results in multiple markdown paragraphs/blocks each separated visually by a full empty line.
+- The content fields shall be written using formats #1 (Explicit field name) for
+  single-paragraph fields and #2 (Explicit field name with a line break) for
+  multi-paragraph fields. A multi-paragraph field is one that results in
+  multiple markdown paragraphs/blocks each separated visually by a full empty
+  line.
 
-- StrictDoc shall write the SDoc fields as Markdown fields based on SDoc human title as recorded in the document grammar element field human title. If a human title is missing in the grammar, the field name shall be used.
+- StrictDoc shall write the SDoc fields as Markdown fields based on SDoc human
+  title as recorded in the document grammar element field human title. If a
+  human title is missing in the grammar, the field name shall be used.
 
-- All fields shall be printed in the same order like they are stored in an SDoc node. Meta vs content decision shall be based on a standard SDocNode/GrammarElement decision for multiline index.
+- All fields shall be printed in the same order like they are stored in an SDoc
+  node. Meta vs content decision shall be based on a standard
+  SDocNode/GrammarElement decision for multiline index.
 
-- The node level shall be used for defining the Markdown node level. The document title becomes the top-level section level 1. SDoc node level 1 becomes ``##``, level 2 becomes ``###``, etc.
+- The node level shall be used for defining the Markdown node level. The
+  document title becomes the top-level section level 1. SDoc node level 1
+  becomes ``##``, level 2 becomes ``###``, etc.
 <<<
 
 [REQUIREMENT]
@@ -212,12 +258,15 @@ MID: 95f0e0198d8446a38eb1c7fc0f409522
 UID: SDOC-LLR-203
 TITLE: Use of html2pdf4doc
 STATEMENT: >>>
-StrictDoc shall export HTML documents using html2pdf4doc library with the following document types supported already:
+StrictDoc shall export HTML documents using html2pdf4doc library with the
+following document types supported already:
 
 - StrictDoc's main DOC document type/screen.
 <<<
 RATIONALE: >>>
-html2pdf4doc is part of the StrictDoc project that is developed by the core team. It allows printing PDF pages directly from StrictDoc HTML and gives the developers a full control over the printing mechanics.
+html2pdf4doc is part of the StrictDoc project that is developed by the core
+team. It allows printing PDF pages directly from StrictDoc HTML and gives the
+developers a full control over the printing mechanics.
 <<<
 
 [REQUIREMENT]
@@ -228,10 +277,13 @@ TITLE: Use of PyPDF for PDF postprocessing
 STATEMENT: >>>
 StrictDoc shall employ the PyPDF library for the following tasks:
 
-- Rewriting all StrictDoc's LINK/ANCHOR to documents of the same project tree into the PDF anchors.
+- Rewriting all StrictDoc's LINK/ANCHOR to documents of the same project tree
+  into the PDF anchors.
 <<<
 RATIONALE: >>>
-The extra processing with PyPDF is needed because there are limitations of what developers can do when printing HTML to PDF with html2pdf4doc based on Google Chrome Driver.
+The extra processing with PyPDF is needed because there are limitations of what
+developers can do when printing HTML to PDF with html2pdf4doc based on Google
+Chrome Driver.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -243,17 +295,27 @@ UID: SDOC-LLR-205
 STATUS: Active
 TITLE: Cross-linking PDF documents from one project tree
 STATEMENT: >>>
-When exporting HTML documents to PDF, StrictDoc shall rewrite all LINK/ANCHOR to documents of the same project tree into the PDF document links/anchors according to the following rule:
+When exporting HTML documents to PDF, StrictDoc shall rewrite all LINK/ANCHOR to
+documents of the same project tree into the PDF document links/anchors according
+to the following rule:
 
-- The Chrome Driver resolves the relative links to other documents with full paths, e.g., ``file:///<full-path-to-another-SDoc-document>-PDF.html#<anchor>``.
-- The PDF postprocessing step shall convert these absolute ``file:///...` links to just relative paths: ``<relative-path-to-another-SDoc-document>.pdf`` without the leading slash character.
-- If one PDF is in a nested folder compared to another PDF, the link to this PDF anchor shall have relative ``../`` path components.
+- The Chrome Driver resolves the relative links to other documents with full
+  paths, e.g.,
+  ``file:///<full-path-to-another-SDoc-document>-PDF.html#<anchor>``.
+- The PDF postprocessing step shall convert these absolute ``file:///...` links
+  to just relative paths: ``<relative-path-to-another-SDoc-document>.pdf``
+  without the leading slash character.
+- If one PDF is in a nested folder compared to another PDF, the link to this PDF
+  anchor shall have relative ``../`` path components.
 <<<
 RATIONALE: >>>
-Allows a reader to navigate between PDF documents of the same project as requested by the parent requirement.
+Allows a reader to navigate between PDF documents of the same project as
+requested by the parent requirement.
 <<<
 COMMENT: >>>
-The PDF cross-document linking is supported by the PDF format natively but is known to not work in all PDF viewers. For example, it is known to work well in Linux PDF viewers, but not macOS Preview viewer.
+The PDF cross-document linking is supported by the PDF format natively but is
+known to not work in all PDF viewers. For example, it is known to work well in
+Linux PDF viewers, but not macOS Preview viewer.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -274,9 +336,10 @@ MID: d83cab2dcd014d328b348acc37c6f4a6
 UID: SDOC-LLR-164
 TITLE: Auto-scoped relation markers in Rust docs
 STATEMENT: >>>
-If a StrictDoc relation marker is inside a `Rust doc comment`_, the marker scope shall be set to exact the item the Rust
-language defines as target of the containing doc comment. The :code:`@relation(scope=...)` parameter shall therefore
-be optional and shall be ignored if provided.
+If a StrictDoc relation marker is inside a `Rust doc comment`_, the marker scope
+shall be set to exact the item the Rust language defines as target of the
+containing doc comment. The :code:`@relation(scope=...)` parameter shall
+therefore be optional and shall be ignored if provided.
 
 .. code-block:: rust
    :number-lines:
@@ -289,16 +352,17 @@ be optional and shall be ignored if provided.
        }
    }
 
-In the given example, the first marker shall link REQ-1 to the :code:`impl Foo` implementation,
-highlighting lines 1 to 7. The second marker shall link REQ-2 to the :code:`fn foo()` function,
-highlighting lines 4 to 6.
+In the given example, the first marker shall link REQ-1 to the :code:`impl Foo`
+implementation, highlighting lines 1 to 7. The second marker shall link REQ-2 to
+the :code:`fn foo()` function, highlighting lines 4 to 6.
 
 .. _Rust doc comment: https://doc.rust-lang.org/rust-by-example/meta/doc.html#doc-comments
 <<<
 COMMENT: >>>
-Note that doc comments are syntactic sugar for `doc attribute`_ s, which shall also be supported.
-To figure detailed doc comment rules from the rust-lang specification it's sometimes useful
-to check for general attribute rules, if explicit doc comment rules are missing.
+Note that doc comments are syntactic sugar for `doc attribute`_ s, which shall
+also be supported. To figure detailed doc comment rules from the rust-lang
+specification it's sometimes useful to check for general attribute rules, if
+explicit doc comment rules are missing.
 
 .. _doc attribute: https://doc.rust-lang.org/rustdoc/write-documentation/the-doc-attribute.html
 <<<
@@ -331,7 +395,8 @@ UID: SDOC-LLR-166
 STATUS: Active
 TITLE: Inner line docs
 STATEMENT: >>>
-StrictDoc shall support auto-scoped relation relation markers in `inner line docs`_.
+StrictDoc shall support auto-scoped relation relation markers in `inner line
+docs`_.
 
 .. _inner line docs: https://doc.rust-lang.org/reference/comments.html#grammar-INNER_LINE_DOC
 <<<
@@ -345,7 +410,8 @@ UID: SDOC-LLR-167
 STATUS: Active
 TITLE: Inner block docs
 STATEMENT: >>>
-StrictDoc shall support auto-scoped relation relation markers in `inner block docs`_.
+StrictDoc shall support auto-scoped relation relation markers in `inner block
+docs`_.
 
 .. _inner block docs: https://doc.rust-lang.org/reference/comments.html#grammar-INNER_BLOCK_DOC
 <<<
@@ -359,7 +425,8 @@ UID: SDOC-LLR-168
 STATUS: Active
 TITLE: Outer doc attributes
 STATEMENT: >>>
-StrictDoc shall support auto-scoped relation markers in outer_ `doc attribute`_ s.
+StrictDoc shall support auto-scoped relation markers in outer_ `doc attribute`_
+s.
 
 .. _outer: https://doc.rust-lang.org/reference/attributes.html#r-attributes.outer
 .. _doc attribute: https://doc.rust-lang.org/rustdoc/write-documentation/the-doc-attribute.html#the-doc-attribute
@@ -402,10 +469,12 @@ UID: SDOC-LLR-171
 STATUS: Active
 TITLE: File, line and range markers
 STATEMENT: >>>
-StrictDoc shall point to lines and line ranges of Rust code by using file, line and range markers.
-These marker types shall be parsed from `regular line and block comments`_.
+StrictDoc shall point to lines and line ranges of Rust code by using file, line
+and range markers. These marker types shall be parsed from `regular line and
+block comments`_.
 
-Note: File markers may also result from the inner doc comments of the top-level module.
+Note: File markers may also result from the inner doc comments of the top-level
+module.
 
 .. _regular line and block comments: https://doc.rust-lang.org/rust-by-example/hello/comment.html#comments
 <<<
@@ -425,9 +494,10 @@ UID: SDOC-LLR-172
 STATUS: Active
 TITLE: Source nodes from doc comments
 STATEMENT: >>>
-If a Rust doc comments contains custom tags, and the containing Rust source file matches an entry in the
-source node configuration, StrictDoc shall create document nodes from the custom tags and automatically
-link the created node with the Rust item targeted by the doc comment.
+If a Rust doc comments contains custom tags, and the containing Rust source file
+matches an entry in the source node configuration, StrictDoc shall create
+document nodes from the custom tags and automatically link the created node with
+the Rust item targeted by the doc comment.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -441,8 +511,8 @@ UID: SDOC-LLR-173
 STATUS: Active
 TITLE: Forward relations to Rust items
 STATEMENT: >>>
-StrictDoc shall support linking from a requirement in SDoc to a language item in Rust code by using a :code:`FILE`
-relation of type :code:`FUNCTION`. For example
+StrictDoc shall support linking from a requirement in SDoc to a language item in
+Rust code by using a :code:`FILE` relation of type :code:`FUNCTION`. For example
 
 .. code-block:: strictdoc
 
@@ -453,8 +523,8 @@ relation of type :code:`FUNCTION`. For example
      VALUE: file.rs
      FUNCTION: file::foo
 
-This shall work for all kinds of Rust items that have a `canonical path`_, including const, enum, fn, mod, static,
-struct, trait, type, union.
+This shall work for all kinds of Rust items that have a `canonical path`_,
+including const, enum, fn, mod, static, struct, trait, type, union.
 
 .. _canonical path: https://doc.rust-lang.org/reference/paths.html#canonical-paths
 <<<
@@ -468,22 +538,23 @@ UID: SDOC-LLR-174
 STATUS: Active
 TITLE: Forward relation by canonical path
 STATEMENT: >>>
-The identifier for forward relations shall be the `canonical path`_ as the rustc compiler would set it when invoked for
-a single file like
+The identifier for forward relations shall be the `canonical path`_ as the rustc
+compiler would set it when invoked for a single file like
 
 .. code-block:: shell
 
    rustc --crate-type rlib --emit=obj src/lib.rs
 
-Note: :code:`cargo build` usually result in a different canonical path, since it considers the file position relative to
-the crate root. Using a single file as root is a simplification, needed because StrictDoc is unaware of the Rust
-file and directory-based module hierarchy.
+Note: :code:`cargo build` usually result in a different canonical path, since it
+considers the file position relative to the crate root. Using a single file as
+root is a simplification, needed because StrictDoc is unaware of the Rust file
+and directory-based module hierarchy.
 
 .. _canonical path: https://doc.rust-lang.org/reference/paths.html#canonical-paths
 <<<
 COMMENT: >>>
-The canonical path of an item can be observed with :code:`objdump -t lib.o --demangle=rust`. For example, given this
-source file
+The canonical path of an item can be observed with :code:`objdump -t lib.o
+--demangle=rust`. For example, given this source file
 
 .. code-block:: rust
    :number-lines:
@@ -528,10 +599,11 @@ UID: SDOC-LLR-175
 STATUS: Active
 TITLE: Collapse doc comments
 STATEMENT: >>>
-Multiple scattered doc comments shall be collapsed as done by the rustdoc_ tool when using the collapse-docs option
-to determine the highlight range(s).
+Multiple scattered doc comments shall be collapsed as done by the rustdoc_ tool
+when using the collapse-docs option to determine the highlight range(s).
 
-For example, rustdoc would collapse alle these comments into the description of :code:`fn foo()`
+For example, rustdoc would collapse alle these comments into the description of
+:code:`fn foo()`
 
 .. code-block:: rust
    :number-lines:
@@ -553,7 +625,8 @@ For example, rustdoc would collapse alle these comments into the description of 
    fn foo() {
    }
 
-In the given example, the StrictDoc highlight range for the relation marker shall be from line 1 to line 16.
+In the given example, the StrictDoc highlight range for the relation marker
+shall be from line 1 to line 16.
 
 .. _rustdoc: https://github.com/rust-lang/rust/tree/main/src/tools/rustdoc
 <<<
@@ -567,7 +640,8 @@ UID: SDOC-LLR-176
 STATUS: Active
 TITLE: Rust marker descriptions
 STATEMENT: >>>
-StrictDoc should use the marker labels as rustdoc_ would set them in the description of a documented node.
+StrictDoc should use the marker labels as rustdoc_ would set them in the
+description of a documented node.
 
 .. _rustdoc: https://doc.rust-lang.org/stable/rustdoc/
 <<<
@@ -581,12 +655,14 @@ UID: SDOC-LLR-177
 STATUS: Active
 TITLE: Valid positions of doc comments
 STATEMENT: >>>
-StrictDoc shall find doc comments where the language allows_ them and ignore those in other positions.
+StrictDoc shall find doc comments where the language allows_ them and ignore
+those in other positions.
 
 .. _allows: https://doc.rust-lang.org/reference/attributes.html#r-attributes.allowed-position
 <<<
 COMMENT: >>>
-Since doc comments are syntactic sugar for doc attributes, allowed position rules for attributes apply.
+Since doc comments are syntactic sugar for doc attributes, allowed position
+rules for attributes apply.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -646,7 +722,8 @@ UID: SDOC-LLR-182
 STATUS: Active
 TITLE: Allowed position for outer docs
 STATEMENT: >>>
-StrictDoc shall find outer doc comments in `allowed positions`_ as specified by the Rust language:
+StrictDoc shall find outer doc comments in `allowed positions`_ as specified by
+the Rust language:
 
 - All item_ declarations
 - Most statements
@@ -675,7 +752,8 @@ MID: 5d49af5c74794e7ab0a77fe99576243c
 UID: SDOC-LLR-206
 TITLE: Macro definitions
 STATEMENT: >>>
-StrictDoc's C reader shall recognize the special macro definitions as function definitions:
+StrictDoc's C reader shall recognize the special macro definitions as function
+definitions:
 
 Special macro definitions:
 
@@ -687,7 +765,8 @@ Special macro definitions:
 
     }
 
-shall be recognized as a function with a title ``ZTEST_USER(semaphore, test_sem_take_multiple)``.
+shall be recognized as a function with a title ``ZTEST_USER(semaphore,
+test_sem_take_multiple)``.
 
 2) The following Linux syscall macro:
 
@@ -700,7 +779,10 @@ shall be recognized as a function with a title ``ZTEST_USER(semaphore, test_sem_
         return error;
     }
 
-shall be recognized as a function with a title ``SYSCALL_DEFINE2(clock_gettime, const clockid_t, which_clock, struct __kernel_timespec __user *, tp)`` with all newlines character replaced with a space character each but all content and punctuation preserved otherwise.
+shall be recognized as a function with a title ``SYSCALL_DEFINE2(clock_gettime,
+const clockid_t, which_clock, struct __kernel_timespec __user *, tp)`` with all
+newlines character replaced with a space character each but all content and
+punctuation preserved otherwise.
 <<<
 
 [REQUIREMENT]
@@ -709,7 +791,8 @@ UID: SDOC-LLR-207
 STATUS: Active
 TITLE: Forward links to macro definitions using regexes
 STATEMENT: >>>
-StrictDoc shall allow linking SDoc nodes to C macro definitions using regexes as follows:
+StrictDoc shall allow linking SDoc nodes to C macro definitions using regexes as
+follows:
 
 1) The forward link:
 
@@ -750,7 +833,8 @@ UID: SDOC-LLR-208
 STATUS: Active
 TITLE: Create initial StrictDoc project
 STATEMENT: >>>
-The "new" StrictDoc CLI command shall generate a documentation skeleton that consists of the following artifacts in the provided input directory:
+The "new" StrictDoc CLI command shall generate a documentation skeleton that
+consists of the following artifacts in the provided input directory:
 
 - ``docs/`` folder with the following content:
 
@@ -761,9 +845,12 @@ The "new" StrictDoc CLI command shall generate a documentation skeleton that con
 
   - A source file ``main.c`` that contains a C hello world program that is annotated with a C comment that has a ``@relation`` to the ``LLR-1`` requirement.
 
-- ``strictdoc_config.py`` that is configured to read SDoc documents from the ``docs/`` folder and source files from the ``src/`` folder.
-- All documents must be configured with ``ENABLE_MID: True``. All nodes must have valid unique MID identifiers.
-- At the end of the execution, the ``new`` command shall print the instructions for running: 1) StrictDoc's static HTML export and 2) web server.
+- ``strictdoc_config.py`` that is configured to read SDoc documents from the
+  ``docs/`` folder and source files from the ``src/`` folder.
+- All documents must be configured with ``ENABLE_MID: True``. All nodes must
+  have valid unique MID identifiers.
+- At the end of the execution, the ``new`` command shall print the instructions
+  for running: 1) StrictDoc's static HTML export and 2) web server.
 
 Example of the "new" command usage:
 

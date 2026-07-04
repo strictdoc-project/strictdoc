@@ -67,9 +67,11 @@ TITLE: System dependencies
 [TEXT]
 MID: df2e1de12c6b456898c48a36650813d4
 STATEMENT: >>>
-StrictDoc itself mostly depends on other Python Pip packages, so there is nothing special to be installed.
+StrictDoc itself mostly depends on other Python Pip packages, so there is
+nothing special to be installed.
 
-You may need to install ``libtidy`` if you want to run the integration tests. The HTML markup validation tests depend on libtidy.
+You may need to install ``libtidy`` if you want to run the integration tests.
+The HTML markup validation tests depend on libtidy.
 
 On Linux Ubuntu:
 
@@ -91,9 +93,11 @@ TITLE: Windows-specific: Long Path support
 [TEXT]
 MID: 8591cf6dece04244824c3ac2a8666ba3
 STATEMENT: >>>
-As `reported <https://github.com/strictdoc-project/strictdoc/issues/1118>`_ by a user, Windows Long Path support has to be enabled on a Windows system.
+As `reported <https://github.com/strictdoc-project/strictdoc/issues/1118>`_ by a
+user, Windows Long Path support has to be enabled on a Windows system.
 
-You can find information on how to enable the long paths support at https://pip.pypa.io/warnings/enable-long-paths.
+You can find information on how to enable the long paths support at
+https://pip.pypa.io/warnings/enable-long-paths.
 <<<
 
 [[/SECTION]]
@@ -118,7 +122,8 @@ STATEMENT: >>>
     python3 developer/pip_install_strictdoc_deps.py
     python3 strictdoc/cli/main.py
 
-The ``pip_install_strictdoc_deps.py`` installs all dependencies of StrictDoc, but not StrictDoc itself.
+The ``pip_install_strictdoc_deps.py`` installs all dependencies of StrictDoc,
+but not StrictDoc itself.
 <<<
 
 [[SECTION]]
@@ -128,7 +133,8 @@ TITLE: Development within a virtual environment
 [TEXT]
 MID: a3e14b05452b48e2a0d8726fa00a7f00
 STATEMENT: >>>
-An alternative approach for those familiar with development in a virtual environment:
+An alternative approach for those familiar with development in a virtual
+environment:
 
 .. code:: bash
 
@@ -142,7 +148,8 @@ An alternative approach for those familiar with development in a virtual environ
 
     Windows users, substitute: ``.\.venv\Scripts\activate``
 
-After this, running ``developer/pip_install_strictdoc_deps.py`` should report that all packages are already installed.
+After this, running ``developer/pip_install_strictdoc_deps.py`` should report
+that all packages are already installed.
 
 This installs all the default dependencies of StrictDoc.
 To also install the dev dependencies specified in ``pyproject.toml``:
@@ -165,11 +172,10 @@ TITLE: Invoke for development tasks
 [TEXT]
 MID: 452b3c24463446a497ed6b8fcdb31fef
 STATEMENT: >>>
-All development tasks are managed using
-`Invoke <https://www.pyinvoke.org/>`_ in the ``tasks.py`` file. On macOS and
-Linux, all tasks run in dedicated virtual environments. On Windows, invoke uses
-the parent pip environment, which can be a system environment or a user's virtual
-environment.
+All development tasks are managed using `Invoke <https://www.pyinvoke.org/>`_ in
+the ``tasks.py`` file. On macOS and Linux, all tasks run in dedicated virtual
+environments. On Windows, invoke uses the parent pip environment, which can be a
+system environment or a user's virtual environment.
 
 Make sure to familiarize yourself with the available developer tasks by running:
 
@@ -187,13 +193,15 @@ TITLE: Main "Check" task
 [TEXT]
 MID: 09258e99cabb4455904b0e2c6687d492
 STATEMENT: >>>
-Before doing anything else, run the main ``check`` command to make sure that StrictDoc passes all tests on your system:
+Before doing anything else, run the main ``check`` command to make sure that
+StrictDoc passes all tests on your system:
 
 .. code:: bash
 
     invoke check
 
-The ``check`` command runs all StrictDoc lint and test tasks with the only exception of end-to-end Web tests that are run with a separate task (see below).
+The ``check`` command runs all StrictDoc lint and test tasks with the only
+exception of end-to-end Web tests that are run with a separate task (see below).
 <<<
 
 [[/SECTION]]
@@ -209,7 +217,8 @@ TITLE: Black for Python code formatting
 [TEXT]
 MID: 0a8c138cb2f2415184007ab20080e9ca
 STATEMENT: >>>
-Formatting is governed by ``black`` which reformats the code automatically when the ``invoke lint`` command is run.
+Formatting is governed by ``black`` which reformats the code automatically when
+the ``invoke lint`` command is run.
 <<<
 
 [[/SECTION]]
@@ -228,9 +237,11 @@ TITLE: Python version
 [TEXT]
 MID: 1d9ec1c5b17240ec8fed8ea34646bd32
 STATEMENT: >>>
-Set the Python version as low as possible given some constraints of StrictDoc's dependencies.
+Set the Python version as low as possible given some constraints of StrictDoc's
+dependencies.
 
-Raise the Python version baseline only when it is consistently deprecated by major software platforms like Ubuntu or GitHub Actions.
+Raise the Python version baseline only when it is consistently deprecated by
+major software platforms like Ubuntu or GitHub Actions.
 <<<
 
 [[/SECTION]]
@@ -244,7 +255,8 @@ MID: 32813f4a974d4f3cb9b5f810c1a60a05
 STATEMENT: >>>
 For Python code, use line length of 80.
 
-If a string literal gets too long, it should be converted into a multiline literal with each line being a meaningful word or a subsentence.
+If a string literal gets too long, it should be converted into a multiline
+literal with each line being a meaningful word or a subsentence.
 <<<
 
 [[/SECTION]]
@@ -258,7 +270,9 @@ MID: 647dd970e02540309165d6fdf2da1b5d
 STATEMENT: >>>
 Use explicit types everywhere.
 
-**NOTE**: StrictDoc has been making a gradual shift towards a stronger type system. Although type annotations haven't been added everywhere in the codebase, it is preferred to include them for all new code that is written.
+**NOTE**: StrictDoc has been making a gradual shift towards a stronger type
+system. Although type annotations haven't been added everywhere in the codebase,
+it is preferred to include them for all new code that is written.
 <<<
 
 [[/SECTION]]
@@ -270,7 +284,8 @@ TITLE: Order and naming of functions
 [TEXT]
 MID: dbbd427ead5743bc9ab737ed006578ae
 STATEMENT: >>>
-The order of functions in a Python module or class shall follow the "newspaper style":
+The order of functions in a Python module or class shall follow the "newspaper
+style":
 
 - Place public functions above all private functions.
 - The private functions shall start with the ``_`` character.
@@ -285,9 +300,12 @@ TITLE: Full descriptive names
 [TEXT]
 MID: 32dc22fe23604c87b01dfdafbd80b730
 STATEMENT: >>>
-Avoid shortening variable names unnecessarily. For example, use 'buffer' instead of 'buf', 'document' instead of 'doc', 'function' instead of 'func', 'length' instead of 'len', etc.
+Avoid shortening variable names unnecessarily. For example, use 'buffer' instead
+of 'buf', 'document' instead of 'doc', 'function' instead of 'func', 'length'
+instead of 'len', etc.
 
-NOTE: While some older parts of StrictDoc may not adhere to this guideline, they are planned to be refactored in the future.
+NOTE: While some older parts of StrictDoc may not adhere to this guideline, they
+are planned to be refactored in the future.
 <<<
 
 [[/SECTION]]
@@ -299,9 +317,13 @@ TITLE: Short-lived/temporary variables
 [TEXT]
 MID: 3bc4e3b017374963a75f59458ed43a21
 STATEMENT: >>>
-For lambdas and short for loops, append a trailing underscore (``_``) to variable names to visually indicate that they are temporary and intended for use only within the local scope of the lambda or loop.
+For lambdas and short for loops, append a trailing underscore (``_``) to
+variable names to visually indicate that they are temporary and intended for use
+only within the local scope of the lambda or loop.
 
-This convention helps with local reasoning and mitigates the fact that Python loop variables are not block-scoped and remain accessible after the loop has finished.
+This convention helps with local reasoning and mitigates the fact that Python
+loop variables are not block-scoped and remain accessible after the loop has
+finished.
 
 Example:
 
@@ -324,13 +346,17 @@ For "element is non-None" checks, always use the full form.
 
 Example: ``if foo is not None`` instead of ``if foo``.
 
-The non-None and non-empty string check shall be as follows: ``if foo is not None and len(foo) > 0``. The explicit check also applies to any other kinds of objects besides strings: ``if foo is not None`` instead of ``if foo``.
+The non-None and non-empty string check shall be as follows: ``if foo is not
+None and len(foo) > 0``. The explicit check also applies to any other kinds of
+objects besides strings: ``if foo is not None`` instead of ``if foo``.
 
 **Rationale**:
 
-The use of ``if foo`` makes it unclear whether the intention is to check ``is not None`` or also ``len(foo) > 0``.
+The use of ``if foo`` makes it unclear whether the intention is to check ``is
+not None`` or also ``len(foo) > 0``.
 
-This helps to avoid any confusion with all sorts of strings (empty or non-empty ``str``, ``Optional[str]``) that are used extensively in StrictDoc's codebase.
+This helps to avoid any confusion with all sorts of strings (empty or non-empty
+``str``, ``Optional[str]``) that are used extensively in StrictDoc's codebase.
 <<<
 
 [[/SECTION]]
@@ -342,9 +368,11 @@ TITLE: Opening files
 [TEXT]
 MID: 4e05d9b1a86b4b8bb0c4b6adb9933e86
 STATEMENT: >>>
-For opening files, use the helpers ``file_open_read_utf8`` and ``file_open_read_bytes``.
+For opening files, use the helpers ``file_open_read_utf8`` and
+``file_open_read_bytes``.
 
-These helpers perform normal file opening but also strip the UTF-8 BOM character, which is added by some Windows tools.
+These helpers perform normal file opening but also strip the UTF-8 BOM
+character, which is added by some Windows tools.
 <<<
 
 [[/SECTION]]
@@ -359,13 +387,19 @@ TITLE: Git workflow
 [TEXT]
 MID: 0e916453596b460b84a89f722354a825
 STATEMENT: >>>
-The preferred Git workflow is "1 commit per 1 PR". If the work truly deserves a sequence of commits, each commit shall be self-contained and pass all checks from the ``invoke check`` command.
+The preferred Git workflow is "1 commit per 1 PR". If the work truly deserves a
+sequence of commits, each commit shall be self-contained and pass all checks
+from the ``invoke check`` command.
 
-For larger pull requests involving too many changes, the preferred approach: split the work into several independent PRs to simplify the work of the reviewer.
+For larger pull requests involving too many changes, the preferred approach:
+split the work into several independent PRs to simplify the work of the
+reviewer.
 
-The branch should be always rebased against the main branch. The ``git fetch && git rebase origin/main`` is preferred over ``git fetch && git merge main``.
+The branch should be always rebased against the main branch. The ``git fetch &&
+git rebase origin/main`` is preferred over ``git fetch && git merge main``.
 
-The Git commit message should follow the format of `Conventional Commits <https://www.conventionalcommits.org/en/v1.0.0/>`_:
+The Git commit message should follow the format of
+`Conventional Commits <https://www.conventionalcommits.org/en/v1.0.0/>`_:
 
 .. code-block::
 
@@ -386,7 +420,8 @@ Examples:
     chore(.github): switch the macOS tests to macos-latest
     docs: update release notes
 
-If the committed work is dedicated to more than one topic, use comma-separated scopes. Example:
+If the committed work is dedicated to more than one topic, use comma-separated
+scopes. Example:
 
 .. code-block::
 
@@ -424,9 +459,14 @@ MID: e48e78597c404e4288cae4e39e854ecb
 STATEMENT: >>>
 For every new feature, write at least one new integration or end-to-end test.
 
-For modifications to existing code, add new or adapt the existing test to exercise the new behavior.
+For modifications to existing code, add new or adapt the existing test to
+exercise the new behavior.
 
-If the contributed code needs a fine-grained control over the added behavior, adding both unit and integration tests is preferred. The only exception where a contribution can contain no tests is ``refactoring`` or ``chore`` (code climate) work which is work that introduces changes in code but no change to the functionality.
+If the contributed code needs a fine-grained control over the added behavior,
+adding both unit and integration tests is preferred. The only exception where a
+contribution can contain no tests is ``refactoring`` or ``chore`` (code climate)
+work which is work that introduces changes in code but no change to the
+functionality.
 <<<
 
 [[SECTION]]
@@ -442,13 +482,17 @@ The integration tests are run using Invoke:
 
     invoke test-integration
 
-The ``--focus`` parameter can be used to run only selected tests that match a given substring. This helps to avoid running all tests all the time.
+The ``--focus`` parameter can be used to run only selected tests that match a
+given substring. This helps to avoid running all tests all the time.
 
 .. code-block:: bash
 
     invoke test-integration --focus <keyword>
 
-See `How to test command-line programs with Python tools: LIT and FileCheck <https://stanislaw.github.io/2020-11-20-how-to-test-command-line-programs-with-python.html>`_ to learn more about LIT and FileCheck, which enable the StrictDoc integration tests.
+See
+`How to test command-line programs with Python tools: LIT and FileCheck <https://stanislaw.github.io/2020-11-20-how-to-test-command-line-programs-with-python.html>`_
+to learn more about LIT and FileCheck, which enable the StrictDoc integration
+tests.
 <<<
 
 [[/SECTION]]
@@ -516,7 +560,8 @@ MID: ee60e2514d664e3db2dc7a1a79e0e84f
 STATEMENT: >>>
 - Use this Dev Guide to perform any software development.
 - Use `invoke lint` for linting.
-- Use `invoke test-*` tasks with ``--focus`` argument when iterating on new or existing features.
+- Use `invoke test-*` tasks with ``--focus`` argument when iterating on new or
+  existing features.
 - For features and bugfixes, generate release notes.
 <<<
 
@@ -529,13 +574,21 @@ TITLE: How to update release notes
 [TEXT]
 MID: e06a9159c4be4555acd67d77f445c968
 STATEMENT: >>>
-- Add to the release notes (``docs/strictdoc_04_release_notes.sdoc``) a high-level, human-readable summary of all work since the latest Git tag.
-- Summarize all changes under the top section called "Unreleased". If that section does not exist yet, create it. It is this section that will later be turned into the actual release notes.
-- The section shall start with ``This release contains the following enhancements:<full empty line break>``.
+- Add to the release notes (``docs/strictdoc_04_release_notes.sdoc``) a
+  high-level, human-readable summary of all work since the latest Git tag.
+- Summarize all changes under the top section called "Unreleased". If that
+  section does not exist yet, create it. It is this section that will later be
+  turned into the actual release notes.
+- The section shall start with ``This release contains the following
+  enhancements:<full empty line break>``.
 - Follow the example of the existing Release Notes.
-- Do not summarize each and every commit. Only include the most important user-facing changes that are implemented with ``feat:`` and ``fix:`` commits. Don't consider commits with any other prefix.
-- Ignore the changelog file ``CHANGELOG.md`` completely. It is an outdated auto-generated file that is going to be removed in the future.
-- Do not try to create a new version yourself. This is handled with another playbook (TBD).
+- Do not summarize each and every commit. Only include the most important
+  user-facing changes that are implemented with ``feat:`` and ``fix:`` commits.
+  Don't consider commits with any other prefix.
+- Ignore the changelog file ``CHANGELOG.md`` completely. It is an outdated
+  auto-generated file that is going to be removed in the future.
+- Do not try to create a new version yourself. This is handled with another
+  playbook (TBD).
 - Do not modify any existing content from the previous releases.
 <<<
 

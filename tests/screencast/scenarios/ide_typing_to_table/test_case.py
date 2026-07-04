@@ -18,6 +18,7 @@ from tests.screencast.fixture import (
     FIXTURE_DIR,
     RECORD_SERVER_PORT,
 )
+from tests.screencast.helpers.viewtype_selector import ViewTypeSelector
 from tests.screencast.scenarios.typing import type_text
 
 SCENE_HTML = os.path.abspath(
@@ -54,15 +55,9 @@ class Test:
             page.goto(
                 f"{base_url}/strictdoc-demo-project/docs/requirements.html"
             )
-            expect(page.locator(".header__document_title")).to_contain_text(
-                "StrictDoc"
-            )
 
-            page.click("#viewtype_handler")
-            table_link = page.locator('[data-viewtype_link="table"]')
-            expect(table_link).to_be_visible()
-            table_link.click()
+            viewtype_selector = ViewTypeSelector(page)
+            screen_table = viewtype_selector.go_to_table()
 
-            expect(page.locator("body")).to_have_attribute(
-                "data-viewtype", "table"
-            )
+            screen_table.assert_header_document_title("StrictDoc")
+            screen_table.assert_on_screen("table")

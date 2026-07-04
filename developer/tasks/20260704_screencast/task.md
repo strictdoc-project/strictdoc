@@ -72,11 +72,18 @@ to adapt, not a design to preserve as-is.
   `python -m strictdoc.cli.main server ...` in-process to this repository —
   no `tox` subprocess, no assumption of a sibling checkout.
 - **Scenario structure**: each demo scene becomes its own pytest test case,
-  following the existing `tests/end2end/screens/*/test_case.py` convention
-  (Page Object helpers such as `Screen_*` / `helpers/components/*` reused
-  where they already exist for the same UI areas). Standalone HTML/IDE-style
-  scenes (fake typing effect) keep using a local HTML playground, driven from
-  Python instead of `demo.js`.
+  following the existing `tests/end2end/screens/*/test_case.py` convention.
+  The existing `Screen_*` / `helpers/components/*` Page Object classes are
+  tied to SeleniumBase (`BaseCase`, `By.XPATH`) and cannot be called
+  directly from Playwright code — instead, new Playwright-native Page
+  Object helpers are introduced under `tests/screencast/helpers/`, mirroring
+  the existing helpers' names/selectors/responsibilities (verified against
+  the actually rendered UI and the existing SeleniumBase tests, which
+  describe real current UI behavior). These new helpers are written for
+  reuse across the screencast suite now, and as a base for a wider
+  Playwright suite later, not as one-off inline locators per test.
+  Standalone HTML/IDE-style scenes (fake typing effect) keep using a local
+  HTML playground, driven from Python instead of `demo.js`.
 - **Dual-purpose run modes**:
   - default run: scenario executes as a normal pass/fail check (fast, no
     video output) — a failure means the scenario (and its published video)

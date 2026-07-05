@@ -8,9 +8,7 @@ TITLE: Intro section
 
 [REQUIREMENT]
 TITLE: Lemon requirement
-STATEMENT: >>>
-Statement L.
-<<<
+STATEMENT: Statement L.
 
 [REQUIREMENT]
 UID: REQ-1

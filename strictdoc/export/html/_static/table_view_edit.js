@@ -596,6 +596,39 @@
 
     // --- Stream fetch ---
 
+    // [FEATURE: skip-save-if-unchanged]
+    // Turbo defers the actual DOM update by at least one animation frame
+    // (StreamElement.render() awaits nextAnimationFrame() before applying the
+    // action), so the form is not yet in the DOM synchronously after
+    // renderTurboStream() returns. A fixed delay (e.g. requestAnimationFrame
+    // x2) is not safe either: on a slow CI runner Turbo can still be slower
+    // than that, and on a fast one a scripted paste/keystroke can land inside
+    // the delay window and get captured as the "original" value, silently
+    // discarding the real edit. Watch the cell directly and capture as soon
+    // as the form actually appears — that instant is a hard lower bound for
+    // any subsequent user interaction with the form, since the field the
+    // user would type into doesn't exist before then.
+    function captureOriginalFormDataWhenReady(cell) {
+        const form = getFieldForm(cell);
+        if (form) {
+            const state = getCellState(cell);
+            state.originalFormData = new URLSearchParams(
+                new FormData(form)
+            ).toString();
+            return;
+        }
+        const observer = new MutationObserver(() => {
+            const readyForm = getFieldForm(cell);
+            if (!readyForm) return;
+            observer.disconnect();
+            const state = getCellState(cell);
+            state.originalFormData = new URLSearchParams(
+                new FormData(readyForm)
+            ).toString();
+        });
+        observer.observe(cell, { childList: true, subtree: true });
+    }
+
     async function fetchTurboStream(url, cell = null) {
         try {
             const response = await fetch(url, {
@@ -609,13 +642,7 @@
                 // before any user input. Used in saveInlineCell to skip the POST when
                 // nothing has changed.
                 if (cell) {
-                    const form = getFieldForm(cell);
-                    if (form) {
-                        const state = getCellState(cell);
-                        state.originalFormData = new URLSearchParams(
-                            new FormData(form)
-                        ).toString();
-                    }
+                    captureOriginalFormDataWhenReady(cell);
                 }
             }
         } catch (err) {

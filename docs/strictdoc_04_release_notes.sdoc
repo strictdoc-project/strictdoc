@@ -69,6 +69,10 @@ documents can link to it via ``[LINK <uid>]``.
 
 4\) Markdown custom grammars now support ``**Reverse role**`` on ``Parent`` and
 ``Child`` relations.
+
+5\) Markdown custom grammars now support ``**Composite**: True`` on grammar
+elements, so nested headings become a node's children rather than siblings,
+matching SDoc's composite requirements.
 <<<
 
 [[/SECTION]]

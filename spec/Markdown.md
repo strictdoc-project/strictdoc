@@ -257,6 +257,19 @@ SECTION is included because the reader treats any heading with a valid meta bloc
 
 When the grammar only contains built-in element types the Type field is not emitted. The determination is performed by `Grammar.has_custom_elements()`.
 
+### Composite nodes
+
+**MID**: 9d844387bd384ea19aa66e16f84c0c44 \
+**UID**: MD-34
+
+**Statement**:
+
+If a grammar element declares `**Composite**: True`, its instances may visually contain other nodes: any node that follows it with an increased heading level is grouped under it as a child rather than treated as a sibling.
+
+`**Composite**` cannot be resolved while a document is being parsed, since a document's grammar may be attached from an external file and is not fully resolved until the build stage of [LINK: MD-9]. `is_composite` is therefore set on node instances once the grammar becomes available, after parsing completes.
+
+`SECTION` must always be declared with `**Composite**: True` in the grammar; it is rejected otherwise.
+
 ### SECTION MID with TEXT child — no TEXT meta
 
 **MID**: c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0 \

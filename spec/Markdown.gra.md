@@ -4,14 +4,14 @@
 
 **Composite**: True
 
-### Field: TITLE
+### Field: Title
 
 **Type**: String
 **Required**: True
 
 ## Element: TEXT
 
-### Field: STATEMENT
+### Field: Statement
 
 **Type**: String
 **Required**: False
@@ -28,17 +28,17 @@
 **Type**: String
 **Required**: False
 
-### Field: TITLE
+### Field: Title
 
 **Type**: String
 **Required**: False
 
-### Field: STATEMENT
+### Field: Statement
 
 **Type**: String
 **Required**: False
 
-### Field: RATIONALE
+### Field: Rationale
 
 **Type**: String
 **Required**: False

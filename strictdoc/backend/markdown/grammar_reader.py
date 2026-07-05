@@ -75,9 +75,9 @@ class MarkdownGrammarReader:
                     heading_node.body, file_path, heading_node
                 )
                 unknown_properties = set(properties.keys()) - {
-                    "COMPOSITE",
-                    "PREFIX",
-                    "VIEW STYLE",
+                    "Composite",
+                    "Prefix",
+                    "View style",
                 }
                 if len(unknown_properties) > 0:
                     MarkdownGrammarReader._raise_error(
@@ -86,7 +86,7 @@ class MarkdownGrammarReader:
                         heading_node,
                         file_path,
                     )
-                property_is_composite = properties.get("COMPOSITE", "")
+                property_is_composite = properties.get("Composite", "")
                 if property_is_composite not in ("", "True", "False"):
                     MarkdownGrammarReader._raise_error(
                         "Composite must be True or False.",
@@ -98,8 +98,8 @@ class MarkdownGrammarReader:
                         parent=None,
                         tag=tag,
                         property_is_composite=property_is_composite,
-                        property_prefix=properties.get("PREFIX", ""),
-                        property_view_style=properties.get("VIEW STYLE", ""),
+                        property_prefix=properties.get("Prefix", ""),
+                        property_view_style=properties.get("View style", ""),
                         fields=[],
                         relations=[],
                     )
@@ -134,8 +134,13 @@ class MarkdownGrammarReader:
                 field_name = MarkdownGrammarReader._parse_named_heading(
                     heading_node, "Field", file_path
                 )
+                canonical_field_name = (
+                    SDMarkdownReader.default_grammar_field_aliases.get(
+                        field_name, field_name
+                    )
+                )
                 if any(
-                    field_.title == field_name
+                    field_.title == canonical_field_name
                     for field_ in current_element.fields
                 ):
                     MarkdownGrammarReader._raise_error(
@@ -234,9 +239,9 @@ class MarkdownGrammarReader:
             body, file_path, heading_node
         )
         unknown_properties = set(properties.keys()) - {
-            "TYPE",
-            "REQUIRED",
-            "HUMAN TITLE",
+            "Type",
+            "Required",
+            "Human title",
         }
         if len(unknown_properties) > 0:
             MarkdownGrammarReader._raise_error(
@@ -245,21 +250,41 @@ class MarkdownGrammarReader:
                 heading_node,
                 file_path,
             )
-        field_type = properties.get("TYPE")
+        field_type = properties.get("Type")
         if field_type is None:
             MarkdownGrammarReader._raise_error(
                 f"field {field_name} has no Type.",
                 heading_node,
                 file_path,
             )
-        required = properties.get("REQUIRED")
+        required = properties.get("Required")
         if required not in ("True", "False"):
             MarkdownGrammarReader._raise_error(
                 f"field {field_name} Required must be True or False.",
                 heading_node,
                 file_path,
             )
-        human_title = properties.get("HUMAN TITLE")
+        human_title = properties.get("Human title")
+
+        # 8 field roles (Title, Statement, Rationale, Comment, Level, Status,
+        # Tags, Prefix) back shared SDocNode accessors (reserved_title,
+        # reserved_statement, rationale, comment, reserved_level,
+        # reserved_status, reserved_tags, get_prefix) that hardcode the exact
+        # ALL_CAPS key — this holds for the built-in default grammar AND any
+        # custom grammar, since SDocNode has no per-markup subclass. A
+        # grammar author may declare one of these fields using the readable
+        # surface name (e.g. "Statement"); it is canonicalized to the
+        # required internal key here, with the declared surface name kept as
+        # the default human title. Declaring the field under any other name
+        # (e.g. ASIL, DERIVED_RATIONALE) is untouched — those are free-form.
+        canonical_field_name = (
+            SDMarkdownReader.default_grammar_field_aliases.get(
+                field_name, field_name
+            )
+        )
+        if human_title is None and field_name != canonical_field_name:
+            human_title = field_name
+        field_name = canonical_field_name
 
         if field_type == "String":
             return GrammarElementFieldString(
@@ -325,7 +350,7 @@ class MarkdownGrammarReader:
         properties = MarkdownGrammarReader._parse_properties(
             body, file_path, heading_node
         )
-        unknown_properties = set(properties.keys()) - {"ROLE", "REVERSE ROLE"}
+        unknown_properties = set(properties.keys()) - {"Role", "Reverse role"}
         if len(unknown_properties) > 0:
             MarkdownGrammarReader._raise_error(
                 "unknown relation propertie(s): "
@@ -333,8 +358,8 @@ class MarkdownGrammarReader:
                 heading_node,
                 file_path,
             )
-        role = properties.get("ROLE")
-        reverse_role = properties.get("REVERSE ROLE")
+        role = properties.get("Role")
+        reverse_role = properties.get("Reverse role")
         if relation_type == "Parent":
             return GrammarElementRelationParent(
                 parent, relation_type, role, reverse_role
@@ -368,7 +393,7 @@ class MarkdownGrammarReader:
                     heading_node,
                     file_path,
                 )
-            key = match.group("name").strip().upper()
+            key = match.group("name").strip()
             value = SDMarkdownReader._trim_single_space_prefix(
                 match.group("value")
             ).strip()

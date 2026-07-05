@@ -21,7 +21,7 @@ CHECK: ## Chapter 2
 
 # Section-level PREFIX must be present directly after the section heading.
 CHECK-NEXT:
-CHECK-NEXT: **PREFIX**: LEVEL2-REQ-
+CHECK-NEXT: **Prefix**: LEVEL2-REQ-
 
 # The requirement UID that uses the section prefix must be preserved.
 CHECK: **UID**: LEVEL2-REQ-001

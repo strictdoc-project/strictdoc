@@ -4,10 +4,10 @@
 
 ## Introduction
 
-**TYPE**: SECTION \
+**Type**: SECTION \
 **MID**: 11111111111111111111111111111111
 
-**TYPE**: TEXT \
+**Type**: TEXT \
 **MID**: 22222222222222222222222222222222
 
-**STATEMENT**: This is a text statement.
+**Statement**: This is a text statement.

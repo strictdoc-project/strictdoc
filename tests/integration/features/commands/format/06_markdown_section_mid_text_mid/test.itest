@@ -2,7 +2,7 @@ REQUIRES: PLATFORM_IS_NOT_WINDOWS
 
 #
 # Verify MD-28: SECTION with TYPE+MID meta block, where the TEXT child body
-# begins with an embedded **TYPE**: TEXT \ **MID**: ... prefix.
+# begins with an embedded **Type**: TEXT \ **MID**: ... prefix.
 # The SECTION MID is preserved in the meta block; the embedded TEXT MID
 # (including the TYPE and MID lines) is preserved verbatim in the TEXT body.
 # A second format pass must produce identical output (idempotency).
@@ -18,15 +18,15 @@ RUN: %strictdoc format %T/pass1/
 RUN: %cat %T/pass1/input.md | filecheck %s --dump-input=fail
 
 # SECTION meta block: TYPE and original MID are preserved.
-CHECK: **TYPE**: SECTION \
+CHECK: **Type**: SECTION \
 CHECK-NEXT: **MID**: 11111111111111111111111111111111
 
 # Embedded TEXT MID prefix is preserved verbatim in the TEXT body.
-CHECK: **TYPE**: TEXT \
+CHECK: **Type**: TEXT \
 CHECK-NEXT: **MID**: 22222222222222222222222222222222
 
 # TEXT statement is preserved.
-CHECK: **STATEMENT**: This is a text statement.
+CHECK: **Statement**: This is a text statement.
 
 # Second pass must produce identical output (idempotency).
 RUN: cp -r %T/pass1 %T/pass2

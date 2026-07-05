@@ -2,7 +2,7 @@
 # Regression test for https://github.com/strictdoc-project/strictdoc/issues/2924
 #
 # When a custom grammar declares a MID field for the SECTION element, the writer
-# must auto-inject MID into SECTION nodes AND emit **TYPE**: SECTION alongside
+# must auto-inject MID into SECTION nodes AND emit **Type**: SECTION alongside
 # it. Without TYPE: SECTION the reader mis-classifies the heading as a
 # REQUIREMENT on the next parse, causing a grammar validation error.
 #
@@ -25,7 +25,7 @@ RUN: %cat %T/pass1/input.md | filecheck %s --dump-input=fail
 # After the first format pass the SECTION heading must carry TYPE: SECTION and
 # a freshly generated MID.
 CHECK: ## Section heading
-CHECK: **TYPE**: SECTION \
+CHECK: **Type**: SECTION \
 CHECK-NEXT: **MID**:
 
 # The REQUIREMENT inside the section must also carry a freshly generated MID.

@@ -22,4 +22,4 @@
 #### Relation: Parent
 
 **Role**: Refines
-**Reverse Role**: Refined by
+**Reverse role**: Refined by

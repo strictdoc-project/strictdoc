@@ -8,4 +8,4 @@
 
 **UID**: REQ-1
 
-**STATEMENT**: System shall do X.
+**Statement**: System shall do X.

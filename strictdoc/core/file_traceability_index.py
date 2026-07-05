@@ -1182,12 +1182,9 @@ class FileTraceabilityIndex:
         sdoc_node.ng_including_document_reference = DocumentReference()
         sdoc_node_fields = source_node.get_sdoc_fields(source_node_config_entry)
         sdoc_node_fields["UID"] = sdoc_node_uid
-        if (
-            "TITLE" not in sdoc_node_fields
-            and source_node.entity_name is not None
-        ):
-            sdoc_node_fields["TITLE"] = source_node.entity_name
-        FileTraceabilityIndex.set_sdoc_node_fields(sdoc_node, sdoc_node_fields)
+        FileTraceabilityIndex.set_sdoc_node_fields(
+            sdoc_node, sdoc_node_fields, source_node
+        )
         # Recorded so that a later TEST_RESULT resolution pass can find this
         # node by its source_node/function and link it as a test case,
         # even though no explicit @relation marker exists for it.
@@ -1245,16 +1242,28 @@ class FileTraceabilityIndex:
                     f"Conflicting UID: {sdoc_node.reserved_uid} != {sdoc_node_fields['UID']}"
                 )
 
-        FileTraceabilityIndex.set_sdoc_node_fields(sdoc_node, sdoc_node_fields)
+        FileTraceabilityIndex.set_sdoc_node_fields(
+            sdoc_node, sdoc_node_fields, source_node
+        )
         source_node.sdoc_node = sdoc_node
 
     @staticmethod
     def set_sdoc_node_fields(
-        sdoc_node: SDocNode, sdoc_node_fields: dict[str, str]
+        sdoc_node: SDocNode,
+        sdoc_node_fields: Dict[str, str],
+        source_node: SourceNode,
     ) -> None:
         document = assert_cast(sdoc_node.get_document(), SDocDocumentIF)
         grammar = assert_cast(document.grammar, DocumentGrammar)
         element = grammar.elements_by_type[sdoc_node.node_type]
+
+        # Fall back to parser-suggested auto title as last option.
+        if (
+            "TITLE" not in sdoc_node_fields
+            and "TITLE" not in sdoc_node.ordered_fields_lookup
+            and source_node.entity_name is not None
+        ):
+            sdoc_node_fields["TITLE"] = source_node.entity_name
 
         for field_name, field_value in sdoc_node_fields.items():
             multiline = element.is_field_multiline(field_name)

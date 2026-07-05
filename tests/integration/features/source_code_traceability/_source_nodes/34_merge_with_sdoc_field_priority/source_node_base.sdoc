@@ -1,0 +1,37 @@
+[DOCUMENT]
+MID: 8a9d5f6c1b2e4d3f8a7c6b5e4d3f2a1b
+TITLE: Requirements from Source Nodes
+UID: SRC-NODES-BASE
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  PROPERTIES:
+    VIEW_STYLE: Narrative
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: DETAIL
+    TYPE: String
+    REQUIRED: False
+
+[REQUIREMENT]
+UID: SRC-NODES-BASE/src/example.c/example_title_fallback
+
+[REQUIREMENT]
+UID: SRC-NODES-BASE/src/example.c/example_title_static_wins
+TITLE: Static Title
+
+[REQUIREMENT]
+UID: SRC-NODES-BASE/src/example.c/example_field_source_overrides_stub
+TITLE: Static Title
+DETAIL: Stub detail (should be overridden)
+
+[REQUIREMENT]
+UID: SRC-NODES-BASE/src/example.c/example_field_preserved_when_absent_in_source
+TITLE: Static Title
+DETAIL: Stub detail (should be preserved)

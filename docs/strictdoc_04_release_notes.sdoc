@@ -56,6 +56,8 @@ TITLE: Unreleased
 [TEXT]
 MID: 39b43201403544e585fa3dda188e24ec
 STATEMENT: >>>
+This release contains the following enhancements:
+
 1\) An ``[ANCHOR: uid, title]`` title can now contain hyphens and most other
 punctuation. Special characters are supported by quoting.
 
@@ -67,8 +69,38 @@ swallowed as plain text.
 metadata block (``**UID**: ...``) is now registered correctly, so other
 documents can link to it via ``[LINK <uid>]``.
 
-4\) Markdown custom grammars now support ``**Reverse role**`` on ``Parent`` and
+4\) Fixed: the document ``UID`` no longer appears twice in the HTML metadata
+panel of Markdown documents.
+
+5\) Markdown custom grammars now support ``**Reverse role**`` on ``Parent`` and
 ``Child`` relations.
+
+6\) Markdown custom grammars now support ``**Composite**: True`` on grammar
+elements, so nested headings become a node's children rather than siblings,
+matching SDoc's composite requirements.
+
+7\) Markdown grammar and document meta-field keys were harmonized to sentence
+case (e.g. ``**Relations**`` instead of ``**RELATIONS**``) for better
+readability, moving Markdown syntax away from SDoc's ``ALL_CAPS`` convention.
+
+8\) A Markdown heading followed by no title text (or an empty ``**Title**``)
+now produces a node with no title field, instead of a title field containing
+an empty string.
+
+9\) ``[LINK]`` tags are now allowed in document and node metadata fields, not
+just in statement content.
+
+10\) The HTML2PDF bundle export now includes all ``METADATA`` fields from
+every member document, instead of dropping metadata contributed by non-root
+documents in the bundle.
+
+11\) ``--generate-diff-git`` now includes Git tags in its output, making it
+easier to see which release a diffed commit belongs to.
+
+12\) Improved handling of ``REQUIREMENT`` <-> ``TEST_CASE`` <-> ``TEST_RESULT``
+traceability: auto-generated ``TEST_RESULT`` nodes are now automatically
+linked to the ``TEST_CASE`` node of the source node they were derived from,
+even when the source node has no explicit traceability markers.
 <<<
 
 [[/SECTION]]

@@ -378,6 +378,34 @@ def test_end2end(
     )
 
 
+@task(aliases=["tsc"])
+def test_screencast(context, *, focus=None, record_video=False):
+    """
+    Runs the tests/screencast scenarios: fast pass/fail checks by default,
+    or (re)recording of the corresponding .webm videos with --record-video.
+    """
+
+    focus_argument = f"-k {focus}" if focus is not None else ""
+    record_video_argument = (
+        "--strictdoc-record-video" if record_video else ""
+    )
+
+    Path(TEST_REPORTS_DIR).mkdir(parents=True, exist_ok=True)
+
+    test_command = f"""
+        pytest
+        --capture=no
+        {focus_argument}
+        {record_video_argument}
+        --junit-xml={TEST_REPORTS_DIR}/tests_screencast.pytest.junit.xml
+        -o junit_suite_name="StrictDoc Screencast Tests"
+        -o cache_dir=build/pytest_screencast
+        tests/screencast/scenarios
+    """
+
+    run_invoke_with_tox(context, ToxEnvironment.CHECK, test_command)
+
+
 @task(aliases=["tu"])
 def test_unit(context, coverage=False, focus=None, path=None, output=False):
     """

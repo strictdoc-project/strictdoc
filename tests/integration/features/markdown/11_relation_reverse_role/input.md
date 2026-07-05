@@ -11,7 +11,7 @@ Parent requirement statement.
 ## Child requirement
 
 **UID**: REQ-2
-**RELATIONS**:
+**Relations**:
 - **Type**: Parent
   **ID**: REQ-1
   **Role**: Refines

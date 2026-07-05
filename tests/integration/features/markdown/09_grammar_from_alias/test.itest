@@ -7,3 +7,5 @@ CHECK-HTML-FILE: show-node-type-name="REQUIREMENT"
 CHECK-HTML-FILE: data-uid="REQ-1"
 CHECK-HTML-FILE: ASIL
 CHECK-HTML-FILE: B
+CHECK-HTML-FILE: <sdoc-node-field-label>Statement:</sdoc-node-field-label>
+CHECK-HTML-FILE: System shall do X.

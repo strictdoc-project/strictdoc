@@ -24,7 +24,7 @@ def test_001_markdown_grammar_reader_parses_default_model():
 ### Field: ASIL
 
 **Type**: SingleChoice(A, B, C, D)
-**Human Title**: Safety Level
+**Human title**: Safety Level
 **Required**: True
 
 ### Relations
@@ -136,7 +136,7 @@ def test_003_markdown_document_grammar_metadata_sets_import_from_file():
 
 **UID**: REQ-1
 
-**Statement**: System shall do X.
+**STATEMENT**: System shall do X.
 """
 
     document = SDMarkdownReader.read(input_markdown, file_path=None)
@@ -176,7 +176,7 @@ def test_004_markdown_grammar_custom_grammar_relaxes_uid_and_statement_requireme
     # Both custom fields must be present on the node.
     field_names = {f.field_name for f in node.enumerate_fields()}
     assert "ASIL" in field_names
-    assert "NAME" in field_names
+    assert "Name" in field_names
 
 
 def test_005_markdown_grammar_writer_uses_field_key_not_human_title_for_custom_grammar():
@@ -184,11 +184,11 @@ def test_005_markdown_grammar_writer_uses_field_key_not_human_title_for_custom_g
     Regression test for https://github.com/strictdoc-project/strictdoc/issues/2918.
 
     When a document has a custom (imported) grammar whose fields carry a
-    Human Title, the writer must serialise each field using the grammar key
+    Human title, the writer must serialise each field using the grammar key
     name (e.g. DERIVED_RATIONALE), not the human-readable title
-    (e.g. "Example Human Title").  The reader canonicalises field names with
-    .upper(), so writing the human title produces an unrecoverable key on
-    the next parse.
+    (e.g. "Example Human Title").  The reader matches field names exactly, so
+    writing the human title would produce an unrecognized key on the next
+    parse.
     """
     grammar_markdown = """\
 # StrictDoc Markdown Grammar
@@ -203,7 +203,7 @@ def test_005_markdown_grammar_writer_uses_field_key_not_human_title_for_custom_g
 ### Field: DERIVED_RATIONALE
 
 **Type**: String
-**Human Title**: Example Human Title
+**Human title**: Example Human Title
 **Required**: False
 
 ### Relations
@@ -290,7 +290,7 @@ def test_007_markdown_writer_auto_writes_mid_when_grammar_has_mid_field():
 
 **UID**: REQ-1
 
-**Statement**: System shall do X.
+**STATEMENT**: System shall do X.
 """
 
     document = SDMarkdownReader.read(doc_markdown, file_path=None)
@@ -346,7 +346,7 @@ def test_008_markdown_writer_preserves_existing_mid_when_grammar_has_mid_field()
 **MID**: abc123 \\
 **UID**: REQ-1
 
-**Statement**: System shall do X.
+**STATEMENT**: System shall do X.
 """
 
     document = SDMarkdownReader.read(doc_markdown, file_path=None)
@@ -397,7 +397,7 @@ def test_009_markdown_writer_no_mid_when_grammar_has_no_mid_field():
 
 **UID**: REQ-1
 
-**Statement**: System shall do X.
+**STATEMENT**: System shall do X.
 """
 
     document = SDMarkdownReader.read(doc_markdown, file_path=None)
@@ -418,7 +418,7 @@ def test_010_markdown_writer_injects_mid_into_section_nodes_when_grammar_declare
     """
     When a grammar declares a MID field for the SECTION element, the writer
     auto-injects MID into SECTION nodes that do not already carry one, and
-    also emits TYPE: SECTION as the first meta field so the reader does not
+    also emits Type: SECTION as the first meta field so the reader does not
     misidentify the heading as a REQUIREMENT on the next parse.
     """
     grammar_markdown = """\
@@ -466,7 +466,7 @@ def test_010_markdown_writer_injects_mid_into_section_nodes_when_grammar_declare
 
 **UID**: REQ-1
 
-**Statement**: System shall do X.
+**STATEMENT**: System shall do X.
 """
 
     document = SDMarkdownReader.read(doc_markdown, file_path=None)
@@ -482,7 +482,7 @@ def test_010_markdown_writer_injects_mid_into_section_nodes_when_grammar_declare
 
     lines = output_markdown.splitlines()
 
-    # The SECTION node must receive TYPE and MID injection.
+    # The SECTION node must receive Type and MID injection.
     section_idx = next(
         i for i, line in enumerate(lines) if "Section heading" in line
     )
@@ -492,14 +492,14 @@ def test_010_markdown_writer_injects_mid_into_section_nodes_when_grammar_declare
             break
         section_block_lines.append(line)
     section_block = "\n".join(section_block_lines)
-    assert "**TYPE**: SECTION" in section_block, (
-        f"TYPE: SECTION not found in section block: {section_block!r}"
+    assert "**Type**: SECTION" in section_block, (
+        f"Type: SECTION not found in section block: {section_block!r}"
     )
     assert "**MID**:" in section_block, (
         f"MID not injected into section block: {section_block!r}"
     )
 
-    # The REQUIREMENT node must also receive TYPE and MID injection.
+    # The REQUIREMENT node must also receive Type and MID injection.
     req_idx = next(
         i
         for i, line in enumerate(lines)
@@ -532,7 +532,7 @@ def test_011_markdown_grammar_reader_and_writer_roundtrip_reverse_role():
 #### Relation: Parent
 
 **Role**: Refines
-**Reverse Role**: Refined by
+**Reverse role**: Refined by
 """
 
     grammar = MarkdownGrammarReader.read(grammar_markdown)
@@ -542,7 +542,7 @@ def test_011_markdown_grammar_reader_and_writer_roundtrip_reverse_role():
 
     output_markdown = MarkdownGrammarWriter.write(grammar)
     assert "**Role**: Refines" in output_markdown
-    assert "**Reverse Role**: Refined by" in output_markdown
+    assert "**Reverse role**: Refined by" in output_markdown
 
     roundtrip_grammar = MarkdownGrammarReader.read(output_markdown)
     roundtrip_relation = roundtrip_grammar.elements_by_type[
@@ -550,3 +550,138 @@ def test_011_markdown_grammar_reader_and_writer_roundtrip_reverse_role():
     ].relations[0]
     assert roundtrip_relation.relation_role == "Refines"
     assert roundtrip_relation.reverse_relation_role == "Refined by"
+
+
+def test_012_markdown_grammar_field_declared_in_camel_case():
+    """
+    A custom grammar is free to declare an arbitrary (non-reserved) field
+    name in ALL_CAPS, Camel-Case, or Camel Case. SDMarkdownReader no longer
+    normalizes parsed field names, so a document must write such a field
+    using the exact casing declared by the grammar for it to be recognised;
+    that casing is also what the writer reproduces on write-back.
+    """
+    grammar_markdown = """\
+# StrictDoc Markdown Grammar
+
+## Element: REQUIREMENT
+
+### Field: UID
+
+**Type**: String
+**Required**: False
+
+### Field: Name
+
+**Type**: String
+**Required**: False
+"""
+    doc_markdown = """\
+# Document
+
+**Grammar**: `requirements.gra.md`
+
+## Requirement title
+
+**UID**: REQ-1
+**Name**: Some name text.
+"""
+
+    document = SDMarkdownReader.read(doc_markdown, file_path=None)
+    resolved_grammar = MarkdownGrammarReader.read(grammar_markdown)
+    resolved_grammar.import_from_file = "requirements.gra.md"
+    resolved_grammar.parent = document
+    document.grammar = resolved_grammar
+
+    requirement_element = resolved_grammar.elements_by_type["REQUIREMENT"]
+    assert "Name" in requirement_element.fields_map
+
+    requirement = document.section_contents[0]
+    assert "Name" in requirement.ordered_fields_lookup
+
+    output_markdown = SDMarkdownWriter.write(document)
+    assert "**Name**: Some name text." in output_markdown
+
+
+def test_013_markdown_grammar_reserved_field_declared_in_title_case():
+    """
+    The 8 reserved field roles (Title, Statement, Rationale, Comment, Level,
+    Status, Tags, Prefix) back shared SDocNode accessors (reserved_title,
+    reserved_statement, rationale, etc.) that hardcode the exact ALL_CAPS
+    key, for the default AND any custom grammar (SDocNode has no
+    per-markup subclass). A custom grammar may declare one of these fields
+    using the readable surface name; it is canonicalized to the required
+    internal key so that those accessors keep working, and the declared
+    surface name becomes the default human title (round-tripped by the
+    writer).
+
+    Regression test: an earlier version of this canonicalization was
+    reader/writer-only and left the grammar's own field.title as the
+    declared surface name, which silently broke node.rationale (and
+    node.reserved_statement / GrammarElement.content_field detection, which
+    also hardcode "STATEMENT") for any custom grammar declaring these
+    fields in a non-ALL_CAPS casing.
+    """
+    grammar_markdown = """\
+# StrictDoc Markdown Grammar
+
+## Element: REQUIREMENT
+
+### Field: UID
+
+**Type**: String
+**Required**: False
+
+### Field: Statement
+
+**Type**: String
+**Required**: False
+
+### Field: Rationale
+
+**Type**: String
+**Required**: False
+"""
+    doc_markdown = """\
+# Document
+
+**Grammar**: `requirements.gra.md`
+
+## Requirement title
+
+**UID**: REQ-1
+**Statement**: Some statement text.
+**Rationale**: Some rationale text.
+"""
+
+    document = SDMarkdownReader.read(doc_markdown, file_path=None)
+    resolved_grammar = MarkdownGrammarReader.read(grammar_markdown)
+    resolved_grammar.import_from_file = "requirements.gra.md"
+    resolved_grammar.parent = document
+    document.grammar = resolved_grammar
+
+    requirement_element = resolved_grammar.elements_by_type["REQUIREMENT"]
+    # The internal key stays ALL_CAPS regardless of the declared casing.
+    assert "STATEMENT" in requirement_element.fields_map
+    assert "RATIONALE" in requirement_element.fields_map
+    assert requirement_element.content_field == ("STATEMENT", 1)
+    assert (
+        requirement_element.fields_map["STATEMENT"].get_field_human_name()
+        == "Statement"
+    )
+    assert (
+        requirement_element.fields_map["RATIONALE"].get_field_human_name()
+        == "Rationale"
+    )
+
+    requirement = document.section_contents[0]
+    assert "STATEMENT" in requirement.ordered_fields_lookup
+    assert "RATIONALE" in requirement.ordered_fields_lookup
+
+    # The shared SDocNode accessors must actually work, not just the raw
+    # field lookup (this is what the earlier, broken version got wrong).
+    assert requirement.reserved_statement == "Some statement text."
+    assert requirement.rationale == "Some rationale text."
+
+    output_markdown = SDMarkdownWriter.write(document)
+    assert "**Statement**: Some statement text." in output_markdown
+    assert "**Rationale**: Some rationale text." in output_markdown

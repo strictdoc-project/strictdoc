@@ -67,7 +67,7 @@ swallowed as plain text.
 metadata block (``**UID**: ...``) is now registered correctly, so other
 documents can link to it via ``[LINK <uid>]``.
 
-4\) Markdown custom grammars now support ``**Reverse Role**`` on ``Parent`` and
+4\) Markdown custom grammars now support ``**Reverse role**`` on ``Parent`` and
 ``Child`` relations.
 <<<
 

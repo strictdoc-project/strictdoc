@@ -14,7 +14,7 @@
 **Type**: String
 **Required**: False
 
-### Field: STATEMENT
+### Field: Statement
 
 **Type**: String
 **Required**: False

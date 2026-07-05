@@ -4,7 +4,7 @@ REQUIRES: PLATFORM_IS_NOT_WINDOWS
 # Verify MD-31: document-level PREFIX declared in the H1 metadata block is
 # preserved across format passes.
 #
-# Pass 1: format the document, check that **PREFIX**: appears in the output.
+# Pass 1: format the document, check that **Prefix**: appears in the output.
 # Pass 2: format again and verify identical output (idempotency).
 #
 
@@ -17,7 +17,7 @@ RUN: %strictdoc format %T/pass1/
 RUN: %cat %T/pass1/input.md | filecheck %s --dump-input=fail
 
 # Document-level PREFIX must be present in the output.
-CHECK: **PREFIX**: MYDOC-
+CHECK: **Prefix**: MYDOC-
 
 # The requirement UID that uses the prefix must be preserved.
 CHECK: **UID**: MYDOC-001

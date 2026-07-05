@@ -4,4 +4,4 @@
 
 **UID**: REQ-1
 
-**STATEMENT**: Modified statement.
+**Statement**: Modified statement.

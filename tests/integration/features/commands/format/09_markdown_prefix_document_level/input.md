@@ -1,6 +1,6 @@
 # Requirements specification
 
-**PREFIX**: MYDOC-
+**Prefix**: MYDOC-
 
 ## A requirement
 

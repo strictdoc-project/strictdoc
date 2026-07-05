@@ -6,4 +6,4 @@
 
 **UID**: REQ-1
 
-**STATEMENT**: Requirement statement.
+**Statement**: Requirement statement.

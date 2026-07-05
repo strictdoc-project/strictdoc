@@ -12,7 +12,7 @@
 **Type**: SingleChoice(A, B, C, D)
 **Required**: True
 
-### Field: STATEMENT
+### Field: Statement
 
 **Type**: String
 **Required**: False

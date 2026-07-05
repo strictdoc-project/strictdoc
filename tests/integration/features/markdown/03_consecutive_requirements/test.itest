@@ -10,6 +10,6 @@ RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail 
 
 CHECK-HTML-FILE: data-testid="node-requirement"
 CHECK-HTML-FILE: data-uid="FMT-2"
-CHECK-HTML-FILE: <sdoc-node-field-label>STATEMENT:</sdoc-node-field-label>
+CHECK-HTML-FILE: <sdoc-node-field-label>Statement:</sdoc-node-field-label>
 CHECK-HTML-FILE: The statement continues below after the colon:
 CHECK-HTML-FILE: Item 1.

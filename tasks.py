@@ -400,9 +400,7 @@ def test_screencast(context, *, focus=None, record_video=False):
     """
 
     focus_argument = f"-k {focus}" if focus is not None else ""
-    record_video_argument = (
-        "--strictdoc-record-video" if record_video else ""
-    )
+    record_video_argument = "--strictdoc-record-video" if record_video else ""
 
     Path(TEST_REPORTS_DIR).mkdir(parents=True, exist_ok=True)
 

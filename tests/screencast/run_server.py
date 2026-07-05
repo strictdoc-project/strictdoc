@@ -1,12 +1,9 @@
-#!/usr/bin/env python3
-
 from __future__ import annotations
 
 import os
 import subprocess
 import sys
 import time
-from typing import List
 
 STRICTDOC_ROOT = os.path.abspath(os.path.join(__file__, "../../.."))
 assert os.path.isdir(STRICTDOC_ROOT), STRICTDOC_ROOT
@@ -22,7 +19,7 @@ from tests.screencast.fixture import (  # noqa: E402
 )
 
 
-def find_pids_on_port(port: int) -> List[int]:
+def find_pids_on_port(port: int) -> list[int]:
     result = subprocess.run(
         ["lsof", "-ti", f"tcp:{port}"],
         check=False,
@@ -50,7 +47,7 @@ def is_previous_demo_server(pid: int) -> bool:
     return str(FIXTURE_DIR) in cmdline
 
 
-def collect_pid_tree(pid: int) -> List[int]:
+def collect_pid_tree(pid: int) -> list[int]:
     try:
         process = psutil.Process(pid)
     except psutil.NoSuchProcess:
@@ -73,7 +70,7 @@ def free_dev_port(port: int) -> None:
     if foreign_pids:
         details = "\n".join(f"  {describe_process(pid)}" for pid in foreign_pids)
 
-        pid_tree: List[int] = []
+        pid_tree: list[int] = []
         for pid in foreign_pids:
             pid_tree.extend(collect_pid_tree(pid))
 
@@ -90,7 +87,9 @@ def free_dev_port(port: int) -> None:
         )
 
     for pid in pids:
-        print(f"🔁 Stopping a previous demo server on port {port} ({pid}).")
+        print(  # noqa: T201
+            f"🔁 Stopping a previous demo server on port {port} ({pid})."
+        )
         try:
             psutil.Process(pid).terminate()
         except psutil.NoSuchProcess:
@@ -118,16 +117,18 @@ def main() -> int:
             config_path=str(FIXTURE_CONFIG),
             port=DEV_SERVER_PORT,
         ) as server:
-            print(f"🚀 StrictDoc demo server: {server.get_host_and_port()}")
-            print("   Press Ctrl+C to stop.")
+            print(  # noqa: T201
+                f"🚀 StrictDoc demo server: {server.get_host_and_port()}"
+            )
+            print("   Press Ctrl+C to stop.")  # noqa: T201
 
             server.process.wait()
 
     except KeyboardInterrupt:
-        print("\n🛑 Stopping StrictDoc demo server.")
+        print("\n🛑 Stopping StrictDoc demo server.")  # noqa: T201
 
     except OSError as error:
-        print(error, file=sys.stderr)
+        print(error, file=sys.stderr)  # noqa: T201
         return 1
 
     return 0

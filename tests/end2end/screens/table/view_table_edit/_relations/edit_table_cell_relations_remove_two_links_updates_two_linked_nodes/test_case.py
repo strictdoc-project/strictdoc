@@ -75,7 +75,10 @@ class Test(E2ECase):
             screen_table.wait_for_cell_not_editing(req001_mid, "RELATIONS")
 
             # REQ-001 no longer declares any relations.
-            screen_table.assert_cell_dom_text(req001_mid, "RELATIONS", "")
+            # data-mode is cleared synchronously before the save's Turbo Stream
+            # is applied (see wait_for_cell_save_applied), so wait_for_* is
+            # needed here too, not just for the cross-node updates below.
+            screen_table.wait_for_cell_dom_text(req001_mid, "RELATIONS", "")
 
             # Once REQ-001 no longer declares "Parent: REQ-002"/"Parent:
             # REQ-003", REQ-002's and REQ-003's computed "Children: REQ-001"

@@ -1,0 +1,27 @@
+<svg
+   class="svg_icon"
+   viewBox="0 0 16 16"
+   fill="none"
+   stroke="currentColor"
+   stroke-width="1.5"
+   stroke-linecap="round"
+   stroke-linejoin="round"
+>
+  <style>
+    .node {
+      fill: currentColor;
+    }
+  </style>
+
+  <path
+    class="line"
+    d="M 12.75,5.25 8,2.5 3.25,5.25 12.75,10.75 8,13.5 3.25,10.75"/>
+
+  <circle id="sdoc_n_7" class="node" cx="3.25" cy="10.75" r="1.0"/>
+  <circle id="sdoc_n_6" class="node" cx="8" cy="13.5" r="1.0"/>
+  <circle id="sdoc_n_5" class="node" cx="12.75" cy="10.75" r="1.0"/>
+  <circle id="sdoc_n_4" class="node" cx="8" cy="8" r="1.0"/>
+  <circle id="sdoc_n_3" class="node" cx="3.25" cy="5.25" r="1.0"/>
+  <circle id="sdoc_n_2" class="node" cx="8" cy="2.5" r="1.0"/>
+  <circle id="sdoc_n_1" class="node" cx="12.75" cy="5.25" r="1.0"/>
+</svg>

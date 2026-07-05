@@ -1,119 +1,101 @@
-# Demo Video Pipeline
+# Screencast scenarios
 
-This directory contains the tooling used to generate demo videos for the StrictDoc website.
+This directory holds the StrictDoc demo-video pipeline: scenarios that
+exercise real StrictDoc UI flows with Playwright, written in Python.
 
-The goal is to keep the entire pipeline reproducible:
+Each scenario is an ordinary pytest test case, and it is dual-purpose:
 
-- demo pages are defined as HTML/CSS/JS;
-- browser interaction is scripted with Playwright;
-- videos can be regenerated automatically after UI changes.
+- run as a normal test, it verifies that the scenario still reflects real
+  UI behavior;
+- run with `--record-video` (see below), the same test also captures and
+  saves a `.webm` video of the scenario.
 
-The generated video assets are intended for the Hugo website and are not part of the StrictDoc application itself.
+A failing scenario means its video can no longer be trusted: investigate
+before re-recording — it may be a product bug, or an intentional UI change
+the scenario doesn't reflect yet. Re-record once the scenario is fixed or
+updated and passing again.
+
+## Directory layout
+
+```text
+tests/screencast/
+├── fixture.py                    # shared fixture-project and port constants
+├── fixtures/
+│   └── strictdoc-demo-project/   # small, self-contained StrictDoc project used by scenarios
+├── helpers/                      # Playwright Page Object helpers (Screen, ViewTypeSelector, ...)
+├── scenarios/
+│   ├── conftest.py                # `page` fixture (headless Chromium) + --strictdoc-record-video option
+│   ├── typing.py                  # fake-typing effect for the IDE-style scene
+│   ├── strictdoc_ui/test_case.py
+│   └── ide_typing_to_table/test_case.py
+├── demo.html                     # standalone HTML playground for IDE/terminal-style scenes
+├── run_server.py                 # manual dev server for inspecting a scene in the browser
+└── output/                       # generated .webm videos (gitignored)
+```
+
+`tests/screencast/helpers/` contains Playwright Page Object helpers
+(`Screen`, `ViewTypeSelector`, ...). New scenarios should use and extend
+these rather than inlining locators.
 
 ## Setup
 
-Install the Node dependencies and the Playwright browser binary,\
-from `strictdoc-project.github.io`:
+Playwright's Python package is installed as part of the project's `check`
+dependencies (`requirements.check.txt`). The Chromium browser binary is a
+separate, one-time step:
 
 ```bash
-npm install --prefix demo
-npx --prefix demo playwright install chromium
+playwright install chromium
 ```
 
-Only Chromium is needed — `demo.js` doesn't use other browsers.
+(Only Chromium is needed — scenarios don't use other browsers.)
 
-The demo server scripts also need a local checkout of the
-[strictdoc](https://github.com/strictdoc-project/strictdoc) repository and
-`tox` to run its dev environment:
-
-- by default, the StrictDoc checkout is expected as a sibling directory:
-  `../strictdoc` relative to this repository's root;
-- `tox` is expected on `PATH` (e.g. `pip install tox`).
-
-If your setup differs, override with environment variables instead of
-editing the scripts:
-
-| Variable | Purpose | Default |
-| --- | --- | --- |
-| `STRICTDOC_ROOT` | Path to the strictdoc checkout | `../strictdoc` (sibling of this repo) |
-| `STRICTDOC_TOX` | Path to the `tox` executable | resolved from `PATH`, falling back to a pyenv-versions guess |
-| `STRICTDOC_PYTHON_VERSION` | Python version used in the pyenv fallback above | `3.10.16` |
-| `STRICTDOC_SITE_URL` | URL for the manual dev server | `http://127.0.0.1:5111/` |
-| `STRICTDOC_VIDEO_SITE_URL` | URL for the temporary recording server | `http://127.0.0.1:5112/` |
-
-## Running the demo server
-
-For manual development and inspecting the demo in the browser,\
-from `strictdoc-project.github.io`:
+## Running the scenarios
 
 ```bash
-python3 demo/run_server.py
+invoke test-screencast
 ```
 
-This starts the StrictDoc with the demo fixture at **5111**:
-`http://127.0.0.1:5111`.
+This runs every scenario in `tests/screencast/scenarios/` as a fast
+pass/fail check, with no video output.
 
-This server can stay open while developing or inspecting the demo in the browser.
+Useful options:
 
-The script:
+| Option | Purpose |
+| --- | --- |
+| `--focus=<expr>` | Run only scenarios matching a pytest `-k` expression. |
+| `--record-video` | Also (re)generate each scenario's `.webm` into `tests/screencast/output/`, named after the scenario's directory (e.g. `strictdoc_ui.webm`). |
 
-- stops an existing demo server on the same port;
-- starts StrictDoc with the fixture project;
-- keeps the server running until stopped manually;
-- shuts down the complete StrictDoc process tree on exit.
-
-## Recording the demo video
-
-To generate the demo video,\
-from `strictdoc-project.github.io`:
+Example:
 
 ```bash
-python3 demo/run_demo.py
+invoke test-screencast --record-video
 ```
 
-The video recording uses a separate temporary StrictDoc server.
+## Running the demo server manually
 
-Using a separate port allows the manual development server to stay open while regenerating videos.
-
-The recording pipeline:
-
-- starts a temporary StrictDoc server at **5112**: `http://127.0.0.1:5112`.
-- waits until the server is available;
-- runs the Playwright recording scenario;
-- stops the complete StrictDoc server process tree afterwards.
-
-The generated videos are written to `demo/output/`.
-
-Each video scenario defines its own output file name.
-
-Each scenario defines:
-
-- the list of recorded steps;
-- the output video file name.
-
-Scenarios can combine different sources, for example standalone HTML scenes
-(for terminal or IDE-style recordings) and live StrictDoc UI screens.
-
-Standalone HTML scenes (`demo.html`) use a fake typing effect: characters are
-appended directly to a page element's text content to *look* like typing.
-This is a visual effect only — it does not simulate keyboard input and does
-not type into a real input, textarea, or code editor.
-
-## StrictDoc server setup
-
-The helper scripts start StrictDoc automatically. The server can also be started manually from the StrictDoc repository:
+For inspecting a scene in the browser during development:
 
 ```bash
-cd /path/to/strictdoc
-
-invoke server \
-  --input-path=/path/to/strictdoc-project.github.io/demo/fixtures/strictdoc-demo-project \
-  --config=/path/to/strictdoc-project.github.io/demo/fixtures/strictdoc-demo-project/strictdoc_config.py
+python3 tests/screencast/run_server.py
 ```
 
-The `input-path` argument points to the demo project root. The `--config` argument points to the demo project's configuration file. Both are required.
+This starts StrictDoc with the demo fixture project at
+`http://127.0.0.1:5111` and keeps running until stopped with Ctrl+C.
 
-*Note*: `invoke server` always uses the default StrictDoc server port.
-The video recording script starts StrictDoc through the CLI directly because
-it needs a separate temporary port. The `invoke server` wrapper does not expose
-port configuration.
+Scenario test runs use a separate port (`5112`, see `fixture.py`) so a
+manual dev server can stay open while scenarios are (re)recorded.
+
+## Adding a new scenario
+
+1. Add fixture content under `fixtures/strictdoc-demo-project/`, if needed.
+2. Create `tests/screencast/scenarios/<scenario_name>/test_case.py` with a
+   `Test.test(self, page)` method, using the `helpers/` Page Objects (add
+   new ones there if the scenario needs UI areas not covered yet).
+3. Run `invoke test-screencast --record-video --focus=<scenario_name>` to
+   verify the recording.
+
+Standalone HTML/IDE-style scenes (fake typing effect, terminal look) use
+`demo.html` as a local playground: characters are appended directly to a
+page element's text content to *look* like typing. This is a visual effect
+only — it does not simulate keyboard input and does not type into a real
+input, textarea, or code editor.

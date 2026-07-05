@@ -1,6 +1,7 @@
 # StrictDoc Demo Project
 
-This project is used by the video generation pipeline in `demo/`.
+This project is used by the screencast scenario/video generation pipeline
+in `tests/screencast/`.
 
 ## Directory layout
 

@@ -82,6 +82,11 @@ python3 tests/screencast/run_server.py
 This starts StrictDoc with the demo fixture project at
 `http://127.0.0.1:5111` and keeps running until stopped with Ctrl+C.
 
+If the port is already taken by a previous run of this same demo server, it
+is stopped automatically. If it's taken by anything else, `run_server.py`
+refuses to touch it and prints the occupying process(es) along with a
+`kill` command to stop them yourself.
+
 Scenario test runs use a separate port (`5112`, see `fixture.py`) so a
 manual dev server can stay open while scenarios are (re)recorded.
 

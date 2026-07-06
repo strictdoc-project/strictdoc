@@ -4,6 +4,7 @@
 
 import pytest
 
+from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     FileReference,
@@ -521,4 +522,72 @@ def test__missing_parent_relation__strict_mode_raises():
 
     assert "references parent requirement which doesn't exist" in str(
         exception_info.value
+    )
+
+
+def test_unresolved_inline_link_is_reported_by_query_methods():
+    document_builder = DocumentBuilder()
+    requirement = document_builder.add_requirement("REQ-001")
+
+    statement_field = requirement.ordered_fields_lookup["STATEMENT"][0]
+    missing_inline_link = InlineLink(
+        parent=statement_field, value="MISSING-UID"
+    )
+    statement_field.parts.append(missing_inline_link)
+
+    document = document_builder.build()
+    document_tree = DocumentTree(
+        file_tree=[],
+        document_list=[document],
+        map_docs_by_paths={},
+        map_docs_by_rel_paths={},
+        map_grammars_by_filenames={},
+    )
+    traceability_index = TraceabilityIndexBuilder.create_from_document_tree(
+        document_tree, project_config=document_builder.project_config
+    )
+
+    assert traceability_index.has_unresolved_inline_links() is True
+
+    unresolved_inline_links = (
+        traceability_index.get_all_unresolved_inline_links()
+    )
+    assert len(unresolved_inline_links) == 1
+
+    node_, inline_link_ = unresolved_inline_links[0]
+    assert node_ is requirement
+    assert inline_link_.link == "MISSING-UID"
+
+    assert traceability_index.get_unresolved_inline_links(requirement) == [
+        missing_inline_link
+    ]
+
+
+def test_resolved_inline_link_is_not_reported_as_unresolved():
+    document_builder = DocumentBuilder()
+    requirement = document_builder.add_requirement("REQ-001")
+    # The target of the inline link exists in the same document.
+    document_builder.add_requirement("REQ-002")
+
+    statement_field = requirement.ordered_fields_lookup["STATEMENT"][0]
+    statement_field.parts.append(
+        InlineLink(parent=statement_field, value="REQ-002")
+    )
+
+    document = document_builder.build()
+    document_tree = DocumentTree(
+        file_tree=[],
+        document_list=[document],
+        map_docs_by_paths={},
+        map_docs_by_rel_paths={},
+        map_grammars_by_filenames={},
+    )
+    traceability_index = TraceabilityIndexBuilder.create_from_document_tree(
+        document_tree, project_config=document_builder.project_config
+    )
+
+    assert traceability_index.has_unresolved_inline_links() is False
+    assert traceability_index.get_all_unresolved_inline_links() == []
+    assert (
+        traceability_index.get_unresolved_inline_links(requirement) == []
     )

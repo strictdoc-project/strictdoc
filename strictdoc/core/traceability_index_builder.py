@@ -269,16 +269,22 @@ class TraceabilityIndexBuilder:
                         if isinstance(inline_link_field, SDocNodeField)
                         else None
                     )
-                    node_title = (
-                        inline_link_node.reserved_title
-                        if isinstance(inline_link_node, SDocNode)
-                        else None
-                    )
+                    node_name: Optional[str] = None
+                    if isinstance(inline_link_node, SDocNode):
+                        node_name = (
+                            inline_link_node.reserved_title
+                            if inline_link_node.reserved_title is not None
+                            else inline_link_node.reserved_uid
+                        )
                     traceability_index.validation_index.add_issue(
                         inline_link_node,
                         issue=f"Missing link: {inline_link.link}",
                         field=field_name,
-                        subject=f"Node: {node_title}",
+                        subject=(
+                            f"Node: {node_name}"
+                            if node_name is not None
+                            else None
+                        ),
                     )
                     continue
                 raise StrictDocException(

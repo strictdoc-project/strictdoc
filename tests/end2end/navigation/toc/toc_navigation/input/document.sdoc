@@ -24,3 +24,21 @@ TITLE: Requirement 2 title
 STATEMENT: >>>
 Requirement statement.
 <<<
+
+[[SECTION]]
+UID: SECTION_PARENT
+TITLE: Parent section
+
+[[SECTION]]
+UID: SECTION_CHILD
+TITLE: Child section
+
+[[SECTION]]
+UID: SECTION_GRANDCHILD
+TITLE: Grandchild section
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[/SECTION]]

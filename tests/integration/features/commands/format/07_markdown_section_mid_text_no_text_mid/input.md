@@ -4,7 +4,7 @@
 
 ## Introduction
 
-**TYPE**: SECTION \
+**Type**: SECTION \
 **MID**: 11111111111111111111111111111111
 
-**STATEMENT**: This is a TEXT node statement, not a SECTION node statement.
+**Statement**: This is a TEXT node statement, not a SECTION node statement.

@@ -11,10 +11,19 @@ RUN: %check_exists --file %T/html2pdf/html/%THIS_TEST_FOLDER/nested/input2-PDF.h
 RUN: %check_exists --file %T/html2pdf/html/%THIS_TEST_FOLDER/nested/subnested/input3-PDF.html
 
 RUN: %cat %T/html2pdf/html/bundle-PDF.html | filecheck %s --check-prefix CHECK-DOC-HTML
+
+# The metadata of the nested document (#2992) must also be shown in the bundle.
+CHECK-DOC-HTML: DOC-2
+CHECK-DOC-HTML: 2.0
+CHECK-DOC-HTML: 2026-02-02
+CHECK-DOC-HTML: Internal
+CHECK-DOC-HTML: AUTHOR
+CHECK-DOC-HTML: Jane Doe
+
 # This ensures that the link is resolved correctly.
 CHECK-DOC-HTML:<a href="#SEC-1">🔗&nbsp;1.1. Section #1</a>
 
-# Git meta information.
+# Git meta information (bundle document's own front page).
 CHECK-DOC-HTML: {{.* \(Git branch: .*\)}}
 CHECK-DOC-HTML: {{\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}}}
 

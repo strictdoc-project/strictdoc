@@ -318,18 +318,43 @@ class Form:  # pylint: disable=invalid-name
         assert isinstance(field_value, str)
 
         field_xpath = f"(//*[@mid='{mid}' and @data-testid='{test_id}'])"
-        for _ in range(3):
-            self.test_case.type(field_xpath, f"{field_value}", by=By.XPATH)
-            element = self.test_case.find_element(field_xpath)
-            element.send_keys(Keys.ARROW_DOWN)
-            element.send_keys(Keys.RETURN)
-            if field_value in element.text:
-                break
-        else:
-            raise AssertionError(
-                f"The text field could not be filled with the value: "
-                f"'{field_value}'."
-            )
+        element = self.test_case.find_element(field_xpath)
+        hidden_input = element.find_element(
+            By.XPATH, 'following-sibling::input[@type="hidden"]'
+        )
+        results_ul = hidden_input.find_element(
+            By.XPATH, "following-sibling::ul[1]"
+        )
+
+        # We simulate a user typing the supplied field_value.
+        self.test_case.type(field_xpath, f"{field_value}", by=By.XPATH)
+
+        # We wait until the results <ul> is displayed. Sending Arrow-Down and
+        # Enter before the autocomplete request has resolved is a no-op that
+        # leaves the raw typed prefix in the field (e.g. "REQ-"), which is
+        # still a substring of the expected value and previously made this
+        # method report a false success, saving an invalid relation UID.
+        WebDriverWait(self.test_case.driver, 3).until(
+            lambda _: results_ul.is_displayed()
+        )
+
+        # We send Arrow-Down and Enter select the first match.
+        # The stimulus.js controller uses a debounce of 10ms, we are
+        # careful to use an larger interval inbetween key presses.
+        select_first_match_action = ActionChains(self.test_case.driver)
+        select_first_match_action.send_keys(Keys.ARROW_DOWN).pause(
+            0.1
+        ).send_keys(Keys.RETURN).perform()
+
+        # Committing a match always closes the results dropdown (see
+        # commit() in autocompletable_field_controller.js). Wait for that
+        # instead of a text-length increase: when field_value is already the
+        # full target value (e.g. "REQ-001"), selecting the match commits
+        # the same text, so the field's length never grows even though the
+        # selection succeeded.
+        WebDriverWait(self.test_case.driver, timeout=3).until(
+            lambda _: not results_ul.is_displayed()
+        )
 
     def do_clear_field(self, field_name: str, field_order: int = 1) -> None:
         assert isinstance(field_name, str)

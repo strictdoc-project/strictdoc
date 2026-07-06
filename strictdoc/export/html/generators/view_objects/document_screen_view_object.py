@@ -18,9 +18,10 @@ from typing import (
 )
 
 from jinja2 import Template
-from markupsafe import Markup
+from markupsafe import Markup, escape
 
 from strictdoc import __version__
+from strictdoc.backend.sdoc.free_text_reader import SDFreeTextReader
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_view import ViewElement
@@ -30,6 +31,7 @@ from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElementFieldSingleChoice,
     GrammarElementFieldTag,
 )
+from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.model import (
     RequirementFieldName,
     SDocDocumentIF,
@@ -49,6 +51,9 @@ from strictdoc.export.html.generators.view_objects.helpers import (
     screen_should_display_folder,
 )
 from strictdoc.export.html.html_templates import HTMLTemplates, JinjaEnvironment
+from strictdoc.export.html.renderers.html_fragment_writer import (
+    HTMLFragmentWriter,
+)
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.helpers.cast import assert_cast
@@ -256,8 +261,17 @@ class DocumentScreenViewObject:
 
         return output
 
-    def render_document_version(self) -> Optional[str]:
-        if self.document.config.version is None:
+    def render_document_version(
+        self, included_document: Optional[SDocDocument] = None
+    ) -> Optional[str]:
+        # 'document' is the main view document or an included document
+        # (e.g., a bundle PDF member); defaults to the main view document.
+        document_ = (
+            included_document
+            if included_document is not None
+            else self.document
+        )
+        if document_.config.version is None:
             return None
 
         def resolver(variable_name: str) -> str:
@@ -267,12 +281,19 @@ class DocumentScreenViewObject:
                 return self.git_client.get_branch()
             return variable_name
 
-        return interpolate_at_pattern_lazy(
-            self.document.config.version, resolver
-        )
+        return interpolate_at_pattern_lazy(document_.config.version, resolver)
 
-    def render_document_date(self) -> Optional[str]:
-        if self.document.config.date is None:
+    def render_document_date(
+        self, included_document: Optional[SDocDocument] = None
+    ) -> Optional[str]:
+        # 'document' is the main view document or an included document
+        # (e.g., a bundle PDF member); defaults to the main view document.
+        document_ = (
+            included_document
+            if included_document is not None
+            else self.document
+        )
+        if document_.config.date is None:
             return None
 
         def resolver(variable_name: str) -> str:
@@ -282,9 +303,9 @@ class DocumentScreenViewObject:
                 return self.git_client.get_commit_datetime()
             return variable_name
 
-        return interpolate_at_pattern_lazy(self.document.config.date, resolver)
+        return interpolate_at_pattern_lazy(document_.config.date, resolver)
 
-    def render_metadata_value(self, metadata_value: str) -> str:
+    def render_metadata_value(self, metadata_value: str) -> Markup:
         """
         FIXME: Remove duplication of Git-resolvers in this class.
         """
@@ -300,7 +321,43 @@ class DocumentScreenViewObject:
                 return self.git_client.get_commit_datetime()
             return variable_name
 
-        return interpolate_at_pattern_lazy(metadata_value, resolver)
+        free_text_container = SDFreeTextReader.read(metadata_value)
+        output_parts: List[str] = []
+        for part in free_text_container.parts:
+            if isinstance(part, str):
+                interpolated = interpolate_at_pattern_lazy(part, resolver)
+                output_parts.append(str(escape(interpolated)))
+            elif isinstance(part, InlineLink):
+                linkable_node = (
+                    self.traceability_index.get_linkable_node_by_uid_weak(
+                        part.link
+                    )
+                )
+                if linkable_node is None:
+                    # Dangling or not-yet-complete while the user is still
+                    # typing: degrade gracefully instead of crashing this
+                    # ad hoc, possibly unsaved render.
+                    output_parts.append(str(escape(f"[LINK: {part.link}]")))
+                else:
+                    href = self.link_renderer.render_node_link(
+                        linkable_node, self.document, self.document_type
+                    )
+                    output_parts.append(
+                        HTMLFragmentWriter.write_anchor_link(
+                            linkable_node.get_display_title(), href
+                        )
+                    )
+            else:
+                # An Anchor can only be produced here by SDFreeTextReader
+                # parsing a raw, not-yet-saved value in isolation (where
+                # "[ANCHOR: ...]" happens to sit at the start of the
+                # string). Persisted METADATA can never contain a real
+                # Anchor: the main grammar embeds the value right after
+                # "KEY: ", never at a line start, so it always parses as
+                # plain text there. Render defensively as literal text.
+                assert isinstance(part, Anchor)
+                output_parts.append(str(escape(f"[ANCHOR: {part.value}]")))
+        return Markup("".join(output_parts))
 
     def is_empty_tree(self) -> bool:
         return self.document_tree_iterator.is_empty_tree()
@@ -317,8 +374,10 @@ class DocumentScreenViewObject:
     def render_url(self, url: str) -> Markup:
         return Markup(self.link_renderer.render_url(url))
 
-    def render_node_link(self, node: SDocNode) -> str:
-        assert isinstance(node, SDocNode), node
+    def render_node_link(
+        self, node: Union[SDocDocument, SDocNode, Anchor]
+    ) -> str:
+        assert isinstance(node, (SDocDocument, SDocNode, Anchor)), node
         return self.link_renderer.render_node_link(
             node, self.document, self.document_type
         )

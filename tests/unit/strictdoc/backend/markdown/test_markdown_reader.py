@@ -198,7 +198,7 @@ def test_012_markdown_reader_preserves_multiline_crlf_field_value():
         "\r\n"
         "**UID**: REQ-1\r\n"
         "\r\n"
-        "**Statement**:\r\n"
+        "**STATEMENT**:\r\n"
         "\r\n"
         "Line 1\r\n"
         "Line 2\r\n"
@@ -263,7 +263,7 @@ def test_015_document_level_prefix_sets_requirement_prefix():
     markdown_content = """\
 # Requirements specification
 
-**PREFIX**: MYDOC-
+**Prefix**: MYDOC-
 
 ## Requirement
 
@@ -519,7 +519,7 @@ def test_017_section_immediately_followed_by_child_section_has_no_empty_text_nod
 **MID**: aabbccdd11223344aabbccdd11223344 \\
 **UID**: REQ-1
 
-**Statement**: Some statement.
+**STATEMENT**: Some statement.
 """
 
     reader = SDMarkdownReader()
@@ -533,3 +533,33 @@ def test_017_section_immediately_followed_by_child_section_has_no_empty_text_nod
     child = parent_section.section_contents[0]
     assert isinstance(child, SDocNode)
     assert child.node_type == "REQUIREMENT"
+
+
+def test_024_markdown_reader_registers_document_level_uid():
+    markdown_content = "# Document title\n\n**UID**: DOC-1\n"
+
+    reader = SDMarkdownReader()
+    document = reader.read(markdown_content, file_path=None)
+
+    assert document.config.uid == "DOC-1"
+
+
+def test_025_markdown_reader_empty_heading_produces_no_title_field():
+    markdown_content = """\
+# Document title
+
+##
+
+**Type**: REQUIREMENT \\
+**UID**: REQ-1
+"""
+
+    reader = SDMarkdownReader()
+    document = reader.read(markdown_content, file_path=None)
+
+    requirement = document.section_contents[0]
+    assert isinstance(requirement, SDocNode)
+    assert requirement.node_type == "REQUIREMENT"
+    assert requirement.reserved_uid == "REQ-1"
+    assert requirement.reserved_title is None
+    assert "TITLE" not in requirement.ordered_fields_lookup

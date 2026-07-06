@@ -19,6 +19,8 @@ from strictdoc.core.environment import (
     HTML_STATIC_DIRS,
     HTML_TEMPLATE_DIRS,
 )
+from strictdoc.core.project_config import ProjectConfigDefault
+from tools.server_check import free_strictdoc_port
 
 # Specifying encoding because Windows crashes otherwise when running Invoke
 # tasks below:
@@ -136,11 +138,26 @@ def clean(context):
 
 
 @task(aliases=["s"])
-def server(context, input_path=".", config=None):
+def server(context, input_path=".", config=None, port=None):
     assert os.path.isdir(input_path), input_path
     if config is not None:
         assert os.path.isfile(config), config
     config_argument = f"--config {config}" if config is not None else ""
+    port_argument = f"--port {port}" if port is not None else ""
+
+    try:
+        should_continue = free_strictdoc_port(
+            port
+            if port is not None
+            else ProjectConfigDefault.DEFAULT_SERVER_PORT
+        )
+    except OSError as error:
+        print(error, file=sys.stderr)  # noqa: T201
+        return
+
+    if not should_continue:
+        return
+
     run_invoke_with_tox(
         context,
         ToxEnvironment.DEVELOPMENT,
@@ -149,7 +166,9 @@ def server(context, input_path=".", config=None):
                 --debug
                 server {input_path} {config_argument}
                     --host 127.0.0.1
+                    {port_argument}
                     --reload
+                    --watch
         """,
     )
 

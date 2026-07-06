@@ -37,10 +37,19 @@ class ServerCommand(BaseCommand):
             help=argparse.SUPPRESS,
         )
         command_parser_server.add_argument(
-            "--allow-missing-relation-requirements",
-            dest="allow_missing_relation_requirements",
-            action="store_true",
+            "--watch",
             default=False,
+            action="store_true",
+            help=(
+                "Watch project files and live-reload connected browsers when "
+                "documents change on disk."
+            ),
+        )
+        command_parser_server.add_argument(
+            "--allow-missing-relation-requirements",
+            default=False,
+            action="store_true",
+            dest="allow_missing_relation_requirements",
             help=(
                 "Allow starting the server even when some requirement "
                 "relations (parent/child) cannot be resolved."

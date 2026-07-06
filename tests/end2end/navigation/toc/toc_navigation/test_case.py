@@ -1,5 +1,6 @@
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.components.collapsible_list import CollapsibleList
 from tests.end2end.helpers.components.toc import TOC
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
@@ -55,5 +56,43 @@ class Test(E2ECase):
             screen_document.assert_target_by_anchor(
                 toc_requirement_with_title_anchor
             )
+
+            # TOC - expanding a collapsed branch when navigating to its anchor
+
+            collapsible_list: CollapsibleList = (
+                screen_document.get_collapsible_list()
+            )
+            collapsible_list.do_bulk_expand_all()
+
+            # Collapse "Child section" so its own child ("Grandchild section")
+            # becomes hidden.
+            collapsible_list.do_toggle_collapsible("Child section")
+            collapsible_list.assert_is_collapsed("Child section")
+            collapsible_list.assert_visible_not("Grandchild section")
+
+            # Also collapse "Parent section" so "Child section" itself
+            # becomes hidden.
+            collapsible_list.do_toggle_collapsible("Parent section")
+            collapsible_list.assert_is_collapsed("Parent section")
+            collapsible_list.assert_visible_not("Child section")
+
+            base_url = self.get_current_url().split("#")[0]
+
+            # Navigate to the page directly on a hidden anchor (e.g. an
+            # external/bookmarked link), as opposed to clicking inside the
+            # TOC. Expected: the collapsed ancestor branch ("Parent section")
+            # opens up to the anchor, revealing "Child section".
+            self.open(f"{base_url}#SECTION_CHILD")
+            collapsible_list.assert_is_expanded("Parent section")
+            collapsible_list.assert_visible("Child section")
+            screen_toc.assert_toc_link_has_attribute(
+                "SECTION_CHILD", "targeted"
+            )
+
+            # "Child section" is itself a collapsed folder: its own child
+            # ("Grandchild section") must stay hidden — the branch opens up
+            # to the anchor, not deeper than it.
+            collapsible_list.assert_is_collapsed("Child section")
+            collapsible_list.assert_visible_not("Grandchild section")
 
         assert test_setup.compare_sandbox_and_expected_output()

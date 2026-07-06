@@ -4,7 +4,7 @@
 
 **UID**: REQ-1
 
-**STATEMENT**:
+**Statement**:
 
 Modified statement.
 

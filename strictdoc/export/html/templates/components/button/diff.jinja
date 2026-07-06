@@ -2,6 +2,7 @@
   {{ form }}
   Defined in the parent modal/form template.
 #}
+{% assert view_object.project_config.is_running_on_server %}
 <button
   {% if form is defined %}
     form="{{ form }}"

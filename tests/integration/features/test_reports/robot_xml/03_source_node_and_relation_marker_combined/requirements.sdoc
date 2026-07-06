@@ -1,0 +1,7 @@
+[DOCUMENT]
+TITLE: Requirements
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Login
+STATEMENT: The system shall allow login with valid credentials.

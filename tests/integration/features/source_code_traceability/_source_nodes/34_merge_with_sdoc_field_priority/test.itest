@@ -1,0 +1,37 @@
+#
+# This test verifies field priority when a static sdoc stub is merged with a
+# source node. One document, four REQUIREMENT/function pairs, one scenario
+# each, to avoid four separate export runs:
+#
+# - example_title_fallback: neither side has TITLE -> falls back to the
+#   parser-suggested entity name.
+# - example_title_static_wins: stub has a static TITLE, source has none ->
+#   the static TITLE is kept, not replaced by the entity name.
+# - example_field_source_overrides_stub: both sides have a DETAIL value ->
+#   the source-parsed value wins.
+# - example_field_preserved_when_absent_in_source: stub has a DETAIL value,
+#   source has none -> the stub value is kept untouched.
+#
+# @relation(SDOC-SRS-141, scope=file)
+#
+
+RUN: %strictdoc --debug export %S --output-dir %T | filecheck %s
+
+CHECK: Published: Requirements from Source Nodes
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/source_node_base.html | filecheck %s --check-prefix CHECK-HTML
+
+CHECK-HTML: <sdoc-node-title
+CHECK-HTML: example_title_fallback</sdoc-autogen>
+
+CHECK-HTML: <sdoc-node-title
+CHECK-HTML: Static Title</sdoc-autogen>
+
+CHECK-HTML: <sdoc-node-title
+CHECK-HTML: Static Title</sdoc-autogen>
+CHECK-HTML: detail from source (wins over stub)
+CHECK-HTML-NOT: Stub detail (should be overridden)
+
+CHECK-HTML: <sdoc-node-title
+CHECK-HTML: Static Title</sdoc-autogen>
+CHECK-HTML: Stub detail (should be preserved)

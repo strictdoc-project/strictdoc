@@ -63,7 +63,9 @@ ELEMENTS:
 [TEXT]
 MID: 2c006e9044074d239db4a45328633657
 STATEMENT: >>>
-This document describes the architecture and the implementation details of StrictDoc. Compared to the User Guide that describes how to use StrictDoc, this Design Document focuses on the "how it works" of StrictDoc.
+This document describes the architecture and the implementation details of
+StrictDoc. Compared to the User Guide that describes how to use StrictDoc, this
+Design Document focuses on the "how it works" of StrictDoc.
 <<<
 
 [[SECTION]]
@@ -78,7 +80,10 @@ StrictDoc consists of two applications:
 1. StrictDoc command-line application (CLI).
 2. StrictDoc web application.
 
-Both applications share a significant subset of the backend and frontend logic. The backend logic is written in Python, the frontend logic is written using HTML/CSS, Jinja templates, and a combination of Turbo.js/Stimulus.js frontend libraries.
+Both applications share a significant subset of the backend and frontend logic.
+The backend logic is written in Python, the frontend logic is written using
+HTML/CSS, Jinja templates, and a combination of Turbo.js/Stimulus.js frontend
+libraries.
 <<<
 
 [[/SECTION]]
@@ -148,13 +153,17 @@ TITLE: StrictDoc command-line application
 [TEXT]
 MID: 0e0fca629004496084dbe5e217874c36
 STATEMENT: >>>
-StrictDoc command-line application is at the core of StrictDoc. The command-line interface contains commands for exporting/importing SDoc content from/to other formats and presenting documentation content to a user.
+StrictDoc command-line application is at the core of StrictDoc. The command-line
+interface contains commands for exporting/importing SDoc content from/to other
+formats and presenting documentation content to a user.
 
 The command-line application can be seen as a Model-View-Controller application:
 
 - A command entered by a user gets recognized by the CLI arguments parser.
-- Depending on the type of command, a responsible Action (Controller layer) processes the command (export action, import action, etc.).
-- The input of the command is transformed by the action using the backend (Model layer) (SDoc, ReqIF, Excel, etc.).
+- Depending on the type of command, a responsible Action (Controller layer)
+  processes the command (export action, import action, etc.).
+- The input of the command is transformed by the action using the backend (Model
+  layer) (SDoc, ReqIF, Excel, etc.).
 - The resulting output is written back to HTML or other formats (View layer).
 <<<
 
@@ -167,12 +176,17 @@ TITLE: StrictDoc web application
 [TEXT]
 MID: f84c0efa27954e44a8b5c1dd3517f90f
 STATEMENT: >>>
-StrictDoc Web application is based on FastAPI / Uvicorn. The end-to-end usage cycle of the web application is as follows:
+StrictDoc Web application is based on FastAPI / Uvicorn. The end-to-end usage
+cycle of the web application is as follows:
 
 - A browser requests documents from a FastAPI server.
-- The FastAPI web server parses the SDoc files into memory and converts them into HTML using Jinja templates. The resulting HTML output is given back to the user.
-- The Jinja templates are extended with JavaScript logic that allows a user to edit the documents and send the updated content back to the server.
-- The server writes the updated content back to the SDoc files stored on a user's file system.
+- The FastAPI web server parses the SDoc files into memory and converts them
+  into HTML using Jinja templates. The resulting HTML output is given back to
+  the user.
+- The Jinja templates are extended with JavaScript logic that allows a user to
+  edit the documents and send the updated content back to the server.
+- The server writes the updated content back to the SDoc files stored on a
+  user's file system.
 <<<
 
 [[SECTION]]
@@ -184,13 +198,28 @@ MID: 5577da2187294eb986ec84d9fe26bbdf
 STATEMENT: >>>
 StrictDoc uses the `Hotwire architecture <https://hotwired.dev>`_.
 
-The JavaScript framework used by StrictDoc is minimized to Turbo.js/Stimulus.js which helps to avoid the complexity of the larger JS frameworks such as React, Vue, Angular, etc. In accordance with the Hotwire approach, most of the StrictDoc's business logic is done on a server, while Turbo and Stimulus provide a thin layer of JS and AJAX to connect the almost static HTML with the server.
+The JavaScript framework used by StrictDoc is minimized to Turbo.js/Stimulus.js
+which helps to avoid the complexity of the larger JS frameworks such as React,
+Vue, Angular, etc. In accordance with the Hotwire approach, most of the
+StrictDoc's business logic is done on a server, while Turbo and Stimulus provide
+a thin layer of JS and AJAX to connect the almost static HTML with the server.
 
-The Hotwire approach helps to reduce the differences between the static HTML produced by the StrictDoc command-line application and the StrictDoc web application. In both cases, the core content of StrictDoc is a statically generated website with documents. The web application extends the static HTML content with Turbo/Stimulus to turn it into a dynamic website.
+The Hotwire approach helps to reduce the differences between the static HTML
+produced by the StrictDoc command-line application and the StrictDoc web
+application. In both cases, the core content of StrictDoc is a statically
+generated website with documents. The web application extends the static HTML
+content with Turbo/Stimulus to turn it into a dynamic website.
 
-Currently, the web server renders the HTML documents using the same generators that are used by the static HTML export, so the static HTML documentation and the web application interface look identical. The web interface adds the action buttons and other additional UI elements for editing the content.
+Currently, the web server renders the HTML documents using the same generators
+that are used by the static HTML export, so the static HTML documentation and
+the web application interface look identical. The web interface adds the action
+buttons and other additional UI elements for editing the content.
 
-To ensure that certain Stimulus-based interactive features work not only in the web application but also in the static HTML output, StrictDoc uses the UMD build of Stimulus instead of the default ES module version. This allows the browser to execute Stimulus controllers in environments where module loading is not available, preserving interactivity in static documentation pages.
+To ensure that certain Stimulus-based interactive features work not only in the
+web application but also in the static HTML output, StrictDoc uses the UMD build
+of Stimulus instead of the default ES module version. This allows the browser to
+execute Stimulus controllers in environments where module loading is not
+available, preserving interactivity in static documentation pages.
 <<<
 
 [[/SECTION]]
@@ -206,16 +235,23 @@ MID: 5fedd9aac1684adc8fe1f3b87557345d
 UID: SDOC-SRS-156
 TITLE: Static HTML search
 STATEMENT: >>>
-The static HTML search is implemented using a custom JavaScript solution that consumes a search index JS file generated by the same StrictDoc Python pipeline that produces all other artifacts.
+The static HTML search is implemented using a custom JavaScript solution that
+consumes a search index JS file generated by the same StrictDoc Python pipeline
+that produces all other artifacts.
 
 The following requirements are relevant in the StrictDoc context:
 
-- The JS library must start up quickly, so search indexes need to be generated in advance. Since StrictDoc is based on Python, index generation must be done in Python rather than in JS/NPM.
-- The Python code must generate indexes incrementally and allow caching, e.g., one index per document.
-- The JS library must support matching search terms using OR by default and AND when the terms are enclosed in quotes, e.g., "foo bar".
+- The JS library must start up quickly, so search indexes need to be generated
+  in advance. Since StrictDoc is based on Python, index generation must be done
+  in Python rather than in JS/NPM.
+- The Python code must generate indexes incrementally and allow caching, e.g.,
+  one index per document.
+- The JS library must support matching search terms using OR by default and AND
+  when the terms are enclosed in quotes, e.g., "foo bar".
 - The JS library must support incremental and decremental search terms.
 
-Several existing solutions, such as Lunr and FlexSearch, were considered, but none were found to support all of the above features.
+Several existing solutions, such as Lunr and FlexSearch, were considered, but
+none were found to support all of the above features.
 
 .. note::
 
@@ -227,12 +263,23 @@ Several existing solutions, such as Lunr and FlexSearch, were considered, but no
     - "o" => "abc"
     - "oo" => "abc"
 
-The current implementation builds per-document indexes immediately after parsing the SDoc documents from .sdoc files. The generated index is cached along with the overall document content, significantly speeding up tree generation once the document caches are available. StrictDoc generates a JSON file containing a search index ``{ search term => node MID }`` as well as a map ``{ MID => SDoc node }``.
+The current implementation builds per-document indexes immediately after parsing
+the SDoc documents from .sdoc files. The generated index is cached along with
+the overall document content, significantly speeding up tree generation once the
+document caches are available. StrictDoc generates a JSON file containing a
+search index ``{ search term => node MID }`` as well as a map ``{ MID => SDoc
+node }``.
 
-The corresponding JS file has access to the pre-built search indexes generated by Python. The JavaScript algorithms are simple but enable basic search functionality:
+The corresponding JS file has access to the pre-built search indexes generated
+by Python. The JavaScript algorithms are simple but enable basic search
+functionality:
 
-- Incremental/decremental search for terms using OR when multiple terms are provided without quotes, and AND when the terms are quoted. Currently, only one quoted search term is supported.
-- The algorithm is reasonably fast and has been tested with documentation trees of up to 130+ documents with the largest documents reaching up to 1.5 megabytes.
+- Incremental/decremental search for terms using OR when multiple terms are
+  provided without quotes, and AND when the terms are quoted. Currently, only
+  one quoted search term is supported.
+- The algorithm is reasonably fast and has been tested with documentation trees
+  of up to 130+ documents with the largest documents reaching up to 1.5
+  megabytes.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -247,7 +294,10 @@ TITLE: Parsing SDoc files
 [TEXT]
 MID: 8a926f0a67424a1eb5db73bb5abca0cd
 STATEMENT: >>>
-StrictDoc uses `textX <https://github.com/textX/textX>`_  which is a ``meta-language for building Domain-Specific Languages (DSLs) in Python``. The textX itself is based on `Arpeggio <https://github.com/textX/Arpeggio>`_ which is a ``Parser interpreter based on PEG grammars written in Python``.
+StrictDoc uses `textX <https://github.com/textX/textX>`_  which is a
+``meta-language for building Domain-Specific Languages (DSLs) in Python``. The
+textX itself is based on `Arpeggio <https://github.com/textX/Arpeggio>`_ which
+is a ``Parser interpreter based on PEG grammars written in Python``.
 
 StrictDoc relies on both tools to get:
 
@@ -255,7 +305,11 @@ StrictDoc relies on both tools to get:
 - Automatic conversion of the parsed blocks into Python objects
 - Fast parsing of SDoc files.
 
-One important implementation detail of Arpeggio that influences StrictDoc user experience is that the parser stops immediately when it encounters an error. For a document that has several issues, the parser highlights only the first error without going any further. When the first error is resolved, the second error will be shown, etc.
+One important implementation detail of Arpeggio that influences StrictDoc user
+experience is that the parser stops immediately when it encounters an error. For
+a document that has several issues, the parser highlights only the first error
+without going any further. When the first error is resolved, the second error
+will be shown, etc.
 <<<
 
 [[/SECTION]]
@@ -268,7 +322,8 @@ TITLE: Caching artifacts
 [TEXT]
 MID: d351d1bf6c2a48d88e9b9bdc50e029ff
 STATEMENT: >>>
-StrictDoc caches artifacts to disk to speed up performance by avoiding repeated reading and computation of already-parsed objects.
+StrictDoc caches artifacts to disk to speed up performance by avoiding repeated
+reading and computation of already-parsed objects.
 
 The cached artifacts include:
 
@@ -280,7 +335,11 @@ The cached artifacts include:
 
 A general algorithm is as follows:
 
-An MD5 checksum is generated for a piece of content, and a file with this checksum in its name is written to disk. On subsequent reads, the checksum is recalculated, and the disk is checked for an existing file with the matching checksum. If a match is found, the file is read from disk, avoiding the need for extensive parsing or computation.
+An MD5 checksum is generated for a piece of content, and a file with this
+checksum in its name is written to disk. On subsequent reads, the checksum is
+recalculated, and the disk is checked for an existing file with the matching
+checksum. If a match is found, the file is read from disk, avoiding the need for
+extensive parsing or computation.
 <<<
 
 [[/SECTION]]
@@ -332,7 +391,8 @@ MID: abe8709709614f0f9ccdf702799bf511
 UID: SDOC-SRS-153
 TITLE: ReqIF-to-SDoc import
 STATEMENT: >>>
-The following details describe the implementation of the StrictDoc ReqIF-to-SDoc converter.
+The following details describe the implementation of the StrictDoc ReqIF-to-SDoc
+converter.
 
 The table below shows how ReqIF elements are mapped to SDoc elements:
 
@@ -352,13 +412,20 @@ The table below shows how ReqIF elements are mapped to SDoc elements:
     * - Spec Object
       - Node
 
-Before converting ReqIF elements to SDoc elements, StrictDoc first traverses the entire XML file. This is necessary because a single ReqIF file may contain multiple specifications, and it is otherwise not possible to determine which Spec Object Types, Spec Relations, or Spec Relation Types are used by which specification or whether they are used at all.
+Before converting ReqIF elements to SDoc elements, StrictDoc first traverses the
+entire XML file. This is necessary because a single ReqIF file may contain
+multiple specifications, and it is otherwise not possible to determine which
+Spec Object Types, Spec Relations, or Spec Relation Types are used by which
+specification or whether they are used at all.
 
-StrictDoc uses a **lazy** approach to generating SDoc documents from a ReqIF XML file. For each ReqIF Specification, only the elements that are actually used by that specification will be included in the corresponding SDoc document.
+StrictDoc uses a **lazy** approach to generating SDoc documents from a ReqIF XML
+file. For each ReqIF Specification, only the elements that are actually used by
+that specification will be included in the corresponding SDoc document.
 
 **Example:**
 
-If ReqIF Specification “A” uses Spec Object Type “X”, and Specification “B” uses Spec Relation Type “Y”, the resulting SDoc documents will be:
+If ReqIF Specification “A” uses Spec Object Type “X”, and Specification “B” uses
+Spec Relation Type “Y”, the resulting SDoc documents will be:
 
 * SDoc document “A” with a grammar element for type “X”
 * SDoc document “B” with a grammar element for type “Y”

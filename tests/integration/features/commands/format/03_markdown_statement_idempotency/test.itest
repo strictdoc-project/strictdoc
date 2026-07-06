@@ -2,8 +2,8 @@ REQUIRES: PLATFORM_IS_NOT_WINDOWS
 
 #
 # Verify that the Markdown formatter preserves the STATEMENT format:
-# - inline format (**STATEMENT**: text) stays inline
-# - block format (**STATEMENT**:\n\ntext) stays block
+# - inline format (**Statement**: text) stays inline
+# - block format (**Statement**:\n\ntext) stays block
 # A second format pass must produce identical output (idempotency).
 #
 
@@ -17,10 +17,10 @@ RUN: %strictdoc format %T/pass1/
 RUN: %cat %T/pass1/input.md | filecheck %s --dump-input=fail
 
 # Inline format: statement content on same line as field name.
-CHECK: **STATEMENT**: The statement content starts on the same line as the field name.
+CHECK: **Statement**: The statement content starts on the same line as the field name.
 
 # Block format: field name alone on its line, blank line, then content.
-CHECK: **STATEMENT**:
+CHECK: **Statement**:
 CHECK-EMPTY:
 CHECK-NEXT: Paragraph one.
 

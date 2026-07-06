@@ -411,6 +411,7 @@ class ProjectConfig:
             _config_last_update
         )
         self.is_running_on_server: bool = False
+        self.watch_enabled: bool = False
 
     @staticmethod
     def default_config() -> "ProjectConfig":
@@ -421,6 +422,7 @@ class ProjectConfig:
         self, server_config: ServerCommandConfig
     ) -> None:
         self.is_running_on_server = True
+        self.watch_enabled = server_config.watch
         if (server_host_ := server_config.host) is not None:
             self.server_host = server_host_
         if (server_port_ := server_config.port) is not None:
@@ -942,7 +944,7 @@ class ProjectConfigLoader:
         if not os.path.isfile(path_to_config):
             return ProjectConfig.default_config()
 
-        if path_to_config.endswith("strictdoc_config.py"):
+        if path_to_config.endswith(".py"):
             return ProjectConfigLoader.load_from_python(
                 config_py_path=path_to_config
             )

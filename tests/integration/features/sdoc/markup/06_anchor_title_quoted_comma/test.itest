@@ -1,0 +1,11 @@
+# A quoted ANCHOR title may contain a comma or a closing bracket.
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Anchor title quoted comma
+
+RUN: %cat %T/html/06_anchor_title_quoted_comma/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+
+CHECK-HTML: <sdoc-anchor id="A-QUOTED"
+CHECK-HTML: <sdoc-anchor id="A-BRACKET"
+CHECK-HTML: Title with, a comma
+CHECK-HTML: Title [with] brackets

@@ -1,3 +1,10 @@
+{#
+  This form's action/turbo-frame plumbing only works when strictdoc is
+  actually serving /diff and /diff_result (project_config.is_running_on_server).
+  In a static HTML export (e.g. --generate-diff-git) there is no server to
+  submit to, so the revision fields are disabled and the submit button is
+  hidden below to avoid presenting controls that can't do anything.
+#}
 <sdoc-form sticky diff>
   <form
     action="/diff"
@@ -7,7 +14,14 @@
         <input
           type="text"
           {% if view_object.left_revision is not none %}
+          {# In a static export, this field is a readonly display (not a
+             resubmittable value, see the note above), so it is enriched
+             with the tags to match the "Compared revisions" table. #}
+          {% if not view_object.project_config.is_running_on_server and view_object.left_revision_tags %}
+          value="{{ view_object.left_revision }} [tags: {{ view_object.left_revision_tags|join(', ') }}]"
+          {% else %}
           value="{{ view_object.left_revision }}"
+          {% endif %}
           {% else %}
           value=""
           {% endif %}
@@ -15,12 +29,21 @@
           id="left_revision"
           name="left_revision"
           data-testid="diff-screen-field-lhs"
+          {% if not view_object.project_config.is_running_on_server %}
+          disabled
+          {% endif %}
         />
-        {% include "components/button/diff.jinja" %}
+        {% if view_object.project_config.is_running_on_server %}
+          {% include "components/button/diff.jinja" %}
+        {% endif %}
         <input
           type="text"
           {% if view_object.right_revision is not none %}
+          {% if not view_object.project_config.is_running_on_server and view_object.right_revision_tags %}
+          value="{{ view_object.right_revision }} [tags: {{ view_object.right_revision_tags|join(', ') }}]"
+          {% else %}
           value="{{ view_object.right_revision }}"
+          {% endif %}
           {% else %}
           value=""
           {% endif %}
@@ -28,6 +51,9 @@
           id="right_revision"
           name="right_revision"
           data-testid="diff-screen-field-rhs"
+          {% if not view_object.project_config.is_running_on_server %}
+          disabled
+          {% endif %}
         />
         <input
           type="hidden"

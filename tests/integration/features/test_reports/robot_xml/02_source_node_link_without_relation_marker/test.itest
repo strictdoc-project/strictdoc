@@ -1,0 +1,12 @@
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Test Specification
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/testcases.html | filecheck %s --dump-input=fail --check-prefix CHECK-TESTCASE
+CHECK-TESTCASE: RELATIONS (Child):
+CHECK-TESTCASE: href="../02_source_node_link_without_relation_marker/test_report/output.robot.html#SYSTEM-TEST-FEATURE-CHECK-VALID-LOGIN">{{.*}}
+CHECK-TESTCASE: (has result)
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/test_report/output.robot.html | filecheck %s --dump-input=fail --check-prefix CHECK-RESULT
+CHECK-RESULT: RELATIONS (Parent):
+CHECK-RESULT: href="../../02_source_node_link_without_relation_marker/testcases.html#TC-AUTH-001">{{.*}}
+CHECK-RESULT: (is result of)

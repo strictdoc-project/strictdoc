@@ -1,0 +1,11 @@
+RUN: %strictdoc export %S --formats=html --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Composite requirement document
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-FILE
+
+CHECK-HTML-FILE: data-uid="REQ-1"
+CHECK-HTML-FILE: <sdoc-node-field-label>Statement:</sdoc-node-field-label>
+CHECK-HTML-FILE: Parent statement.
+CHECK-HTML-FILE: data-uid="REQ-2"
+CHECK-HTML-FILE: <sdoc-node-field-label>Statement:</sdoc-node-field-label>
+CHECK-HTML-FILE: Child statement.

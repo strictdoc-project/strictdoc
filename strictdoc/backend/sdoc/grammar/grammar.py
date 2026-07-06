@@ -33,8 +33,12 @@ InlineLink[noskipws]:
 
 Anchor[noskipws]:
   /^\[ANCHOR: /
-  value = /{REGEX_UID}/ (', ' title = /\w+[\s\w+]*/)?
+  value = /{REGEX_UID}/ (', ' title = AnchorTitle)?
   /\](\Z|\r?\n)/
+;
+
+AnchorTitle[noskipws]:
+  /(["])[^"\r\n]+\1|[^,\]\r\n]+/
 ;
 
 // According to the Strict Grammar Rule #3, both SingleLineString and
@@ -149,7 +153,7 @@ DocumentCustomMetadata[noskipws]:
 ;
 
 DocumentCustomMetadataKeyValuePair[noskipws]:
-  '  ' key=DocumentCustomMetadataKey ': ' value=SingleLineString '\n'
+  '  ' key=DocumentCustomMetadataKey ': ' parts+=SingleLineTextPart '\n'
 ;
 
 DocumentCustomMetadataKey: /[a-zA-Z_][a-zA-Z0-9_-]*/;

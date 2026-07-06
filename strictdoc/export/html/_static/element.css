@@ -975,6 +975,12 @@ svg:hover .svg_icon_not_hover_visible {
   font-size: .85rem;
 }
 
+.strictdoc__link {
+  display: flex;
+  align-items: center;
+  column-gap: calc(var(--base-rhythm)/2);
+}
+
 a.strictdoc__link {
   color: var(--color-fg-accent);
   fill: var(--color-fg-accent);

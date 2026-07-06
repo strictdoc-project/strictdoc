@@ -2,6 +2,7 @@
 @relation(SDOC-SRS-126, scope=file)
 """
 
+import asyncio
 import logging
 import os
 import sys
@@ -75,10 +76,16 @@ def print_welcome_message(project_config: ProjectConfig) -> None:
 
 
 def create_app(*, project_config: ProjectConfig) -> FastAPI:
-    def lifespan(_: FastAPI) -> Generator[None, None, None]:
+    def lifespan(app_: FastAPI) -> Generator[None, None, None]:
         DEPRECATION_ENGINE.print_all_messages()
         print_welcome_message(project_config)
+        app_.state.event_loop = asyncio.get_event_loop()
+        document_watcher = getattr(app_.state, "document_watcher", None)
+        if document_watcher is not None:
+            document_watcher.start()
         yield
+        if document_watcher is not None:
+            document_watcher.stop()
 
     app = FastAPI(lifespan=lifespan)
 

@@ -1,0 +1,11 @@
+[DOCUMENT]
+TITLE: Document 1
+METADATA:
+  OWNER: [LINK: REQ-1]
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Requirement title
+STATEMENT: >>>
+Requirement statement.
+<<<

@@ -63,7 +63,7 @@ dependencies = [
     "markdown-it-py >= 4.0.0, == 4.*",
 
     # Tree Sitter is used for language/AST-aware parsing of Python, C and other files.
-    "tree-sitter >= 0.25",
+    "tree-sitter == 0.25.2",
     "tree-sitter-c",
     "tree_sitter_cpp",
     "tree-sitter-python",
@@ -98,6 +98,8 @@ dependencies = [
     "python-multipart",
     "uvicorn[standard] >= 0.14.0",
     "WebSockets",
+    # Watching project files for the server's --watch live-reload.
+    "watchdog >= 2.1.7",
 
     # HTML2PDF dependencies
     "html2pdf4doc == 0.0.33",

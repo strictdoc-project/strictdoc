@@ -62,7 +62,7 @@ class Test(E2ECase):
             screen_table.do_open_inline_cell(node_mid, "STATEMENT")
             screen_table.do_cancel_inline_cell_by_escape()
 
-            screen_table.assert_cell_dom_text(node_mid, "STATEMENT", "Req.")
+            screen_table.wait_for_cell_dom_text(node_mid, "STATEMENT", "Req.")
             screen_table.assert_cell_has_no_validation_error(
                 node_mid, "STATEMENT"
             )

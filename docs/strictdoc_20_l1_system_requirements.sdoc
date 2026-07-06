@@ -72,14 +72,24 @@ ELEMENTS:
 [TEXT]
 MID: c455f0297eb648c6aa9c6d239f043e0d
 STATEMENT: >>>
-The StrictDoc project is structured around two distinct requirement documents that guide its development:
+The StrictDoc project is structured around two distinct requirement documents
+that guide its development:
 
-1. The "Requirements Tool Specification" (this document), which is a higher-level document.
-2. The "StrictDoc Requirements Specification," a more detailed and lower-level document, separate from this one.
+1. The "Requirements Tool Specification" (this document), which is a
+   higher-level document.
+2. The "StrictDoc Requirements Specification," a more detailed and lower-level
+   document, separate from this one.
 
-This document, the Requirements Tool Specification, delineates the general requirements for an open-source Requirements Tool, with a focus that remains agnostic of the specific implementation details of StrictDoc. Its primary goal is to provide a comprehensive, implementation-neutral overview of what capabilities a Requirements Tool should possess, emphasizing the 'WHAT' aspect.
+This document, the Requirements Tool Specification, delineates the general
+requirements for an open-source Requirements Tool, with a focus that remains
+agnostic of the specific implementation details of StrictDoc. Its primary goal
+is to provide a comprehensive, implementation-neutral overview of what
+capabilities a Requirements Tool should possess, emphasizing the 'WHAT' aspect.
 
-In contrast, the StrictDoc Requirements Specification, the second document, delves deeply into the 'HOW' aspect of StrictDoc’s implementation. It builds upon the high-level requirements set out in this document, treating them as parent requirements to guide its detailed development approach.
+In contrast, the StrictDoc Requirements Specification, the second document,
+delves deeply into the 'HOW' aspect of StrictDoc’s implementation. It builds
+upon the high-level requirements set out in this document, treating them as
+parent requirements to guide its detailed development approach.
 <<<
 
 [[SECTION]]
@@ -89,7 +99,8 @@ TITLE: Summary of user needs
 [TEXT]
 MID: 7a94c3f55e32498187603400923bfae4
 STATEMENT: >>>
-This section offers an overview of the necessary capabilities of a requirements and documentation management tool.
+This section offers an overview of the necessary capabilities of a requirements
+and documentation management tool.
 <<<
 
 [[SECTION]]
@@ -99,9 +110,17 @@ TITLE: Free and open source tool
 [TEXT]
 MID: 3ca29d12a7804f089f5b2aa955e4da59
 STATEMENT: >>>
-The primary user need and entry point for this Requirements Tool specification is the availability of free, lightweight, yet capable software for creating requirements specifications and other technical documentation. The tool should facilitate the creation of requirements specifications and technical documents, effectively lowering the entry barrier for requirements engineering and technical documentation writing.
+The primary user need and entry point for this Requirements Tool specification
+is the availability of free, lightweight, yet capable software for creating
+requirements specifications and other technical documentation. The tool should
+facilitate the creation of requirements specifications and technical documents,
+effectively lowering the entry barrier for requirements engineering and
+technical documentation writing.
 
-It is assumed throughout this document that the requirements tool will be developed as open-source software available at no cost. However, with minor adjustments, these requirements could also apply to commercial requirements tools. See [LINK: SECTION-SSSS-Licensing-and-distribution].
+It is assumed throughout this document that the requirements tool will be
+developed as open-source software available at no cost. However, with minor
+adjustments, these requirements could also apply to commercial requirements
+tools. See [LINK: SECTION-SSSS-Licensing-and-distribution].
 <<<
 
 [[/SECTION]]
@@ -113,13 +132,20 @@ TITLE: Document types
 [TEXT]
 MID: 14383453f84747d3abdce6b5dce50c7f
 STATEMENT: >>>
-A requirements tool is very often also a documentation writing and management tool, so, besides the requirements editing functionality, the tool shall be able to accommodate for the variety of documents and templates used in different industries.
+A requirements tool is very often also a documentation writing and management
+tool, so, besides the requirements editing functionality, the tool shall be able
+to accommodate for the variety of documents and templates used in different
+industries.
 
 The variety comes from:
 
-- Supporting arbitrary documentation structures, e.g., non-nested vs. deeply nested documents.
-- Supporting a rich set of visualization mechanisms. Supporting images, diagrams, tables, text markup, etc.
-- Supporting custom fields/attributes used by different industries (the criticality levels in various industries, RAIT verification activities in aerospace, status/workflow fields, etc.).
+- Supporting arbitrary documentation structures, e.g., non-nested vs. deeply
+  nested documents.
+- Supporting a rich set of visualization mechanisms. Supporting images,
+  diagrams, tables, text markup, etc.
+- Supporting custom fields/attributes used by different industries (the
+  criticality levels in various industries, RAIT verification activities in
+  aerospace, status/workflow fields, etc.).
 
 Examples of typical document types include:
 
@@ -131,7 +157,9 @@ Examples of typical document types include:
 - Systems engineering plan, management plan
 - Standard (e.g., ECSS or ISO 26262).
 
-The documentation/requirements management requirements for a Requirements Tool are specified in the sections [LINK: SECTION-RTS-Documentation-management] and [LINK: SECTION-RTS-Requirements-management].
+The documentation/requirements management requirements for a Requirements Tool
+are specified in the sections [LINK: SECTION-RTS-Documentation-management] and
+[LINK: SECTION-RTS-Requirements-management].
 <<<
 
 [[SECTION]]
@@ -142,7 +170,8 @@ TITLE: Document structure differences
 [TEXT]
 MID: 4a847b9a58444e4a9be056db1f23272c
 STATEMENT: >>>
-The table below summarizes various differences observed across industry documents.
+The table below summarizes various differences observed across industry
+documents.
 
 .. list-table:: Table: Requirements and specification document
    :widths: 20 80
@@ -173,7 +202,9 @@ TITLE: Workflows
 [TEXT]
 MID: c537b8fa5b54417eb9dff6478553f6d7
 STATEMENT: >>>
-Besides supporting a variety of document types, a Requirements Tool shall also support and integrate well with multiple documentation and requirements management workflows.
+Besides supporting a variety of document types, a Requirements Tool shall also
+support and integrate well with multiple documentation and requirements
+management workflows.
 
 At least the following workflows have been identified to be relevant:
 
@@ -205,7 +236,8 @@ At least the following workflows have been identified to be relevant:
    * - Interoperability with industry standards.
      - Supporting seamless integration between a project documentation tree and applicable standards.
 
-The section [LINK: SECTION-SSSS-Existing-workflows] contains the workflow-related requirements for a Requirements Tool.
+The section [LINK: SECTION-SSSS-Existing-workflows] contains the
+workflow-related requirements for a Requirements Tool.
 <<<
 
 [[/SECTION]]
@@ -217,7 +249,9 @@ TITLE: Target audience
 [TEXT]
 MID: 847eaab505124e7797bd25c865f9d868
 STATEMENT: >>>
-A Requirements Tool may have different users, each with a different role, experience and background which necessitates the requirements towards usability, installation, and user experience.
+A Requirements Tool may have different users, each with a different role,
+experience and background which necessitates the requirements towards usability,
+installation, and user experience.
 
 The following user groups are preliminarily identified as especially relevant:
 
@@ -229,25 +263,46 @@ This group includes:
 - Requirements engineers
 - Assurance experts in quality, safety/security, verification/validation
 
-For these professionals, the Requirements Tool should offer robust functionality that is adequate for complex system design and detailed requirements tracking, ensuring that all aspects of system integrity and compliance are met efficiently.
+For these professionals, the Requirements Tool should offer robust functionality
+that is adequate for complex system design and detailed requirements tracking,
+ensuring that all aspects of system integrity and compliance are met
+efficiently.
 
 **Management**
 
-The focus of this group is more on the progress and compliance aspects. They require high-level overviews and reporting capabilities in the tool, to track project milestones, manage risks, and ensure that the development is adhering to the predefined requirements and industry standards.
+The focus of this group is more on the progress and compliance aspects. They
+require high-level overviews and reporting capabilities in the tool, to track
+project milestones, manage risks, and ensure that the development is adhering to
+the predefined requirements and industry standards.
 
 **Software engineers**
 
-For software engineers, the Requirements Tool shall be closely integrated with their software engineering workflow, e.g., it has interfaces with software version control systems, software IDEs, and source code repositories. This integration ensures a seamless transition between requirement specification and software development tasks.
+For software engineers, the Requirements Tool shall be closely integrated with
+their software engineering workflow, e.g., it has interfaces with software
+version control systems, software IDEs, and source code repositories. This
+integration ensures a seamless transition between requirement specification and
+software development tasks.
 
 **IT/DevOps**
 
-This group of users may not work with a Requirements Tool directly but is still an important stakeholder. The Tool shall be easy to install and deploy. It shall be easy to maintain and upgrade the tool, with support for automated updates and compatibility with various IT infrastructures.
+This group of users may not work with a Requirements Tool directly but is still
+an important stakeholder. The Tool shall be easy to install and deploy. It shall
+be easy to maintain and upgrade the tool, with support for automated updates and
+compatibility with various IT infrastructures.
 
 **General audience**
 
-Not all users of a requirements tool must have an engineering background. In fact, there are many projects where non-technical people have to maintain requirements. The Requirements Tool shall be usable without any technical training required, featuring an intuitive user interface and simplified processes for entering and managing requirements.
+Not all users of a requirements tool must have an engineering background. In
+fact, there are many projects where non-technical people have to maintain
+requirements. The Requirements Tool shall be usable without any technical
+training required, featuring an intuitive user interface and simplified
+processes for entering and managing requirements.
 
-The requirement sets in the sections [LINK: SECTION-RTC-Usability-installation-and-usage] and [LINK: SECTION-SSSS-Implementation-suggestions] aim to equip the Requirements Tool with sufficient capabilities to support all of the user groups described above.
+The requirement sets in the sections
+[LINK: SECTION-RTC-Usability-installation-and-usage] and
+[LINK: SECTION-SSSS-Implementation-suggestions] aim to equip the Requirements
+Tool with sufficient capabilities to support all of the user groups described
+above.
 <<<
 
 [[/SECTION]]
@@ -262,9 +317,11 @@ TITLE: Documentation management
 [TEXT]
 MID: 0cacb010f5164118adce5dd8512c3e27
 STATEMENT: >>>
-This section outlines the requirements towards a Requirements Tool as a documentation tool.
+This section outlines the requirements towards a Requirements Tool as a
+documentation tool.
 
-The requirements of this group are dedicated to the core tasks of documentation management:
+The requirements of this group are dedicated to the core tasks of documentation
+management:
 
 - Writing, structuring and managing documents
 - Complementing documents with meta information
@@ -285,7 +342,8 @@ The Requirements Tool shall provide the CRUD operations for document management:
 - Delete document.
 <<<
 RATIONALE: >>>
-The CRUD operations are essential operations of document management. They are at the core of a documentation management tool.
+The CRUD operations are essential operations of document management. They are at
+the core of a documentation management tool.
 <<<
 
 [REQUIREMENT]
@@ -303,7 +361,8 @@ UID: SDOC-SSS-51
 STATUS: Active
 TITLE: Documents with nested sections/chapters structure
 STATEMENT: >>>
-The Requirements Tool shall allow management of documents with nested sections/chapters structure.
+The Requirements Tool shall allow management of documents with nested
+sections/chapters structure.
 <<<
 
 [REQUIREMENT]
@@ -312,12 +371,18 @@ UID: SDOC-SSS-52
 STATUS: Active
 TITLE: Assembling documents from fragments
 STATEMENT: >>>
-The Requirements Tool shall allow composing documents from other documents or fragments.
+The Requirements Tool shall allow composing documents from other documents or
+fragments.
 
-NOTE: If a Requirements Tool implements stores documents in a file system, the composition can be arranged at a file level when a parent document file includes the child fragment files and produces a composite document.
+NOTE: If a Requirements Tool implements stores documents in a file system, the
+composition can be arranged at a file level when a parent document file includes
+the child fragment files and produces a composite document.
 <<<
 RATIONALE: >>>
-Composable documents allow assembling documents from multiple smaller documents which can be standalone documents or document fragments. This feature is particularly useful for managing extensive documents that can be more effectively organized and handled when divided into smaller document sections.
+Composable documents allow assembling documents from multiple smaller documents
+which can be standalone documents or document fragments. This feature is
+particularly useful for managing extensive documents that can be more
+effectively organized and handled when divided into smaller document sections.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -347,7 +412,8 @@ UID: SDOC-SSS-63
 STATUS: Active
 TITLE: Text formatting capabilities
 STATEMENT: >>>
-The Requirements Tool shall provide "rich text" formatting capabilities which includes but not limited to:
+The Requirements Tool shall provide "rich text" formatting capabilities which
+includes but not limited to:
 
 - Headings
 - Lists
@@ -365,10 +431,13 @@ UID: SDOC-SSS-95
 STATUS: Active
 TITLE: Content search
 STATEMENT: >>>
-The Requirements Tool shall provide functionality to search content in the documentation tree.
+The Requirements Tool shall provide functionality to search content in the
+documentation tree.
 <<<
 RATIONALE: >>>
-Efficient navigation of large documentation trees requires search capabilities so that users can quickly locate relevant information without manually browsing through all content.
+Efficient navigation of large documentation trees requires search capabilities
+so that users can quickly locate relevant information without manually browsing
+through all content.
 <<<
 
 [[/SECTION]]
@@ -381,7 +450,8 @@ TITLE: Requirements management
 [TEXT]
 MID: c1e2431cdf2141ca86931f29b9912ff7
 STATEMENT: >>>
-This section outlines the requirements towards a Requirements Tool as a requirements management tool.
+This section outlines the requirements towards a Requirements Tool as a
+requirements management tool.
 
 The following core aspects of the requirements management are covered:
 
@@ -414,7 +484,8 @@ UID: SDOC-SSS-61
 STATUS: Active
 TITLE: Minimal requirement field set
 STATEMENT: >>>
-The Requirements Tool shall support at least the following requirement field set:
+The Requirements Tool shall support at least the following requirement field
+set:
 
 - UID
 - STATUS
@@ -425,10 +496,12 @@ The Requirements Tool shall support at least the following requirement field set
 - RELATIONS (connections with other requirements).
 <<<
 RATIONALE: >>>
-The selection of the minimal set is based on what is common in the industries (e.g., automotive, space, etc).
+The selection of the minimal set is based on what is common in the industries
+(e.g., automotive, space, etc).
 <<<
 COMMENT: >>>
-The other fields common to each industry can be customized with custom fields handled by other requirements.
+The other fields common to each industry can be customized with custom fields
+handled by other requirements.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -442,12 +515,16 @@ UID: SDOC-SSS-62
 STATUS: Active
 TITLE: Custom fields
 STATEMENT: >>>
-The requirements tool shall support configuring a requirement item with an arbitrary set of fields.
+The requirements tool shall support configuring a requirement item with an
+arbitrary set of fields.
 
-NOTE: Examples of typical fields include: UID, Title, Statement, Rationale, Comment. Other fields that are used very often are: Status, Tags, Criticality level, Priority, etc.
+NOTE: Examples of typical fields include: UID, Title, Statement, Rationale,
+Comment. Other fields that are used very often are: Status, Tags, Criticality
+level, Priority, etc.
 <<<
 RATIONALE: >>>
-The tool shall not constrain a user in which fields they are able to use for their projects.
+The tool shall not constrain a user in which fields they are able to use for
+their projects.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -462,7 +539,8 @@ STATEMENT: >>>
 The Requirements Tool shall support structuring requirements in documents.
 <<<
 RATIONALE: >>>
-The industry works with requirements documents. The documents have sections/chapters and requirements.
+The industry works with requirements documents. The documents have
+sections/chapters and requirements.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -474,7 +552,8 @@ UID: SDOC-SSS-5
 STATUS: Active
 TITLE: Move requirement nodes within document
 STATEMENT: >>>
-The Requirements Tool shall allow moving nodes (sections, requirements) within the containing document.
+The Requirements Tool shall allow moving nodes (sections, requirements) within
+the containing document.
 <<<
 
 [REQUIREMENT]
@@ -483,7 +562,8 @@ UID: SDOC-SSS-70
 STATUS: Active
 TITLE: Move nodes between documents
 STATEMENT: >>>
-The Requirements Tool shall allow moving nodes (sections, requirements) between documents.
+The Requirements Tool shall allow moving nodes (sections, requirements) between
+documents.
 <<<
 
 [REQUIREMENT]
@@ -492,10 +572,14 @@ UID: SDOC-SSS-6
 STATUS: Active
 TITLE: Auto-provision of Requirement UIDs
 STATEMENT: >>>
-The Requirements Tool shall provide controls for automatic generation of requirements UIDs.
+The Requirements Tool shall provide controls for automatic generation of
+requirements UIDs.
 <<<
 RATIONALE: >>>
-When a document is large, it becomes harder to manage the assignment of the new requirements identifiers by manually exploring which requirement UID has not been assigned yet. The provision of automatically generated UIDs is a convenience feature that improves the user experience significantly.
+When a document is large, it becomes harder to manage the assignment of the new
+requirements identifiers by manually exploring which requirement UID has not
+been assigned yet. The provision of automatically generated UIDs is a
+convenience feature that improves the user experience significantly.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -507,10 +591,13 @@ UID: SDOC-SSS-7
 STATUS: Active
 TITLE: Link requirements together
 STATEMENT: >>>
-The Requirements Tool shall allow bi-directional linking of requirements nodes together using Parent or Child relations.
+The Requirements Tool shall allow bi-directional linking of requirements nodes
+together using Parent or Child relations.
 <<<
 RATIONALE: >>>
-The requirement ensures a classic capability of a requirement tool: linking requirements together enables bi-directional traceability which helps in understanding how the requirements are related to each other.
+The requirement ensures a classic capability of a requirement tool: linking
+requirements together enables bi-directional traceability which helps in
+understanding how the requirements are related to each other.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -524,10 +611,12 @@ TITLE: Multiple link roles
 STATEMENT: >>>
 The Requirements Tool shall support the link roles.
 
-Example of roles for a child-to-parent link: "verifies", "implements", "satisfies", etc.
+Example of roles for a child-to-parent link: "verifies", "implements",
+"satisfies", etc.
 <<<
 RATIONALE: >>>
-Different industries maintain custom conventions for naming the relations between requirements and other nodes such as tests or other artefacts.
+Different industries maintain custom conventions for naming the relations
+between requirements and other nodes such as tests or other artefacts.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -548,14 +637,18 @@ UID: SDOC-SSS-89
 STATUS: Active
 TITLE: Unique identification of requirements
 STATEMENT: >>>
-The Requirements Tool shall provide means for unique identification of every requirement.
+The Requirements Tool shall provide means for unique identification of every
+requirement.
 <<<
 RATIONALE: >>>
 The requirement ensures a classic capability of a requirement tool:
 
-1) The unique identifiers help the users in identifying the requirements, both when reading a requirements document and when discussing requirements.
+1) The unique identifiers help the users in identifying the requirements, both
+   when reading a requirements document and when discussing requirements.
 
-2) The unique identifiers are used for linking requirements together. The requirements tool stores the identifiers in a global database and can resolve the links, following the unique identifiers they point to.
+2) The unique identifiers are used for linking requirements together. The
+   requirements tool stores the identifiers in a global database and can resolve
+   the links, following the unique identifiers they point to.
 <<<
 
 [REQUIREMENT]
@@ -564,13 +657,15 @@ UID: SDOC-SSS-47
 STATUS: Active
 TITLE: Requirements database consistency checks
 STATEMENT: >>>
-The Requirements Tool shall provide a validation mechanism that ensures the integrity of requirements and connections between them.
+The Requirements Tool shall provide a validation mechanism that ensures the
+integrity of requirements and connections between them.
 
 NOTE: Examples of integrity checks:
 
 - Requirements have correct fields.
 - Requirements do not form cycles.
-- Requirements only link to other requirements as specified in a project configuration.
+- Requirements only link to other requirements as specified in a project
+  configuration.
 <<<
 
 [REQUIREMENT]
@@ -579,7 +674,8 @@ UID: SDOC-SSS-57
 STATUS: Active
 TITLE: Requirement syntax validation (e.g. EARS)
 STATEMENT: >>>
-The Requirements Tool shall provide capabilities for validating requirements according to the EARS syntax.
+The Requirements Tool shall provide capabilities for validating requirements
+according to the EARS syntax.
 <<<
 
 [[/SECTION]]
@@ -592,7 +688,8 @@ TITLE: Existing workflows
 [TEXT]
 MID: 33769a5f0ca94b99a4802adc81841037
 STATEMENT: >>>
-This section captures the requirements towards specific workflows that a Requirements Tool should support as outlined in [LINK: SECTION-LRTS-Workflows].
+This section captures the requirements towards specific workflows that a
+Requirements Tool should support as outlined in [LINK: SECTION-LRTS-Workflows].
 <<<
 
 [REQUIREMENT]
@@ -601,12 +698,15 @@ UID: SDOC-SSS-73
 STATUS: Active
 TITLE: Excel-like viewing and editing of requirements
 STATEMENT: >>>
-The Requirements Tool shall provide an Excel-like user interface for viewing and editing requirements.
+The Requirements Tool shall provide an Excel-like user interface for viewing and
+editing requirements.
 
 NOTE: This interface does not have to be the only or a default interface.
 <<<
 RATIONALE: >>>
-As recognized by the parent requirement, some requirements-based workflows are naturally easier when the requirements content is presented in a form of a table, as opposed to a document with a nested chapter structure.
+As recognized by the parent requirement, some requirements-based workflows are
+naturally easier when the requirements content is presented in a form of a
+table, as opposed to a document with a nested chapter structure.
 <<<
 
 [REQUIREMENT]
@@ -615,10 +715,14 @@ UID: SDOC-SSS-56
 STATUS: Active
 TITLE: 1000-feet view
 STATEMENT: >>>
-The Requirements Tool shall provide a "1000-feet view" kind of requirements visualization.
+The Requirements Tool shall provide a "1000-feet view" kind of requirements
+visualization.
 <<<
 RATIONALE: >>>
-Compared to the other visualizations, such a visualization helps to "see the forest for the trees". Seeing requirements and their sections all at once helps to visualize groups of requirements and better understand the relationships between them.
+Compared to the other visualizations, such a visualization helps to "see the
+forest for the trees". Seeing requirements and their sections all at once helps
+to visualize groups of requirements and better understand the relationships
+between them.
 <<<
 
 [REQUIREMENT]
@@ -645,12 +749,19 @@ UID: SDOC-SSS-29
 STATUS: Active
 TITLE: Requirements coverage
 STATEMENT: >>>
-The Requirements Tool shall provide means for getting information about the requirements coverage of a given project.
+The Requirements Tool shall provide means for getting information about the
+requirements coverage of a given project.
 
-NOTE: The requirements coverage can be presented in a tabular form or visualized with a set of graphs.
+NOTE: The requirements coverage can be presented in a tabular form or visualized
+with a set of graphs.
 <<<
 RATIONALE: >>>
-The requirements coverage information helps to assess whether all requirements are linked to each other, whether all requirements are connected to implementation, test or other artifacts. Additionally, the requirements coverage information can provide metrics for measuring a project's progress, e.g., "50% of requirements have been traced to the source code". The requirement ensures that the requirements tool provides this feature.
+The requirements coverage information helps to assess whether all requirements
+are linked to each other, whether all requirements are connected to
+implementation, test or other artifacts. Additionally, the requirements coverage
+information can provide metrics for measuring a project's progress, e.g., "50%
+of requirements have been traced to the source code". The requirement ensures
+that the requirements tool provides this feature.
 <<<
 
 [REQUIREMENT]
@@ -661,7 +772,8 @@ TITLE: Progress report
 STATEMENT: >>>
 The Requirements Tool shall allow generating a Progress Report document.
 
-NOTE: A progress report document shall include at least the following Key Performance Indicators.
+NOTE: A progress report document shall include at least the following Key
+Performance Indicators.
 
 Project-level KPIs:
 
@@ -700,12 +812,20 @@ UID: SDOC-SSS-72
 STATUS: Active
 TITLE: Traceability between requirements and source code
 STATEMENT: >>>
-The Requirements Tool shall support bi-directional tracing between requirements content and implementation source code with only minimal changes needed in the source code.
+The Requirements Tool shall support bi-directional tracing between requirements
+content and implementation source code with only minimal changes needed in the
+source code.
 
-NOTE: The Requirements Tool does not necessarily have to implement the complete tracing process. It may delegate parts of the traceability task to other tools, e.g., Doxygen, Lobster, etc.
+NOTE: The Requirements Tool does not necessarily have to implement the complete
+tracing process. It may delegate parts of the traceability task to other tools,
+e.g., Doxygen, Lobster, etc.
 <<<
 RATIONALE: >>>
-This requirement connects the worlds of requirements and source code which ensures that the traceability between requirements-implementation and requirements-tests can be achieved in an explicit way. Without a direct support of tracing requirements to source code by a requirements tool, the users have to find workarounds that are less efficient.
+This requirement connects the worlds of requirements and source code which
+ensures that the traceability between requirements-implementation and
+requirements-tests can be achieved in an explicit way. Without a direct support
+of tracing requirements to source code by a requirements tool, the users have to
+find workarounds that are less efficient.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -723,9 +843,14 @@ TITLE: Requirements exchange formats (export/import)
 [TEXT]
 MID: ecc76e0991e44d6282776365496193e6
 STATEMENT: >>>
-This section captures the requirements related to "Requirements exchange" as outlined in the section [LINK: SECTION-LRTS-Workflows].
+This section captures the requirements related to "Requirements exchange" as
+outlined in the section [LINK: SECTION-LRTS-Workflows].
 
-The Requirements Tool should fundamentally support the exchange of documentation and requirements with other tools. Importing data into this tool and exporting data from it to other tools should be straightforward. The key focus of this section's requirements is on enabling seamless access to requirements and documentation data.
+The Requirements Tool should fundamentally support the exchange of documentation
+and requirements with other tools. Importing data into this tool and exporting
+data from it to other tools should be straightforward. The key focus of this
+section's requirements is on enabling seamless access to requirements and
+documentation data.
 <<<
 
 [REQUIREMENT]
@@ -734,7 +859,8 @@ UID: SDOC-SSS-96
 STATUS: Active
 TITLE: PDF export
 STATEMENT: >>>
-The Requirements Tool shall support exporting documentation content to PDF, both individual documents and complete documentation trees.
+The Requirements Tool shall support exporting documentation content to PDF, both
+individual documents and complete documentation trees.
 <<<
 RATIONALE: >>>
 PDF is one of the most common formats for reviewing documentation.
@@ -746,10 +872,12 @@ UID: SDOC-SSS-58
 STATUS: Active
 TITLE: ReqIF export/import
 STATEMENT: >>>
-The Requirements Tool shall support exporting/importing requirements content from/to ReqIF format.
+The Requirements Tool shall support exporting/importing requirements content
+from/to ReqIF format.
 <<<
 RATIONALE: >>>
-ReqIF is a standard for exchanging requirements. There is currently no other standard of a higher maturity.
+ReqIF is a standard for exchanging requirements. There is currently no other
+standard of a higher maturity.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -761,7 +889,8 @@ UID: SDOC-SSS-59
 STATUS: Active
 TITLE: CSV export/import
 STATEMENT: >>>
-The Requirements Tool shall support exporting/importing requirements content from/to CSV.
+The Requirements Tool shall support exporting/importing requirements content
+from/to CSV.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -773,7 +902,8 @@ UID: SDOC-SSS-60
 STATUS: Active
 TITLE: Excel export/import
 STATEMENT: >>>
-The Requirements Tool shall support exporting/importing requirements content from/to Excel.
+The Requirements Tool shall support exporting/importing requirements content
+from/to Excel.
 <<<
 
 [[/SECTION]]
@@ -788,7 +918,8 @@ UID: SDOC-SSS-92
 STATUS: Active
 TITLE: Project-level configuration
 STATEMENT: >>>
-The Requirements Tool shall provide a solution for configuring the project-level options.
+The Requirements Tool shall provide a solution for configuring the project-level
+options.
 
 NOTE: Examples of project-level options:
 
@@ -805,7 +936,8 @@ UID: SDOC-SSS-93
 STATUS: Active
 TITLE: Document-level configuration
 STATEMENT: >>>
-The Requirements Tool shall provide a solution for configuring the document-level options.
+The Requirements Tool shall provide a solution for configuring the
+document-level options.
 
 NOTE: Examples of document-level options:
 
@@ -814,7 +946,9 @@ NOTE: Examples of document-level options:
 - Other options local to the content and the presentation of a given document.
 <<<
 RATIONALE: >>>
-Sometimes, the project-level configuration can be not fine-grained enough. The requirement ensures that the requirements tool allows a configuration on a document level.
+Sometimes, the project-level configuration can be not fine-grained enough. The
+requirement ensures that the requirements tool allows a configuration on a
+document level.
 <<<
 
 [[/SECTION]]
@@ -836,7 +970,8 @@ UID: SDOC-SSS-13
 STATUS: Active
 TITLE: Support large requirements sets
 STATEMENT: >>>
-The Requirements Tool shall support requirement trees with at least 10000 requirements.
+The Requirements Tool shall support requirement trees with at least 10000
+requirements.
 <<<
 
 [REQUIREMENT]
@@ -845,7 +980,8 @@ UID: SDOC-SSS-14
 STATUS: Active
 TITLE: Support large project trees
 STATEMENT: >>>
-The Requirements Tool shall be able to handle documentation packages of at least 100 documents without significant performance degradation.
+The Requirements Tool shall be able to handle documentation packages of at least
+100 documents without significant performance degradation.
 <<<
 
 [[/SECTION]]
@@ -860,13 +996,16 @@ UID: SDOC-SSS-94
 STATUS: Active
 TITLE: Data integrity of documentation/requirements
 STATEMENT: >>>
-The Requirements Tool shall ensure the integrity of stored documentation and requirements data throughout its lifecycle.
+The Requirements Tool shall ensure the integrity of stored documentation and
+requirements data throughout its lifecycle.
 <<<
 RATIONALE: >>>
-The requirement ensures that the tool and the tool's development includes measures for reducing the risk of any data corruption.
+The requirement ensures that the tool and the tool's development includes
+measures for reducing the risk of any data corruption.
 <<<
 COMMENT: >>>
-This includes safeguarding against data corruption, loss, and ensuring the reliability of links within the documentation.
+This includes safeguarding against data corruption, loss, and ensuring the
+reliability of links within the documentation.
 <<<
 
 [[/SECTION]]
@@ -893,7 +1032,8 @@ NOTE: Factors to consider:
 - The interoperability of the tool with other tools.
 <<<
 RATIONALE: >>>
-A tool that can be used by a large number of people simplifies its adoption and allows more users to work with documentation and requirements.
+A tool that can be used by a large number of people simplifies its adoption and
+allows more users to work with documentation and requirements.
 <<<
 
 [REQUIREMENT]
@@ -902,7 +1042,8 @@ UID: SDOC-SSS-97
 STATUS: Active
 TITLE: Tool identification
 STATEMENT: >>>
-The Requirements Tool shall provide identifying information, including title, release version, and project website links.
+The Requirements Tool shall provide identifying information, including title,
+release version, and project website links.
 <<<
 
 [REQUIREMENT]
@@ -913,7 +1054,10 @@ TITLE: Easy user experience
 STATEMENT: >>>
 The Requirements Tool shall provide a smooth user experience.
 
-NOTE: Documentation and requirements management are composite activities that consist of several types of repetitive tasks. A requirements tool user experience should assist in automating these tasks as far as possible and make the overall workflow efficient and precise.
+NOTE: Documentation and requirements management are composite activities that
+consist of several types of repetitive tasks. A requirements tool user
+experience should assist in automating these tasks as far as possible and make
+the overall workflow efficient and precise.
 <<<
 
 [REQUIREMENT]
@@ -925,7 +1069,8 @@ STATEMENT: >>>
 The Requirements Tool shall be capable of supporting a large number of users.
 <<<
 RATIONALE: >>>
-Many documentation and requirements projects involve large groups of people. The requirements tool should not become a bottleneck when a number of users grows.
+Many documentation and requirements projects involve large groups of people. The
+requirements tool should not become a bottleneck when a number of users grows.
 <<<
 
 [REQUIREMENT]
@@ -934,7 +1079,8 @@ UID: SDOC-SSS-82
 STATUS: Active
 TITLE: Individual use (home PC)
 STATEMENT: >>>
-The Requirements Tool shall be usable on the normal personal computers, e.g., do not require a special cloud deployment.
+The Requirements Tool shall be usable on the normal personal computers, e.g., do
+not require a special cloud deployment.
 <<<
 
 [REQUIREMENT]
@@ -943,7 +1089,8 @@ UID: SDOC-SSS-83
 STATUS: Active
 TITLE: Server-based deployments (IT-friendly setup)
 STATEMENT: >>>
-The Requirements Tool shall be deployable to the network of computers, e.g., provide a server instance.
+The Requirements Tool shall be deployable to the network of computers, e.g.,
+provide a server instance.
 <<<
 COMMENT: >>>
 Scaling from smaller setups (e.g., Raspberry PI in an office network) to
@@ -956,7 +1103,8 @@ UID: SDOC-SSS-84
 STATUS: Active
 TITLE: Requirements database
 STATEMENT: >>>
-The Requirements Tool shall store documentation and requirements data in a database.
+The Requirements Tool shall store documentation and requirements data in a
+database.
 <<<
 RATIONALE: >>>
 A database allows:
@@ -976,7 +1124,9 @@ STATEMENT: >>>
 The Requirements Tool shall provide a Web API interface.
 <<<
 RATIONALE: >>>
-Besides a direct access to the tool's source code, accessing an API deployed to a server provides additional capabilities for getting and manipulating requirements/documentation content.
+Besides a direct access to the tool's source code, accessing an API deployed to
+a server provides additional capabilities for getting and manipulating
+requirements/documentation content.
 <<<
 
 [REQUIREMENT]
@@ -985,11 +1135,14 @@ UID: SDOC-SSS-86
 STATUS: Active
 TITLE: Programming access via API (SDK)
 STATEMENT: >>>
-The Requirements Tool shall provide a Software Development Kit (SDK) that allows customization of the Requirements Tool functions.
+The Requirements Tool shall provide a Software Development Kit (SDK) that allows
+customization of the Requirements Tool functions.
 
-NOTE: An SDK provides access to the API of the Requirements Tool. Examples of functions that may be used by the users of the tool:
+NOTE: An SDK provides access to the API of the Requirements Tool. Examples of
+functions that may be used by the users of the tool:
 
-- Custom import/export functions to/from various requirements/documentation formats.
+- Custom import/export functions to/from various requirements/documentation
+  formats.
 - Implement custom visualization functions.
 - Implement integration with other tools.
 <<<
@@ -1006,7 +1159,8 @@ STATEMENT: >>>
 The Requirements Tool shall provide programmatic access to requirements data.
 <<<
 RATIONALE: >>>
-When the requirements data is accessible by a user directly, it is possible to exchange the data or implement additional scripting procedures.
+When the requirements data is accessible by a user directly, it is possible to
+exchange the data or implement additional scripting procedures.
 <<<
 
 [[/SECTION]]
@@ -1029,7 +1183,8 @@ A static HTML export capability enables:
 
 - Viewing requirements in browsers without any additional software.
 - Exchanging HTML content as zip between users.
-- Publishing HTML content via static website hosting providers (GitHub and GitLab Pages, Read the Docs, Heroku, etc.).
+- Publishing HTML content via static website hosting providers (GitHub and
+  GitLab Pages, Read the Docs, Heroku, etc.).
 <<<
 
 [REQUIREMENT]
@@ -1065,12 +1220,14 @@ UID: SDOC-SSS-33
 STATUS: Active
 TITLE: Version control (Git)
 STATEMENT: >>>
-The Requirements Tool shall support the software version control systems (e.g., Git).
+The Requirements Tool shall support the software version control systems (e.g.,
+Git).
 <<<
 RATIONALE: >>>
 - Git allows precise tracking of the changes to the documentation.
 - Requirements/documentation content can be release-tagged.
-- The "Time machine" function: ability to review the older state of the documentation/requirements tree.
+- The "Time machine" function: ability to review the older state of the
+  documentation/requirements tree.
 <<<
 
 [REQUIREMENT]
@@ -1092,7 +1249,8 @@ UID: SDOC-SSS-69
 STATUS: Active
 TITLE: Conservative languages for implementation
 STATEMENT: >>>
-The Requirements Tool shall be implemented using the popular programming languages.
+The Requirements Tool shall be implemented using the popular programming
+languages.
 
 NOTE: Examples of the most popular programming languages:
 
@@ -1102,10 +1260,12 @@ NOTE: Examples of the most popular programming languages:
 - JavaScript
 <<<
 RATIONALE: >>>
-Choosing a less popular programming language can limit the long-term maintainability of the tool.
+Choosing a less popular programming language can limit the long-term
+maintainability of the tool.
 <<<
 COMMENT: >>>
-Examples of less popular programming languages, with all due respect to their powerful features: Haskell, F#, Ada, etc.
+Examples of less popular programming languages, with all due respect to their
+powerful features: Haskell, F#, Ada, etc.
 <<<
 
 [REQUIREMENT]
@@ -1118,9 +1278,12 @@ The Requirements Tool shall be designed for long-term maintenance.
 
 NOTE: Long-term maintenance aspects to consider:
 
-- Careful selection of the technologies used, e.g., avoid building on too many unrelated technologies at the same time.
-- Take into account the existing experience of the development team. Consider the availability of qualified developers in the future.
-- Take into account maintainability by the development team as well as the users, e.g., IT/DevOps department.
+- Careful selection of the technologies used, e.g., avoid building on too many
+  unrelated technologies at the same time.
+- Take into account the existing experience of the development team. Consider
+  the availability of qualified developers in the future.
+- Take into account maintainability by the development team as well as the
+  users, e.g., IT/DevOps department.
 <<<
 
 [[/SECTION]]
@@ -1143,7 +1306,8 @@ UID: SDOC-SSS-88
 STATUS: Active
 TITLE: Text files for storing documentation and requirements
 STATEMENT: >>>
-The Requirements Tool shall allow storage of documentation and requirements content using text files.
+The Requirements Tool shall allow storage of documentation and requirements
+content using text files.
 <<<
 
 [REQUIREMENT]
@@ -1173,7 +1337,8 @@ UID: SDOC-SSS-34
 STATUS: Active
 TITLE: Requirements data from multiple repositories
 STATEMENT: >>>
-The Requirement Tool shall allow reading requirements files from multiple folders or repositories.
+The Requirement Tool shall allow reading requirements files from multiple
+folders or repositories.
 
 NOTE: The folders/repositories can be arbitrarily nested.
 <<<
@@ -1210,10 +1375,13 @@ UID: SDOC-SSS-76
 STATUS: Active
 TITLE: Requirements engineering
 STATEMENT: >>>
-The Requirements Tool's development process shall include the Requirements Tool's own requirements engineering.
+The Requirements Tool's development process shall include the Requirements
+Tool's own requirements engineering.
 <<<
 RATIONALE: >>>
-A requirements tool is not a trivial project. A clear set of requirements for the developed tool helps to structure the development and communicate the functions of the tool to the developers and the users of the tool.
+A requirements tool is not a trivial project. A clear set of requirements for
+the developed tool helps to structure the development and communicate the
+functions of the tool to the developers and the users of the tool.
 <<<
 
 [REQUIREMENT]
@@ -1222,10 +1390,15 @@ UID: SDOC-SSS-50
 STATUS: Active
 TITLE: Self-hosted requirements
 STATEMENT: >>>
-The Requirements Tool's requirements shall be developed and stored using the Requirements Tool itself.
+The Requirements Tool's requirements shall be developed and stored using the
+Requirements Tool itself.
 <<<
 RATIONALE: >>>
-While not strictly necessary, developing the requirements for the tool using the tool itself aids developers in test-driving its functionality during the requirement development phase. Moreover, having the tool host its own requirements provides a tangible and dynamic illustration of how the tool can be employed for crafting requirements documentation.
+While not strictly necessary, developing the requirements for the tool using the
+tool itself aids developers in test-driving its functionality during the
+requirement development phase. Moreover, having the tool host its own
+requirements provides a tangible and dynamic illustration of how the tool can be
+employed for crafting requirements documentation.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -1241,10 +1414,13 @@ The Requirements Tool's development process shall ensure:
 
 - A testability of the tool.
 - The highest possible coverage of the tool's code by test.
-- Usage of modern testing methods to ensure adequate coverage of the tool's functions (e.g., command-line interface, web interface, smallest units of code, etc.).
+- Usage of modern testing methods to ensure adequate coverage of the tool's
+  functions (e.g., command-line interface, web interface, smallest units of
+  code, etc.).
 <<<
 RATIONALE: >>>
-The presence of tests, the adequate selection of test methods and a high test coverage are preconditions for a high quality of the requirements tool.
+The presence of tests, the adequate selection of test methods and a high test
+coverage are preconditions for a high quality of the requirements tool.
 <<<
 
 [REQUIREMENT]
@@ -1253,10 +1429,16 @@ UID: SDOC-SSS-78
 STATUS: Active
 TITLE: Tool qualification
 STATEMENT: >>>
-The Requirements Tool's development process shall ensure that the tool can be qualified for the use in critical product developments as required by the rigorous technical standards (e.g., EN IEC 61508).
+The Requirements Tool's development process shall ensure that the tool can be
+qualified for the use in critical product developments as required by the
+rigorous technical standards (e.g., EN IEC 61508).
 <<<
 RATIONALE: >>>
-Many project developments require a qualification of the tools used during the development. A requirements tool is one of the critical tools that affect the project development. If a requirement tool is developed to the higher standards of quality, it simplifies the argument of bringing the tool forward and using it in a particular project.
+Many project developments require a qualification of the tools used during the
+development. A requirements tool is one of the critical tools that affect the
+project development. If a requirement tool is developed to the higher standards
+of quality, it simplifies the argument of bringing the tool forward and using it
+in a particular project.
 <<<
 
 [[/SECTION]]
@@ -1269,7 +1451,8 @@ TITLE: Licensing and distribution
 [TEXT]
 MID: 92bf658bcddb4d2899b78c526fbddf38
 STATEMENT: >>>
-This section outlines the requirements for the "free and open source" aspect of the Requirements Tool.
+This section outlines the requirements for the "free and open source" aspect of
+the Requirements Tool.
 <<<
 
 [REQUIREMENT]
@@ -1278,7 +1461,8 @@ UID: SDOC-SSS-38
 STATUS: Active
 TITLE: Open source
 STATEMENT: >>>
-The Requirements Tool's source code shall be publicly available, e.g., hosted on a code hosting platform such as GitHub or GitLab.
+The Requirements Tool's source code shall be publicly available, e.g., hosted on
+a code hosting platform such as GitHub or GitLab.
 <<<
 
 [REQUIREMENT]
@@ -1287,7 +1471,8 @@ UID: SDOC-SSS-39
 STATUS: Active
 TITLE: Only open source dependencies
 STATEMENT: >>>
-The Requirement Tool's source code shall be based on open source software components.
+The Requirement Tool's source code shall be based on open source software
+components.
 <<<
 
 [REQUIREMENT]
@@ -1296,12 +1481,14 @@ UID: SDOC-SSS-40
 STATUS: Active
 TITLE: Free
 STATEMENT: >>>
-The Requirements Tool shall be licensed under a permissive license, ensuring no/minimal constraints on the utilization and dissemination of the project.
+The Requirements Tool shall be licensed under a permissive license, ensuring
+no/minimal constraints on the utilization and dissemination of the project.
 
 NOTE: Example of a permissive license: MIT, Apache 2.
 <<<
 RATIONALE: >>>
-This requirement captures the essence of an open and free requirements management tool.
+This requirement captures the essence of an open and free requirements
+management tool.
 <<<
 
 [[/SECTION]]

@@ -85,6 +85,7 @@ const CONTROLS_PANEL_HEIGHT = `32px`;
 const BULK_MODE = 'bulk';
 const UNDO_MODE = 'undo';
 const TOC_STATE_CHANGED_EVENT = strictDoc.events.TOC_STATE_CHANGED;
+const TOC_FRAGMENT_RESOLVED_EVENT = strictDoc.events.TOC_FRAGMENT_RESOLVED;
 let lastBulkSnapshot = null;
 
 const _TRUE = 'collapsed';
@@ -231,7 +232,7 @@ function main() {
       if (mutation.type === 'childList') {
         let addedToc = Array.from(mutation.addedNodes).find(node => isCollapsibleList(node));
         if (addedToc) {
-          run(mutatingFrame)
+          runAndExpandToHash(mutatingFrame)
         }
       }
     }
@@ -244,7 +245,23 @@ function main() {
     }
   );
 
-  run(mutatingFrame)
+  // * React to URL navigation directly (own concern, independent of
+  // * toc_highlighting.js): a plain `hashchange` covers back/forward and
+  // * manually edited/external/bookmarked URLs. Turbo-frame navigations
+  // * that swap in a new TOC don't fire `hashchange` (they use the History
+  // * API), so those are covered by runAndExpandToHash() above instead.
+  window.addEventListener('hashchange', () => expandToCurrentHash(mutatingFrame));
+
+  // * toc_highlighting.js notifies us only for the narrow edge case where a
+  // * hash points at a renamed/renumbered anchor: it silently corrects the
+  // * URL via history.replaceState, which does not fire `hashchange`, so we
+  // * would otherwise never learn about the corrected target.
+  // * See app_core.js for the full bus contract.
+  strictDoc.bus.on(TOC_FRAGMENT_RESOLVED_EVENT, event => {
+    expandToAnchorId(mutatingFrame, event.detail && event.detail.anchor);
+  });
+
+  runAndExpandToHash(mutatingFrame)
 }
 
 // Run TOC processing for the collapsible-list root
@@ -255,6 +272,31 @@ function run(mount) {
     return;
   }
   processToc(toc);
+}
+
+// run() followed by expanding to the anchor currently in the URL, if any -
+// covers the turbo-frame-swap navigation case (no native `hashchange`).
+function runAndExpandToHash(mount) {
+  run(mount);
+  expandToCurrentHash(mount);
+}
+
+// Expand collapsed ancestor branches for whatever anchor is currently in
+// `window.location.hash`, if there's a matching TOC link.
+function expandToCurrentHash(mount) {
+  const hash = window.location.hash;
+  const anchorId = hash ? decodeURIComponent(hash.slice(1)) : null;
+  expandToAnchorId(mount, anchorId);
+}
+
+// Expand collapsed ancestor branches up to (not including) the TOC link
+// matching `anchorId`.
+function expandToAnchorId(mount, anchorId) {
+  const link = resolveTocLinkByAnchor(mount, anchorId);
+  if (expandAncestorsToLink(link)) {
+    updateSessionStorage();
+    notifyTocStateChanged();
+  }
 }
 
 // Detect the TOC root node when it is injected into the frame.
@@ -341,6 +383,41 @@ function bulkToggleChildBrunches(controls, handler) {
   });
   updateSessionStorage();
   notifyTocStateChanged();
+}
+
+// Resolve a TOC <a> element by anchor id (e.g. from the URL hash or a bus
+// event), rather than receiving a live DOM reference from another script.
+function resolveTocLinkByAnchor(mount, anchorId) {
+  if (!anchorId) {
+    return null;
+  }
+  const toc = mount.querySelector(`[${ROOT_SELECTOR}]`);
+  return toc ? toc.querySelector(`a[anchor="${CSS.escape(anchorId)}"]`) : null;
+}
+
+// Expand collapsed ancestor branches of a TOC link, stopping at the link itself.
+// The link's own branch (if it is a folder) is left untouched: navigation
+// should reveal the anchor, not auto-expand what is below it.
+function expandAncestorsToLink(link) {
+  if (!link) {
+    return false;
+  }
+  let changed = false;
+  // Walk up one branch <li> at a time: from `li`, its parent <ul> is the
+  // list it sits in, and the nearest <li> ancestor of that <ul> is the
+  // branch one level up (markup pattern: <li><a/><ul>...<li>...</li>...</ul></li>).
+  let ancestorLi = link.closest('li')?.parentElement?.closest('li');
+  while (ancestorLi) {
+    if (ancestorLi.dataset[BRANCH_DATA_ATTR] === _TRUE) {
+      const handler = ancestorLi.querySelector(`:scope > [data-${HANDLER_DATA_ATTR}]`);
+      if (handler) {
+        setBranchState(handler, _FALSE);
+        changed = true;
+      }
+    }
+    ancestorLi = ancestorLi.parentElement?.closest('li');
+  }
+  return changed;
 }
 
 // ===== Bulk Controls =====

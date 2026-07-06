@@ -92,13 +92,20 @@ TITLE: Contact the developers
 [TEXT]
 MID: 3ae6491057674be1abf057b7e0d9bf21
 STATEMENT: >>>
-Join the StrictDoc mailing list on groups.io: https://groups.io/g/strictdoc. As of Q1 2025, this is the primary channel for general discussions and announcements about StrictDoc, uniting three previously separate communities: email, GitHub, and Discord.
+Join the StrictDoc mailing list on groups.io: https://groups.io/g/strictdoc. As
+of Q1 2025, this is the primary channel for general discussions and
+announcements about StrictDoc, uniting three previously separate communities:
+email, GitHub, and Discord.
 
-For more interactive discussions, join us in Discord. Here is the invitation link: https://discord.gg/4BAAME9MmG.
+For more interactive discussions, join us in Discord. Here is the invitation
+link: https://discord.gg/4BAAME9MmG.
 
-The developers can be also contacted via email: Stanislav Pankevich `s.pankevich@gmail.com <s.pankevich@gmail.com>`_ and Maryna Balioura `mettta@gmail.com <mettta@gmail.com>`_.
+The developers can be also contacted via email: Stanislav Pankevich
+`s.pankevich@gmail.com <s.pankevich@gmail.com>`_ and Maryna Balioura
+`mettta@gmail.com <mettta@gmail.com>`_.
 
-See also [LINK: SDOC_FAQ] for common topics and [LINK: SDOC_TROUBLESHOOTING] for troubleshooting the most common issues.
+See also [LINK: SDOC_FAQ] for common topics and [LINK: SDOC_TROUBLESHOOTING] for
+troubleshooting the most common issues.
 <<<
 
 [[SECTION]]
@@ -110,13 +117,25 @@ MID: c46def916b6f4df692c95f47414feebb
 STATEMENT: >>>
 The StrictDoc team hosts a weekly 1-hour office hours meeting.
 
-StrictDoc Office Hours provide an open space for users and contributors to connect with the core team. Spontaneous participation is highly encouraged – feel free to join at any time with questions, ideas, or feedback. By default, these slots are used for StrictDoc development unless a specific topic is agreed upon in advance.
+StrictDoc Office Hours provide an open space for users and contributors to
+connect with the core team. Spontaneous participation is highly encouraged –
+feel free to join at any time with questions, ideas, or feedback. By default,
+these slots are used for StrictDoc development unless a specific topic is agreed
+upon in advance.
 
-The goal is to balance core development priorities with community-driven input. While the team follows a focused roadmap, these sessions create space for discussing feature requests, improvements, and other topics that matter most to users – especially active contributors. Agenda updates will be posted in the calendar when applicable.
+The goal is to balance core development priorities with community-driven input.
+While the team follows a focused roadmap, these sessions create space for
+discussing feature requests, improvements, and other topics that matter most to
+users – especially active contributors. Agenda updates will be posted in the
+calendar when applicable.
 
-Here is a `public Google calendar <https://calendar.google.com/calendar/embed?src=9e52bdb79398efa1c138c5938a54d48918b2858a9564f7326477879ec27c34b3%40group.calendar.google.com&ctz=Europe%2FBerlin>`_ to subscribe to.
+Here is a
+`public Google calendar <https://calendar.google.com/calendar/embed?src=9e52bdb79398efa1c138c5938a54d48918b2858a9564f7326477879ec27c34b3%40group.calendar.google.com&ctz=Europe%2FBerlin>`_
+to subscribe to.
 
-When adding the calendar, it's recommended to enable notifications for new and updated events. This ensures you'll be informed if an event's agenda is updated with announcements or if the event is canceled.
+When adding the calendar, it's recommended to enable notifications for new and
+updated events. This ensures you'll be informed if an event's agenda is updated
+with announcements or if the event is canceled.
 <<<
 
 [[/SECTION]]
@@ -156,7 +175,9 @@ STATEMENT: >>>
 
 Open a command-line terminal program supported on your system.
 
-Once you have ``strictdoc`` installed (see [LINK: SDOC_UG_GETTING_STARTED] below), use the ``strictdoc new`` command to generate a hello world project skeleton.
+Once you have ``strictdoc`` installed (see [LINK: SDOC_UG_GETTING_STARTED]
+below), use the ``strictdoc new`` command to generate a hello world project
+skeleton.
 
 .. code:: text
 
@@ -204,7 +225,10 @@ TITLE: StrictDoc Examples repository
 [TEXT]
 MID: d6bde8e4055b42138d216b48692c8f26
 STATEMENT: >>>
-The `strictdoc-examples <https://github.com/strictdoc-project/strictdoc-examples>`_ repository contains a collection of basic examples. Visit the repository and read its README for details.
+The
+`strictdoc-examples <https://github.com/strictdoc-project/strictdoc-examples>`_
+repository contains a collection of basic examples. Visit the repository and
+read its README for details.
 <<<
 
 [[/SECTION]]
@@ -216,7 +240,10 @@ TITLE: StrictDoc Templates repository
 [TEXT]
 MID: 47c2088447d7452ba28962ee220ba63a
 STATEMENT: >>>
-The `strictdoc-templates <https://github.com/strictdoc-project/strictdoc-templates>`_ repository contains a growing collection of templates from the industry standards like DO-178C (aviation) and ECSS-E-ST-40C (space).
+The
+`strictdoc-templates <https://github.com/strictdoc-project/strictdoc-templates>`_
+repository contains a growing collection of templates from the industry
+standards like DO-178C (aviation) and ECSS-E-ST-40C (space).
 <<<
 
 [[/SECTION]]
@@ -263,7 +290,8 @@ Depending on an operating system, a terminal program can be, for example:
 - ``Gnome Terminal`` or ``konsole`` on Linux
 - ``Terminal`` or ``PowerShell`` on Windows.
 
-A terminal program is required to input all the commands outlined in this user guide.
+A terminal program is required to input all the commands outlined in this user
+guide.
 <<<
 
 [[/SECTION]]
@@ -289,7 +317,9 @@ TITLE: Installing "nightly" StrictDoc as a Pip package
 [TEXT]
 MID: 867f22a2767a434586d1ee4f7ee161fb
 STATEMENT: >>>
-Sometimes, it takes a while before the latest features and fixes reach the stable Pip release. In that case, installing a Pip package from the Git repository directly is possible:
+Sometimes, it takes a while before the latest features and fixes reach the
+stable Pip release. In that case, installing a Pip package from the Git
+repository directly is possible:
 
 .. code:: text
 
@@ -315,7 +345,10 @@ To build the image:
         --build-arg STRICTDOC_SOURCE=pypi \
         -t strictdoc:latest
 
-The ``STRICTDOC_SOURCE`` argument is optional (default value is ``pypi``) and can be used to specify which Git revision the container shall check out when installing StrictDoc with ``pip install``. Possible values: a branch name, e.g., ``main``, or a commit hash.
+The ``STRICTDOC_SOURCE`` argument is optional (default value is ``pypi``) and
+can be used to specify which Git revision the container shall check out when
+installing StrictDoc with ``pip install``. Possible values: a branch name, e.g.,
+``main``, or a commit hash.
 
 To run the container:
 
@@ -350,14 +383,16 @@ To run the container:
    * - ``/bin/bash -c "..."``
      - This command shall typically be ``strictdoc export`` but it can also be skipped in which case the ``docker run`` will enter the container with SSH.
 
-If entering the container manually, the ``strictdoc`` command can be run as follows:
+If entering the container manually, the ``strictdoc`` command can be run as
+follows:
 
 .. code:: text
 
     bash-5.1# strictdoc export .
     bash-5.1# exit
 
-The documentation shall be generated to ``./output/html`` which is accessible both on the host and inside the container.
+The documentation shall be generated to ``./output/html`` which is accessible
+both on the host and inside the container.
 <<<
 
 [[/SECTION]]
@@ -382,7 +417,9 @@ TITLE: Installing StrictDoc with Nix
 [TEXT]
 MID: 2045b5e37fc34a83b7457c43d816bf2c
 STATEMENT: >>>
-StrictDoc is `packaged in nixpkgs <https://search.nixos.org/packages?query=strictdoc>`_ as ``strictdoc``.
+StrictDoc is
+`packaged in nixpkgs <https://search.nixos.org/packages?query=strictdoc>`_ as
+``strictdoc``.
 
 You can try it without installing with ``nix-shell``:
 
@@ -421,9 +458,13 @@ TITLE: Static HTML export
 [TEXT]
 MID: c092847abfa04295b63f943c951f24c8
 STATEMENT: >>>
-The easiest way to see the static HTML export feature in action is to run the [LINK: SDOC_UG_HELLO_WORLD] example.
+The easiest way to see the static HTML export feature in action is to run the
+[LINK: SDOC_UG_HELLO_WORLD] example.
 
-The ``export`` command is the main producer of documentation. The native export format of StrictDoc is HTML. The ``export`` command supports a number of parameters, including the option for selecting export formats (HTML, RST, Excel, etc.). The options can be explored with the ``--help`` command.
+The ``export`` command is the main producer of documentation. The native export
+format of StrictDoc is HTML. The ``export`` command supports a number of
+parameters, including the option for selecting export formats (HTML, RST, Excel,
+etc.). The options can be explored with the ``--help`` command.
 
 .. code:: text
 
@@ -440,7 +481,9 @@ TITLE: Web server
 [TEXT]
 MID: 1fc9f6f4f84d47439bf6aa3404227ca4
 STATEMENT: >>>
-StrictDoc supports a web-based user interface. The StrictDoc web server is launched via the ``server`` command which accepts a path to a documentation tree as a parameter.
+StrictDoc supports a web-based user interface. The StrictDoc web server is
+launched via the ``server`` command which accepts a path to a documentation tree
+as a parameter.
 
 .. code:: text
 
@@ -452,13 +495,43 @@ The ``server`` command accepts a number of options. To explore the options, run:
 
     strictdoc server --help
 
-StrictDoc uses ``127.0.0.1`` as a default host and ``5111`` as a default port. When running within Docker, the host argument ``--host`` can be specified, for example, ``--host 0.0.0.0`` or a more specific host or IP address. The host and port can be also configured in the Python config file, see [LINK: SECTION-UG-Host-and-port].
+StrictDoc uses ``127.0.0.1`` as a default host and ``5111`` as a default port.
+When running within Docker, the host argument ``--host`` can be specified, for
+example, ``--host 0.0.0.0`` or a more specific host or IP address. The host and
+port can be also configured in the Python config file, see
+[LINK: SECTION-UG-Host-and-port].
 
 .. note::
 
     The implementation of the web interface is work-in-progress.
     See [LINK: SDOC_UG_LIMIT_WEB] for an overview of the existing limitations.
 <<<
+
+[[SECTION]]
+MID: 3556cc0790954c0dadab5da0c80cdfcc
+TITLE: Live reload (--watch)
+
+[TEXT]
+MID: f48a8731afa84849af3c06f302d24c98
+STATEMENT: >>>
+The ``--watch`` option enables automatic detection of file changes and live
+reload of all connected browsers:
+
+.. code:: text
+
+    strictdoc server --watch .
+
+When ``--watch`` is active, StrictDoc monitors the input document files for
+changes. If a file is modified by an external tool (such as a text editor or a
+version control operation), StrictDoc rebuilds the documentation tree and sends
+a reload signal to all connected browser tabs.
+
+.. note::
+
+    Live reload is triggered only by external changes to the watched files. Edits made through the StrictDoc web interface itself do not trigger a reload, since the server already handles those changes internally.
+<<<
+
+[[/SECTION]]
 
 [[/SECTION]]
 
@@ -475,19 +548,39 @@ STATEMENT: >>>
 
     Using StrictDoc's command-line and web interfaces should be more secure if the web server is not deployed on a public network.
 
-Due to current constraints (refer to [LINK: SDOC_UG_LIMIT_WEB]), StrictDoc requires running a server through a command line interface in one window or OS process, and separately committing changes to documents using Git in another window or OS process. Deploying StrictDoc as a shared web server is impractical, as it still requires manual commits to SDoc files via the server's command line using Git. The future development plan for StrictDoc aims to enable its use as a standalone server application, which includes resolving the following security-related issues.
+Due to current constraints (refer to [LINK: SDOC_UG_LIMIT_WEB]), StrictDoc
+requires running a server through a command line interface in one window or OS
+process, and separately committing changes to documents using Git in another
+window or OS process. Deploying StrictDoc as a shared web server is impractical,
+as it still requires manual commits to SDoc files via the server's command line
+using Git. The future development plan for StrictDoc aims to enable its use as a
+standalone server application, which includes resolving the following
+security-related issues.
 
 What makes StrictDoc's web server unsafe:
 
-- The web interface is not fully hardened against unsafe inputs, such as malformed strings or files. The web server does not perform comprehensive sanity checks on the size and validity of inputs across all its HTTP endpoints.
-- StrictDoc uses the `pickle <https://docs.python.org/3/library/pickle.html>`_ module to cache SDoc files, significantly improving performance. However, the pickle module is not secure. The pickled files are currently stored in the /tmp folder, which poses risks under certain circumstances.
-- The security-related properties of the textX/Arpeggio parser are not understood yet. We have opened a request to track this upstream: `textX -  Security considerations (#422) <https://github.com/textX/textX/discussions/422>`_.
-- Several uses of regular expressions may be unsafe, some of which have been identified by GitHub's CodeQL analyzer.
+- The web interface is not fully hardened against unsafe inputs, such as
+  malformed strings or files. The web server does not perform comprehensive
+  sanity checks on the size and validity of inputs across all its HTTP
+  endpoints.
+- StrictDoc uses the `pickle <https://docs.python.org/3/library/pickle.html>`_
+  module to cache SDoc files, significantly improving performance. However, the
+  pickle module is not secure. The pickled files are currently stored in the
+  /tmp folder, which poses risks under certain circumstances.
+- The security-related properties of the textX/Arpeggio parser are not
+  understood yet. We have opened a request to track this upstream:
+  `textX -  Security considerations (#422) <https://github.com/textX/textX/discussions/422>`_.
+- Several uses of regular expressions may be unsafe, some of which have been
+  identified by GitHub's CodeQL analyzer.
 - The security aspects of StrictDoc's dependencies have not yet been analyzed.
 
-Known security-related issues are tracked on GitHub, under the `"Security" label <https://github.com/strictdoc-project/strictdoc/issues?q=is%3Aissue+is%3Aopen+security+label%3ASecurity>`_. As StrictDoc becomes usable without command-line access, all known issues will need to be addressed or acknowledged as known limitations.
+Known security-related issues are tracked on GitHub, under the
+`"Security" label <https://github.com/strictdoc-project/strictdoc/issues?q=is%3Aissue+is%3Aopen+security+label%3ASecurity>`_.
+As StrictDoc becomes usable without command-line access, all known issues will
+need to be addressed or acknowledged as known limitations.
 
-We are committed to continuously enhancing the functionality and security of StrictDoc and welcome user feedback and contributions in this area.
+We are committed to continuously enhancing the functionality and security of
+StrictDoc and welcome user feedback and contributions in this area.
 <<<
 
 [[/SECTION]]
@@ -515,19 +608,27 @@ backward-compatible with both TextMate's JSON and PLIST grammars.
 The following IDEs are known to work:
 
 - Microsoft Visual Studio Code (TextMate JSON)
-- JetBrains's PyCharm and WebStorm (TextMate JSON). The other `JetBrains IDEs <https://www.jetbrains.com/products/>`_ are expected to work too.
+- JetBrains's PyCharm and WebStorm (TextMate JSON). The other
+  `JetBrains IDEs <https://www.jetbrains.com/products/>`_ are expected to work
+  too.
 - Eclipse (TextMate JSON)
 - Sublime Text (Sublime Syntax)
 - Neovim (Tree-sitter grammar)
 
-Due to the incompatibilities between these formats, the markup files are provided in separate repositories:
+Due to the incompatibilities between these formats, the markup files are
+provided in separate repositories:
 
-- `strictdoc-project/strictdoc.tmLanguage <https://github.com/strictdoc-project/strictdoc.tmLanguage>`_ – TextMate grammar files for StrictDoc (JSON).
-- `strictdoc-project/strictdoc.tmbundle <https://github.com/strictdoc-project/strictdoc.tmbundle>`_ – TextMate grammar files for StrictDoc (PLIST).
-- `strictdoc-project/strictdoc.sublime-syntax <https://github.com/strictdoc-project/strictdoc.sublime-syntax>`_ –  StrictDoc markup syntax highlighting in Sublime Text.
-- `manueldiagostino/tree-sitter-strictdoc <https://github.com/manueldiagostino/tree-sitter-strictdoc>`_ – StrictDoc Tree‑sitter parser for Neovim.
+- `strictdoc-project/strictdoc.tmLanguage <https://github.com/strictdoc-project/strictdoc.tmLanguage>`_
+  – TextMate grammar files for StrictDoc (JSON).
+- `strictdoc-project/strictdoc.tmbundle <https://github.com/strictdoc-project/strictdoc.tmbundle>`_
+  – TextMate grammar files for StrictDoc (PLIST).
+- `strictdoc-project/strictdoc.sublime-syntax <https://github.com/strictdoc-project/strictdoc.sublime-syntax>`_
+  – StrictDoc markup syntax highlighting in Sublime Text.
+- `manueldiagostino/tree-sitter-strictdoc <https://github.com/manueldiagostino/tree-sitter-strictdoc>`_
+  – StrictDoc Tree‑sitter parser for Neovim.
 
-The instructions for installing the StrictDoc markup can be found in all repositories.
+The instructions for installing the StrictDoc markup can be found in all
+repositories.
 
 For any other IDE, when possible, it is recommended to use the TextMate JSON
 format, unless a given IDE is known to only support the TextMate bundle format
@@ -557,8 +658,8 @@ syntax is called SDoc and it's grammar is encoded with the
 `textX <https://github.com/textX/textX>`_
 tool.
 
-The grammar is defined using textX language for defining grammars and is
-located in a grammar file:
+The grammar is defined using textX language for defining grammars and is located
+in a grammar file:
 `grammar.py <https://github.com/strictdoc-project/strictdoc/blob/main/strictdoc/backend/sdoc/grammar/grammar.py>`_.
 
 This is how a minimal possible SDoc document looks like:
@@ -579,9 +680,13 @@ TITLE: Document structure
 [TEXT]
 MID: 5419c0c9bfcc4922ac5aa79ddb333188
 STATEMENT: >>>
-An SDoc document consists of a ``[DOCUMENT]`` declaration followed by a sequence of **leaf nodes** or **composite nodes**.
+An SDoc document consists of a ``[DOCUMENT]`` declaration followed by a sequence
+of **leaf nodes** or **composite nodes**.
 
-A **leaf node** cannot contain any child nodes. It is simply a node with text fields. The default leaf nodes are defined as ``[TEXT]`` or ``[REQUIREMENT]``. Any other ``[...]`` custom leaf node can be registered by a user in a document grammar as described below in [LINK: SECTION-UG-DOCUMENT-GRAMMAR].
+A **leaf node** cannot contain any child nodes. It is simply a node with text
+fields. The default leaf nodes are defined as ``[TEXT]`` or ``[REQUIREMENT]``.
+Any other ``[...]`` custom leaf node can be registered by a user in a document
+grammar as described below in [LINK: SECTION-UG-DOCUMENT-GRAMMAR].
 
 Example of a leaf node:
 
@@ -590,7 +695,10 @@ Example of a leaf node:
     [REQUIREMENT]
     STATEMENT: StrictDoc shall be based on a document model.
 
-A **composite node** can contain other composite or leaf nodes. The default composite node is ``[[SECTION]]`` which models a section/chapter in a document. Any other ``[[...]]`` composite node can be registered by a user in a document grammar.
+A **composite node** can contain other composite or leaf nodes. The default
+composite node is ``[[SECTION]]`` which models a section/chapter in a document.
+Any other ``[[...]]`` composite node can be registered by a user in a document
+grammar.
 
 Example of a composite node:
 
@@ -604,7 +712,8 @@ Example of a composite node:
 
     [[/SECTION]]
 
-The document elements are described further below in [LINK: SECTION-UG-DOCUMENT-ELEMENTS].
+The document elements are described further below in
+[LINK: SECTION-UG-DOCUMENT-ELEMENTS].
 <<<
 
 [[/SECTION]]
@@ -768,11 +877,15 @@ displayed inline or as table blocks. The available options are:
 - ``Zebra``
 - ``Plain``
 
-The default style is Narrative. This style displays meta information and prints node fields without surrounding tables, making it most suitable for documents where nodes contain descriptive content (i.e., paragraphs of text).
+The default style is Narrative. This style displays meta information and prints
+node fields without surrounding tables, making it most suitable for documents
+where nodes contain descriptive content (i.e., paragraphs of text).
 
-The Inline, Table, and Zebra styles are all variations of a table-based format designed for requirement-like nodes.
+The Inline, Table, and Zebra styles are all variations of a table-based format
+designed for requirement-like nodes.
 
-The Plain style is the simplest option, showing only the content of the node fields without any meta information.
+The Plain style is the simplest option, showing only the content of the node
+fields without any meta information.
 
 .. code:: strictdoc
 
@@ -818,7 +931,10 @@ TITLE: Additional Metadata
 [TEXT]
 MID: f86d45b7ad1a48ec919b43a695ca9126
 STATEMENT: >>>
-StrictDoc allows additional metadata to be added in the ``[DOCUMENT]`` element. The ``METADATA:`` field accepts any number of entries, each consisting of a key-value pair on a separate line. Keys must begin with a letter and end with a colon, but are not otherwise constrained.
+StrictDoc allows additional metadata to be added in the ``[DOCUMENT]`` element.
+The ``METADATA:`` field accepts any number of entries, each consisting of a
+key-value pair on a separate line. Keys must begin with a letter and end with a
+colon, but are not otherwise constrained.
 
 .. code:: strictdoc
 
@@ -830,7 +946,9 @@ StrictDoc allows additional metadata to be added in the ``[DOCUMENT]`` element. 
       AUTHOR: John Doe
       APPROVED_BY: Jane Smith
 
-The additional metadata is also included on the front page of the exported PDF. This is useful for displaying document-specific information, such as the author's name or project identifiers.
+The additional metadata is also included on the front page of the exported PDF.
+This is useful for displaying document-specific information, such as the
+author's name or project identifiers.
 
 .. note ::
 
@@ -854,7 +972,9 @@ TITLE: TEXT
 [TEXT]
 MID: 4474709783b74b1ca31fa754c712344e
 STATEMENT: >>>
-A text node is the most basic document node which is used for normal document text. The ``[TEXT]`` is one of the default leaf elements declared in StrictDoc's default grammar. See [LINK: SECTION-UG-DOCUMENT-GRAMMAR].
+A text node is the most basic document node which is used for normal document
+text. The ``[TEXT]`` is one of the default leaf elements declared in StrictDoc's
+default grammar. See [LINK: SECTION-UG-DOCUMENT-GRAMMAR].
 
 .. code:: strictdoc
 
@@ -866,7 +986,10 @@ A text node is the most basic document node which is used for normal document te
     StrictDoc is software for technical documentation.
     <<<
 
-According to the [LINK: SECTION-UG-Strict-rule-2], arbitrary content cannot be written outside of StrictDoc's grammar structure. The ``[TEXT]`` node is therefore a designated grammar element for writing arbitrary text content, unless the other nodes, such as ``REQUIREMENT``, are used instead.
+According to the [LINK: SECTION-UG-Strict-rule-2], arbitrary content cannot be
+written outside of StrictDoc's grammar structure. The ``[TEXT]`` node is
+therefore a designated grammar element for writing arbitrary text content,
+unless the other nodes, such as ``REQUIREMENT``, are used instead.
 
 .. warning::
 
@@ -882,9 +1005,11 @@ TITLE: REQUIREMENT
 [TEXT]
 MID: f221cd0c72f846b385ec2f0a9ddd15d5
 STATEMENT: >>>
-The ``REQUIREMENT`` is used for creating requirements, for example technical requirements or project requirements.
+The ``REQUIREMENT`` is used for creating requirements, for example technical
+requirements or project requirements.
 
-Similar to ``TEXT``, the ``REQUIREMENT`` is a default leaf element declared in StrictDoc's default grammar, see [LINK: SECTION-UG-DOCUMENT-GRAMMAR].
+Similar to ``TEXT``, the ``REQUIREMENT`` is a default leaf element declared in
+StrictDoc's default grammar, see [LINK: SECTION-UG-DOCUMENT-GRAMMAR].
 
 .. code:: strictdoc
 
@@ -948,11 +1073,18 @@ TITLE: Composite nodes
 [TEXT]
 MID: ce69fe89236a4bcfa104a640def4b64a
 STATEMENT: >>>
-A composite node is similar to a regular leaf node, but it can also nest other nodes.
+A composite node is similar to a regular leaf node, but it can also nest other
+nodes.
 
-This element can be useful in lower-level specification documents where a given section must describe a single feature, and the description requires one or more levels of nesting. In such cases, it may be natural to use a composite node that is tightly connected to several related sub-nodes.
+This element can be useful in lower-level specification documents where a given
+section must describe a single feature, and the description requires one or more
+levels of nesting. In such cases, it may be natural to use a composite node that
+is tightly connected to several related sub-nodes.
 
-The ``[[SECTION]]`` element is a reserved composite node in StrictDoc's default grammar, used to represent nested document sections or chapters. Users can also define custom composite nodes by registering them in the document grammar as follows:
+The ``[[SECTION]]`` element is a reserved composite node in StrictDoc's default
+grammar, used to represent nested document sections or chapters. Users can also
+define custom composite nodes by registering them in the document grammar as
+follows:
 
 .. code:: strictdoc
 
@@ -1073,9 +1205,12 @@ TITLE: Section grammar definition
 [TEXT]
 MID: 7f2967ea1a41426ba15c0bdde2664920
 STATEMENT: >>>
-The ``[[SECTION]]`` element is registered by default in StrictDoc's grammar, but users can override this declaration by defining it manually in the grammar specification. See [LINK: SECTION-UG-DOCUMENT-GRAMMAR].
+The ``[[SECTION]]`` element is registered by default in StrictDoc's grammar, but
+users can override this declaration by defining it manually in the grammar
+specification. See [LINK: SECTION-UG-DOCUMENT-GRAMMAR].
 
-Default ``[[SECTION]]`` grammar is equivalent to the following manual definition:
+Default ``[[SECTION]]`` grammar is equivalent to the following manual
+definition:
 
 .. code:: strictdoc
 
@@ -1103,7 +1238,8 @@ Default ``[[SECTION]]`` grammar is equivalent to the following manual definition
         TYPE: String
         REQUIRED: True
 
-A user can add any custom field to the grammar declaration. However, the default set of fields typically covers most use cases.
+A user can add any custom field to the grammar declaration. However, the default
+set of fields typically covers most use cases.
 <<<
 
 [[/SECTION]]
@@ -1120,7 +1256,8 @@ TITLE: Reserved fields
 MID: 4d69fa95bd974d859973dbb34679a7c4
 STATEMENT: >>>
 While it is possible to declare a grammar with completely custom fields, there
-is a fixed set of reserved fields that StrictDoc uses for the presentation of the table of contents and the document structure:
+is a fixed set of reserved fields that StrictDoc uses for the presentation of
+the table of contents and the document structure:
 
 .. list-table:: Reserved fields in SDoc's grammar
    :widths: 20 80
@@ -1170,7 +1307,13 @@ TITLE: MID – Machine identifier
 [TEXT]
 MID: 7fe2832d60014259a8d67a09f1db102a
 STATEMENT: >>>
-StrictDoc supports the automatic generation of machine identifiers (MIDs). This optional feature can be enabled individually for each document through the document-level ``ENABLE_MID`` config option. If the MIDs are enabled, the document must also provide an explicit grammar for its nodes (see [LINK: SECTION-UG-DOCUMENT-GRAMMAR]) because the default grammar does not include the MID identifier for its default TEXT and REQUIREMENT elements. All grammar elements must include the MID field.
+StrictDoc supports the automatic generation of machine identifiers (MIDs). This
+optional feature can be enabled individually for each document through the
+document-level ``ENABLE_MID`` config option. If the MIDs are enabled, the
+document must also provide an explicit grammar for its nodes (see
+[LINK: SECTION-UG-DOCUMENT-GRAMMAR]) because the default grammar does not
+include the MID identifier for its default TEXT and REQUIREMENT elements. All
+grammar elements must include the MID field.
 
 .. code:: strictdoc
 
@@ -1204,11 +1347,16 @@ StrictDoc supports the automatic generation of machine identifiers (MIDs). This 
         TYPE: String
         REQUIRED: True
 
-When the ``ENABLE_MID`` option is enabled, StrictDoc automatically generates MID fields whenever the document is written back to the file system.
+When the ``ENABLE_MID`` option is enabled, StrictDoc automatically generates MID
+fields whenever the document is written back to the file system.
 
-With the web server, MIDs are generated automatically when a document, section, or requirement is saved.
+With the web server, MIDs are generated automatically when a document, section,
+or requirement is saved.
 
-With the command-line interface, the generation of ``MID`` can be initiated with a ``export`` command. Executing ``strictdoc export --formats sdoc`` on a document with ``ENABLE_MID: True`` results in all nodes having auto-generated MIDs.
+With the command-line interface, the generation of ``MID`` can be initiated with
+a ``export`` command. Executing ``strictdoc export --formats sdoc`` on a
+document with ``ENABLE_MID: True`` results in all nodes having auto-generated
+MIDs.
 
 .. note::
 
@@ -1216,9 +1364,14 @@ With the command-line interface, the generation of ``MID`` can be initiated with
 
 **Markdown documents**
 
-For Markdown documents, the ``ENABLE_MID`` behavior is activated automatically — no document-level option is required. Instead, the presence of a ``MID`` field in a custom grammar element is the activation signal.
+For Markdown documents, the ``ENABLE_MID`` behavior is activated automatically —
+no document-level option is required. Instead, the presence of a ``MID`` field
+in a custom grammar element is the activation signal.
 
-When a ``.gra.md`` grammar file declares a ``MID`` field for an element type, the Markdown writer automatically inserts a machine identifier for every node of that type that does not already have one. On the next read, the persisted value is treated as permanent.
+When a ``.gra.md`` grammar file declares a ``MID`` field for an element type,
+the Markdown writer automatically inserts a machine identifier for every node of
+that type that does not already have one. On the next read, the persisted value
+is treated as permanent.
 
 Example grammar with MID declared:
 
@@ -1243,7 +1396,9 @@ Example grammar with MID declared:
     **Type**: String
     **Required**: False
 
-With this grammar attached (``**Grammar**: requirements.gra.md``), any ``REQUIREMENT`` node that does not yet have a ``**MID**`` field will receive one on the first write-back.
+With this grammar attached (``**Grammar**: requirements.gra.md``), any
+``REQUIREMENT`` node that does not yet have a ``**MID**`` field will receive one
+on the first write-back.
 <<<
 
 [[SECTION]]
@@ -1253,7 +1408,9 @@ TITLE: Unique vs machine identifiers (MID vs UID)
 [TEXT]
 MID: a5a3d62d90f646aa8fac43795aa8fcbb
 STATEMENT: >>>
-Machine identifiers (MIDs) differ from and do not replace unique identifiers (UIDs). A requirement, section, or document node may have both ``MID`` and ``UID`` fields defined. For example:
+Machine identifiers (MIDs) differ from and do not replace unique identifiers
+(UIDs). A requirement, section, or document node may have both ``MID`` and
+``UID`` fields defined. For example:
 
 .. code:: strictdoc
 
@@ -1268,13 +1425,23 @@ Machine identifiers (MIDs) differ from and do not replace unique identifiers (UI
 
 Advantages of using machine identifiers:
 
-1. Machine identifiers provide a robust means of identifying documents, sections, requirements, or custom nodes. An MID can uniquely identify a given node, independent of other fields like UID or TITLE.
+1. Machine identifiers provide a robust means of identifying documents,
+   sections, requirements, or custom nodes. An MID can uniquely identify a given
+   node, independent of other fields like UID or TITLE.
 
-2. MIDs increase the portability of requirements data. Even when UID naming conventions change or nodes are relocated, the MID continues to uniquely identify the original node.
+2. MIDs increase the portability of requirements data. Even when UID naming
+   conventions change or nodes are relocated, the MID continues to uniquely
+   identify the original node.
 
-3. The unique identification of nodes via MIDs allows precise tracking of changes using StrictDoc's Diff/Changelog functionality. It allows the algorithm to accurately match requirements, sections, or document nodes, even if they are moved, renamed, or undergo metadata changes.
+3. The unique identification of nodes via MIDs allows precise tracking of
+   changes using StrictDoc's Diff/Changelog functionality. It allows the
+   algorithm to accurately match requirements, sections, or document nodes, even
+   if they are moved, renamed, or undergo metadata changes.
 
-For larger projects, particularly those with extended maintenance cycles, we strongly recommend activating machine identifiers early in the project lifecycle. This proactive approach ensures robust tracking and management of documentation throughout the project's duration.
+For larger projects, particularly those with extended maintenance cycles, we
+strongly recommend activating machine identifiers early in the project
+lifecycle. This proactive approach ensures robust tracking and management of
+documentation throughout the project's duration.
 <<<
 
 [[/SECTION]]
@@ -1502,12 +1669,17 @@ The ``RELATIONS`` field is used to connect requirements to each other:
     - TYPE: File
       VALUE: /full/path/file.py
 
-The supported relation types are: ``Parent``, ``Child``, and ``File``. To be used in a requirement, the relations must be first registered in the document grammar. The default grammar defines ``Parent`` and ``File`` relation. See [LINK: SDOC_UG_GRAMMAR_RELATIONS] for more details.
+The supported relation types are: ``Parent``, ``Child``, and ``File``. To be
+used in a requirement, the relations must be first registered in the document
+grammar. The default grammar defines ``Parent`` and ``File`` relation. See
+[LINK: SDOC_UG_GRAMMAR_RELATIONS] for more details.
 
-The ``RELATIONS`` must be the last field of a requirement. For ``TYPE: Parent`` and ``TYPE: Child`` relations, the ``VALUE`` attribute contains a parent/child's requirement
-``UID``. A requirement may reference multiple parent or child requirements by
-adding multiple ``TYPE``/``VALUE`` items. Defining circular
-references e.g. ``Req-A`` ⇒ ``Req-B`` ⇒ ``Reg-C`` ⇒ ``Req-A`` results in validation errors and must be avoided.
+The ``RELATIONS`` must be the last field of a requirement. For ``TYPE: Parent``
+and ``TYPE: Child`` relations, the ``VALUE`` attribute contains a parent/child's
+requirement ``UID``. A requirement may reference multiple parent or child
+requirements by adding multiple ``TYPE``/``VALUE`` items. Defining circular
+references e.g. ``Req-A`` ⇒ ``Req-B`` ⇒ ``Reg-C`` ⇒ ``Req-A`` results in
+validation errors and must be avoided.
 
 The ``TYPE: File``-``VALUE`` attribute contains a filename referencing the
 implementation of (parts of) this requirement. A requirement may add multiple
@@ -1535,7 +1707,8 @@ TITLE: Relation roles
 [TEXT]
 MID: a54f41576b2d40df92041862bef13600
 STATEMENT: >>>
-A requirement relation can be specialized with a role. The role must be registered in the document grammar, see [LINK: SDOC_UG_GRAMMAR_RELATIONS].
+A requirement relation can be specialized with a role. The role must be
+registered in the document grammar, see [LINK: SDOC_UG_GRAMMAR_RELATIONS].
 
 .. code:: strictdoc
 
@@ -1572,7 +1745,9 @@ A requirement relation can be specialized with a role. The role must be register
 
 In this example REQ-1 is the parent of REQ-2 and REQ-2 refines REQ-1.
 
-The reverse name of a role, if needed, is configured in the grammar with ``REVERSE_ROLE``. It is not repeated in individual requirement relations. See [LINK: SECTION-UG-Relation-roles] for the grammar syntax.
+The reverse name of a role, if needed, is configured in the grammar with
+``REVERSE_ROLE``. It is not repeated in individual requirement relations. See
+[LINK: SECTION-UG-Relation-roles] for the grammar syntax.
 <<<
 
 [[/SECTION]]
@@ -1601,17 +1776,31 @@ Example:
     Multiline field.
     <<<
 
-The following summarizes the current StrictDoc convention for using single-line vs. multiline fields:
+The following summarizes the current StrictDoc convention for using single-line
+vs. multiline fields:
 
-In the default and most common use case, single-line fields are used for meta-information such as ``MID``, ``UID``, ``TITLE``, ``TAGS``, etc. Multiline fields are used for the actual document or requirement content such as ``STATEMENT``, ``RATIONALE``, ``COMMENT``, and similar fields.
+In the default and most common use case, single-line fields are used for
+meta-information such as ``MID``, ``UID``, ``TITLE``, ``TAGS``, etc. Multiline
+fields are used for the actual document or requirement content such as
+``STATEMENT``, ``RATIONALE``, ``COMMENT``, and similar fields.
 
-Single-line fields are parsed as plain text, not as RST. To render RST or to have ``[LINK: ...]`` recognized as HTML, the field must be multiline.
+Single-line fields are parsed as plain text, not as RST. To render RST or to
+have ``[LINK: ...]`` recognized as HTML, the field must be multiline.
 
-By convention, each node contains one primary multiline field: ``STATEMENT``, ``CONTENT`` or ``DESCRIPTION``. All fields before the primary multiline field should be single-line fields that store meta-information, and all fields after the primary multiline field should typically be multiline content.
+By convention, each node contains one primary multiline field: ``STATEMENT``,
+``CONTENT`` or ``DESCRIPTION``. All fields before the primary multiline field
+should be single-line fields that store meta-information, and all fields after
+the primary multiline field should typically be multiline content.
 
-A fallback to this rule applies when a node does not have a content field, in which case the ``TITLE`` field serves as a boundary between single-line and multiline fields. If a node has neither a content field nor a ``TITLE`` field, all fields are treated as multiline.
+A fallback to this rule applies when a node does not have a content field, in
+which case the ``TITLE`` field serves as a boundary between single-line and
+multiline fields. If a node has neither a content field nor a ``TITLE`` field,
+all fields are treated as multiline.
 
-There is an ongoing discussion on GitHub about formalizing the single-line and multiline convention in the SDoc format: https://github.com/strictdoc-project/strictdoc/discussions/2221. User feedback is welcome.
+There is an ongoing discussion on GitHub about formalizing the single-line and
+multiline convention in the SDoc format:
+https://github.com/strictdoc-project/strictdoc/discussions/2221. User feedback
+is welcome.
 <<<
 
 [[/SECTION]]
@@ -1627,11 +1816,12 @@ STATEMENT: >>>
 .. note::
     The composable documents is an early feature with only 50%+ of the implementation complete. See `Epic: UI: Composable documents <https://github.com/strictdoc-project/strictdoc/issues/1698>`_ for an overview of the aspects that are still missing.
 
-StrictDoc ``.sdoc`` files can be built-up from including other documents where a document can be included to no more than one including document.
+StrictDoc ``.sdoc`` files can be built-up from including other documents where a
+document can be included to no more than one including document.
 
 The ``[DOCUMENT_FROM_FILE]`` element can be used anywhere body elements can be
-used (e.g. ``[SECTION]``, ``[REQUIREMENT]``, ``[TEXT]`` etc.) and will
-evaluate by inserting its contents from the file referenced by its ``FILE:`` property
+used (e.g. ``[SECTION]``, ``[REQUIREMENT]``, ``[TEXT]`` etc.) and will evaluate
+by inserting its contents from the file referenced by its ``FILE:`` property
 where it was used in the parent document. The files included must be proper SDoc
 documents and have a usual ``.sdoc`` extension.
 
@@ -1693,11 +1883,15 @@ Which will resolve to the following document after inclusion:
 [TEXT]
 MID: 952dd638d61c45ab950f271d53e56b2f
 STATEMENT: >>>
-The SDoc model and syntax provide a set of default elements, along with the option for users to create custom nodes.
+The SDoc model and syntax provide a set of default elements, along with the
+option for users to create custom nodes.
 
-The default leaf nodes are ``[TEXT]`` and ``[REQUIREMENT]``, while the default composite node is ``[[SECTION]]``. These default nodes are described below.
+The default leaf nodes are ``[TEXT]`` and ``[REQUIREMENT]``, while the default
+composite node is ``[[SECTION]]``. These default nodes are described below.
 
-To create a custom node, users must declare it in a document grammar. Instructions for creating grammars are provided in [LINK: SECTION-UG-DOCUMENT-GRAMMAR].
+To create a custom node, users must declare it in a document grammar.
+Instructions for creating grammars are provided in
+[LINK: SECTION-UG-DOCUMENT-GRAMMAR].
 <<<
 
 [[/SECTION]]
@@ -1722,7 +1916,9 @@ StrictDoc allows declaration of document grammars with custom fields that are
 specific to a particular document.
 
 First, such fields have to be registered on a document level using the
-``[GRAMMAR]`` field. The following example defines a grammar with three elements: ``SECTION``, ``TEXT``, and ``REQUIREMENT``, where the REQUIREMENT element includes several custom fields, such as the ``VERIFICATION`` field.
+``[GRAMMAR]`` field. The following example defines a grammar with three
+elements: ``SECTION``, ``TEXT``, and ``REQUIREMENT``, where the REQUIREMENT
+element includes several custom fields, such as the ``VERIFICATION`` field.
 
 .. code:: strictdoc
 
@@ -1797,9 +1993,10 @@ Each grammar element must have exactly one content field named ``STATEMENT``,
 ``DESCRIPTION`` or ``CONTENT``. The content field plays a key role in the HTML
 user interface as well as other export formats.
 
-All fields before the content field are considered meta information. Meta information
-fields are assumed to be single-line. The content field and all following fields
-accept single-line and multiline strings. See [LINK: SECTION-UG-Single-vs-multiline-fields] for more details.
+All fields before the content field are considered meta information. Meta
+information fields are assumed to be single-line. The content field and all
+following fields accept single-line and multiline strings. See
+[LINK: SECTION-UG-Single-vs-multiline-fields] for more details.
 
 .. note::
 
@@ -1918,7 +2115,8 @@ TITLE: IS_COMPOSITE
 [TEXT]
 MID: 5396d4571b4c4204b093a44980a489ed
 STATEMENT: >>>
-The ``IS_COMPOSITE`` property controls whether a document node will be treated as a leaf node, e.g., ``[NODE]``, or a composite node, e.g., ``[[NODE]]``.
+The ``IS_COMPOSITE`` property controls whether a document node will be treated
+as a leaf node, e.g., ``[NODE]``, or a composite node, e.g., ``[[NODE]]``.
 
 .. code:: strictdoc
 
@@ -1961,7 +2159,9 @@ TITLE: PREFIX
 [TEXT]
 MID: 19d4dcbf0cd24f84996bcddb778e348c
 STATEMENT: >>>
-The ``PREFIX`` property declared for a grammar element determines the prefix that will be automatically added to a UID when creating a new requirement via the StrictDoc web interface or the manage auto-uuid command.
+The ``PREFIX`` property declared for a grammar element determines the prefix
+that will be automatically added to a UID when creating a new requirement via
+the StrictDoc web interface or the manage auto-uuid command.
 
 .. code:: strictdoc
 
@@ -1991,7 +2191,8 @@ TITLE: VIEW_STYLE
 [TEXT]
 MID: 4678706b4c864f459d1b478cd703fcc1
 STATEMENT: >>>
-The ``VIEW_STYLE`` property controls which template should be used for rendering a given node.
+The ``VIEW_STYLE`` property controls which template should be used for rendering
+a given node.
 
 .. code:: strictdoc
 
@@ -2005,7 +2206,9 @@ The ``VIEW_STYLE`` property controls which template should be used for rendering
         TYPE: String
         REQUIRED: True
 
-If ``VIEW_STYLE`` is not specified at the grammar element level, StrictDoc will look up the view style from the ``VIEW_STYLE`` document-level declaration, see [LINK: SECTION-UG-VIEW_STYLE].
+If ``VIEW_STYLE`` is not specified at the grammar element level, StrictDoc will
+look up the view style from the ``VIEW_STYLE`` document-level declaration, see
+[LINK: SECTION-UG-VIEW_STYLE].
 <<<
 
 [[/SECTION]]
@@ -2020,7 +2223,8 @@ TITLE: Relations
 [TEXT]
 MID: 012b0350547a48fc9ab3fbd6d9b5d502
 STATEMENT: >>>
-The custom grammar configuration includes the optional ``RELATION:`` section which specifies the relations a given document supports.
+The custom grammar configuration includes the optional ``RELATION:`` section
+which specifies the relations a given document supports.
 
 .. code:: strictdoc
 
@@ -2045,9 +2249,12 @@ The custom grammar configuration includes the optional ``RELATION:`` section whi
     - TYPE: Parent
       VALUE: ID-001
 
-The supported relation types are ``Parent``, ``Child``, ``File``. The Parent/Child relations are valid between requirements, the File relation connects a requirement with a file.
+The supported relation types are ``Parent``, ``Child``, ``File``. The
+Parent/Child relations are valid between requirements, the File relation
+connects a requirement with a file.
 
-The default grammar relations, when a custom grammar is not specified, are ``Parent`` and ``File``.
+The default grammar relations, when a custom grammar is not specified, are
+``Parent`` and ``File``.
 <<<
 
 [[SECTION]]
@@ -2058,7 +2265,9 @@ TITLE: Relation roles
 [TEXT]
 MID: 01b8aa59963b42518d98c4e6b5e3259b
 STATEMENT: >>>
-StrictDoc's custom grammar support the configuration of relation roles. The Parent and Child relations can be further specialized with roles, such as Refines, Implements, Verifies, etc.
+StrictDoc's custom grammar support the configuration of relation roles. The
+Parent and Child relations can be further specialized with roles, such as
+Refines, Implements, Verifies, etc.
 
 .. code:: strictdoc
 
@@ -2079,7 +2288,9 @@ StrictDoc's custom grammar support the configuration of relation roles. The Pare
       - TYPE: Parent
         ROLE: Refines
 
-With this grammar, StrictDoc will only allow creating requirements that have Parent relations with the ``ROLE: Refines`` specified. Any other relations will trigger validation errors.
+With this grammar, StrictDoc will only allow creating requirements that have
+Parent relations with the ``ROLE: Refines`` specified. Any other relations will
+trigger validation errors.
 
 Optionally, a role can define a reverse display name using ``REVERSE_ROLE``:
 
@@ -2115,9 +2326,15 @@ Optionally, a role can define a reverse display name using ``REVERSE_ROLE``:
       VALUE: REQ-1
       ROLE: Refines
 
-In this example, ``REQ-2`` has a Parent relation to ``REQ-1`` with ``ROLE: Refines``. When the relation is displayed from ``REQ-2`` to ``REQ-1``, StrictDoc shows ``Refines``. When the same relation is displayed from ``REQ-1`` back to ``REQ-2``, StrictDoc shows ``Refined by``.
+In this example, ``REQ-2`` has a Parent relation to ``REQ-1`` with ``ROLE:
+Refines``. When the relation is displayed from ``REQ-2`` to ``REQ-1``, StrictDoc
+shows ``Refines``. When the same relation is displayed from ``REQ-1`` back to
+``REQ-2``, StrictDoc shows ``Refined by``.
 
-The ``REVERSE_ROLE`` field is only defined in the grammar. Individual requirement relations still specify only the canonical ``ROLE``. The ``REVERSE_ROLE`` field cannot be used without ``ROLE``. If ``REVERSE_ROLE`` is omitted, StrictDoc displays ``ROLE`` in both directions.
+The ``REVERSE_ROLE`` field is only defined in the grammar. Individual
+requirement relations still specify only the canonical ``ROLE``. The
+``REVERSE_ROLE`` field cannot be used without ``ROLE``. If ``REVERSE_ROLE`` is
+omitted, StrictDoc displays ``ROLE`` in both directions.
 
 .. note::
 
@@ -2134,9 +2351,13 @@ TITLE: Parent vs Child relations
 [TEXT]
 MID: b119e614781044eab641e20eaec872e5
 STATEMENT: >>>
-**TL;DR** If there is no compelling reason to use the Child relations, avoid using them.
+**TL;DR** If there is no compelling reason to use the Child relations, avoid
+using them.
 
-Most of the technical requirements documents can be modeled with just a Parent relation type. A typical traceability graph for a requirements project is typically child-to-parent, where the higher-level parent requirements are referred to as "Parents" by their child requirements.
+Most of the technical requirements documents can be modeled with just a Parent
+relation type. A typical traceability graph for a requirements project is
+typically child-to-parent, where the higher-level parent requirements are
+referred to as "Parents" by their child requirements.
 
 For example, in one (parent) document:
 
@@ -2163,7 +2384,10 @@ Somewhere in another child document:
     - TYPE: Parent
       VALUE: PARENT-001
 
-In some very special cases, it may be desired to also use the Child relations. For example, creating a so-called Compliance Matrix between a standard and a project requirement can use the Child relation to connect both the upper-level standard requirement with a project-level technical requirement:
+In some very special cases, it may be desired to also use the Child relations.
+For example, creating a so-called Compliance Matrix between a standard and a
+project requirement can use the Child relation to connect both the upper-level
+standard requirement with a project-level technical requirement:
 
 .. code:: strictdoc
 
@@ -2199,9 +2423,16 @@ In some very special cases, it may be desired to also use the Child relations. F
     - TYPE: Child
       VALUE: PROJECT-001
 
-With such a setup, StrictDoc generates the correct traceability graph that will link together the requirements of the PROJECT with the requirements of the STANDARD through the requirements of the compliance matrix.
+With such a setup, StrictDoc generates the correct traceability graph that will
+link together the requirements of the PROJECT with the requirements of the
+STANDARD through the requirements of the compliance matrix.
 
-Another example can be adapting the requirements of the Off-the-Shelf (OTS) project to the higher-level requirements of the user project. An intermediate requirements document can be created that connects the parent requirements of the user project with the immutable child requirements of the OTS project. This intermediate document can link the user requirement with the Parent and the OTS project with a Child link.
+Another example can be adapting the requirements of the Off-the-Shelf (OTS)
+project to the higher-level requirements of the user project. An intermediate
+requirements document can be created that connects the parent requirements of
+the user project with the immutable child requirements of the OTS project. This
+intermediate document can link the user requirement with the Parent and the OTS
+project with a Child link.
 
 Both examples above involve an activity called "tailoring" in which an
 intermediate document (the Compliance Matrix) serves as an interface between two
@@ -2221,7 +2452,9 @@ TITLE: IMPORT_FROM_FILE – Importing grammar from file
 [TEXT]
 MID: df106206da0e446e87021fbf711fdb65
 STATEMENT: >>>
-A document grammar can be described in a separate file with an extension ``.sgra`` and imported to a document. This feature may be useful when multiple documents need to share the same grammar.
+A document grammar can be described in a separate file with an extension
+``.sgra`` and imported to a document. This feature may be useful when multiple
+documents need to share the same grammar.
 
 Example:
 
@@ -2239,7 +2472,8 @@ Example:
     Requirement statement.
     <<<
 
-A grammar file has an extension ``grammar.sgra`` and contains a usual grammar declaration which starts with a ``[GRAMMAR]`` tag.
+A grammar file has an extension ``grammar.sgra`` and contains a usual grammar
+declaration which starts with a ``[GRAMMAR]`` tag.
 
 .. code:: strictdoc
 
@@ -2254,7 +2488,9 @@ A grammar file has an extension ``grammar.sgra`` and contains a usual grammar de
         TYPE: String
         REQUIRED: True
 
-When a ``[GRAMMAR]`` is declared with an ``IMPORT_FROM_FILE`` line, the grammar from the grammar file becomes the document grammar as if it was declared directly in the document.
+When a ``[GRAMMAR]`` is declared with an ``IMPORT_FROM_FILE`` line, the grammar
+from the grammar file becomes the document grammar as if it was declared
+directly in the document.
 
 .. note::
 
@@ -2268,7 +2504,8 @@ TITLE: Grammar aliases
 [TEXT]
 MID: eba1c3f3a9364f1c8785c30c6fa5f3cc
 STATEMENT: >>>
-To support sharing a grammar across multiple documents, possibly located in different directories, a grammar alias can be used as follows:
+To support sharing a grammar across multiple documents, possibly located in
+different directories, a grammar alias can be used as follows:
 
 .. code-block:: strictdoc
 
@@ -2297,7 +2534,8 @@ The grammar alias itself must be registered in the project config:
         )
         return config
 
-The grammar path must be specified relative to the directory containing the project configuration file.
+The grammar path must be specified relative to the directory containing the
+project configuration file.
 <<<
 
 [[/SECTION]]
@@ -2314,7 +2552,8 @@ TITLE: Links
 [TEXT]
 MID: 6ce1010a003146ec9e3e8d77ee89a082
 STATEMENT: >>>
-StrictDoc supports creating inline links to document sections, anchors, requirements and custom grammar elements.
+StrictDoc supports creating inline links to document sections, anchors,
+requirements and custom grammar elements.
 <<<
 
 [[SECTION]]
@@ -2324,7 +2563,8 @@ TITLE: Links
 [TEXT]
 MID: 8b07c82f462348a58c3ab81be4db753d
 STATEMENT: >>>
-Elements that have a UID can be referenced from any node’s multiline field using a ``[LINK: <UID>]`` tag.
+Elements that have a UID can be referenced from any node’s multiline field using
+a ``[LINK: <UID>]`` tag.
 
 Example:
 
@@ -2344,7 +2584,11 @@ TITLE: Anchors
 [TEXT]
 MID: 294d6a0e96424dc8a93d6502c43e8501
 STATEMENT: >>>
-The ``[ANCHOR: <anchor uid>, <optional anchor title>]`` tag creates an anchor that can be referenced from other pages using ``[LINK <Anchor UID>]``.
+The ``[ANCHOR: <anchor uid>, <optional anchor title>]`` tag creates an anchor
+that can be referenced from other pages using ``[LINK <Anchor UID>]``.
+
+The optional title can be an unquoted string, but must be enclosed in double
+quotes if it contains special characters.
 
 Example:
 
@@ -2386,10 +2630,11 @@ TITLE: Strict rule #1: One empty line between all nodes
 [TEXT]
 MID: 2ebd1f2d3c8746a383d71232756c3bd3
 STATEMENT: >>>
-StrictDoc's grammar requires each node, such as ``[REQUIREMENT]``, ``[[SECTION]]``,
-etc., to be separated with exactly one empty line from the nodes surrounding it.
-This rule is valid for all nodes. Absence of an empty line or presence of more
-than one empty line between two nodes will result in an SDoc parsing error.
+StrictDoc's grammar requires each node, such as ``[REQUIREMENT]``,
+``[[SECTION]]``, etc., to be separated with exactly one empty line from the
+nodes surrounding it. This rule is valid for all nodes. Absence of an empty line
+or presence of more than one empty line between two nodes will result in an SDoc
+parsing error.
 <<<
 
 [[/SECTION]]
@@ -2402,7 +2647,8 @@ TITLE: Strict rule #2: No content is allowed outside of SDoc grammar
 [TEXT]
 MID: 686eb01cf7db44c4bd1edd72ccb02ed0
 STATEMENT: >>>
-StrictDoc's grammar does not allow any content to be written outside the SDoc grammatical constructs.
+StrictDoc's grammar does not allow any content to be written outside the SDoc
+grammatical constructs.
 
 It is assumed that the critical content shall always be
 written in form of leaf nodes and composite nodes, such as
@@ -2455,9 +2701,13 @@ The following patterns are all invalid for multiline fields:
     <<<
 
 If you need to provide a placeholder for a field that you know has to be filled
-out soon, add a "TBD" (to be done, by our team) or a "TBC" (to be confirmed with a customer or a supplier) string.
+out soon, add a "TBD" (to be done, by our team) or a "TBC" (to be confirmed with
+a customer or a supplier) string.
 
-The Project Statistics screen provides metrics for counting the number of TBDs (To Be Determined) and TBCs (To Be Confirmed) in a document, assisting in evaluating the document's maturity. This is a common practice in the regulared industries. See [LINK: SECTION-UG-Project-statistics-screen] for more details.
+The Project Statistics screen provides metrics for counting the number of TBDs
+(To Be Determined) and TBCs (To Be Confirmed) in a document, assisting in
+evaluating the document's maturity. This is a common practice in the regulared
+industries. See [LINK: SECTION-UG-Project-statistics-screen] for more details.
 <<<
 
 [[/SECTION]]
@@ -2495,7 +2745,8 @@ TITLE: Images
 [TEXT]
 MID: e87ffdf6195c481cb39bc3d1ec29eca6
 STATEMENT: >>>
-To insert an image into a document, create a folder named ``_assets`` alongside your document and then place the image file into it.
+To insert an image into a document, create a folder named ``_assets`` alongside
+your document and then place the image file into it.
 
 This is the example of how images are included using the reST syntax:
 
@@ -2523,7 +2774,9 @@ TITLE: Mathjax support
 [TEXT]
 MID: abdf406fe10847929dd7cb12a030456f
 STATEMENT: >>>
-StrictDoc includes the `MathJax <https://www.mathjax.org/>`_ Javascript library in all document templates by default. No configuration is required to use MathJax.
+StrictDoc includes the `MathJax <https://www.mathjax.org/>`_ Javascript library
+in all document templates by default. No configuration is required to use
+MathJax.
 
 Examples of using MathJax:
 
@@ -2588,9 +2841,13 @@ The following command creates an HTML export:
     This documentation is exported by StrictDoc to HTML:
     `StrictDoc HTML export <https://strictdoc.readthedocs.io>`_
 
-The options ``--formats=html`` and ``--output-dir output-html`` can be skipped because HTML export is a default export option and the default output folder is ``output``.
+The options ``--formats=html`` and ``--output-dir output-html`` can be skipped
+because HTML export is a default export option and the default output folder is
+``output``.
 
-StrictDoc does not detect .sdoc files in the output folder. This is based on the assumption that StrictDoc should not read anything in the output folder, which is intended for transient output artifacts.
+StrictDoc does not detect .sdoc files in the output folder. This is based on the
+assumption that StrictDoc should not read anything in the output folder, which
+is intended for transient output artifacts.
 <<<
 
 [[SECTION]]
@@ -2601,22 +2858,29 @@ TITLE: Inbound Links
 [TEXT]
 MID: 742831d32ca54791b53c1dbbbd070b55
 STATEMENT: >>>
-To enable integration of StrictDoc with external tools such as bug trackers, project management systems, or wikis, StrictDoc supports stable inbound links to any node that has a ``UID``.
+To enable integration of StrictDoc with external tools such as bug trackers,
+project management systems, or wikis, StrictDoc supports stable inbound links to
+any node that has a ``UID``.
 
-To create a stable link, click the "Copy Stable Link" button located in the top-left corner of a requirement or section block:
+To create a stable link, click the "Copy Stable Link" button located in the
+top-left corner of a requirement or section block:
 
 .. image:: _assets/Feature_Copy_Stable_Link.png
    :alt: copy a stable link
    :class: image
    :width: 400
 
-The stable links have the form of a URL pointing to the project's main index page, followed by the UID (or MID) as an anchor. For example:
+The stable links have the form of a URL pointing to the project's main index
+page, followed by the UID (or MID) as an anchor. For example:
 
 ``http://your-strictdoc-site/#SDOC_UG_HELLO_WORLD``
 
 ``http://your-strictdoc-site/#742831d32ca54791b53c1dbbbd070b55``
 
-When such a link is opened, StrictDoc automatically resolves the UID (or MID) and forwards the user to the appropriate page and position within the project. This allows requirements to be moved between sections or files without breaking external references.
+When such a link is opened, StrictDoc automatically resolves the UID (or MID)
+and forwards the user to the appropriate page and position within the project.
+This allows requirements to be moved between sections or files without breaking
+external references.
 <<<
 
 [[/SECTION]]
@@ -2646,8 +2910,8 @@ The created RST files can be copied to a project created using Sphinx, see
     cd docs/sphinx && make html
 
 `StrictDoc's own Sphinx/HTML documentation
-<https://strictdoc.readthedocs.io/en/latest/sphinx>`_
-is generated this way, see the Invoke task:
+<https://strictdoc.readthedocs.io/en/latest/sphinx>`_ is generated this way, see
+the Invoke task:
 `invoke sphinx <https://github.com/strictdoc-project/strictdoc/blob/5c94aab96da4ca21944774f44b2c88509be9636e/tasks.py#L48>`_.
 <<<
 
@@ -2677,8 +2941,8 @@ The created RST files can be copied to a project created using Sphinx, see
     cd docs/sphinx && make pdf
 
 `StrictDoc's own Sphinx/PDF documentation
-<https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/>`_
-is generated this way, see the Invoke task:
+<https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/>`_ is generated
+this way, see the Invoke task:
 `invoke sphinx <https://github.com/strictdoc-project/strictdoc/blob/5c94aab96da4ca21944774f44b2c88509be9636e/tasks.py#L48>`_.
 <<<
 
@@ -2697,9 +2961,14 @@ The following command creates a JSON export:
 
     strictdoc export YourDoc.sdoc --formats=json --output-dir output/
 
-The structure of the exported JSON mostly mirrors the structure of the underlying SDoc objects that represent the project tree, documents, sections, requirements, and other nodes.
+The structure of the exported JSON mostly mirrors the structure of the
+underlying SDoc objects that represent the project tree, documents, sections,
+requirements, and other nodes.
 
-When the exported documents are included to other documents using the [LINK: UG_COMPOSABLE_DOCUMENTS] feature, the JSON export does not include the included documents but only the including documents with the included content. This can be changed by adding the ``--included-documents`` option.
+When the exported documents are included to other documents using the
+[LINK: UG_COMPOSABLE_DOCUMENTS] feature, the JSON export does not include the
+included documents but only the including documents with the included content.
+This can be changed by adding the ``--included-documents`` option.
 <<<
 
 [[/SECTION]]
@@ -2724,11 +2993,14 @@ To assign requirement UIDs automatically:
 
     strictdoc manage auto-uid <path-to-project-tree>
 
-The command goes over all requirements in the project tree and assigns missing UIDs automatically. The project tree is mutated in-place.
+The command goes over all requirements in the project tree and assigns missing
+UIDs automatically. The project tree is mutated in-place.
 
-By default, the assignment happens based on the requirement mask ``REQ-``, so the requirements will get the UIDs of ``REQ-001``, ``REQ-002``, ...
+By default, the assignment happens based on the requirement mask ``REQ-``, so
+the requirements will get the UIDs of ``REQ-001``, ``REQ-002``, ...
 
-If a document-level or a section-level requirement mask is provided, the UIDs will be generated based on that mask.
+If a document-level or a section-level requirement mask is provided, the UIDs
+will be generated based on that mask.
 
 A document-level requirement mask:
 
@@ -2762,13 +3034,18 @@ To create a new node in a document:
 
     strictdoc manage new <path-to-project-tree>
 
-The command adds a new node at the end of the target document. The node receives a unique MID and the next available UID for its document. Required fields (as defined by the document grammar) are set to ``TBD``; non-required fields are left empty.
+The command adds a new node at the end of the target document. The node receives
+a unique MID and the next available UID for its document. Required fields (as
+defined by the document grammar) are set to ``TBD``; non-required fields are
+left empty.
 
-StrictDoc reads all documents in the project tree before creating the node so that the generated UID does not collide with UIDs in any other document.
+StrictDoc reads all documents in the project tree before creating the node so
+that the generated UID does not collide with UIDs in any other document.
 
 **Selecting the target document**
 
-When the project tree contains more than one document, use ``--document-path`` to specify which document to add the node to:
+When the project tree contains more than one document, use ``--document-path``
+to specify which document to add the node to:
 
 .. code:: text
 
@@ -2776,28 +3053,35 @@ When the project tree contains more than one document, use ``--document-path`` t
 
 **Selecting the parent node**
 
-Use ``--parent-uid-or-mid`` to add the new node inside an existing document or composite (section) node:
+Use ``--parent-uid-or-mid`` to add the new node inside an existing document or
+composite (section) node:
 
 .. code:: text
 
     strictdoc manage new <path-to-project-tree> --parent-uid-or-mid <uid-or-mid>
 
-Both options can be combined. When both are given, StrictDoc validates that the specified parent node is actually present in the specified document.
+Both options can be combined. When both are given, StrictDoc validates that the
+specified parent node is actually present in the specified document.
 
 **Selecting the node type**
 
-Use ``--node-type`` to specify which grammar element type the new node should use:
+Use ``--node-type`` to specify which grammar element type the new node should
+use:
 
 .. code:: text
 
     strictdoc manage new <path-to-project-tree> --node-type <TYPE>
 
-The value must match a grammar element tag defined in the document (for example ``REQUIREMENT``, ``FEATURE``, or any custom type). If the type does not exist in the grammar, the command exits with an error listing the available types.
+The value must match a grammar element tag defined in the document (for example
+``REQUIREMENT``, ``FEATURE``, or any custom type). If the type does not exist in
+the grammar, the command exits with an error listing the available types.
 
 When ``--node-type`` is omitted, ``manage new`` applies the following default:
 
-- If the document has no explicit grammar, or its grammar includes a ``REQUIREMENT`` element, the node type defaults to ``REQUIREMENT``.
-- If the document has a custom grammar with no ``REQUIREMENT`` element, the command exits with an error and asks the user to specify ``--node-type``.
+- If the document has no explicit grammar, or its grammar includes a
+  ``REQUIREMENT`` element, the node type defaults to ``REQUIREMENT``.
+- If the document has a custom grammar with no ``REQUIREMENT`` element, the
+  command exits with an error and asks the user to specify ``--node-type``.
 <<<
 
 [[/SECTION]]
@@ -2865,16 +3149,24 @@ MID: 4398b17f61ad4dd290e72d7888597f48
 STATEMENT: >>>
 StrictDoc allows connecting requirements to source code files in two ways:
 
-1. Linking source files to requirements by adding special markers in the source code without modifying the requirements.
-2. Linking requirements to source files by adding relations in the requirements without altering the source code.
+1. Linking source files to requirements by adding special markers in the source
+   code without modifying the requirements.
+2. Linking requirements to source files by adding relations in the requirements
+   without altering the source code.
 
-The advantage of the first approach is that requirements remain agnostic to the source code and implementation details. Special markers are added solely to the source files, creating traceability back to the requirements.
+The advantage of the first approach is that requirements remain agnostic to the
+source code and implementation details. Special markers are added solely to the
+source files, creating traceability back to the requirements.
 
-The benefit of the second approach is that traceability to source files is established without any modification to the source code. This can be useful in projects where adding markers to the source code is undesirable or not feasible.
+The benefit of the second approach is that traceability to source files is
+established without any modification to the source code. This can be useful in
+projects where adding markers to the source code is undesirable or not feasible.
 
-Both options can be used independently or in combination, depending on the project setup and allocation of software components.
+Both options can be used independently or in combination, depending on the
+project setup and allocation of software components.
 
-To activate the traceability to source files, configure the project config with a dedicated feature:
+To activate the traceability to source files, configure the project config with
+a dedicated feature:
 
 .. code:: python
 
@@ -2889,9 +3181,12 @@ To activate the traceability to source files, configure the project config with 
         )
         return config
 
-By default, StrictDoc looks for source files in a directory from which the ``strictdoc`` command is run. This can be changed by using the ``source_root_path`` project-level option.
+By default, StrictDoc looks for source files in a directory from which the
+``strictdoc`` command is run. This can be changed by using the
+``source_root_path`` project-level option.
 
-See [LINK: SDOC_UG_OPTIONS_PROJECT_LEVEL] for more details about the project-level options.
+See [LINK: SDOC_UG_OPTIONS_PROJECT_LEVEL] for more details about the
+project-level options.
 
 The
 `strictdoc-examples <https://github.com/strictdoc-project/strictdoc-examples>`_
@@ -2907,11 +3202,19 @@ TITLE: Language-aware parsing of source code
 [TEXT]
 MID: 07bfe045a4934dd29d97fdb8ac567b7c
 STATEMENT: >>>
-For parsing source code and calculating traceability to requirements, StrictDoc uses language-aware parsers for supported source file types. For other source file types, StrictDoc falls back to a general parser that is agnostic of specific programming languages and their constructs, such as classes or functions.
+For parsing source code and calculating traceability to requirements, StrictDoc
+uses language-aware parsers for supported source file types. For other source
+file types, StrictDoc falls back to a general parser that is agnostic of
+specific programming languages and their constructs, such as classes or
+functions.
 
-Language-aware parsing recognizes selected language syntax, primarily enabling traceability of functions (in Python, C/C++, Rust, and others), classes (in Python, C++, and others), and tests (Python, C++, Robot Framework) to requirements.
+Language-aware parsing recognizes selected language syntax, primarily enabling
+traceability of functions (in Python, C/C++, Rust, and others), classes (in
+Python, C++, and others), and tests (Python, C++, Robot Framework) to
+requirements.
 
-Language-aware parsing is enabled automatically for supported source file types when requirement-to-source traceability is enabled:
+Language-aware parsing is enabled automatically for supported source file types
+when requirement-to-source traceability is enabled:
 
 .. code:: python
 
@@ -2936,13 +3239,18 @@ TITLE: Linking source code to requirements
 [TEXT]
 MID: c787c538cc0a422fb2898b525ec1006d
 STATEMENT: >>>
-To connect a source file to a requirement, a dedicated ``@relation`` marker must be added to the source file. Several marker types are supported, depending on the programming language. For example, the ``scope=class`` option is available for Python files but not for C files, as C does not support classes. The marker supports both () and {} for arguments.
+To connect a source file to a requirement, a dedicated ``@relation`` marker must
+be added to the source file. Several marker types are supported, depending on
+the programming language. For example, the ``scope=class`` option is available
+for Python files but not for C files, as C does not support classes. The marker
+supports both () and {} for arguments.
 
 .. note::
 
     Language-specific scopes such as ``class`` and ``function`` are available for supported source file types. See [LINK: SECTION-UG-Language-aware-parsing-of-source-code].
 
-It is also possible to use @relation markers and be compatible with Doxygen. See [LINK: SECTION-UG-Doxygen].
+It is also possible to use @relation markers and be compatible with Doxygen. See
+[LINK: SECTION-UG-Doxygen].
 
 **1\) Linking a file to a requirement**
 
@@ -2969,7 +3277,8 @@ The marker must be added to the top comment of a file.
 
 **3\) Linking language items to a requirement (Python, C, C++, Rust)**
 
-For Python, ``@relation`` markers can be placed inside `doc strings`_ to link functions and classes.
+For Python, ``@relation`` markers can be placed inside `doc strings`_ to link
+functions and classes.
 
 .. _doc strings: https://peps.python.org/pep-0257/#what-is-a-docstring
 
@@ -2983,8 +3292,10 @@ For Python, ``@relation`` markers can be placed inside `doc strings`_ to link fu
             @relation(REQ-1, scope=function)
             """
 
-For the C and C++ languages, if a ``@relation`` marker is included in a function declaration prototype (which is the most
-common practice), StrictDoc also creates a link between the requirement and the corresponding C function definition.
+For the C and C++ languages, if a ``@relation`` marker is included in a function
+declaration prototype (which is the most common practice), StrictDoc also
+creates a link between the requirement and the corresponding C function
+definition.
 
 .. code:: c
 
@@ -2997,8 +3308,9 @@ common practice), StrictDoc also creates a link between the requirement and the 
         print("Hello, World\n");
     }
 
-For Rust, ``@relation`` marker can be placed inside `doc comments`_ to automatically infer the linked item. This
-works for almost all Rust language elements like modules, functions, traits, enums or structs.
+For Rust, ``@relation`` marker can be placed inside `doc comments`_ to
+automatically infer the linked item. This works for almost all Rust language
+elements like modules, functions, traits, enums or structs.
 
 .. _doc comments: https://doc.rust-lang.org/rust-by-example/meta/doc.html#doc-comments
 
@@ -3076,7 +3388,8 @@ TITLE: Linking requirements to source code
 [TEXT]
 MID: 1c06fb7b90114633801d177459f482b5
 STATEMENT: >>>
-The linking of requirements to source files is arranged with a special RELATION type ``File``.
+The linking of requirements to source files is arranged with a special RELATION
+type ``File``.
 
 .. note::
 
@@ -3158,7 +3471,8 @@ TITLE: File relations roles
 [TEXT]
 MID: 4f477cb2e0ca42aaac814042f795b982
 STATEMENT: >>>
-StrictDoc supports relation roles for both SDoc nodes with ``TYPE: File`` and the source file markers.
+StrictDoc supports relation roles for both SDoc nodes with ``TYPE: File`` and
+the source file markers.
 
 To establish a forward link with a role from an SDoc node to a source file:
 
@@ -3200,7 +3514,9 @@ TITLE: Ignoring source code markers
 [TEXT]
 MID: 5c9881f6fa2847b3b95ef0cad131cfb3
 STATEMENT: >>>
-Sometimes, it is necessary to ignore ``@relation(...)`` markers in a specific section of a file. This can be done using the special skip keyword, as shown below:
+Sometimes, it is necessary to ignore ``@relation(...)`` markers in a specific
+section of a file. This can be done using the special skip keyword, as shown
+below:
 
 .. code:: python
 
@@ -3210,7 +3526,9 @@ Sometimes, it is necessary to ignore ``@relation(...)`` markers in a specific se
     # @relation(REQ-001, scope=range_end)
     # @relation(skip, scope=range_end)
 
-In this example, the ``skip``-relation causes StrictDoc to ignore the ``REQ-001`` requirement, so that it does not appear in the traceability information.
+In this example, the ``skip``-relation causes StrictDoc to ignore the
+``REQ-001`` requirement, so that it does not appear in the traceability
+information.
 <<<
 
 [[/SECTION]]
@@ -3227,7 +3545,9 @@ STATEMENT: >>>
 
     Insight: It is often practical to avoid maintaining test specifications and similar documents separately from the source code, since the information is closely related anyway.
 
-In addition to recognizing the ``@relation(...)`` markers described above, StrictDoc can also read SDoc node fields when they are defined in source code comments.
+In addition to recognizing the ``@relation(...)`` markers described above,
+StrictDoc can also read SDoc node fields when they are defined in source code
+comments.
 
 .. code:: c
 
@@ -3250,7 +3570,9 @@ In addition to recognizing the ``@relation(...)`` markers described above, Stric
         print("hello world\n");
     }
 
-To enable SDoc node parsing, enable requirement-to-source traceability and register the corresponding source file in the ``strictdoc_config.py`` configuration as follows:
+To enable SDoc node parsing, enable requirement-to-source traceability and
+register the corresponding source file in the ``strictdoc_config.py``
+configuration as follows:
 
 .. code:: python
 
@@ -3274,7 +3596,10 @@ To enable SDoc node parsing, enable requirement-to-source traceability and regis
         )
         return config
 
-With the above declaration, StrictDoc will locate the document with the specified UID and automatically populate it with parsed descriptions. This allows the user to start with a basic template of their choice, knowing that it will be filled with content extracted from the source files.
+With the above declaration, StrictDoc will locate the document with the
+specified UID and automatically populate it with parsed descriptions. This
+allows the user to start with a basic template of their choice, knowing that it
+will be filled with content extracted from the source files.
 
 A document template example:
 
@@ -3377,11 +3702,23 @@ MID: 57dd1fb10ba64e2f8e0b75baf772b634
 STATEMENT: >>>
 The following options are available for ReqIF export/import commands.
 
-``--reqif-multiline-is-xhtml`` This option makes StrictDoc to export all multiline fields as XHTML attributes, not as STRING (the default behavior). This is useful for interfacing with tools, such as Polarion, which assume XHTML as the primary format for writing multiline text.
+``--reqif-multiline-is-xhtml`` This option makes StrictDoc to export all
+multiline fields as XHTML attributes, not as STRING (the default behavior). This
+is useful for interfacing with tools, such as Polarion, which assume XHTML as
+the primary format for writing multiline text.
 
-``--reqif-import-markup={RST,HTML,Text}`` This option makes StrictDoc import ReqIF to SDoc documents, setting their ``MARKUP`` option to the markup value provided. The default value is RST which is the default markup of StrictDoc. When working with other ReqIF tools, very often this option can be set to HTML. It is likely that with this option, the previous option ``--reqif-multiline-is-xhtml`` should be enabled as well.
+``--reqif-import-markup={RST,HTML,Text}`` This option makes StrictDoc import
+ReqIF to SDoc documents, setting their ``MARKUP`` option to the markup value
+provided. The default value is RST which is the default markup of StrictDoc.
+When working with other ReqIF tools, very often this option can be set to HTML.
+It is likely that with this option, the previous option
+``--reqif-multiline-is-xhtml`` should be enabled as well.
 
-``--reqif-enable-mid`` This option requires the machine identifiers option to be enabled (see [LINK: SECTION-UG-Machine-identifiers-MID]) and allows all nodes machine identifiers (MID) exported as ReqIF IDENTIFIERs. This option can be useful when the MID/IDENTIFIER stability of document, section, and requirement nodes is critical when doing iterative export/import roundtrips.
+``--reqif-enable-mid`` This option requires the machine identifiers option to be
+enabled (see [LINK: SECTION-UG-Machine-identifiers-MID]) and allows all nodes
+machine identifiers (MID) exported as ReqIF IDENTIFIERs. This option can be
+useful when the MID/IDENTIFIER stability of document, section, and requirement
+nodes is critical when doing iterative export/import roundtrips.
 
 All options can be also specified in a project's Python config file as follows:
 
@@ -3444,7 +3781,8 @@ TITLE: Excel support
 [TEXT]
 MID: 65c1657a8fb04179960fca4ece265b18
 STATEMENT: >>>
-StrictDoc provides a support for Excel XLS/XLSX on input and Excel XLSX on output.
+StrictDoc provides a support for Excel XLS/XLSX on input and Excel XLSX on
+output.
 
 On input, the headers of sheet1 are used to put together a custom grammar and
 the requirements are imported one row per requirement. A best effort is made by
@@ -3501,13 +3839,15 @@ For exporting only selected fields:
 
     strictdoc export --formats=excel --fields=UID,STATUS --output-dir=Output input.sdoc
 
-For exporting a folder with multiple SDoc files, specify a path to a folder or ``.`` for a current directory:
+For exporting a folder with multiple SDoc files, specify a path to a folder or
+``.`` for a current directory:
 
 .. code:: text
 
     strictdoc export --formats=excel .
 
-If the ``output-dir`` option is not provided, the ``output/`` folder is the default value.
+If the ``output-dir`` option is not provided, the ``output/`` folder is the
+default value.
 <<<
 
 [[/SECTION]]
@@ -3522,9 +3862,11 @@ TITLE: Project statistics screen
 [TEXT]
 MID: 2fefc893de83432fa852886cc3a05fea
 STATEMENT: >>>
-The project statistics screen displays useful information about a documentation project as well as some requirements-based statistics.
+The project statistics screen displays useful information about a documentation
+project as well as some requirements-based statistics.
 
-To activate the project statistics screen, add/edit the ``strictdoc_config.py`` config file in the root of your repository with documentation content.
+To activate the project statistics screen, add/edit the ``strictdoc_config.py``
+config file in the root of your repository with documentation content.
 
 .. code:: python
 
@@ -3540,7 +3882,12 @@ To activate the project statistics screen, add/edit the ``strictdoc_config.py`` 
         )
         return config
 
-This feature is not enabled by default because it has not undergone sufficient testing by users. The particular aspect requiring extensive testing is related to StrictDoc's interaction with Git to retrieve git commit information. There remain certain unexamined edge cases and portability concerns, e.g., testing on Windows, testing projects that have no Git version control, calling StrictDoc outside of a project's root folder.
+This feature is not enabled by default because it has not undergone sufficient
+testing by users. The particular aspect requiring extensive testing is related
+to StrictDoc's interaction with Git to retrieve git commit information. There
+remain certain unexamined edge cases and portability concerns, e.g., testing on
+Windows, testing projects that have no Git version control, calling StrictDoc
+outside of a project's root folder.
 <<<
 
 [[SECTION]]
@@ -3552,7 +3899,8 @@ MID: 7cf15de69efc46a5abe6b6fc786e4b71
 STATEMENT: >>>
 StrictDoc allows users to write their own custom statistics generators.
 
-To connect a custom generator, add it to the ``strictdoc_config.py`` configuration file as follows:
+To connect a custom generator, add it to the ``strictdoc_config.py``
+configuration file as follows:
 
 .. code:: python
 
@@ -3566,9 +3914,15 @@ To connect a custom generator, add it to the ``strictdoc_config.py`` configurati
         )
         return config
 
-The path specified by the config variable must be a valid path to a Python file, and the last component must reference an existing statistics generator class. StrictDoc automatically adds the document input path to its Python search paths, so the specified path must be discoverable relative to the location where the SDoc documents are read.
+The path specified by the config variable must be a valid path to a Python file,
+and the last component must reference an existing statistics generator class.
+StrictDoc automatically adds the document input path to its Python search paths,
+so the specified path must be discoverable relative to the location where the
+SDoc documents are read.
 
-A statistics generator is a class that iterates over the traceability index, collects and calculates relevant statistics about the traceability graph, and stores the results as a list of ``Metric`` and ``MetricSection`` objects.
+A statistics generator is a class that iterates over the traceability index,
+collects and calculates relevant statistics about the traceability graph, and
+stores the results as a list of ``Metric`` and ``MetricSection`` objects.
 
 .. note::
 
@@ -3586,7 +3940,8 @@ TITLE: Mermaid diagramming and charting tool
 [TEXT]
 MID: 6a4e4467a5c0451ea8291fd94309d525
 STATEMENT: >>>
-The Mermaid tool allows to create diagrams inside of StrictDoc/RST markup as follows:
+The Mermaid tool allows to create diagrams inside of StrictDoc/RST markup as
+follows:
 
 .. code:: strictdoc
 
@@ -3606,7 +3961,8 @@ The Mermaid tool allows to create diagrams inside of StrictDoc/RST markup as fol
         </pre>
     <<<
 
-Mermaid is enabled by default. No configuration is required to use Mermaid diagrams.
+Mermaid is enabled by default. No configuration is required to use Mermaid
+diagrams.
 <<<
 
 [[/SECTION]]
@@ -3622,7 +3978,9 @@ STATEMENT: >>>
 
     StrictDoc is migrating from TOML to Python for its configuration files, see the migration note: [LINK: SECTION-UG-MIGRATE-CONFIG-2025-Q4].
 
-Once the new Python configuration syntax has been sufficiently tested, using TOML will trigger deprecation warnings. The removal of TOML support is expected to take place in 2026-Q1.
+Once the new Python configuration syntax has been sufficiently tested, using
+TOML will trigger deprecation warnings. The removal of TOML support is expected
+to take place in 2026-Q1.
 <<<
 
 [[SECTION]]
@@ -3633,9 +3991,12 @@ TITLE: Project-level configuration
 [TEXT]
 MID: 6449098df878484fbe8aed8a8b0e9a97
 STATEMENT: >>>
-StrictDoc supports reading configuration from a Python config file. The file must be called ``strictdoc_config.py`` and shall be stored in the same folder which is provided as a path to the SDoc documents.
+StrictDoc supports reading configuration from a Python config file. The file
+must be called ``strictdoc_config.py`` and shall be stored in the same folder
+which is provided as a path to the SDoc documents.
 
-For example, ``strictdoc export .`` will make StrictDoc recognize the config file, if it is stored under the current directory.
+For example, ``strictdoc export .`` will make StrictDoc recognize the config
+file, if it is stored under the current directory.
 <<<
 
 [[SECTION]]
@@ -3668,9 +4029,12 @@ TITLE: Path to assets
 [TEXT]
 MID: 7d1102cda98c4ea18c6e646b73511097
 STATEMENT: >>>
-By default, StrictDoc copies its CSS/JS and other asset files to a folder ``_static`` in the HTML output directory.
+By default, StrictDoc copies its CSS/JS and other asset files to a folder
+``_static`` in the HTML output directory.
 
-Sometimes, it is desirable to change the folder name. For example, the GitHub Pages static website engine expects the assets to be found in the ``assets`` folder.
+Sometimes, it is desirable to change the folder name. For example, the GitHub
+Pages static website engine expects the assets to be found in the ``assets``
+folder.
 
 The ``html_assets_strictdoc_dir`` allows changing the assets folder name:
 
@@ -3696,9 +4060,14 @@ TITLE: Path to cache dir
 [TEXT]
 MID: e94e9762cc0e4e1eafe57d0d9e03eb5b
 STATEMENT: >>>
-StrictDoc uses caching when reading and writing artifacts. By default, all cache files are stored in the output/``_cache`` directory. If a custom output directory is specified, the cache will be placed in the ``_cache`` subdirectory within that output directory.
+StrictDoc uses caching when reading and writing artifacts. By default, all cache
+files are stored in the output/``_cache`` directory. If a custom output
+directory is specified, the cache will be placed in the ``_cache`` subdirectory
+within that output directory.
 
-It is possible to override the default cache location using the ``cache_dir`` option in the configuration file. For example, setting it to ``./output/build`` will store cache files there.
+It is possible to override the default cache location using the ``cache_dir``
+option in the configuration file. For example, setting it to ``./output/build``
+will store cache files there.
 
 .. code:: python
 
@@ -3711,7 +4080,9 @@ It is possible to override the default cache location using the ``cache_dir`` op
         )
         return config
 
-One reserved value for this parameter is ``$TMPDIR`` which makes StrictDoc generate temporary files in the OS temporary directory under ``strictdoc_cache`` folder.
+One reserved value for this parameter is ``$TMPDIR`` which makes StrictDoc
+generate temporary files in the OS temporary directory under ``strictdoc_cache``
+folder.
 
 See [LINK: SECTION-DD-Caching-artifacts] for an overview of how caching works.
 <<<
@@ -3725,7 +4096,9 @@ TITLE: Path to source root
 [TEXT]
 MID: be42ecf5c8a84fc3bca0b73ea50647de
 STATEMENT: >>>
-When the ``REQUIREMENT_TO_SOURCE_TRACEABILITY`` feature is activated, StrictDoc looks for source files in the directory from which the ``strictdoc`` program is run. This can be changed with the ``source_root_path`` option.
+When the ``REQUIREMENT_TO_SOURCE_TRACEABILITY`` feature is activated, StrictDoc
+looks for source files in the directory from which the ``strictdoc`` program is
+run. This can be changed with the ``source_root_path`` option.
 
 .. code:: python
 
@@ -3741,7 +4114,8 @@ When the ``REQUIREMENT_TO_SOURCE_TRACEABILITY`` feature is activated, StrictDoc 
         )
         return config
 
-The ``source_root_path`` option supports relative paths, e.g. ``../source_root/``.
+The ``source_root_path`` option supports relative paths, e.g.
+``../source_root/``.
 <<<
 
 [[/SECTION]]
@@ -3753,9 +4127,9 @@ TITLE: Document line width
 [TEXT]
 MID: 6f7162b49f78452ba7aa07930db4b568
 STATEMENT: >>>
-The ``document_line_width`` option sets the maximum line width for document content.
-When set, the SDoc and Markdown writers automatically wrap long text paragraphs
-to the configured number of columns whenever a document is saved.
+The ``document_line_width`` option sets the maximum line width for document
+content. When set, the SDoc and Markdown writers automatically wrap long text
+paragraphs to the configured number of columns whenever a document is saved.
 
 This affects both the ``strictdoc format`` command and the web server's save
 operations. The minimum accepted value is ``80``.
@@ -3786,9 +4160,11 @@ TITLE: Path to custom HTML2PDF template
 [TEXT]
 MID: 225dc4d22c084a67ae049fca1098bc1a
 STATEMENT: >>>
-StrictDoc uses an internal default template when exporting documents in PDF format.
+StrictDoc uses an internal default template when exporting documents in PDF
+format.
 
-If the front page, header, or footer needs to be customised, it is possible to provide a custom template with the ``html2pdf_template`` option.
+If the front page, header, or footer needs to be customised, it is possible to
+provide a custom template with the ``html2pdf_template`` option.
 
 .. code:: python
 
@@ -3804,7 +4180,8 @@ If the front page, header, or footer needs to be customised, it is possible to p
         )
         return config
 
-When specified, the provided template will override the internal default template. The path can be absolute or relative to the project root.
+When specified, the provided template will override the internal default
+template. The path can be absolute or relative to the project root.
 
 .. note ::
 
@@ -3820,9 +4197,11 @@ TITLE: Include/exclude document paths
 [TEXT]
 MID: 27e5981c451d4ad4938ab622e3cf0be2
 STATEMENT: >>>
-Use ``include_doc_paths`` and ``exclude_doc_paths`` paths to whitelist/blacklist paths to SDoc documents.
+Use ``include_doc_paths`` and ``exclude_doc_paths`` paths to whitelist/blacklist
+paths to SDoc documents.
 
-In the following example, StrictDoc will look for all files in the input project directory, except all documents in the ``tests/`` folder.
+In the following example, StrictDoc will look for all files in the input project
+directory, except all documents in the ``tests/`` folder.
 
 .. code:: python
 
@@ -3842,9 +4221,12 @@ In the following example, StrictDoc will look for all files in the input project
 
 The behavior of wildcard symbols ``*`` and ``**`` is as follows:
 
-- The ``*`` expands to any combination of symbols that represent a valid file name, excluding the forward and backward slashes, which limits this wildcard to only match a single directory.
+- The ``*`` expands to any combination of symbols that represent a valid file
+  name, excluding the forward and backward slashes, which limits this wildcard
+  to only match a single directory.
 
-- The ``**`` expands to any combination of valid file name symbols, possibly separated by any number of slashes.
+- The ``**`` expands to any combination of valid file name symbols, possibly
+  separated by any number of slashes.
 
 .. list-table:: Examples of possible filter strings
    :widths: 20 80
@@ -3875,7 +4257,9 @@ TITLE: Include/exclude source files paths
 [TEXT]
 MID: 3908f98fab5c47668ba752d0e93033ab
 STATEMENT: >>>
-Use ``include_source_paths`` and ``exclude_source_paths`` to whitelist/blacklist paths to source files when the traceability between requirements and source files feature is enabled.
+Use ``include_source_paths`` and ``exclude_source_paths`` to whitelist/blacklist
+paths to source files when the traceability between requirements and source
+files feature is enabled.
 
 .. code:: python
 
@@ -3896,7 +4280,8 @@ Use ``include_source_paths`` and ``exclude_source_paths`` to whitelist/blacklist
         )
         return config
 
-The behavior of the wildcards is the same as for the ``include_doc_paths/exclude_doc_paths`` options.
+The behavior of the wildcards is the same as for the
+``include_doc_paths/exclude_doc_paths`` options.
 
 .. note::
 
@@ -3913,11 +4298,15 @@ TITLE: Selecting features
 [TEXT]
 MID: f43d8170c44b4d70ada2816fe71caf07
 STATEMENT: >>>
-StrictDoc has optional features and features that are developed with a lower priority.
+StrictDoc has optional features and features that are developed with a lower
+priority.
 
-The feature of exporting the SDoc documents to HTML document view is a core feature and is always enabled. The option ``features`` allows selecting which additional features should be activated or not.
+The feature of exporting the SDoc documents to HTML document view is a core
+feature and is always enabled. The option ``features`` allows selecting which
+additional features should be activated or not.
 
-The following is an example of the default configuration. The same features are active/inactive when the option ``features`` is not specified.
+The following is an example of the default configuration. The same features are
+active/inactive when the option ``features`` is not specified.
 
 .. code:: python
 
@@ -3943,7 +4332,8 @@ The following is an example of the default configuration. The same features are 
         )
         return config
 
-See [LINK: SDOC_UG_EXPERIMENTAL_FEATURES] where the experimental features are outlined.
+See [LINK: SDOC_UG_EXPERIMENTAL_FEATURES] where the experimental features are
+outlined.
 <<<
 
 [[SECTION]]
@@ -3953,7 +4343,8 @@ TITLE: Enable all features
 [TEXT]
 MID: d33880e1740d4d0892852cc8c425f66f
 STATEMENT: >>>
-To select all available features, stable and experimental, specify ``ALL_FEATURES``.
+To select all available features, stable and experimental, specify
+``ALL_FEATURES``.
 
 .. code:: python
 
@@ -3968,11 +4359,14 @@ To select all available features, stable and experimental, specify ``ALL_FEATURE
         )
         return config
 
-The advantage of this option is that all feature toggles become activated, and all extra screens and buttons are generated and visible.
+The advantage of this option is that all feature toggles become activated, and
+all extra screens and buttons are generated and visible.
 
-The disadvantage is that StrictDoc spends more time rendering extra screens that might not be needed by a particular user.
+The disadvantage is that StrictDoc spends more time rendering extra screens that
+might not be needed by a particular user.
 
-If ``ALL_FEATURES`` is present, all features are activated, regardless of any other features that are also specified or not.
+If ``ALL_FEATURES`` is present, all features are activated, regardless of any
+other features that are also specified or not.
 <<<
 
 [[/SECTION]]
@@ -4103,21 +4497,44 @@ TITLE: Python API
 [TEXT]
 MID: 4504bffd6ced4aa78848ee9e03fdd4b7
 STATEMENT: >>>
-At present, StrictDoc lacks a documented public Python API. Nevertheless, users can leverage StrictDoc's internal API to enhance existing functions or create custom import, export, and analysis tools. The architecture of StrictDoc is highly modular, so for each functional block there shall always be a dedicated Python class with a public interface, see [LINK: SECTION-DD-High-level-architecture].
+At present, StrictDoc lacks a documented public Python API. Nevertheless, users
+can leverage StrictDoc's internal API to enhance existing functions or create
+custom import, export, and analysis tools. The architecture of StrictDoc is
+highly modular, so for each functional block there shall always be a dedicated
+Python class with a public interface, see
+[LINK: SECTION-DD-High-level-architecture].
 
-One good example is the ``SDWriter`` class, which exercises the complete export of the Python data objects to the SDoc format. Since, the SDoc format is the primary data format of StrictDoc, the SDWriter is quite feature-rich in what it does and covers. The ``RSTWriter`` is less powerful because it does not reflect the full data model, but is probably worth a look as well.
+One good example is the ``SDWriter`` class, which exercises the complete export
+of the Python data objects to the SDoc format. Since, the SDoc format is the
+primary data format of StrictDoc, the SDWriter is quite feature-rich in what it
+does and covers. The ``RSTWriter`` is less powerful because it does not reflect
+the full data model, but is probably worth a look as well.
 
-The ``strictdoc/backend/reqif`` folder contains exporter/importer routines for the ReqIF format. There, the core classes from the Python data model, e.g. SDocNode, Section, Document, Grammar, etc. are created or read from and to the ReqIF format.
+The ``strictdoc/backend/reqif`` folder contains exporter/importer routines for
+the ReqIF format. There, the core classes from the Python data model, e.g.
+SDocNode, Section, Document, Grammar, etc. are created or read from and to the
+ReqIF format.
 
-The ``ManageAutoUIDCommand`` class features a good use of all APIs that one may need to read/update/write back a SDoc document tree:
+The ``ManageAutoUIDCommand`` class features a good use of all APIs that one may
+need to read/update/write back a SDoc document tree:
 
-- The ``TraceabilityIndex`` is created from a project config. The traceability index is the main class for storing the whole traceability graph in Python objects. It has plenty of methods for reading and writing things from the graph.
-- The ``DocumentUIDAnalyzer`` is an example of how the objects are manipulated in memory.
-- And finally the final sequence writes the mutated traceability graph back to files using ``SDWriter``.
+- The ``TraceabilityIndex`` is created from a project config. The traceability
+  index is the main class for storing the whole traceability graph in Python
+  objects. It has plenty of methods for reading and writing things from the
+  graph.
+- The ``DocumentUIDAnalyzer`` is an example of how the objects are manipulated
+  in memory.
+- And finally the final sequence writes the mutated traceability graph back to
+  files using ``SDWriter``.
 
-The `tests/integration/examples/python_api <https://github.com/strictdoc-project/strictdoc/tree/main/tests/integration/examples/python_api>`_ folder contains user-requested or community-contributed examples of scripts that use the Python API.
+The
+`tests/integration/examples/python_api <https://github.com/strictdoc-project/strictdoc/tree/main/tests/integration/examples/python_api>`_
+folder contains user-requested or community-contributed examples of scripts that
+use the Python API.
 
-For any custom Python API request, for example, a need to do a more advanced data analysis on SDoc data, open a GitHub issue and your specific issue will be handled.
+For any custom Python API request, for example, a need to do a more advanced
+data analysis on SDoc data, open a GitHub issue and your specific issue will be
+handled.
 <<<
 
 [[/SECTION]]
@@ -4129,9 +4546,13 @@ TITLE: User plugins
 [TEXT]
 MID: 1b399003cf974018ab5e35773b88922e
 STATEMENT: >>>
-StrictDoc allows a user to register a Python plugin class which will have its methods/hooks called while StrictDoc runs a given command.
+StrictDoc allows a user to register a Python plugin class which will have its
+methods/hooks called while StrictDoc runs a given command.
 
-The only hook supported at the moment is ``traceability_index_build_finished``, which is called right after StrictDoc has finished reading all input documents and source files, and after it has finished calculating the entire traceability index.
+The only hook supported at the moment is ``traceability_index_build_finished``,
+which is called right after StrictDoc has finished reading all input documents
+and source files, and after it has finished calculating the entire traceability
+index.
 
 The plugin must be registered in the StrictDoc Python config file:
 
@@ -4175,7 +4596,8 @@ TITLE: Custom validations
 [TEXT]
 MID: c2eb6745410d414eb883c565c603f0c7
 STATEMENT: >>>
-The StrictDoc plugin feature can be used to implement custom validations specific to a user project.
+The StrictDoc plugin feature can be used to implement custom validations
+specific to a user project.
 
 Example:
 
@@ -4244,20 +4666,49 @@ TITLE: Finding document and source files
 [TEXT]
 MID: fbdd39974b224826a2b5c7fd8c0f44d1
 STATEMENT: >>>
-When the number of document and source files grows, StrictDoc has to iterate over the contents of the disk using the filters specified in the configuration file.
+When the number of document and source files grows, StrictDoc has to iterate
+over the contents of the disk using the filters specified in the configuration
+file.
 
-When searching for information, StrictDoc considers filters such as ``include/exclude_doc_paths`` and ``include/exclude_source_paths``, as well as the .gitignore file found in the root project folder.
+When searching for information, StrictDoc considers filters such as
+``include/exclude_doc_paths`` and ``include/exclude_source_paths``, as well as
+the .gitignore file found in the root project folder.
 
-When the number of folders to search and the number of source files grows to thousands or more, StrictDoc has to perform many regular expression matches. This can slow down the documentation generation process if the filters are not optimized well enough.
+When the number of folders to search and the number of source files grows to
+thousands or more, StrictDoc has to perform many regular expression matches.
+This can slow down the documentation generation process if the filters are not
+optimized well enough.
 
-Every rule specified in the search filters in the configuration file or in .gitignore becomes a regular expression that StrictDoc has to evaluate for every folder and file being iterated over. The following guidelines are therefore relevant:
+Every rule specified in the search filters in the configuration file or in
+.gitignore becomes a regular expression that StrictDoc has to evaluate for every
+folder and file being iterated over. The following guidelines are therefore
+relevant:
 
-- The search filters used should be as precise as possible to help StrictDoc decide as quickly as possible whether it should whitelist or blacklist a given path.
-- The search is performed using Python's ``os.walk(<project root>, topdown=True)``. The search is therefore top-down, which allows exclude filters to be applied at the first point of contact with undesired folders. If an undesired folder is detected, the search does not descend into that folder and entirely skips its contents.
-- If a folder to be included or excluded is a root-level folder, the search string should start with ``/`` to indicate that StrictDoc should apply this rule only to root-level folders, ignoring all other paths as it descends into subdirectories. Example: ``/strictdoc/foo/`` instead of ``foo``.
-- Similarly, if a folder to be excluded is not at the root level but is known to be a subdirectory of a specific root-level directory, it is better to specify the full path. For example, instead of ``**/Output/``, it is better to specify ``/tests/integration/**/Output/`` to ensure that StrictDoc does not consider directories outside ``tests/integration``.
-- If a user project produces many cache artifacts using multiple tools, it is recommended to store them all in a single cache folder, for example ``build/tool1_cache``, ``build/tool2_cache``, etc., and configure StrictDoc to ignore only the ``/build/`` folder instead of several separate ones. This reduces the number of lookups StrictDoc has to perform during the search.
-- When whitelisting paths, it is better to specify paths that are known to contain wildcards in specific locations. For example, use ``src/**.py`` and ``tests/**.py`` instead of ``*.py``.
+- The search filters used should be as precise as possible to help StrictDoc
+  decide as quickly as possible whether it should whitelist or blacklist a given
+  path.
+- The search is performed using Python's ``os.walk(<project root>,
+  topdown=True)``. The search is therefore top-down, which allows exclude
+  filters to be applied at the first point of contact with undesired folders. If
+  an undesired folder is detected, the search does not descend into that folder
+  and entirely skips its contents.
+- If a folder to be included or excluded is a root-level folder, the search
+  string should start with ``/`` to indicate that StrictDoc should apply this
+  rule only to root-level folders, ignoring all other paths as it descends into
+  subdirectories. Example: ``/strictdoc/foo/`` instead of ``foo``.
+- Similarly, if a folder to be excluded is not at the root level but is known to
+  be a subdirectory of a specific root-level directory, it is better to specify
+  the full path. For example, instead of ``**/Output/``, it is better to specify
+  ``/tests/integration/**/Output/`` to ensure that StrictDoc does not consider
+  directories outside ``tests/integration``.
+- If a user project produces many cache artifacts using multiple tools, it is
+  recommended to store them all in a single cache folder, for example
+  ``build/tool1_cache``, ``build/tool2_cache``, etc., and configure StrictDoc to
+  ignore only the ``/build/`` folder instead of several separate ones. This
+  reduces the number of lookups StrictDoc has to perform during the search.
+- When whitelisting paths, it is better to specify paths that are known to
+  contain wildcards in specific locations. For example, use ``src/**.py`` and
+  ``tests/**.py`` instead of ``*.py``.
 <<<
 
 [[/SECTION]]
@@ -4276,13 +4727,27 @@ STATEMENT: >>>
 
     **TL;DR**: The following topic of portability becomes relevant if documentation created with StrictDoc has to be exported to another tool and especially if the other tool has to export the content back to StrictDoc. Writing custom export/import generators may be needed to enable a full interoperability when the less portable features are used.
 
-The portability of documentation, particularly when it involves requirements, shares similarities to the portability of programming languages. StrictDoc has several features that are useful but they can also limit the interoperability of the documentation/requirements when the content is exchanged with other tools.
+The portability of documentation, particularly when it involves requirements,
+shares similarities to the portability of programming languages. StrictDoc has
+several features that are useful but they can also limit the interoperability of
+the documentation/requirements when the content is exchanged with other tools.
 
-The following is a list of features that are considered less portable when it comes to interfacing with other tools through the existing export/import interfaces:
+The following is a list of features that are considered less portable when it
+comes to interfacing with other tools through the existing export/import
+interfaces:
 
-- [LINK: UG_COMPOSABLE_DOCUMENTS]. Composing documents from other documents is a useful feature but it may not be directly supported by other tools. When exporting to JSON or ReqIF, StrictDoc by default does not export included documents but only the including documents.
-- [LINK: UG_COMPOSITE_NODE]. A Composite Requirement is a useful concept which is natively supported by StrictDoc but it may be supported less by other tools.
-- [LINK: UG_NODE_WITHOUT_A_LEVEL]. Table of contents hierarchy where some nodes do not have TOC levels (or have custom TOC levels) can cause problems when exporting/importing documentation content if an interfacing tool does not support custom TOC nodes.
+- [LINK: UG_COMPOSABLE_DOCUMENTS].
+  Composing documents from other documents is a useful feature but it may not be
+  directly supported by other tools. When exporting to JSON or ReqIF, StrictDoc
+  by default does not export included documents but only the including
+  documents.
+- [LINK: UG_COMPOSITE_NODE].
+  A Composite Requirement is a useful concept which is natively supported by
+  StrictDoc but it may be supported less by other tools.
+- [LINK: UG_NODE_WITHOUT_A_LEVEL].
+  Table of contents hierarchy where some nodes do not have TOC levels (or have
+  custom TOC levels) can cause problems when exporting/importing documentation
+  content if an interfacing tool does not support custom TOC nodes.
 
 .. note::
 
@@ -4303,9 +4768,11 @@ TITLE: Doxygen
 [TEXT]
 MID: a8664547ac7e41399d7d8d263869abc6
 STATEMENT: >>>
-HTML documentation generated by StrictDoc can be integrated with Doxygen documentation.
+HTML documentation generated by StrictDoc can be integrated with Doxygen
+documentation.
 
-Doxygen includes a ``TAGFILE`` feature that allows linking to external documentation. This tagfile is in XML format and looks like this:
+Doxygen includes a ``TAGFILE`` feature that allows linking to external
+documentation. This tagfile is in XML format and looks like this:
 
 .. code:: xml
 
@@ -4317,23 +4784,31 @@ Doxygen includes a ``TAGFILE`` feature that allows linking to external documenta
       </compound>
     </tagfile>
 
-StrictDoc automatically generates a Doxygen tagfile containing the requirements using the export command:
+StrictDoc automatically generates a Doxygen tagfile containing the requirements
+using the export command:
 
 .. code:: text
 
     strictdoc export . --formats=html,doxygen
 
-When a requirement is referenced in a source code comment block with the command ``\ref REQ-1``, Doxygen includes a link to the corresponding ``<filename/>`` in the output.
+When a requirement is referenced in a source code comment block with the command
+``\ref REQ-1``, Doxygen includes a link to the corresponding ``<filename/>`` in
+the output.
 
-The location of the StrictDoc export can be specified in the TAGFILE field, either as a relative path, e.g., ``TAGFILES = strictdoc.tag=../../strictdoc``, or as an absolute URL, e.g., ``TAGFILES = strictdoc.tag=http://example.com/strictdoc``.
+The location of the StrictDoc export can be specified in the TAGFILE field,
+either as a relative path, e.g., ``TAGFILES = strictdoc.tag=../../strictdoc``,
+or as an absolute URL, e.g., ``TAGFILES =
+strictdoc.tag=http://example.com/strictdoc``.
 
-To make the StrictDoc @relation keyword work with Doxygen, an alias has to be created:
+To make the StrictDoc @relation keyword work with Doxygen, an alias has to be
+created:
 
 .. code:: text
 
     ALIASES  += relation{2}="\ref \1"
 
-resulting in the following syntax to be recognized by Doxygen: ``@relation{REQ-1, scope=function}``.
+resulting in the following syntax to be recognized by Doxygen:
+``@relation{REQ-1, scope=function}``.
 
 Relevant Doxygen documentation:
 
@@ -4350,9 +4825,13 @@ TITLE: Valispace
 [TEXT]
 MID: 5fe39dedfa4640d2bd7127ff23b0e3de
 STATEMENT: >>>
-Valispace provides a Python API, including an example script for exporting all project requirements in JSON format. See `Examples: Get a complete project requirements tree <https://github.com/valispace/ValispacePythonAPI/pull/22>`_.
+Valispace provides a Python API, including an example script for exporting all
+project requirements in JSON format. See
+`Examples: Get a complete project requirements tree <https://github.com/valispace/ValispacePythonAPI/pull/22>`_.
 
-The ``GetAllProjectRequirementsTree.py`` script can be used to create a converter that generates SDoc text files customized to the specifics of the project.
+The ``GetAllProjectRequirementsTree.py`` script can be used to create a
+converter that generates SDoc text files customized to the specifics of the
+project.
 <<<
 
 [[/SECTION]]
@@ -4367,9 +4846,12 @@ TITLE: Experimental features
 [TEXT]
 MID: 5b400736aec54789b2ed3ebcffcf961e
 STATEMENT: >>>
-At any point in time, StrictDoc supports features that are still experimental. These features are either not fully developed or their testing has not been completed yet.
+At any point in time, StrictDoc supports features that are still experimental.
+These features are either not fully developed or their testing has not been
+completed yet.
 
-A feature is considered stable when all its known edge cases have been covered and enough users report that they have used and tested this feature.
+A feature is considered stable when all its known edge cases have been covered
+and enough users report that they have used and tested this feature.
 
 See also [LINK: SDOC_UG_CONFIG_FEATURES] for general instructions.
 <<<
@@ -4382,7 +4864,8 @@ TITLE: Markdown support (experimental)
 [TEXT]
 MID: 5ca22eb4638e4b13867a88176b217ce0
 STATEMENT: >>>
-Since 2026 Q1, StrictDoc supports reading Markdown documents and can recognize requirements and other traceable nodes according to the following syntax.
+Since 2026 Q1, StrictDoc supports reading Markdown documents and can recognize
+requirements and other traceable nodes according to the following syntax.
 
 **1. Minimal example:**
 
@@ -4398,7 +4881,8 @@ Since 2026 Q1, StrictDoc supports reading Markdown documents and can recognize r
 
     System A shall do B.
 
-In the example above, the line ``System A shall do B.`` is implicitly converted to a requirement statement.
+In the example above, the line ``System A shall do B.`` is implicitly converted
+to a requirement statement.
 
 **2. Example with relations and all explicit content fields:**
 
@@ -4435,11 +4919,14 @@ In the example above, the line ``System A shall do B.`` is implicitly converted 
 
 Open points for a further implementation:
 
-- How to relate Markdown files with grammars. Use JSON schema, Pydantic or similar?
-- How to support node types? The way forward seems to be via a dedicated meta field ``Type: Requirement``.
+- How to relate Markdown files with grammars. Use JSON schema, Pydantic or
+  similar?
+- How to support node types? The way forward seems to be via a dedicated meta
+  field ``Type: Requirement``.
 - The syntax for Parent vs Child relations as well as relation roles.
 
-The Markdown epic is tracked here: https://github.com/strictdoc-project/strictdoc/issues/1321.
+The Markdown epic is tracked here:
+https://github.com/strictdoc-project/strictdoc/issues/1321.
 <<<
 
 [[SECTION]]
@@ -4449,11 +4936,14 @@ TITLE: PREFIX
 [TEXT]
 MID: eb5d29a4dc144f0587f25a2bb7d0a420
 STATEMENT: >>>
-The ``PREFIX`` meta field controls the prefix used when auto-generating UIDs. It can be set at the document level or at the section level. See [LINK: SECTION-UG-Automatic-assignment-of-requirements-UID].
+The ``PREFIX`` meta field controls the prefix used when auto-generating UIDs. It
+can be set at the document level or at the section level. See
+[LINK: SECTION-UG-Automatic-assignment-of-requirements-UID].
 
 **1. Document-level PREFIX:**
 
-The ``PREFIX`` field is placed in the H1 meta block, immediately after the document title.
+The ``PREFIX`` field is placed in the H1 meta block, immediately after the
+document title.
 
 .. code-block:: markdown
 
@@ -4471,7 +4961,9 @@ The ``PREFIX`` field is placed in the H1 meta block, immediately after the docum
 
 **2. Section-level PREFIX:**
 
-A section can declare its own prefix by using the ``**TYPE**: SECTION`` meta field together with ``**PREFIX**``. The section-level prefix overrides the document-level prefix for all requirements within that section.
+A section can declare its own prefix by using the ``**TYPE**: SECTION`` meta
+field together with ``**PREFIX**``. The section-level prefix overrides the
+document-level prefix for all requirements within that section.
 
 .. code-block:: markdown
 
@@ -4501,7 +4993,10 @@ TITLE: Search and filtering
 [TEXT]
 MID: de584af947a445e5bcc782bab6a93baf
 STATEMENT: >>>
-StrictDoc supports search and filtering of document content. However, this feature has not been extensively tested and is hidden behind a feature flag. To activate it, enable the corresponding setting in the ``strictdoc_config.py`` configuration file:
+StrictDoc supports search and filtering of document content. However, this
+feature has not been extensively tested and is hidden behind a feature flag. To
+activate it, enable the corresponding setting in the ``strictdoc_config.py``
+configuration file:
 
 .. code:: python
 
@@ -4516,7 +5011,9 @@ StrictDoc supports search and filtering of document content. However, this featu
         )
         return config
 
-The web interface includes the Search screen, designed for conducting queries against a document tree. The command-line interface supports filtering of requirements and sections through the ``export`` commands.
+The web interface includes the Search screen, designed for conducting queries
+against a document tree. The command-line interface supports filtering of
+requirements and sections through the ``export`` commands.
 <<<
 
 [[SECTION]]
@@ -4526,7 +5023,8 @@ TITLE: Query engine
 [TEXT]
 MID: 29ffc3e91d8045589b0837f647286128
 STATEMENT: >>>
-The syntax of the search query is inspired by Python, utilizing a fixed grammar that converts search queries into corresponding Python expressions.
+The syntax of the search query is inspired by Python, utilizing a fixed grammar
+that converts search queries into corresponding Python expressions.
 
 Important rules:
 
@@ -4569,9 +5067,12 @@ TITLE: Filtering content
 [TEXT]
 MID: d52d86750ad54ce1b3263ebb092451c0
 STATEMENT: >>>
-The ``export`` command-line interface command supports filtering documentation content with the ``--filter-nodes`` option.
+The ``export`` command-line interface command supports filtering documentation
+content with the ``--filter-nodes`` option.
 
-The option is based on the Query Engine, so the same rules that are valid for Search also apply for filtering. When a filter is applied, only the whitelisted nodes will be exported.
+The option is based on the Query Engine, so the same rules that are valid for
+Search also apply for filtering. When a filter is applied, only the whitelisted
+nodes will be exported.
 
 Example:
 
@@ -4591,7 +5092,8 @@ TITLE: Document tree map screen
 [TEXT]
 MID: 36067f1c73c545fea0b2408b32ee8a9a
 STATEMENT: >>>
-The Document Tree Map screen, or simply Tree Map, provides a visualization of the document tree and of requirements coverage by source files and tests.
+The Document Tree Map screen, or simply Tree Map, provides a visualization of
+the document tree and of requirements coverage by source files and tests.
 
 The feature can be activated as follows:
 
@@ -4609,11 +5111,15 @@ The feature can be activated as follows:
         )
         return config
 
-The feature has experimental status because it has only been tested against StrictDoc's own documentation. Several questions still remain to be answered:
+The feature has experimental status because it has only been tested against
+StrictDoc's own documentation. Several questions still remain to be answered:
 
-- How to allow users to customize this screen with their own additional visualizations.
+- How to allow users to customize this screen with their own additional
+  visualizations.
 - How to allow users to customize rules for color-coding the document nodes.
-- How should the traceability mechanics work when there are multiple levels of requirements and a given requirement can reference either source files or child requirements.
+- How should the traceability mechanics work when there are multiple levels of
+  requirements and a given requirement can reference either source files or
+  child requirements.
 <<<
 
 [[/SECTION]]
@@ -4626,9 +5132,15 @@ TITLE: Diff/changelog screen
 [TEXT]
 MID: 131a7392a33f4225a62539dd173a920b
 STATEMENT: >>>
-The "Git Diff/Changelog" experimental feature in StrictDoc allows users to track changes between different versions of requirement documents. This feature provides a visual diff by highlighting what content has been added, removed, or modified within the SDoc files, using a style similar to Git diffs. It helps in maintaining version history, ensuring that changes are traceable, and supports auditing by showing how requirements evolve over time.
+The "Git Diff/Changelog" experimental feature in StrictDoc allows users to track
+changes between different versions of requirement documents. This feature
+provides a visual diff by highlighting what content has been added, removed, or
+modified within the SDoc files, using a style similar to Git diffs. It helps in
+maintaining version history, ensuring that changes are traceable, and supports
+auditing by showing how requirements evolve over time.
 
-To activate the Diff/Changelog screen, add/edit the strictdoc_config.py config file in the root of your repository with documentation content.
+To activate the Diff/Changelog screen, add/edit the strictdoc_config.py config
+file in the root of your repository with documentation content.
 
 .. code:: python
 
@@ -4644,7 +5156,9 @@ To activate the Diff/Changelog screen, add/edit the strictdoc_config.py config f
         )
         return config
 
-With the feature enabled, the editable web server interface displays the corresponding Diff/Changelog screen, where users can select Git revisions to compare for change tracking.
+With the feature enabled, the editable web server interface displays the
+corresponding Diff/Changelog screen, where users can select Git revisions to
+compare for change tracking.
 
 To use the feature with a command-line interface:
 
@@ -4673,32 +5187,51 @@ TITLE: HTML2PDF document generator
 [TEXT]
 MID: 6e610b9a381f4b5d9d26004dd286e001
 STATEMENT: >>>
-StrictDoc offers an experimental feature for converting HTML documents into PDF files. This feature aims to deliver a good PDF printing experience without the necessity of installing more sophisticated printing systems like LaTeX.
+StrictDoc offers an experimental feature for converting HTML documents into PDF
+files. This feature aims to deliver a good PDF printing experience without the
+necessity of installing more sophisticated printing systems like LaTeX.
 
 There are three methods of PDF printing available:
 
-1. Through the command-line interface with the ``strictdoc export --formats=html2pdf ...`` command.
+1. Through the command-line interface with the ``strictdoc export
+   --formats=html2pdf ...`` command.
 
 2. Within the web interface by clicking the 'Export to PDF' button.
 
-3. Also in the web interface, by navigating to a 'PDF' view of a document and using the browser's built-in Print function.
+3. Also in the web interface, by navigating to a 'PDF' view of a document and
+   using the browser's built-in Print function.
 
-The first two methods require the Chrome browser and chromedriver to be installed on the user's computer.
-StrictDoc downloads chromedriver on demand by default, or uses a pre installed executable if
-``strictdoc export --chromedriver=/path/to/chromedriver`` or the equivalent ``strictdoc_config.py`` option is given.
+The first two methods require the Chrome browser and chromedriver to be
+installed on the user's computer. StrictDoc downloads chromedriver on demand by
+default, or uses a pre installed executable if ``strictdoc export
+--chromedriver=/path/to/chromedriver`` or the equivalent ``strictdoc_config.py``
+option is given.
 
-When printing from the command line (the first method), you can use the ``--generate-bundle-document`` option to have StrictDoc generate a single PDF document that bundles together all individual PDFs. The bundle document gets the document version/date information from Git by default which can be controlled in the ``strictdoc_config.py`` config (the default values are shown):
+When printing from the command line (the first method), you can use the
+``--generate-bundle-document`` option to have StrictDoc generate a single PDF
+document that bundles together all individual PDFs. The bundle document gets the
+document version/date information from Git by default which can be controlled in
+the ``strictdoc_config.py`` config (the default values are shown):
 
 .. code:: text
 
     bundle_document_version = "@GIT_VERSION (Git branch: @GIT_BRANCH)"
     bundle_document_date = "@GIT_COMMIT_DATETIME"
 
-To disable bundle document version/date automatic generation, set ``bundle_document_version``/``bundle_document_date`` to empty strings or use any custom values.
+To disable bundle document version/date automatic generation, set
+``bundle_document_version``/``bundle_document_date`` to empty strings or use any
+custom values.
 
-The third method, the PDF screen, presents a version of the document that is optimized for browser printing. This approach allows for the creation of neatly formatted PDF documents or directly printed documents. Although this method is compatible with any browser, Chrome is recommended for the best printing results. Unlike Firefox and Safari, Chrome maintains the document's internal hyperlinks in the printed PDF.
+The third method, the PDF screen, presents a version of the document that is
+optimized for browser printing. This approach allows for the creation of neatly
+formatted PDF documents or directly printed documents. Although this method is
+compatible with any browser, Chrome is recommended for the best printing
+results. Unlike Firefox and Safari, Chrome maintains the document's internal
+hyperlinks in the printed PDF.
 
-To activate the HTML2PDF screen in the web interface, add/edit the ``strictdoc_config.py`` config file in the root of your repository with documentation content.
+To activate the HTML2PDF screen in the web interface, add/edit the
+``strictdoc_config.py`` config file in the root of your repository with
+documentation content.
 
 .. code:: python
 
@@ -4714,7 +5247,10 @@ To activate the HTML2PDF screen in the web interface, add/edit the ``strictdoc_c
         )
         return config
 
-This feature is not enabled by default because the implementation has not been completed yet. The underlying JavaScript library is being improved with respect to how the SDoc HTML content is split between pages, in particular the splitting of HTML ``<table>`` tags is being worked out.
+This feature is not enabled by default because the implementation has not been
+completed yet. The underlying JavaScript library is being improved with respect
+to how the SDoc HTML content is split between pages, in particular the splitting
+of HTML ``<table>`` tags is being worked out.
 <<<
 
 [[SECTION]]
@@ -4724,7 +5260,11 @@ TITLE: Forcing a page break for each node
 [TEXT]
 MID: 202f6fffba9f4000a95cd69933839fc3
 STATEMENT: >>>
-The ``html2pdf_forced_page_break_nodes`` allows specifying which nodes should always start on a new page when printed to PDF using the HTML2PDF feature. It is especially useful for documents that contain very large, descriptive requirement nodes with a lot of text. In such cases, starting each node on a new page helps avoid having the beginning of a node lost in the middle of a page.
+The ``html2pdf_forced_page_break_nodes`` allows specifying which nodes should
+always start on a new page when printed to PDF using the HTML2PDF feature. It is
+especially useful for documents that contain very large, descriptive requirement
+nodes with a lot of text. In such cases, starting each node on a new page helps
+avoid having the beginning of a node lost in the middle of a page.
 
 Example of ``strictdoc_config.py``:
 
@@ -4756,9 +5296,13 @@ TITLE: Test report integration
 [TEXT]
 MID: 07e78a4847554fbd87c44d7b11133f68
 STATEMENT: >>>
-StrictDoc can read test report files from several testing tools as SDoc content, which allows establishing traceability between requirements, test cases, and test results.
+StrictDoc can read test report files from several testing tools as SDoc content,
+which allows establishing traceability between requirements, test cases, and
+test results.
 
-To enable traceability for imported test reports, enable requirement-to-source traceability. It is recommended to provide a dedicated folder for test report XML files to not mix human-written SDoc content and auto-generated test reports.
+To enable traceability for imported test reports, enable requirement-to-source
+traceability. It is recommended to provide a dedicated folder for test report
+XML files to not mix human-written SDoc content and auto-generated test reports.
 
 .. code:: python
 
@@ -4786,7 +5330,10 @@ TITLE: JUnit XML
 [TEXT]
 MID: eba63ebd45624139a8773cf42fe7d670
 STATEMENT: >>>
-JUnit XML format is mostly identical between different tools that produce it but there are subtle differences that must be handled case by case. StrictDoc supports several JUnit XML flavors. To be discovered by StrictDoc, the XML files must have one of the following extensions:
+JUnit XML format is mostly identical between different tools that produce it but
+there are subtle differences that must be handled case by case. StrictDoc
+supports several JUnit XML flavors. To be discovered by StrictDoc, the XML files
+must have one of the following extensions:
 
 .. list-table:: Supported JUnit XML formats
    :widths: 60 40
@@ -4824,7 +5371,9 @@ TITLE: LLVM Integrated Tester JUnit XML specifics
 [TEXT]
 MID: fab24f53f02f46e7a4cb49e333dfdc54
 STATEMENT: >>>
-Specifically for LLVM Integrated Tester-produced JUnit XML, an extra config option must be provided because its output XML does not contain precise information about the test root folder.
+Specifically for LLVM Integrated Tester-produced JUnit XML, an extra config
+option must be provided because its output XML does not contain precise
+information about the test root folder.
 
 .. code:: python
 
@@ -4842,7 +5391,10 @@ Specifically for LLVM Integrated Tester-produced JUnit XML, an extra config opti
         )
         return config
 
-In this example, the expectation is that a user has generated a JUnit XML with LLVM LIT and the output XML is at ``reports/tests_integration.lit.junit.xml``. The config line tells StrictDoc that this JUnit XML was produced by LIT from the ``tests/integration`` root folder.
+In this example, the expectation is that a user has generated a JUnit XML with
+LLVM LIT and the output XML is at ``reports/tests_integration.lit.junit.xml``.
+The config line tells StrictDoc that this JUnit XML was produced by LIT from the
+``tests/integration`` root folder.
 <<<
 
 [[/SECTION]]
@@ -4854,7 +5406,8 @@ TITLE: Robot Framework XML
 [TEXT]
 MID: 6c3d98ca65cc40d585953237693ff2c6
 STATEMENT: >>>
-Robot Framework has its own native XML test report schema, sometimes referred to as ``output.xml``. Files must end with ``.robot.xml`` to be recognized as such.
+Robot Framework has its own native XML test report schema, sometimes referred to
+as ``output.xml``. Files must end with ``.robot.xml`` to be recognized as such.
 
 .. warning::
 
@@ -4925,13 +5478,19 @@ TITLE: Shadow features
 [TEXT]
 MID: 38fa0af0d01e479ba7f5be046bae02eb
 STATEMENT: >>>
-At any given moment, StrictDoc may contain one or more features that have been implemented and are supported in the codebase, yet lack documentation.
+At any given moment, StrictDoc may contain one or more features that have been
+implemented and are supported in the codebase, yet lack documentation.
 
-In most cases, these features are still in their early stages and may not even be documented as experimental features.
+In most cases, these features are still in their early stages and may not even
+be documented as experimental features.
 
-The testing of these experimental features is typically done by developers or by selected users who have either requested or expressed interest in a specific feature.
+The testing of these experimental features is typically done by developers or by
+selected users who have either requested or expressed interest in a specific
+feature.
 
-If you happen to stumble upon such a hidden feature, we encourage you to use it and provide bug reports or share your experiences with it. However, please be prepared to encounter various unknown or undefined behaviors in the process.
+If you happen to stumble upon such a hidden feature, we encourage you to use it
+and provide bug reports or share your experiences with it. However, please be
+prepared to encounter various unknown or undefined behaviors in the process.
 <<<
 
 [[/SECTION]]
@@ -4951,7 +5510,10 @@ TITLE: Limitations of RST support by StrictDoc
 [TEXT]
 MID: f7b039831f4e4c1ea19b45efe71c5365
 STATEMENT: >>>
-StrictDoc uses Docutils for rendering RST to HTML, not Sphinx. The implication is that no Sphinx-specific RST directives are supported. Refer to this issue for the related discussion of the limitations: `Unexpected restriction on specific RST directives / compatibility with Breathe Sphinx Plugin #1093 <https://github.com/strictdoc-project/strictdoc/issues/1093>`_.
+StrictDoc uses Docutils for rendering RST to HTML, not Sphinx. The implication
+is that no Sphinx-specific RST directives are supported. Refer to this issue for
+the related discussion of the limitations:
+`Unexpected restriction on specific RST directives / compatibility with Breathe Sphinx Plugin #1093 <https://github.com/strictdoc-project/strictdoc/issues/1093>`_.
 <<<
 
 [[/SECTION]]
@@ -4964,24 +5526,31 @@ TITLE: Limitations of web user interface
 [TEXT]
 MID: 911c454331634018b8de24186ae8e742
 STATEMENT: >>>
-The existing implementation of the web user interface has the following limitations.
+The existing implementation of the web user interface has the following
+limitations.
 
-The user interface and the underlying backend implementation are not yet autonomous from the command-line workflow. A user still has to access the command line to run the server and commit the documents to Git manually.
+The user interface and the underlying backend implementation are not yet
+autonomous from the command-line workflow. A user still has to access the
+command line to run the server and commit the documents to Git manually.
 
 The currently supported workflow for the ``server`` command must be hybrid:
 
 - In one terminal window: run the server.
-- In another window: check the changes made by the server in the .sdoc files. Commit the .sdoc files to Git.
+- In another window: check the changes made by the server in the .sdoc files.
+  Commit the .sdoc files to Git.
 
-Currently StrictDoc server maintains an in-memory state of a documentation tree, and it does not watch over the changes made in the .sdoc files. If you make a change in an ``.sdoc`` file manually, you have to restart the server in order for your changes to show up in the web user interface.
 
-The following essential features are still missing and will be worked on in the future:
+The following essential features are still missing and will be worked on in the
+future:
 
-- A dedicated screen where a user can commit and push changes to GitHub/GitLab or other Git servers.
-- Adding images via drag-and-drop or an upload button to the multiline fields like such requirements and text nodes ``STATEMENT``.
+- A dedicated screen where a user can commit and push changes to GitHub/GitLab
+  or other Git servers.
+- Adding images via drag-and-drop or an upload button to the multiline fields
+  like such requirements and text nodes ``STATEMENT``.
 - Adding/editing sections with ``LEVEL: None``.
 - Deleting a document.
-- Deleting a section recursively with a correct cleanup of all traceability information.
+- Deleting a section recursively with a correct cleanup of all traceability
+  information.
 - A separate screen for editing project settings.
 - Editing File-based relations.
 - Moving the TOC nodes of a document when it has one or more included documents.
@@ -4999,7 +5568,9 @@ TITLE: Known issues
 [TEXT]
 MID: 9282f2d7218a4f2e967b6df45b0347ab
 STATEMENT: >>>
-This section used to document known issues and non-obvious implementation details, but it has recently been decomposed into more specific sections such as:
+This section used to document known issues and non-obvious implementation
+details, but it has recently been decomposed into more specific sections such
+as:
 
 - [LINK: SECTION-UG-Security-considerations]
 - [LINK: SECTION-UG-Performance-considerations]
@@ -5021,13 +5592,22 @@ TITLE: FREETEXT-TEXT migration (June 2024)
 [TEXT]
 MID: 2509cce7ee634c7a8878c5e1094b83f2
 STATEMENT: >>>
-A new grammar node called ``TEXT`` has been introduced in the SDoc grammar, replacing the ``FREETEXT`` node as a more powerful feature.
+A new grammar node called ``TEXT`` has been introduced in the SDoc grammar,
+replacing the ``FREETEXT`` node as a more powerful feature.
 
 The reasons for the migration:
 
-- The ``[FREETEXT]..[/FREETEXT]`` markup element is limited. Unlike ``REQUIREMENT`` it is not possible to attach fields like MID or UID, which can be important for change tracking and importing/exporting from formats like ReqIF and SPDX, which assign unique identifiers to all nodes of the document / requirements graph, not just the requirements nodes.
-- Historically, the ``[FREETEXT]`` node was implemented differently compared to the ``REQUIREMENT`` node, creating a lot of branching and requiring two separate sets of code to handle free text and requirements slightly differently.
-- 15000 lines of code are removed, eliminating numerous branches, such as ``if node.is_requirement ... elif node.is_free_text``.
+- The ``[FREETEXT]..[/FREETEXT]`` markup element is limited. Unlike
+  ``REQUIREMENT`` it is not possible to attach fields like MID or UID, which can
+  be important for change tracking and importing/exporting from formats like
+  ReqIF and SPDX, which assign unique identifiers to all nodes of the document /
+  requirements graph, not just the requirements nodes.
+- Historically, the ``[FREETEXT]`` node was implemented differently compared to
+  the ``REQUIREMENT`` node, creating a lot of branching and requiring two
+  separate sets of code to handle free text and requirements slightly
+  differently.
+- 15000 lines of code are removed, eliminating numerous branches, such as ``if
+  node.is_requirement ... elif node.is_free_text``.
 
 .. image:: _assets/StrictDoc_Workspace-FREETEXT-TEXT.drawio.png
    :alt: The FREE-TEXT migration
@@ -5036,13 +5616,25 @@ The reasons for the migration:
 
 There are three important consequences of this migration.
 
-**Consequence #1:** The ``TEXT`` nodes can now have ``UID`` (if declared in a grammar) and ``MID`` (if the ``ENABLE_MID: True`` option is enabled), but the automatic generation of UIDs is disabled for ``TEXT`` nodes in the first version after the migration. User feedback regarding the potential use cases for ``TEXT`` node's UID/MID identifiers would be nice to have.
+**Consequence #1:** The ``TEXT`` nodes can now have ``UID`` (if declared in a
+grammar) and ``MID`` (if the ``ENABLE_MID: True`` option is enabled), but the
+automatic generation of UIDs is disabled for ``TEXT`` nodes in the first version
+after the migration. User feedback regarding the potential use cases for
+``TEXT`` node's UID/MID identifiers would be nice to have.
 
-**Consequence #2:** Now it is possible to create a ``[LINK]`` to any custom elements, not only ``FREETEXT`` elements like it was before.
+**Consequence #2:** Now it is possible to create a ``[LINK]`` to any custom
+elements, not only ``FREETEXT`` elements like it was before.
 
-**Consequence #3**: It is now possible to place ``[TEXT]`` nodes anywhere within a document or a section. Previously, ``[FREETEXT]`` nodes could only be placed directly after the Document or Section titles. This limitation originated from the original implementation of ``FREETEXT`` but has now been removed. This should improve the experience for users whose documents contain a mix of requirements and text nodes.
+**Consequence #3**: It is now possible to place ``[TEXT]`` nodes anywhere within
+a document or a section. Previously, ``[FREETEXT]`` nodes could only be placed
+directly after the Document or Section titles. This limitation originated from
+the original implementation of ``FREETEXT`` but has now been removed. This
+should improve the experience for users whose documents contain a mix of
+requirements and text nodes.
 
-**Consequence #4**: Previously, it was not possible to reference FREETEXT nodes from source files because FREETEXT lacked a UID field. Now, TEXT nodes can be referenced by a UID, just like any other REQUIREMENT-like node.
+**Consequence #4**: Previously, it was not possible to reference FREETEXT nodes
+from source files because FREETEXT lacked a UID field. Now, TEXT nodes can be
+referenced by a UID, just like any other REQUIREMENT-like node.
 <<<
 
 [[SECTION]]
@@ -5052,7 +5644,10 @@ TITLE: How to migrate from FREETEXT to TEXT
 [TEXT]
 MID: 5d2f033604824264b1cc05840997c6b8
 STATEMENT: >>>
-The backward compatibility is preserved. The users can still create SDoc documents with ``FREETEXT`` but internally the free text nodes will be anyway converted to ``TEXT`` nodes, and the FREETEXT node no longer exist in the SDoc document model.
+The backward compatibility is preserved. The users can still create SDoc
+documents with ``FREETEXT`` but internally the free text nodes will be anyway
+converted to ``TEXT`` nodes, and the FREETEXT node no longer exist in the SDoc
+document model.
 
 The users are encouraged to perform the migration as follows.
 
@@ -5073,7 +5668,9 @@ becomes
     This is a free text node.
     <<<
 
-The ``TEXT`` node is now included to a default StrictDoc grammar by default. If a custom grammar is used, the default grammar definition for the ``TEXT`` node is as follows:
+The ``TEXT`` node is now included to a default StrictDoc grammar by default. If
+a custom grammar is used, the default grammar definition for the ``TEXT`` node
+is as follows:
 
 .. code:: strictdoc
 
@@ -5099,7 +5696,9 @@ The ``TEXT`` node is now included to a default StrictDoc grammar by default. If 
         TYPE: String
         REQUIRED: True
 
-The ``strictdoc export --formats sdoc --free-text-to-text ...`` command can be used for converting all FREETEXT nodes to TEXT nodes automatically. See ``strictdoc export --help`` for more details.
+The ``strictdoc export --formats sdoc --free-text-to-text ...`` command can be
+used for converting all FREETEXT nodes to TEXT nodes automatically. See
+``strictdoc export --help`` for more details.
 <<<
 
 [[/SECTION]]
@@ -5114,11 +5713,14 @@ TITLE: [[NODE]] migration (2025 Q2-Q3)
 [TEXT]
 MID: 9d55b69bf789487e814210da06fc4164
 STATEMENT: >>>
-As of 2025 Q2, the following changes are made to StrictDoc's grammar in a partially backward-incompatible manner. The relevant GitHub issue related to the migration:
+As of 2025 Q2, the following changes are made to StrictDoc's grammar in a
+partially backward-incompatible manner. The relevant GitHub issue related to the
+migration:
 
 `Migration: SDoc model: Merge Section, Node, Composite Node into just Node #2193 <https://github.com/strictdoc-project/strictdoc/issues/2193>`_
 
-1\) The ``[[CUSTOM_NODE]]`` syntax with two square brackets around the element name has been introduced for composite nodes.
+1\) The ``[[CUSTOM_NODE]]`` syntax with two square brackets around the element
+name has been introduced for composite nodes.
 
 Example of declaring a composite node in a grammar and using it in a document:
 
@@ -5147,13 +5749,22 @@ Example of declaring a composite node in a grammar and using it in a document:
 
     [[/SECTION]]
 
-Using the new syntax, it is now possible to declare any custom composite element, such as what ``[COMPOSITE_REQUIREMENT]`` used to provide before.
+Using the new syntax, it is now possible to declare any custom composite
+element, such as what ``[COMPOSITE_REQUIREMENT]`` used to provide before.
 
-2\) The previously used ``[SECTION]`` syntax with one square bracket around the SECTION is now DEPRECATED, but the old behavior is still supported. The users are encouraged to migrate all ``[SECTION]`` elements to the new ``[[SECTION]]`` syntax. To support the new behavior, the grammar must include a declaration for a composite SECTION element similar to the example provided above.
+2\) The previously used ``[SECTION]`` syntax with one square bracket around the
+SECTION is now DEPRECATED, but the old behavior is still supported. The users
+are encouraged to migrate all ``[SECTION]`` elements to the new ``[[SECTION]]``
+syntax. To support the new behavior, the grammar must include a declaration for
+a composite SECTION element similar to the example provided above.
 
-3\) The ``[COMPOSITE_REQUIREMENT]`` node has been removed from the codebase. This is a backward-incompatible change, but it is assumed that no users should be affected since this feature has never been developed enough to be useful.
+3\) The ``[COMPOSITE_REQUIREMENT]`` node has been removed from the codebase.
+This is a backward-incompatible change, but it is assumed that no users should
+be affected since this feature has never been developed enough to be useful.
 
-4\) The document-level ``REQ_PREFIX`` has been renamed/aliased to ``PREFIX``. The REQ_PREFIX form will still be recognized but writing SDoc files back to disk will result in the new PREFIX field to be written.
+4\) The document-level ``REQ_PREFIX`` has been renamed/aliased to ``PREFIX``.
+The REQ_PREFIX form will still be recognized but writing SDoc files back to disk
+will result in the new PREFIX field to be written.
 <<<
 
 [[SECTION]]
@@ -5163,11 +5774,16 @@ TITLE: How to migrate from [SECTION] to [[SECTION]]
 [TEXT]
 MID: 19fe5099aa034eddb960cc88953ace0e
 STATEMENT: >>>
-The migration from ``[SECTION]`` to the new composite ``[[SECTION]]`` syntax is mostly straightforward and can be done manually. However, StrictDoc also provides a dedicated configuration option to assist with this migration.
+The migration from ``[SECTION]`` to the new composite ``[[SECTION]]`` syntax is
+mostly straightforward and can be done manually. However, StrictDoc also
+provides a dedicated configuration option to assist with this migration.
 
 1\) **Manual approach**
 
-Update all instances of ``[SECTION]`` to ``[[SECTION]]`` manually, or use a combination of ``find`` and ``sed``. Additionally, make sure to update all document grammar declarations to include the new composite ``[[SECTION]]`` element like described in the previous section.
+Update all instances of ``[SECTION]`` to ``[[SECTION]]`` manually, or use a
+combination of ``find`` and ``sed``. Additionally, make sure to update all
+document grammar declarations to include the new composite ``[[SECTION]]``
+element like described in the previous section.
 
 .. note::
 
@@ -5185,7 +5801,8 @@ Examples of a sed command for Linux and macOS:
 
 2\) **Semi-automated approach (experimental)**
 
-StrictDoc can automatically migrate SDoc files if the project configuration option ``section_behavior`` is set as follows:
+StrictDoc can automatically migrate SDoc files if the project configuration
+option ``section_behavior`` is set as follows:
 
 .. code:: python
 
@@ -5198,7 +5815,8 @@ StrictDoc can automatically migrate SDoc files if the project configuration opti
         )
         return config
 
-With this option enabled, StrictDoc's ``export`` command will convert all ``[SECTION]`` nodes to ``[[SECTION]]`` when writing SDoc files.
+With this option enabled, StrictDoc's ``export`` command will convert all
+``[SECTION]`` nodes to ``[[SECTION]]`` when writing SDoc files.
 
 To perform the migration, run the export command:
 
@@ -5206,9 +5824,11 @@ To perform the migration, run the export command:
 
     strictdoc export . --formats=sdoc
 
-The resulting files will have all ``[SECTION]`` nodes replaced with ``[[SECTION]]``.
+The resulting files will have all ``[SECTION]`` nodes replaced with
+``[[SECTION]]``.
 
-Additionally, when the section behavior is specified to ``[[SECTION]]``, the UI will mark the old section node as Deprecated.
+Additionally, when the section behavior is specified to ``[[SECTION]]``, the UI
+will mark the old section node as Deprecated.
 
 .. image:: _assets/StrictDoc_NodeMigration_DeprecatedSection.png
    :alt: UI: The deprecated SECTION
@@ -5228,20 +5848,28 @@ TITLE: Migrating StrictDoc Configuration: Python Replaces TOML (2025 Q4)
 [TEXT]
 MID: f72351be40d84f23970f93720c3625c7
 STATEMENT: >>>
-Until 2025-Q4, StrictDoc has been using TOML for its ``strictdoc.toml`` configuration file.
+Until 2025-Q4, StrictDoc has been using TOML for its ``strictdoc.toml``
+configuration file.
 
-Since 2025-Q4, the new configuration format moving forward is Python. Once the new Python configuration syntax has been sufficiently tested, using TOML will trigger deprecation warnings. The removal of TOML support is expected to take place in 2026-Q1.
+Since 2025-Q4, the new configuration format moving forward is Python. Once the
+new Python configuration syntax has been sufficiently tested, using TOML will
+trigger deprecation warnings. The removal of TOML support is expected to take
+place in 2026-Q1.
 
-The rationale for this change is that configuring StrictDoc with a Python file provides greater flexibility for users who need to:
+The rationale for this change is that configuring StrictDoc with a Python file
+provides greater flexibility for users who need to:
 
 - Create custom generators
 - Remove existing generators
 - Customize requirement and document tree validations
 - Customize project statistics
 
-With a configuration file written directly in Python, it becomes much easier for users to inject their own Python code into StrictDoc’s traceability pipeline. Achieving the same with TOML would require additional layers of indirection.
+With a configuration file written directly in Python, it becomes much easier for
+users to inject their own Python code into StrictDoc’s traceability pipeline.
+Achieving the same with TOML would require additional layers of indirection.
 
-Instead of using ``strictdoc.toml``, the new approach includes ``strictdoc_config.py`` with the following syntax:
+Instead of using ``strictdoc.toml``, the new approach includes
+``strictdoc_config.py`` with the following syntax:
 
 .. code:: python
 
@@ -5261,11 +5889,16 @@ Instead of using ``strictdoc.toml``, the new approach includes ``strictdoc_confi
         )
         return config
 
-All TOML configuration options specified in StrictDoc’s documentation are still valid but must be migrated to their Python equivalents.
+All TOML configuration options specified in StrictDoc’s documentation are still
+valid but must be migrated to their Python equivalents.
 
-See `StrictDoc's own config file <https://github.com/strictdoc-project/strictdoc/blob/main/strictdoc_config.py>`_ for a realistic example.
+See
+`StrictDoc's own config file <https://github.com/strictdoc-project/strictdoc/blob/main/strictdoc_config.py>`_
+for a realistic example.
 
-Refer to the `ProjectConfig <https://github.com/strictdoc-project/strictdoc/blob/main/strictdoc/core/project_config.py>`_ class for a complete overview of all available options.
+Refer to the
+`ProjectConfig <https://github.com/strictdoc-project/strictdoc/blob/main/strictdoc/core/project_config.py>`_
+class for a complete overview of all available options.
 <<<
 
 [[/SECTION]]

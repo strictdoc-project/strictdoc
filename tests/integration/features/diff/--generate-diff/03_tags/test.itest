@@ -1,0 +1,43 @@
+#
+# @relation(SDOC-SRS-111, scope=file)
+#
+
+RUN: cp %S/strictdoc_config.py %T/
+RUN: git init
+RUN: git config user.name "Your Name"
+RUN: git config user.email "you@example.com"
+RUN: git config user.email "you@example.com"
+RUN: cp %S/lhs/input.sdoc %T/
+RUN: git add .
+RUN: git commit -m "Test commit #1"
+RUN: git tag v1.0.0
+RUN: git tag v1.0.0-beta
+RUN: cp %S/rhs/input.sdoc %T/
+RUN: git add .
+RUN: git commit -m "Test commit #2"
+RUN: git tag v2.0.0
+RUN: git tag release-2.0.0
+RUN: %strictdoc export %T --generate-diff-git "v1.0.0..v2.0.0" --output-dir %T/output
+RUN: cat %T/output/html/changelog.html | filecheck %s
+
+CHECK: Compared revisions
+CHECK: v1.0.0 (
+CHECK: Left tags
+CHECK: v1.0.0, v1.0.0-beta
+CHECK: v2.0.0 (
+CHECK: Right tags
+CHECK: release-2.0.0, v2.0.0
+
+CHECK-NOT: form-submit-action
+
+RUN: cat %T/output/html/changelog.html | filecheck %s --check-prefix DISABLED
+
+DISABLED: id="left_revision"
+DISABLED: disabled
+DISABLED: id="right_revision"
+DISABLED: disabled
+
+RUN: cat %T/output/html/changelog.html | filecheck %s --check-prefix FIELD
+
+FIELD: value="v1.0.0 ({{.*}}) [tags: v1.0.0, v1.0.0-beta]"
+FIELD: value="v2.0.0 ({{.*}}) [tags: release-2.0.0, v2.0.0]"

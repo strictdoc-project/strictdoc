@@ -688,6 +688,24 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
             )
         )
 
+    def wait_for_cell_save_applied(
+        self, node_mid: str, field_name: str, timeout: float = 10
+    ) -> None:
+        # Polls until the save's Turbo Stream response has been applied to the
+        # cell DOM. data-mode is cleared synchronously before renderTurboStream
+        # fires, so wait_for_cell_not_editing resolves too early. This method
+        # instead checks the absence of sdoc-contenteditable and
+        # sdoc-autocompletable inside div#cell-{mid}-{field}: both are injected
+        # by the editing form and are gone once the Turbo Stream replaces the
+        # cell content with the display view. Use this after any save action
+        # (outside-click or Cmd+Enter) that triggers a server round-trip.
+        WebDriverWait(self.test_case.driver, timeout).until(
+            lambda _: self.test_case.execute_script(
+                f"const c = document.getElementById('cell-{node_mid}-{field_name}');"
+                f"return c ? !c.querySelector('sdoc-contenteditable, sdoc-autocompletable') : true;"
+            )
+        )
+
     def do_save_inline_cell_by_outside_click(self) -> None:
         # Click the page header: always visible regardless of horizontal scroll.
         self.test_case.click("#header-project-name")

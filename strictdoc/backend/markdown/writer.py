@@ -2,6 +2,7 @@ import re
 from typing import List, Optional, Sequence, Tuple
 
 from strictdoc.backend.markdown.formatter import wrap_md_text
+from strictdoc.backend.markdown.reader import SDMarkdownReader
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import (
     DocumentCustomMetadataKeyValuePair,
@@ -25,6 +26,18 @@ from strictdoc.helpers.cast import assert_cast
 
 
 class SDMarkdownWriter:
+    # Reverse of SDMarkdownReader.default_grammar_field_aliases: the Markdown
+    # surface convention for the built-in default grammar applies regardless
+    # of which concrete grammar object produced the document (a genuinely
+    # markdown-authored document, or one converted from SDoc/ReqIF/Excel),
+    # so this is independent of any particular grammar's human_title.
+    _default_grammar_field_surface_names = {
+        internal: surface
+        for surface, internal in (
+            SDMarkdownReader.default_grammar_field_aliases.items()
+        )
+    }
+
     @staticmethod
     def write(document: SDocDocument, line_width: Optional[int] = None) -> str:
         top_level_blocks: List[str] = []
@@ -82,7 +95,7 @@ class SDMarkdownWriter:
             metadata_entries.append(
                 ("Grammar", document.grammar.import_from_file)
             )
-            seen_keys.add("GRAMMAR")
+            seen_keys.add("Grammar")
 
         custom_metadata = document.config.custom_metadata
         if custom_metadata is not None:
@@ -90,18 +103,17 @@ class SDMarkdownWriter:
                 if (
                     not isinstance(entry, DocumentCustomMetadataKeyValuePair)
                     or entry.key is None
-                    or entry.value is None
                 ):
                     continue
-                metadata_entries.append((entry.key, entry.value))
-                seen_keys.add(entry.key.upper())
+                metadata_entries.append((entry.key, entry.get_text_value()))
+                seen_keys.add(entry.key)
 
         default_config_entries: Sequence[Tuple[str, Optional[str]]] = (
             ("UID", document.config.uid),
-            ("VERSION", document.config.version),
-            ("DATE", document.config.date),
-            ("CLASSIFICATION", document.config.classification),
-            ("PREFIX", document.config.requirement_prefix),
+            ("Version", document.config.version),
+            ("Date", document.config.date),
+            ("Classification", document.config.classification),
+            ("Prefix", document.config.requirement_prefix),
         )
         for entry_key, entry_value in default_config_entries:
             if entry_value is None or entry_key in seen_keys:
@@ -185,9 +197,9 @@ class SDMarkdownWriter:
             and "MID" not in node.ordered_fields_lookup
         )
 
-        # Emit TYPE for every non-TEXT node when:
+        # Emit Type for every non-TEXT node when:
         # - the grammar defines element types beyond the built-in set (MD-26), OR
-        # - a SECTION node carries a MID field (MD-24): TYPE: SECTION must
+        # - a SECTION node carries a MID field (MD-24): Type: SECTION must
         #   accompany the MID on every write so the reader does not misidentify
         #   the heading as a REQUIREMENT on re-read.
         section_has_mid = node.node_type == "SECTION" and (
@@ -198,7 +210,7 @@ class SDMarkdownWriter:
             and node.node_type != "TEXT"
             and (document_grammar.has_custom_elements() or section_has_mid)
         ):
-            meta_fields.append(("TYPE", node.node_type))
+            meta_fields.append(("Type", node.node_type))
 
         if should_inject_mid:
             meta_fields.append(("MID", node.reserved_mid))
@@ -208,9 +220,6 @@ class SDMarkdownWriter:
                 continue
 
             field_name = field.field_name
-            field_human_name = SDMarkdownWriter._resolve_human_field_name(
-                node=node, field_name=field_name
-            )
             field_value = SDMarkdownWriter._to_lf(field.get_text_value())
 
             if element is None or field_name not in element.fields_map:
@@ -220,10 +229,25 @@ class SDMarkdownWriter:
             else:
                 is_content_field = element.is_field_multiline(field_name)
 
+            # The 8 reserved field roles (Title/Statement/Rationale/Comment/
+            # Level/Status/Tags/Prefix) always use this fixed Markdown
+            # surface convention on write-back, for the default grammar AND
+            # any custom grammar, since their internal key is always ALL_CAPS
+            # (see default_grammar_field_aliases). Any other field keeps its
+            # raw key: a custom grammar's **Human title** on such a field is
+            # an arbitrary display string (e.g. "Example Human Title" for
+            # "DERIVED_RATIONALE") that would not round-trip if written back
+            # as the field's key.
+            surface_field_name = (
+                SDMarkdownWriter._default_grammar_field_surface_names.get(
+                    field_name, field_name
+                )
+            )
+
             if is_content_field:
-                content_fields.append((field_human_name, field_value))
+                content_fields.append((surface_field_name, field_value))
             else:
-                meta_fields.append((field_human_name, field_value))
+                meta_fields.append((surface_field_name, field_value))
 
         relations_block = SDMarkdownWriter._serialize_relations(node)
 
@@ -331,28 +355,6 @@ class SDMarkdownWriter:
         return "\n".join(lines)
 
     @staticmethod
-    def _resolve_human_field_name(node: SDocNode, field_name: str) -> str:
-        document = node.get_document()
-        if document is None or document.grammar is None:
-            return field_name
-        grammar = assert_cast(document.grammar, DocumentGrammar)
-        # For imported (custom) grammars, always write the field key name so
-        # that the reader can recover it via .upper(). Human titles in custom
-        # grammars are arbitrary strings (e.g. "Example Human Title" for key
-        # "DERIVED_RATIONALE") and do not round-trip through the reader's
-        # name.upper() normalisation. For the built-in default grammar the
-        # human title is always a simple capitalisation variant of the key
-        # (e.g. "Statement" for "STATEMENT"), so .upper() recovers it safely.
-        if grammar.import_from_file is not None:
-            return field_name
-        element = grammar.elements_by_type.get(node.node_type, None)
-        if element is None:
-            return field_name
-        if field_name not in element.fields_map:
-            return field_name
-        return element.fields_map[field_name].get_field_human_name()
-
-    @staticmethod
     def _serialize_text_node(
         node: SDocNode, line_width: Optional[int] = None
     ) -> Optional[str]:
@@ -366,7 +368,7 @@ class SDMarkdownWriter:
             statement_value = wrap_md_text(statement_value, line_width)
 
         # When the grammar's TEXT element declares a MID field, emit
-        # **TYPE**: TEXT \ **MID**: <mid> before the statement body so that
+        # **Type**: TEXT \ **MID**: <mid> before the statement body so that
         # the TEXT node's machine identifier is preserved across read/write cycles.
         document = node.get_document()
         if document is not None and document.grammar is not None:
@@ -385,7 +387,7 @@ class SDMarkdownWriter:
                 else:
                     mid_str = str(node.reserved_mid)
                 meta_block = SDMarkdownWriter._serialize_meta_fields(
-                    [("TYPE", "TEXT"), ("MID", mid_str)]
+                    [("Type", "TEXT"), ("MID", mid_str)]
                 )
                 if len(statement_value) > 0:
                     return f"{meta_block}\n\n{statement_value}"
@@ -485,7 +487,7 @@ class MarkdownGrammarWriter:
                 element_properties.append(("Prefix", element.property_prefix))
             if element.property_view_style is not None:
                 element_properties.append(
-                    ("View Style", element.property_view_style)
+                    ("View style", element.property_view_style)
                 )
             if len(element_properties) > 0:
                 element_lines.append(
@@ -524,7 +526,7 @@ class MarkdownGrammarWriter:
             ("Required", "True" if field.required else "False"),
         ]
         if field.human_title is not None:
-            field_properties.insert(1, ("Human Title", field.human_title))
+            field_properties.insert(1, ("Human title", field.human_title))
         return (
             f"### Field: {field.title}\n\n"
             + MarkdownGrammarWriter._serialize_properties(field_properties)
@@ -543,9 +545,14 @@ class MarkdownGrammarWriter:
     @staticmethod
     def _serialize_relation(relation: GrammarElementRelationType) -> str:
         output = f"#### Relation: {relation.relation_type}"
+        properties: List[Tuple[str, str]] = []
         if relation.relation_role is not None:
+            properties.append(("Role", relation.relation_role))
+        if relation.reverse_relation_role is not None:
+            properties.append(("Reverse role", relation.reverse_relation_role))
+        if len(properties) > 0:
             output += "\n\n" + MarkdownGrammarWriter._serialize_properties(
-                [("Role", relation.relation_role)]
+                properties
             )
         return output
 

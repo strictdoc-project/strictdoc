@@ -10,6 +10,9 @@ from typing import Any, Dict, List, Optional, Sequence, Set, Tuple, Union
 from markdown_it import MarkdownIt
 from markdown_it.token import Token
 
+from strictdoc.backend.markdown.default_grammar import (
+    create_markdown_default_grammar,
+)
 from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
@@ -54,7 +57,6 @@ class ParsedField:
 
     name: str
     value: str
-    human_name: str
     is_block_format: bool = False
 
 
@@ -67,7 +69,7 @@ class ParsedMarkdownNode:
     has_duplicates: bool
     explicit_node_type: Optional[str] = None
     # Body after the meta block stripped, used as effective body for section
-    # TEXT children so that **TYPE**: / **PREFIX**: / **MID**: lines do not
+    # TEXT children so that **Type**: / **Prefix**: / **MID**: lines do not
     # reappear as prose.  None means "use the raw heading body" (fallback for
     # ambiguous meta blocks such as duplicate-field invalid nodes).
     processed_body: Optional[str] = None
@@ -79,9 +81,9 @@ class SDMarkdownReader:
     plain_field_pattern = re.compile(
         r"^\*\*(?P<name>[A-Za-z0-9][A-Za-z0-9 _-]*)\*\*:(?P<value>.*)$"
     )
-    # Patterns for detecting the **TYPE**: TEXT \ **MID**: ... prefix in TEXT
+    # Patterns for detecting the **Type**: TEXT \ **MID**: ... prefix in TEXT
     # node bodies (used when the grammar's TEXT element declares a MID field).
-    _text_type_line_re = re.compile(r"^\*\*TYPE\*\*: TEXT(?: \\)?$")
+    _text_type_line_re = re.compile(r"^\*\*Type\*\*: TEXT(?: \\)?$")
     _text_mid_line_re = re.compile(r"^\*\*MID\*\*: (\S+)$")
     dict_entry_pattern = re.compile(
         r"^\s*\*\*(?P<name>[A-Za-z0-9][A-Za-z0-9 _-]*)\*\*:\s*`?(?P<value>[^`]*)`?\s*(?:\\)?$"
@@ -94,13 +96,31 @@ class SDMarkdownReader:
         "LEVEL",
         "STATUS",
         "TAGS",
-        "RELATIONS",
+        "Relations",
         "TITLE",
         "STATEMENT",
         "RATIONALE",
         "COMMENT",
     }
     requirement_meta_fields = {"MID", "UID", "LEVEL", "STATUS", "TAGS"}
+    # The built-in default grammar's REQUIREMENT/SECTION/TEXT elements are
+    # shared with SDoc: SDocNode's own convenience accessors (reserved_title,
+    # reserved_level, rationale, comment, etc.) and GrammarElement's
+    # content-field detection hardcode these exact ALL_CAPS keys. Markdown's
+    # more readable surface syntax (e.g. **Statement**:) is therefore mapped
+    # onto the required internal key here; this alias applies only when no
+    # custom grammar is attached (has_custom_grammar=False) — custom grammars
+    # are matched exactly against whatever casing their author declared.
+    default_grammar_field_aliases = {
+        "Level": "LEVEL",
+        "Status": "STATUS",
+        "Tags": "TAGS",
+        "Title": "TITLE",
+        "Statement": "STATEMENT",
+        "Rationale": "RATIONALE",
+        "Comment": "COMMENT",
+        "Prefix": "PREFIX",
+    }
 
     @staticmethod
     def read(
@@ -182,6 +202,23 @@ class SDMarkdownReader:
 
         return document
 
+    @staticmethod
+    def fixup_composite_nodes(document: SDocDocument) -> None:
+        # Markdown nesting is heading-level based, so it never sets
+        # is_composite the way SDoc's [[TAG]]...[[/TAG]] syntax does; derive
+        # it here from the (by-now fully resolved) grammar instead.
+        grammar = assert_cast(document.grammar, DocumentGrammar)
+
+        def walk(section_contents: List[Any]) -> None:
+            for node_ in section_contents:
+                if isinstance(node_, SDocNode):
+                    element = grammar.elements_by_type.get(node_.node_type)
+                    if element is not None and element.property_is_composite:
+                        node_.is_composite = True
+                walk(node_.section_contents)
+
+        walk(document.section_contents)
+
     def read_from_file(
         self, file_path: str, project_config: ProjectConfig
     ) -> SDocDocument:
@@ -235,7 +272,7 @@ class SDMarkdownReader:
             section_contents=[],
         )
         document.config.markup = SDocMarkup.MARKDOWN
-        document.grammar = DocumentGrammar.create_default(
+        document.grammar = create_markdown_default_grammar(
             parent=document,
             enable_mid=True,
             include_child_relation=True,
@@ -292,24 +329,29 @@ class SDMarkdownReader:
 
             metadata_entries = []
             for field_ in root_meta_fields:
-                if field_.name == "GRAMMAR":
+                if field_.name == "Grammar":
                     document.grammar = DocumentGrammar(
                         parent=document,
                         elements=[],
                         import_from_file=field_.value,
                     )
                     continue
-                if field_.name == "PREFIX":
+                if field_.name == "Prefix":
                     document.config.requirement_prefix = field_.value
+                if field_.name == "UID":
+                    document.config.uid = field_.value
                 metadata_entries.append(
                     DocumentCustomMetadataKeyValuePair(
-                        key=field_.human_name,
-                        value=field_.value,
+                        key=field_.name,
+                        parts=SDMarkdownReader._parse_text_parts(field_.value),
                     )
                 )
-            document.config.custom_metadata = DocumentCustomMetadata(
-                entries=metadata_entries
+            custom_metadata = DocumentCustomMetadata(
+                parent=document.config, entries=metadata_entries
             )
+            for entry_ in metadata_entries:
+                entry_.parent = custom_metadata
+            document.config.custom_metadata = custom_metadata
         else:
             root_body_lines_without_meta = root_body_lines
             document.config.custom_metadata = None
@@ -411,11 +453,6 @@ class SDMarkdownReader:
                 parent_node.section_contents.append(requirement_node)
                 stack.append((heading_node.level, requirement_node))
 
-                SDMarkdownReader._memorize_requirement_human_titles(
-                    document=document,
-                    markdown_fields=parsed_node.fields,
-                )
-
                 document.ng_has_requirements = True
                 cursor_node: Optional[SDocNode]
                 if isinstance(parent_node, SDocNode):
@@ -438,7 +475,7 @@ class SDMarkdownReader:
                 section_node.ng_including_document_reference = (
                     including_document_reference
                 )
-                # Preserve MID from the section meta block (e.g. **TYPE**: SECTION \ **MID**: ...).
+                # Preserve MID from the section meta block (e.g. **Type**: SECTION \ **MID**: ...).
                 # create_section does not accept fields, so we patch it in afterwards.
                 # MID must be inserted before TITLE to match the grammar field order.
                 mid_field = next(
@@ -457,9 +494,9 @@ class SDMarkdownReader:
                     section_node.ordered_fields_lookup.update(existing)
                     section_node.reserved_mid = MID(mid_field.value)
                     section_node.mid_permanent = True
-                # Preserve PREFIX from the section meta block.
-                # PREFIX is inserted before TITLE (after MID) to keep the
-                # field order: MID, LEVEL, PREFIX, TITLE.
+                # Preserve Prefix from the section meta block.
+                # The internal PREFIX key is inserted before TITLE (after
+                # MID) to keep the field order: MID, LEVEL, PREFIX, TITLE.
                 prefix_field = next(
                     (f for f in parsed_node.fields if f.name == "PREFIX"), None
                 )
@@ -483,7 +520,7 @@ class SDMarkdownReader:
                 parent_node.section_contents.append(section_node)
 
                 # When processed_body is set the meta block has been stripped;
-                # use it to avoid duplicating **TYPE**: / **PREFIX**: / **MID**:
+                # use it to avoid duplicating **Type**: / **Prefix**: / **MID**:
                 # lines as prose in the TEXT child.  Otherwise fall back to the
                 # raw heading body so ambiguous content is preserved.
                 effective_body = (
@@ -507,28 +544,6 @@ class SDMarkdownReader:
                 stack.append((heading_node.level, section_node))
 
             previous_level = heading_node.level
-
-    @staticmethod
-    def _memorize_requirement_human_titles(
-        document: SDocDocument, markdown_fields: List[ParsedField]
-    ) -> None:
-        """
-        Copy markdown field names (e.g. "Statement") from markdown to default grammar REQUIREMENT element.
-
-        The markdown writer will later use the names to reproduce original capitalisation.
-        """
-        assert document.grammar is not None
-        requirement_element = document.grammar.elements_by_type.get(
-            "REQUIREMENT"
-        )
-        if requirement_element is None:
-            return
-        for markdown_field in markdown_fields:
-            if markdown_field.name not in requirement_element.fields_map:
-                continue
-            grammar_field = requirement_element.fields_map[markdown_field.name]
-            if grammar_field.human_title is None:
-                grammar_field.human_title = markdown_field.human_name
 
     @staticmethod
     def _fallback_document_title(file_path: Optional[str]) -> str:
@@ -706,18 +721,30 @@ class SDMarkdownReader:
 
         parsed_fields = meta_fields + content_fields
 
-        # Extract TYPE before further validation; it controls the node type and
+        # These 8 reserved field roles back shared SDocNode accessors
+        # (reserved_title, reserved_statement, rationale, comment,
+        # reserved_level, reserved_status, reserved_tags, get_prefix) that
+        # hardcode the exact ALL_CAPS key, in both the default and any custom
+        # grammar. The alias is therefore applied unconditionally here; it
+        # only ever matches these 8 fixed names, never an arbitrary
+        # grammar-specific field (e.g. ASIL, DERIVED_RATIONALE).
+        for field_ in parsed_fields:
+            field_.name = SDMarkdownReader.default_grammar_field_aliases.get(
+                field_.name, field_.name
+            )
+
+        # Extract Type before further validation; it controls the node type and
         # must not be forwarded as a regular SDoc field.
-        # Only the first TYPE field is honoured: for SECTION nodes the body may
-        # contain a **TYPE**: TEXT \ prefix in the TEXT child content (MD-28),
-        # and that body-level TYPE must not override the meta-block TYPE.
+        # Only the first Type field is honoured: for SECTION nodes the body may
+        # contain a **Type**: TEXT \ prefix in the TEXT child content (MD-28),
+        # and that body-level Type must not override the meta-block Type.
         explicit_node_type: Optional[str] = None
         parsed_fields_without_type: List[ParsedField] = []
         for field_ in parsed_fields:
-            if field_.name == "TYPE":
+            if field_.name == "Type":
                 if explicit_node_type is None:
                     explicit_node_type = field_.value.strip()
-                # Subsequent TYPE fields (e.g. in the TEXT body) are discarded.
+                # Subsequent Type fields (e.g. in the TEXT body) are discarded.
             else:
                 parsed_fields_without_type.append(field_)
         parsed_fields = parsed_fields_without_type
@@ -738,16 +765,14 @@ class SDMarkdownReader:
         )
 
         if explicit_node_type == "SECTION":
-            # Explicit TYPE: SECTION always creates a section, regardless of
+            # Explicit Type: SECTION always creates a section, regardless of
             # whether the body would otherwise qualify as a requirement.
             valid_for_requirement = False
         elif explicit_node_type is not None:
-            # Any other explicit TYPE is accepted as long as the markdown syntax
+            # Any other explicit Type is accepted as long as the markdown syntax
             # is well-formed and the heading has a non-empty title.  Grammar
             # field validation is deferred to TraceabilityIndexBuilder.
-            valid_for_requirement = (
-                meta_is_valid and content_is_valid and len(title) > 0
-            )
+            valid_for_requirement = meta_is_valid and content_is_valid
         elif has_custom_grammar:
             # When a custom grammar is attached, drop the hardcoded UID/STATEMENT
             # assumptions and defer field validation to TraceabilityIndexBuilder.
@@ -757,7 +782,6 @@ class SDMarkdownReader:
                 and has_only_known_fields
                 and not has_empty_field_values
                 and len(parsed_fields) > 0
-                and len(title) > 0
             )
         else:
             valid_for_requirement = (
@@ -771,8 +795,8 @@ class SDMarkdownReader:
             )
 
         # Use body_lines_without_meta (meta block stripped) as processed_body
-        # only when the meta block contains section-specific fields (TYPE, MID,
-        # PREFIX) so those lines do not reappear as prose in the TEXT child.
+        # only when the meta block contains section-specific fields (Type, MID,
+        # Prefix) so those lines do not reappear as prose in the TEXT child.
         # For ambiguous meta blocks (e.g. duplicate UID fields in an invalid
         # requirement node) fall back to None so _create_document_tree uses the
         # raw heading body and preserves the content.
@@ -862,7 +886,7 @@ class SDMarkdownReader:
                 )
                 if (
                     next_field_match is not None
-                    and next_field_match.group("name").upper() == "RELATIONS"
+                    and next_field_match.group("name") == "Relations"
                 ):
                     raise StrictDocSemanticError(
                         title=(
@@ -949,8 +973,7 @@ class SDMarkdownReader:
 
             parsed_fields.append(
                 ParsedField(
-                    name=match.group("name").upper(),
-                    human_name=match.group("name"),
+                    name=match.group("name"),
                     value=value,
                 )
             )
@@ -967,7 +990,7 @@ class SDMarkdownReader:
 
         A **Key**: line at column 0 starts a named field. If its value is empty
         and the next line opens a dict bullet (- **), the field is a structured
-        list (e.g. RELATIONS); otherwise the field value is collected as
+        list (e.g. Relations); otherwise the field value is collected as
         multiline prose until the next field header or end of body.
         Lines that match no field header are accumulated as an implicit STATEMENT.
 
@@ -1034,8 +1057,7 @@ class SDMarkdownReader:
                     )
                     if (
                         next_field_match is not None
-                        and next_field_match.group("name").upper()
-                        == "RELATIONS"
+                        and next_field_match.group("name") == "Relations"
                     ):
                         raise StrictDocSemanticError(
                             title=(
@@ -1055,8 +1077,7 @@ class SDMarkdownReader:
             line_text = SDMarkdownReader._line_without_line_ending(line)
             plain_match = SDMarkdownReader.plain_field_pattern.match(line_text)
             if plain_match is not None and line_index not in fence_interior:
-                field_name_upper = plain_match.group("name").upper()
-                field_name_human = plain_match.group("name")
+                field_name = plain_match.group("name")
                 inline_value = SDMarkdownReader._trim_single_space_prefix(
                     plain_match.group("value")
                 )
@@ -1096,8 +1117,7 @@ class SDMarkdownReader:
                         field_value = inline_value
                     parsed_fields.append(
                         ParsedField(
-                            name=field_name_upper,
-                            human_name=field_name_human,
+                            name=field_name,
                             value=field_value,
                         )
                     )
@@ -1145,8 +1165,7 @@ class SDMarkdownReader:
                 field_value = "".join(multiline_field_lines)
                 parsed_fields.append(
                     ParsedField(
-                        name=field_name_upper,
-                        human_name=field_name_human,
+                        name=field_name,
                         value=field_value,
                         is_block_format=True,
                     )
@@ -1175,7 +1194,6 @@ class SDMarkdownReader:
             parsed_fields.append(
                 ParsedField(
                     name="STATEMENT",
-                    human_name="Statement",
                     value=statement_value,
                 )
             )
@@ -1198,7 +1216,7 @@ class SDMarkdownReader:
         parsed_content_fields: List[ParsedField] = []
         relations_field: Optional[ParsedField] = None
         for field in fields:
-            if field.name == "RELATIONS":
+            if field.name == "Relations":
                 relations_field = field
                 continue
             if field.name in SDMarkdownReader.requirement_meta_fields:
@@ -1216,14 +1234,15 @@ class SDMarkdownReader:
                     multiline="\n" in field.value,
                 )
             )
-        requirement_fields.append(
-            SDocNodeField.create_from_string(
-                parent=None,
-                field_name="TITLE",
-                field_value=title,
-                multiline=False,
+        if len(title) > 0:
+            requirement_fields.append(
+                SDocNodeField.create_from_string(
+                    parent=None,
+                    field_name="TITLE",
+                    field_value=title,
+                    multiline=False,
+                )
             )
-        )
         for field in parsed_content_fields:
             sdoc_field = SDocNodeField(
                 parent=None,
@@ -1258,7 +1277,7 @@ class SDMarkdownReader:
     @staticmethod
     def _try_parse_text_meta(body: str) -> Tuple[Optional[str], str]:
         r"""
-        Detect and extract a **TYPE**: TEXT \\ **MID**: <value> prefix block
+        Detect and extract a **Type**: TEXT \\ **MID**: <value> prefix block
         from a section body string.
 
         Returns (mid_value, remaining_body) when the prefix is found, or
@@ -1477,7 +1496,7 @@ class SDMarkdownReader:
 
         Each "- " line starts a new dict item; continuation lines (indented)
         belong to the same item. Returns a list of {key: value} dicts,
-        one per bullet. RELATIONS-agnostic: any structured list field can use this.
+        one per bullet. Relations-agnostic: any structured list field can use this.
         """
         items: List[List[str]] = []
         current_item: Optional[List[str]] = None

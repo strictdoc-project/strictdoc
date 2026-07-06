@@ -18,7 +18,7 @@ nodes and standalone `.md` files.
 **MID**: f1e2d3c4b5a6f7e8d9c0b1a2f3e4d5c6 \
 **UID**: FMT-1
 
-**STATEMENT**: The formatter wraps text lines to a configurable maximum line
+**Statement**: The formatter wraps text lines to a configurable maximum line
 width. The minimum acceptable line width is 80 characters.
 
 ### Prose wrapping
@@ -26,7 +26,7 @@ width. The minimum acceptable line width is 80 characters.
 **MID**: a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7 \
 **UID**: FMT-2
 
-**STATEMENT**: The formatter wraps plain prose paragraphs so that no output
+**Statement**: The formatter wraps plain prose paragraphs so that no output
 line exceeds the configured line width. Paragraph boundaries (two or more
 consecutive blank lines) are preserved. The formatter does not split individual
 words.
@@ -36,7 +36,7 @@ words.
 **MID**: b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8 \
 **UID**: FMT-3
 
-**STATEMENT**: The formatter preserves blank lines that separate paragraphs or
+**Statement**: The formatter preserves blank lines that separate paragraphs or
 list items. No blank lines are added or removed during formatting.
 
 ### Idempotency
@@ -44,7 +44,7 @@ list items. No blank lines are added or removed during formatting.
 **MID**: c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9 \
 **UID**: FMT-4
 
-**STATEMENT**: Formatting an already-formatted document produces identical
+**Statement**: Formatting an already-formatted document produces identical
 output. Running the formatter twice on the same input produces the same result
 as running it once.
 
@@ -53,7 +53,7 @@ as running it once.
 **MID**: d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0 \
 **UID**: FMT-5
 
-**STATEMENT**: The formatter does not alter the semantic content of the
+**Statement**: The formatter does not alter the semantic content of the
 document. It only changes line-break positions within wrappable prose.
 
 ### Blocks that must not be rewrapped
@@ -61,7 +61,7 @@ document. It only changes line-break positions within wrappable prose.
 **MID**: e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1 \
 **UID**: FMT-6
 
-**STATEMENT**:
+**Statement**:
 
 The formatter preserves the following block types unchanged,
 regardless of line length:
@@ -80,7 +80,7 @@ regardless of line length:
 **MID**: f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2 \
 **UID**: FMT-7
 
-**STATEMENT**:
+**Statement**:
 
 The formatter treats inline links as atomic tokens that are
 never broken across lines:
@@ -101,7 +101,7 @@ when no line-break position within the token exists.
 **MID**: 08b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3 \
 **UID**: FMT-MD-1
 
-**STATEMENT**:
+**Statement**:
 
 The formatter recognises and preserves the following unordered
 Markdown list markers: `-`, `*`, `+`. The following ordered list markers are
@@ -115,7 +115,7 @@ preserved.
 **MID**: 19c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4 \
 **UID**: FMT-MD-2
 
-**STATEMENT**:
+**Statement**:
 
 When a Markdown list item is wrapped, continuation lines are
 indented to align with the content of the list item, not with the list marker.
@@ -137,7 +137,7 @@ the marker (including its trailing space). For a `- ` marker the indent is
 **MID**: 2ad1e2f3a4b5c6d7e8f9a0b1c2d3e4f5 \
 **UID**: FMT-MD-3
 
-**STATEMENT**:
+**Statement**:
 
 The formatter does not rewrap the following Markdown constructs:
 
@@ -155,7 +155,7 @@ The formatter does not rewrap the following Markdown constructs:
 **MID**: 3be2f3a4b5c6d7e8f9a0b1c2d3e4f5a6 \
 **UID**: FMT-RST-1
 
-**STATEMENT**:
+**Statement**:
 
 The formatter recognises and preserves the following RST list
 markers:
@@ -171,7 +171,7 @@ markers:
 **MID**: 4cf3a4b5c6d7e8f9a0b1c2d3e4f5a6b7 \
 **UID**: FMT-RST-2
 
-**STATEMENT**:
+**Statement**:
 
 When an RST list item is wrapped, continuation lines are
 indented to align with the content of the list item, not with the list marker.
@@ -194,7 +194,7 @@ the marker (including its trailing space).
 **MID**: 5da4b5c6d7e8f9a0b1c2d3e4f5a6b7c8 \
 **UID**: FMT-RST-3
 
-**STATEMENT**:
+**Statement**:
 
 The formatter does not rewrap the following RST constructs:
 
@@ -213,7 +213,7 @@ The formatter does not rewrap the following RST constructs:
 **MID**: 6eb5c6d7e8f9a0b1c2d3e4f5a6b7c8d9 \
 **UID**: FMT-SD-1
 
-**STATEMENT**: The formatter treats `[LINK: uid]` as an atomic token. The
+**Statement**: The formatter treats `[LINK: uid]` as an atomic token. The
 space between the colon and the UID is not a valid line-break position. If the
 keyword would cause the current line to exceed the configured width, the entire
 `[LINK: uid]` expression is moved to the next line as a single unit.
@@ -223,7 +223,7 @@ keyword would cause the current line to exceed the configured width, the entire
 **MID**: 7fc6d7e8f9a0b1c2d3e4f5a6b7c8d9e0 \
 **UID**: FMT-SD-2
 
-**STATEMENT**: The formatter treats `[ANCHOR: uid]` as an atomic token with
+**Statement**: The formatter treats `[ANCHOR: uid]` as an atomic token with
 the same line-break rules as FMT-SD-1.
 
 ### Link as first content of a list item
@@ -231,7 +231,7 @@ the same line-break rules as FMT-SD-1.
 **MID**: 80d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1 \
 **UID**: FMT-SD-3
 
-**STATEMENT**:
+**Statement**:
 
 If an inline link or a StrictDoc cross-reference keyword
 (`[LINK: uid]` or `[ANCHOR: uid]`) is the first content of a list item —

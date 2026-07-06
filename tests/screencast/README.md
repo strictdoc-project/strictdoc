@@ -90,6 +90,45 @@ refuses to touch it and prints the occupying process(es) along with a
 Scenario test runs use a separate port (`5302`, see `fixture.py`) so a
 manual dev server can stay open while scenarios are (re)recorded.
 
+### Previewing a scenario that doesn't use the shared fixture
+
+Some scenarios (e.g. `hello_world`) don't browse the shared fixture
+project — they generate their own project from scratch (via a real
+`strictdoc new` call) inside the test itself, in a pytest `tmp_path` that's
+deleted right after the test finishes. There's nothing left on disk
+afterwards to point a manual server at.
+
+To preview one of these, pass `--focus=<scenario_name>`:
+
+```bash
+invoke screencast-server --focus=hello_world
+```
+
+This looks up the scenario in `tests/screencast/manual_scenarios.py`,
+which knows how to (re)create that scenario's project on demand, and
+serves it on the same port/URL as the default case
+(`http://127.0.0.1:5301`).
+
+The generated project is written to
+`build/screencast_manual/<scenario_name>/` — a disposable, gitignored
+build artifact (see `/build/` in `.gitignore`), **not** a fixture. It's
+left in place between runs (instead of being regenerated every time) so
+that:
+
+- restarting the manual server doesn't rerun the scenario's setup (e.g.
+  `strictdoc new`) and doesn't hit its refusal to overwrite existing
+  files;
+- any manual edits made through the UI while inspecting the scene survive
+  a server restart.
+
+Delete `build/screencast_manual/` (or the specific scenario's
+subdirectory) at any time to reset it back to a clean, freshly generated
+state on the next run.
+
+Adding a new scenario that needs this kind of on-demand project also means
+adding an entry for it to the `SCENARIOS` registry in
+`tests/screencast/manual_scenarios.py`.
+
 ## Adding a new scenario
 
 1. Add fixture content under `fixtures/strictdoc-demo-project/`, if needed.

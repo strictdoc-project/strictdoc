@@ -180,16 +180,19 @@ def server(context, input_path=".", config=None, port=None):
 
 
 @task(aliases=["scs"])
-def screencast_server(context):
+def screencast_server(context, focus=None):
     """
-    Manual dev server for tests/screencast scenarios: starts StrictDoc with
-    the screencast demo fixture, for inspecting a scene in the browser.
+    Manual dev server for tests/screencast scenarios: starts StrictDoc on a
+    scenario's project (the shared demo fixture by default, or another
+    scenario's project via --focus), for inspecting it in the browser.
     """
+
+    focus_argument = f"--focus {focus}" if focus is not None else ""
 
     run_invoke_with_tox(
         context,
         ToxEnvironment.CHECK,
-        "python tests/screencast/run_server.py",
+        f"python tests/screencast/run_server.py {focus_argument}",
     )
 
 

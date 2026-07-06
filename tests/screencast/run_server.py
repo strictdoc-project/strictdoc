@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import os
 import subprocess
 import sys
@@ -12,10 +13,10 @@ sys.path.insert(0, STRICTDOC_ROOT)
 import psutil  # noqa: E402
 
 from tests.end2end.server import SDocTestServer  # noqa: E402
-from tests.screencast.fixture import (  # noqa: E402
-    DEV_SERVER_PORT,
-    FIXTURE_CONFIG,
-    FIXTURE_DIR,
+from tests.screencast.fixture import DEV_SERVER_PORT  # noqa: E402
+from tests.screencast.manual_scenarios import (  # noqa: E402
+    DEFAULT_SCENARIO,
+    SCENARIOS,
 )
 
 
@@ -44,7 +45,13 @@ def is_previous_demo_server(pid: int) -> bool:
         cmdline = " ".join(psutil.Process(pid).cmdline())
     except psutil.NoSuchProcess:
         return False
-    return str(FIXTURE_DIR) in cmdline
+    # Matched by shape (any strictdoc server bound to this dev port), not by
+    # project directory: --focus can point at a different project per run.
+    return (
+        "strictdoc.cli.main" in cmdline
+        and "server" in cmdline
+        and f"--port {DEV_SERVER_PORT}" in cmdline
+    )
 
 
 def collect_pid_tree(pid: int) -> list[int]:
@@ -108,17 +115,36 @@ def free_dev_port(port: int) -> None:
             continue
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--focus",
+        default=DEFAULT_SCENARIO,
+        choices=sorted(SCENARIOS),
+        help=(
+            "Which screencast scenario's project to serve "
+            f"(default: {DEFAULT_SCENARIO})."
+        ),
+    )
+    return parser.parse_args()
+
+
 def main() -> int:
+    args = parse_args()
+
     try:
+        project_dir, config_path = SCENARIOS[args.focus]()
+
         free_dev_port(DEV_SERVER_PORT)
 
         with SDocTestServer(
-            input_path=str(FIXTURE_DIR),
-            config_path=str(FIXTURE_CONFIG),
+            input_path=str(project_dir),
+            config_path=str(config_path) if config_path is not None else None,
             port=DEV_SERVER_PORT,
         ) as server:
             print(  # noqa: T201
-                f"🚀 StrictDoc demo server: {server.get_host_and_port()}"
+                f"🚀 StrictDoc demo server ({args.focus}): "
+                f"{server.get_host_and_port()}"
             )
             print("   Press Ctrl+C to stop.")  # noqa: T201
 

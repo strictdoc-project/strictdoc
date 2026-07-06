@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>StrictDoc terminal</title>
+  <style>
+    body {
+      margin: 0;
+      background: #111827;
+      color: #e5e7eb;
+      font: 18px/1.5 system-ui, sans-serif;
+    }
+
+    .screen {
+      width: 1280px;
+      height: 720px;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    .window {
+      height: 100%;
+      background: #0b1020;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+
+    .bar {
+      height: 44px;
+      background: #1f2937;
+    }
+
+    pre {
+      margin: 0;
+      padding: 32px;
+      font: 22px/1.55 ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre-wrap;
+    }
+
+    .cursor::after {
+      content: "▌";
+      animation: blink 0.8s infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="screen">
+    <div class="window">
+      <div class="bar"></div>
+      <pre id="demoText" class="cursor"></pre>
+    </div>
+  </div>
+</body>
+</html>

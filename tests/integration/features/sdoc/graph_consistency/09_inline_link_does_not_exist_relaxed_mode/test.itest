@@ -1,0 +1,24 @@
+#
+# In relaxed mode (--allow-missing-relation-requirements), an inline [LINK:]
+# that references a missing node UID or a missing [ANCHOR:] produces a warning
+# and a UI highlight instead of a hard error. Valid links still resolve.
+#
+
+RUN: %strictdoc export %S --output-dir %T --allow-missing-relation-requirements | filecheck %s --dump-input=fail
+CHECK: warning: Missing link: MISSING-UID
+CHECK: warning: Missing link: MISSING-ANCHOR
+CHECK: warning: unresolved inline links were detected and allowed by configuration.
+CHECK: warning: unresolved inline links count: 2
+CHECK: warning: node 'REQ-002' in document 'Doc with missing inline links' has an unresolved inline link to 'MISSING-UID'.
+CHECK: warning: node 'REQ-003' in document 'Doc with missing inline links' has an unresolved inline link to 'MISSING-ANCHOR'.
+CHECK: Published: Doc with missing inline links
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHECK-HTML
+
+# The missing node link is rendered as a dead link and highlighted as an issue.
+CHECK-HTML: MISSING-UID</a>
+CHECK-HTML: Missing link: MISSING-UID
+
+# The missing anchor link is rendered as a dead link and highlighted as an issue.
+CHECK-HTML: MISSING-ANCHOR</a>
+CHECK-HTML: Missing link: MISSING-ANCHOR

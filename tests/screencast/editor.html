@@ -45,6 +45,7 @@
 
     #code {
       counter-reset: line;
+      background: transparent;
     }
 
     .line {
@@ -72,10 +73,6 @@
       background: rgba(46, 160, 67, 0.18);
     }
 
-    .line.added .line-text {
-      color: #7ee787;
-    }
-
     .cursor-line .line-text::after {
       content: "▌";
       animation: blink 0.8s infinite;
@@ -89,7 +86,7 @@
 <body>
   <div class="screen">
     <div class="tabbar"><div class="tab" id="fileTab"></div></div>
-    <div class="body"><div id="code"></div></div>
+    <div class="body"><div id="code" class="code"></div></div>
   </div>
 </body>
 </html>

@@ -19,9 +19,9 @@
           <b>Input paths:</b>
           {% for path_ in view_object.project_config.input_paths %}
           {% set external_, internal_ = view_object.split_path_for_display(path_) %}
-          <code class="dashboard-path">
+          <code class="dashboard-path" data-testid="dashboard-input-path">
             {%- if external_ -%}
-            <span class="dashboard-path-external" tabindex="0" title="Click to reveal">…</span><span class="dashboard-path-external-full">{{ external_ }}</span>
+            <span class="dashboard-path-external" data-testid="dashboard-input-path-external" tabindex="0" title="Click to reveal">…</span><span class="dashboard-path-external-full">{{ external_ }}</span>
             {%- endif -%}
             <span class="dashboard-path-internal">{{ internal_ }}</span>
           </code><br/>
@@ -43,9 +43,9 @@
         {% if view_object.project_config.source_root_path is not none %}
           {% set external_, internal_ = view_object.split_path_for_display(view_object.project_config.source_root_path) %}
           <b>Source root path:</b>
-            <code class="dashboard-path">
+            <code class="dashboard-path" data-testid="dashboard-source-root-path">
               {%- if external_ -%}
-              <span class="dashboard-path-external" tabindex="0" title="Click to reveal">…</span><span class="dashboard-path-external-full">{{ external_ }}</span>
+              <span class="dashboard-path-external" data-testid="dashboard-source-root-path-external" tabindex="0" title="Click to reveal">…</span><span class="dashboard-path-external-full">{{ external_ }}</span>
               {%- endif -%}
               <span class="dashboard-path-internal">{{ internal_ }}</span>
             </code>

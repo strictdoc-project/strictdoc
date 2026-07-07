@@ -209,9 +209,10 @@ This starts StrictDoc with the demo fixture project at
 `http://127.0.0.1:5301` and keeps running until stopped with Ctrl+C.
 
 If the port is already taken by a previous run of this same demo server, it
-is stopped automatically. If it's taken by anything else, the command
-refuses to touch it and prints the occupying process(es) along with a
-`kill` command to stop them yourself.
+is stopped automatically — no confirmation prompt. If it's taken by
+anything else, the command refuses to touch it and hard-fails, printing
+the occupying process(es) along with a `kill` command to stop them
+yourself.
 
 Scenario test runs use a separate port (`5302`, see `fixture.py`) so a
 manual dev server can stay open while scenarios are (re)recorded.
@@ -230,10 +231,11 @@ To preview one of these, pass `--focus=<scenario_name>`:
 invoke screencast-server --focus=hello_world
 ```
 
-This looks up the scenario in `tests/screencast/manual_scenarios.py`,
-which knows how to (re)create that scenario's project on demand, and
-serves it on the same port/URL as the default case
-(`http://127.0.0.1:5301`).
+This looks up `hello_world` in the `SCENARIOS` registry in
+`tests/screencast/manual_scenarios.py` — the one place that knows this
+particular scenario needs a real `strictdoc new` call to produce
+something to serve — and serves the result on the same port/URL as the
+default case (`http://127.0.0.1:5301`).
 
 The generated project is written to
 `build/screencast_manual/<scenario_name>/` — a disposable, gitignored
@@ -243,7 +245,10 @@ that:
 
 - restarting the manual server doesn't rerun the scenario's setup (e.g.
   `strictdoc new`) and doesn't hit its refusal to overwrite existing
-  files;
+  files — that refusal is `strictdoc new`'s own, native behavior (see
+  `strictdoc/commands/new_command.py`), not something specific to
+  screencasts; we simply avoid triggering it by skipping the call
+  entirely once the target directory is already populated;
 - any manual edits made through the UI while inspecting the scene survive
   a server restart.
 

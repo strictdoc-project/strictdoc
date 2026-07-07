@@ -5,18 +5,12 @@
 import pytest
 
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
-from strictdoc.backend.sdoc.models.reference import (
-    ChildReqReference,
-    FileReference,
-    ParentReqReference,
-)
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.mid import MID
 from tests.unit.helpers.document_builder import DocumentBuilder
-from typing import List
 
 
 def test_valid_01_one_document_with_1req():
@@ -495,6 +489,7 @@ def test__delete_requirement__parent_child_links_cleaned_up_symmetrically():
     # gone; previously it was left in place.
     assert traceability_index.get_children_requirements(requirement1) == []
 
+
 def test__missing_parent_relation__strict_mode_raises():
     document_builder = DocumentBuilder()
     document_builder.add_requirement("REQ-001")
@@ -588,6 +583,4 @@ def test_resolved_inline_link_is_not_reported_as_unresolved():
 
     assert traceability_index.has_unresolved_inline_links() is False
     assert traceability_index.get_all_unresolved_inline_links() == []
-    assert (
-        traceability_index.get_unresolved_inline_links(requirement) == []
-    )
+    assert traceability_index.get_unresolved_inline_links(requirement) == []

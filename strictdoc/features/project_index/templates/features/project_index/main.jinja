@@ -18,7 +18,7 @@
         {% if view_object.project_config.input_paths|length %}
           <b>Input paths:</b>
           {% for path_ in view_object.project_config.input_paths %}
-          <code style="word-wrap: break-word;">{{ path_ }}</code><br/>
+          <code class="dashboard-path">{{ path_ }}</code><br/>
           {% endfor %}
         {% endif %}
 
@@ -37,7 +37,7 @@
         {% if view_object.project_config.source_root_path is not none %}
           <b>Source root path:</b>
           <div>
-            <code style="word-wrap: break-word;">{{ view_object.project_config.source_root_path }}</code>
+            <code class="dashboard-path">{{ view_object.project_config.source_root_path }}</code>
           </div>
         {% endif %}
 

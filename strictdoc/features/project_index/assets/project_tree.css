@@ -226,3 +226,27 @@
 .dashboard-path {
   overflow-wrap: anywhere;
 }
+
+.dashboard-path-external {
+  cursor: pointer;
+  padding: 0 0.2em;
+  border-radius: 3px;
+  background-color: rgba(0,0,0,0.06);
+}
+
+.dashboard-path-external:hover,
+.dashboard-path-external:focus {
+  background-color: rgba(0,0,0,0.12);
+}
+
+.dashboard-path-external-full {
+  display: none;
+}
+
+.dashboard-path.revealed .dashboard-path-external {
+  display: none;
+}
+
+.dashboard-path.revealed .dashboard-path-external-full {
+  display: inline;
+}

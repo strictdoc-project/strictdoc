@@ -2,8 +2,9 @@
 @relation(SDOC-SRS-53, scope=file)
 """
 
+import os
 from dataclasses import dataclass
-from typing import Union
+from typing import Tuple, Union
 
 from markupsafe import Markup
 
@@ -81,6 +82,29 @@ class ProjectTreeViewObject:
 
     def get_document_level(self) -> int:
         return 0
+
+    def split_path_for_display(self, path: str) -> Tuple[str, str]:
+        """
+        Split an absolute path into an (external_prefix, remainder) pair,
+        so that the UI can hide the external_prefix (e.g. behind a
+        click-to-reveal "…") from screen recordings/screenshots.
+
+        If the path is inside the project root's parent directory, the
+        remainder keeps everything from the project root directory name
+        onward (e.g. "/strictdoc/some/src"). Otherwise the path lies
+        outside the project entirely, and only its last path segment is
+        kept in the remainder (e.g. remainder="/src" for
+        path="/opt/external-libs/src").
+        """
+        project_root_path = self.project_config.get_project_root_path()
+        external_prefix = os.path.dirname(project_root_path)
+        if external_prefix and path.startswith(external_prefix):
+            return external_prefix, path[len(external_prefix) :]
+
+        fallback_prefix = os.path.dirname(path)
+        if fallback_prefix and fallback_prefix != path:
+            return fallback_prefix, path[len(fallback_prefix) :]
+        return "", path
 
     def should_display_fragments_toggle(self) -> bool:
         return self.project_config.export_included_documents

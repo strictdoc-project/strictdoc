@@ -180,19 +180,25 @@ def server(context, input_path=".", config=None, port=None):
 
 
 @task(aliases=["scs"])
-def screencast_server(context, focus=None):
+def screencast_server(context, focus=None, edit=False):
     """
     Manual dev server for tests/screencast scenarios: starts StrictDoc on a
     scenario's project (the shared demo fixture by default, or another
     scenario's project via --focus), for inspecting it in the browser.
+
+    By default this serves a disposable copy, rebuilt fresh every time, so
+    nothing done through the UI persists. Pass --edit to serve the real,
+    persistent files instead (the shared fixture itself, or a generated
+    project reused across restarts) when intentionally editing them.
     """
 
     focus_argument = f"--focus {focus}" if focus is not None else ""
+    edit_argument = "--edit" if edit else ""
 
     run_invoke_with_tox(
         context,
         ToxEnvironment.CHECK,
-        f"python tests/screencast/run_server.py {focus_argument}",
+        f"python tests/screencast/run_server.py {focus_argument} {edit_argument}",
     )
 
 

@@ -5,6 +5,7 @@ import os
 import subprocess
 import sys
 import time
+import unicodedata
 
 STRICTDOC_ROOT = os.path.abspath(os.path.join(__file__, "../../.."))
 assert os.path.isdir(STRICTDOC_ROOT), STRICTDOC_ROOT
@@ -115,6 +116,55 @@ def free_dev_port(port: int) -> None:
             continue
 
 
+def _display_width(text: str) -> int:
+    """
+    Terminal column width of `text`: wide characters (most emoji, CJK)
+    render as 2 columns despite `len()` counting them as 1, which throws
+    off plain `.center()`/`.ljust()` for a fixed-width box.
+    """
+    return sum(
+        2 if unicodedata.east_asian_width(ch) in ("W", "F") else 1
+        for ch in text
+    )
+
+
+def _center(text: str, width: int) -> str:
+    padding = max(width - _display_width(text), 0)
+    left = padding // 2
+    return " " * left + text + " " * (padding - left)
+
+
+def _ljust(text: str, width: int) -> str:
+    return text + " " * max(width - _display_width(text), 0)
+
+
+def print_banner(*, scenario: str, mode_label: str, url: str) -> None:
+    """
+    Same ASCII-box style as StrictDoc's own server startup banner
+    (strictdoc/server/app.py::print_welcome_message), so this reads as
+    part of the same product rather than a one-off print.
+    """
+    width = 72
+    border = "=" * width
+
+    lines = [
+        f" {_center('StrictDoc 🎥 Screencast Manual Server', width - 2)} ",
+        "",
+        f" Scenario: {scenario}",
+        f" Mode:     {mode_label}",
+        f" URL:      {url}",
+        "",
+        " Press Ctrl+C to stop.",
+    ]
+
+    banner = (
+        f"+{border}+\n"
+        + "\n".join(f"|{_ljust(line, width)}|" for line in lines)
+        + f"\n+{border}+"
+    )
+    print(banner)  # noqa: T201
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -126,6 +176,18 @@ def parse_args() -> argparse.Namespace:
             f"(default: {DEFAULT_SCENARIO})."
         ),
     )
+    parser.add_argument(
+        "--edit",
+        action="store_true",
+        default=False,
+        help=(
+            "Serve the scenario's real, persistent files (the shared "
+            "fixture itself, or a generated project reused across "
+            "restarts) instead of a disposable, freshly rebuilt copy. "
+            "Changes made through the UI are real and stick around — "
+            "opt in only when that's the point."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -133,7 +195,7 @@ def main() -> int:
     args = parse_args()
 
     try:
-        project_dir, config_path = SCENARIOS[args.focus]()
+        project_dir, config_path = SCENARIOS[args.focus](args.edit)
 
         free_dev_port(DEV_SERVER_PORT)
 
@@ -142,11 +204,14 @@ def main() -> int:
             config_path=str(config_path) if config_path is not None else None,
             port=DEV_SERVER_PORT,
         ) as server:
-            print(  # noqa: T201
-                f"🚀 StrictDoc demo server ({args.focus}): "
-                f"{server.get_host_and_port()}"
+            mode_label = (
+                "editable (changes persist!)" if args.edit else "read-only copy"
             )
-            print("   Press Ctrl+C to stop.")  # noqa: T201
+            print_banner(
+                scenario=args.focus,
+                mode_label=mode_label,
+                url=server.get_host_and_port(),
+            )
 
             server.process.wait()
 

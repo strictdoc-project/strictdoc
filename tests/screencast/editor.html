@@ -1,0 +1,95 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>StrictDoc editor</title>
+  <style>
+    body {
+      margin: 0;
+      background: #1e1e1e;
+      color: #d4d4d4;
+      font: 16px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    .screen {
+      width: 1280px;
+      height: 720px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tabbar {
+      height: 44px;
+      flex: 0 0 auto;
+      background: #252526;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      border-bottom: 1px solid #333;
+    }
+
+    .tab {
+      background: #1e1e1e;
+      padding: 8px 18px;
+      border-radius: 6px 6px 0 0;
+      font-size: 14px;
+      color: #e5e7eb;
+    }
+
+    .body {
+      flex: 1;
+      overflow: hidden;
+      padding: 16px 0;
+    }
+
+    #code {
+      counter-reset: line;
+    }
+
+    .line {
+      display: flex;
+      padding: 0 24px;
+    }
+
+    .line::before {
+      counter-increment: line;
+      content: counter(line);
+      display: inline-block;
+      width: 32px;
+      margin-right: 20px;
+      text-align: right;
+      color: #6e7681;
+      user-select: none;
+      flex: 0 0 auto;
+    }
+
+    .line-text {
+      white-space: pre;
+    }
+
+    .line.added {
+      background: rgba(46, 160, 67, 0.18);
+    }
+
+    .line.added .line-text {
+      color: #7ee787;
+    }
+
+    .cursor-line .line-text::after {
+      content: "▌";
+      animation: blink 0.8s infinite;
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="screen">
+    <div class="tabbar"><div class="tab" id="fileTab"></div></div>
+    <div class="body"><div id="code"></div></div>
+  </div>
+</body>
+</html>

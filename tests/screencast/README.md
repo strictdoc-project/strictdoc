@@ -22,20 +22,117 @@ tests/screencast/
 ├── fixture.py                    # shared fixture-project and port constants
 ├── fixtures/
 │   └── strictdoc-demo-project/   # small, self-contained StrictDoc project used by scenarios
-├── helpers/                      # Playwright Page Object helpers (Screen, ViewTypeSelector, ...)
+├── manual_scenarios.py           # registry used by `invoke screencast-server --focus=...`
+├── helpers/                      # Playwright Page Object helpers, see below
 ├── scenarios/
-│   ├── conftest.py                # `page` fixture (headless Chromium) + --strictdoc-record-video option
+│   ├── conftest.py                # `page` fixture (headless Chromium, VIEWPORT_SIZE) + --strictdoc-record-video option
 │   ├── typing.py                  # fake-typing effect for the IDE-style scene
 │   ├── strictdoc_ui/test_case.py
-│   └── ide_typing_to_table/test_case.py
-├── demo.html                     # standalone HTML playground for IDE/terminal-style scenes
+│   ├── ide_typing_to_table/test_case.py
+│   └── hello_world/test_case.py   # strictdoc new -> web UI -> editor reveal, see below
+├── demo.html                     # standalone HTML playground for the IDE-style scene
+├── terminal.html                 # standalone HTML playground: full-frame terminal look
+├── editor.html                   # standalone HTML playground: code-editor look (tab + line numbers)
 ├── run_server.py                 # manual dev server for inspecting a scene in the browser
 └── output/                       # generated .webm videos (gitignored)
 ```
 
-`tests/screencast/helpers/` contains Playwright Page Object helpers
-(`Screen`, `ViewTypeSelector`, ...). New scenarios should use and extend
-these rather than inlining locators.
+`tests/screencast/helpers/` contains Playwright Page Object helpers. New
+scenarios should use and extend these rather than inlining locators or
+raw `page.click()`/`page.fill()` calls:
+
+| Helper | Covers |
+| --- | --- |
+| `screen.py` (`Screen`) | Generic viewtype/header assertions. |
+| `viewtype_selector.py` | Switching between document viewtypes (table, ...). |
+| `project_tree.py` (`ProjectTree`) | Project index: document list, "add document" modal. |
+| `actions_menu.py` (`ActionsMenu`) | The header's `...` actions menu. |
+| `form.py` / `form_add_document.py` / `form_edit_requirement.py` | Filling in and submitting `sdoc-form` modals. |
+| `node.py` (`Node`, `DocumentRoot`, `Requirement`, `AddNode_Menu`) | Opening a node's menu and adding a child/sibling node. |
+| `pointer.py` (`Pointer`) | Makes clicks/typing visible on camera — see below. |
+| `pacing.py` (`pause`) | Deliberate beats between steps — see below. |
+| `editor_scene.py` | Drives the `editor.html` code-reveal scene — see below. |
+
+## Video resolution
+
+Both the browser viewport and the recorded `.webm`'s resolution come from
+a single constant, `VIEWPORT_SIZE` in `scenarios/conftest.py`. Change it
+there to change every scenario's output size; there's no per-scenario
+override.
+
+## Pacing: controlling pauses
+
+Screencasts need deliberate pauses that a functional test wouldn't
+(there's no viewer to wait for otherwise). There are a few independent
+knobs:
+
+| What | Where | Default |
+| --- | --- | --- |
+| A beat between steps/scenes | `pause(page, seconds=...)` from `helpers/pacing.py`, called explicitly in a scenario | 1.0s |
+| Pause after the cursor arrives, before clicking | `Pointer.click(target, pause_ms=...)` | 400ms |
+| Pause after moving to a target (`Pointer.move_to`) | `Pointer.move_to(target, pause_ms=...)` | 300ms |
+| Typing speed in form fields | `Pointer.type_into(target, text, delay_ms=...)` | 35ms/char |
+| Typing speed in `demo.html`/`terminal.html` scenes | `type_text(locator, text, delay_ms=...)` in `scenarios/typing.py` | 45ms/char |
+| Line-reveal speed in the editor scene | `editor_scene.reveal_added_lines(page, text, line_delay_ms=...)` | 350ms/line |
+
+None of this belongs in a real (future) Playwright e2e suite — there,
+actions should run at Playwright's normal speed with its built-in
+actionability waits, not with artificial pauses. `Pointer`/`pause()` are
+screencast-only, for the benefit of a human watching the video.
+
+## Making clicks visible: the fake cursor and highlight
+
+Playwright doesn't render a real OS mouse cursor, so a driven click is
+otherwise invisible in a recording. `helpers/pointer.py`'s `Pointer`
+injects:
+
+- a small dot that follows real `mousemove` events (dispatched by
+  `page.mouse.move(..., steps=N)`, so it visibly travels rather than
+  teleporting), and
+- a pulsing outline that highlights the click target just before the
+  click.
+
+This is registered via `page.add_init_script()`, so it re-applies
+automatically on every navigation within a scenario (a `file://` scene,
+the live server, another `file://` scene, ...) — no need to re-inject it
+per page.
+
+To change how the cursor or highlight *look* (color, size, shape,
+animation), edit `helpers/pointer.css` — plain CSS, no build step. Its
+content is read and spliced into the injected script at import time (via
+`json.dumps()`, so any CSS content is safe to use there, including quotes
+or backslashes).
+
+## Editing scene visuals (terminal, editor, IDE)
+
+`demo.html`, `terminal.html`, and `editor.html` are self-contained HTML
+files with an inline `<style>` block each — no bundler, no CSS framework.
+Open one directly and edit its `<style>`:
+
+- `terminal.html`: a full-frame dark terminal window; content goes into
+  `#demoText` (filled by `type_text()`/direct `textContent` appends from
+  Python).
+- `editor.html`: a code-editor look (tab bar with a filename, CSS-counter
+  line numbers, a highlighted-row style for newly added lines); content
+  is driven entirely from Python via `helpers/editor_scene.py`.
+- `demo.html`: the older split marketing-copy + code-window layout used
+  by the `ide_typing_to_table` scenario.
+
+Only change the Python side (the `*_scene.py` helper or the scenario
+itself) if you're changing *what* is shown or *when* — not for pure
+visual/color changes, which stay CSS-only.
+
+### Real .sdoc syntax highlighting in the editor scene
+
+`editor.html`'s content isn't hand-highlighted: `editor_scene.py` reuses
+StrictDoc's own Pygments lexer
+(`strictdoc.backend.rst.strictdoc_lexer.StrictDocLexer` — the same one
+that highlights `.. code:: strictdoc` blocks in the docs) to tokenize
+each `.sdoc` line, and reuses the product's own
+`strictdoc/export/html/_static/pygments.css` for the token colors, so the
+video's colors match the real product's highlighting. If StrictDoc's sdoc
+grammar or its lexer's token colors change, this scene picks it up for
+free — nothing here needs to be kept in sync by hand.
 
 ## Setup
 
@@ -131,15 +228,24 @@ adding an entry for it to the `SCENARIOS` registry in
 
 ## Adding a new scenario
 
-1. Add fixture content under `fixtures/strictdoc-demo-project/`, if needed.
+1. Add fixture content under `fixtures/strictdoc-demo-project/`, if needed
+   (or generate a project on the fly, like `hello_world` does with a real
+   `strictdoc new` call — see "Previewing a scenario that doesn't use the
+   shared fixture" above for what that means for manual preview).
 2. Create `tests/screencast/scenarios/<scenario_name>/test_case.py` with a
-   `Test.test(self, page)` method, using the `helpers/` Page Objects (add
-   new ones there if the scenario needs UI areas not covered yet).
+   `Test.test(self, page)` method. Drive every click/type through a
+   `Pointer` (see "Making clicks visible" above) rather than raw
+   `page.click()`/`page.fill()`, and use the `helpers/` Page Objects (add
+   new ones there if the scenario needs UI areas not covered yet). Insert
+   `pause()` calls at the beats a viewer needs to register.
 3. Run `invoke test-screencast --record-video --focus=<scenario_name>` to
    verify the recording.
 
-Standalone HTML/IDE-style scenes (fake typing effect, terminal look) use
-`demo.html` as a local playground: characters are appended directly to a
-page element's text content to *look* like typing. This is a visual effect
-only — it does not simulate keyboard input and does not type into a real
-input, textarea, or code editor.
+Standalone HTML playground scenes (`demo.html`, `terminal.html`,
+`editor.html` — see "Editing scene visuals" above) are filled from Python
+via direct DOM manipulation (`textContent`/`innerHTML` appends), not real
+keyboard/DOM input: `demo.html`/`terminal.html`'s typing effect only
+*looks* like typing, it doesn't simulate keyboard input into a real
+input, textarea, or code editor. Form fields on the live server, by
+contrast, are typed into for real via `Pointer.type_into()`
+(`press_sequentially`, real key events).

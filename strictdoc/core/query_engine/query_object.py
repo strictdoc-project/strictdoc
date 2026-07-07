@@ -328,7 +328,9 @@ class QueryObject:
                 f"Requirement objects, got: {node.__class__.__name__}. To fix "
                 f"the error, prepend your query with node.is_requirement."
             )
-        return self.traceability_index.has_missing_relations_for_requirement(node)
+        return self.traceability_index.has_missing_relations_for_requirement(
+            node
+        )
 
     def _evaluate_node_contains(
         self,

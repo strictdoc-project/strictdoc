@@ -69,7 +69,7 @@ class ExportAction:
             "detected and allowed by configuration."
         )
         print(  # noqa: T201
-            f"warning: missing relations count: " f"{len(missing_relations)}"
+            f"warning: missing relations count: {len(missing_relations)}"
         )
 
         for requirement_, relation_ in missing_relations:

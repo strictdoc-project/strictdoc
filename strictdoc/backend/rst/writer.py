@@ -127,7 +127,9 @@ class RSTWriter:
                 else:
                     output += part
             elif isinstance(part, InlineLink):
-                node_or_none = self.index.get_linkable_node_by_uid_weak(part.link)
+                node_or_none = self.index.get_linkable_node_by_uid_weak(
+                    part.link
+                )
                 # Labels that aren't placed before a section title can still be
                 # referenced, but you must give the link an explicit title,
                 # using this syntax: :ref:`Link title <label-name>`.

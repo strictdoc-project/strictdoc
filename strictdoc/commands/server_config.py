@@ -31,7 +31,9 @@ class ServerCommandConfig:
         self.host: Optional[str] = host
         self.port: Optional[int] = port
         self.watch: bool = watch
-        self.allow_missing_relation_requirements: bool = allow_missing_relation_requirements
+        self.allow_missing_relation_requirements: bool = (
+            allow_missing_relation_requirements
+        )
 
     def get_full_input_path(self) -> str:
         return os.path.abspath(self._input_path)

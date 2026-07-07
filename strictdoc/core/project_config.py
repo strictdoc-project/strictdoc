@@ -395,9 +395,9 @@ class ProjectConfig:
             )
         self.document_line_width: Optional[int] = document_line_width
 
-        assert isinstance(
-            allow_missing_relation_requirements, bool
-        ), allow_missing_relation_requirements
+        assert isinstance(allow_missing_relation_requirements, bool), (
+            allow_missing_relation_requirements
+        )
         self.allow_missing_relation_requirements: bool = (
             allow_missing_relation_requirements
         )

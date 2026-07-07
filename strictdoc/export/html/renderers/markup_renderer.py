@@ -198,7 +198,9 @@ class MarkupRenderer:
                     parts_output += part
             elif isinstance(part, InlineLink):
                 linkable_node = (
-                    self.traceability_index.get_linkable_node_by_uid_weak(part.link)
+                    self.traceability_index.get_linkable_node_by_uid_weak(
+                        part.link
+                    )
                 )
                 if linkable_node is not None:
                     href = self.link_renderer.render_node_link(

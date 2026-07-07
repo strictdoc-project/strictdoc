@@ -15,6 +15,35 @@ before re-recording — it may be a product bug, or an intentional UI change
 the scenario doesn't reflect yet. Re-record once the scenario is fixed or
 updated and passing again.
 
+## Quick reference
+
+Commands:
+
+| Command | Effect |
+| --- | --- |
+| `invoke test-screencast` | Run every scenario, fast pass/fail, no video. |
+| `invoke test-screencast --focus=<expr>` | Run only scenarios matching a pytest `-k` expression. |
+| `invoke test-screencast --record-video` | Also (re)generate every scenario's `.webm`. |
+| `invoke test-screencast --record-video --focus=<name>` | (Re)generate just one scenario's `.webm`. |
+| `invoke screencast-server` (alias `scs`) | Manual server on the shared fixture, for browsing at `http://127.0.0.1:5301`. |
+| `invoke screencast-server --focus=<scenario>` | Manual server on a specific scenario's project instead. |
+| `playwright install chromium` | One-time setup — see "Setup" below. |
+
+Where to change what:
+
+| To change... | Edit... |
+| --- | --- |
+| Video/viewport resolution | `VIEWPORT_SIZE` in `scenarios/conftest.py`. |
+| Pauses between steps | `pause()` calls in a scenario (`helpers/pacing.py`). |
+| Pause before a click, or typing speed | `pause_ms`/`delay_ms` args on `Pointer.click`/`move_to`/`type_into` calls. |
+| Cursor/highlight look (color, size, shape) | `helpers/pointer.css`. |
+| Terminal/editor/IDE scene visuals (layout, colors) | `terminal.html` / `editor.html` / `demo.html` (plain CSS). |
+| What a scene shows, or when | The scenario's `test_case.py`, or `helpers/editor_scene.py`. |
+| `.sdoc` syntax colors in the editor scene | Not here — it reuses the product's own `strictdoc/export/html/_static/pygments.css`. |
+| Which project a manual server (`--focus=`) serves | `manual_scenarios.py`'s `SCENARIOS` registry. |
+
+Each row is explained in its own section below.
+
 ## Directory layout
 
 ```text

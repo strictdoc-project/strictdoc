@@ -504,11 +504,11 @@
         <mxCell id="3zg7_a4Cr1-tkNY---Zh-2" value="&lt;div&gt;Markdown — Relations syntax improvements&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
           <mxGeometry x="1210" y="1080" width="310" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="NG1bawOdFmVwRv8Im0xz-1" value="&lt;div&gt;Stabilization 2026 Q2:&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Remove language aware parsers feature option (now default), features/ migration, remove RAPIDOC feature, remove most of strictdoc.toml files&lt;/span&gt;&lt;/div&gt;" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
+        <mxCell id="NG1bawOdFmVwRv8Im0xz-1" value="&lt;div&gt;Stabilization 2026 Q2:&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Remove language aware parsers feature option (now default), features/ migration, remove RAPIDOC feature, remove most of strictdoc.toml files&lt;/span&gt;&lt;/div&gt;" style="text;html=1;strokeColor=#82b366;fillColor=#d5e8d4;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
           <mxGeometry x="1210" y="1440" width="460" height="70" as="geometry" />
         </mxCell>
         <mxCell id="NG1bawOdFmVwRv8Im0xz-2" value="&lt;div&gt;Drag-and-drop image upload&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
-          <mxGeometry x="1130" y="1260" width="540" height="70" as="geometry" />
+          <mxGeometry x="1130" y="1260" width="700" height="70" as="geometry" />
         </mxCell>
         <mxCell id="RImopIBfapGW27McXgfb-1" value="&lt;div&gt;Single- vs multiline field issues&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
           <mxGeometry x="1360" y="990" width="80" height="70" as="geometry" />
@@ -522,11 +522,11 @@
         <mxCell id="RImopIBfapGW27McXgfb-4" value="&lt;div&gt;C reader: recognize selected C macros&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
           <mxGeometry x="1370" y="900" width="80" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="S7qylqRdD8e5_p44ZXv2-1" value="&lt;div&gt;Table screen: Content filters and content editing&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
+        <mxCell id="S7qylqRdD8e5_p44ZXv2-1" value="&lt;div&gt;Table screen: Content filters and content editing&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
           <mxGeometry x="1460" y="900" width="230" height="70" as="geometry" />
         </mxCell>
         <mxCell id="m9XbbClwqRoo2d-S99YS-1" value="&lt;div&gt;Editable web: Readonly content for autogen fields&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
-          <mxGeometry x="1510" y="990" width="160" height="70" as="geometry" />
+          <mxGeometry x="1510" y="990" width="330" height="70" as="geometry" />
         </mxCell>
         <mxCell id="m9XbbClwqRoo2d-S99YS-2" value="&lt;div&gt;TK-based launcher GUI&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
           <mxGeometry x="1220" y="1170" width="280" height="70" as="geometry" />
@@ -534,8 +534,23 @@
         <mxCell id="5BSNgzyTaPeLpsCE4vZA-1" value="Rust&#39;s cargo-nextest JUnit XML" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
           <mxGeometry x="1520" y="1170" width="80" height="70" as="geometry" />
         </mxCell>
-        <mxCell id="avZaHCUyBh2S1JCu4Szq-1" value="&lt;div&gt;Markdown:&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Grammar, LINK/ANCHOR, parsing corner cases&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="5Hoejhb2v4ojji3GJ6aL-5">
-          <mxGeometry x="1520" y="1080" width="160" height="70" as="geometry" />
+        <mxCell id="avZaHCUyBh2S1JCu4Szq-1" value="&lt;div&gt;Markdown:&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Grammar, LINK/ANCHOR, parsing corner cases&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" parent="5Hoejhb2v4ojji3GJ6aL-5" vertex="1">
+          <mxGeometry x="1520" y="1080" width="220" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="rtCiIeL7m7KNmv-1_1vX-1" value="&lt;div&gt;Stabilization 2026 Q3&lt;/div&gt;" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" vertex="1" parent="5Hoejhb2v4ojji3GJ6aL-5">
+          <mxGeometry x="1690" y="1440" width="460" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="rtCiIeL7m7KNmv-1_1vX-2" value="&lt;div&gt;Build documentation with unresolved relations&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="5Hoejhb2v4ojji3GJ6aL-5">
+          <mxGeometry x="1610" y="1170" width="220" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="rtCiIeL7m7KNmv-1_1vX-4" value="&lt;div&gt;Editing very large documentation trees&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="5Hoejhb2v4ojji3GJ6aL-5">
+          <mxGeometry x="1530" y="1350" width="460" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="rtCiIeL7m7KNmv-1_1vX-5" value="&lt;div&gt;Committing to Git from UI and resolving conflicts&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" vertex="1" parent="5Hoejhb2v4ojji3GJ6aL-5">
+          <mxGeometry x="1930" y="900" width="460" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="rtCiIeL7m7KNmv-1_1vX-6" value="&lt;div&gt;Read/write SPDX JSON-LD&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" vertex="1" parent="5Hoejhb2v4ojji3GJ6aL-5">
+          <mxGeometry x="2010" y="990" width="460" height="70" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

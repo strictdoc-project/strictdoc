@@ -8,7 +8,9 @@ from textx import metamodel_from_str
 
 from strictdoc.core.query_engine.grammar import QUERY_GRAMMAR
 from strictdoc.core.query_engine.query_object import (
+    AllInExpression,
     AndExpression,
+    AnyInExpression,
     EqualExpression,
     InExpression,
     NodeContainsAnyFreeTextExpression,
@@ -24,16 +26,20 @@ from strictdoc.core.query_engine.query_object import (
     NodeIsSourceFileWithNoCoverageExpression,
     NodeIsSourceFileWithPartialCoverageExpression,
     NoneExpression,
+    NoneInExpression,
     NotEqualExpression,
     NotExpression,
     NotInExpression,
     OrExpression,
     Query,
     StringExpression,
+    StringListExpression,
 )
 
 QUERY_MODELS = [
+    AllInExpression,
     AndExpression,
+    AnyInExpression,
     EqualExpression,
     InExpression,
     NodeContainsExpression,
@@ -49,12 +55,14 @@ QUERY_MODELS = [
     NodeIsSourceFileWithPartialCoverageExpression,
     NodeIsSourceFileWithNoCoverageExpression,
     NoneExpression,
+    NoneInExpression,
     NotEqualExpression,
     NotExpression,
     NotInExpression,
     OrExpression,
     Query,
     StringExpression,
+    StringListExpression,
 ]
 
 

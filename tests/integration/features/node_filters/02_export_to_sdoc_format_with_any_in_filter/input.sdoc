@@ -1,0 +1,22 @@
+[DOCUMENT]
+TITLE: Query filter list membership
+
+[REQUIREMENT]
+TAGS: tag_a
+TITLE: Requirement #1
+STATEMENT: Statement #1
+
+[REQUIREMENT]
+TAGS: tag_b
+TITLE: Requirement #2
+STATEMENT: Statement #2
+
+[REQUIREMENT]
+TAGS: tag_c
+TITLE: Requirement #3
+STATEMENT: Statement #3
+
+[REQUIREMENT]
+TAGS: tag
+TITLE: Requirement #4
+STATEMENT: Statement #4

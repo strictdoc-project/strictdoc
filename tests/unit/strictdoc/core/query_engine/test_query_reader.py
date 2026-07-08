@@ -1,4 +1,6 @@
 from strictdoc.core.query_engine.query_object import (
+    AllInExpression,
+    AnyInExpression,
     EqualExpression,
     InExpression,
     NodeContainsAnyFreeTextExpression,
@@ -6,6 +8,7 @@ from strictdoc.core.query_engine.query_object import (
     NodeHasParentRequirementsExpression,
     NodeIsRequirementExpression,
     NodeIsSectionExpression,
+    NoneInExpression,
     NotEqualExpression,
     NotExpression,
     OrExpression,
@@ -13,6 +16,14 @@ from strictdoc.core.query_engine.query_object import (
     StringExpression,
 )
 from strictdoc.core.query_engine.query_reader import QueryReader
+
+
+def assert_query_rejected(query: str) -> None:
+    try:
+        QueryReader.read(query)
+    except Exception:
+        return
+    raise AssertionError(f"Query was expected to be rejected: {query}")
 
 
 def test_30_equal_expression_two_node_field_expressions():
@@ -109,6 +120,65 @@ def test_52_in_expression_with_string_and_node_field_expression():
         query_object.root_expression.rhs_expr, NodeFieldExpression
     )
     assert query_object.root_expression.rhs_expr.field_name == "TITLE"
+
+
+def test_53_any_in_expression_with_string_list_and_node_field_expression():
+    query = """\
+any(["A", "B"]) in node["TAGS"]\
+"""
+    query_object = QueryReader.read(query)
+    assert isinstance(query_object, Query)
+    assert isinstance(query_object.root_expression, AnyInExpression)
+    assert [
+        string_expression.string
+        for string_expression in query_object.root_expression.lhs_expr.strings
+    ] == ["A", "B"]
+    assert isinstance(
+        query_object.root_expression.rhs_expr, NodeFieldExpression
+    )
+    assert query_object.root_expression.rhs_expr.field_name == "TAGS"
+
+
+def test_54_all_in_expression_with_string_list_and_node_field_expression():
+    query = """\
+all(["A", "B"]) in node["TAGS"]\
+"""
+    query_object = QueryReader.read(query)
+    assert isinstance(query_object, Query)
+    assert isinstance(query_object.root_expression, AllInExpression)
+    assert [
+        string_expression.string
+        for string_expression in query_object.root_expression.lhs_expr.strings
+    ] == ["A", "B"]
+    assert isinstance(
+        query_object.root_expression.rhs_expr, NodeFieldExpression
+    )
+    assert query_object.root_expression.rhs_expr.field_name == "TAGS"
+
+
+def test_55_none_in_expression_with_string_list_and_node_field_expression():
+    query = """\
+none(["A", "B"]) in node["TAGS"]\
+"""
+    query_object = QueryReader.read(query)
+    assert isinstance(query_object, Query)
+    assert isinstance(query_object.root_expression, NoneInExpression)
+    assert [
+        string_expression.string
+        for string_expression in query_object.root_expression.lhs_expr.strings
+    ] == ["A", "B"]
+    assert isinstance(
+        query_object.root_expression.rhs_expr, NodeFieldExpression
+    )
+    assert query_object.root_expression.rhs_expr.field_name == "TAGS"
+
+
+def test_56_bare_list_items_are_not_supported():
+    assert_query_rejected('any([A, B]) in node["TAGS"]')
+
+
+def test_57_reverse_list_field_semantics_are_not_supported():
+    assert_query_rejected('all(node["TAGS"]) in ["A", "B"]')
 
 
 def test_61_node_has_parent_requirements():

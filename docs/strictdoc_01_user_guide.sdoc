@@ -5028,9 +5028,16 @@ that converts search queries into corresponding Python expressions.
 
 Important rules:
 
-- Every query component shall start with ``node.``.
+- Node properties and functions are accessed through ``node.`` or
+  ``node["FIELD"]`` expressions.
 - ``and`` and ``or`` expressions must be grouped using round brackets.
 - Only double quotes are accepted for strings.
+- For text fields, ``"text" in node["FIELD"]`` checks substring membership. The
+  quantified forms ``any([...]) in node["FIELD"]``, ``all([...]) in
+  node["FIELD"]``, and ``none([...]) in node["FIELD"]`` apply the same substring
+  check to each listed string.
+- For ``node["TAGS"]``, quantified list membership checks exact
+  comma-space-separated tag values.
 
 .. list-table:: Query examples
    :widths: 50 50
@@ -5049,13 +5056,22 @@ Important rules:
      - Find all requirements or sections from documents with ``ROOT: True``. See [LINK: SECTION-UG-Document] for the description of the ``ROOT`` option.
 
    * - ``(node.is_requirement and "System" in node["TITLE"])``
-     - Find all requirements with a TITLE that equals to "System".
+     - Find all requirements with a TITLE that contains "System".
 
    * - ``(node.is_requirement and node.has_parent_requirements)``
      - Find all requirements which have parent requirements.
 
    * - ``(node.is_requirement and node.has_child_requirements)``
      - Find all requirements which have child requirements.
+
+   * - ``any(["tag_a", "tag_b"]) in node["TAGS"]``
+     - Find all nodes that have at least one of the listed tags.
+
+   * - ``all(["tag_a", "tag_b"]) in node["TAGS"]``
+     - Find all nodes that have every listed tag.
+
+   * - ``none(["excluded_a", "excluded_b"]) in node["TAGS"]``
+     - Find all nodes that have none of the listed tags.
 <<<
 
 [[/SECTION]]
@@ -5079,6 +5095,10 @@ Example:
 .. code:: text
 
     strictdoc export . --filter-nodes '"System" in node["TITLE"]'
+
+.. code:: text
+
+    strictdoc export . --filter-nodes 'any(["tag_a", "tag_b"]) in node["TAGS"]'
 <<<
 
 [[/SECTION]]

@@ -1,0 +1,12 @@
+[DOCUMENT]
+TITLE: Query filter none list membership
+
+[REQUIREMENT]
+TAGS: tag_a
+TITLE: Requirement #1
+STATEMENT: Statement #1
+
+[REQUIREMENT]
+TAGS: tag_b
+TITLE: Requirement #4
+STATEMENT: Statement #4

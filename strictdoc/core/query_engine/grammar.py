@@ -37,6 +37,12 @@ BooleanExpression:
   |
   NodeHasChildRequirementsExpression
   |
+  AnyInExpression
+  |
+  AllInExpression
+  |
+  NoneInExpression
+  |
   InExpression
   |
   NotInExpression
@@ -70,6 +76,10 @@ StringExpression:
 
 NoneExpression:
   _ = 'None'
+;
+
+StringListExpression:
+  '[' strings += StringExpression[','] ']'
 ;
 
 NodeFieldExpression:
@@ -138,6 +148,18 @@ InExpression:
 
 NotInExpression:
   lhs_expr = InableLHSExpression 'not in' rhs_expr = InableRHSExpression
+;
+
+AnyInExpression:
+  'any' '(' lhs_expr = StringListExpression ')' 'in' rhs_expr = InableRHSExpression
+;
+
+AllInExpression:
+  'all' '(' lhs_expr = StringListExpression ')' 'in' rhs_expr = InableRHSExpression
+;
+
+NoneInExpression:
+  'none' '(' lhs_expr = StringListExpression ')' 'in' rhs_expr = InableRHSExpression
 ;
 
 InableLHSExpression:

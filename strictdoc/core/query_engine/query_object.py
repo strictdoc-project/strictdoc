@@ -35,6 +35,12 @@ class NoneExpression:
         self.parent: Any = parent
 
 
+class StringListExpression:
+    def __init__(self, parent: Any, strings: List[StringExpression]):
+        self.parent: Any = parent
+        self.strings: List[StringExpression] = strings
+
+
 class NodeFieldExpression:
     def __init__(self, parent: Any, field_name: str):
         self.parent: Any = parent
@@ -143,6 +149,42 @@ class NotInExpression:
         self.rhs_expr: Expression = rhs_expr
 
 
+class AnyInExpression:
+    def __init__(
+        self,
+        parent: Any,
+        lhs_expr: StringListExpression,
+        rhs_expr: Expression,
+    ):
+        self.parent: Any = parent
+        self.lhs_expr: StringListExpression = lhs_expr
+        self.rhs_expr: Expression = rhs_expr
+
+
+class AllInExpression:
+    def __init__(
+        self,
+        parent: Any,
+        lhs_expr: StringListExpression,
+        rhs_expr: Expression,
+    ):
+        self.parent: Any = parent
+        self.lhs_expr: StringListExpression = lhs_expr
+        self.rhs_expr: Expression = rhs_expr
+
+
+class NoneInExpression:
+    def __init__(
+        self,
+        parent: Any,
+        lhs_expr: StringListExpression,
+        rhs_expr: Expression,
+    ):
+        self.parent: Any = parent
+        self.lhs_expr: StringListExpression = lhs_expr
+        self.rhs_expr: Expression = rhs_expr
+
+
 class Query:
     def __init__(self, root_expression: Any):
         self.root_expression: Any = root_expression
@@ -236,7 +278,43 @@ class QueryObject:
             ) is not None:
                 return lhs_value not in rhs_value
             return False
+        if isinstance(expression, AnyInExpression):
+            return any(
+                self._evaluate_list_in(node, lhs_expr_, expression.rhs_expr)
+                for lhs_expr_ in expression.lhs_expr.strings
+            )
+        if isinstance(expression, AllInExpression):
+            return all(
+                self._evaluate_list_in(node, lhs_expr_, expression.rhs_expr)
+                for lhs_expr_ in expression.lhs_expr.strings
+            )
+        if isinstance(expression, NoneInExpression):
+            return not any(
+                self._evaluate_list_in(node, lhs_expr_, expression.rhs_expr)
+                for lhs_expr_ in expression.lhs_expr.strings
+            )
         assert 0, expression
+
+    def _evaluate_list_in(
+        self,
+        node: SDocExtendedElementIF,
+        lhs_expr: StringExpression,
+        rhs_expr: Expression,
+    ) -> bool:
+        if (rhs_value := self._evaluate_value(node, rhs_expr)) is not None and (
+            lhs_value := self._evaluate_value(node, lhs_expr)
+        ) is not None:
+            if (
+                isinstance(rhs_expr, NodeFieldExpression)
+                and rhs_expr.field_name == "TAGS"
+            ):
+                return lhs_value in self._split_list_field_value(rhs_value)
+            return lhs_value in rhs_value
+        return False
+
+    @staticmethod
+    def _split_list_field_value(field_value: str) -> List[str]:
+        return field_value.split(", ")
 
     def _evaluate_equal(
         self, node: SDocExtendedElementIF, expression: EqualExpression

@@ -1,0 +1,4 @@
+RUN: %expect_exit 0 %strictdoc export %S/input.sdoc --formats=sdoc --output-dir=%T --filter-nodes 'all(["tag_a", "tag_b"]) in node["TAGS"]' | filecheck %s --dump-input=fail
+CHECK: Reading SDOC: input.sdoc
+
+RUN: %diff %S/expected/output.sdoc %T/sdoc/input.sdoc

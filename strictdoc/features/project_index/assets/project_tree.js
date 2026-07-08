@@ -375,5 +375,25 @@ window.addEventListener("DOMContentLoaded", function(){
 
   projectTree.init();
 
+  document.addEventListener('click', function (event) {
+    const trigger = event.target.closest('.dashboard-path-external');
+    if (!trigger) {
+      return;
+    }
+    trigger.closest('.dashboard-path').classList.toggle('revealed');
+  });
+
+  document.addEventListener('keydown', function (event) {
+    if (event.key !== 'Enter' && event.key !== ' ') {
+      return;
+    }
+    const trigger = event.target.closest('.dashboard-path-external');
+    if (!trigger) {
+      return;
+    }
+    event.preventDefault();
+    trigger.closest('.dashboard-path').classList.toggle('revealed');
+  });
+
 },false);
 })();

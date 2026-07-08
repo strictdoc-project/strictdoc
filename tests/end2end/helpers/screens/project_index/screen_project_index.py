@@ -82,6 +82,76 @@ class Screen_ProjectIndex(Screen):  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
+    #
+    # Dashboard: external path prefix reveal/hide toggle.
+    #
+
+    def assert_dashboard_input_path_present(self) -> None:
+        self.test_case.assert_element(
+            '//*[@data-testid="dashboard-input-path"]',
+            by=By.XPATH,
+        )
+
+    def assert_dashboard_input_path_external_toggle_present(self) -> None:
+        self.test_case.assert_element(
+            '//*[@data-testid="dashboard-input-path-external"]',
+            by=By.XPATH,
+        )
+
+    def assert_dashboard_input_path_external_full_hidden(self) -> None:
+        self.test_case.assert_element_not_visible(
+            '//*[@data-testid="dashboard-input-path"]'
+            '//*[@class="dashboard-path-external-full"]',
+            by=By.XPATH,
+        )
+
+    def assert_dashboard_input_path_external_full_visible(self) -> None:
+        self.test_case.assert_element_visible(
+            '//*[@data-testid="dashboard-input-path"]'
+            '//*[@class="dashboard-path-external-full"]',
+            by=By.XPATH,
+        )
+
+    def do_click_on_dashboard_input_path_external_toggle(self) -> None:
+        self.test_case.click_xpath(
+            '//*[@data-testid="dashboard-input-path-external"]'
+        )
+
+    def assert_dashboard_source_root_path_present(self) -> None:
+        self.test_case.assert_element(
+            '//*[@data-testid="dashboard-source-root-path"]',
+            by=By.XPATH,
+        )
+
+    def assert_dashboard_source_root_path_external_toggle_present(
+        self,
+    ) -> None:
+        self.test_case.assert_element(
+            '//*[@data-testid="dashboard-source-root-path-external"]',
+            by=By.XPATH,
+        )
+
+    def assert_dashboard_source_root_path_external_full_hidden(self) -> None:
+        self.test_case.assert_element_not_visible(
+            '//*[@data-testid="dashboard-source-root-path"]'
+            '//*[@class="dashboard-path-external-full"]',
+            by=By.XPATH,
+        )
+
+    def assert_dashboard_source_root_path_external_full_visible(
+        self,
+    ) -> None:
+        self.test_case.assert_element_visible(
+            '//*[@data-testid="dashboard-source-root-path"]'
+            '//*[@class="dashboard-path-external-full"]',
+            by=By.XPATH,
+        )
+
+    def do_click_on_dashboard_source_root_path_external_toggle(self) -> None:
+        self.test_case.click_xpath(
+            '//*[@data-testid="dashboard-source-root-path-external"]'
+        )
+
     def assert_link_to_project_statistics_present(self) -> None:
         self.test_case.assert_element(
             '//a[@data-testid="project-tree-link-project-statistics"]',

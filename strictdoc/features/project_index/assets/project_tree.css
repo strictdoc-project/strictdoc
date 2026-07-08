@@ -170,7 +170,7 @@
 .dashboard {
   gap: var(--base-rhythm);
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
 }
 
 @media (max-width: 768px) {
@@ -221,4 +221,32 @@
   bottom: 0;
   background-color: rgba(0,0,0,0.025);
   border-bottom: var(--base-border);
+}
+
+.dashboard-path {
+  overflow-wrap: anywhere;
+}
+
+.dashboard-path-external {
+  cursor: pointer;
+  padding: 0 0.2em;
+  border-radius: 3px;
+  background-color: rgba(0,0,0,0.06);
+}
+
+.dashboard-path-external:hover,
+.dashboard-path-external:focus {
+  background-color: rgba(0,0,0,0.12);
+}
+
+.dashboard-path-external-full {
+  display: none;
+}
+
+.dashboard-path.revealed .dashboard-path-external {
+  display: none;
+}
+
+.dashboard-path.revealed .dashboard-path-external-full {
+  display: inline;
 }

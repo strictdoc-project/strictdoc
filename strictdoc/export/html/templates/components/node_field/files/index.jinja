@@ -1,7 +1,8 @@
 {# needs sdoc_entity, see README.txt #}
   {%- if view_object.project_config.is_activated_requirements_to_source_traceability() -%}
     {%- set requirement_file_links = view_object.traceability_index.get_requirement_file_links(sdoc_entity) %}
-    {%- if requirement_file_links is not none and requirement_file_links|length > 0 %}
+    {%- set has_missing_file_relations = view_object.traceability_index.get_missing_file_relations(sdoc_entity) | length > 0 %}
+    {%- if requirement_file_links or has_missing_file_relations %}
       <sdoc-node-field-label>RELATIONS (File):</sdoc-node-field-label>
       <sdoc-node-field data-field-label="file relations">
         <ul class="requirement__link">
@@ -23,5 +24,6 @@
           {%- endfor -%}
         </ul>
       </sdoc-node-field>
-    {%- endif %}
-  {%- endif %}
+      {{ view_object.render_issues(sdoc_entity, "RELATIONS (File)") }}
+      {%- endif %}
+    {%- endif -%}

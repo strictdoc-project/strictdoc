@@ -46,6 +46,16 @@ class ServerCommand(BaseCommand):
             ),
         )
         command_parser_server.add_argument(
+            "--allow-missing-relation-requirements",
+            default=False,
+            action="store_true",
+            dest="allow_missing_relation_requirements",
+            help=(
+                "Allow starting the server even when some requirement "
+                "relations (parent/child) cannot be resolved."
+            ),
+        )
+        command_parser_server.add_argument(
             "--config",
             type=str,
             help="Path to the StrictDoc TOML config file.",

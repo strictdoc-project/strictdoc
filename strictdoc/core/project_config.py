@@ -153,6 +153,7 @@ class ProjectConfig:
         ] = ProjectConfigDefault.DEFAULT_SECTION_BEHAVIOR,
         statistics_generator: Optional[str] = None,
         document_line_width: Optional[int] = None,
+        allow_missing_relation_requirements: bool = False,
         # Logo path can be set in the project config to customize the launcher's appearance for a specific project.
         launcher_logo_path: Optional[str] = None,
         user_plugin: Optional[StrictDocPlugin] = None,
@@ -394,6 +395,13 @@ class ProjectConfig:
             )
         self.document_line_width: Optional[int] = document_line_width
 
+        assert isinstance(allow_missing_relation_requirements, bool), (
+            allow_missing_relation_requirements
+        )
+        self.allow_missing_relation_requirements: bool = (
+            allow_missing_relation_requirements
+        )
+
         self.user_plugin: Optional[StrictDocPlugin] = user_plugin
 
         # Optional launcher logo path (absolute or workspace-relative).
@@ -451,6 +459,9 @@ class ProjectConfig:
         self.export_formats = ["html"]
         self.generate_bundle_document = False
         self.export_included_documents = True
+
+        if server_config.allow_missing_relation_requirements:
+            self.allow_missing_relation_requirements = True
 
     def integrate_export_config(
         self, export_config: ExportCommandConfig
@@ -519,6 +530,9 @@ class ProjectConfig:
             )
         if not self.reqif_enable_mid:
             self.reqif_enable_mid = export_config.reqif_enable_mid
+
+        if export_config.allow_missing_relation_requirements:
+            self.allow_missing_relation_requirements = True
 
     def validate_and_finalize(self) -> None:
         project_path = self.get_project_root_path()
@@ -1016,6 +1030,7 @@ class ProjectConfigLoader:
         section_behavior: str = ProjectConfigDefault.DEFAULT_SECTION_BEHAVIOR
         statistics_generator: Optional[str] = None
         document_line_width: Optional[int] = None
+        allow_missing_relation_requirements: bool = False
 
         if "project" in config_dict:
             project_content = config_dict["project"]
@@ -1111,6 +1126,11 @@ class ProjectConfigLoader:
                 "document_line_width", document_line_width
             )
 
+            allow_missing_relation_requirements = project_content.get(
+                "allow_missing_relation_requirements",
+                allow_missing_relation_requirements,
+            )
+
             if "source_nodes" in project_content:
                 source_nodes_config = project_content["source_nodes"]
                 assert isinstance(source_nodes_config, list)
@@ -1168,5 +1188,6 @@ class ProjectConfigLoader:
             section_behavior=section_behavior,
             statistics_generator=statistics_generator,
             document_line_width=document_line_width,
+            allow_missing_relation_requirements=allow_missing_relation_requirements,
             _config_last_update=config_last_update,
         )

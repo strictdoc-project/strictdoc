@@ -1,0 +1,9 @@
+{%- set missing_relations = view_object.traceability_index.get_all_missing_relations() | length -%}
+{%- set missing_links = view_object.traceability_index.get_all_unresolved_inline_links() | length -%}
+{%- set missing_tracebility = missing_relations + missing_links -%}
+{%- if missing_tracebility > 0 -%}
+  <div class="field_issue field_issue-ribbon" data-testid="missing-relations-project-warning">
+    <strong>Warning:</strong>
+    {{ missing_tracebility }} relation(s) or link(s) could not be resolved in this project.
+  </div>
+{%- endif -%}

@@ -4,7 +4,7 @@
 
 import datetime
 from copy import copy, deepcopy
-from typing import Any, Dict, Generator, List, Optional, Tuple, Union
+from typing import Any, Dict, Generator, List, Optional, Tuple, TypeGuard, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.anchor import Anchor
@@ -15,6 +15,7 @@ from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
+    FileReference,
     ParentReqReference,
 )
 from strictdoc.backend.sdoc.node_filter import NodeFilter
@@ -295,6 +296,186 @@ class TraceabilityIndex:
                 link_type=GraphLinkType.NODE_TO_PARENT_NODES,
                 lhs_node=requirement,
                 edge=ALL_EDGES,
+            )
+        )
+
+    def get_missing_relations(
+        self, requirement: SDocNode
+    ) -> List[Union[ParentReqReference, ChildReqReference, FileReference]]:
+        assert isinstance(requirement, SDocNode)
+
+        missing_relations: List[
+            Union[ParentReqReference, ChildReqReference, FileReference]
+        ] = []
+        for relation_ in requirement.relations:
+            if isinstance(relation_, (ParentReqReference, ChildReqReference)):
+                if (
+                    self.graph_database.get_link_value_weak(
+                        link_type=GraphLinkType.UID_TO_NODE,
+                        lhs_node=relation_.ref_uid,
+                    )
+                    is None
+                ):
+                    missing_relations.append(relation_)
+                continue
+
+            if isinstance(relation_, FileReference):
+                if (
+                    self._file_traceability_index.get_coverage_info_weak(
+                        relation_.get_posix_path()
+                    )
+                    is None
+                ):
+                    missing_relations.append(relation_)
+
+        return missing_relations
+
+    def has_missing_relations_for_requirement(
+        self, requirement: SDocNode
+    ) -> bool:
+        assert isinstance(requirement, SDocNode)
+        return len(self.get_missing_relations(requirement)) > 0
+
+    def get_missing_relations_for_document(
+        self, document: SDocDocument
+    ) -> List[
+        Tuple[
+            SDocNode,
+            Union[ParentReqReference, ChildReqReference, FileReference],
+        ]
+    ]:
+        assert isinstance(document, SDocDocument)
+
+        missing_relations: List[
+            Tuple[
+                SDocNode,
+                Union[
+                    ParentReqReference,
+                    ChildReqReference,
+                    FileReference,
+                ],
+            ]
+        ] = []
+        document_iterator = self.document_iterators[document]
+        for node_, _ in document_iterator.all_content(print_fragments=False):
+            if not isinstance(node_, SDocNode):
+                continue
+            for relation_ in self.get_missing_relations(node_):
+                missing_relations.append((node_, relation_))
+        return missing_relations
+
+    def get_all_missing_relations(
+        self,
+    ) -> List[
+        Tuple[
+            SDocNode,
+            Union[ParentReqReference, ChildReqReference, FileReference],
+        ]
+    ]:
+        missing_relations: List[
+            Tuple[
+                SDocNode,
+                Union[
+                    ParentReqReference,
+                    ChildReqReference,
+                    FileReference,
+                ],
+            ]
+        ] = []
+        for document_ in self.document_tree.document_list:
+            missing_relations.extend(
+                self.get_missing_relations_for_document(document_)
+            )
+        return missing_relations
+
+    def has_missing_relations(self) -> bool:
+        return len(self.get_all_missing_relations()) > 0
+
+    def get_unresolved_inline_links(self, node: SDocNode) -> List[InlineLink]:
+        assert isinstance(node, SDocNode)
+
+        unresolved_inline_links: List[InlineLink] = []
+        for node_field_ in node.enumerate_fields():
+            for part_ in node_field_.parts:
+                if not isinstance(part_, InlineLink):
+                    continue
+                if (
+                    self.graph_database.get_link_value_weak(
+                        link_type=GraphLinkType.UID_TO_NODE,
+                        lhs_node=part_.link,
+                    )
+                    is None
+                ):
+                    unresolved_inline_links.append(part_)
+        return unresolved_inline_links
+
+    def get_all_unresolved_inline_links(
+        self,
+    ) -> List[Tuple[SDocNode, InlineLink]]:
+        unresolved_inline_links: List[Tuple[SDocNode, InlineLink]] = []
+        for document_ in self.document_tree.document_list:
+            document_iterator = self.document_iterators[document_]
+            for node_, _ in document_iterator.all_content(
+                print_fragments=False
+            ):
+                if not isinstance(node_, SDocNode):
+                    continue
+                for inline_link_ in self.get_unresolved_inline_links(node_):
+                    unresolved_inline_links.append((node_, inline_link_))
+        return unresolved_inline_links
+
+    def has_unresolved_inline_links(self) -> bool:
+        return len(self.get_all_unresolved_inline_links()) > 0
+
+    # Compatibility wrappers for old API.
+    def get_missing_parent_relations(
+        self, requirement: SDocNode
+    ) -> List[ParentReqReference]:
+        def is_parent_relation(
+            relation: Union[
+                ParentReqReference, ChildReqReference, FileReference
+            ],
+        ) -> TypeGuard[ParentReqReference]:
+            return isinstance(relation, ParentReqReference)
+
+        return list(
+            filter(
+                is_parent_relation,
+                self.get_missing_relations(requirement),
+            )
+        )
+
+    def get_missing_child_relations(
+        self, requirement: SDocNode
+    ) -> List[ChildReqReference]:
+        def is_child_relation(
+            relation: Union[
+                ParentReqReference, ChildReqReference, FileReference
+            ],
+        ) -> TypeGuard[ChildReqReference]:
+            return isinstance(relation, ChildReqReference)
+
+        return list(
+            filter(
+                is_child_relation,
+                self.get_missing_relations(requirement),
+            )
+        )
+
+    def get_missing_file_relations(
+        self, requirement: SDocNode
+    ) -> List[FileReference]:
+        def is_file_relation(
+            relation: Union[
+                ParentReqReference, ChildReqReference, FileReference
+            ],
+        ) -> TypeGuard[FileReference]:
+            return isinstance(relation, FileReference)
+
+        return list(
+            filter(
+                is_file_relation,
+                self.get_missing_relations(requirement),
             )
         )
 

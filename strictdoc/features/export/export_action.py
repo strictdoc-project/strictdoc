@@ -10,6 +10,7 @@ from strictdoc.backend.reqif.reqif_export import ReqIFExport
 from strictdoc.backend.rst.document_rst_generator import DocumentRSTGenerator
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.reference import FileReference
 from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.backend.spdx.spdx_generator import SPDXGenerator
 from strictdoc.core.project_config import ProjectConfig
@@ -51,7 +52,94 @@ class ExportAction:
             print(exc.to_print_message())  # noqa: T201
             sys.exit(1)
         self.traceability_index = traceability_index
+        self._print_missing_relations_warning()
+        self._print_unresolved_inline_links_warning()
         return traceability_index
+
+    def _print_missing_relations_warning(self) -> None:
+        if not self.project_config.allow_missing_relation_requirements:
+            return
+
+        missing_relations = self.traceability_index.get_all_missing_relations()
+        if len(missing_relations) == 0:
+            return
+
+        print(  # noqa: T201
+            "warning: unresolved relations were "
+            "detected and allowed by configuration."
+        )
+        print(  # noqa: T201
+            f"warning: missing relations count: {len(missing_relations)}"
+        )
+
+        for requirement_, relation_ in missing_relations:
+            requirement_identifier = (
+                requirement_.reserved_uid
+                if requirement_.reserved_uid is not None
+                else requirement_.reserved_mid
+            )
+            document = requirement_.get_document()
+            document_title = (
+                document.reserved_title
+                if isinstance(document, SDocDocument)
+                else "UNKNOWN_DOCUMENT"
+            )
+            role_message = (
+                f", role '{relation_.role}'"
+                if relation_.role is not None
+                else ""
+            )
+
+            if isinstance(relation_, FileReference):
+                relation_target = f"file '{relation_.get_posix_path()}'"
+            else:
+                relation_target = f"requirement '{relation_.ref_uid}'"
+
+            print(  # noqa: T201
+                "warning: "
+                f"requirement '{requirement_identifier}' in document "
+                f"'{document_title}' has a missing relation of type "
+                f"'{relation_.ref_type}' to {relation_target}{role_message}."
+            )
+
+    def _print_unresolved_inline_links_warning(self) -> None:
+        if not self.project_config.allow_missing_relation_requirements:
+            return
+
+        unresolved_inline_links = (
+            self.traceability_index.get_all_unresolved_inline_links()
+        )
+        if len(unresolved_inline_links) == 0:
+            return
+
+        print(  # noqa: T201
+            "warning: unresolved inline links were "
+            "detected and allowed by configuration."
+        )
+        print(  # noqa: T201
+            "warning: unresolved inline links count: "
+            f"{len(unresolved_inline_links)}"
+        )
+
+        for node_, inline_link_ in unresolved_inline_links:
+            node_identifier = (
+                node_.reserved_uid
+                if node_.reserved_uid is not None
+                else node_.reserved_mid
+            )
+            document = node_.get_document()
+            document_title = (
+                document.reserved_title
+                if isinstance(document, SDocDocument)
+                else "UNKNOWN_DOCUMENT"
+            )
+
+            print(  # noqa: T201
+                "warning: "
+                f"node '{node_identifier}' in document "
+                f"'{document_title}' has an unresolved inline link to "
+                f"'{inline_link_.link}'."
+            )
 
     @timing_decorator("Export SDoc")
     def export(self) -> None:

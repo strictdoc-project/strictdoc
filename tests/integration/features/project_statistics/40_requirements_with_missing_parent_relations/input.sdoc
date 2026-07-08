@@ -1,0 +1,15 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[REQUIREMENT]
+UID: REQ-001
+TITLE: Existing requirement
+STATEMENT: Existing requirement statement.
+
+[REQUIREMENT]
+UID: REQ-002
+TITLE: Requirement with missing parent relation
+STATEMENT: This requirement references a parent that does not exist.
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-404

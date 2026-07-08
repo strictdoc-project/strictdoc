@@ -28,7 +28,7 @@ from strictdoc.backend.sdoc.models.model import (
     SDocElementIF,
     SDocNodeIF,
 )
-from strictdoc.backend.sdoc.models.node import SDocNode
+from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     ParentReqReference,
@@ -259,6 +259,36 @@ class TraceabilityIndexBuilder:
                 link_type=GraphLinkType.UID_TO_NODE,
                 lhs_node=inline_link.link,
             ):
+                if project_config.allow_missing_relation_requirements:
+                    # Relaxed mode: an inline link may reference a target that
+                    # does not exist. Record a validation issue (which prints a
+                    # warning and highlights the owning field) instead of
+                    # failing the whole build.
+                    inline_link_field = inline_link.parent
+                    inline_link_node = inline_link.parent_node()
+                    field_name: Optional[str] = (
+                        inline_link_field.field_name
+                        if isinstance(inline_link_field, SDocNodeField)
+                        else None
+                    )
+                    node_name: Optional[str] = None
+                    if isinstance(inline_link_node, SDocNode):
+                        node_name = (
+                            inline_link_node.reserved_title
+                            if inline_link_node.reserved_title is not None
+                            else inline_link_node.reserved_uid
+                        )
+                    traceability_index.validation_index.add_issue(
+                        inline_link_node,
+                        issue=f"Missing link: {inline_link.link}",
+                        field=field_name,
+                        subject=(
+                            f"Node: {node_name}"
+                            if node_name is not None
+                            else None
+                        ),
+                    )
+                    continue
                 raise StrictDocException(
                     "DocumentIndex: "
                     "the inline link references an object with an UID "
@@ -651,6 +681,14 @@ class TraceabilityIndexBuilder:
                             lhs_node=parent_reference.ref_uid,
                         )
                         if parent_requirement is None:
+                            if project_config.allow_missing_relation_requirements:
+                                traceability_index.validation_index.add_issue(
+                                    requirement,
+                                    issue=f"Missing parent relation: {parent_reference.ref_uid}",
+                                    field="RELATIONS (Parent)",
+                                    subject=f"Node: {requirement.reserved_title}",
+                                )
+                                continue
                             raise StrictDocException(
                                 f"[DocumentIndex.create] "
                                 f"Requirement {requirement.reserved_uid} "
@@ -698,6 +736,14 @@ class TraceabilityIndexBuilder:
                             lhs_node=child_reference.ref_uid,
                         )
                         if child_requirement is None:
+                            if project_config.allow_missing_relation_requirements:
+                                traceability_index.validation_index.add_issue(
+                                    requirement,
+                                    issue=f"Missing child relation: {child_reference.ref_uid}",
+                                    field="RELATIONS (Child)",
+                                    subject=f"Node: {requirement.reserved_title}",
+                                )
+                                continue
                             raise StrictDocException(
                                 f"[DocumentIndex.create] "
                                 f"Requirement {requirement.reserved_uid} "

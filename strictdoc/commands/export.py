@@ -177,6 +177,16 @@ class ExportCommand(BaseCommand):
             "strictdoc cache.",
         )
         command_parser_export.add_argument(
+            "--allow-missing-relation-requirements",
+            dest="allow_missing_relation_requirements",
+            action="store_true",
+            default=False,
+            help=(
+                "Allow exporting even when some requirement relations "
+                "(parent/child) cannot be resolved."
+            ),
+        )
+        command_parser_export.add_argument(
             "--config",
             type=str,
             help="Path to the StrictDoc TOML config file.",

@@ -87,6 +87,11 @@ class ProgressStatisticsGenerator:
                                 ):
                                     document_tree_stats.requirements_no_links += 1
 
+                        if traceability_index.has_missing_relations_for_requirement(
+                            requirement
+                        ):
+                            document_tree_stats.requirements_missing_relations += 1
+
                         # RATIONALE.
                         if (
                             requirement.ordered_fields_lookup.get("RATIONALE")
@@ -216,6 +221,16 @@ class ProgressStatisticsGenerator:
                 link='search?q=(node.is_requirement() and not node.is_root and node["STATUS"] != "Backlog" and not node.has_parent_requirements)',
             )
         )
+        if project_config.allow_missing_relation_requirements:
+            section.metrics.append(
+                Metric(
+                    name="Requirements with missing relations",
+                    value=str(
+                        document_tree_stats.requirements_missing_relations
+                    ),
+                    link="search?q=(node.is_requirement() and node.has_missing_relations)",
+                )
+            )
         section.metrics.append(
             Metric(
                 name="Requirements with no RATIONALE",

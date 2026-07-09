@@ -20,6 +20,9 @@
   reference under `developer/design/favicon/logo_s.svg` and is never
   served directly.
 - Out of scope:
+  - End-user-facing icon customization/branding for a project's own
+    `"default"`-variant favicon — tracked separately in
+    `developer/tasks/20260708_favicon_vars/task_custom_favicon.md`.
   - The desktop launcher window icon (`favicon.ico`, used by
     `strictdoc/features/launcher/launcher_frame.py`) — a separate asset,
     not the browser-tab favicon. How to regenerate it from the design
@@ -90,9 +93,10 @@
     docs export — resolves to `variant="default"`; no dedicated signal is
     needed for either, they are simply what's left once `is_test_env` and
     `is_debug_mode` are both false.
-  - `resolve_favicon_variant(project_config) -> str`
-    (`strictdoc/export/html/html_generator.py`) implements this
-    resolution once, in one place.
+  - `resolve_favicon_variant(environment) -> str`
+    (`strictdoc/core/project_config.py`) implements this resolution once,
+    in one place; `ProjectConfig.get_favicon_variant()` calls it with
+    `self.environment`.
 
 - **Rendering happens once per process/run, not per request.** None of
   the flags that decide `variant` change during a process's lifetime, so:
@@ -103,26 +107,26 @@
     folder exactly once per process (once at server startup, once during
     `strictdoc export`/HTML2PDF export) — calls `render_favicon_svg()`
     right after that copy step and writes the result to
-    `_static/favicon.svg`, overwriting the plain copy `sync_dir()` just
-    placed there.
+    `_static/<ProjectConfig.get_favicon_filename()>` (`favicon.svg` for
+    this task; see `task_custom_favicon.md` for the other case).
   - This single code path serves both the live server
     (`strictdoc/server/routers/main_router.py`) and static export
     (`strictdoc/features/html2pdf/html2pdf_generator.py`,
     `strictdoc export`). No new server route or in-memory cache is
     needed: the existing "render/copy once into the output tree"
     pipeline already gives "rendered once per process" for free.
-  - `base.jinja.html`'s
-    `<link rel="shortcut icon" href="{{ view_object.render_static_url('favicon.svg') }}">`
-    and the server's asset route are unchanged — both still just serve a
-    plain file from disk.
+  - `base.jinja.html`'s `<link rel="shortcut icon">` reads its `href`
+    and `type` from `ProjectConfig.get_favicon_filename()`/
+    `get_favicon_mime_type()`; the server's asset route is unchanged and
+    still just serves a plain file from disk.
 
 - **Verification.** `tests/unit/strictdoc/export/html/test_favicon.py`
-  covers: `resolve_favicon_variant()` for each flag combination; that the
-  template tags its output with the expected `data-testid` for each
-  variant; and that `render_favicon_svg()` correctly threads
-  `resolve_favicon_variant()`'s result into the template through a real
-  `HTMLTemplates` instance (guarding the Python → Jinja handoff, not just
-  each half in isolation). Manually cross-check the visual result for the
+  covers: `ProjectConfig.get_favicon_variant()` for each flag combination;
+  that the template tags its output with the expected `data-testid` for
+  each variant; and that `render_favicon_svg()` correctly threads the
+  resolved variant into the template through a real `HTMLTemplates`
+  instance (guarding the Python → Jinja handoff, not just each half in
+  isolation). Manually cross-check the visual result for the
   dev server, a plain `strictdoc server`, and a screencast/e2e test server
   (e.g. via `invoke screencast-server`) side by side in a browser that
   supports `prefers-color-scheme` for favicons (Chromium/Edge) and one

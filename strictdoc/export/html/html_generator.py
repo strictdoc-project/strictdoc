@@ -1,5 +1,6 @@
 import importlib
 import os
+import shutil
 import sys
 from collections import defaultdict
 from functools import partial
@@ -62,20 +63,10 @@ from strictdoc.helpers.paths import SDocRelativePath, path_to_posix_path
 from strictdoc.helpers.timing import measure_performance, timing_decorator
 
 
-def resolve_favicon_variant(project_config: ProjectConfig) -> str:
-    """Resolve which favicon.svg.jinja variant identifies this process."""
-    environment = project_config.environment
-    if environment.is_test_env:
-        return "test"
-    if environment.is_debug_mode:
-        return "dev"
-    return "default"
-
-
 def render_favicon_svg(
     project_config: ProjectConfig, html_templates: HTMLTemplates
 ) -> str:
-    variant = resolve_favicon_variant(project_config)
+    variant = project_config.get_favicon_variant()
     return (
         html_templates.jinja_environment()
         .get_template("_shared/favicon.svg.jinja")
@@ -236,16 +227,20 @@ class HTMLGenerator:
                 message="Copying StrictDoc's assets",
             )
 
-        # Render the favicon from a Jinja template so it can encode which
-        # kind of StrictDoc instance (dev/user/test/docs export) rendered
-        # it, overwriting the plain copy that sync_dir() just placed above.
-        favicon_svg = render_favicon_svg(project_config, html_templates)
-        with open(
-            os.path.join(output_html_static_files, "favicon.svg"),
-            "w",
-            encoding="utf8",
-        ) as output_file:
-            output_file.write(favicon_svg)
+        # Write the favicon: a project's own custom file (only for the
+        # "default" variant, see ProjectConfig.get_custom_favicon_path()),
+        # or else render it from the Jinja template so it can encode which
+        # kind of StrictDoc instance (dev/test/docs export) rendered it.
+        favicon_output_path = os.path.join(
+            output_html_static_files, project_config.get_favicon_filename()
+        )
+        custom_favicon_path = project_config.get_custom_favicon_path()
+        if custom_favicon_path is not None:
+            shutil.copyfile(custom_favicon_path, favicon_output_path)
+        else:
+            favicon_svg = render_favicon_svg(project_config, html_templates)
+            with open(favicon_output_path, "w", encoding="utf8") as output_file:
+                output_file.write(favicon_svg)
 
         # Export HTML2PDF.
         if project_config.is_feature_activated(ProjectFeature.HTML2PDF):

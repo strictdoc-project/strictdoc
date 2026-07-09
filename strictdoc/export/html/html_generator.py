@@ -21,7 +21,10 @@ from strictdoc.export.html.generators.document import DocumentHTMLGenerator
 from strictdoc.export.html.generators.document_table import (
     DocumentTableHTMLGenerator,
 )
-from strictdoc.export.html.html_templates import HTMLTemplates
+from strictdoc.export.html.html_templates import (
+    HTMLTemplates,
+    NormalHTMLTemplates,
+)
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.features.deep_trace.generator import (
@@ -64,11 +67,23 @@ from strictdoc.helpers.timing import measure_performance, timing_decorator
 
 
 def render_favicon_svg(
-    project_config: ProjectConfig, html_templates: HTMLTemplates
+    project_config: ProjectConfig,
+    html_templates: HTMLTemplates,  # noqa: ARG001
 ) -> str:
+    # Deliberately not using html_templates.jinja_environment(): for large
+    # projects it is a CompiledHTMLTemplates instance that lazily caches a
+    # ModuleLoader-backed Environment (holding unpicklable compiled
+    # _TemplateModule objects) on first call. HTMLGenerator instances are
+    # captured by the closure passed to the document-export parallelizer,
+    # so populating that cache here, in the main process, before parallel
+    # export starts, makes the whole HTMLGenerator (and its html_templates)
+    # unpicklable for the worker pool. A standalone, uncached environment
+    # sidesteps that entirely; favicon.svg.jinja is small enough that
+    # skipping template compilation has no measurable cost.
     variant = project_config.get_favicon_variant()
     return (
-        html_templates.jinja_environment()
+        NormalHTMLTemplates()
+        .jinja_environment()
         .get_template("_shared/favicon.svg.jinja")
         .render(variant=variant)
     )

@@ -9,6 +9,7 @@ class ManageNewCommandConfig:
         self,
         *,
         debug: bool,
+        development: bool = False,
         command: str,
         subcommand: str,
         project_root_path: str,
@@ -18,6 +19,7 @@ class ManageNewCommandConfig:
         config: Optional[str],
     ):
         self.debug: bool = debug
+        self.development: bool = development
         self.command: str = command
         self.subcommand: str = subcommand
         self.project_root_path: str = project_root_path

@@ -2,7 +2,7 @@
 
 StrictDoc's browser-tab favicon is rendered from one Jinja template and
 varies by which kind of process is serving it: a local dev server
-(`invoke server`, `--debug`), a plain `strictdoc server` run, an
+(`invoke server`, `--development`), a plain `strictdoc server` run, an
 end2end/screencast test server (`SDocTestServer`), or a static docs
 export. It also adapts to the browser/OS light/dark color scheme.
 
@@ -20,9 +20,13 @@ export. It also adapts to the browser/OS light/dark color scheme.
   has no effect on any browser (a favicon is never inserted into a
   page's DOM) — it's there only so unit tests can assert which variant a
   render produced, without depending on colors.
-- `resolve_favicon_variant(project_config)` in
-  `strictdoc/export/html/html_generator.py` resolves the variant:
-  `is_test_env` → `"test"`, `is_debug_mode` → `"dev"`, else `"default"`.
+- `resolve_favicon_variant(environment)` in
+  `strictdoc/core/project_config.py` resolves the variant:
+  `is_test_env` → `"test"`, `is_development_mode` → `"dev"`, else
+  `"default"`. `ProjectConfig.get_favicon_variant()` calls it with
+  `self.environment`. `is_debug_mode`/`--debug` controls verbose error
+  output and is unrelated to this resolution. See "Development-mode
+  signal" below.
 - `render_favicon_svg(project_config, html_templates)` resolves +
   renders in one call.
 - Rendering happens once per process, not per HTTP request:
@@ -40,8 +44,17 @@ export. It also adapts to the browser/OS light/dark color scheme.
 - Test-environment signal: `SDocTestServer._get_strictdoc_command()`
   (`tests/end2end/server.py`) sets `STRICTDOC_ENV=test` on the
   subprocess it launches; `strictdoc/cli/main.py` reads it into
-  `SDocRuntimeEnvironment.is_test_env` (`strictdoc/core/environment.py`),
-  the same way `--debug` is read into `is_debug_mode`.
+  `SDocRuntimeEnvironment.is_test_env` (`strictdoc/core/environment.py`).
+- Development-mode signal: a hidden CLI flag, `--development`
+  (`strictdoc/cli/cli_arg_parser.py`, `help=argparse.SUPPRESS` so it
+  never shows up in `--help` for end users), read into
+  `SDocRuntimeEnvironment.is_development_mode` in
+  `strictdoc/cli/main.py`. `invoke server`'s dev task (`tasks.py`) passes
+  both `--debug --development`. Every command's `*CommandConfig` class
+  (`strictdoc/commands/*_config.py`) declares a `development: bool =
+  False` field alongside its existing `debug: bool` one, because
+  `--development` is a top-level argparse flag and every command
+  constructs its config via `SomeCommandConfig(**vars(args))`.
 - Tests: `tests/unit/strictdoc/export/html/test_favicon.py`.
 - The original static SVG is kept only as a design source at
   `developer/design/favicon/logo_s.svg` and is never served directly.

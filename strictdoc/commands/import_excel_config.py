@@ -9,3 +9,4 @@ class ImportExcelCommandConfig:
     parser: str
     input_path: str
     output_path: str
+    development: bool = False

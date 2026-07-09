@@ -64,6 +64,9 @@ def _main() -> None:
     if parser.is_debug_mode():
         environment.is_debug_mode = True
 
+    if parser.is_development_mode():
+        environment.is_development_mode = True
+
     if os.environ.get("STRICTDOC_ENV") == "test":
         environment.is_test_env = True
 

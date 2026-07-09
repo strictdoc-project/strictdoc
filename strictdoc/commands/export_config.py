@@ -11,6 +11,7 @@ class ExportCommandConfig:
         self,
         *,
         debug: bool,
+        development: bool = False,
         command: str,
         input_paths: List[str],
         output_dir: Optional[str],
@@ -33,6 +34,7 @@ class ExportCommandConfig:
     ):
         assert isinstance(input_paths, list), f"{input_paths}"
         self.debug: bool = debug
+        self.development: bool = development
         self.command: str = command
         self.input_paths: List[str] = input_paths
         self.output_dir: Optional[str] = output_dir

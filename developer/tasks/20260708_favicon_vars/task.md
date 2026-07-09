@@ -5,9 +5,9 @@
 - StrictDoc's browser-tab favicon distinguishes, at a glance, which kind of
   StrictDoc instance a tab belongs to, within our own development
   ecosystem:
-  - a local developer server (`invoke server`, i.e. `--debug` mode),
+  - a local developer server (`invoke server`, i.e. `--development` mode),
   - a StrictDoc server as deployed/run by an end user (`strictdoc server`,
-    no `--debug`),
+    no `--development`),
   - a test server (end2end/screencast scenarios, `SDocTestServer`),
   - the published static documentation site (GitHub Pages export).
 - The favicon additionally adapts to the browser/OS light/dark color
@@ -79,20 +79,25 @@
     expected to change over time. See
     `tests/unit/strictdoc/export/html/test_favicon.py`.
 
-- **Where `variant` comes from — reuse existing flags, add exactly one
-  new one:**
-  - `project_config.environment.is_debug_mode` (existing, set from the
-    CLI `--debug` flag that `invoke server`'s dev task already passes)
-    resolves to `variant="dev"`.
-  - A new flag for test servers: `SDocTestServer._get_strictdoc_command()`
+- **Where `variant` comes from — two independent flags:**
+  - A hidden (not shown in `--help`) CLI flag, `--development`
+    (`strictdoc/cli/cli_arg_parser.py`), read into
+    `SDocRuntimeEnvironment.is_development_mode`
+    (`strictdoc/cli/main.py`, `strictdoc/core/environment.py`).
+    `invoke server`'s dev task (`tasks.py`) passes `--development`
+    alongside `--debug` (which controls verbose error/stack-trace output
+    and is unrelated to `variant` resolution).
+    `project_config.environment.is_development_mode` resolves to
+    `variant="dev"`.
+  - A flag for test servers: `SDocTestServer._get_strictdoc_command()`
     (`tests/end2end/server.py`) sets `STRICTDOC_ENV=test` on the
-    subprocess it launches; `strictdoc/cli/main.py` reads it (alongside
-    `--debug`) into `SDocRuntimeEnvironment.is_test_env`, exposed the same
-    way `is_debug_mode` already is. This resolves to `variant="test"`.
+    subprocess it launches; `strictdoc/cli/main.py` reads it into
+    `SDocRuntimeEnvironment.is_test_env`, exposed the same way
+    `is_development_mode` is. This resolves to `variant="test"`.
   - Everything else — a user's plain `strictdoc server` run, or a static
     docs export — resolves to `variant="default"`; no dedicated signal is
     needed for either, they are simply what's left once `is_test_env` and
-    `is_debug_mode` are both false.
+    `is_development_mode` are both false.
   - `resolve_favicon_variant(environment) -> str`
     (`strictdoc/core/project_config.py`) implements this resolution once,
     in one place; `ProjectConfig.get_favicon_variant()` calls it with

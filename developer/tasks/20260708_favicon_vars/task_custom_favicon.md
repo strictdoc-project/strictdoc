@@ -7,7 +7,7 @@
   `developer/tasks/20260708_favicon_vars/task.md` for what `"default"`
   means among the favicon variants.
 - **`"default"` covers both a user-deployed `strictdoc server` run
-  (no `--debug`) *and* a static `strictdoc export`/HTML2PDF export — a
+  (no `--development`) *and* a static `strictdoc export`/HTML2PDF export — a
   custom favicon applies to both.** `"dev"` and `"test"` always keep
   rendering StrictDoc's own favicon regardless of whether a custom
   favicon is configured — a developer must always be able to tell a

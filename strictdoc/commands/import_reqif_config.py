@@ -12,3 +12,4 @@ class ImportReqIFCommandConfig:
     profile: str
     reqif_enable_mid: bool
     reqif_import_markup: Optional[str]
+    development: bool = False

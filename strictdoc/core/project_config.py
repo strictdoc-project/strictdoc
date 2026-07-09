@@ -107,7 +107,7 @@ def resolve_favicon_variant(environment: SDocRuntimeEnvironment) -> str:
     """Resolve which favicon.svg.jinja variant identifies this process."""
     if environment.is_test_env:
         return "test"
-    if environment.is_debug_mode:
+    if environment.is_development_mode:
         return "dev"
     return "default"
 

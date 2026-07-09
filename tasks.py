@@ -164,6 +164,7 @@ def server(context, input_path=".", config=None, port=None):
         f"""
             python -m strictdoc.cli.main
                 --debug
+                --development
                 server {input_path} {config_argument}
                     --host 127.0.0.1
                     {port_argument}

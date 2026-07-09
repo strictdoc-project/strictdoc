@@ -12,6 +12,7 @@ class ServerCommandConfig:
         self,
         *,
         debug: bool,
+        development: bool = False,
         command: str,
         input_path: str,
         output_path: Optional[str],
@@ -22,6 +23,7 @@ class ServerCommandConfig:
         watch: bool = False,
     ):
         self.debug: bool = debug
+        self.development: bool = development
         self.command: str = command
         self._input_path: str = input_path
         self.output_path: Optional[str] = output_path

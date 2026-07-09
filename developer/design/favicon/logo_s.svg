@@ -4,11 +4,11 @@
   <style>
     .line {
       fill: none;
+      stroke: #808080;
       stroke-width: 6;
-      stroke: #000;
     }
     .node {
-      fill: #000;
+      fill: #808080;
       stroke: none;
     }
   </style>

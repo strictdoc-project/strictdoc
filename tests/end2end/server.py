@@ -256,8 +256,11 @@ class SDocTestServer:
             self.process.terminate()
 
             for process_ in child_processes:
-                if process_.is_running():
-                    process_.send_signal(signal.SIGTERM)
+                try:
+                    if process_.is_running():
+                        process_.send_signal(signal.SIGTERM)
+                except psutil.NoSuchProcess:
+                    continue
 
             #
             # Wait for all processes (main server + children) to exit

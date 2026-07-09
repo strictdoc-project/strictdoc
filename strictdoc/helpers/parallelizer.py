@@ -62,7 +62,35 @@ class MultiprocessingParallelizer(Parallelizer):
             )
             process_number = 2
 
-        self.executor = ProcessPoolExecutor(max_workers=process_number)
+        # The implicit "fork" start method forks the whole (multithreaded)
+        # interpreter and is deprecated by CPython since 3.12 (raises
+        # DeprecationWarning) because it can deadlock in a threaded process;
+        # CPython 3.14 switched the POSIX default to "forkserver" for this
+        # reason. Use "forkserver" where available (cheap forks from a
+        # clean, single-threaded server process) and fall back to "spawn"
+        # elsewhere (e.g., Windows).
+        #
+        # Exception: PyInstaller/Nuitka-frozen binaries. "spawn"/"forkserver"
+        # re-invoke sys.executable with an internal bootstrap command line,
+        # but for a frozen binary sys.executable is the strictdoc executable
+        # itself, so that bootstrap string gets parsed by strictdoc's own
+        # argparse CLI and fails (e.g. "invalid choice: 'from
+        # multiprocessing.forkserver import main; ...'"). The Python docs
+        # confirm "spawn"/"forkserver" generally cannot be used with frozen
+        # executables on POSIX and that "fork" may work there instead. So
+        # frozen binaries keep the "fork" default.
+        if environment.is_binary_dist:
+            start_method = "fork"
+        else:
+            start_method = (
+                "forkserver"
+                if "forkserver" in multiprocessing.get_all_start_methods()
+                else "spawn"
+            )
+        mp_context = multiprocessing.get_context(start_method)
+        self.executor = ProcessPoolExecutor(
+            max_workers=process_number, mp_context=mp_context
+        )
 
     def run_parallel(
         self,

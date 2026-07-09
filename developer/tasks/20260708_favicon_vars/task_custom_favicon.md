@@ -1,17 +1,16 @@
-# Custom favicon for a project's `"default"` StrictDoc instance
+# Custom favicon for a project's own StrictDoc instance
 
 ## WHAT
 
 - Let a project supply its own favicon file, replacing StrictDoc's icon
-  for the `"default"` variant — see
-  `developer/tasks/20260708_favicon_vars/task.md` for what `"default"`
-  means among the favicon variants.
-- **`"default"` covers both a user-deployed `strictdoc server` run
-  (no `--development`) *and* a static `strictdoc export`/HTML2PDF export — a
-  custom favicon applies to both.** `"dev"` and `"test"` always keep
-  rendering StrictDoc's own favicon regardless of whether a custom
-  favicon is configured — a developer must always be able to tell a
-  dev/test instance apart, even in a project that has one set.
+  for the `"default"` and `"export"` variants — see
+  `developer/tasks/20260708_favicon_vars/task.md` for what these variants
+  mean (a user-deployed `strictdoc server` run, and a static `strictdoc
+  export`/HTML2PDF export, respectively).
+- `"dev"` and `"test"` always keep rendering StrictDoc's own favicon
+  regardless of whether a custom favicon is configured — a developer must
+  always be able to tell a dev/test instance apart, even in a project
+  that has one set.
 - Out of scope: the desktop launcher window icon (`favicon.ico`); per-tab
   favicon animation.
 
@@ -33,8 +32,8 @@
   `validate_and_finalize()`.
 - Any file format is allowed (`.ico`, `.png`, `.svg`, ...) — not
   SVG-only. `ProjectConfig.get_custom_favicon_path()` returns
-  `favicon_path` only when `get_favicon_variant()` resolves to
-  `"default"` (`None` otherwise, i.e. always for `"dev"`/`"test"`).
+  `favicon_path` unless `get_favicon_variant()` resolves to `"dev"` or
+  `"test"` (`None` in those two cases).
   `HTMLGenerator.export_assets()`
   (`strictdoc/export/html/html_generator.py`) copies that file to
   `_static/favicon.<their-extension>` instead of rendering
@@ -48,7 +47,7 @@
   reached from the template the same way `project_config` is already
   reachable from view objects there.
 - Verification: a unit test asserting that with `favicon_path` set, the
-  `"default"` variant copies the user's file bytes into
+  `"default"`/`"export"` variants copy the user's file bytes into
   `_static/favicon.<ext>` unchanged and the rendered `<link>` tag points
   at that filename/MIME type, while `"dev"`/`"test"` still render
   `favicon.svg.jinja` at `_static/favicon.svg` regardless.

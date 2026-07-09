@@ -9,7 +9,8 @@ export. It also adapts to the browser/OS light/dark color scheme.
 ## How it works
 
 - Template: `strictdoc/export/html/templates/_shared/favicon.svg.jinja`.
-  Takes one parameter, `variant` (`"default"`, `"dev"`, `"test"`, ...).
+  Takes one parameter, `variant` (`"default"`, `"dev"`, `"test"`,
+  `"export"`, ...).
 - Each `variant` defines its own `light_color`/`dark_color` pair, used by
   `@media (prefers-color-scheme: light/dark)` — light/dark adaptation is
   per variant, not shared across all of them. A neutral grey (`#808080`)
@@ -20,13 +21,15 @@ export. It also adapts to the browser/OS light/dark color scheme.
   has no effect on any browser (a favicon is never inserted into a
   page's DOM) — it's there only so unit tests can assert which variant a
   render produced, without depending on colors.
-- `resolve_favicon_variant(environment)` in
+- `resolve_favicon_variant(environment, is_running_on_server)` in
   `strictdoc/core/project_config.py` resolves the variant:
-  `is_test_env` → `"test"`, `is_development_mode` → `"dev"`, else
-  `"default"`. `ProjectConfig.get_favicon_variant()` calls it with
-  `self.environment`. `is_debug_mode`/`--debug` controls verbose error
-  output and is unrelated to this resolution. See "Development-mode
-  signal" below.
+  `is_test_env` → `"test"`, `is_development_mode` → `"dev"`, not
+  `is_running_on_server` → `"export"` (a static `strictdoc export`/
+  HTML2PDF export), else `"default"` (a live, non-dev, non-test server).
+  `ProjectConfig.get_favicon_variant()` calls it with `self.environment`
+  and `self.is_running_on_server`. `is_debug_mode`/`--debug` controls
+  verbose error output and is unrelated to this resolution. See
+  "Development-mode signal" below.
 - `render_favicon_svg(project_config, html_templates)` resolves +
   renders in one call.
 - Rendering happens once per process, not per HTTP request:

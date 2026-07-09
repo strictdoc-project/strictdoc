@@ -1,20 +1,20 @@
 {#
-  Favicon template driven by a single `variant` string (e.g. "default",
-  "dev", "test", ...) that identifies which kind of StrictDoc instance is
-  serving this favicon. There is no CSS/browser feature that can express
-  "which process served this file" — it has to be baked into the SVG
-  bytes themselves. At process start (server startup or a documentation
-  export), StrictDoc resolves the favicon variant once via
+  Favicon template driven by a single `variant` string ("default", "dev",
+  "test", "export", ...) that identifies which kind of StrictDoc instance
+  is serving this favicon. There is no CSS/browser feature that can
+  express "which process served this file" — it has to be baked into
+  the SVG bytes themselves. At process start (server startup or a
+  documentation export), StrictDoc resolves the favicon variant once via
   ProjectConfig.get_favicon_variant() (strictdoc/core/project_config.py),
   renders the SVG once, and writes it to _static/favicon.svg via
   HTMLGenerator.export_assets() (strictdoc/export/html/html_generator.py).
   Every later browser request just serves that already-rendered file —
   not read live per HTTP request.
 
-  This template only renders for the "default" variant when no custom
-  favicon is configured. If ProjectConfig.favicon_path is set, "default"
-  serves that file as-is instead — see
-  ProjectConfig.get_custom_favicon_path() and
+  "default" (a live, non-dev, non-test server) and "export" (a static
+  `strictdoc export`) render this template only when no custom favicon
+  is configured. If ProjectConfig.favicon_path is set, both serve that
+  file as-is instead — see ProjectConfig.get_custom_favicon_path() and
   developer/tasks/20260708_favicon_vars/task_custom_favicon.md. "dev" and
   "test" always render this template, ignoring favicon_path.
 

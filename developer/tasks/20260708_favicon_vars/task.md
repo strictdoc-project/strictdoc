@@ -79,7 +79,7 @@
     expected to change over time. See
     `tests/unit/strictdoc/export/html/test_favicon.py`.
 
-- **Where `variant` comes from — two independent flags:**
+- **Where `variant` comes from — three signals:**
   - A hidden (not shown in `--help`) CLI flag, `--development`
     (`strictdoc/cli/cli_arg_parser.py`), read into
     `SDocRuntimeEnvironment.is_development_mode`
@@ -94,14 +94,17 @@
     subprocess it launches; `strictdoc/cli/main.py` reads it into
     `SDocRuntimeEnvironment.is_test_env`, exposed the same way
     `is_development_mode` is. This resolves to `variant="test"`.
-  - Everything else — a user's plain `strictdoc server` run, or a static
-    docs export — resolves to `variant="default"`; no dedicated signal is
-    needed for either, they are simply what's left once `is_test_env` and
-    `is_development_mode` are both false.
-  - `resolve_favicon_variant(environment) -> str`
+  - `ProjectConfig.is_running_on_server` (existing, set by the live
+    server's router setup) distinguishes a live server from a static
+    export: when `False`, resolves to `variant="export"` (`strictdoc
+    export`, HTML2PDF export).
+  - A user's plain `strictdoc server` run is what's left once
+    `is_test_env`, `is_development_mode` are both false and
+    `is_running_on_server` is true: `variant="default"`.
+  - `resolve_favicon_variant(environment, is_running_on_server) -> str`
     (`strictdoc/core/project_config.py`) implements this resolution once,
     in one place; `ProjectConfig.get_favicon_variant()` calls it with
-    `self.environment`.
+    `self.environment` and `self.is_running_on_server`.
 
 - **Rendering happens once per process/run, not per request.** None of
   the flags that decide `variant` change during a process's lifetime, so:

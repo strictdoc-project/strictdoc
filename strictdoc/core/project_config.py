@@ -103,12 +103,16 @@ class ProjectConfigDefault:
     DEFAULT_SECTION_BEHAVIOR = "[SECTION]"
 
 
-def resolve_favicon_variant(environment: SDocRuntimeEnvironment) -> str:
+def resolve_favicon_variant(
+    environment: SDocRuntimeEnvironment, is_running_on_server: bool
+) -> str:
     """Resolve which favicon.svg.jinja variant identifies this process."""
     if environment.is_test_env:
         return "test"
     if environment.is_development_mode:
         return "dev"
+    if not is_running_on_server:
+        return "export"
     return "default"
 
 
@@ -683,12 +687,14 @@ class ProjectConfig:
         return feature in self.project_features
 
     def get_favicon_variant(self) -> str:
-        return resolve_favicon_variant(self.environment)
+        return resolve_favicon_variant(
+            self.environment, self.is_running_on_server
+        )
 
     def get_custom_favicon_path(self) -> Optional[str]:
         if self.favicon_path is None:
             return None
-        if self.get_favicon_variant() != "default":
+        if self.get_favicon_variant() in ("dev", "test"):
             return None
         return self.favicon_path
 

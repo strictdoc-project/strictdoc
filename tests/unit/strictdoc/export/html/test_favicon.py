@@ -15,6 +15,7 @@ def _project_config(
     *,
     is_development_mode: bool,
     is_test_env: bool,
+    is_running_on_server: bool = True,
     favicon_path: str | None = None,
 ) -> ProjectConfig:
     project_config = ProjectConfig()
@@ -24,14 +25,15 @@ def _project_config(
     project_config.environment = copy.copy(strictdoc_environment)
     project_config.environment.is_development_mode = is_development_mode
     project_config.environment.is_test_env = is_test_env
+    project_config.is_running_on_server = is_running_on_server
     project_config.favicon_path = favicon_path
     return project_config
 
 
-# Checks that get_favicon_variant() maps is_test_env/is_development_mode
-# to the expected string, per the priority the function itself encodes.
-# Protects against an accidental edit to that mapping (e.g. swapped
-# priority, a typo in a string literal).
+# Checks that get_favicon_variant() maps is_test_env/is_development_mode/
+# is_running_on_server to the expected string, per the priority the
+# function itself encodes. Protects against an accidental edit to that
+# mapping (e.g. swapped priority, a typo in a string literal).
 # LIMITATION: cannot validate that is_development_mode is the correct
 # signal for "this is StrictDoc's own dev server" - that is a design
 # decision, not something expressible as an assertion over this
@@ -50,11 +52,20 @@ def test_get_favicon_variant_dev_server():
     assert project_config.get_favicon_variant() == "dev"
 
 
-def test_get_favicon_variant_user_deployed_or_export():
+def test_get_favicon_variant_user_deployed_server():
     project_config = _project_config(
         is_development_mode=False, is_test_env=False
     )
     assert project_config.get_favicon_variant() == "default"
+
+
+def test_get_favicon_variant_static_export():
+    project_config = _project_config(
+        is_development_mode=False,
+        is_test_env=False,
+        is_running_on_server=False,
+    )
+    assert project_config.get_favicon_variant() == "export"
 
 
 # Checks get_favicon_filename()/get_favicon_mime_type() branching
@@ -110,7 +121,7 @@ def _render_favicon_template(*, variant: str) -> str:
 # this catches template syntax errors and a missing/renamed data-testid
 # attribute - real rendering, not just Python-side logic.
 def test_favicon_template_tags_output_with_the_given_variant():
-    for variant in ("default", "dev", "test"):
+    for variant in ("default", "dev", "test", "export"):
         svg = _render_favicon_template(variant=variant)
         assert f'data-testid="{variant}-favicon"' in svg
 

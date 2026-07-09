@@ -35,14 +35,38 @@
 {% set variant = variant | default("default") %}
 
 {% if variant == "dev" %}
-  {% set light_color = "#000" %}
-  {% set dark_color = "#fff" %}
+  {#
+    "dev" variant:
+    StrictDoc's own local dev server.
+    Ignores ProjectConfig.favicon_path — always rendered, orange colors.
+  #}
+  {% set light_color = "rgb(242, 100, 42)" %}
+  {% set dark_color = "rgb(242, 100, 42)" %}
 {% elif variant == "test" %}
-  {% set light_color = "#000" %}
-  {% set dark_color = "#fff" %}
+  {#
+    "test" variant:
+    end2end/screencast test server (SDocTestServer).
+    Ignores ProjectConfig.favicon_path — always rendered, green colors.
+  #}
+  {% set light_color = "rgb(42, 142, 42)" %}
+  {% set dark_color = "rgb(42, 142, 42)" %}
+{% elif variant == "export" %}
+  {#
+    "export" variant:
+    a static `strictdoc export`/HTML2PDF export, rendered only when no
+    custom favicon (ProjectConfig.favicon_path) is configured for it;
+    used base site colors.
+  #}
+  {% set light_color = "#282c42" %}
+  {% set dark_color = "#F2F5F9" %}
 {% else %}
-  {% set light_color = "#000" %}
-  {% set dark_color = "#fff" %}
+  {#
+    "default" variant:
+    a user's own live server, rendered only when no custom favicon
+    (ProjectConfig.favicon_path) is configured for it
+  #}
+  {% set light_color = "#555555" %}
+  {% set dark_color = "#AAAAAA" %}
 {% endif %}
 
 <svg
@@ -83,5 +107,5 @@
   <circle id="sdoc_n_1" class="node" cx="76" cy="35" r="9.0"/>
 
   {# Extra per-variant markup goes here, e.g.: #}
-  {# {% if variant == "dev" %}<circle cx="88" cy="12" r="8.0"/>{% endif %} #}
+  {# {% if variant == "dev" %}<circle class="line" cx="50" cy="50" r="49"/>{% endif %} #}
 </svg>

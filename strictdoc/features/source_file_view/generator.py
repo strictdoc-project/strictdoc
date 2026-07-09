@@ -4,7 +4,7 @@
 
 # mypy: disable-error-code="operator"
 from pathlib import Path
-from typing import List, Tuple, Union
+from typing import List, Tuple, Union, cast
 
 from markupsafe import Markup
 from pygments import highlight
@@ -220,8 +220,15 @@ class SourceFileViewHTMLGenerator:
         pygmented_source_file_content = pygmented_source_file_content[
             slice_start:slice_end
         ]
-        pygmented_source_file_lines: List[Union[str, SourceMarkerTuple]] = list(
-            pygmented_source_file_content.split("\n")
+        # cast() is required for mypy: split() returns List[str], and
+        # because List is invariant, mypy rejects assigning it directly to
+        # a List[Union[str, SourceMarkerTuple]] variable even with the
+        # annotation in place. cast() is a no-op at runtime, unlike
+        # wrapping in list(), which would silently allocate a second,
+        # unnecessary copy of the list just to satisfy the type checker.
+        pygmented_source_file_lines: List[Union[str, SourceMarkerTuple]] = cast(
+            List[Union[str, SourceMarkerTuple]],
+            pygmented_source_file_content.split("\n"),
         )
         if hack_first_line:
             pygmented_source_file_lines[0] = "<span></span>"

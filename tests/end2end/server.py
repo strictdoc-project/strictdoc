@@ -355,6 +355,7 @@ class SDocTestServer:
         # server command, otherwise the Python packages will not be discovered.
         strictdoc_env: Dict[str, str] = dict(os.environ)
         strictdoc_env["PYTHONPATH"] = os.getcwd()
+        strictdoc_env["STRICTDOC_ENV"] = "test"
 
         should_collect_coverage = test_environment.coverage
         strictdoc_args: List[str] = [sys.executable]

@@ -62,6 +62,27 @@ from strictdoc.helpers.paths import SDocRelativePath, path_to_posix_path
 from strictdoc.helpers.timing import measure_performance, timing_decorator
 
 
+def resolve_favicon_variant(project_config: ProjectConfig) -> str:
+    """Resolve which favicon.svg.jinja variant identifies this process."""
+    environment = project_config.environment
+    if environment.is_test_env:
+        return "test"
+    if environment.is_debug_mode:
+        return "dev"
+    return "default"
+
+
+def render_favicon_svg(
+    project_config: ProjectConfig, html_templates: HTMLTemplates
+) -> str:
+    variant = resolve_favicon_variant(project_config)
+    return (
+        html_templates.jinja_environment()
+        .get_template("_shared/favicon.svg.jinja")
+        .render(variant=variant)
+    )
+
+
 class HTMLGenerator:
     def __init__(
         self, project_config: ProjectConfig, html_templates: HTMLTemplates
@@ -84,6 +105,7 @@ class HTMLGenerator:
         HTMLGenerator.export_assets(
             traceability_index=traceability_index,
             project_config=self.project_config,
+            html_templates=self.html_templates,
             export_output_html_root=self.project_config.export_output_html_root,
         )
 
@@ -187,6 +209,7 @@ class HTMLGenerator:
         *,
         traceability_index: Optional[TraceabilityIndex],
         project_config: ProjectConfig,
+        html_templates: HTMLTemplates,
         export_output_html_root: str,
         flat_assets: bool = False,
     ) -> None:
@@ -212,6 +235,17 @@ class HTMLGenerator:
                 output_html_static_files,
                 message="Copying StrictDoc's assets",
             )
+
+        # Render the favicon from a Jinja template so it can encode which
+        # kind of StrictDoc instance (dev/user/test/docs export) rendered
+        # it, overwriting the plain copy that sync_dir() just placed above.
+        favicon_svg = render_favicon_svg(project_config, html_templates)
+        with open(
+            os.path.join(output_html_static_files, "favicon.svg"),
+            "w",
+            encoding="utf8",
+        ) as output_file:
+            output_file.write(favicon_svg)
 
         # Export HTML2PDF.
         if project_config.is_feature_activated(ProjectFeature.HTML2PDF):

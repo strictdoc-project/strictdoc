@@ -1,6 +1,7 @@
 # Needed to ensure that multiprocessing.freeze_support() is called
 # in a frozen application (see main() below).
 import multiprocessing
+import os
 import sys
 from typing import Any, Dict, Optional
 
@@ -62,6 +63,9 @@ def _main() -> None:
 
     if parser.is_debug_mode():
         environment.is_debug_mode = True
+
+    if os.environ.get("STRICTDOC_ENV") == "test":
+        environment.is_test_env = True
 
     # Ensure that multiprocessing.freeze_support() is called in a frozen
     # application

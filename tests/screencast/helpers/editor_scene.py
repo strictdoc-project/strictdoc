@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import List
 
 from playwright.sync_api import Page
 from pygments import highlight
@@ -66,7 +65,7 @@ _APPEND_LINE_JS = """
 """
 
 
-def _highlight_lines(text: str) -> List[str]:
+def _highlight_lines(text: str) -> list[str]:
     """
     One highlighted HTML fragment per source line (StrictDocLexer's rules
     each match exactly one line, so this lines up 1:1 with `text`'s lines).

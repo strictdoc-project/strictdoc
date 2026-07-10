@@ -2,12 +2,11 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Union
 
 from playwright.sync_api import Locator, Page
 from playwright.sync_api import TimeoutError as PlaywrightTimeoutError
 
-Target = Union[str, Locator]
+Target = str | Locator
 
 _CSS = (Path(__file__).parent / "pointer.css").read_text(encoding="utf-8")
 

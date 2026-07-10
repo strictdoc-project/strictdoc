@@ -22,7 +22,7 @@ from __future__ import annotations
 
 import shutil
 from pathlib import Path
-from typing import Callable, Dict, Optional, Tuple
+from typing import Callable
 
 from tests.screencast.fixture import (
     FIXTURE_CONFIG,
@@ -33,10 +33,10 @@ from tests.screencast.scenarios.hello_world.test_case import run_strictdoc_new
 
 DEFAULT_SCENARIO = "fixture"
 
-ScenarioSetup = Callable[[bool], Tuple[Path, Optional[Path]]]
+ScenarioSetup = Callable[[bool], tuple[Path, Path | None]]
 
 
-def _prepare_fixture_project(editable: bool) -> Tuple[Path, Optional[Path]]:
+def _prepare_fixture_project(editable: bool) -> tuple[Path, Path | None]:
     if editable:
         return FIXTURE_DIR, FIXTURE_CONFIG
 
@@ -47,7 +47,7 @@ def _prepare_fixture_project(editable: bool) -> Tuple[Path, Optional[Path]]:
     return project_dir, project_dir / "strictdoc_config.py"
 
 
-def _prepare_hello_world_project(editable: bool) -> Tuple[Path, Optional[Path]]:
+def _prepare_hello_world_project(editable: bool) -> tuple[Path, Path | None]:
     if editable:
         project_dir = MANUAL_SERVER_BUILD_DIR / "hello_world" / "edit"
         # strictdoc_config.py is the last file `strictdoc new` writes: its
@@ -66,7 +66,7 @@ def _prepare_hello_world_project(editable: bool) -> Tuple[Path, Optional[Path]]:
     return project_dir, None
 
 
-SCENARIOS: Dict[str, ScenarioSetup] = {
+SCENARIOS: dict[str, ScenarioSetup] = {
     "fixture": _prepare_fixture_project,
     "hello_world": _prepare_hello_world_project,
 }

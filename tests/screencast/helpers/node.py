@@ -62,7 +62,7 @@ class DocumentRoot(Node):
 
 class Requirement(Node):
     @staticmethod
-    def with_node(pointer: Pointer, node_order: int = 1) -> "Requirement":
+    def with_node(pointer: Pointer, node_order: int = 1) -> Requirement:
         locator = pointer.page.locator(
             '[data-testid="node-requirement"]'
         ).nth(node_order - 1)

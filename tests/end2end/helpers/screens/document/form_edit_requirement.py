@@ -1,5 +1,7 @@
 # pylint: disable=invalid-name
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support.expected_conditions import staleness_of
+from selenium.webdriver.support.ui import WebDriverWait
 from seleniumbase import BaseCase
 
 from strictdoc.helpers.mid import MID
@@ -196,7 +198,25 @@ class Form_EditRequirement(Form):  # pylint: disable=invalid-name
 
     def do_reset_uid_field(self, field_name: str = "") -> None:
         assert isinstance(field_name, str)
+
+        field_xpath = "(//*[@data-testid='form-field-UID'])"
+        field_element_before_reset = self.test_case.find_element(
+            field_xpath, by=By.XPATH
+        )
+
         self.test_case.click_xpath("//*[@data-testid='reset-uid-field-action']")
+
+        # The reset action triggers an async /reset_uid request whose
+        # response replaces the whole UID row (field + button) via a
+        # turbo-stream action="replace", regardless of whether the
+        # generated UID differs from the previous value (e.g. it stays
+        # empty when the node has no prefix). Wait for the pre-reset field
+        # element to go stale, i.e. for the DOM swap to actually happen,
+        # before returning. Otherwise a caller may submit the form before
+        # the generated UID has been populated.
+        WebDriverWait(self.test_case.driver, timeout=3).until(
+            staleness_of(field_element_before_reset)
+        )
 
     def assert_field_is_readonly(self, field_name: str) -> None:
         """Verifies that a specific field has contenteditable set to false."""

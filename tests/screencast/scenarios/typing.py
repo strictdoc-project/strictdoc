@@ -16,6 +16,12 @@ def type_text(locator: Locator, text: str, delay_ms: int = 45) -> None:
 
     for char in text:
         locator.evaluate(
-            "(el, char) => { el.textContent += char; }", char
+            """
+            (el, char) => {
+              el.textContent += char;
+              el.scrollTop = el.scrollHeight;
+            }
+            """,
+            char,
         )
         time.sleep(delay_ms / 1000)

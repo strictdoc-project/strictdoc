@@ -1,6 +1,6 @@
 """
 Screencast scenario: creating a project from scratch with `strictdoc new`,
-adding a new Requirement to an existing document through the web UI, then
+adding a Rationale to an existing Requirement through the web UI, then
 revealing the real resulting .sdoc source in an editor-style scene.
 
 If this test fails, the "hello-world" screencast video is stale and must
@@ -29,9 +29,10 @@ from tests.screencast.scenarios.typing import type_text
 TERMINAL_HTML = os.path.abspath(os.path.join(__file__, "../../../terminal.html"))
 EDITOR_HTML = os.path.abspath(os.path.join(__file__, "../../../editor.html"))
 
-REQUIREMENT_UID = "HLR-2"
-REQUIREMENT_TITLE = "Hello world requirement"
-REQUIREMENT_STATEMENT = "StrictDoc shall greet the world."
+RATIONALE_TEXT = (
+    "A printed message is the simplest way to verify the application "
+    "satisfies the parent requirement."
+)
 
 
 def run_strictdoc_new(project_dir: Path) -> str:
@@ -61,13 +62,22 @@ class Test:
         expect(demo_text).to_be_visible()
 
         type_text(demo_text, "$ strictdoc new hello-world\n")
+
+        # The output appears in full, scrolled to the top — read the
+        # banner first...
         demo_text.evaluate(
             "(el, text) => { el.textContent += text; }", cli_output
         )
         pause(page, 2)
 
-        hlr_path = project_dir / "docs" / "high_level_requirements.sdoc"
-        original_sdoc_text = hlr_path.read_text(encoding="utf-8")
+        # ...then a smooth (CSS scroll-behavior) scroll down to the end,
+        # if it doesn't already fit, so the "Next steps" instructions are
+        # readable too instead of being cut off below the fold.
+        demo_text.evaluate("(el) => { el.scrollTop = el.scrollHeight; }")
+        pause(page, 2)
+
+        llr_path = project_dir / "docs" / "low_level_requirements.sdoc"
+        original_sdoc_text = llr_path.read_text(encoding="utf-8")
 
         with SDocTestServer(
             input_path=str(project_dir),
@@ -81,51 +91,40 @@ class Test:
             screen.assert_on_screen("document-tree")
 
             project_tree = ProjectTree(pointer)
-            project_tree.assert_contains_document("High-Level Requirements")
+            project_tree.assert_contains_document("Low-Level Requirements")
             pause(page)
 
             project_tree.do_click_on_the_document_with_title(
-                "High-Level Requirements"
+                "Low-Level Requirements"
             )
             screen.assert_on_screen("document")
             pause(page)
 
-            # Scene 3: adding a new Requirement below the existing one.
-            hlr_1 = Requirement.with_node(pointer)
-            node_menu = hlr_1.do_open_node_menu()
-            form_edit_requirement = node_menu.do_node_add_requirement_below()
+            # Scene 3: adding a Rationale to the existing Requirement.
+            llr_1 = Requirement.with_node(pointer)
+            form_edit_requirement = llr_1.do_open_form_edit_requirement()
 
-            form_edit_requirement.do_fill_in_field_uid(REQUIREMENT_UID)
-            form_edit_requirement.do_fill_in_field_title(REQUIREMENT_TITLE)
-            form_edit_requirement.do_fill_in_field_statement(
-                REQUIREMENT_STATEMENT
-            )
+            form_edit_requirement.do_fill_in_field_rationale(RATIONALE_TEXT)
             pause(page)
             form_edit_requirement.do_form_submit()
 
             expect(
-                page.locator("sdoc-node-title", has_text=REQUIREMENT_TITLE)
-            ).to_be_visible()
-            expect(
-                page.locator('[data-field-label="statement"]').filter(
-                    has_text=REQUIREMENT_STATEMENT
+                page.locator('[data-field-label="rationale"]').filter(
+                    has_text=RATIONALE_TEXT
                 )
             ).to_be_visible()
             pause(page, 2)
 
-        final_sdoc_text = hlr_path.read_text(encoding="utf-8")
-        assert final_sdoc_text.startswith(original_sdoc_text), (
-            "Expected the new requirement to be appended after the "
-            "document's existing content."
-        )
-        added_sdoc_text = final_sdoc_text[len(original_sdoc_text) :]
-        assert REQUIREMENT_UID in added_sdoc_text
+        final_sdoc_text = llr_path.read_text(encoding="utf-8")
+        assert RATIONALE_TEXT not in original_sdoc_text
+        assert RATIONALE_TEXT in final_sdoc_text
 
-        # Scene 4: the real resulting .sdoc source, editor-style.
+        # Scene 4: the real resulting .sdoc source, editor-style, with the
+        # Rationale revealed exactly where it landed in the file.
         page.goto(f"file://{EDITOR_HTML}")
         editor_scene.render_original(
-            page, "docs/high_level_requirements.sdoc", original_sdoc_text
+            page, "docs/low_level_requirements.sdoc", original_sdoc_text
         )
         pause(page)
-        editor_scene.reveal_added_lines(page, added_sdoc_text)
+        editor_scene.reveal_change(page, original_sdoc_text, final_sdoc_text)
         pause(page, 2)

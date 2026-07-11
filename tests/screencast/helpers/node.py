@@ -52,6 +52,13 @@ class Node:
         )
         return AddNode_Menu(self.pointer, self.node_locator)
 
+    def do_open_form_edit_requirement(self) -> Form_EditRequirement:
+        self.pointer.move_to(self.node_locator)
+        self.pointer.click(
+            self.node_locator.locator('[data-testid="node-edit-action"]')
+        )
+        return Form_EditRequirement(self.pointer)
+
 
 class DocumentRoot(Node):
     def __init__(self, pointer: Pointer) -> None:

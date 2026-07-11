@@ -1,0 +1,19 @@
+#
+# Demonstrates a user-defined custom Format (CSVFormat, see csv_format.py)
+# registered via this directory's own strictdoc_config.py, exercised in both
+# directions through the real CLI:
+#
+# - `strictdoc convert` (CSV -> SDoc): --input-format is auto-discovered
+#   from the .csv extension.
+# - `strictdoc export --formats=csv` (SDoc -> CSV): the tree-wide export
+#   direction, same mechanism as any other export format.
+#
+# A full round trip: input.csv -> (convert) -> SDoc -> (export) -> CSV,
+# and the CSV at both ends of the round trip is identical.
+#
+
+RUN: %strictdoc convert %S/input.csv %T/convert_out/ --config=%S/strictdoc_config.py
+RUN: %diff %T/convert_out/CSV_Example.sdoc %S/expected/expected.sdoc
+
+RUN: %strictdoc export --formats=csv %T/convert_out/CSV_Example.sdoc --output-dir %T/export_out/ --config=%S/strictdoc_config.py
+RUN: %diff %S/input.csv %T/export_out/csv/CSV_Example.csv

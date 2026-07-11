@@ -249,7 +249,7 @@ def test_unit_server(context, focus=None):
                 {focus_argument}
                 --junit-xml={TEST_REPORTS_DIR}/tests_unit_server.pytest.junit.xml
                 -o junit_suite_name="StrictDoc Web Server Unit Tests"
-                -o cache_dir=build/pytest_unit_server
+                -o cache_dir=build/pytest_cache/unit_server
         """,
     )
 
@@ -346,7 +346,7 @@ def test_end2end(
             {headless_argument}
             --junit-xml={TEST_REPORTS_DIR}/tests_end2end.pytest.junit.xml
             -o junit_suite_name="StrictDoc End-to-End Tests"
-            -o cache_dir=build/pytest_end2end
+            -o cache_dir=build/pytest_cache/end2end
             tests/end2end
     """
     if test_path:
@@ -411,7 +411,7 @@ def test_unit(context, coverage=False, focus=None, path=None, output=False):
             {focus_argument}
             {output_argument}
             --junit-xml={TEST_REPORTS_DIR}/tests_unit.pytest.junit.xml
-            -o cache_dir=build/pytest_unit_with_coverage
+            -o cache_dir=build/pytest_cache/unit
             -o junit_suite_name="StrictDoc Unit Tests"
             -p no:seleniumbase
             {path}
@@ -638,7 +638,7 @@ def lint_ruff_format(context):
         """
             ruff
                 format
-                --cache-dir build/ruff
+                --cache-dir build/ruff_cache
                 *.py
                 developer/
                 docs/
@@ -667,7 +667,7 @@ def lint_ruff(context):
         context,
         ToxEnvironment.CHECK,
         """
-            ruff check . --fix --exit-non-zero-on-fix --cache-dir build/ruff
+            ruff check . --fix --exit-non-zero-on-fix --cache-dir build/ruff_cache
         """,
     )
 
@@ -697,7 +697,7 @@ def lint_mypy(context):
                 --show-error-codes
                 --disable-error-code=import
                 --disable-error-code=type-abstract
-                --cache-dir=build/mypy
+                --cache-dir=build/mypy_cache
                 --extra-checks
 
                 --strict
@@ -928,7 +928,7 @@ def release_local(context):
     run_invoke(
         context,
         """
-            rm -rfv dist/ build/
+            rm -rfv build/
         """,
     )
     run_invoke(
@@ -941,21 +941,21 @@ def release_local(context):
         context,
         ToxEnvironment.RELEASE_LOCAL,
         """
-            python -m build
+            python -m build --outdir build/dist
         """,
     )
     run_invoke_with_tox(
         context,
         ToxEnvironment.RELEASE_LOCAL,
         """
-            twine check dist/*
+            twine check build/dist/*
         """,
     )
     run_invoke_with_tox(
         context,
         ToxEnvironment.RELEASE_LOCAL,
         """
-            pip install dist/*.tar.gz
+            pip install build/dist/*.tar.gz
         """,
     )
     test_integration(
@@ -1005,21 +1005,21 @@ def release(context, test_pypi=False, username=None, password=None):
     run_invoke(
         context,
         """
-            rm -rfv dist/
+            rm -rfv build/dist/
         """,
     )
     run_invoke_with_tox(
         context,
         ToxEnvironment.RELEASE,
         """
-            python3 -m build
+            python3 -m build --outdir build/dist
         """,
     )
     run_invoke_with_tox(
         context,
         ToxEnvironment.RELEASE,
         """
-            twine check dist/*
+            twine check build/dist/*
         """,
     )
     # The token is in a core developer's .pypirc file.
@@ -1029,7 +1029,7 @@ def release(context, test_pypi=False, username=None, password=None):
         context,
         ToxEnvironment.RELEASE,
         f"""
-            twine upload dist/strictdoc-*.tar.gz dist/strictdoc-*.whl
+            twine upload build/dist/strictdoc-*.tar.gz build/dist/strictdoc-*.whl
                 {repository_argument_or_none}
                 {user_password}
         """,

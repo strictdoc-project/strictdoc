@@ -13,7 +13,7 @@ sys.path.insert(0, STRICTDOC_ROOT)
 
 from tests.screencast.fixture import OUTPUT_DIR  # noqa: E402
 
-VIEWPORT_SIZE = {"width": 1280, "height": 720}
+VIEWPORT_SIZE = {"width": 1024, "height": 768}
 
 
 def pytest_addoption(parser):

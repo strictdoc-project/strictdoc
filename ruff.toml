@@ -1,5 +1,6 @@
 target-version = "py38"
 line-length = 80
+cache-dir = "build/ruff_cache"
 
 [lint]
 select = [

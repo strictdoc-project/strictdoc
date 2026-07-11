@@ -137,6 +137,7 @@ Source = "https://github.com/strictdoc-project/strictdoc"
 
 [tool.pytest.ini_options]
 addopts = "--import-mode=importlib"
+cache_dir = "build/pytest_cache/default"
 pythonpath = [
   "."
 ]

@@ -25,7 +25,7 @@ from strictdoc.helpers.file_system import file_open_read_utf8
 from strictdoc.helpers.paths import path_to_posix_path
 
 
-class JUnitXMLFormat(IntEnum):
+class JUnitXMLDialect(IntEnum):
     LLVM_LIT = 1
     CTEST = 2
     GOOGLE_TEST = 3
@@ -33,17 +33,17 @@ class JUnitXMLFormat(IntEnum):
     CARGO_NEXTEST = 5
 
     @staticmethod
-    def create_from_path(file_path: str) -> "JUnitXMLFormat":
+    def create_from_path(file_path: str) -> "JUnitXMLDialect":
         if file_path.endswith(".lit.junit.xml"):
-            return JUnitXMLFormat.LLVM_LIT
+            return JUnitXMLDialect.LLVM_LIT
         if file_path.endswith(".ctest.junit.xml"):
-            return JUnitXMLFormat.CTEST
+            return JUnitXMLDialect.CTEST
         if file_path.endswith(".gtest.junit.xml"):
-            return JUnitXMLFormat.GOOGLE_TEST
+            return JUnitXMLDialect.GOOGLE_TEST
         if file_path.endswith(".pytest.junit.xml"):
-            return JUnitXMLFormat.PYTEST
+            return JUnitXMLDialect.PYTEST
         if file_path.endswith(".nextest.junit.xml"):
-            return JUnitXMLFormat.CARGO_NEXTEST
+            return JUnitXMLDialect.CARGO_NEXTEST
         raise NotImplementedError(file_path)
 
 
@@ -75,7 +75,7 @@ class JUnitXMLReader:
         except Exception as exception:  # pylint: disable=broad-except
             raise RuntimeError(str(exception)) from None
 
-        xml_format = JUnitXMLFormat.create_from_path(doc_file.full_path)
+        xml_format = JUnitXMLDialect.create_from_path(doc_file.full_path)
 
         document = SDocDocument(
             mid=None,
@@ -222,7 +222,7 @@ class JUnitXMLReader:
                 # the test names and paths are stored. Each tool's output is
                 # handled separately below.
                 #
-                if xml_format == JUnitXMLFormat.LLVM_LIT:
+                if xml_format == JUnitXMLDialect.LLVM_LIT:
                     #
                     # Example produced by LLVM LIT:
                     # <testcase classname="StrictDoc integration tests.tests/integration" name="test.ignored.itest" time="5.50"/>
@@ -264,12 +264,12 @@ class JUnitXMLReader:
                     test_case_node_title = rel_path_to_test
                     test_case_node_duration = xml_testcase_time
                     test_case_node_test_path = rel_path_to_test
-                elif xml_format == JUnitXMLFormat.CTEST:
+                elif xml_format == JUnitXMLDialect.CTEST:
                     test_case_node_uid = xml_testcase_name
                     test_case_node_title = xml_testcase_name
                     test_case_node_duration = xml_testcase_time
                     test_case_node_test_function = "#GTEST#" + xml_testcase_name
-                elif xml_format == JUnitXMLFormat.GOOGLE_TEST:
+                elif xml_format == JUnitXMLDialect.GOOGLE_TEST:
                     google_test_name = (
                         xml_testcase_classname + "." + xml_testcase_name
                     )
@@ -277,7 +277,7 @@ class JUnitXMLReader:
                     test_case_node_title = google_test_name
                     test_case_node_duration = xml_testcase_time
                     test_case_node_test_function = "#GTEST#" + google_test_name
-                elif xml_format == JUnitXMLFormat.CARGO_NEXTEST:
+                elif xml_format == JUnitXMLDialect.CARGO_NEXTEST:
                     # cargo-nextest records no source location, so the
                     # classname and name are forwarded as a "#NEXTEST#" marker
                     # for FileTraceabilityIndex to resolve by forward lookup.
@@ -296,7 +296,7 @@ class JUnitXMLReader:
                         + "|"
                         + xml_testcase_name
                     )
-                elif xml_format == JUnitXMLFormat.PYTEST:
+                elif xml_format == JUnitXMLDialect.PYTEST:
                     xml_testcase_path_parts = xml_testcase_classname
                     xml_testcase_class = ""
                     # Heuristic: if last part of the classname attribute starts with "Test" and is

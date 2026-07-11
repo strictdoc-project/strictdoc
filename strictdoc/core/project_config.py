@@ -10,7 +10,7 @@ import types
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple
 
 import toml
 
@@ -34,6 +34,9 @@ from strictdoc.helpers.md5 import get_md5
 from strictdoc.helpers.module import import_from_path
 from strictdoc.helpers.net import is_valid_host
 from strictdoc.helpers.path_filter import validate_mask
+
+if TYPE_CHECKING:
+    from strictdoc.core.format import Format
 
 
 def parse_relation_tuple(column_name: str) -> Optional[Tuple[str, str]]:
@@ -156,6 +159,7 @@ class ProjectConfig:
         # Logo path can be set in the project config to customize the launcher's appearance for a specific project.
         launcher_logo_path: Optional[str] = None,
         user_plugin: Optional[StrictDocPlugin] = None,
+        formats: Optional[List["Format"]] = None,
         # Reserved for StrictDoc's internal use.
         _config_last_update: Optional[datetime.datetime] = None,
     ) -> None:
@@ -311,6 +315,9 @@ class ProjectConfig:
             self.output_dir, "html"
         )
         self.export_formats: Optional[List[str]] = None
+        self.formats: List[Format] = (
+            formats if formats is not None else ProjectConfig.default_formats()
+        )
         self.export_included_documents: bool = False
         self.generate_bundle_document: bool = False
         self.filter_nodes: Optional[str] = None
@@ -408,6 +415,67 @@ class ProjectConfig:
     @staticmethod
     def default_config() -> "ProjectConfig":
         return ProjectConfig()
+
+    @staticmethod
+    def default_formats() -> List["Format"]:
+        # Imported locally to avoid a circular import: each Format module
+        # imports generator/writer classes that, transitively, import
+        # ProjectConfig itself.
+        from strictdoc.backend.excel.export.excel_format import (  # noqa: PLC0415
+            ExcelFormat,
+        )
+        from strictdoc.backend.gcov.gcov_format import (  # noqa: PLC0415
+            GCovJSONFormat,
+        )
+        from strictdoc.backend.json.json_format import (  # noqa: PLC0415
+            JSONFormat,
+        )
+        from strictdoc.backend.markdown.markdown_format import (  # noqa: PLC0415
+            MarkdownFormat,
+        )
+        from strictdoc.backend.reqif.reqif_format import (  # noqa: PLC0415
+            ReqIFFormat,
+        )
+        from strictdoc.backend.rst.rst_format import (  # noqa: PLC0415
+            RSTFormat,
+        )
+        from strictdoc.backend.sdoc.sdoc_format import (  # noqa: PLC0415
+            SDocFormat,
+        )
+        from strictdoc.backend.sdoc_source_code.test_reports.junit_xml_format import (  # noqa: PLC0415
+            JUnitXMLFormat,
+        )
+        from strictdoc.backend.sdoc_source_code.test_reports.robot_xml_format import (  # noqa: PLC0415
+            RobotXMLFormat,
+        )
+        from strictdoc.backend.spdx.spdx_format import (  # noqa: PLC0415
+            SPDXFormat,
+        )
+        from strictdoc.export.html.html_format import (  # noqa: PLC0415
+            HTMLFormat,
+        )
+        from strictdoc.features.doxygen.doxygen_format import (  # noqa: PLC0415
+            DoxygenFormat,
+        )
+        from strictdoc.features.html2pdf.html2pdf_format import (  # noqa: PLC0415
+            HTML2PDFFormat,
+        )
+
+        return [
+            HTMLFormat(),
+            HTML2PDFFormat(),
+            RSTFormat(),
+            ExcelFormat(),
+            ReqIFFormat(),
+            SDocFormat(),
+            MarkdownFormat(),
+            DoxygenFormat(),
+            SPDXFormat(),
+            JUnitXMLFormat(),
+            GCovJSONFormat(),
+            RobotXMLFormat(),
+            JSONFormat(),
+        ]
 
     # Some server command settings can override the project config settings.
     def integrate_server_config(

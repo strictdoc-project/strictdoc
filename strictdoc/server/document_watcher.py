@@ -5,12 +5,19 @@
 import hashlib
 import os
 import threading
-from typing import Callable, Dict, List, Optional, Set, Union
+from typing import Callable, Dict, List, Optional, Set, Tuple, Union
 
 from watchdog.events import FileSystemEvent, FileSystemEventHandler
 from watchdog.observers import Observer
 from watchdog.observers.api import BaseObserver
 
+from strictdoc.core.file_system.document_finder import get_document_extensions
+from strictdoc.core.project_config import ProjectConfig
+
+# Fallback used when no ProjectConfig is available (e.g. in unit tests
+# constructing DocumentWatcher directly). Mirrors
+# ProjectConfig.default_formats()'s read/grammar extensions; kept in sync via
+# get_watched_document_extensions() when a ProjectConfig is available.
 WATCHED_DOCUMENT_EXTENSIONS = (
     ".sdoc",
     ".gra.md",
@@ -22,6 +29,12 @@ WATCHED_DOCUMENT_EXTENSIONS = (
     ".gcov.json",
     ".robot.xml",
 )
+
+
+def get_watched_document_extensions(
+    project_config: ProjectConfig,
+) -> Tuple[str, ...]:
+    return tuple(get_document_extensions(project_config))
 
 
 def _as_str(path: Union[str, bytes]) -> str:
@@ -66,6 +79,7 @@ class DocumentWatcher:
         output_dir_abs_path: Optional[str],
         on_documents_changed: Callable[[], None],
         debounce_seconds: float = 0.3,
+        watched_extensions: Tuple[str, ...] = WATCHED_DOCUMENT_EXTENSIONS,
     ) -> None:
         self._watch_paths = [os.path.abspath(path) for path in watch_paths]
         self._output_dir_abs_path = (
@@ -75,6 +89,7 @@ class DocumentWatcher:
         )
         self._on_documents_changed = on_documents_changed
         self._debounce_seconds = debounce_seconds
+        self._watched_extensions = watched_extensions
         self._observer: Optional[BaseObserver] = None
         self._debounce_timer: Optional[threading.Timer] = None
         self._lock = threading.Lock()
@@ -90,7 +105,7 @@ class DocumentWatcher:
             return False
         if self._is_inside_hidden_directory(absolute_path):
             return False
-        return absolute_path.endswith(WATCHED_DOCUMENT_EXTENSIONS)
+        return absolute_path.endswith(self._watched_extensions)
 
     def _is_inside_hidden_directory(self, absolute_path: str) -> bool:
         for watch_path in self._watch_paths:

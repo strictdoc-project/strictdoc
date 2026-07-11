@@ -7,22 +7,8 @@ import sys
 from functools import partial
 from typing import Dict, List, Tuple, Union
 
-from strictdoc.backend.gcov.reader import (
-    GCovJSONReader,
-)
-from strictdoc.backend.markdown.grammar_reader import MarkdownGrammarReader
-from strictdoc.backend.markdown.reader import SDMarkdownReader
-from strictdoc.backend.reqif.reqif_reader import ReqIFReader
-from strictdoc.backend.sdoc.grammar_reader import SDocGrammarReader
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
-from strictdoc.backend.sdoc.reader import SDReader
-from strictdoc.backend.sdoc_source_code.test_reports.junit_xml_reader import (
-    JUnitXMLReader,
-)
-from strictdoc.backend.sdoc_source_code.test_reports.robot_xml_reader import (
-    RobotOutputXMLReader,
-)
 from strictdoc.core.asset_manager import AssetManager
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
@@ -33,12 +19,46 @@ from strictdoc.core.file_system.file_tree import (
     Folder,
     PathFinder,
 )
+from strictdoc.core.format import Format
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.parallelizer import Parallelizer
 from strictdoc.helpers.paths import SDocRelativePath
 from strictdoc.helpers.textx import drop_textx_meta
 from strictdoc.helpers.timing import measure_performance, timing_decorator
+
+# Each entry: (extension, Format instance, is_grammar).
+# Sorted longest-extension-first so that e.g. ".gra.md" is matched before
+# ".md" (a "foo.gra.md" file ends with both).
+FormatDispatchEntry = Tuple[str, Format, bool]
+
+
+def _build_extension_dispatch_table(
+    project_config: ProjectConfig,
+) -> List[FormatDispatchEntry]:
+    entries: List[FormatDispatchEntry] = []
+    for format_ in project_config.formats:
+        if format_.supports_read():
+            for extension_ in format_.read_extensions():
+                entries.append((extension_, format_, False))
+        if format_.supports_grammar():
+            for extension_ in format_.grammar_extensions():
+                entries.append((extension_, format_, True))
+    entries.sort(key=lambda entry: len(entry[0]), reverse=True)
+    return entries
+
+
+def get_document_extensions(project_config: ProjectConfig) -> List[str]:
+    """
+    All extensions natively read (as documents or grammars) by the
+    project's registered Formats. Used both for DocumentFinder's own file
+    discovery and, in strictdoc/server/document_watcher.py, so a filesystem
+    watcher can't drift out of sync with what DocumentFinder actually reads.
+    """
+    return [
+        extension_
+        for extension_, _, _ in _build_extension_dispatch_table(project_config)
+    ]
 
 
 class DocumentFinder:
@@ -79,63 +99,32 @@ class DocumentFinder:
         with measure_performance(
             f"Reading SDOC: {os.path.basename(doc_full_path)}"
         ):
-            document_or_grammar: Union[SDocDocument, DocumentGrammar]
+            document_or_grammar: Union[SDocDocument, DocumentGrammar, None] = (
+                None
+            )
 
             # @relation(SDOC-SRS-104, scope=range_start)
-            if doc_full_path.endswith(".sdoc"):
-                sdoc_reader: SDReader = SDReader()
-                document_or_grammar = sdoc_reader.read_from_file(
-                    doc_full_path, project_config
-                )
-                assert isinstance(document_or_grammar, SDocDocument)
-            elif doc_full_path.endswith(".gra.md"):
-                markdown_grammar_reader = MarkdownGrammarReader()
-                document_or_grammar = markdown_grammar_reader.read_from_file(
-                    doc_full_path,
-                    project_config,
-                )
-                assert isinstance(document_or_grammar, DocumentGrammar)
-            elif doc_full_path.endswith(".md") or doc_full_path.endswith(
-                ".markdown"
-            ):
-                markdown_reader = SDMarkdownReader()
-                document_or_grammar = markdown_reader.read_from_file(
-                    doc_full_path,
-                    project_config,
-                )
-                assert isinstance(document_or_grammar, SDocDocument)
+            for (
+                extension_,
+                format_,
+                is_grammar_,
+            ) in _build_extension_dispatch_table(project_config):
+                if not doc_full_path.endswith(extension_):
+                    continue
+                if is_grammar_:
+                    document_or_grammar = format_.read_grammar(
+                        doc_file, project_config
+                    )
+                    assert isinstance(document_or_grammar, DocumentGrammar)
+                else:
+                    document_or_grammar = format_.read_from_file(
+                        doc_file, project_config
+                    )
+                    assert isinstance(document_or_grammar, SDocDocument)
+                break
             # @relation(SDOC-SRS-104, scope=range_end)
 
-            elif doc_full_path.endswith(".sgra"):
-                sgra_reader = SDocGrammarReader()
-                document_or_grammar = sgra_reader.read_from_file(
-                    doc_full_path, project_config
-                )
-                assert isinstance(document_or_grammar, DocumentGrammar)
-            elif doc_full_path.endswith(".reqif"):
-                reqif_reader = ReqIFReader()
-                reqif_documents = reqif_reader.read_from_file(doc_full_path)
-                assert len(reqif_documents) >= 0
-                document_or_grammar = reqif_documents[0]
-                assert isinstance(document_or_grammar, SDocDocument)
-            elif doc_full_path.endswith(".junit.xml"):
-                junit_xml_reader = JUnitXMLReader()
-                document_or_grammar = junit_xml_reader.read_from_file(
-                    doc_file, project_config
-                )
-                assert isinstance(document_or_grammar, SDocDocument)
-            elif doc_full_path.endswith(".gcov.json"):
-                gcov_json_reader = GCovJSONReader()
-                document_or_grammar = gcov_json_reader.read_from_file(
-                    doc_file, project_config
-                )
-                assert isinstance(document_or_grammar, SDocDocument)
-            elif doc_full_path.endswith(".robot.xml"):
-                robot_reader = RobotOutputXMLReader()
-                document_or_grammar = robot_reader.read_from_file(
-                    doc_file, project_config
-                )
-            else:
+            if document_or_grammar is None:
                 raise NotImplementedError
         drop_textx_meta(document_or_grammar)
 
@@ -315,17 +304,7 @@ class DocumentFinder:
                 file_tree_structure = FileFinder.find_files_with_extensions(
                     root_path=path_to_doc_root,
                     ignored_dirs=[project_config.output_dir],
-                    extensions=[
-                        ".sdoc",
-                        ".gra.md",
-                        ".md",
-                        ".markdown",
-                        ".sgra",
-                        ".reqif",
-                        ".junit.xml",
-                        ".gcov.json",
-                        ".robot.xml",
-                    ],
+                    extensions=get_document_extensions(project_config),
                     include_paths=project_config.include_doc_paths,
                     exclude_paths=project_config.exclude_doc_paths,
                 )

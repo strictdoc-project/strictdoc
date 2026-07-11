@@ -150,7 +150,10 @@ from strictdoc.helpers.string import (
     sanitize_html_form_field,
 )
 from strictdoc.helpers.timing import measure_performance
-from strictdoc.server.document_watcher import DocumentWatcher
+from strictdoc.server.document_watcher import (
+    DocumentWatcher,
+    get_watched_document_extensions,
+)
 from strictdoc.server.error_object import ErrorObject
 from strictdoc.server.helpers.hierarchical_rw_lock_manager import (
     HierarchicalRWLockManager,
@@ -4874,6 +4877,7 @@ def create_main_router(
             watch_paths=project_config.input_paths or [],
             output_dir_abs_path=project_config.output_dir,
             on_documents_changed=notify_clients_after_file_change,
+            watched_extensions=get_watched_document_extensions(project_config),
         )
 
     @router.websocket("/ws/{client_id}")

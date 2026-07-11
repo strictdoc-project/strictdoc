@@ -87,6 +87,8 @@ class SDocRuntimeEnvironment:
         )
 
         self.is_debug_mode: bool = False
+        self.is_test_env: bool = False
+        self.is_development_mode: bool = False
 
     def is_windows(self) -> bool:
         return platform.system() == "Windows"

@@ -1,0 +1,111 @@
+{#
+  Favicon template driven by a single `variant` string ("default", "dev",
+  "test", "export", ...) that identifies which kind of StrictDoc instance
+  is serving this favicon. There is no CSS/browser feature that can
+  express "which process served this file" — it has to be baked into
+  the SVG bytes themselves. At process start (server startup or a
+  documentation export), StrictDoc resolves the favicon variant once via
+  ProjectConfig.get_favicon_variant() (strictdoc/core/project_config.py),
+  renders the SVG once, and writes it to _static/favicon.svg via
+  HTMLGenerator.export_assets() (strictdoc/export/html/html_generator.py).
+  Every later browser request just serves that already-rendered file —
+  not read live per HTTP request.
+
+  "default" (a live, non-dev, non-test server) and "export" (a static
+  `strictdoc export`) render this template only when no custom favicon
+  is configured. If ProjectConfig.favicon_path is set, both serve that
+  file as-is instead — see ProjectConfig.get_custom_favicon_path() and
+  developer/tasks/20260708_favicon_vars/task_custom_favicon.md. "dev" and
+  "test" always render this template, ignoring favicon_path.
+
+  Each variant defines its own light_color/dark_color pair used by the
+  @media (prefers-color-scheme) rules below, so prefers-color-scheme
+  keeps working independently for every variant. A variant may also add
+  markup of its own (see the extra_element block).
+
+  data-testid="{variant}-favicon" on the root <svg> has no runtime effect
+  (a favicon is never inserted into a page's DOM) — it exists only so
+  tests/unit/strictdoc/export/html/test_favicon.py can assert which
+  variant a given render produced without hardcoding colors.
+
+  See developer/design/favicon/favicon.md and
+  developer/tasks/20260708_favicon_vars/task.md for the full
+  rationale.
+#}
+{% set variant = variant | default("default") %}
+
+{% if variant == "dev" %}
+  {#
+    "dev" variant:
+    StrictDoc's own local dev server.
+    Ignores ProjectConfig.favicon_path — always rendered, orange colors.
+  #}
+  {% set light_color = "rgb(242, 100, 42)" %}
+  {% set dark_color = "rgb(242, 100, 42)" %}
+{% elif variant == "test" %}
+  {#
+    "test" variant:
+    end2end/screencast test server (SDocTestServer).
+    Ignores ProjectConfig.favicon_path — always rendered, green colors.
+  #}
+  {% set light_color = "rgb(42, 142, 42)" %}
+  {% set dark_color = "rgb(42, 142, 42)" %}
+{% elif variant == "export" %}
+  {#
+    "export" variant:
+    a static `strictdoc export`/HTML2PDF export, rendered only when no
+    custom favicon (ProjectConfig.favicon_path) is configured for it;
+    used base site colors.
+  #}
+  {% set light_color = "#282c42" %}
+  {% set dark_color = "#F2F5F9" %}
+{% else %}
+  {#
+    "default" variant:
+    a user's own live server, rendered only when no custom favicon
+    (ProjectConfig.favicon_path) is configured for it
+  #}
+  {% set light_color = "#555555" %}
+  {% set dark_color = "#AAAAAA" %}
+{% endif %}
+
+<svg
+  data-testid="{{ variant }}-favicon"
+  viewBox="0 0 100 100"
+  xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .line {
+      fill: none;
+      stroke-width: 6;
+      stroke: #808080;
+    }
+    .node {
+      fill: #808080;
+      stroke: none;
+    }
+
+    @media (prefers-color-scheme: light) {
+      .line { stroke: {{ light_color }}; }
+      .node { fill: {{ light_color }}; }
+    }
+    @media (prefers-color-scheme: dark) {
+      .line { stroke: {{ dark_color }}; }
+      .node { fill: {{ dark_color }}; }
+    }
+  </style>
+
+  <path
+    class="line"
+    d="M 76,35 50,20 24,35 76,65 50,80 24,65"/>
+
+  <circle id="sdoc_n_7" class="node" cx="24" cy="65" r="9.0"/>
+  <circle id="sdoc_n_6" class="node" cx="50" cy="80" r="9.0"/>
+  <circle id="sdoc_n_5" class="node" cx="76" cy="65" r="9.0"/>
+  <circle id="sdoc_n_4" class="node" cx="50" cy="50" r="9.0"/>
+  <circle id="sdoc_n_3" class="node" cx="24" cy="35" r="9.0"/>
+  <circle id="sdoc_n_2" class="node" cx="50" cy="20" r="9.0"/>
+  <circle id="sdoc_n_1" class="node" cx="76" cy="35" r="9.0"/>
+
+  {# Extra per-variant markup goes here, e.g.: #}
+  {# {% if variant == "dev" %}<circle class="line" cx="50" cy="50" r="49"/>{% endif %} #}
+</svg>

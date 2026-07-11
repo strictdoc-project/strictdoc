@@ -9,11 +9,13 @@ class FormatCommandConfig:
         self,
         *,
         debug: bool,
+        development: bool = False,
         command: str,
         input_path: str,
         config: Optional[str],
     ):
         self.debug: bool = debug
+        self.development: bool = development
         self.command: str = command
         self.input_path: str = input_path
         self._config_path: Optional[str] = config

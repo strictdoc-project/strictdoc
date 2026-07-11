@@ -41,6 +41,7 @@ class HTML2PDFGenerator:
         HTMLGenerator.export_assets(
             traceability_index=traceability_index,
             project_config=project_config,
+            html_templates=html_templates,
             export_output_html_root=path_to_output_pdf_html_dir,
             flat_assets=flat_assets,
         )

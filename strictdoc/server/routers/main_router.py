@@ -272,6 +272,7 @@ def create_main_router(
     html_generator.export_assets(
         traceability_index=export_action.traceability_index,
         project_config=project_config,
+        html_templates=html_templates,
         export_output_html_root=project_config.export_output_html_root,
     )
 

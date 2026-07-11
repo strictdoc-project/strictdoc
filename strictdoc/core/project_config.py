@@ -3,6 +3,7 @@
 """
 
 import datetime
+import mimetypes
 import os
 import re
 import tempfile
@@ -105,6 +106,19 @@ class ProjectConfigDefault:
     DEFAULT_SECTION_BEHAVIOR = "[SECTION]"
 
 
+def resolve_favicon_variant(
+    environment: SDocRuntimeEnvironment, is_running_on_server: bool
+) -> str:
+    """Resolve which favicon.svg.jinja variant identifies this process."""
+    if environment.is_test_env:
+        return "test"
+    if environment.is_development_mode:
+        return "dev"
+    if not is_running_on_server:
+        return "export"
+    return "default"
+
+
 @auto_described
 class ProjectConfig:
     """
@@ -158,6 +172,10 @@ class ProjectConfig:
         document_line_width: Optional[int] = None,
         # Logo path can be set in the project config to customize the launcher's appearance for a specific project.
         launcher_logo_path: Optional[str] = None,
+        # Favicon path can be set in the project config to customize the
+        # browser-tab favicon for a project's own (non-dev, non-test) server
+        # or static export. Ignored for the dev/test favicon variants.
+        favicon_path: Optional[str] = None,
         user_plugin: Optional[StrictDocPlugin] = None,
         formats: Optional[List["Format"]] = None,
         # Reserved for StrictDoc's internal use.
@@ -406,6 +424,10 @@ class ProjectConfig:
         # Optional launcher logo path (absolute or workspace-relative).
         self.launcher_logo_path: Optional[str] = launcher_logo_path
 
+        # Optional custom favicon path, project-relative. Validated and
+        # resolved to an absolute path in validate_and_finalize().
+        self.favicon_path: Optional[str] = favicon_path
+
         self.config_last_update: Optional[datetime.datetime] = (
             _config_last_update
         )
@@ -645,6 +667,20 @@ class ProjectConfig:
                 )
 
         #
+        # Validate favicon path.
+        #
+        if (favicon_path := self.favicon_path) is not None:
+            assert not os.path.isabs(favicon_path)
+            if project_path is not None:
+                favicon_path = os.path.join(project_path, favicon_path)
+            if not os.path.isfile(favicon_path):
+                raise ValueError(
+                    "config: favicon_path: "
+                    f"invalid path to a favicon file: {favicon_path}."
+                )
+            self.favicon_path = favicon_path
+
+        #
         # Validate path to Chrome Driver.
         #
         if (
@@ -717,6 +753,31 @@ class ProjectConfig:
 
     def is_feature_activated(self, feature: ProjectFeature) -> bool:
         return feature in self.project_features
+
+    def get_favicon_variant(self) -> str:
+        return resolve_favicon_variant(
+            self.environment, self.is_running_on_server
+        )
+
+    def get_custom_favicon_path(self) -> Optional[str]:
+        if self.favicon_path is None:
+            return None
+        if self.get_favicon_variant() in ("dev", "test"):
+            return None
+        return self.favicon_path
+
+    def get_favicon_filename(self) -> str:
+        custom_favicon_path = self.get_custom_favicon_path()
+        if custom_favicon_path is None:
+            return "favicon.svg"
+        return "favicon" + os.path.splitext(custom_favicon_path)[1]
+
+    def get_favicon_mime_type(self) -> str:
+        custom_favicon_path = self.get_custom_favicon_path()
+        if custom_favicon_path is None:
+            return "image/svg+xml"
+        mime_type, _ = mimetypes.guess_type(custom_favicon_path)
+        return mime_type or "application/octet-stream"
 
     def is_activated_table_screen(self) -> bool:
         return ProjectFeature.TABLE_SCREEN in self.project_features

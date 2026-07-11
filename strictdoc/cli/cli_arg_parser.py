@@ -44,6 +44,9 @@ class SDocArgsParser:
     def is_debug_mode(self) -> bool:
         return assert_cast(self.args.debug, bool)
 
+    def is_development_mode(self) -> bool:
+        return assert_cast(self.args.development, bool)
+
     def run(self, parallelizer: Parallelizer) -> bool:
         if self.args.command not in self.registry:
             return False
@@ -83,6 +86,19 @@ class SDocArgsParser:
             action="store_true",
             default=False,
             help="Enable more verbose printing of errors when they are encountered.",
+        )
+
+        # Marks a StrictDoc-team-internal development instance (e.g. our own
+        # `invoke server`), independent of --debug: --debug is about verbose
+        # error output and is meaningful for end users too, while this flag
+        # only identifies "this is StrictDoc's own dev server" (see
+        # developer/tasks/20260708_favicon_vars/task.md for the favicon use
+        # case). Hidden from --help on purpose, not for end users.
+        main_parser.add_argument(
+            "--development",
+            action="store_true",
+            default=False,
+            help=argparse.SUPPRESS,
         )
 
         command_subparsers = main_parser.add_subparsers(

@@ -12,7 +12,7 @@
   {%- endif %}
   <meta name="strictdoc-document-level" content="{{ view_object.get_document_level() }}">
 
-  <link rel="shortcut icon" href="{{ view_object.render_static_url('logo_s.svg') }}" type="image/svg+xml" />
+  <link rel="shortcut icon" href="{{ view_object.render_static_url(view_object.project_config.get_favicon_filename()) }}" type="{{ view_object.project_config.get_favicon_mime_type() }}" />
 
   {% block head_css %}
   <link rel="stylesheet" href="{{ view_object.render_static_url('base.css') }}"/>

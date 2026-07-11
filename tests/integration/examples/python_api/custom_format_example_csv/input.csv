@@ -1,0 +1,10 @@
+TYPE,PARENT_SECTION,UID,TITLE,STATEMENT
+DOCUMENT,,,CSV Example,
+SECTION,,,Section 1,
+REQUIREMENT,Section 1,REQ-1,Requirement 1,Statement for requirement 1.
+REQUIREMENT,Section 1,REQ-2,Requirement 2,Statement for requirement 2.
+REQUIREMENT,Section 1,REQ-3,Requirement 3,Statement for requirement 3.
+SECTION,,,Section 2,
+REQUIREMENT,Section 2,REQ-4,Requirement 4,Statement for requirement 4.
+REQUIREMENT,Section 2,REQ-5,Requirement 5,Statement for requirement 5.
+REQUIREMENT,Section 2,REQ-6,Requirement 6,Statement for requirement 6.

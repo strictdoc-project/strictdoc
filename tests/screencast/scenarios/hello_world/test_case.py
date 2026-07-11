@@ -62,15 +62,20 @@ class Test:
     def test(self, page: Page, tmp_path: Path) -> None:
         pointer = Pointer(page)
 
-        project_dir = tmp_path / "hello-world"
-        cli_output = run_strictdoc_new(project_dir)
-
         # Scene 1: the real `strictdoc new` output, in a terminal look.
+        # Navigate here first, before actually running the command below:
+        # video recording starts as soon as the browser context exists
+        # (see scenarios/conftest.py), so running the (real, non-trivial)
+        # subprocess before the first goto() would show a blank white
+        # about:blank page at the very start of the video.
         page.goto(f"file://{TERMINAL_HTML}")
         demo_text = page.locator("#demoText")
         expect(demo_text).to_be_visible()
 
         type_text(demo_text, "$ strictdoc new hello-world\n")
+
+        project_dir = tmp_path / "hello-world"
+        cli_output = run_strictdoc_new(project_dir)
 
         # The output appears in full, scrolled to the top — read the
         # banner first...

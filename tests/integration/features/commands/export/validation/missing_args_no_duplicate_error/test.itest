@@ -1,0 +1,17 @@
+#
+# Regression test: --formats is validated by an argparse `type=` callback
+# that triggers a best-effort internal pre-parse of sys.argv to discover the
+# project config path. If that pre-parse's throwaway ArgumentParser is not
+# silenced, it prints its own usage/error to stderr (with the wrong "prog"
+# name) before the real parser reports the same error correctly, duplicating
+# the error output. This only reproduces when --formats is passed explicitly
+# (the default is a list, not a string, so argparse doesn't run the `type=`
+# callback on it automatically). See the same test for `convert` and
+# `server`.
+#
+
+RUN: %expect_exit 2 %strictdoc export --formats=html 2>&1 | filecheck %s --dump-input=fail
+
+CHECK-NOT: main.py
+CHECK: strictdoc export: error: the following arguments are required: input_paths
+CHECK-NOT: main.py

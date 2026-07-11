@@ -35,6 +35,25 @@ class SDocFormat(Format):
         return True
 
     @staticmethod
+    def supports_convert_output() -> bool:
+        return True
+
+    def write_converted_document(
+        self,
+        document: SDocDocument,
+        output_dir: str,
+        filename_stem: str,
+        project_config: ProjectConfig,
+    ) -> None:
+        Path(output_dir).mkdir(parents=True, exist_ok=True)
+        path_to_output_document = os.path.join(
+            output_dir, filename_stem + self.supported_extensions()[0]
+        )
+        document_content = SDWriter(project_config).write(document)
+        with open(path_to_output_document, "w", encoding="utf8") as output_file:
+            output_file.write(document_content)
+
+    @staticmethod
     def supports_read() -> bool:
         return True
 

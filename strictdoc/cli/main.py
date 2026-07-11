@@ -10,6 +10,7 @@ from strictdoc.cli.cli_arg_parser import (
     SDocArgsParser,
 )
 from strictdoc.commands.about_command import AboutCommand
+from strictdoc.commands.convert import ConvertCommand
 from strictdoc.commands.export import ExportCommand
 from strictdoc.commands.format_command import FormatCommand
 from strictdoc.commands.launcher_command import (
@@ -21,7 +22,6 @@ from strictdoc.commands.manage_new_command import ManageNewCommand
 from strictdoc.commands.new_command import NewCommand
 from strictdoc.commands.server import ServerCommand
 from strictdoc.commands.version_command import VersionCommand
-from strictdoc.features.import_.import_feature import ImportFeature
 from strictdoc.helpers.coverage import register_code_coverage_hook
 from strictdoc.helpers.exception import (
     ExceptionInfo,
@@ -34,9 +34,9 @@ from strictdoc.helpers.timing import SimpleNominalExit, measure_performance
 def create_command_registry() -> Dict[str, Any]:
     command_registry: Dict[str, Any] = {
         "about": AboutCommand,
+        "convert": ConvertCommand,
         "export": ExportCommand,
         "format": FormatCommand,
-        "import": ImportFeature.get_import_family_registry(),
         "manage": {"auto-uid": ManageAutoUIDCommand, "new": ManageNewCommand},
         "new": NewCommand,
         "server": ServerCommand,

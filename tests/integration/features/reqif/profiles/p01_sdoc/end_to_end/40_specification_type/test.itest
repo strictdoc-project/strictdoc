@@ -5,7 +5,7 @@
 RUN: %strictdoc export --formats=reqif-sdoc %S/sample.sdoc --output-dir %T
 RUN: reqif validate --use-reqif-schema %T/reqif/output.reqif
 RUN: %cat %T/reqif/output.reqif | filecheck %s
-RUN: %strictdoc import reqif sdoc %T/reqif/output.reqif %T/
+RUN: %strictdoc convert %T/reqif/output.reqif %T/
 RUN: %diff %S/sample.sdoc %T/sample.sdoc
 
 CHECK:        <SPECIFICATION-TYPE IDENTIFIER="SDOC_SPECIFICATION_TYPE_SINGLETON" LAST-CHANGE="{{.*}}" LONG-NAME="SDOC_SPECIFICATION_TYPE_SINGLETON"/>

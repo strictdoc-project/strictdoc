@@ -18,10 +18,9 @@ import toml
 from strictdoc import __version__, environment
 from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
 from strictdoc.backend.sdoc.constants import SDocMarkup
+from strictdoc.commands.convert_config import ConvertCommandConfig
 from strictdoc.commands.export_config import ExportCommandConfig
 from strictdoc.commands.format_config import FormatCommandConfig
-from strictdoc.commands.import_excel_config import ImportExcelCommandConfig
-from strictdoc.commands.import_reqif_config import ImportReqIFCommandConfig
 from strictdoc.commands.manage_autouid_config import ManageAutoUIDCommandConfig
 from strictdoc.commands.manage_new_config import ManageNewCommandConfig
 from strictdoc.commands.server_config import ServerCommandConfig
@@ -931,24 +930,11 @@ class ProjectConfigLoader:
         return project_config
 
     @classmethod
-    def load_using_import_excel_config(
+    def load_using_convert_config(
         cls,
-        import_excel_config: ImportExcelCommandConfig,
+        convert_config: ConvertCommandConfig,
     ) -> ProjectConfig:
-        path_to_config = import_excel_config.get_path_to_config()
-        project_config: ProjectConfig = cls.load_from_path_or_get_default(
-            path_to_config=path_to_config
-        )
-        project_config.input_paths = [os.getcwd()]
-        project_config.validate_and_finalize()
-        return project_config
-
-    @classmethod
-    def load_using_import_reqif_config(
-        cls,
-        import_reqif_config: ImportReqIFCommandConfig,
-    ) -> ProjectConfig:
-        path_to_config = import_reqif_config.get_path_to_config()
+        path_to_config = convert_config.get_path_to_config()
         project_config: ProjectConfig = cls.load_from_path_or_get_default(
             path_to_config=path_to_config
         )

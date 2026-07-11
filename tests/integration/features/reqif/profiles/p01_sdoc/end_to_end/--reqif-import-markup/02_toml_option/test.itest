@@ -4,5 +4,5 @@
 
 RUN: cd %S
 RUN: %strictdoc export --formats=reqif-sdoc %S/sample.sdoc --output-dir %T
-RUN: %strictdoc import reqif sdoc %T/reqif/output.reqif %T/
+RUN: %strictdoc convert %T/reqif/output.reqif %T/
 RUN: %diff %S/sample.sdoc %T/sample.sdoc

@@ -3653,7 +3653,7 @@ MID: 079ed6d7ec3f4040b59efce7ccd37267
 STATEMENT: >>>
 .. code:: text
 
-    strictdoc import reqif sdoc input.reqif output.sdoc
+    strictdoc convert input.reqif output.sdoc
 
 The command does the following:
 
@@ -3803,7 +3803,7 @@ MID: b01355b5a6d54409a0c7a684376a5278
 STATEMENT: >>>
 .. code:: text
 
-    strictdoc import excel basic input.xls output.sdoc
+    strictdoc convert input.xls output.sdoc --input-format=excel
 
 The command does the following:
 

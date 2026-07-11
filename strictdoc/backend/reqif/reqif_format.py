@@ -1,25 +1,18 @@
 import argparse
-from typing import List, Optional
+from typing import List
 
 from strictdoc.backend.reqif.reqif_export import ReqIFExport
-from strictdoc.backend.reqif.reqif_import import ReqIFImport
+from strictdoc.backend.reqif.reqif_import import ReqIFImport, ReqIFImportOptions
 from strictdoc.backend.reqif.reqif_reader import ReqIFReader
 from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
-from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.backend.sdoc.models.document import SDocDocument
-from strictdoc.commands._shared import _check_reqif_profile
-from strictdoc.commands.import_reqif_config import ImportReqIFCommandConfig
+from strictdoc.commands._shared import (
+    _check_reqif_import_markup,
+    _check_reqif_profile,
+)
 from strictdoc.core.file_system.file_tree import File
 from strictdoc.core.format import ExportContext, Format
 from strictdoc.core.project_config import ProjectConfig
-
-
-def _check_reqif_import_markup(markup: Optional[str]) -> str:
-    if markup is None or markup not in SDocMarkup.ALL:
-        valid_text_markups_string = ", ".join(SDocMarkup.ALL)
-        message = f"invalid choice: '{markup}' (choose from {valid_text_markups_string})"
-        raise argparse.ArgumentTypeError(message)
-    return markup
 
 
 class ReqIFFormat(Format):
@@ -27,29 +20,13 @@ class ReqIFFormat(Format):
     def handles() -> List[str]:
         return ["reqif-sdoc", "reqifz-sdoc"]
 
-    @staticmethod
-    def import_command_name() -> str:
-        return "reqif"
-
     @classmethod
     def add_import_arguments(cls, parser: argparse.ArgumentParser) -> None:
         parser.add_argument(
-            "profile",
+            "--reqif-profile",
             type=_check_reqif_profile,
-            help=(
-                "An argument that selects the ReqIF import/export profile. "
-                f"Possible values: {{{', '.join(ReqIFProfile.ALL)}}}"
-            ),
-        )
-        parser.add_argument(
-            "input_path",
-            type=str,
-            help="Path to the input ReqIF file.",
-        )
-        parser.add_argument(
-            "output_path",
-            type=str,
-            help="Path to the output SDoc file.",
+            default=ReqIFProfile.P01_SDOC,
+            help="An argument that selects the ReqIF import/export profile.",
         )
         parser.add_argument(
             "--reqif-enable-mid",
@@ -118,9 +95,20 @@ class ReqIFFormat(Format):
             reqifz=handle == "reqifz-sdoc",
         )
 
+    @classmethod
+    def build_import_options(
+        cls, args: argparse.Namespace
+    ) -> ReqIFImportOptions:
+        return ReqIFImportOptions(
+            input_path=args.input_path,
+            reqif_profile=args.reqif_profile,
+            reqif_enable_mid=args.reqif_enable_mid,
+            reqif_import_markup=args.reqif_import_markup,
+        )
+
     def import_file(  # type: ignore[override]
         self,
-        import_config: ImportReqIFCommandConfig,
+        import_options: ReqIFImportOptions,
         project_config: ProjectConfig,
     ) -> List[SDocDocument]:
-        return ReqIFImport.import_from_file(import_config, project_config)
+        return ReqIFImport.import_from_file(import_options, project_config)

@@ -3,5 +3,5 @@
 #
 
 RUN: %strictdoc export --formats=reqif-sdoc %S/sample.sdoc --output-dir %T
-RUN: %strictdoc import reqif sdoc --reqif-import-markup=HTML %T/reqif/output.reqif %T/
+RUN: %strictdoc convert --reqif-import-markup=HTML %T/reqif/output.reqif %T/
 RUN: %diff %S/sample.sdoc %T/sample.sdoc

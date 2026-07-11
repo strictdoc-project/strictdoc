@@ -1,8 +1,8 @@
 # @relation(SDOC-SRS-152, scope=file)
 
 RUN: %mkdir %T
-RUN: %strictdoc import excel basic %S/input.xls %T/
+RUN: %strictdoc convert %S/input.xls %T/ --input-format=excel
 RUN: %diff %T/input.sdoc %S/expected/expected.sdoc
 RUN: %mkdir %T_xlsx
-RUN: %strictdoc import excel basic %S/input.xlsx %T_xlsx/
+RUN: %strictdoc convert %S/input.xlsx %T_xlsx/
 RUN: %diff %T_xlsx/input.sdoc %S/expected_xslx/expected.sdoc

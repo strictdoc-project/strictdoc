@@ -5,7 +5,10 @@ from typing import List, Optional
 
 from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
 from strictdoc.cli.base_command import BaseCommand, CLIValidationError
-from strictdoc.commands._shared import _check_reqif_profile
+from strictdoc.commands._shared import (
+    _check_reqif_profile,
+    _SilentArgumentParser,
+)
 from strictdoc.commands.export_config import ExportCommandConfig
 from strictdoc.core.project_config import ProjectConfigLoader
 from strictdoc.features.export.export_action import ExportAction
@@ -48,7 +51,7 @@ def _preparse_config_path() -> Optional[str]:
     except StopIteration:
         return None
 
-    pre_parser = argparse.ArgumentParser(add_help=False)
+    pre_parser = _SilentArgumentParser(add_help=False)
     ExportCommand.add_arguments(pre_parser, validate_formats=False)
     try:
         pre_args, _ = pre_parser.parse_known_args(sys.argv[export_index + 1 :])

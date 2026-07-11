@@ -1,0 +1,13 @@
+#
+# Control/regression test companion to the same test for `convert` and
+# `export`: `server` has no internal sys.argv pre-parse, so this has always
+# printed its error exactly once. Kept alongside the other two so a future
+# change that introduces a similar pre-parse to `server` (or any other
+# command) is caught the same way.
+#
+
+RUN: %expect_exit 2 %strictdoc server 2>&1 | filecheck %s --dump-input=fail
+
+CHECK-NOT: main.py
+CHECK: strictdoc server: error: the following arguments are required: input_path
+CHECK-NOT: main.py

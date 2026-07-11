@@ -3,7 +3,8 @@
 """
 
 import os.path
-from typing import List
+from dataclasses import dataclass
+from typing import List, Optional
 
 from reqif.parser import ReqIFParser, ReqIFZParser
 from reqif.reqif_bundle import ReqIFBundle, ReqIFZBundle
@@ -13,14 +14,21 @@ from strictdoc.backend.reqif.p01_sdoc.reqif_to_sdoc_converter import (
 )
 from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
 from strictdoc.backend.sdoc.models.document import SDocDocument
-from strictdoc.commands.import_reqif_config import ImportReqIFCommandConfig
 from strictdoc.core.project_config import ProjectConfig
+
+
+@dataclass
+class ReqIFImportOptions:
+    input_path: str
+    reqif_profile: str
+    reqif_enable_mid: bool
+    reqif_import_markup: Optional[str]
 
 
 class ReqIFImport:
     @staticmethod
     def import_from_file(
-        import_config: ImportReqIFCommandConfig, project_config: ProjectConfig
+        import_config: ReqIFImportOptions, project_config: ProjectConfig
     ) -> List[SDocDocument]:
         converter = ReqIFImport.select_reqif_profile(import_config)
 
@@ -58,13 +66,13 @@ class ReqIFImport:
 
     @staticmethod
     def select_reqif_profile(
-        import_config: ImportReqIFCommandConfig,
+        import_config: ReqIFImportOptions,
     ) -> P01_ReqIFToSDocConverter:
         if (
-            import_config.profile is None
-            or import_config.profile == ReqIFProfile.P01_SDOC
+            import_config.reqif_profile is None
+            or import_config.reqif_profile == ReqIFProfile.P01_SDOC
         ):
             return P01_ReqIFToSDocConverter()
         raise NotImplementedError(
-            f"Unsupported profile: {import_config.profile}"
+            f"Unsupported profile: {import_config.reqif_profile}"
         )

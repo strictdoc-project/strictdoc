@@ -1,14 +1,24 @@
 import argparse
+import os
 from typing import List
 
-from strictdoc.backend.excel.excel_import import ExcelImport
+from strictdoc.backend.excel.excel_import import ExcelImport, ExcelImportOptions
 from strictdoc.backend.excel.export.excel_generator import ExcelGenerator
 from strictdoc.backend.sdoc.models.document import SDocDocument
-from strictdoc.commands.import_excel_config import ImportExcelCommandConfig
+from strictdoc.commands.convert_config import ConvertCommandConfig
 from strictdoc.core.format import ExportContext, Format
 from strictdoc.core.project_config import ProjectConfig
 
 EXCEL_PARSERS = ["basic"]
+
+
+def check_excel_parser(parser_name: str) -> str:
+    if parser_name not in EXCEL_PARSERS:
+        message = (
+            f"invalid choice: '{parser_name}' (choose from {EXCEL_PARSERS})"
+        )
+        raise argparse.ArgumentTypeError(message)
+    return parser_name
 
 
 class ExcelFormat(Format):
@@ -16,38 +26,16 @@ class ExcelFormat(Format):
     def handles() -> List[str]:
         return ["excel"]
 
-    @staticmethod
-    def import_command_name() -> str:
-        return "excel"
-
     @classmethod
     def add_import_arguments(cls, parser: argparse.ArgumentParser) -> None:
-        def check_excel_parser(parser_name: str) -> str:
-            if parser_name not in EXCEL_PARSERS:
-                message = (
-                    f"invalid choice: '{parser_name}' "
-                    f"(choose from {EXCEL_PARSERS})"
-                )
-                raise argparse.ArgumentTypeError(message)
-            return parser_name
-
         parser.add_argument(
-            "parser",
+            "--excel-parser",
             type=check_excel_parser,
+            default="basic",
             help=(
                 "An argument that selects the Excel parser. "
                 f"Possible values: {{{', '.join(EXCEL_PARSERS)}}}"
             ),
-        )
-        parser.add_argument(
-            "input_path",
-            type=str,
-            help="Path to the input Excel file.",
-        )
-        parser.add_argument(
-            "output_path",
-            type=str,
-            help="Path to the output SDoc file.",
         )
 
     @staticmethod
@@ -79,9 +67,25 @@ class ExcelFormat(Format):
             project_config=context.project_config,
         )
 
+    @classmethod
+    def build_import_options(
+        cls, args: argparse.Namespace
+    ) -> ExcelImportOptions:
+        return ExcelImportOptions(
+            input_path=args.input_path,
+            excel_parser=args.excel_parser,
+        )
+
     def import_file(  # type: ignore[override]
         self,
-        import_config: ImportExcelCommandConfig,
+        import_options: ExcelImportOptions,
         project_config: ProjectConfig,  # noqa: ARG002
     ) -> SDocDocument:
-        return ExcelImport.import_from_file(import_config)
+        return ExcelImport.import_from_file(import_options)
+
+    def import_output_filename_stem(
+        self,
+        document: SDocDocument,  # noqa: ARG002
+        convert_config: ConvertCommandConfig,
+    ) -> str:
+        return os.path.splitext(os.path.basename(convert_config.input_path))[0]

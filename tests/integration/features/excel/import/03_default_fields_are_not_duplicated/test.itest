@@ -10,5 +10,5 @@
 
 RUN: %mkdir %T
 RUN: %mkdir %T_xlsx
-RUN: %strictdoc import excel basic %S/input.xlsx %T_xlsx/
+RUN: %strictdoc convert %S/input.xlsx %T_xlsx/
 RUN: %diff %T_xlsx/input.sdoc %S/expected_xslx/expected.sdoc

@@ -1,10 +1,9 @@
 import dataclasses
 import inspect
 
+from strictdoc.commands.convert_config import ConvertCommandConfig
 from strictdoc.commands.export_config import ExportCommandConfig
 from strictdoc.commands.format_config import FormatCommandConfig
-from strictdoc.commands.import_excel_config import ImportExcelCommandConfig
-from strictdoc.commands.import_reqif_config import ImportReqIFCommandConfig
 from strictdoc.commands.manage_autouid_config import (
     ManageAutoUIDCommandConfig,
 )
@@ -12,10 +11,9 @@ from strictdoc.commands.manage_new_config import ManageNewCommandConfig
 from strictdoc.commands.server_config import ServerCommandConfig
 
 ALL_COMMAND_CONFIGS = [
+    ConvertCommandConfig,
     ExportCommandConfig,
     FormatCommandConfig,
-    ImportExcelCommandConfig,
-    ImportReqIFCommandConfig,
     ManageAutoUIDCommandConfig,
     ManageNewCommandConfig,
     ServerCommandConfig,

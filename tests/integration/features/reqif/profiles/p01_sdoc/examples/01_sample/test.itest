@@ -2,7 +2,7 @@
 # @relation(SDOC-SRS-72, scope=file)
 #
 
-RUN: %strictdoc import reqif sdoc %S/sample.reqif %T/
+RUN: %strictdoc convert %S/sample.reqif %T/
 RUN: %cat %T/sample.sdoc | filecheck %s
 
 CHECK: [REQUIREMENT_TYPE]
@@ -15,5 +15,5 @@ CHECK: Anonymized-6e95e816-6fc9-0fe1-8b1f-66340311da94
 CHECK: <<<
 
 RUN: %strictdoc export --formats=reqif-sdoc %T/sample.sdoc --output-dir %T
-RUN: %strictdoc import reqif sdoc %T/reqif/output.reqif %T2/
+RUN: %strictdoc convert %T/reqif/output.reqif %T2/
 RUN: %diff %T/sample.sdoc %T2/sample.sdoc

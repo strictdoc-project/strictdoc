@@ -1,0 +1,17 @@
+#
+# Regression test: `--output-format`'s string default ("sdoc") means argparse
+# runs its `type=` validator on every `convert` invocation, even when
+# --output-format isn't passed (argparse applies `type=` to string defaults
+# too). That validator triggers a best-effort internal pre-parse of sys.argv
+# to discover the project config path. If that pre-parse's throwaway
+# ArgumentParser is not silenced, it prints its own usage/error to stderr
+# (with the wrong "prog" name) before the real parser reports the same
+# error correctly, duplicating the error output. See the same test for
+# `export` and `server`.
+#
+
+RUN: %expect_exit 2 %strictdoc convert 2>&1 | filecheck %s --dump-input=fail
+
+CHECK-NOT: main.py
+CHECK: strictdoc convert: error: the following arguments are required: input_path, output_path
+CHECK-NOT: main.py

@@ -114,7 +114,22 @@ class Test:
             screen.assert_on_screen("document")
             pause(page)
 
-            # Scene 3: adding a Rationale to the existing Requirement.
+            # Scene 3: follow the traceability link up to the parent
+            # requirement (a real cross-document navigation to
+            # High-Level Requirements), then back down via its child
+            # relation — showing the link between the two documents is
+            # real and works both ways.
+            llr_1 = Requirement.with_node(pointer)
+            llr_1.do_click_parent_relation()
+            screen.assert_on_screen("document")
+            pause(page)
+
+            hlr_1 = Requirement.with_node(pointer)
+            hlr_1.do_click_child_relation()
+            screen.assert_on_screen("document")
+            pause(page)
+
+            # Scene 4: adding a Rationale to the existing Requirement.
             llr_1 = Requirement.with_node(pointer)
             form_edit_requirement = llr_1.do_open_form_edit_requirement()
 
@@ -133,7 +148,7 @@ class Test:
         assert RATIONALE_TEXT not in original_sdoc_text
         assert RATIONALE_TEXT in final_sdoc_text
 
-        # Scene 4: the real resulting .sdoc source, editor-style, with the
+        # Scene 5: the real resulting .sdoc source, editor-style, with the
         # Rationale revealed exactly where it landed in the file.
         page.goto(f"file://{EDITOR_HTML}")
         editor_scene.render_original(

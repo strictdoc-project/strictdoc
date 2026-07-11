@@ -59,6 +59,30 @@ class Node:
         )
         return Form_EditRequirement(self.pointer)
 
+    def do_click_parent_relation(self) -> None:
+        """
+        Follows the node's "parent relations" link. When the parent lives
+        in another document, this is a real navigation (no data-testid on
+        these links — StrictDoc renders them as plain
+        `a.requirement__link-parent`), so callers should re-locate nodes
+        via Requirement.with_node(...) etc. on the new page afterwards.
+        """
+        self.pointer.click(
+            self.node_locator.locator(
+                'sdoc-node-field[data-field-label="parent relations"] '
+                "a.requirement__link-parent"
+            )
+        )
+
+    def do_click_child_relation(self) -> None:
+        """Same as do_click_parent_relation, for a "child relations" link."""
+        self.pointer.click(
+            self.node_locator.locator(
+                'sdoc-node-field[data-field-label="child relations"] '
+                "a.requirement__link-child"
+            )
+        )
+
 
 class DocumentRoot(Node):
     def __init__(self, pointer: Pointer) -> None:

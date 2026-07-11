@@ -11,7 +11,12 @@
   box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
   pointer-events: none;
   z-index: 2147483647;
-  transition: left 0.05s linear, top 0.05s linear;
+  opacity: 0;
+  transition: left 0.05s linear, top 0.05s linear, opacity 0.15s ease-out;
+}
+
+#__screencast_cursor.__screencast_cursor_visible {
+  opacity: 1;
 }
 
 .__screencast_highlight {

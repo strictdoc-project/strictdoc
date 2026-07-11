@@ -66,6 +66,14 @@ class Pointer:
         locator.scroll_into_view_if_needed()
         box = locator.bounding_box()
         assert box is not None, f"Not visible: {target}"
+        # Hidden by default (see pointer.css): scenes that never click
+        # anything (the terminal/editor reveal scenes) never show a
+        # cursor frozen in the top-left corner. Revealed here, the first
+        # time this page actually needs one.
+        self.page.evaluate(
+            "document.getElementById('__screencast_cursor')"
+            ".classList.add('__screencast_cursor_visible')"
+        )
         self.page.mouse.move(
             box["x"] + box["width"] / 2,
             box["y"] + box["height"] / 2,

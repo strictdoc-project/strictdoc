@@ -39,12 +39,21 @@ def run_strictdoc_new(project_dir: Path) -> str:
     env = dict(os.environ)
     env["PYTHONPATH"] = os.getcwd()
 
+    # Passed as a relative path, run from its own parent directory, so
+    # the command's own printed output ("Location: ...", "cd ...") reads
+    # short and relative — the same as a real user typing `strictdoc new
+    # hello-world` — instead of leaking pytest's absolute tmp_path.
+    # subprocess's cwd must already exist (unlike `strictdoc new` itself,
+    # which happily creates its target); callers like manual_scenarios.py
+    # may not have created it yet.
+    project_dir.parent.mkdir(parents=True, exist_ok=True)
     result = subprocess.run(
-        [sys.executable, "-m", "strictdoc.cli.main", "new", str(project_dir)],
+        [sys.executable, "-m", "strictdoc.cli.main", "new", project_dir.name],
         capture_output=True,
         text=True,
         env=env,
         check=True,
+        cwd=project_dir.parent,
     )
     return result.stdout
 

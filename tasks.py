@@ -35,6 +35,11 @@ sys.stdout = open(1, "w", encoding="utf-8", closefd=False, buffering=1)
 STRICTDOC_TMP_DIR = os.path.join(tempfile.gettempdir(), "strictdoc_tmp_dir")
 TEST_REPORTS_DIR = "build/test_reports"
 
+# Redirect all __pycache__ output (from Invoke itself and every subprocess it
+# spawns: pytest, mypy, plain python invocations, etc.) into a single folder,
+# instead of littering __pycache__ directories across the source tree.
+os.environ["PYTHONPYCACHEPREFIX"] = os.path.abspath("build/pycache")
+
 
 def get_pyinstaller_html_template_data_options() -> str:
     return "\n".join(

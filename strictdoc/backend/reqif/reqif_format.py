@@ -1,19 +1,76 @@
-from typing import List
+import argparse
+from typing import List, Optional
 
 from strictdoc.backend.reqif.reqif_export import ReqIFExport
 from strictdoc.backend.reqif.reqif_import import ReqIFImport
 from strictdoc.backend.reqif.reqif_reader import ReqIFReader
+from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
+from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.commands._shared import _check_reqif_profile
 from strictdoc.commands.import_reqif_config import ImportReqIFCommandConfig
 from strictdoc.core.file_system.file_tree import File
 from strictdoc.core.format import ExportContext, Format
 from strictdoc.core.project_config import ProjectConfig
 
 
+def _check_reqif_import_markup(markup: Optional[str]) -> str:
+    if markup is None or markup not in SDocMarkup.ALL:
+        valid_text_markups_string = ", ".join(SDocMarkup.ALL)
+        message = f"invalid choice: '{markup}' (choose from {valid_text_markups_string})"
+        raise argparse.ArgumentTypeError(message)
+    return markup
+
+
 class ReqIFFormat(Format):
     @staticmethod
     def handles() -> List[str]:
         return ["reqif-sdoc", "reqifz-sdoc"]
+
+    @staticmethod
+    def import_command_name() -> str:
+        return "reqif"
+
+    @classmethod
+    def add_import_arguments(cls, parser: argparse.ArgumentParser) -> None:
+        parser.add_argument(
+            "profile",
+            type=_check_reqif_profile,
+            help=(
+                "An argument that selects the ReqIF import/export profile. "
+                f"Possible values: {{{', '.join(ReqIFProfile.ALL)}}}"
+            ),
+        )
+        parser.add_argument(
+            "input_path",
+            type=str,
+            help="Path to the input ReqIF file.",
+        )
+        parser.add_argument(
+            "output_path",
+            type=str,
+            help="Path to the output SDoc file.",
+        )
+        parser.add_argument(
+            "--reqif-enable-mid",
+            default=False,
+            action="store_true",
+            help=(
+                "Controls whether StrictDoc's MID field will be mapped to ReqIF "
+                "SPEC-OBJECT's IDENTIFIER and vice versa when exporting/importing."
+            ),
+        )
+        parser.add_argument(
+            "--reqif-import-markup",
+            default=None,
+            type=_check_reqif_import_markup,
+            help=(
+                "Controls which MARKUP option the imported SDoc documents will have. "
+                "This value is RST as what StrictDoc has by default but very often "
+                "the requirements tools use the (X)HTML markup for multiline fields in "
+                "which case HTML is the best option."
+            ),
+        )
 
     @staticmethod
     def supported_extensions() -> List[str]:

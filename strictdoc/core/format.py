@@ -5,6 +5,7 @@ StrictDoc can export to and/or import from.
 @relation(SDOC-SRS-119, scope=file)
 """
 
+import argparse
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from typing import TYPE_CHECKING, List, Optional, Tuple
@@ -112,6 +113,15 @@ class Format(ABC):
             f"{self.__class__.__name__} does not support exporting a "
             f"single document."
         )
+
+    @staticmethod
+    def import_command_name() -> str:
+        """CLI subcommand name under `strictdoc import <name>`."""
+        raise NotImplementedError
+
+    @classmethod
+    def add_import_arguments(cls, parser: argparse.ArgumentParser) -> None:
+        raise NotImplementedError(f"{cls.__name__} does not support import.")
 
     def import_file(self, *args: object, **kwargs: object) -> object:
         raise NotImplementedError(

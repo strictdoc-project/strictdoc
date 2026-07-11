@@ -933,26 +933,26 @@ class ProjectConfigLoader:
     @classmethod
     def load_using_import_excel_config(
         cls,
-        _: ImportExcelCommandConfig,
+        import_excel_config: ImportExcelCommandConfig,
     ) -> ProjectConfig:
-        path_to_config = os.getcwd()
+        path_to_config = import_excel_config.get_path_to_config()
         project_config: ProjectConfig = cls.load_from_path_or_get_default(
             path_to_config=path_to_config
         )
-        project_config.input_paths = [path_to_config]
+        project_config.input_paths = [os.getcwd()]
         project_config.validate_and_finalize()
         return project_config
 
     @classmethod
     def load_using_import_reqif_config(
         cls,
-        _: ImportReqIFCommandConfig,
+        import_reqif_config: ImportReqIFCommandConfig,
     ) -> ProjectConfig:
-        path_to_config = os.getcwd()
+        path_to_config = import_reqif_config.get_path_to_config()
         project_config: ProjectConfig = cls.load_from_path_or_get_default(
             path_to_config=path_to_config
         )
-        project_config.input_paths = [path_to_config]
+        project_config.input_paths = [os.getcwd()]
         project_config.validate_and_finalize()
         return project_config
 

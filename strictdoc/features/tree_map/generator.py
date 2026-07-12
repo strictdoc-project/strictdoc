@@ -24,10 +24,7 @@ from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
-from strictdoc.features.tree_map.helpers import (
-    get_color,
-    split_into_max_n_lines,
-)
+from strictdoc.features.tree_map.helpers import get_color
 from strictdoc.features.tree_map.view_object import TreeMapViewObject
 from strictdoc.helpers.timing import timing_decorator
 
@@ -91,6 +88,16 @@ class PlotlyDataFrameColumn:
     PARENT_MID = "_PARENT_MID"
     WEIGHT = "_WEIGHT"
     IS_NORMATIVE = "_IS_NORMATIVE"
+
+
+# Without this, Plotly shrinks each box's title to fit, down to
+# sub-pixel sizes that render as an illegible blur on small boxes.
+# uniformtext instead forces one font size across the whole chart and
+# hides labels that don't fit at "minsize", so titles are always
+# legible or absent.
+# minsize is a tuned tradeoff: too low brings back blur, too high
+# hides titles on more (still readable) boxes.
+TREE_MAP_UNIFORMTEXT = {"minsize": 10, "mode": "hide"}
 
 
 class TreeMapGenerator:
@@ -366,18 +373,10 @@ class TreeMapGenerator:
         df["_IS_LEAF"] = ~df["MID"].isin(df[PlotlyDataFrameColumn.PARENT_MID])
 
         def short_label(row_: Any) -> Any:
-            title = row_["TITLE"]
-            # FIXME: Move this reasoning to JS based on zoom depth.
-            if len(title) > 20:
-                title = split_into_max_n_lines(title, max_lines=2)
-            return title
+            return row_["TITLE"]
 
         def short_label_normative(row_: Any) -> Any:
-            title = row_["TITLE_NORMATIVE"]
-            # FIXME: Move this reasoning to JS based on zoom depth.
-            if len(title) > 20:
-                title = split_into_max_n_lines(title, max_lines=2)
-            return title
+            return row_["TITLE_NORMATIVE"]
 
         df["_SHORT_LABEL"] = df.apply(short_label, axis=1)
         df["_SHORT_LABEL_NORMATIVE"] = df.apply(short_label_normative, axis=1)
@@ -438,6 +437,7 @@ class TreeMapGenerator:
         fig.update_layout(
             margin={"t": 25, "l": 25, "r": 25, "b": 25},
             height=800,
+            uniformtext=TREE_MAP_UNIFORMTEXT,
         )
         fig.update_traces(
             root_color="lightgray",
@@ -486,6 +486,7 @@ indicate how many nodes each section or node contains.
         fig.update_layout(
             margin={"t": 25, "l": 25, "r": 25, "b": 25},
             height=800,
+            uniformtext=TREE_MAP_UNIFORMTEXT,
         )
         fig.update_traces(
             root_color="lightgray",

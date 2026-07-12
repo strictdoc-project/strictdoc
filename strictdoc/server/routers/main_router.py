@@ -59,6 +59,7 @@ from strictdoc.core.analyzers.document_stats import DocumentTreeStats
 from strictdoc.core.analyzers.document_uid_analyzer import DocumentUIDAnalyzer
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
+from strictdoc.core.feature import Feature, FeatureContext
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.query_engine.query_object import Query, QueryObject
 from strictdoc.core.query_engine.query_reader import QueryReader
@@ -269,6 +270,23 @@ def create_main_router(
     )
 
     html_generator = HTMLGenerator(project_config, html_templates)
+
+    # Server screens contributed by built-in Features (e.g.
+    # ProjectStatisticsFeature), keyed by the screen_filename() each one
+    # owns. Built from *all* built-in Features regardless of activation
+    # (not just project_config.get_features(), which only resolves
+    # activated ones) so that a request for a known-but-not-activated
+    # screen can be told apart from an unknown path: the former must
+    # still return 412, the latter 404. Dispatched from within
+    # generate_document() below, so every Feature-contributed screen
+    # still goes through the same shared caching/locking machinery as
+    # every other document.
+    server_features_by_screen_filename: Dict[str, Feature] = {
+        feature_.screen_filename(): feature_
+        for feature_ in ProjectConfig._builtin_features_by_handle().values()
+        if feature_.supports_server()
+    }
+
     html_generator.export_assets(
         traceability_index=export_action.traceability_index,
         project_config=project_config,
@@ -4686,16 +4704,24 @@ def create_main_router(
                         traceability_index=export_action.traceability_index,
                     )
                 elif (
-                    document_relative_path.relative_path
-                    == "project_statistics.html"
-                ):
-                    if not project_config.is_activated_project_statistics():
+                    feature_ := server_features_by_screen_filename.get(
+                        document_relative_path.relative_path
+                    )
+                ) is not None:
+                    if project_config.get_feature(feature_.HANDLE) is None:
                         return Response(
-                            content="The Project Statistics feature is not activated in the project config.",
+                            content=(
+                                f"The {feature_.HANDLE} feature is not "
+                                f"activated in the project config."
+                            ),
                             status_code=HTTP_STATUS_PRECONDITION_FAILED,
                         )
-                    html_generator.export_project_statistics(
-                        traceability_index=export_action.traceability_index,
+                    feature_.render_screen(
+                        FeatureContext(
+                            project_config=project_config,
+                            traceability_index=export_action.traceability_index,
+                            html_templates=html_templates,
+                        )
                     )
                 else:
                     document_type_to_generate: DocumentType

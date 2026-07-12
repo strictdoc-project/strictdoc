@@ -3,6 +3,7 @@ from typing import Optional
 
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.core.feature import FeatureContext
 from strictdoc.core.format import ExportContext
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
@@ -91,3 +92,19 @@ class ExportAction:
             for handle_ in format_.handles():
                 if handle_ in requested_handles:
                     format_.export_complete_tree(context, handle=handle_)
+
+        # Features (cross-cutting export/server capabilities that are not
+        # document-content conversion, e.g. project statistics) are exported
+        # alongside formats. Gated on "html" specifically (not "html2pdf"),
+        # matching the pre-Feature behavior where project statistics was
+        # only ever generated as part of HTMLGenerator's own export() flow.
+        if "html" in requested_handles:
+            assert html_templates is not None
+            feature_context = FeatureContext(
+                project_config=self.project_config,
+                traceability_index=self.traceability_index,
+                html_templates=html_templates,
+            )
+            for feature_ in self.project_config.get_features():
+                if feature_.supports_export():
+                    feature_.export(feature_context)

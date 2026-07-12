@@ -1,7 +1,5 @@
-import importlib
 import os
 import shutil
-import sys
 from collections import defaultdict
 from functools import partial
 from pathlib import Path
@@ -39,9 +37,6 @@ from strictdoc.features.project_index.generator import (
 from strictdoc.features.project_index.project_map_generator import (
     ProjectMapGenerator,
 )
-from strictdoc.features.project_statistics.generator import (
-    ProgressStatisticsGenerator,
-)
 from strictdoc.features.source_coverage.generator import (
     SourceFileCoverageHTMLGenerator,
 )
@@ -56,7 +51,6 @@ from strictdoc.features.traceability_matrix.generator import (
 )
 from strictdoc.features.tree_map.generator import TreeMapGenerator
 from strictdoc.helpers.cast import assert_cast
-from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.file_system import sync_dir
 from strictdoc.helpers.git_client import GitClient
@@ -180,11 +174,9 @@ class HTMLGenerator:
         if self.project_config.is_activated_tree_map():
             self.export_tree_map_screen(traceability_index)
 
-        # Export project statistics.
-        if self.project_config.is_feature_activated(
-            ProjectFeature.PROJECT_STATISTICS_SCREEN
-        ):
-            self.export_project_statistics(traceability_index)
+        # Project statistics is exported by the ExportAction class via the
+        # Feature abstraction (see the ProjectStatisticsFeature class), not
+        # here.
 
         # Export requirements coverage.
         if self.project_config.is_feature_activated(
@@ -621,65 +613,6 @@ class HTMLGenerator:
                 return
 
         raise FileNotFoundError
-
-    def export_project_statistics(
-        self,
-        traceability_index: TraceabilityIndex,
-    ) -> None:
-        """
-        Export project statistics to a dedicated HTML page.
-
-        @relation(SDOC-SRS-97, scope=function)
-        @relation(SDOC-SRS-154, scope=function)
-        """
-
-        link_renderer = LinkRenderer(
-            root_path="",
-            static_path=self.project_config.dir_for_sdoc_assets,
-        )
-
-        statistics_generator = ProgressStatisticsGenerator
-
-        if (
-            custom_statistics_generator_path
-            := self.project_config.statistics_generator
-        ) is not None:
-            # It is important to add the input folder to the import path.
-            # Otherwise, the custom statistics generator may not be found.
-            # In fact, a more reasonable path to add would be the project config
-            # path, but since it is not maintained by ProjectConfig yet and
-            # usually equals the input path, add the input path for
-            # now.
-            input_paths = self.project_config.input_paths
-            assert input_paths is not None and len(input_paths) > 0, (
-                "Expected a valid input path."
-            )
-            sys.path.insert(0, input_paths[0])
-
-            module_path, class_name = custom_statistics_generator_path.rsplit(
-                ".", 1
-            )
-            try:
-                module = importlib.import_module(module_path)
-                statistics_generator = getattr(module, class_name)
-            except ModuleNotFoundError as module_not_found_error_:
-                raise StrictDocException(
-                    "Could not import a user-provided statistics generator: "
-                    f"{module_not_found_error_}."
-                ) from module_not_found_error_
-
-        document_content = statistics_generator.export(
-            self.project_config,
-            traceability_index,
-            link_renderer,
-            html_templates=self.html_templates,
-        )
-        output_html_source_coverage = os.path.join(
-            self.project_config.export_output_html_root,
-            "project_statistics.html",
-        )
-        with open(output_html_source_coverage, "w", encoding="utf8") as file:
-            file.write(document_content)
 
     @timing_decorator("Export static HTML search index")
     def export_static_html_search_index(

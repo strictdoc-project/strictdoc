@@ -19,13 +19,13 @@ wget https://raw.githubusercontent.com/strictdoc-project/strictdoc/refs/heads/ma
 
 4) Download the ECSS Applicability Requirement Matrix (EARM) Excel from
 https://ecss.nl/standards/downloads__trashed/earm/ or use a direct link to the
-latest export as of 2025 Q3:
+latest export as of 2026 Q3:
 
-wget https://ecss.nl/wp-content/uploads/2025/02/EARM_ECSS_export\(DOORS-v1.0_Dec2024\).xlsx
+wget "https://ecss.nl/wp-content/uploads/2026/02/EARM_ECSS_export(DOORS-v1.0_3Feb2026).xlsx"
 
 5) Run the import script:
 
-python import_ecss_earm_excel.py EARM_ECSS_export\(DOORS-v1.0_Dec2024\).xlsx
+python import_ecss_earm_excel.py "EARM_ECSS_export(DOORS-v1.0_3Feb2026).xlsx"
 
 The SDoc files shall be written to output/ecss/ folder.
 
@@ -96,7 +96,7 @@ ECSS_EARM_Excel_Field_Mapping: Dict[str, str] = {
 
 
 class ECSS_EARM_Excel_Importer:
-    MAIN_SHEET = "DOORS 1.0 Current"
+    MAIN_SHEET = "Current DOORS1.0"
 
     @staticmethod
     def import_from_file(path_to_excel: str, path_to_output_dir: str):
@@ -243,16 +243,22 @@ class ECSS_EARM_Excel_Importer:
             with open(document_path, "w") as output_file:
                 output_file.write(sdoc_content)
 
-        strictdoc_toml_config = os.path.join(ecss_output_dir, "strictdoc.toml")
-        with open(strictdoc_toml_config, "w") as output_file:
+        strictdoc_config_py = os.path.join(
+            ecss_output_dir, "strictdoc_config.py"
+        )
+        with open(strictdoc_config_py, "w") as output_file:
             output_file.write("""\
-[project]
-title = "ECSS: Example HTML export"
+from strictdoc.core.project_config import ProjectConfig
 
-features = [
-    # Disable all features, except those specified below.
-    "HTML2PDF",
-]
+
+def create_config() -> ProjectConfig:
+    return ProjectConfig(
+        project_title="ECSS: Example HTML export",
+        project_features=[
+            # Disable all features, except those specified below.
+            "HTML2PDF",
+        ],
+    )
 """)
 
     @staticmethod
@@ -296,7 +302,9 @@ def main():
     parser = argparse.ArgumentParser()
 
     parser.add_argument(
-        "input_file", type=str, help="EARM_ECSS_export(DOORS-v1.0_Dec2024).xlsx"
+        "input_file",
+        type=str,
+        help="EARM_ECSS_export(DOORS-v1.0_3Feb2026).xlsx",
     )
     parser.add_argument(
         "--output-dir", default="output/", type=str, help="TODO"

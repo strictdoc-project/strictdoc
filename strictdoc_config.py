@@ -1,4 +1,4 @@
-from strictdoc.core.project_config import ProjectConfig
+from strictdoc.api import ProjectConfig
 
 
 def create_config() -> ProjectConfig:

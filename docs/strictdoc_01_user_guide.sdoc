@@ -4561,7 +4561,7 @@ The plugin must be registered in the StrictDoc Python config file:
     import os
     import sys
 
-    from strictdoc.core.project_config import ProjectConfig
+    from strictdoc.api import ProjectConfig
 
     sys.path.append(os.path.dirname(__file__))
 
@@ -4579,7 +4579,7 @@ The plugin class can be implemented as follows:
 
 .. code-block:: python
 
-    from strictdoc.core.plugin import StrictDocPlugin
+    from strictdoc.api import StrictDocPlugin, TraceabilityIndex
 
 
     class UserPlugin(StrictDocPlugin):
@@ -4603,10 +4603,12 @@ Example:
 
 .. code-block:: python
 
-    from strictdoc.backend.sdoc.models.node import SDocNode
-    from strictdoc.core.document_iterator import SDocDocumentIterator
-    from strictdoc.core.plugin import StrictDocPlugin
-    from strictdoc.core.traceability_index import TraceabilityIndex
+    from strictdoc.api import (
+        SDocDocumentIterator,
+        SDocNode,
+        StrictDocPlugin,
+        TraceabilityIndex,
+    )
 
 
     class UserPlugin(StrictDocPlugin):

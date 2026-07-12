@@ -24,13 +24,15 @@ import os
 import re
 import sys
 
-from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
-from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.core.project_config import ProjectConfig
-from strictdoc.core.traceability_index import TraceabilityIndex
-from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
-from strictdoc.helpers.cast import assert_cast
-from strictdoc.helpers.parallelizer import Parallelizer
+from strictdoc.api import (
+    DocumentTreeError,
+    Parallelizer,
+    ProjectConfig,
+    SDocNode,
+    TraceabilityIndex,
+    TraceabilityIndexBuilder,
+    assert_cast,
+)
 
 
 def alphanumeric_sort_key(s: str):

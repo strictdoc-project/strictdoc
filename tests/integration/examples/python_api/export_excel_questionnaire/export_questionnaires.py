@@ -5,16 +5,20 @@ from typing import Optional
 
 import xlsxwriter
 
-from strictdoc.backend.excel.export.excel_generator import ExcelGenerator
-from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
-from strictdoc.backend.sdoc.models.document import SDocDocument
-from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.core.document_iterator import SDocDocumentIterator
-from strictdoc.core.graph.abstract_bucket import ALL_EDGES
-from strictdoc.core.project_config import ProjectConfig, ProjectConfigLoader
-from strictdoc.core.traceability_index import GraphLinkType, TraceabilityIndex
-from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
-from strictdoc.helpers.parallelizer import Parallelizer
+from strictdoc.api import (
+    ALL_EDGES,
+    DocumentTreeError,
+    ExcelGenerator,
+    GraphLinkType,
+    Parallelizer,
+    ProjectConfig,
+    ProjectConfigLoader,
+    SDocDocument,
+    SDocDocumentIterator,
+    SDocNode,
+    TraceabilityIndex,
+    TraceabilityIndexBuilder,
+)
 
 CLOUD_SEC_REQ = "(Cloud Component) Security Requirements"
 CONNECTIVITY_SEC_REQ = "(Connectivity or Communications Component) Security Requirements"

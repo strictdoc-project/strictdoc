@@ -1,7 +1,9 @@
-from strictdoc.backend.sdoc.models.node import SDocNode
-from strictdoc.core.document_iterator import SDocDocumentIterator
-from strictdoc.core.plugin import StrictDocPlugin
-from strictdoc.core.traceability_index import TraceabilityIndex
+from strictdoc.api import (
+    SDocDocumentIterator,
+    SDocNode,
+    StrictDocPlugin,
+    TraceabilityIndex,
+)
 
 
 class UserPlugin(StrictDocPlugin):

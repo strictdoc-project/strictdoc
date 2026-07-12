@@ -50,6 +50,67 @@ releases:
 <<<
 
 [[SECTION]]
+MID: 8a4b0e6f9d3c4c5b8e1a2f7d6c9b0a3e
+TITLE: Unreleased
+
+[TEXT]
+MID: 7c2d5e8f1a9b4c6d8e0f2a4b6c8d0e2f
+STATEMENT: >>>
+**This is a breaking change release for users of the Python API**
+(``strictdoc.api.*`` and any code importing StrictDoc's internal modules
+directly). See item 1 and the note on ``Format``/``Feature`` abstractions
+below.
+
+This release contains the following enhancements:
+
+1\) A new ``strictdoc.api.*`` layer exposes StrictDoc's internal building
+blocks (document tree, traceability index, HTML templates, project
+statistics, and more) as a stable import surface for Python scripts and
+plugins, replacing direct imports from internal modules.
+
+2\) The ``strictdoc import`` command has been replaced by ``strictdoc
+convert``. ``strictdoc import reqif sdoc input.reqif output.sdoc`` is now
+``strictdoc convert input.reqif output.sdoc``, and ``strictdoc import excel
+basic input.xls output.sdoc`` is now ``strictdoc convert input.xls
+output.sdoc --input-format=excel``.
+
+3\) Search queries (``--filter-nodes`` and the Query screen) gained
+quantified list membership checks: ``any([...]) in node["FIELD"]``,
+``all([...]) in node["FIELD"]``, and ``none([...]) in node["FIELD"]`` test
+whether a field (including ``TAGS``) matches at least one, all, or none of a
+list of values.
+
+4\) The dashboard's project index now hides long external filesystem
+prefixes in input/output paths, replacing them with a compact,
+click-to-reveal element instead of always showing the full absolute path.
+
+5\) StrictDoc now renders a dedicated favicon per execution context
+(regular export, dev server, test server), and a project can supply its own
+custom favicon via a new ``favicon_path`` project configuration option.
+
+6\) Fixed: the project index dashboard's column widths are now stable
+instead of shifting depending on path contents.
+
+**Important: Format and Feature abstractions.** StrictDoc introduces two
+new top-level abstractions for extensibility. ``Format`` covers everything
+that reads/writes document *content* (SDoc, Markdown, ReqIF, RST, Excel,
+HTML, HTML2PDF, Doxygen, JSON); a project can register custom
+formats via the Python project config, e.g.
+``formats=[*ProjectConfig.default_formats(), CustomMarkdownOftFormat()]``.
+``Feature`` covers cross-cutting, non-content capabilities that plug into
+the ``export`` and ``server`` commands (for example, project statistics); a
+project can register custom features via ``project_features=[...]``,
+alongside the existing built-in feature handle strings. Both abstractions
+are Python abstract classes. Users who currently import StrictDoc's
+internal modules directly (generators, readers, or ad hoc
+``strictdoc/features/*`` wiring) should migrate to ``strictdoc.api.*`` and
+the ``Format``/``Feature`` interfaces, since the internal module layout
+they replace may keep changing with or without notice.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 650087b6a70d4451af7ddffde5e8b567
 TITLE: 0.26.0 (2026-07-05)
 

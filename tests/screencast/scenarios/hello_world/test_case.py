@@ -14,7 +14,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from playwright.sync_api import Page, expect
+from playwright.sync_api import Locator, Page, expect
 
 from tests.end2end.server import SDocTestServer
 from tests.screencast.fixture import RECORD_SERVER_PORT
@@ -56,6 +56,24 @@ def run_strictdoc_new(project_dir: Path) -> str:
         cwd=project_dir.parent,
     )
     return result.stdout
+
+
+def wait_for_stable_scroll_height(
+    locator: Locator, *, poll_ms: int = 100, max_polls: int = 20
+) -> None:
+    """
+    Waits until `locator.scrollHeight` stops changing between polls.
+    Content that just appeared (e.g. a form that was just opened) can
+    keep growing for a bit as it settles, so reading scrollHeight too
+    early undershoots a "scroll to the bottom".
+    """
+    previous_height = None
+    for _ in range(max_polls):
+        current_height = locator.evaluate("(el) => el.scrollHeight")
+        if current_height == previous_height:
+            return
+        previous_height = current_height
+        locator.page.wait_for_timeout(poll_ms)
 
 
 class Test:
@@ -132,6 +150,19 @@ class Test:
             # Scene 4: adding a Rationale to the existing Requirement.
             llr_1 = Requirement.with_node(pointer)
             form_edit_requirement = llr_1.do_open_form_edit_requirement()
+
+            # Scroll the content area to the bottom before typing starts,
+            # so the (last) Rationale field is settled in view — purely
+            # cosmetic, .main already has scroll-behavior: smooth. The
+            # form's height keeps growing for a bit right after it opens
+            # (its fields animate/settle in), so scrollHeight must be
+            # given time to stabilize first, or the scroll undershoots
+            # against the still-growing content.
+            wait_for_stable_scroll_height(page.locator(".main"))
+            page.locator(".main").evaluate(
+                "(el) => { el.scrollTop = el.scrollHeight; }"
+            )
+            pause(page)
 
             form_edit_requirement.do_fill_in_field_rationale(RATIONALE_TEXT)
             pause(page)

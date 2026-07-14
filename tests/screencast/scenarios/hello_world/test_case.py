@@ -100,13 +100,13 @@ class Test:
         demo_text.evaluate(
             "(el, text) => { el.textContent += text; }", cli_output
         )
-        pause(page, 2)
+        pause(page, 1)
 
         # ...then a smooth (CSS scroll-behavior) scroll down to the end,
         # if it doesn't already fit, so the "Next steps" instructions are
         # readable too instead of being cut off below the fold.
         demo_text.evaluate("(el) => { el.scrollTop = el.scrollHeight; }")
-        pause(page, 2)
+        pause(page, 1)
 
         llr_path = project_dir / "docs" / "low_level_requirements.sdoc"
         original_sdoc_text = llr_path.read_text(encoding="utf-8")
@@ -173,7 +173,7 @@ class Test:
                     has_text=RATIONALE_TEXT
                 )
             ).to_be_visible()
-            pause(page, 2)
+            pause(page, 1)
 
         final_sdoc_text = llr_path.read_text(encoding="utf-8")
         assert RATIONALE_TEXT not in original_sdoc_text

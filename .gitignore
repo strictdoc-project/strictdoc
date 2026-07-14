@@ -15,6 +15,7 @@ __pycache__
 
 /tests/unit_server/**/output/
 /tests/screencast/output/
+/tests/screencast/temp/
 
 ### LIT/FileCheck integration tests' artifacts. ###
 /tests/integration/**/Output/**

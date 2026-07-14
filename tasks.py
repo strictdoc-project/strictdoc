@@ -427,6 +427,24 @@ def test_screencast(context, *, focus=None, record_video=False):
     run_invoke_with_tox(context, ToxEnvironment.CHECK, test_command)
 
 
+@task(aliases=["scov"])
+def screencast_optimize_video(context, focus=None):
+    """
+    Converts recorded tests/screencast/output/*.webm into muted,
+    web-optimized .webm (VP9) and .mp4 (H.264) pairs under
+    tests/screencast/output/web/, ready to hand off to the product website.
+
+    Run `invoke test-screencast --record-video` first to produce the raw
+    recordings this reads from.
+    """
+
+    focus_argument = f"--focus {focus}" if focus is not None else ""
+
+    run_invoke(
+        context, f"python tests/screencast/optimize_video.py {focus_argument}"
+    )
+
+
 @task(aliases=["tu"])
 def test_unit(context, coverage=False, focus=None, path=None, output=False):
     """

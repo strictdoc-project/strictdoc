@@ -25,6 +25,8 @@ Commands:
 | `invoke test-screencast --focus=<expr>` | Run only scenarios matching a pytest `-k` expression. |
 | `invoke test-screencast --record-video` | Also (re)generate every scenario's `.webm`. |
 | `invoke test-screencast --record-video --focus=<name>` | (Re)generate just one scenario's `.webm`. |
+| `invoke screencast-optimize-video` (alias `scov`) | Convert every recorded `.webm` into a web-ready `.webm`/`.mp4` pair, see below. |
+| `invoke screencast-optimize-video --focus=<name>` | Convert just one scenario's recording. |
 | `invoke screencast-server` (alias `scs`) | Manual server on a disposable copy of the shared fixture, at `http://127.0.0.1:5301`. |
 | `invoke screencast-server --focus=<scenario>` | Manual server on a disposable copy of a specific scenario's project instead. |
 | `invoke screencast-server --edit [--focus=<scenario>]` | Same, but on the real, persistent files — changes through the UI stick around. |
@@ -64,7 +66,9 @@ tests/screencast/
 ├── terminal.html                 # standalone HTML playground: full-frame terminal look
 ├── editor.html                   # standalone HTML playground: code-editor look (tab + line numbers)
 ├── run_server.py                 # manual dev server for inspecting a scene in the browser
+├── optimize_video.py              # converts a recording into a web-ready .webm/.mp4 pair
 └── output/                       # generated .webm videos (gitignored)
+    └── web/                       # web-optimized .webm/.mp4 pairs (gitignored)
 ```
 
 `tests/screencast/helpers/` contains Playwright Page Object helpers. New
@@ -197,6 +201,43 @@ Example:
 ```bash
 invoke test-screencast --record-video
 ```
+
+## Producing web-ready videos
+
+The `.webm` recordings in `tests/screencast/output/` are VP8, straight out
+of Playwright's recorder, sized for editing rather than for embedding on
+the product website. `invoke screencast-optimize-video` (alias `scov`)
+re-encodes each one into a `tests/screencast/output/web/<scenario>.webm`
+(VP9) + `<scenario>.mp4` (H.264, for Safari/older browsers) pair — same
+filename as the source `.webm`, different directory, **not** a copy:
+
+```bash
+invoke test-screencast --record-video --focus=hello_world
+invoke screencast-optimize-video --focus=hello_world
+# -> tests/screencast/output/web/hello_world.webm  (VP9, -b:v 0 -crf 32)
+# -> tests/screencast/output/web/hello_world.mp4    (H.264, -crf 23 -preset slow)
+```
+
+Both outputs are audio-stripped (`-an` — the website embeds these as
+muted, autoplaying/looping video) and capped at 1280px wide (recordings
+narrower than that, like the default `VIEWPORT_SIZE`, are left at their
+native width — never upscaled). Stripping audio and re-encoding at a
+fixed quality target is what shrinks the file, e.g. `hello_world`: 1.7 MB
+VP8 source -> 0.63 MB VP9 / 0.58 MB H.264.
+
+Omit `--focus` to (re)generate every scenario found in
+`tests/screencast/output/`. This step requires `ffmpeg` on `PATH` (e.g.
+`brew install ffmpeg` on macOS); the command fails with a clear message if
+it isn't found.
+
+If a scenario is meant to loop seamlessly (e.g. a hero-section clip),
+make sure its first and last frame line up visually at the scenario level
+(`test_case.py`) — this step only re-encodes, it does not trim or blend
+frames to fix a bad loop seam.
+
+Delivering the generated files to `strictdoc-project.github.io` itself is
+out of scope for this pipeline; copy them over by hand (or in that
+repo's own tooling).
 
 ## Running the demo server manually
 

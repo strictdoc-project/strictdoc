@@ -95,7 +95,7 @@ class MarkdownFormat(Format):
             assert document.meta.document_filename_base
             assert document.meta.input_doc_dir_rel_path
 
-            output = writer.write(document)
+            output = writer.write(document, project_config=project_config)
 
             path_to_output_file_dir: str = os.path.join(
                 output_dir, document.meta.input_doc_dir_rel_path.relative_path

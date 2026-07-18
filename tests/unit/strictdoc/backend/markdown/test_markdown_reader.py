@@ -5,6 +5,7 @@ from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode
+from strictdoc.core.project_config import ProjectConfig, ProjectFeature
 
 
 def test_001_markdown_reader_requires_h1_heading_first():
@@ -563,3 +564,188 @@ def test_025_markdown_reader_empty_heading_produces_no_title_field():
     assert requirement.reserved_uid == "REQ-1"
     assert requirement.reserved_title is None
     assert "TITLE" not in requirement.ordered_fields_lookup
+
+
+def test_026_markdown_reader_supports_headings_deeper_than_h6():
+    markdown_content = """\
+# Document title
+
+## Level 1
+
+### Level 2
+
+#### Level 3
+
+##### Level 4
+
+###### Level 5
+
+####### Level 6
+
+######## Deep requirement
+
+**UID**: REQ-DEEP-1
+
+**Statement**: Statement nested seven levels below the document.
+"""
+
+    project_config = ProjectConfig(
+        project_features=[ProjectFeature.MARKDOWN_DEEP_HEADINGS]
+    )
+    reader = SDMarkdownReader()
+    document = reader.read(
+        markdown_content, file_path=None, project_config=project_config
+    )
+
+    node = document.section_contents[0]
+    for expected_title in [
+        "Level 1",
+        "Level 2",
+        "Level 3",
+        "Level 4",
+        "Level 5",
+        "Level 6",
+    ]:
+        assert isinstance(node, SDocNode)
+        assert node.node_type == "SECTION"
+        assert node.reserved_title == expected_title
+        assert len(node.section_contents) == 1
+        node = node.section_contents[0]
+
+    assert isinstance(node, SDocNode)
+    assert node.node_type == "REQUIREMENT"
+    assert node.reserved_uid == "REQ-DEEP-1"
+
+
+def test_027_markdown_reader_hashes_without_space_are_not_a_heading():
+    # CommonMark requires a space after the hashes; this must stay true for
+    # the extended 7+ hash headings as well.
+    markdown_content = """\
+# Document title
+
+## Section
+
+#######Not a heading.
+"""
+
+    reader = SDMarkdownReader()
+    document = reader.read(markdown_content, file_path=None)
+
+    section = document.section_contents[0]
+    assert isinstance(section, SDocNode)
+    assert section.node_type == "SECTION"
+    assert len(section.section_contents) == 1
+    text_node = section.section_contents[0]
+    assert isinstance(text_node, SDocNode)
+    assert text_node.node_type == "TEXT"
+    assert text_node.reserved_statement is not None
+    assert "#######Not a heading." in text_node.reserved_statement
+
+
+def test_028_markdown_reader_rejects_forward_jump_beyond_h6():
+    # Forward-jump validation must keep working in the extended range.
+    markdown_content = """\
+# Document title
+
+## Level 1
+
+### Level 2
+
+#### Level 3
+
+##### Level 4
+
+###### Level 5
+
+######## Level 7 reached by a forward jump
+"""
+
+    project_config = ProjectConfig(
+        project_features=[ProjectFeature.MARKDOWN_DEEP_HEADINGS]
+    )
+    reader = SDMarkdownReader()
+    with pytest.raises(StrictDocSemanticError) as exc_info:
+        reader.read(
+            markdown_content, file_path=None, project_config=project_config
+        )
+    assert "forward jumps" in str(exc_info.value.title)
+
+
+def test_029_markdown_reader_deep_headings_are_text_without_feature_flag():
+    # Without the MARKDOWN_DEEP_HEADINGS feature, the reader must follow
+    # CommonMark: seven or more hashes are paragraph text, not a heading.
+    markdown_content = """\
+# Document title
+
+## Level 1
+
+### Level 2
+
+#### Level 3
+
+##### Level 4
+
+###### Level 5
+
+####### Level 6
+"""
+
+    reader = SDMarkdownReader()
+    document = reader.read(
+        markdown_content,
+        file_path=None,
+        project_config=ProjectConfig.default_config(),
+    )
+
+    node = document.section_contents[0]
+    for _ in range(5):
+        assert isinstance(node, SDocNode)
+        assert node.node_type == "SECTION"
+        node = node.section_contents[0]
+
+    assert isinstance(node, SDocNode)
+    assert node.node_type == "TEXT"
+    assert node.reserved_statement is not None
+    assert "####### Level 6" in node.reserved_statement
+
+
+def test_030_markdown_reader_deep_headings_with_feature_flag():
+    markdown_content = """\
+# Document title
+
+## Level 1
+
+### Level 2
+
+#### Level 3
+
+##### Level 4
+
+###### Level 5
+
+####### Level 6
+
+######## Deep requirement
+
+**UID**: REQ-DEEP-1
+
+**Statement**: Statement nested seven levels below the document.
+"""
+
+    project_config = ProjectConfig(
+        project_features=[ProjectFeature.MARKDOWN_DEEP_HEADINGS]
+    )
+    reader = SDMarkdownReader()
+    document = reader.read(
+        markdown_content, file_path=None, project_config=project_config
+    )
+
+    node = document.section_contents[0]
+    for _ in range(6):
+        assert isinstance(node, SDocNode)
+        assert node.node_type == "SECTION"
+        node = node.section_contents[0]
+
+    assert isinstance(node, SDocNode)
+    assert node.node_type == "REQUIREMENT"
+    assert node.reserved_uid == "REQ-DEEP-1"

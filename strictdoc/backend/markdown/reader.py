@@ -13,6 +13,9 @@ from markdown_it.token import Token
 from strictdoc.backend.markdown.default_grammar import (
     create_markdown_default_grammar,
 )
+from strictdoc.backend.markdown.lax_heading import (
+    create_lax_heading_markdown_parser,
+)
 from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
@@ -37,7 +40,7 @@ from strictdoc.backend.sdoc.pickle_cache import PickleCache
 from strictdoc.backend.sdoc_source_code.reader_registry import (
     SourceCodeReaderRegistry,
 )
-from strictdoc.core.project_config import ProjectConfig
+from strictdoc.core.project_config import ProjectConfig, ProjectFeature
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.mid import MID
 from strictdoc.helpers.string import strip_bom
@@ -77,6 +80,8 @@ class ParsedMarkdownNode:
 
 class SDMarkdownReader:
     markdown_parser = MarkdownIt("commonmark")
+    # Used when the MARKDOWN_DEEP_HEADINGS project feature is activated.
+    markdown_parser_lax = create_lax_heading_markdown_parser()
     default_meta_style = "backslash"
     plain_field_pattern = re.compile(
         r"^\*\*(?P<name>[A-Za-z0-9][A-Za-z0-9 _-]*)\*\*:(?P<value>.*)$"
@@ -131,9 +136,15 @@ class SDMarkdownReader:
         """Convert a StrictDoc-conventional markdown file into SDocDocument."""
         input_string = strip_bom(input_string)
 
-        markdown_tokens: Sequence[Token] = (
-            SDMarkdownReader.markdown_parser.parse(input_string)
+        markdown_parser = (
+            SDMarkdownReader.markdown_parser_lax
+            if project_config is not None
+            and project_config.is_feature_activated(
+                ProjectFeature.MARKDOWN_DEEP_HEADINGS
+            )
+            else SDMarkdownReader.markdown_parser
         )
+        markdown_tokens: Sequence[Token] = markdown_parser.parse(input_string)
         heading_nodes = SDMarkdownReader._extract_heading_nodes(
             markdown_tokens, input_string
         )
@@ -596,10 +607,15 @@ class SDMarkdownReader:
         for token_index, token in enumerate(markdown_tokens):
             if token.type != "heading_open":
                 continue
-            if token.tag is None or len(token.tag) != 2 or token.tag[0] != "h":
+            if (
+                token.tag is None
+                or len(token.tag) < 2
+                or token.tag[0] != "h"
+                or not token.tag[1:].isdigit()
+            ):
                 continue
 
-            heading_level = int(token.tag[1])
+            heading_level = int(token.tag[1:])
             token_map = token.map
             if token_map is None:
                 continue

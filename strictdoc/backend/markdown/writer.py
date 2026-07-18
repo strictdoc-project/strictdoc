@@ -22,7 +22,9 @@ from strictdoc.backend.sdoc.models.reference import (
     ParentReqReference,
 )
 from strictdoc.core.document_meta import DocumentMeta
+from strictdoc.core.project_config import ProjectConfig, ProjectFeature
 from strictdoc.helpers.cast import assert_cast
+from strictdoc.helpers.exception import StrictDocException
 
 
 class SDMarkdownWriter:
@@ -39,7 +41,17 @@ class SDMarkdownWriter:
     }
 
     @staticmethod
-    def write(document: SDocDocument, line_width: Optional[int] = None) -> str:
+    def write(
+        document: SDocDocument,
+        line_width: Optional[int] = None,
+        project_config: Optional[ProjectConfig] = None,
+    ) -> str:
+        deep_headings_enabled = (
+            project_config is not None
+            and project_config.is_feature_activated(
+                ProjectFeature.MARKDOWN_DEEP_HEADINGS
+            )
+        )
         top_level_blocks: List[str] = []
         document_meta_block = SDMarkdownWriter._serialize_document_metadata(
             document
@@ -54,6 +66,7 @@ class SDMarkdownWriter:
                 node=node,
                 heading_level=2,
                 line_width=line_width,
+                deep_headings_enabled=deep_headings_enabled,
             )
             if node_block is None or len(node_block) == 0:
                 continue
@@ -68,10 +81,12 @@ class SDMarkdownWriter:
 
     @staticmethod
     def write_to_file(
-        document: SDocDocument, line_width: Optional[int] = None
+        document: SDocDocument,
+        line_width: Optional[int] = None,
+        project_config: Optional[ProjectConfig] = None,
     ) -> None:
         document_content = SDMarkdownWriter.write(
-            document, line_width=line_width
+            document, line_width=line_width, project_config=project_config
         )
         document_meta: DocumentMeta = assert_cast(document.meta, DocumentMeta)
         with open(
@@ -130,6 +145,7 @@ class SDMarkdownWriter:
         node: SDocNode,
         heading_level: int,
         line_width: Optional[int] = None,
+        deep_headings_enabled: bool = False,
     ) -> Optional[str]:
         if node.autogen:
             return None
@@ -141,6 +157,15 @@ class SDMarkdownWriter:
 
         if node.reserved_title is None:
             return None
+
+        if heading_level > 6 and not deep_headings_enabled:
+            raise StrictDocException(
+                "The Markdown writer cannot represent documents nested "
+                "deeper than six heading levels because CommonMark headings "
+                "stop at H6. Activate the MARKDOWN_DEEP_HEADINGS project "
+                "feature to write deeper headings as a non-CommonMark "
+                f"extension. Offending node: {node.reserved_title}."
+            )
 
         heading_hashes = "#" * max(1, heading_level)
         heading_text = (
@@ -160,6 +185,7 @@ class SDMarkdownWriter:
                     node=child_node,
                     heading_level=heading_level + 1,
                     line_width=line_width,
+                    deep_headings_enabled=deep_headings_enabled,
                 )
                 if child_block is None or len(child_block) == 0:
                     continue

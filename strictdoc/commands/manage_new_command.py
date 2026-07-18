@@ -303,7 +303,9 @@ added to that document's root level.
             ) as output_file:
                 output_file.write(document_content)
         elif doc_filename.endswith(".md"):
-            SDMarkdownWriter.write_to_file(document)
+            SDMarkdownWriter.write_to_file(
+                document, project_config=project_config
+            )
         else:
             print(  # noqa: T201
                 f"error: Unsupported document format: {doc_filename}"

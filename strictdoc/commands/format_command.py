@@ -80,4 +80,8 @@ documents to normalise their content (a no-op round-trip).
                 ) as output_file:
                     output_file.write(document_content)
             elif filename.endswith(".md"):
-                SDMarkdownWriter.write_to_file(document, line_width=line_width)
+                SDMarkdownWriter.write_to_file(
+                    document,
+                    line_width=line_width,
+                    project_config=project_config,
+                )

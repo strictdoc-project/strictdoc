@@ -249,6 +249,18 @@ class HTMLGenerator:
             with open(favicon_output_path, "w", encoding="utf8") as output_file:
                 output_file.write(favicon_svg)
 
+        # Copy the project's custom CSS file, if configured. base.jinja.html
+        # links it after StrictDoc's own stylesheets so it can override them.
+        custom_css_path = project_config.custom_css_path
+        if custom_css_path is not None:
+            shutil.copyfile(
+                custom_css_path,
+                os.path.join(
+                    output_html_static_files,
+                    project_config.get_custom_css_filename(),
+                ),
+            )
+
         # Export HTML2PDF.
         if project_config.is_feature_activated(ProjectFeature.HTML2PDF):
             sync_dir(

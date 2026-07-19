@@ -25,6 +25,9 @@
   <link rel="stylesheet" href="{{ view_object.render_static_url('requirement__temporary.css') }}"/>
   <link rel="stylesheet" href="{{ view_object.render_static_url('autogen.css') }}"/>
   <link rel="stylesheet" href="{{ view_object.render_static_url('pygments.css') }}"/>
+  {% if view_object.project_config.custom_css_path %}
+  <link rel="stylesheet" href="{{ view_object.render_static_url(view_object.project_config.get_custom_css_filename()) }}"/>
+  {% endif %}
   {% endblock head_css %}
 
   {% block head_scripts %}

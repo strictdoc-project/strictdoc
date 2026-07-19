@@ -176,6 +176,10 @@ class ProjectConfig:
         # browser-tab favicon for a project's own (non-dev, non-test) server
         # or static export. Ignored for the dev/test favicon variants.
         favicon_path: Optional[str] = None,
+        # Custom CSS path can be set in the project config to extend or
+        # override StrictDoc's default stylesheets in the HTML export and
+        # on the server.
+        custom_css_path: Optional[str] = None,
         user_plugin: Optional[StrictDocPlugin] = None,
         formats: Optional[List["Format"]] = None,
         # Reserved for StrictDoc's internal use.
@@ -434,6 +438,10 @@ class ProjectConfig:
         # Optional custom favicon path, project-relative. Validated and
         # resolved to an absolute path in validate_and_finalize().
         self.favicon_path: Optional[str] = favicon_path
+
+        # Optional custom CSS path, project-relative. Validated and
+        # resolved to an absolute path in validate_and_finalize().
+        self.custom_css_path: Optional[str] = custom_css_path
 
         self.config_last_update: Optional[datetime.datetime] = (
             _config_last_update
@@ -723,6 +731,20 @@ class ProjectConfig:
             self.favicon_path = favicon_path
 
         #
+        # Validate custom CSS path.
+        #
+        if (custom_css_path := self.custom_css_path) is not None:
+            assert not os.path.isabs(custom_css_path)
+            if project_path is not None:
+                custom_css_path = os.path.join(project_path, custom_css_path)
+            if not os.path.isfile(custom_css_path):
+                raise ValueError(
+                    "config: custom_css_path: "
+                    f"invalid path to a CSS file: {custom_css_path}."
+                )
+            self.custom_css_path = custom_css_path
+
+        #
         # Validate path to Chrome Driver.
         #
         if (
@@ -820,6 +842,13 @@ class ProjectConfig:
             return "image/svg+xml"
         mime_type, _ = mimetypes.guess_type(custom_favicon_path)
         return mime_type or "application/octet-stream"
+
+    def get_custom_css_filename(self) -> str:
+        # The fixed name under which the custom CSS file (custom_css_path)
+        # is copied to the static assets output directory and linked from
+        # base.jinja.html. A fixed name avoids collisions with StrictDoc's
+        # own stylesheets.
+        return "custom.css"
 
     def is_activated_table_screen(self) -> bool:
         return ProjectFeature.TABLE_SCREEN in self.project_features
@@ -1160,6 +1189,7 @@ class ProjectConfigLoader:
         source_nodes: List[SourceNodesEntry] = []
         html2pdf_strict: bool = False
         html2pdf_template: Optional[str] = None
+        custom_css_path: Optional[str] = None
         bundle_document_version = (
             ProjectConfigDefault.DEFAULT_BUNDLE_DOCUMENT_VERSION
         )
@@ -1222,6 +1252,10 @@ class ProjectConfigLoader:
 
             html2pdf_template = project_content.get(
                 "html2pdf_template", html2pdf_template
+            )
+
+            custom_css_path = project_content.get(
+                "custom_css_path", custom_css_path
             )
 
             bundle_document_version = project_content.get(
@@ -1320,6 +1354,7 @@ class ProjectConfigLoader:
             source_nodes=source_nodes,
             html2pdf_strict=html2pdf_strict,
             html2pdf_template=html2pdf_template,
+            custom_css_path=custom_css_path,
             bundle_document_version=bundle_document_version,
             bundle_document_date=bundle_document_date,
             traceability_matrix_relation_columns=traceability_matrix_relation_columns,

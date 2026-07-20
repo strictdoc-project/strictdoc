@@ -1,0 +1,31 @@
+#__screencast_cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  border-radius: 50%;
+  background: rgba(255, 90, 0, 0.85);
+  border: 2px solid white;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  z-index: 2147483647;
+  opacity: 0;
+  transition: left 0.05s linear, top 0.05s linear, opacity 0.15s ease-out;
+}
+
+#__screencast_cursor.__screencast_cursor_visible {
+  opacity: 1;
+}
+
+.__screencast_highlight {
+  outline: 3px solid rgba(255, 90, 0, 0.9) !important;
+  outline-offset: 2px !important;
+  animation: __screencast_pulse 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes __screencast_pulse {
+  from { outline-color: rgba(255, 90, 0, 0.9); }
+  to   { outline-color: rgba(255, 90, 0, 0.35); }
+}

@@ -179,6 +179,29 @@ def server(context, input_path=".", config=None, port=None):
     )
 
 
+@task(aliases=["scs"])
+def screencast_server(context, focus=None, edit=False):
+    """
+    Manual dev server for tests/screencast scenarios: starts StrictDoc on a
+    scenario's project (the shared demo fixture by default, or another
+    scenario's project via --focus), for inspecting it in the browser.
+
+    By default this serves a disposable copy, rebuilt fresh every time, so
+    nothing done through the UI persists. Pass --edit to serve the real,
+    persistent files instead (the shared fixture itself, or a generated
+    project reused across restarts) when intentionally editing them.
+    """
+
+    focus_argument = f"--focus {focus}" if focus is not None else ""
+    edit_argument = "--edit" if edit else ""
+
+    run_invoke_with_tox(
+        context,
+        ToxEnvironment.CHECK,
+        f"python tests/screencast/run_server.py {focus_argument} {edit_argument}",
+    )
+
+
 @task(aliases=["d"])
 def docs(context):
     run_invoke_with_tox(
@@ -375,6 +398,50 @@ def test_end2end(
         ToxEnvironment.CHECK,
         test_command,
         environment=environment,
+    )
+
+
+@task(aliases=["tsc"])
+def test_screencast(context, *, focus=None, record_video=False):
+    """
+    Runs the tests/screencast scenarios: fast pass/fail checks by default,
+    or (re)recording of the corresponding .webm videos with --record-video.
+    """
+
+    focus_argument = f"-k {focus}" if focus is not None else ""
+    record_video_argument = "--strictdoc-record-video" if record_video else ""
+
+    Path(TEST_REPORTS_DIR).mkdir(parents=True, exist_ok=True)
+
+    test_command = f"""
+        pytest
+        --capture=no
+        {focus_argument}
+        {record_video_argument}
+        --junit-xml={TEST_REPORTS_DIR}/tests_screencast.pytest.junit.xml
+        -o junit_suite_name="StrictDoc Screencast Tests"
+        -o cache_dir=build/pytest_screencast
+        tests/screencast/scenarios
+    """
+
+    run_invoke_with_tox(context, ToxEnvironment.CHECK, test_command)
+
+
+@task(aliases=["scov"])
+def screencast_optimize_video(context, focus=None):
+    """
+    Converts recorded tests/screencast/output/*.webm into muted,
+    web-optimized .webm (VP9) and .mp4 (H.264) pairs under
+    tests/screencast/output/web/, ready to hand off to the product website.
+
+    Run `invoke test-screencast --record-video` first to produce the raw
+    recordings this reads from.
+    """
+
+    focus_argument = f"--focus {focus}" if focus is not None else ""
+
+    run_invoke(
+        context, f"python tests/screencast/optimize_video.py {focus_argument}"
     )
 
 

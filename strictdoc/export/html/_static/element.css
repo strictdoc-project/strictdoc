@@ -1346,6 +1346,10 @@ a.tree_item,
   font-size: var(--font-size-sm);
   font-weight: 700;
   width: 99%; /* To calculate cite overflow  */
+  /* Flex items default to min-width: auto, which floors width at the
+    content's intrinsic size and makes width: 99% overflow the parent on
+    narrow viewports (flexbox min-width:auto pitfall). */
+  min-width: 0;
 }
 
 .document_title[data-file_name]::after {

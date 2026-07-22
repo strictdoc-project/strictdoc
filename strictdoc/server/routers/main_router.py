@@ -299,6 +299,13 @@ def create_main_router(
     def write_document_to_file(document: SDocDocument) -> None:
         """
         FIXME: Factorize this into an OOP class.
+
+        FIXME: The writer dispatch below is hardcoded to ".md"/".markdown"
+        vs. everything else, not derived from project_config.formats /
+        Format.supports_edit(). Document creation now accepts any editable
+        format's extension (see ProjectConfig.get_editable_document_extensions()),
+        so a third editable format would pass creation validation but get
+        silently mis-written here.
         """
 
         assert isinstance(document, SDocDocument)
@@ -2722,6 +2729,9 @@ def create_main_router(
             document_title="",
             document_path="",
             include_doc_paths=project_config.include_doc_paths,
+            editable_document_extensions=(
+                project_config.get_editable_document_extensions()
+            ),
         )
         return HTMLResponse(
             content=output,
@@ -2959,6 +2969,20 @@ def create_main_router(
                     ),
                 )
 
+        editable_document_extensions = (
+            project_config.get_editable_document_extensions()
+        )
+        if document_path is not None and len(document_path) > 0:
+            if not document_path.endswith(tuple(editable_document_extensions)):
+                error_object.add_error(
+                    "document_path",
+                    (
+                        "Document path must end with one of the supported "
+                        "document extensions: "
+                        f"{', '.join(editable_document_extensions)}."
+                    ),
+                )
+
         if error_object.any_errors():
             output = env().render_template_as_markup(
                 "actions/project_index/stream_new_document.jinja.html",
@@ -2970,6 +2994,7 @@ def create_main_router(
                 if document_path is not None
                 else "",
                 include_doc_paths=project_config.include_doc_paths,
+                editable_document_extensions=editable_document_extensions,
             )
             return HTMLResponse(
                 content=output,
@@ -2978,9 +3003,6 @@ def create_main_router(
                     "Content-Type": "text/vnd.turbo-stream.html",
                 },
             )
-
-        if not document_path.endswith(".sdoc"):
-            document_path = document_path + ".sdoc"
 
         assert isinstance(project_config.input_paths, list)
         full_input_path = os.path.abspath(project_config.input_paths[0])

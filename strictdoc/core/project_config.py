@@ -549,6 +549,23 @@ class ProjectConfig:
                 return feature
         return None
 
+    def get_editable_document_extensions(self) -> List[str]:
+        """
+        File extensions a new/edited document may use, i.e. the union of
+        supported_extensions() from every format in self.formats that
+        supports_edit(). Computed live from self.formats so that adding or
+        removing a format changes the accepted extensions without any
+        further code changes.
+        """
+        extensions: List[str] = []
+        for format_ in self.formats:
+            if not format_.supports_edit():
+                continue
+            for extension in format_.supported_extensions():
+                if extension not in extensions:
+                    extensions.append(extension)
+        return extensions
+
     # Some server command settings can override the project config settings.
     def integrate_server_config(
         self, server_config: ServerCommandConfig

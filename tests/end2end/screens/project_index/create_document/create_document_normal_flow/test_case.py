@@ -34,12 +34,13 @@ class Test(E2ECase):
             form_add_document.do_fill_in_path("docs/document1.sdoc")
             form_add_document.do_form_submit()
 
-            # Add file without .sdoc extension
+            # The extension is mandatory: add a second file with an
+            # explicit .sdoc extension.
             form_add_document: Form_AddDocument = (
                 screen_project_index.do_open_modal_form_add_document()
             )
             form_add_document.do_fill_in_title("Document 2")  # Empty document
-            form_add_document.do_fill_in_path("docs/document2")
+            form_add_document.do_fill_in_path("docs/document2.sdoc")
             form_add_document.do_form_submit()
 
             # Add file with a leading slash — slash must be stripped silently
@@ -47,7 +48,7 @@ class Test(E2ECase):
                 screen_project_index.do_open_modal_form_add_document()
             )
             form_add_document.do_fill_in_title("Document 3")
-            form_add_document.do_fill_in_path("/docs/document3")
+            form_add_document.do_fill_in_path("/docs/document3.sdoc")
             form_add_document.do_form_submit()
 
             screen_project_index.assert_contains_document("Document 3")

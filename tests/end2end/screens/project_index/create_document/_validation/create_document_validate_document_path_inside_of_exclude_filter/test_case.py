@@ -39,7 +39,7 @@ class Test(E2ECase):
             )
 
             # Then, fill in a valid path.
-            form_add_document.do_fill_in_path("docs/document")
+            form_add_document.do_fill_in_path("docs/document.sdoc")
             form_add_document.do_form_submit()
 
             screen_project_index.assert_contains_document("Document 1")

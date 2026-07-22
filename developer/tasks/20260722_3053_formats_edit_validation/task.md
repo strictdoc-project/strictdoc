@@ -118,6 +118,14 @@ established by the `Format` abstraction (see prior tasks
   `tests/unit/strictdoc/core/test_project_config.py` (numbered
   `test_NN_description` functions, direct `ProjectConfig(...)`
   instantiation, no mocking framework).
+- Fixing this revealed 3 pre-existing e2e tests that silently depended
+  on the removed auto-append-`.sdoc` behavior (a `docs/document`-style
+  path with no extension, previously expected to succeed):
+  `create_document_normal_flow`,
+  `create_document_validate_document_path_outside_of_include_filter`,
+  `create_document_validate_document_path_inside_of_exclude_filter`.
+  Updated each to use an explicit `.sdoc` path (no fixture/
+  expected_output changes needed — same resulting file content).
 
 ## Known limitation (out of scope for this task)
 
@@ -134,3 +142,5 @@ this hardcoded fallback. Not fixing this now — it would turn a validation
 fix into a writer-dispatch refactor — but flagging it as a follow-up
 since `Format` has no "write an edited document back to disk" method yet
 (`write_converted_document` is for `convert`, not this save path).
+A `FIXME` pointing at this mismatch was added directly at
+`write_document_to_file()` for discoverability.

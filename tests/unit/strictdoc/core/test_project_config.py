@@ -3,11 +3,13 @@ import tempfile
 
 import pytest
 
+from strictdoc.backend.sdoc.sdoc_format import SDocFormat
 from strictdoc.core.project_config import (
     ProjectConfig,
     ProjectConfigLoader,
     ProjectFeature,
 )
+from strictdoc.features.html2pdf.html2pdf_format import HTML2PDFFormat
 
 
 def test_01_default_config():
@@ -49,6 +51,31 @@ def test_32_include_source_paths_bad_mask():
 def test_33_exclude_source_paths_bad_mask():
     with pytest.raises(ValueError):
         _ = ProjectConfig(exclude_source_paths=[" "])
+
+
+#
+# Editable document extensions.
+#
+def test_40_editable_document_extensions_only_sdoc():
+    # SDocFormat is the base/always-available format, used here to test
+    # the get_editable_document_extensions() mechanism itself (iterate
+    # formats -> keep supports_edit() ones -> collect
+    # supported_extensions()), independent of which formats a real
+    # project happens to have configured.
+    project_config = ProjectConfig(formats=[SDocFormat()])
+    assert project_config.get_editable_document_extensions() == [".sdoc"]
+
+
+def test_41_editable_document_extensions_excludes_non_editable_format():
+    # HTML2PDFFormat is used (instead of a fake/stub Format) because it is
+    # a real, permanently non-editable format: PDF output is exported
+    # only, never edited through the UI, and supports_edit() is
+    # guaranteed to stay False. This keeps the test meaningful without
+    # inventing a throwaway Format subclass.
+    project_config = ProjectConfig(formats=[SDocFormat(), HTML2PDFFormat()])
+    extensions = project_config.get_editable_document_extensions()
+    assert extensions == [".sdoc"]
+    assert ".pdf" not in extensions
 
 
 def test_60_valid_host_and_port():

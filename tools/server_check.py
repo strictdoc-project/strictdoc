@@ -20,8 +20,14 @@ RESET = "\033[0m"
 
 
 def find_pids_on_port(port: int) -> list[int]:
+    # -sTCP:LISTEN restricts the match to sockets actually listening on
+    # `port`. Without it, lsof also matches processes that happen to be
+    # using `port` as the local (ephemeral) side of an unrelated outbound
+    # connection -- e.g. a browser with many open connections can land on
+    # this port purely by OS-assigned chance right after a strictdoc
+    # server released it, causing a false "port occupied" report.
     result = subprocess.run(
-        ["lsof", "-ti", f"tcp:{port}"],
+        ["lsof", "-ti", f"tcp:{port}", "-sTCP:LISTEN"],
         check=False,
         capture_output=True,
         text=True,

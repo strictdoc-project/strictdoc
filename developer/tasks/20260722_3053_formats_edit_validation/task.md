@@ -126,6 +126,21 @@ established by the `Format` abstraction (see prior tasks
   `create_document_validate_document_path_inside_of_exclude_filter`.
   Updated each to use an explicit `.sdoc` path (no fixture/
   expected_output changes needed — same resulting file content).
+- End-to-end coverage: added
+  `tests/end2end/screens/project_index/create_document/_validation/create_document_validate_document_path_unsupported_extension/`,
+  following the existing `_validation` sibling tests' structure
+  (input/expected_output/`.sandbox`, `End2EndTestSetup`,
+  `Form_AddDocument`). On standard server settings (no
+  `include_doc_paths`/`exclude_doc_paths` restriction), it submits
+  `document.pdf` and asserts the exact rendered error text ("Document path
+  must end with one of the supported document extensions: .sdoc, .md,
+  .markdown."), then submits `document.sdoc` and asserts the document is
+  created. The expected extensions list was confirmed live via
+  `ProjectConfig.default_config().get_editable_document_extensions()`.
+  - Verified with `invoke test-end2end --headless
+    --test-path=screens/project_index/create_document` (7/7 passed) and
+    the LINK_and_ANCHOR create-document e2e test (1/1 passed), against a
+    real headless browser/server.
 
 ## Known limitation (out of scope for this task)
 

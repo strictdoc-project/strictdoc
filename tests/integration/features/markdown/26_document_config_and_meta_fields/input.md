@@ -1,0 +1,9 @@
+# Hello world doc
+
+**Version**: @GIT_VERSION, @GIT_BRANCH \
+**Date**: @GIT_COMMIT_DATE, @GIT_COMMIT_DATETIME \
+**Classification**: Confidential \
+**GIT_VERSION**: @GIT_VERSION \
+**GIT_BRANCH**: @GIT_BRANCH \
+**GIT_COMMIT_DATE**: @GIT_COMMIT_DATE \
+**GIT_COMMIT_DATETIME**: @GIT_COMMIT_DATETIME

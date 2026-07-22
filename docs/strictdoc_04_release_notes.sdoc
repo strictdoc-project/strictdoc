@@ -50,6 +50,20 @@ releases:
 <<<
 
 [[SECTION]]
+MID: a7ffb392d48244969318ec115e4695bd
+TITLE: 0.??.? (2026-??-??)
+
+[TEXT]
+MID: 0046268453bf439b8a826ecc57abbe91
+STATEMENT: >>>
+This release contains the following enhancements:
+
+?\) The Markdown format now supports ``Version``, ``Date`` and ``Classification`` as document config fields.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 8a4b0e6f9d3c4c5b8e1a2f7d6c9b0a3e
 TITLE: 0.27.0 (2026-07-13)
 

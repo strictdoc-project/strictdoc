@@ -1,0 +1,38 @@
+REQUIRES: PLATFORM_IS_NOT_WINDOWS
+
+# Test Markdown support for document config and metadata fields.
+
+# FIXME: git repository is not cleaned. But must be outside strictdoc folder to prevent git from reporting embedded git repositories.
+RUN: mkdir -p /tmp/strictdoc_itests
+RUN: THIS_TMP_DIR=$(mktemp -d %STRICTDOC_TMP_DIR/XXXXXX); cd $THIS_TMP_DIR
+RUN: THIS_TMP_DIR_NAME=$(basename "$THIS_TMP_DIR")
+RUN: echo $THIS_TMP_DIR
+RUN: cp %S/input.md $THIS_TMP_DIR/
+
+RUN: git init --initial-branch=main
+RUN: %strictdoc export . --output-dir Output/
+RUN: %cat "$THIS_TMP_DIR/Output/html/$THIS_TMP_DIR_NAME/input.html" | filecheck %s --dump-input=fail --check-prefix CHECK-1
+CHECK-1: N/A, N/A
+CHECK-1: N/A
+
+RUN: git config user.name "Test User"
+RUN: git config user.email "test@example.com"
+RUN: git add .
+RUN: git commit -m "Initial commit"
+RUN: rm -rf Output/
+RUN: %strictdoc export . --output-dir Output/
+RUN: %cat "$THIS_TMP_DIR/Output/html/$THIS_TMP_DIR_NAME/input.html" | filecheck %s --dump-input=fail --check-prefix CHECK-2
+CHECK-2: {{[a-f0-9]{7}}}, main
+CHECK-2: {{\d{4}-\d{2}-\d{2}}}, {{\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}}}
+
+CHECK-2: CLASSIFICATION:
+CHECK-2: Confidential
+
+CHECK-2: GIT_VERSION:
+CHECK-2: {{[a-f0-9]{7}}}
+CHECK-2: GIT_BRANCH:
+CHECK-2: main
+CHECK-2: GIT_COMMIT_DATE:
+CHECK-2: {{\d{4}-\d{2}-\d{2}}}
+CHECK-2: GIT_COMMIT_DATETIME:
+CHECK-2: {{\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}}}

@@ -340,6 +340,12 @@ class SDMarkdownReader:
                     document.config.requirement_prefix = field_.value
                 if field_.name == "UID":
                     document.config.uid = field_.value
+                if field_.name == "Version":
+                    document.config.version = field_.value
+                if field_.name == "Date":
+                    document.config.date = field_.value
+                if field_.name == "Classification":
+                    document.config.classification = field_.value
                 metadata_entries.append(
                     DocumentCustomMetadataKeyValuePair(
                         key=field_.name,

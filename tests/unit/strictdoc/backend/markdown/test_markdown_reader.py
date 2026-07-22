@@ -535,13 +535,44 @@ def test_017_section_immediately_followed_by_child_section_has_no_empty_text_nod
     assert child.node_type == "REQUIREMENT"
 
 
-def test_024_markdown_reader_registers_document_level_uid():
-    markdown_content = "# Document title\n\n**UID**: DOC-1\n"
+def test_024_markdown_reader_registers_document_config():
+    markdown_content = """\
+# Document title
+
+**UID**: DOC-1 \\
+**Version**: Git commit: @GIT_VERSION, Git branch: @GIT_BRANCH \\
+**Date**: @GIT_COMMIT_DATETIME \\
+**Classification**: Confidential
+"""
 
     reader = SDMarkdownReader()
     document = reader.read(markdown_content, file_path=None)
 
     assert document.config.uid == "DOC-1"
+    assert (
+        document.config.version
+        == "Git commit: @GIT_VERSION, Git branch: @GIT_BRANCH"
+    )
+    assert document.config.date == "@GIT_COMMIT_DATETIME"
+    assert document.config.classification == "Confidential"
+    assert document.config.get_custom_metadata() == []
+
+
+def test_026_markdown_reader_registers_document_metadata():
+    markdown_content = """\
+# Document title
+
+**Author**: Jane \\
+**Checked-by**: Chuck Norris
+"""
+
+    reader = SDMarkdownReader()
+    document = reader.read(markdown_content, file_path=None)
+
+    assert document.config.get_custom_metadata() == [
+        ("Author", "Jane"),
+        ("Checked-by", "Chuck Norris"),
+    ]
 
 
 def test_025_markdown_reader_empty_heading_produces_no_title_field():

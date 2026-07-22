@@ -1098,6 +1098,50 @@ def test_027_section_prefix_without_type_roundtrips():
     )
 
 
+def test_029_document_config_roundtrip():
+    """
+    Document-level config data survives a full write-then-read cycle.
+    """
+    input_markdown = """\
+# Requirements specification
+
+**Version**: Git commit: @GIT_VERSION, Git branch: @GIT_BRANCH \\
+**Date**: @GIT_COMMIT_DATETIME \\
+**Classification**: Confidential
+"""
+    _, output_markdown = _assert_markdown_roundtrip(input_markdown)
+    document_from_output = SDMarkdownReader().read(
+        output_markdown, file_path=None
+    )
+    assert (
+        document_from_output.config.version
+        == "Git commit: @GIT_VERSION, Git branch: @GIT_BRANCH"
+    )
+    assert document_from_output.config.date == "@GIT_COMMIT_DATETIME"
+    assert document_from_output.config.classification == "Confidential"
+
+
+def test_030_document_level_metadata_roundtrip():
+    """
+    User-defined custom metadata survives a full write-then-read cycle.
+    """
+    input_markdown = """\
+# Requirements specification
+
+**Author**: Jane \\
+**Checked-by**: Chuck Norris
+"""
+    _, output_markdown = _assert_markdown_roundtrip(input_markdown)
+
+    document_from_output = SDMarkdownReader().read(
+        output_markdown, file_path=None
+    )
+    assert document_from_output.config.get_custom_metadata() == [
+        ("Author", "Jane"),
+        ("Checked-by", "Chuck Norris"),
+    ]
+
+
 def test_028_section_prefix_with_type_drops_type_on_output():
     """
     Section-level PREFIX written with explicit TYPE: SECTION is accepted;

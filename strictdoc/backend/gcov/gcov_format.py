@@ -36,6 +36,10 @@ class GCovJSONFormat(Format):
         return True
 
     @staticmethod
+    def supports_edit() -> bool:
+        return False
+
+    @staticmethod
     def read_extensions() -> List[str]:
         return [".gcov.json"]
 

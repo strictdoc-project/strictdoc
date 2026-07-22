@@ -69,6 +69,11 @@ class Format(ABC):
         raise NotImplementedError
 
     @staticmethod
+    @abstractmethod
+    def supports_edit() -> bool:
+        raise NotImplementedError
+
+    @staticmethod
     def read_extensions() -> List[str]:
         """
         Extensions this Format auto-discovers/reads as native DocumentFinder

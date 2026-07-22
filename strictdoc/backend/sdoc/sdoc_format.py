@@ -58,6 +58,10 @@ class SDocFormat(Format):
         return True
 
     @staticmethod
+    def supports_edit() -> bool:
+        return True
+
+    @staticmethod
     def read_extensions() -> List[str]:
         return [".sdoc"]
 

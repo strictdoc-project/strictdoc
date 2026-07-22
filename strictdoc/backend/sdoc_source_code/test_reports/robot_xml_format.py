@@ -38,6 +38,10 @@ class RobotXMLFormat(Format):
         return True
 
     @staticmethod
+    def supports_edit() -> bool:
+        return False
+
+    @staticmethod
     def read_extensions() -> List[str]:
         return [".robot.xml"]
 

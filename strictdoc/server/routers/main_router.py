@@ -11,7 +11,17 @@ from pathlib import Path
 from typing import Any, Dict, Iterator, List, Optional, Union
 from urllib.parse import quote
 
-from fastapi import APIRouter, Depends, FastAPI, Form, HTTPException, UploadFile
+from fastapi import (
+    APIRouter,
+    Depends,
+    FastAPI,
+    Form,
+    HTTPException,
+    UploadFile,
+)
+from fastapi import (
+    Query as FastAPIQuery,
+)
 from reqif.models.error_handling import ReqIFXMLParsingError
 from reqif.parser import ReqIFParser
 from reqif.unparser import ReqIFUnparser
@@ -108,6 +118,9 @@ from strictdoc.export.html.form_objects.requirement_form_object import (
     RequirementFormObject,
     RequirementReferenceFormField,
     deduplicate_comma_separated_value,
+)
+from strictdoc.export.html.generators.view_objects.document_chunks import (
+    CHUNK_SIZE,
 )
 from strictdoc.export.html.generators.view_objects.document_screen_view_object import (
     DocumentScreenViewObject,
@@ -4520,6 +4533,70 @@ def create_main_router(
         # The HTTPException will render our ServerErrorViewObject 404 page
         # via @app.exception_handler(404).
         raise HTTPException(status_code=404, detail="UID or MID was not found")
+
+    @read_router.get(
+        "/fragments/document/{document_mid}/chunk", response_class=Response
+    )
+    def get_document_chunk(
+        document_mid: str,
+        from_node: str,
+        count: int = FastAPIQuery(ge=1, le=CHUNK_SIZE),
+        chunk: int = FastAPIQuery(ge=0),
+    ) -> Response:
+        """
+        Serve a single lazily-loaded chunk of a document's content.
+
+        The chunk is addressed with a cursor: from_node is the MID of the
+        first node of the chunk, and count is the number of nodes to render.
+        """
+        document_or_none: Optional[Any] = (
+            export_action.traceability_index.get_node_by_mid_weak(
+                MID(document_mid)
+            )
+        )
+        if not isinstance(document_or_none, SDocDocument):
+            return _error_response(HTTP_STATUS_NOT_FOUND)
+        document: SDocDocument = document_or_none
+
+        assert document.meta is not None
+        link_renderer = LinkRenderer(
+            root_path=document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
+        )
+        markup_renderer = MarkupRenderer.create(
+            markup=document.config.get_markup(),
+            traceability_index=export_action.traceability_index,
+            link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
+            config=project_config,
+            context_document=document,
+        )
+        view_object = DocumentScreenViewObject(
+            document_type=DocumentType.DOCUMENT,
+            document=document,
+            traceability_index=export_action.traceability_index,
+            project_config=project_config,
+            link_renderer=link_renderer,
+            markup_renderer=markup_renderer,
+            jinja_environment=env(),
+            git_client=html_generator.git_client,
+        )
+        # An unknown from_node cursor (e.g., the node was deleted by a
+        # concurrent edit) renders an empty turbo-frame on purpose: HTTP 200
+        # lets Turbo replace the lazy placeholder with the empty frame
+        # instead of leaving the placeholder loading forever.
+        output = env().render_template_as_markup(
+            "screens/document/document/document_chunk.jinja.html",
+            view_object=view_object,
+            chunk_index=chunk,
+            from_node=from_node,
+            count=count,
+        )
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={"Cache-Control": "no-cache"},
+        )
 
     # Nestor is a highly experimental feature that is unlikely to make it to the
     # stable feature set. Excluding it from code coverage.

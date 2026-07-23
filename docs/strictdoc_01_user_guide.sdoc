@@ -4430,6 +4430,39 @@ Use the ``[server]`` section to configure the host and port as follows.
 
 [[/SECTION]]
 
+[[SECTION]]
+MID: 6ebd68891d4a4d518093415cbd6f5f2e
+UID: SECTION-UG-Chunked-documents-threshold
+TITLE: Chunked documents threshold
+
+[TEXT]
+MID: ff77928f09094995acb61af071157431
+STATEMENT: >>>
+When a document contains many nodes, the StrictDoc server can render the
+document in lazily loaded chunks to speed up the initial page load. The
+``chunked_documents_threshold`` option controls the threshold number of
+nodes: the chunked rendering is activated for documents that contain more
+than this number of nodes. The default value is ``200``. Setting the option to ``0`` disables the chunked
+rendering completely. Threshold values below ``100`` also become the chunk
+size: the documents are loaded in chunks of ``min(threshold, 100)`` nodes.
+
+Use the ``[server]`` section of ``strictdoc.toml`` to configure this option.
+
+.. code:: python
+
+    from strictdoc.core.project_config import ProjectConfig
+
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_title="Test project",
+            chunked_documents_threshold=100,
+        )
+        return config
+<<<
+
+[[/SECTION]]
+
 [[/SECTION]]
 
 [[/SECTION]]

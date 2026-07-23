@@ -808,6 +808,7 @@ def lint_format_js(context):
                 --end-with-newline
                 --replace
                 -w100
+                strictdoc/export/html/_static/copy_to_clipboard.js
                 strictdoc/export/html/_static/static_html_search.js
                 strictdoc/features/project_index/assets/stable_uri_forwarder.js
         """,

@@ -16,8 +16,11 @@
   <script src="{{ view_object.render_static_url('collapsible_toc.js') }}"></script>
   <script src="{{ view_object.render_static_url('project_tree_preserve_scroll.js') }}"></script>
   <script src="{{ view_object.render_static_url('toc_highlighting.js') }}"></script>
+  {%- if view_object.is_chunked_rendering() %}
+  <script src="{{ view_object.render_static_url('toc_chunk_navigation.js') }}"></script>
+  {%- endif %}
 
-  <script src="{{ view_object.render_static_url('controllers/copy_to_clipboard_controller.js') }}"></script>
+  <script src="{{ view_object.render_static_url('copy_to_clipboard.js') }}"></script>
 
   {% include "_shared/static_search_head.jinja" %}
 
@@ -47,8 +50,37 @@
   window.MathJax = {
     tex: {
       tags: 'ams',
-    },   
+    },
+    startup: {
+      // Defer the initial typeset off the critical render path:
+      // it is kicked at browser idle time below.
+      typeset: false,
+    },
   };
+  // Typeset when the browser is idle instead of blocking first paint.
+  // Race handling: the MathJax script is loaded async, so when the idle
+  // callback fires it can be in one of three states:
+  // 1. fully started:    typesetPromise exists -> typeset directly;
+  // 2. loaded, starting: startup.promise exists -> typeset once startup
+  //                      is complete;
+  // 3. not executed yet: window.MathJax is still the plain config object
+  //                      above (no startup.promise) -> re-check shortly.
+  window.addEventListener('load', () => {
+    const kickMathJax = () => {
+      if (window.MathJax?.typesetPromise) {
+        MathJax.typesetPromise().catch(console.error);
+      } else if (window.MathJax?.startup?.promise) {
+        MathJax.startup.promise
+          .then(() => MathJax.typesetPromise())
+          .catch(console.error);
+      } else {
+        setTimeout(kickMathJax, 100);
+      }
+    };
+    ('requestIdleCallback' in window)
+      ? requestIdleCallback(kickMathJax, { timeout: 2000 })
+      : setTimeout(kickMathJax, 0);
+  });
   </script>
   <script id="MathJax-script" async src="{{ view_object.render_static_url('mathjax/tex-mml-chtml.js') }}"></script>
   {%- if view_object.is_running_on_server -%}
@@ -71,30 +103,67 @@
       });
     }
 
-    // This EventListener will hook to node updates and re-typeset the MathJax expressions (i.e. after saving)...
-    document.addEventListener("turbo:before-stream-render", (event) => {
+    // Full re-typeset of the whole document: required because edits and
+    // late-arriving content can break the 'ams' equation numbering.
+    function retypesetMathJax()
+    {
       if (window.MathJax?.typesetPromise) {
         requestAnimationFrame(() => {
           restoreOriginalMathElements();                 // restore all math divs and spans in the DOM
-          MathJax.texReset();                            // reset all previous tex input state (eq numbering...) 
+          MathJax.texReset();                            // reset all previous tex input state (eq numbering...)
           MathJax.typesetClear();                        // remove all previous output state (typesetting, elements...)
           MathJax.typesetPromise().catch(console.error); // typeset again, this re-creates the equation numbers
         });
       }
-    });  
+    }
+
+    // This EventListener will hook to node updates and re-typeset the MathJax expressions (i.e. after saving)...
+    document.addEventListener("turbo:before-stream-render", (event) => {
+      retypesetMathJax();
+    });
+
+    // Lazily loaded document chunks (see frame_document_content.jinja.html)
+    // arrive after the initial idle-time typeset; re-typeset when one loads.
+    document.addEventListener("turbo:frame-load", (event) => {
+      if (!event.target.id?.startsWith("document-chunk-")) return;
+      retypesetMathJax();
+    });
   </script>
   {%- endif -%}
   {%- endif -%}
   {%- if view_object.project_config.is_activated_mermaid() -%}
     <script src="{{ view_object.render_static_url('mermaid/mermaid.min.js') }}"></script>
     <script type="module">
-      mermaid.initialize({ startOnLoad: true });
+      // Defer the initial diagram rendering off the critical render path.
+      // mermaid.min.js is a classic script loaded before this module, so
+      // the mermaid global is guaranteed to exist here (no load race,
+      // unlike the async MathJax script above).
+      mermaid.initialize({ startOnLoad: false });
+      window.addEventListener('load', () => {
+        const kickMermaid = () => mermaid.run().catch(console.error);
+        ('requestIdleCallback' in window)
+          ? requestIdleCallback(kickMermaid, { timeout: 2000 })
+          : setTimeout(kickMermaid, 0);
+      });
     </script>
   {%- if view_object.is_running_on_server -%}
     <script>
+      // Re-render mermaid diagrams; idempotent for already rendered
+      // diagrams thanks to mermaid's data-processed marker.
+      function rerunMermaid() {
+        requestAnimationFrame(() => mermaid.run());
+      }
+
       // Re-run mermaid after node updates (i.e. after saving)...
       document.addEventListener("turbo:before-stream-render", () => {
-        requestAnimationFrame(() => mermaid.run());
+        rerunMermaid();
+      });
+
+      // Lazily loaded document chunks (see frame_document_content.jinja.html)
+      // arrive after the initial idle-time rendering; re-run when one loads.
+      document.addEventListener("turbo:frame-load", (event) => {
+        if (!event.target.id?.startsWith("document-chunk-")) return;
+        rerunMermaid();
       });
     </script>
   {%- endif -%}

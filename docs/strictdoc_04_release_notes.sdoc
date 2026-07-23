@@ -347,6 +347,18 @@ C-only constructs were fed to the C++ parser.
 13\) Fixed: Markdown documents containing exactly one section and one
 requirement now parse correctly. A regression introduced in the Markdown grammar
 work caused this common structure to be rejected.
+14\) The web interface renders large documents faster. Copy-to-clipboard buttons
+are now handled by a single delegated event listener instead of one listener
+per node, and the initial MathJax typesetting and Mermaid diagram rendering are
+deferred to browser idle time so they no longer block the first paint of the
+document.
+
+4\) The web interface now renders large documents in lazily loaded chunks.
+Documents containing more than ``chunked_documents_threshold`` nodes (200 by
+default, configurable in ``strictdoc.toml``, 0 disables chunking) initially
+load only the first chunk of nodes together with the table of contents, and
+the remaining chunks are fetched automatically as the user scrolls. This
+keeps documents with thousands of requirements responsive in the editing GUI.
 <<<
 
 [[/SECTION]]

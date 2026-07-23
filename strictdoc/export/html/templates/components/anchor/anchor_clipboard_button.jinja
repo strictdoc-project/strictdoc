@@ -1,12 +1,11 @@
 {#
-  Anchor copy button — part of the copy_to_clipboard controller (copy_to_clipboard_controller.js).
-  The controller is mounted on the parent sdoc-node, not here.
+  Anchor copy button — handled by the delegated document-level listener in copy_to_clipboard.js.
 
   Expected attributes on this element:
     data-copy-clipboard-target="button"  — marks this as a copy button
     data-anchor-id                       — the value to copy (anchor ID)
 
-  Expected targets inside this element (used by _feedback):
+  Expected targets inside this element (used by the feedback() function in copy_to_clipboard.js):
     data-copy-clipboard-target="copyIcon"
     data-copy-clipboard-target="doneIcon"
     data-copy-clipboard-target="cover"

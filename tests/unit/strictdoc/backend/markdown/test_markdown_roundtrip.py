@@ -9,38 +9,50 @@ from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.reader import SDReader
+from strictdoc.core.project_config import ProjectConfig, ProjectFeature
+from strictdoc.helpers.exception import StrictDocException
 
 
 def _assert_markdown_roundtrip(
-    input_markdown: str, expected_markdown: Optional[str] = None
+    input_markdown: str,
+    expected_markdown: Optional[str] = None,
+    project_config: Optional[ProjectConfig] = None,
 ) -> tuple[SDocDocument, str]:
     reader = SDMarkdownReader()
-    document = reader.read(input_markdown, file_path=None)
+    document = reader.read(
+        input_markdown, file_path=None, project_config=project_config
+    )
 
     writer = SDMarkdownWriter()
-    output_markdown = writer.write(document)
+    output_markdown = writer.write(document, project_config=project_config)
 
     if expected_markdown is None:
         expected_markdown = input_markdown
     assert output_markdown == expected_markdown
 
-    document_from_output = reader.read(output_markdown, file_path=None)
-    output_markdown_2 = writer.write(document_from_output)
+    document_from_output = reader.read(
+        output_markdown, file_path=None, project_config=project_config
+    )
+    output_markdown_2 = writer.write(
+        document_from_output, project_config=project_config
+    )
     assert output_markdown_2 == output_markdown
 
     return document, output_markdown
 
 
 def _assert_sdoc_to_markdown_roundtrip(
-    input_sdoc: str, expected_markdown: str
+    input_sdoc: str,
+    expected_markdown: str,
+    project_config: Optional[ProjectConfig] = None,
 ) -> str:
     document = SDReader.read(input_sdoc, file_path=None)
 
     writer = SDMarkdownWriter()
-    output_markdown = writer.write(document)
+    output_markdown = writer.write(document, project_config=project_config)
     assert output_markdown == expected_markdown
 
-    _assert_markdown_roundtrip(output_markdown)
+    _assert_markdown_roundtrip(output_markdown, project_config=project_config)
     return output_markdown
 
 
@@ -1181,3 +1193,115 @@ def test_028_section_prefix_with_type_drops_type_on_output():
     assert isinstance(section, SDocNode)
     assert section.node_type == "SECTION"
     assert section.get_prefix() == "LEVEL2-REQ-"
+
+
+def test_029_roundtrip_headings_deeper_than_h6():
+    input_sdoc = """\
+[DOCUMENT]
+TITLE: Document title
+
+[[SECTION]]
+TITLE: Level 1
+
+[[SECTION]]
+TITLE: Level 2
+
+[[SECTION]]
+TITLE: Level 3
+
+[[SECTION]]
+TITLE: Level 4
+
+[[SECTION]]
+TITLE: Level 5
+
+[[SECTION]]
+TITLE: Level 6
+
+[REQUIREMENT]
+UID: REQ-DEEP-1
+TITLE: Deep requirement
+STATEMENT: Statement nested seven levels below the document.
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[/SECTION]]
+"""
+    expected_markdown = """\
+# Document title
+
+## Level 1
+
+### Level 2
+
+#### Level 3
+
+##### Level 4
+
+###### Level 5
+
+####### Level 6
+
+######## Deep requirement
+
+**UID**: REQ-DEEP-1
+
+**Statement**: Statement nested seven levels below the document.
+"""
+    project_config = ProjectConfig(
+        project_features=[ProjectFeature.MARKDOWN_DEEP_HEADINGS]
+    )
+    _assert_sdoc_to_markdown_roundtrip(
+        input_sdoc, expected_markdown, project_config=project_config
+    )
+
+
+def test_030_writer_rejects_deep_document_without_feature_flag():
+    input_sdoc = """\
+[DOCUMENT]
+TITLE: Document title
+
+[[SECTION]]
+TITLE: Level 1
+
+[[SECTION]]
+TITLE: Level 2
+
+[[SECTION]]
+TITLE: Level 3
+
+[[SECTION]]
+TITLE: Level 4
+
+[[SECTION]]
+TITLE: Level 5
+
+[[SECTION]]
+TITLE: Level 6
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[/SECTION]]
+"""
+    document = SDReader.read(input_sdoc, file_path=None)
+
+    writer = SDMarkdownWriter()
+    with pytest.raises(StrictDocException) as exc_info:
+        writer.write(document)
+    assert "MARKDOWN_DEEP_HEADINGS" in str(exc_info.value)

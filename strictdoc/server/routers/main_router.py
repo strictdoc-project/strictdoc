@@ -326,7 +326,9 @@ def create_main_router(
             )
         ):
             SDMarkdownWriter.write_to_file(
-                document, line_width=project_config.document_line_width
+                document,
+                line_width=project_config.document_line_width,
+                project_config=project_config,
             )
         else:
             sdoc_writer.write_to_file(document)

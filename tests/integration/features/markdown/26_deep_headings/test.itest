@@ -1,0 +1,16 @@
+#
+# Verify that with the MARKDOWN_DEEP_HEADINGS feature activated, Markdown
+# headings deeper than H6 (a non-CommonMark extension) are parsed as nested
+# sections instead of paragraph text.
+#
+
+RUN: %strictdoc export %S --formats=html --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Deep headings example
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-FILE
+
+CHECK-HTML-FILE: data-level="1.1.1.1.1.1"
+CHECK-HTML-FILE: Level 6
+CHECK-HTML-FILE: data-testid="node-requirement"
+CHECK-HTML-FILE: data-uid="REQ-DEEP-1"
+CHECK-HTML-FILE: Statement nested seven levels below the document.

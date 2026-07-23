@@ -4985,6 +4985,76 @@ document-level prefix for all requirements within that section.
 
 [[/SECTION]]
 
+[[SECTION]]
+MID: 3f33a1441f8140ba886ff91371197503
+UID: SECTION-UG-Markdown-deep-headings
+TITLE: Deep headings (more than six levels)
+
+[TEXT]
+MID: 299c3572be2d4e5c9d06b2ce327d377b
+STATEMENT: >>>
+CommonMark recognizes headings with at most six ``#`` characters, so a
+Markdown document can normally nest sections only five levels below the
+document title. SDoc documents, however, support arbitrary nesting depth.
+
+To allow deeply nested documents to round-trip through the Markdown format,
+StrictDoc provides the experimental ``MARKDOWN_DEEP_HEADINGS`` project feature.
+When activated, the Markdown reader accepts headings with seven or more ``#``
+characters, following the precedent of Pandoc's Markdown reader, and the
+Markdown writer emits such headings for nodes nested deeper than six levels.
+
+**Example of a requirement nested seven levels below the document title:**
+
+.. code-block:: markdown
+
+    # Deep headings example
+
+    ## Level 1
+
+    ### Level 2
+
+    #### Level 3
+
+    ##### Level 4
+
+    ###### Level 5
+
+    ####### Level 6
+
+    ######## Deep requirement
+
+    **UID**: REQ-DEEP-1
+
+    **Statement**: Statement nested seven levels below the document.
+
+To activate the feature, enable the corresponding setting in the
+``strictdoc_config.py`` configuration file:
+
+.. code:: python
+
+    from strictdoc.core.project_config import ProjectConfig
+
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_features=[
+                "MARKDOWN_DEEP_HEADINGS"
+            ],
+        )
+        return config
+
+.. note::
+
+    Headings deeper than six levels are a non-CommonMark extension: other
+    Markdown tools, such as GitHub or VS Code, render seven or more ``#``
+    characters as plain paragraph text. Keep the feature disabled if the
+    Markdown files must remain fully portable. When the feature is disabled,
+    the Markdown writer reports an error instead of silently writing a
+    document that is nested too deeply to be represented.
+<<<
+
+[[/SECTION]]
+
 [[/SECTION]]
 
 [[SECTION]]

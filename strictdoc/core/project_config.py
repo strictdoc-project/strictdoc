@@ -80,6 +80,11 @@ class ProjectFeature(str, Enum):
     MERMAID = "MERMAID"
     NESTOR = "NESTOR"
 
+    # Non-CommonMark extension: ATX headings with more than six '#'
+    # characters, allowing the Markdown format to represent documents
+    # nested deeper than six levels.
+    MARKDOWN_DEEP_HEADINGS = "MARKDOWN_DEEP_HEADINGS"
+
     ALL_FEATURES = "ALL_FEATURES"
 
     @staticmethod

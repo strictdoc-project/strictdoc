@@ -66,6 +66,10 @@ class ReqIFFormat(Format):
         return True
 
     @staticmethod
+    def supports_edit() -> bool:
+        return False
+
+    @staticmethod
     def read_extensions() -> List[str]:
         # Only ".reqif" is auto-discovered as native tree-building input
         # today, not ".reqifz" (even though both are listed in

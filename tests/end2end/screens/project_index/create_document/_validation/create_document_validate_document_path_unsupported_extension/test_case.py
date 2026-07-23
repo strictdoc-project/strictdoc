@@ -1,5 +1,5 @@
 """
-@relation(SDOC-SRS-107, scope=file)
+@relation(SDOC-SRS-107, scope=function)
 """
 
 from tests.end2end.e2e_case import E2ECase
@@ -31,15 +31,21 @@ class Test(E2ECase):
             )
             form_add_document.do_fill_in_title("Document 1")
 
-            # First, fill in an invalid path.
-            form_add_document.do_fill_in_path("tests/document")
+            # An extension that no editable format supports is rejected
+            # with a format-specific error. This project uses the default,
+            # unrestricted server settings (no include_doc_paths/
+            # exclude_doc_paths), so this error is distinct from -- and not
+            # to be confused with -- the include/exclude path-filter
+            # errors covered by the sibling tests in this folder.
+            form_add_document.do_fill_in_path("document.pdf")
             form_add_document.do_form_submit_and_catch_error(
-                "Document path is not a valid path according to the project "
-                "config's setting 'exclude_doc_paths': ['tests/**']."
+                "Document path must end with one of the supported "
+                "document extensions: .sdoc, .md, .markdown."
             )
 
-            # Then, fill in a valid path.
-            form_add_document.do_fill_in_path("docs/document.sdoc")
+            # A supported extension (.sdoc) succeeds on the same, standard
+            # settings.
+            form_add_document.do_fill_in_path("document.sdoc")
             form_add_document.do_form_submit()
 
             screen_project_index.assert_contains_document("Document 1")

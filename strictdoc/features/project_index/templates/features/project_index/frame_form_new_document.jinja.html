@@ -42,7 +42,6 @@ Add new document
             field_label="document path and filename",
             field_placeholder="Enter document path and filename here...",
             field_type="singleline",
-            singleline_suffix='.sdoc',
             field_value=document_path,
             testid_postfix="document_path",
             errors=error_object.get_errors("document_path")
@@ -54,6 +53,14 @@ Add new document
             ☞ Path must start with one of:
             {% for path in include_doc_paths -%}
               <code>{{ path }}</code>{% if not loop.last %}, {% endif %}
+            {%- endfor -%}
+          </sdoc-form-hint>
+          {%- endif -%}
+          {%- if editable_document_extensions -%}
+          <sdoc-form-hint>
+            ☞ File name must end with one of:
+            {% for extension in editable_document_extensions -%}
+              <code>{{ extension }}</code>{% if not loop.last %}, {% endif %}
             {%- endfor -%}
           </sdoc-form-hint>
           {%- endif -%}

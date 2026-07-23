@@ -30,6 +30,10 @@ class HTMLFormat(Format):
         return False
 
     @staticmethod
+    def supports_edit() -> bool:
+        return False
+
+    @staticmethod
     def supports_grammar() -> bool:
         return False
 

@@ -50,7 +50,7 @@
     {% if field_required -%}
       required="true"
     {%- endif %}
-    data-controller="editablefield"
+    data-js-editable-field
     role="textbox"
     data-field-type="{{ field_type }}"
     {%- if field_editable is defined and not field_editable -%}

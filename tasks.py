@@ -811,6 +811,7 @@ def lint_format_js(context):
                 -w100
                 strictdoc/export/html/_static/copy_to_clipboard.js
                 strictdoc/export/html/_static/deletable_field.js
+                strictdoc/export/html/_static/editable_field.js
                 strictdoc/export/html/_static/modal.js
                 strictdoc/export/html/_static/movable_field.js
                 strictdoc/export/html/_static/scroll_into_view.js

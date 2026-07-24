@@ -58,7 +58,8 @@ MID: 0046268453bf439b8a826ecc57abbe91
 STATEMENT: >>>
 This release contains the following enhancements:
 
-?\) The Markdown format now supports ``Version``, ``Date`` and ``Classification`` as document config fields.
+?\) The Markdown format now supports ``Version``, ``Date`` and
+``Classification`` as document config fields.
 <<<
 
 [[/SECTION]]

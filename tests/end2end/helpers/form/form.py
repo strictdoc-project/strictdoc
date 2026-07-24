@@ -294,7 +294,7 @@ class Form:  # pylint: disable=invalid-name
         )
 
         # We send Arrow-Down and Enter select the first match.
-        # The stimulus.js controller uses a debounce of 50ms, we are
+        # autocompletable_field.js uses a debounce of 50ms, we are
         # careful to use an larger interval inbetween key presses.
         len_before_autocomplete = len(element.text.lower().strip())
         select_first_match_action = ActionChains(self.test_case.driver)
@@ -339,7 +339,7 @@ class Form:  # pylint: disable=invalid-name
         )
 
         # We send Arrow-Down and Enter select the first match.
-        # The stimulus.js controller uses a debounce of 10ms, we are
+        # autocompletable_field.js uses a debounce of 10ms, we are
         # careful to use an larger interval inbetween key presses.
         select_first_match_action = ActionChains(self.test_case.driver)
         select_first_match_action.send_keys(Keys.ARROW_DOWN).pause(
@@ -347,7 +347,7 @@ class Form:  # pylint: disable=invalid-name
         ).send_keys(Keys.RETURN).perform()
 
         # Committing a match always closes the results dropdown (see
-        # commit() in autocompletable_field_controller.js). Wait for that
+        # commit() in autocompletable_field.js). Wait for that
         # instead of a text-length increase: when field_value is already the
         # full target value (e.g. "REQ-001"), selecting the match commits
         # the same text, so the field's length never grows even though the

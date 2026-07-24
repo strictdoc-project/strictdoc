@@ -809,6 +809,7 @@ def lint_format_js(context):
                 --end-with-newline
                 --replace
                 -w100
+                strictdoc/export/html/_static/autocompletable_field.js
                 strictdoc/export/html/_static/copy_to_clipboard.js
                 strictdoc/export/html/_static/deletable_field.js
                 strictdoc/export/html/_static/draggable_list.js

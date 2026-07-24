@@ -816,6 +816,7 @@ def lint_format_js(context):
                 strictdoc/export/html/_static/movable_field.js
                 strictdoc/export/html/_static/scroll_into_view.js
                 strictdoc/export/html/_static/static_html_search.js
+                strictdoc/export/html/_static/tabs.js
                 strictdoc/features/project_index/assets/stable_uri_forwarder.js
         """,
     )

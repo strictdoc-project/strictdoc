@@ -6,7 +6,7 @@
 {% assert form_object.relation is defined, "form_object: relation must be defined." %}
 
 {% block row_form_attributes %}
-  data-controller="deletable_field movable_field"
+  data-controller="movable_field"
   mid="{{ form_object.relation.relation_mid }}"
   data-testid="grammar-form-relation-row"
 {% endblock row_form_attributes %}

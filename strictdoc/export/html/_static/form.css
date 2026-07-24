@@ -484,7 +484,7 @@ sdoc-autocompletable[data-field-suffix]:not(:empty)::after {
 
 
 
-form[data-controller~="scroll_into_view"] {
+form[data-js-scroll-into-view] {
   /* fix on 1px border and smth unruly */
     scroll-snap-margin-top: calc(var(--base-padding) + 1px);
     scroll-margin-top:      calc(var(--base-padding) + 1px);

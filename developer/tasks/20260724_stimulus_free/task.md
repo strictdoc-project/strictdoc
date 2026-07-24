@@ -41,6 +41,19 @@ Requirements:
   migrated controller are removed from the corresponding Jinja templates and
   replaced with plain selectors/data-attributes, consistent with the
   existing plain-JS scripts in `strictdoc/export/html/_static/`.
+- New boolean marker attributes (a plain "this element opts into behavior X"
+  flag, no value) use the `data-js-*` prefix, matching the existing
+  `data-js-delete-field-action` / `data-js-move-up-field-action` /
+  `data-js-move-down-field-action` convention (e.g.
+  `data-js-scroll-into-view`). Attributes that carry a value (which sub-part
+  of a component an element is, matching the Stimulus-target idea) keep the
+  existing `data-<feature>-target="<value>"` shape (e.g.
+  `data-copy-clipboard-target="button"`). Do not invent a third, `data-controller`-like
+  single-attribute/space-separated-tokens scheme unless an element ends up
+  needing several independent on-insert behaviors stacked on it at once —
+  currently just one such case exists (`scroll_into_view` + `tabs` on the
+  same `<form>`, and that resolves to two separate attributes, not a
+  combined one).
 - Cross-script communication (if any is needed between migrated scripts, or
   with existing plain scripts) goes through `window.StrictDoc.*` in
   `app_core.js`, only for genuine shared contracts — not as a default

@@ -1,68 +1,79 @@
-// Supports multiple menus (toggle/content pairs) per page.
+// Supports multiple dropdown menus (toggle/content pairs) anywhere on the
+// page - view-type menu, header actions, per-node "Add node" menu - each
+// independent by id.
 // Toggle: [data-dropdown-handler] + aria-controls="id_of_content".
 // Content: element with that id + aria-hidden.
+//
+// Uses the shared StrictDoc.onInsert (app_core.js): a toggle inserted
+// anywhere later (Turbo Stream/Frame response, a dynamically added node)
+// is wired up automatically, no extra registration needed.
 
-(function () {
-  function initDropdowns() {
-    const toggles = document.querySelectorAll(
-      "[data-dropdown-handler]:not([data-dropdown-initialized])"
-    );
-    const pairs = [];
-    toggles.forEach((toggle) => {
-      const contentId = toggle.getAttribute("aria-controls");
-      if (!contentId) return;
-      const content = document.getElementById(contentId);
+(() => {
+
+  // Every registered toggle. Content is resolved on demand (not cached at
+  // registration time) for two reasons: during the initial page parse, a
+  // toggle can be inserted (and its onInsert callback fire) slightly before
+  // its sibling content element with the matching id exists yet; and a
+  // Turbo Stream update can later replace the content element outright,
+  // which would leave a cached reference pointing at a detached node.
+  const toggles = [];
+
+  function contentOf(toggle) {
+    const id = toggle.getAttribute('aria-controls');
+    return id ? document.getElementById(id) : null;
+  }
+
+  // Opening one hides every other pair on the page - not just pairs of the
+  // same kind - so only one dropdown is ever open at a time.
+  function show(toggle) {
+    toggles.forEach((t) => {
+      const content = contentOf(t);
       if (!content) return;
-      toggle.setAttribute("data-dropdown-initialized", "true");
-      pairs.push({ toggle, content });
-    });
-
-    pairs.forEach((pair) => {
-      const { toggle, content } = pair;
-
-      const show = () => {
-        pairs.forEach((p) => {
-          if (p === pair) return;
-          p.toggle.setAttribute("aria-expanded", false);
-          p.content.setAttribute("aria-hidden", true);
-        });
-        toggle.setAttribute("aria-expanded", true);
-        content.setAttribute("aria-hidden", false);
-      };
-
-      const hide = () => {
-        toggle.setAttribute("aria-expanded", false);
-        content.setAttribute("aria-hidden", true);
-      };
-
-      toggle.addEventListener("click", (event) => {
-        event.stopPropagation();
-        JSON.parse(toggle.getAttribute("aria-expanded")) ? hide() : show();
-      });
-
-      // Close when click/focus is outside both the toggle and the content.
-      const handleClosure = (event) => {
-        const target = event.target;
-        if (!toggle.contains(target) && !content.contains(target)) hide();
-      };
-
-      window.addEventListener("click", handleClosure);
-      window.addEventListener("focusin", handleClosure);
+      const isThis = t === toggle;
+      t.setAttribute('aria-expanded', isThis);
+      content.setAttribute('aria-hidden', !isThis);
     });
   }
 
-  // On initial page load, wire up all dropdowns found in the DOM.
-  window.addEventListener("load", () => {
-    initDropdowns();
+  function hide(toggle) {
+    const content = contentOf(toggle);
+    toggle.setAttribute('aria-expanded', false);
+    if (content) content.setAttribute('aria-hidden', true);
+  }
 
-    // When a turbo-stream replaces the frame content, the old DOM nodes and
-    // their event listeners are gone. MutationObserver re-initializes any
-    // fresh toggle that appears — the :not([data-dropdown-initialized])
-    // selector makes it a no-op if nothing new arrived.
-    const frame = document.getElementById("frame-viewtype-menu");
-    if (frame) {
-      new MutationObserver(initDropdowns).observe(frame, { childList: true });
+  window.StrictDoc.onInsert('[data-dropdown-handler]', (toggle) => {
+    toggles.push(toggle);
+  });
+
+  document.addEventListener('click', (event) => {
+    const toggle = event.target.closest?.('[data-dropdown-handler]');
+    if (toggle) {
+      JSON.parse(toggle.getAttribute('aria-expanded')) ? hide(toggle) : show(toggle);
+      return;
     }
+
+    // Close every toggle whose content wasn't the click target - either the
+    // click landed fully outside the toggle+content, or it was a link/action
+    // inside an open menu's content (e.g. "Add node" menu items), which
+    // should close that menu right away rather than wait to navigate away.
+    toggles.forEach((t) => {
+      const content = contentOf(t);
+      if (!content) return;
+      const clickedLink = event.target.closest?.('a');
+      const clickedContentLink = clickedLink && content.contains(clickedLink);
+      const clickedOutside = !t.contains(event.target) && !content.contains(event.target);
+      if (clickedContentLink || clickedOutside) hide(t);
+    });
+  });
+
+  // Close on focus moving outside both the toggle and the content (keyboard
+  // navigation away from an open menu).
+  document.addEventListener('focusin', (event) => {
+    toggles.forEach((t) => {
+      const content = contentOf(t);
+      if (!content) return;
+      if (!t.contains(event.target) && !content.contains(event.target)) hide(t);
+    });
   });
 
 })();

@@ -481,36 +481,55 @@ class SDMarkdownReader:
                 section_node.ng_including_document_reference = (
                     including_document_reference
                 )
+                uid_values: List[str] = []
+                mid_value: Optional[str] = None
+                prefix_value: Optional[str] = None
+                for field_ in parsed_node.fields:
+                    if field_.name == "UID":
+                        uid_values.append(field_.value)
+                    elif field_.name == "MID" and mid_value is None:
+                        mid_value = field_.value
+                    elif field_.name == "PREFIX" and prefix_value is None:
+                        prefix_value = field_.value
+
+                # Preserve UID from the section meta block for LINK resolution.
+                # Must run before the MID block so field order ends up MID, UID, PREFIX, TITLE.
+                # A duplicated UID is skipped; the raw-body fallback below preserves it instead.
+                if len(uid_values) == 1:
+                    uid_sdoc_field = SDocNodeField.create_from_string(
+                        parent=section_node,
+                        field_name="UID",
+                        field_value=uid_values[0],
+                        multiline=False,
+                    )
+                    existing = list(section_node.ordered_fields_lookup.items())
+                    section_node.ordered_fields_lookup.clear()
+                    section_node.ordered_fields_lookup["UID"] = [uid_sdoc_field]
+                    section_node.ordered_fields_lookup.update(existing)
                 # Preserve MID from the section meta block (e.g. **Type**: SECTION \ **MID**: ...).
                 # create_section does not accept fields, so we patch it in afterwards.
                 # MID must be inserted before TITLE to match the grammar field order.
-                mid_field = next(
-                    (f for f in parsed_node.fields if f.name == "MID"), None
-                )
-                if mid_field is not None:
+                if mid_value is not None:
                     mid_sdoc_field = SDocNodeField.create_from_string(
                         parent=section_node,
                         field_name="MID",
-                        field_value=mid_field.value,
+                        field_value=mid_value,
                         multiline=False,
                     )
                     existing = list(section_node.ordered_fields_lookup.items())
                     section_node.ordered_fields_lookup.clear()
                     section_node.ordered_fields_lookup["MID"] = [mid_sdoc_field]
                     section_node.ordered_fields_lookup.update(existing)
-                    section_node.reserved_mid = MID(mid_field.value)
+                    section_node.reserved_mid = MID(mid_value)
                     section_node.mid_permanent = True
                 # Preserve Prefix from the section meta block.
                 # The internal PREFIX key is inserted before TITLE (after
                 # MID) to keep the field order: MID, LEVEL, PREFIX, TITLE.
-                prefix_field = next(
-                    (f for f in parsed_node.fields if f.name == "PREFIX"), None
-                )
-                if prefix_field is not None:
+                if prefix_value is not None:
                     prefix_sdoc_field = SDocNodeField.create_from_string(
                         parent=section_node,
                         field_name="PREFIX",
-                        field_value=prefix_field.value,
+                        field_value=prefix_value,
                         multiline=False,
                     )
                     title_entry = section_node.ordered_fields_lookup.pop(
@@ -802,14 +821,18 @@ class SDMarkdownReader:
 
         # Use body_lines_without_meta (meta block stripped) as processed_body
         # only when the meta block contains section-specific fields (Type, MID,
-        # Prefix) so those lines do not reappear as prose in the TEXT child.
-        # For ambiguous meta blocks (e.g. duplicate UID fields in an invalid
-        # requirement node) fall back to None so _create_document_tree uses the
-        # raw heading body and preserves the content.
+        # Prefix, an unambiguous UID) so those lines do not reappear as prose
+        # in the TEXT child. For ambiguous meta blocks (e.g. duplicate UID
+        # fields in an invalid requirement node) fall back to None so
+        # _create_document_tree uses the raw heading body and preserves the
+        # content.
         _parsed_field_names: Set[str] = {f.name for f in parsed_fields}
+        uid_field_count = sum(1 for f in parsed_fields if f.name == "UID")
         processed_body: Optional[str] = None
         if explicit_node_type is not None or (
-            "MID" in _parsed_field_names or "PREFIX" in _parsed_field_names
+            "MID" in _parsed_field_names
+            or "PREFIX" in _parsed_field_names
+            or uid_field_count == 1
         ):
             processed_body = "".join(body_lines_without_meta)
 

@@ -17,6 +17,7 @@ Scope of this task — controllers to migrate:
 - `copy_to_clipboard_controller.js`
 - `dropdown_menu_controller.js`
 - `modal_controller.js`
+- `editable_field_controller.js`
 - `tabs_controller.js`
 - `draggable_list_controller.js`
 - `autocompletable_field_controller.js`
@@ -26,10 +27,11 @@ Requirements:
 - No user-visible behavior change for any migrated control: copy to
   clipboard (node anchor, inline RST anchor, stable link, field content),
   delete field, move field up/down, per-node dropdown menu, modal open/close
-  (including Escape and cancel button), grammar-form tabs, TOC drag-and-drop
-  reorder, and autocompletable fields (typing, keyboard navigation,
-  click-to-open, multiple-choice/tag mode) must all work exactly as they do
-  today.
+  (including Escape and cancel button), contenteditable field editing
+  (paste normalization, single-line Enter suppression), grammar-form tabs,
+  TOC drag-and-drop reorder, and autocompletable fields (typing, keyboard
+  navigation, click-to-open, multiple-choice/tag mode) must all work exactly
+  as they do today.
 - For `copy_to_clipboard_controller.js` specifically: the "misconfigured
   button" case (a copy button with no `sdoc-field` context) must be detected
   and visually flagged eagerly, at the point the button is set up/inserted —
@@ -131,13 +133,22 @@ most complex last):
    removes the Escape listener when the modal is closed or replaced — do not
    leave stale `document`-level Escape listeners behind after a modal
    closes.
-7. `tabs_controller.js` — this control generates its own DOM (`<sdoc-tabs>` /
+7. `editable_field_controller.js` — wires `paste` (normalizes clipboard text
+   for single-line fields, inserts it manually, then syncs the hidden input),
+   `input` (syncs the hidden input), and, for single-line fields, `keydown`
+   (suppresses Enter) on a contenteditable element. All three event types
+   bubble, so this ports directly to three delegated `document`-level
+   listeners keyed off a marker attribute on the contenteditable element,
+   no `StrictDoc.onInsert` needed (unlike the click-only controls, these
+   listeners don't need to know about an element before it fires an event
+   on it).
+8. `tabs_controller.js` — this control generates its own DOM (`<sdoc-tabs>` /
    `<sdoc-tab>`) from existing `<sdoc-tab-content>` markup rather than only
    wiring listeners onto pre-rendered markup. Port as an `initTabs(root)`
    function registered via `StrictDoc.onInsert`; guard against duplicate
    `<sdoc-tabs>` generation if the surrounding form fragment can be
    re-inserted by Turbo.
-8. `draggable_list_controller.js` — HTML5 drag-and-drop with:
+9. `draggable_list_controller.js` — HTML5 drag-and-drop with:
    - a single shared `dragState` (and shared `dropIndicator` /
      `dragIndicator` elements) that must stay a single instance across the
      whole list, not duplicated per initialization;
@@ -147,7 +158,7 @@ most complex last):
    - listeners that need re-wiring whenever the list's `<li>` items are
      replaced by a Turbo Stream response after a move — via `StrictDoc.onInsert`,
      not a dedicated observer for this list.
-9. `autocompletable_field_controller.js` — migrate last; largest and
+10. `autocompletable_field_controller.js` — migrate last; largest and
    highest-risk piece. It is an adapted fork of `stimulus-autocomplete` and
    currently relies on Stimulus's typed `static values` API
    (`urlValue`, `minLengthValue`, `hasUrlValue`, etc.) for parsing/defaulting

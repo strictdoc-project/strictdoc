@@ -39,6 +39,7 @@ def get_textx_syntax_error_message(exception: TextXSyntaxError) -> str:
 class StrictDocSemanticError(StrictDocException):
     def __init__(
         self,
+        *,
         title: str,
         hint: Optional[str],
         example: Optional[str],

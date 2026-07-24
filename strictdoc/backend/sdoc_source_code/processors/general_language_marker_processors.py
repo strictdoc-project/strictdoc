@@ -97,14 +97,14 @@ def create_begin_end_range_reqs_mismatch_error(
     rhs_marker_reqs_str = ", ".join(rhs_marker_reqs)
 
     return StrictDocSemanticError(
-        "STRICTDOC RANGE: BEGIN and END requirements mismatch",
-        (
+        title="STRICTDOC RANGE: BEGIN and END requirements mismatch",
+        hint=(
             "STRICT RANGE marker should START and END "
             "with the same requirement(s): "
             f"'{lhs_marker_reqs_str}' != '{rhs_marker_reqs_str}'."
         ),
         # @relation(skip, scope=range_start)  # noqa: ERA001
-        """
+        example="""
 # [REQ-001]
 Content...
 # [/REQ-001]
@@ -120,13 +120,13 @@ def create_end_without_begin_error(
     filename: str, line: int, col: int
 ) -> StrictDocSemanticError:
     return StrictDocSemanticError(
-        "STRICTDOC RANGE: END marker without preceding BEGIN marker",
-        (
+        title="STRICTDOC RANGE: END marker without preceding BEGIN marker",
+        hint=(
             "STRICT RANGE shall be opened with "
             "START marker and ended with END marker."
         ),
         # @relation(skip, scope=range_start)  # noqa: ERA001
-        """
+        example="""
 # [REQ-001]
 Content...
 # [/REQ-001]
@@ -161,7 +161,7 @@ def create_unmatch_range_error(
         hint = f"The @relation keywords are also unmatched on lines: {range_lines}."
 
     return StrictDocSemanticError(
-        "Unmatched @relation keyword found in source file.",
+        title="Unmatched @relation keyword found in source file.",
         hint=hint,
         # @relation(skip, scope=range_start)
         example=(
@@ -285,7 +285,7 @@ def line_marker_processor(
     )
     if is_consecutive:
         raise StrictDocSemanticError(
-            "Consecutive LineMarkers are not allowed",
+            title="Consecutive LineMarkers are not allowed",
             hint=None,
             example=None,
             line=line,
@@ -295,7 +295,7 @@ def line_marker_processor(
     is_at_eof = line == parse_context.file_stats.lines_total
     if is_at_eof:
         raise StrictDocSemanticError(
-            "LineMarker cannot be followed by EOF",
+            title="LineMarker cannot be followed by EOF",
             hint=None,
             example=None,
             line=line,

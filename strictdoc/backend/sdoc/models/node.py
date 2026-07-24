@@ -154,6 +154,7 @@ class SDocNode(SDocNodeIF):
 
     def __init__(
         self,
+        *,
         parent: Union[SDocDocumentIF, SDocNodeIF],
         node_type: str,
         fields: List[SDocNodeField],
@@ -891,4 +892,4 @@ class SDocCompositeNode(SDocNode):
         parent: Union[SDocDocumentIF, SDocNodeIF],
         **fields: Any,
     ) -> None:
-        super().__init__(parent, **fields, is_composite=True)
+        super().__init__(parent=parent, **fields, is_composite=True)

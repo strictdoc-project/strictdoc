@@ -381,22 +381,22 @@ class HTMLGenerator:
             static_path=self.project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            document.config.markup,
-            traceability_index,
-            link_renderer,
-            self.html_templates,
-            self.project_config,
-            document,
+            markup=document.config.markup,
+            traceability_index=traceability_index,
+            link_renderer=link_renderer,
+            html_templates=self.html_templates,
+            config=self.project_config,
+            context_document=document,
         )
 
         if DocumentType.DOCUMENT in specific_documents:
             # Single Document pages.
             document_content = DocumentHTMLGenerator.export(
-                self.project_config,
-                document,
-                traceability_index,
-                markup_renderer,
-                link_renderer,
+                project_config=self.project_config,
+                document=document,
+                traceability_index=traceability_index,
+                markup_renderer=markup_renderer,
+                link_renderer=link_renderer,
                 git_client=self.git_client,
                 html_templates=self.html_templates,
             )
@@ -412,11 +412,11 @@ class HTMLGenerator:
             and DocumentType.TABLE in specific_documents
         ):
             document_content = DocumentTableHTMLGenerator.export(
-                self.project_config,
-                document,
-                traceability_index,
-                markup_renderer,
-                link_renderer,
+                project_config=self.project_config,
+                document=document,
+                traceability_index=traceability_index,
+                markup_renderer=markup_renderer,
+                link_renderer=link_renderer,
                 git_client=self.git_client,
                 html_templates=self.html_templates,
             )
@@ -432,11 +432,11 @@ class HTMLGenerator:
             and DocumentType.TRACE in specific_documents
         ):
             document_content = DocumentTraceHTMLGenerator.export(
-                self.project_config,
-                document,
-                traceability_index,
-                markup_renderer,
-                link_renderer,
+                project_config=self.project_config,
+                document=document,
+                traceability_index=traceability_index,
+                markup_renderer=markup_renderer,
+                link_renderer=link_renderer,
                 git_client=self.git_client,
                 html_templates=self.html_templates,
             )
@@ -452,11 +452,11 @@ class HTMLGenerator:
             and DocumentType.DEEPTRACE in specific_documents
         ):
             document_content = DocumentDeepTraceHTMLGenerator.export_deep(
-                self.project_config,
-                document,
-                traceability_index,
-                markup_renderer,
-                link_renderer,
+                project_config=self.project_config,
+                document=document,
+                traceability_index=traceability_index,
+                markup_renderer=markup_renderer,
+                link_renderer=link_renderer,
                 git_client=self.git_client,
                 html_templates=self.html_templates,
             )
@@ -470,11 +470,11 @@ class HTMLGenerator:
             and DocumentType.PDF in specific_documents
         ):
             document_content = DocumentHTML2PDFGenerator.export(
-                self.project_config,
-                document,
-                traceability_index,
-                markup_renderer,
-                link_renderer,
+                project_config=self.project_config,
+                document=document,
+                traceability_index=traceability_index,
+                markup_renderer=markup_renderer,
+                link_renderer=link_renderer,
                 git_client=self.git_client,
                 html_templates=self.html_templates,
             )

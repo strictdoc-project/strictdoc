@@ -70,8 +70,8 @@ class HTMLFormat(Format):
             diff_dir_revisions := context.project_config.diff_dir_revisions
         ) is not None:
             ChangeGenerator().generate_from_paths(
-                diff_dir_revisions[0],
-                diff_dir_revisions[1],
+                path_to_lhs_tree=diff_dir_revisions[0],
+                path_to_rhs_tree=diff_dir_revisions[1],
                 project_config=context.project_config,
                 html_templates=context.html_templates,
             )

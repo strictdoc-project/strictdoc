@@ -86,7 +86,7 @@ def test_04_meta_multilines_not_nones():
     document.grammar = grammar
 
     requirement = SDocObjectFactory.create_requirement(
-        document,
+        parent=document,
         node_type="REQUIREMENT",
         title=None,
         uid="A-1",

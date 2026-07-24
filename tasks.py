@@ -523,6 +523,7 @@ def test_unit_report(context):
 @task(clean, aliases=["ti"])
 def test_integration(
     context,
+    *,
     focus=None,
     debug=False,
     no_parallelization=False,

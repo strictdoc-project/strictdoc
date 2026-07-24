@@ -234,7 +234,7 @@ class ExcelToSDocConverter:
                 parent_uid = None
 
         template_requirement = SDocObjectFactory.create_requirement(
-            document,
+            parent=document,
             node_type="REQUIREMENT",
             title=title,
             uid=uid,

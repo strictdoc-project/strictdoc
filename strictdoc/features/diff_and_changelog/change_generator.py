@@ -29,6 +29,7 @@ class ChangeGenerator:
     @classmethod
     def generate_from_paths(
         cls: Type["ChangeGenerator"],
+        *,
         path_to_lhs_tree: str,
         path_to_rhs_tree: str,
         project_config: ProjectConfig,
@@ -276,8 +277,8 @@ class ChangeGenerator:
             git_client_rhs.path_to_git_root, export_input_rel_path
         )
         self.generate_from_paths(
-            export_input_abs_path_lhs,
-            export_input_abs_path_rhs,
+            path_to_lhs_tree=export_input_abs_path_lhs,
+            path_to_rhs_tree=export_input_abs_path_rhs,
             project_config=project_config,
             html_templates=html_templates,
             left_revision_display=left_revision_display,

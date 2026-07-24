@@ -378,7 +378,12 @@ class P01_ReqIFToSDocConverter:
             else "<No title>"
         )
         document = SDocDocument(
-            None, document_title, document_config, None, None, []
+            mid=None,
+            title=document_title,
+            config=document_config,
+            view=None,
+            grammar=None,
+            section_contents=[],
         )
         if context.enable_mid:
             document.reserved_mid = MID(specification.identifier)
@@ -390,6 +395,7 @@ class P01_ReqIFToSDocConverter:
 
     @staticmethod
     def create_requirement_from_spec_object(
+        *,
         spec_object: ReqIFSpecObject,
         context: P01_ReqIFToSDocBuildContext,
         parent_section: Union[SDocDocumentIF, SDocNodeIF],

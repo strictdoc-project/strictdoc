@@ -93,12 +93,12 @@ class TraceabilityMatrixHTMLGenerator:
             root_path="", static_path=project_config.dir_for_sdoc_assets
         )
         markup_renderer = MarkupRenderer.create(
-            "RST",
-            traceability_index,
-            link_renderer,
-            html_templates,
-            project_config,
-            None,
+            markup="RST",
+            traceability_index=traceability_index,
+            link_renderer=link_renderer,
+            html_templates=html_templates,
+            config=project_config,
+            context_document=None,
         )
 
         view_object = TraceabilityMatrixViewObject(

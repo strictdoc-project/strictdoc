@@ -158,9 +158,10 @@ class FeatureContext:
 
 
 class Feature(ABC):
-    HANDLE: str  # e.g. "PROJECT_STATISTICS_SCREEN" -- reuses the existing
-                 # ProjectFeature enum value string verbatim, so string-based
-                 # project_features=[...] entries keep resolving unchanged.
+    # e.g. "PROJECT_STATISTICS_SCREEN" -- reuses the existing
+    # ProjectFeature enum value string verbatim, so string-based
+    # project_features=[...] entries keep resolving unchanged.
+    HANDLE: str
 
     @staticmethod
     @abstractmethod

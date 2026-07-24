@@ -745,6 +745,7 @@ class DocumentScreenViewObject:
 
     @staticmethod
     def create_for_table_screen(
+        *,
         document: SDocDocument,
         traceability_index: TraceabilityIndex,
         project_config: ProjectConfig,

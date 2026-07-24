@@ -594,3 +594,57 @@ def test_025_markdown_reader_empty_heading_produces_no_title_field():
     assert requirement.reserved_uid == "REQ-1"
     assert requirement.reserved_title is None
     assert "TITLE" not in requirement.ordered_fields_lookup
+
+
+def test_027_section_level_fields():
+    markdown_content = """\
+# Document title
+
+## Chapter 2
+
+**Type**: SECTION \\
+**MID**: aabbccdd11223344aabbccdd11223344 \\
+**UID**: SEC-1 \\
+**PREFIX**: LEVEL2-REQ-
+
+Some prose.
+"""
+
+    reader = SDMarkdownReader()
+    document = reader.read(markdown_content, file_path=None)
+
+    section = document.section_contents[0]
+    assert isinstance(section, SDocNode)
+    assert section.node_type == "SECTION"
+    assert section.reserved_uid == "SEC-1"
+    assert str(section.reserved_mid) == "aabbccdd11223344aabbccdd11223344"
+    assert section.get_prefix() == "LEVEL2-REQ-"
+    assert list(section.ordered_fields_lookup.keys()) == [
+        "MID",
+        "UID",
+        "PREFIX",
+        "TITLE",
+    ]
+
+
+def test_028_section_level_uid_without_explicit_type_has_no_duplicated_prose():
+    markdown_content = """\
+# Document title
+
+## Chapter 2
+
+**UID**: SEC-1
+
+### Notes
+
+Some prose.
+"""
+
+    reader = SDMarkdownReader()
+    document = reader.read(markdown_content, file_path=None)
+
+    section = document.section_contents[0]
+    assert isinstance(section, SDocNode)
+    assert section.node_type == "SECTION"
+    assert section.reserved_uid == "SEC-1"
+    assert [c.node_type for c in section.section_contents] == ["SECTION"]

@@ -241,6 +241,7 @@ GrammarElementRelationType = Union[
 class GrammarElement:
     def __init__(
         self,
+        *,
         parent: Any,
         tag: str,
         property_is_composite: str,

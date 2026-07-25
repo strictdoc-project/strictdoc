@@ -4099,12 +4099,12 @@ def create_main_router(
                 static_path=project_config.dir_for_sdoc_assets,
             )
             markup_renderer = MarkupRenderer.create(
-                document.config.get_markup(),
-                export_action.traceability_index,
-                link_renderer,
-                html_templates,
-                project_config,
-                document,
+                markup=document.config.get_markup(),
+                traceability_index=export_action.traceability_index,
+                link_renderer=link_renderer,
+                html_templates=html_templates,
+                config=project_config,
+                context_document=document,
             )
 
             pdf_project_config = copy.deepcopy(project_config)
@@ -4112,11 +4112,11 @@ def create_main_router(
 
             with measure_performance("Generating printable HTML document"):
                 document_content = DocumentHTML2PDFGenerator.export(
-                    pdf_project_config,
-                    document,
-                    export_action.traceability_index,
-                    markup_renderer,
-                    link_renderer,
+                    project_config=pdf_project_config,
+                    document=document,
+                    traceability_index=export_action.traceability_index,
+                    markup_renderer=markup_renderer,
+                    link_renderer=link_renderer,
                     git_client=html_generator.git_client,
                     html_templates=html_templates,
                 )

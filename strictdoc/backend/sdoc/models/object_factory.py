@@ -20,6 +20,7 @@ class SDocObjectFactory:
 
     @staticmethod
     def create_requirement(
+        *,
         parent: Any,
         node_type: str = "REQUIREMENT",
         uid: Optional[str] = None,

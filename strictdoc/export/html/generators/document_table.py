@@ -20,6 +20,7 @@ from strictdoc.helpers.git_client import GitClient
 class DocumentTableHTMLGenerator:
     @staticmethod
     def export(
+        *,
         project_config: ProjectConfig,
         document: SDocDocument,
         traceability_index: TraceabilityIndex,

@@ -77,23 +77,23 @@ class HTML2PDFGenerator:
                     document_.meta.output_document_dir_rel_path.relative_path,
                 )
             markup_renderer = MarkupRenderer.create(
-                document_.config.get_markup(),
-                traceability_index,
-                link_renderer,
-                html_templates,
-                project_config,
-                document_,
+                markup=document_.config.get_markup(),
+                traceability_index=traceability_index,
+                link_renderer=link_renderer,
+                html_templates=html_templates,
+                config=project_config,
+                context_document=document_,
                 flat_assets=flat_assets,
                 reference_path_override=rst_reference_path,
             )
 
             with measure_performance("Generating printable HTML document"):
                 document_content = DocumentHTML2PDFGenerator.export(
-                    project_config,
-                    document_,
-                    traceability_index,
-                    markup_renderer,
-                    link_renderer,
+                    project_config=project_config,
+                    document=document_,
+                    traceability_index=traceability_index,
+                    markup_renderer=markup_renderer,
+                    link_renderer=link_renderer,
                     git_client=git_client,
                     html_templates=html_templates,
                 )

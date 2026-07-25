@@ -374,6 +374,7 @@ class SDMarkdownReader:
 
     @staticmethod
     def _create_document_tree(
+        *,
         heading_nodes: List[MarkdownHeadingNode],
         document: SDocDocument,
         document_reference: DocumentReference,
@@ -1208,6 +1209,7 @@ class SDMarkdownReader:
 
     @staticmethod
     def _create_requirement_node(
+        *,
         parent: Union[SDocDocument, SDocNode],
         title: str,
         fields: List[ParsedField],

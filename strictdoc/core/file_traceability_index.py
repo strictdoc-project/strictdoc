@@ -486,7 +486,7 @@ class FileTraceabilityIndex:
                     file_posix_path = resolved_path_to_function_file
 
                     file_reference.g_file_entry = FileEntry(
-                        relation_,
+                        parent=relation_,
                         g_file_format=relation_.g_file_entry.g_file_format,
                         g_file_path=resolved_path_to_function_file,
                         g_line_range=None,

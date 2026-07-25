@@ -127,6 +127,7 @@ class ProjectConfig:
 
     def __init__(
         self,
+        *,
         project_title: str = ProjectConfigDefault.DEFAULT_PROJECT_TITLE,
         dir_for_sdoc_assets: str = ProjectConfigDefault.DEFAULT_DIR_FOR_SDOC_ASSETS,
         dir_for_sdoc_cache: str = ProjectConfigDefault.DEFAULT_DIR_FOR_SDOC_CACHE,

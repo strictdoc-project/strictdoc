@@ -83,6 +83,7 @@ def deduplicate_comma_separated_value(value: str) -> str:
 class RequirementFormField:
     def __init__(
         self,
+        *,
         field_mid: str,
         field_name: str,
         field_type: RequirementFormFieldType,

@@ -54,6 +54,7 @@ class SDocDocumentSearchIndex:
 class SDocDocument(SDocDocumentIF):
     def __init__(
         self,
+        *,
         mid: Optional[str],
         title: str,
         config: Optional[DocumentConfig],

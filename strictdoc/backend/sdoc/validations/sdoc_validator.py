@@ -225,8 +225,8 @@ class SDocValidator:
             try:
                 valid_or_not_required_field = (
                     SDocValidator.validate_requirement_field(
-                        requirement,
-                        document_grammar,
+                        requirement=requirement,
+                        document_grammar=document_grammar,
                         requirement_field=requirement_field,
                         grammar_field=grammar_field,
                         path_to_sdoc_file=path_to_sdoc_file,
@@ -272,6 +272,7 @@ class SDocValidator:
 
     @staticmethod
     def validate_requirement_field(
+        *,
         requirement: SDocNode,
         document_grammar: DocumentGrammar,
         requirement_field: Optional[SDocNodeField],

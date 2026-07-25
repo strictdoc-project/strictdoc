@@ -109,14 +109,14 @@ class MarkerParser:
 
             if element_.data == "relation_marker":
                 relation_markers = MarkerParser._parse_relation_marker(
-                    element_,
-                    line_start,
-                    line_end,
-                    comment_line_start,
-                    filename,
-                    entity_name,
-                    col_offset,
-                    default_scope,
+                    element_=element_,
+                    line_start=line_start,
+                    line_end=line_end,
+                    comment_line_start=comment_line_start,
+                    filename=filename,
+                    entity_name=entity_name,
+                    col_offset=col_offset,
+                    default_scope=default_scope,
                 )
                 source_node.markers.extend(relation_markers)
 
@@ -140,6 +140,7 @@ class MarkerParser:
 
     @staticmethod
     def _parse_relation_marker(
+        *,
         element_: Tree[Token],
         line_start: int,
         line_end: int,
@@ -261,7 +262,7 @@ class MarkerParser:
         elif relation_scope is None:
             reqs = ",".join(sorted(used_uids))
             raise StrictDocSemanticError(
-                f"@relation marker for requirements {reqs} misses scope argument.",
+                title=f"@relation marker for requirements {reqs} misses scope argument.",
                 hint="Scope can only be omitted if supported by language, as e.g. with Rust doc comments.",
                 example=(
                     "Add a scope argument. Example:\n"

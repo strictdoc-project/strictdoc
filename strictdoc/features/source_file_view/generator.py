@@ -115,20 +115,20 @@ class SourceFileViewHTMLGenerator:
             static_path=project_config.dir_for_sdoc_assets,
         )
         markup_renderer = MarkupRenderer.create(
-            SDocMarkup.RST,
-            traceability_index,
-            link_renderer,
-            html_templates,
-            project_config,
-            None,
+            markup=SDocMarkup.RST,
+            traceability_index=traceability_index,
+            link_renderer=link_renderer,
+            html_templates=html_templates,
+            config=project_config,
+            context_document=None,
         )
         text_renderer = MarkupRenderer.create(
-            SDocMarkup.TEXT,
-            traceability_index,
-            link_renderer,
-            html_templates,
-            project_config,
-            None,
+            markup=SDocMarkup.TEXT,
+            traceability_index=traceability_index,
+            link_renderer=link_renderer,
+            html_templates=html_templates,
+            config=project_config,
+            context_document=None,
         )
         view_object = SourceFileViewObject(
             traceability_index=traceability_index,

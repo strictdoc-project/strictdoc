@@ -218,7 +218,9 @@ Users should be able to register their own `Format` subclasses via the
 Python project config, e.g.:
 
 ```py
-formats=[*ProjectConfig.default_formats(), CustomMarkdownOftFormat()]
+ProjectConfig(
+    formats=[*ProjectConfig.default_formats(), CustomMarkdownOftFormat()]
+)
 ```
 
 - Add a `formats` field to `ProjectConfig`, defaulting to

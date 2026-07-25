@@ -36,6 +36,7 @@ FragmentWriterType = Union[
 class MarkupRenderer:
     @staticmethod
     def create(
+        *,
         markup: Optional[str],
         traceability_index: TraceabilityIndex,
         link_renderer: LinkRenderer,
@@ -63,17 +64,18 @@ class MarkupRenderer:
         else:
             html_fragment_writer = TextToHtmlWriter()
         return MarkupRenderer(
-            html_fragment_writer,
-            traceability_index,
-            link_renderer,
-            html_templates,
-            context_document,
+            fragment_writer=html_fragment_writer,
+            traceability_index=traceability_index,
+            link_renderer=link_renderer,
+            html_templates=html_templates,
+            context_document=context_document,
             flat_assets=flat_assets,
             primary_markup=markup,
         )
 
     def __init__(
         self,
+        *,
         fragment_writer: FragmentWriterType,
         traceability_index: TraceabilityIndex,
         link_renderer: LinkRenderer,

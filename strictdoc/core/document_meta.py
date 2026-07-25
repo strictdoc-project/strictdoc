@@ -31,6 +31,7 @@ from strictdoc.helpers.paths import SDocRelativePath
 class DocumentMeta:
     def __init__(
         self,
+        *,
         level: int,
         file_tree_mount_folder: str,
         document_filename: str,

@@ -35,12 +35,12 @@ class NestorViewObject:
             root_path="", static_path=project_config.dir_for_sdoc_assets
         )
         markup_renderer = MarkupRenderer.create(
-            "RST",
-            traceability_index,
-            link_renderer,
-            templates,
-            project_config,
-            None,
+            markup="RST",
+            traceability_index=traceability_index,
+            link_renderer=link_renderer,
+            html_templates=templates,
+            config=project_config,
+            context_document=None,
         )
 
         self.link_renderer: LinkRenderer = link_renderer

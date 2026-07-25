@@ -13,6 +13,7 @@ from strictdoc.helpers.mid import MID
 class FileEntry:
     def __init__(
         self,
+        *,
         parent: Any,
         g_file_format: Optional[str],
         g_file_path: str,

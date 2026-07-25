@@ -51,14 +51,18 @@ releases:
 
 [[SECTION]]
 MID: a7ffb392d48244969318ec115e4695bd
-TITLE: 0.??.? (2026-??-??)
+TITLE: Unreleased
 
 [TEXT]
 MID: 0046268453bf439b8a826ecc57abbe91
 STATEMENT: >>>
 This release contains the following enhancements:
 
-?\) The Markdown format now supports ``Version``, ``Date`` and ``Classification`` as document config fields.
+1\) The Markdown format now supports ``Version``, ``Date`` and ``Classification`` as document config fields.
+
+2\) A section-level ``UID`` declared in a Markdown heading's metadata block
+(``**UID**: ...``) is now registered correctly, so that it can be linked to
+via ``[LINK <uid>]``.
 <<<
 
 [[/SECTION]]

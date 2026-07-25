@@ -5,6 +5,7 @@ window.StrictDoc is the shared runtime root for plain frontend scripts.
 Supported shared namespaces:
 - StrictDoc.events
 - StrictDoc.bus
+- StrictDoc.onInsert
 - StrictDoc.config
 - StrictDoc.search
 - StrictDoc.project
@@ -39,9 +40,21 @@ Bus contract (event name -> emitter -> listener(s) -> payload):
       TOC link's `anchor` attribute), not a DOM reference, so this event
       is safe to log/replay without reaching into either module's
       internal state.
+
+onInsert(selector, callback) contract:
+    Runs `callback(element)` once for every element matching `selector`,
+    whether it is already in the document at registration time or gets
+    inserted later (e.g. by a Turbo Stream/Frame response).
+    Backed by a single shared MutationObserver for the whole page. Feature
+    scripts that need to react to newly-inserted markup should register
+    through this instead of each creating their own subtree-wide
+    MutationObserver: with N scripts each running their own observer, every
+    DOM mutation anywhere on the page would be scanned N times over; one
+    shared observer keeps that work to a single pass regardless of how many
+    features register.
 */
 
-(function (global) {
+(function(global) {
   const strictDoc = global.StrictDoc || (global.StrictDoc = {});
 
   // Shared event names used across feature scripts.
@@ -66,8 +79,52 @@ Bus contract (event name -> emitter -> listener(s) -> payload):
         };
       },
       emit(eventName, detail) {
-        document.dispatchEvent(new CustomEvent(eventName, { detail: detail }));
+        document.dispatchEvent(new CustomEvent(eventName, {
+          detail: detail
+        }));
       },
+    };
+  }
+
+  // See the onInsert contract documented above. One MutationObserver for
+  // the whole page; `handlers` holds every {selector, callback} pair any
+  // script has registered, so all of them are checked in a single pass per
+  // mutation instead of one observer per script.
+  if (!strictDoc.onInsert) {
+    const handlers = [];
+
+    function runMatching(node) {
+      if (node.nodeType !== Node.ELEMENT_NODE) return;
+      handlers.forEach(({
+        selector,
+        callback
+      }) => {
+        if (node.matches(selector)) callback(node);
+        node.querySelectorAll(selector).forEach(callback);
+      });
+    }
+
+    // documentElement, not document.body: app_core.js is loaded from a
+    // synchronous <head> script, before <body> exists yet. documentElement
+    // is available immediately, and subtree:true keeps tracking body and
+    // its descendants once the parser adds them.
+    new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach(runMatching);
+      });
+    }).observe(document.documentElement, {
+      childList: true,
+      subtree: true
+    });
+
+    strictDoc.onInsert = function(selector, callback) {
+      handlers.push({
+        selector: selector,
+        callback: callback
+      });
+      // Elements already in the document when a script registers won't
+      // produce a mutation record, so run once against the current DOM too.
+      document.querySelectorAll(selector).forEach(callback);
     };
   }
 })(window);

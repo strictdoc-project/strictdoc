@@ -809,7 +809,16 @@ def lint_format_js(context):
                 --end-with-newline
                 --replace
                 -w100
+                strictdoc/export/html/_static/autocompletable_field.js
+                strictdoc/export/html/_static/copy_to_clipboard.js
+                strictdoc/export/html/_static/deletable_field.js
+                strictdoc/export/html/_static/draggable_list.js
+                strictdoc/export/html/_static/editable_field.js
+                strictdoc/export/html/_static/modal.js
+                strictdoc/export/html/_static/movable_field.js
+                strictdoc/export/html/_static/scroll_into_view.js
                 strictdoc/export/html/_static/static_html_search.js
+                strictdoc/export/html/_static/tabs.js
                 strictdoc/features/project_index/assets/stable_uri_forwarder.js
         """,
     )

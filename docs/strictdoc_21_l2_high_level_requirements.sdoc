@@ -1093,7 +1093,7 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SSS-80
 - TYPE: File
-  VALUE: strictdoc/export/html/_static/controllers/copy_to_clipboard_controller.js
+  VALUE: strictdoc/export/html/_static/copy_to_clipboard.js
 
 [[/SECTION]]
 

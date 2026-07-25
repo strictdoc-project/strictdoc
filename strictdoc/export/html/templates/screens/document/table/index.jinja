@@ -6,8 +6,6 @@
 {% endblock head_css %}
 
 {% block head_scripts %}
-  <script src="{{ view_object.render_static_url('stimulus_umd.min.js') }}"></script>
-  <script src="{{ view_object.render_static_url('stimulus_application.js') }}"></script>
   {# Load StrictDoc core before local feature scripts. #}
   <script src="{{ view_object.render_static_url('app_core.js') }}"></script>
   <script src="{{ view_object.render_static_url('dropdown_menu.js') }}"></script>
@@ -17,15 +15,15 @@
   <script src="{{ view_object.render_static_url('toc_highlighting.js') }}"></script>
   <script src="{{ view_object.render_static_url('pan_with_space.js') }}"></script>
   <script src="{{ view_object.render_static_url('table_view.js') }}"></script>
-  <script src="{{ view_object.render_static_url('controllers/modal_controller.js') }}"></script>
+  <script src="{{ view_object.render_static_url('modal.js') }}"></script>
   {%- if view_object.is_running_on_server -%}
   <script type="module">
     import hotwiredTurbo from "{{ view_object.render_static_url('turbo.min.js') }}";
   </script>
-  <script src="{{ view_object.render_static_url('controllers/editable_field_controller.js') }}"></script>
-  <script src="{{ view_object.render_static_url('controllers/deletable_field_controller.js') }}"></script>
-  <script src="{{ view_object.render_static_url('controllers/movable_field_controller.js') }}"></script>
-  <script src="{{ view_object.render_static_url('controllers/autocompletable_field_controller.js') }}"></script>
+  <script src="{{ view_object.render_static_url('editable_field.js') }}"></script>
+  <script src="{{ view_object.render_static_url('deletable_field.js') }}"></script>
+  <script src="{{ view_object.render_static_url('movable_field.js') }}"></script>
+  <script src="{{ view_object.render_static_url('autocompletable_field.js') }}"></script>
   <script src="{{ view_object.render_static_url('table_view_edit.js') }}"></script>
   {%- endif -%}
 

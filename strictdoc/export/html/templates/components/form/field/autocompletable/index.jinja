@@ -34,7 +34,7 @@
     {% if field_required -%}
       required="true"
     {%- endif %}
-    data-controller="autocompletable"
+    data-js-autocompletable
     role="textbox"
     {%- if field_editable is defined and not field_editable -%}
       contenteditable="false"
@@ -49,17 +49,16 @@
       class="{{ field_class_name }}"
     {%- endif -%}
     {%- if autocomplete_multiplechoice -%}
-    data-autocompletable-multiple-choice-value="true"
+    data-autocompletable-multiple-choice="true"
     {%- endif-%}
     data-testid="form-field-{{ testid_postfix }}"
-    data-autocompletable-target="input"
-    data-autocompletable-url-value="{{ autocomplete_url }}"
-    data-autocompletable-min-length-value="{{ autocomplete_len }}"
+    data-autocompletable-url="{{ autocomplete_url }}"
+    data-autocompletable-min-length="{{ autocomplete_len }}"
   >
     {{- field_value -}}
   </sdoc-autocompletable>
 
-  <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}" {% if field_required %}required{% endif %} data-autocompletable-target="hidden"/>
+  <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}" {% if field_required %}required{% endif %}/>
   <ul class="autocomplete-items {{ result_class_name}}" aria-live="polite"></ul>
 
   {%- if errors is defined and errors|length > 0 -%}

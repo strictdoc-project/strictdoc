@@ -1,9 +1,9 @@
 {#
-  No <form> tag here — autocomplete is managed by its own Stimulus controller
-  (data-controller="autocompletable"). The controller handles the full cycle:
+  No <form> tag here — autocomplete is managed by autocompletable_field.js
+  (data-js-autocompletable). The script handles the full cycle:
   user input → dropdown → value selection → POST via fetch.
-  The hidden <input data-autocompletable-target="hidden"> is updated and submitted
-  by the controller directly, without needing an external <form> wrapper.
+  The hidden <input>, the autocompletable's next sibling, is updated and
+  submitted by the script directly, without needing an external <form> wrapper.
 
   Contrast: contenteditable / comments / relations cells do have a <form> —
   because table_view_edit.js finds it on blur and submits it via fetch(FormData).

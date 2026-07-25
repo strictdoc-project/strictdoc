@@ -113,14 +113,13 @@
   {# ADD NODES: dropdown menu #}
   {# djlint:off H025 #}
   <sdoc-menu
-    js-dropdown-menu
-    data-controller="dropdown_menu"
     class="add_node"
   >
   {# djlint:on #}
     <sdoc-menu-handler
-      js-dropdown-menu-handler
+      data-dropdown-handler
       aria-expanded="false"
+      aria-controls="add-node-menu-{{ sdoc_entity.reserved_mid }}"
     >
       <a
         class="action_button"
@@ -131,7 +130,7 @@
 
     <sdoc-menu-list>
       <menu
-        js-dropdown-menu-list
+        id="add-node-menu-{{ sdoc_entity.reserved_mid }}"
         aria-hidden="true"
       >
         <header>Add node</header>

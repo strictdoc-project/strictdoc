@@ -1244,7 +1244,7 @@
         main.addEventListener('drop', handleCustomMetaDrop);
         main.addEventListener('dragend', clearCustomMetaDragState);
 
-        // Save autocomplete cell on blur (Stimulus handles the dropdown interaction).
+        // Save autocomplete cell on blur (autocompletable_field.js handles the dropdown interaction).
         // Uses capture phase to catch blur events from contenteditable sdoc-autocompletable.
         main.addEventListener('blur', handleAutocompleteBlur, true);
 

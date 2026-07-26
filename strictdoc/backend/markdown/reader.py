@@ -7,11 +7,13 @@ import re
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional, Sequence, Set, Tuple, Union
 
-from markdown_it import MarkdownIt
 from markdown_it.token import Token
 
 from strictdoc.backend.markdown.default_grammar import (
     create_markdown_default_grammar,
+)
+from strictdoc.backend.markdown.lax_heading import (
+    create_lax_heading_markdown_parser,
 )
 from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.backend.sdoc.document_reference import DocumentReference
@@ -76,7 +78,10 @@ class ParsedMarkdownNode:
 
 
 class SDMarkdownReader:
-    markdown_parser = MarkdownIt("commonmark")
+    # CommonMark with one deviation: ATX headings deeper than six '#'
+    # characters are recognized so that documents nested deeper than six
+    # levels survive the SDoc -> Markdown -> SDoc round-trip.
+    markdown_parser = create_lax_heading_markdown_parser()
     default_meta_style = "backslash"
     plain_field_pattern = re.compile(
         r"^\*\*(?P<name>[A-Za-z0-9][A-Za-z0-9 _-]*)\*\*:(?P<value>.*)$"
@@ -622,10 +627,15 @@ class SDMarkdownReader:
         for token_index, token in enumerate(markdown_tokens):
             if token.type != "heading_open":
                 continue
-            if token.tag is None or len(token.tag) != 2 or token.tag[0] != "h":
+            if (
+                token.tag is None
+                or len(token.tag) < 2
+                or token.tag[0] != "h"
+                or not token.tag[1:].isdigit()
+            ):
                 continue
 
-            heading_level = int(token.tag[1])
+            heading_level = int(token.tag[1:])
             token_map = token.map
             if token_map is None:
                 continue

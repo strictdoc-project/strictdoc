@@ -3,8 +3,9 @@
 """
 
 import os
+import re
 from enum import IntEnum
-from typing import Any, List, Optional, Type
+from typing import Any, Dict, List, Optional, Set, Type
 
 import bs4
 from bs4 import BeautifulSoup
@@ -12,6 +13,9 @@ from bs4 import BeautifulSoup
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.grammar_element import (
+    GrammarElementFieldString,
+)
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.reference import (
     FileEntry,
@@ -23,6 +27,7 @@ from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.cast import assert_cast, assert_optional_cast
 from strictdoc.helpers.file_system import file_open_read_utf8
 from strictdoc.helpers.paths import path_to_posix_path
+from strictdoc.helpers.string import is_uppercase_underscore_string
 
 
 class JUnitXMLDialect(IntEnum):
@@ -48,6 +53,17 @@ class JUnitXMLDialect(IntEnum):
 
 
 class JUnitXMLReader:
+    _SAFE_SDOC_FIELD_NAME_REGEX: re.Pattern[str] = re.compile(r"[^A-Za-z0-9]")
+    _TEST_RESULT_RESERVED_FIELD_NAMES: Set[str] = {
+        "UID",
+        "TEST_PATH",
+        "TEST_FUNCTION",
+        "DURATION",
+        "STATUS",
+        "TITLE",
+        "STATEMENT",
+    }
+
     @classmethod
     def read_from_file(
         cls: Type["JUnitXMLReader"],
@@ -87,10 +103,6 @@ class JUnitXMLReader:
             autogen=True,
         )
         document.ng_including_document_reference = DocumentReference()
-        grammar = DocumentGrammar.create_for_test_report(document)
-        document.grammar = grammar
-        document.config.requirement_style = "Table"
-
         xml_testsuite_list: List[bs4.element.Tag]
 
         xml_testsuites: Optional[bs4.element.Tag] = assert_optional_cast(
@@ -115,6 +127,24 @@ class JUnitXMLReader:
             document.title = "Test report: " + assert_cast(
                 xml_testsuite_list[0]["name"], str
             )
+
+        property_field_names: Dict[str, str] = (
+            cls._collect_property_field_names(xml_testsuite_list)
+        )
+        additional_fields: List[GrammarElementFieldString] = [
+            GrammarElementFieldString(
+                parent=None,
+                title=field_name_,
+                human_title=property_name_,
+                required="False",
+            )
+            for property_name_, field_name_ in property_field_names.items()
+        ]
+        grammar = DocumentGrammar.create_for_test_report(
+            document, additional_fields=additional_fields
+        )
+        document.grammar = grammar
+        document.config.requirement_style = "Table"
 
         for xml_testsuite_ in xml_testsuite_list:
             assert isinstance(xml_testsuite_, bs4.element.Tag)
@@ -392,6 +422,26 @@ class JUnitXMLReader:
                         multiline__=None,
                     ),
                 )
+                for xml_property_ in cls._get_xml_property_list(xml_testcase_):
+                    property_name: str = cls._get_xml_property_attribute(
+                        xml_property_, "name"
+                    )
+                    property_value: str = cls._get_xml_property_attribute(
+                        xml_property_, "value"
+                    )
+                    property_field_name: str = property_field_names[
+                        property_name
+                    ]
+                    testcase_node.set_field_value(
+                        field_name=property_field_name,
+                        form_field_index=0,
+                        value=SDocNodeField(
+                            parent=testcase_node,
+                            field_name=property_field_name,
+                            parts=[property_value],
+                            multiline__=None,
+                        ),
+                    )
                 testcase_node.set_field_value(
                     field_name="TITLE",
                     form_field_index=0,
@@ -434,3 +484,101 @@ class JUnitXMLReader:
                 test_suite_section.section_contents.append(testcase_node)
 
         return document
+
+    @classmethod
+    def _collect_property_field_names(
+        cls: Type["JUnitXMLReader"],
+        xml_testsuite_list: List[bs4.element.Tag],
+    ) -> Dict[str, str]:
+        property_field_names: Dict[str, str] = {}
+        property_names_by_field_name: Dict[str, str] = {}
+
+        for xml_testsuite_ in xml_testsuite_list:
+            xml_testcase_list: List[Any] = xml_testsuite_.find_all(
+                "testcase", recursive=False
+            )
+            for xml_testcase_ in xml_testcase_list:
+                assert isinstance(xml_testcase_, bs4.element.Tag)
+                property_names_for_testcase: Set[str] = set()
+                for xml_property_ in cls._get_xml_property_list(xml_testcase_):
+                    property_name: str = cls._get_xml_property_attribute(
+                        xml_property_, "name"
+                    )
+                    if property_name in property_names_for_testcase:
+                        raise RuntimeError(
+                            "JUnit testcase contains duplicate property name: "
+                            f"{property_name!r}."
+                        )
+                    property_names_for_testcase.add(property_name)
+                    field_name: str = cls._create_sdoc_field_name(property_name)
+                    if not is_uppercase_underscore_string(field_name):
+                        raise RuntimeError(
+                            "JUnit property name cannot be mapped to a "
+                            "StrictDoc field name: "
+                            f"{property_name!r}."
+                        )
+                    if field_name in cls._TEST_RESULT_RESERVED_FIELD_NAMES:
+                        raise RuntimeError(
+                            "JUnit property name maps to a reserved "
+                            "TEST_RESULT field: "
+                            f"{property_name!r} -> {field_name!r}."
+                        )
+                    existing_property_name: Optional[str] = (
+                        property_names_by_field_name.get(field_name)
+                    )
+                    if (
+                        existing_property_name is not None
+                        and existing_property_name != property_name
+                    ):
+                        raise RuntimeError(
+                            "JUnit property names map to the same StrictDoc "
+                            "field: "
+                            f"{existing_property_name!r}, {property_name!r} "
+                            f"-> {field_name!r}."
+                        )
+                    property_names_by_field_name[field_name] = property_name
+                    property_field_names[property_name] = field_name
+
+        return property_field_names
+
+    @staticmethod
+    def _get_xml_property_list(
+        xml_testcase: bs4.element.Tag,
+    ) -> List[bs4.element.Tag]:
+        xml_properties_or_none: Optional[bs4.element.Tag] = (
+            assert_optional_cast(
+                xml_testcase.find("properties", recursive=False),
+                bs4.element.Tag,
+            )
+        )
+        if xml_properties_or_none is None:
+            return []
+        return [
+            assert_cast(xml_property_, bs4.element.Tag)
+            for xml_property_ in xml_properties_or_none.find_all(
+                "property", recursive=False
+            )
+        ]
+
+    @staticmethod
+    def _get_xml_property_attribute(
+        xml_property: bs4.element.Tag, attribute_name: str
+    ) -> str:
+        attribute_value: Any = xml_property.get(attribute_name)
+        if attribute_value is None:
+            raise RuntimeError(
+                "JUnit property is missing required "
+                f"{attribute_name!r} attribute."
+            )
+        if not isinstance(attribute_value, str):
+            raise RuntimeError(
+                "JUnit property attribute must be a string: "
+                f"{attribute_name!r}."
+            )
+        return attribute_value
+
+    @classmethod
+    def _create_sdoc_field_name(
+        cls: Type["JUnitXMLReader"], property_name: str
+    ) -> str:
+        return cls._SAFE_SDOC_FIELD_NAME_REGEX.sub("_", property_name).upper()

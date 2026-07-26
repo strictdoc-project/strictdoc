@@ -50,6 +50,21 @@ releases:
 <<<
 
 [[SECTION]]
+MID: 295e21753ef346d88c2ccb0ceecd0657
+TITLE: Unreleased
+
+[TEXT]
+MID: c9ceba5f4cc74d04b7f389962b1f127a
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) The JUnit XML test report reader now maps testcase ``<properties>`` to
+fields on generated ``TEST_RESULT`` nodes.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: a7ffb392d48244969318ec115e4695bd
 TITLE: 0.27.1 (2026-07-26)
 

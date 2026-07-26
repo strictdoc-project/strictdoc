@@ -1,0 +1,12 @@
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+
+# Ensure that the test report document is generated.
+CHECK: Published: Test report: testcase properties
+RUN: %check_exists --file "%T/html/%THIS_TEST_FOLDER/reports/tests_unit.ctest.junit.html"
+
+# Ensure that testcase properties are rendered as TEST_RESULT fields.
+RUN: %cat "%T/html/%THIS_TEST_FOLDER/reports/tests_unit.ctest.junit.html" | filecheck %s --check-prefix CHECK-TEST-REPORT
+CHECK-TEST-REPORT: <sdoc-node-field-label>requirement:</sdoc-node-field-label>
+CHECK-TEST-REPORT: <sdoc-autogen>REQ-1</sdoc-autogen>
+CHECK-TEST-REPORT: <sdoc-node-field-label>strictdoc:image:</sdoc-node-field-label>
+CHECK-TEST-REPORT: <sdoc-autogen>test1.png</sdoc-autogen>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="testcase properties"
+           tests="1"
+           failures="0"
+           disabled="0"
+           skipped="0"
+           time="0">
+  <testcase name="TestSuite.Test1"
+            classname="TestSuite.Test1"
+            time="0.1"
+            status="run">
+    <properties>
+      <property name="requirement" value="REQ-1"/>
+      <property name="strictdoc:image" value="test1.png"/>
+    </properties>
+  </testcase>
+</testsuite>

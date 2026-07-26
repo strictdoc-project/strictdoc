@@ -16,7 +16,7 @@
         if sdoc_entity.context.ng_level < 6
         else 6 -%}
 
-    {% if title_has_h_level %}<h{{ h_level }}>{% endif %}
+    {% if title_has_h_level %}<h{{ h_level }}{% if sdoc_entity.context.ng_level >= 6 %} aria-level="{{ sdoc_entity.context.ng_level + 1 }}"{% endif %}>{% endif %}
 
     {#- initiate the accumulating variable -#}
     {%- set field_content_ = "" -%}

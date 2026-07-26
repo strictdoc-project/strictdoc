@@ -9,6 +9,7 @@
       else 6  %}
   <h{{ h_level }}
     id="{{ view_object.render_local_anchor(section) }}"
+    {%- if sdoc_entity.context.ng_level >= 6 %} aria-level="{{ sdoc_entity.context.ng_level + 1 }}"{% endif %}
   >
     {%- if sdoc_entity.context.title_number_string -%}
       {{ sdoc_entity.context.title_number_string }}.&nbsp;

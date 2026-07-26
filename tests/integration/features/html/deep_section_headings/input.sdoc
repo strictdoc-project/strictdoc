@@ -1,0 +1,40 @@
+[DOCUMENT]
+TITLE: Deep sections doc
+
+[[SECTION]]
+TITLE: Level 1 Section
+
+[[SECTION]]
+TITLE: Level 2 Section
+
+[[SECTION]]
+TITLE: Level 3 Section
+
+[[SECTION]]
+TITLE: Level 4 Section
+
+[[SECTION]]
+TITLE: Level 5 Section
+
+[[SECTION]]
+TITLE: Level 6 Section
+
+[[SECTION]]
+TITLE: Level 7 Section
+
+[TEXT]
+STATEMENT: Deepest content.
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[/SECTION]]

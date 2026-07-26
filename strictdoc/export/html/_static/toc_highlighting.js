@@ -38,6 +38,7 @@ let tocHighlightingState = {
   folderSet: new Set(),
 };
 let tocRefreshRaf = null;
+let anchorRescanRaf = null;
 
 function resetState() {
   // * Keep anchorsCount/anchorsSig to detect changes across TOC mutations.
@@ -92,6 +93,30 @@ window.addEventListener("load",function(){
   if (tocList && tocList.querySelector(TOC_ELEMENT_SELECTOR)) {
     highlightTOC(tocFrame, contentFrame, anchorObserver);
   }
+
+  // * Content can also change without the TOC frame mutating - e.g. a
+  // * lazily-loaded document chunk inserting nodes whose anchors were not
+  // * present at initial load. The TOC frame observer above does not see
+  // * this case (see toc_highlighting.js task notes), so anchors are
+  // * re-scanned via StrictDoc.onInsert as well, instead of a dedicated
+  // * MutationObserver - see the onInsert contract in app_core.js.
+  // * scheduleAnchorRescan() coalesces via requestAnimationFrame, since
+  // * onInsert calls back once per matched element, not once per batch.
+  // *
+  // * Fires only for CONTENT_ELEMENT_SELECTOR (sdoc-anchor) matches - the
+  // * inserted node itself or a descendant of it, per the onInsert
+  // * contract. Unaffected by mutations that don't insert an anchor:
+  // * opening a node's edit form replaces it with form markup that has no
+  // * sdoc-anchor at all, so this never fires while editing. It does fire
+  // * when a node's read view (with its anchor) is re-inserted afterwards -
+  // * both on save (already covered anyway by the TOC frame observer,
+  // * since saving also updates frame-toc) and on Cancel (which does not
+  // * touch frame-toc: previously this meant the observed anchor element
+  // * for that node stayed stale/detached after any Cancel, independently
+  // * of chunking - this re-scan fixes that case too).
+  strictDoc.onInsert(CONTENT_ELEMENT_SELECTOR, function () {
+    scheduleAnchorRescan(contentFrame, anchorObserver);
+  });
 
   // * Refresh TOC highlights when collapsible_toc.js changes branch visibility.
   strictDoc.bus.on(TOC_STATE_CHANGED_EVENT, () => {
@@ -336,6 +361,23 @@ function handleIntersect(entries, observer) {
   });
 
   updateVisibleSectionItems(topBound, bottomBound);
+}
+
+// Coalesce multiple content-frame mutations (e.g. all nodes inserted by one
+// lazily-loaded chunk) into a single anchor re-scan.
+function scheduleAnchorRescan(contentFrame, anchorObserver) {
+  if (anchorRescanRaf !== null) {
+    return;
+  }
+  anchorRescanRaf = requestAnimationFrame(() => {
+    anchorRescanRaf = null;
+    // * Deliberately not resetState()+processLinkList(): the TOC link for
+    // * every node id was already captured by the initial full scan, so
+    // * merging newly found anchors into the existing data[id] entries is
+    // * enough - see toc_highlighting.js task notes.
+    processAnchorList(contentFrame, anchorObserver);
+    refreshHighlightFromCurrentState();
+  });
 }
 
 // Coalesce multiple TOC state changes into a single frame refresh.

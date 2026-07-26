@@ -15,9 +15,17 @@
               {%- endwith %}
             {%- else %}
               {#
-                The placeholder reserves approximate scroll space until Turbo
-                loads the chunk content. See the
-                turbo-frame.document-chunk-placeholder rule in _static/node.css.
+                Lazy chunk placeholder contract:
+                - id="document-chunk-N" identifies the frame as a document chunk.
+                - class="document-chunk-placeholder" marks an unloaded placeholder.
+                - loading="lazy" lets Turbo defer the fragment request.
+                - src points to the server endpoint that returns this chunk's content.
+
+                - node.css uses the placeholder class to reserve approximate
+                  scroll space until Turbo loads the chunk content.
+                - toc_chunk_navigation.js observes placeholders by this class,
+                  validates the document-chunk-* id, eagerly preloads them near
+                  the viewport, and removes the class on turbo:frame-load.
               #}
               <turbo-frame
                 id="document-chunk-{{ chunk.index }}"

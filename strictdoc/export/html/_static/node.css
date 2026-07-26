@@ -4,9 +4,12 @@ turbo-frame {
 
 /* Unloaded lazy document chunks reserve approximate scroll space
    (320px ~ average rendered node height) so that the browser does not
-   fetch all below-the-fold chunks immediately. Turbo marks a frame with
-   the "complete" attribute once its content has loaded. */
-turbo-frame.document-chunk-placeholder:not([complete]) {
+   fetch all below-the-fold chunks immediately. toc_chunk_navigation.js
+   removes this class on "turbo:frame-load", handing sizing back to the
+   real content -- Turbo itself does not reflect load completion as an
+   HTML attribute, so the class (not an attribute selector) is the only
+   reliable signal here. */
+turbo-frame.document-chunk-placeholder {
   display: block;
   min-height: calc(var(--document-chunk-size, 100) * 320px);
 }

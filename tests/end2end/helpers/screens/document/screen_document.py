@@ -135,3 +135,29 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
             '[data-testid="document-edit-config-action"]', "class"
         )
         assert "action_button--disabled" not in element_class
+
+    #
+    # Lazy document chunks.
+    #
+
+    def assert_chunk_frame_placeholder_cleared(self, chunk_id: str) -> None:
+        # The placeholder class is StrictDoc's state marker for an unloaded
+        # chunk frame. Turbo loads chunks asynchronously, so wait until the
+        # frame content arrives and StrictDoc removes the placeholder class.
+        self.test_case.assert_element_not_present(
+            f"turbo-frame#{chunk_id}.document-chunk-placeholder",
+            timeout=20,
+        )
+
+    def assert_chunk_frame_loading_attribute(
+        self, chunk_id: str, expected_loading: str
+    ) -> None:
+        # Used for lazy-chunk preload checks where the browser-side script
+        # changes Turbo's loading attribute asynchronously after observing
+        # a placeholder.
+        self.test_case.assert_attribute(
+            f"turbo-frame#{chunk_id}",
+            "loading",
+            expected_loading,
+            timeout=20,
+        )

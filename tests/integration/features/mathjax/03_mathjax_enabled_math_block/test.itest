@@ -10,6 +10,8 @@ RUN: %check_exists --file "%T/html/_static/mathjax/output/chtml/fonts/tex.js"
 
 RUN: %cat %T/html/03_mathjax_enabled_math_block/input.html | filecheck %s --check-prefix CHECK-HTML
 
+CHECK-HTML: window.MathJax = {
+CHECK-HTML: typeset: false,
 CHECK-HTML: <span class="math notranslate nohighlight">\( a^2 + b^2 = c^2 \)</span>
 CHECK-HTML: <div class="math notranslate nohighlight">\[ \begin{align*}\begin{aligned}(a + b)^2 = a^2 + 2ab + b^2 \\ (a - b)^2 = a^2 - 2ab + b^2\end{aligned}\end{align*} \]</div>
 CHECK-HTML: <div class="math notranslate nohighlight">\[ \begin{equation}\label{euler}\begin{aligned} e^{i\pi} + 1 = 0 \end{aligned}\end{equation} \]</div>

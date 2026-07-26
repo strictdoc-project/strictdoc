@@ -1,5 +1,7 @@
 (() => {
-  // Deep-link navigation for chunked (lazily loaded) documents.
+  // Behavior for chunked (lazily loaded) documents: deep-link navigation,
+  // clearing the placeholder's reserved scroll space once a chunk has
+  // loaded, and preloading chunks slightly ahead of scroll.
   //
   // TOC entries are <a anchor="X" href="#X" data-turbo="false">, so the
   // browser natively scrolls to the element with id="X". In chunked mode that
@@ -16,6 +18,9 @@
   window.__sdocTocChunkNavWired = true;
 
   const TOC_FRAME_SELECTOR = "turbo-frame#frame-toc";
+  const CHUNK_PLACEHOLDER_CLASS = "document-chunk-placeholder";
+  const PRELOAD_MARGIN = "800px 0px";
+  const observedPlaceholders = new WeakSet();
 
   function scrollToFragment(fragment) {
     const target = document.getElementById(fragment);
@@ -36,7 +41,7 @@
   function loadChunkThenScroll(frameId, fragment) {
     const frame = document.getElementById(frameId);
     if (!frame) return;
-    if (frame.hasAttribute("complete")) {
+    if (!frame.classList.contains(CHUNK_PLACEHOLDER_CLASS)) {
       scrollToFragment(fragment);
       return;
     }
@@ -87,4 +92,63 @@
       );
     }
   });
+
+  // Clear a chunk's reserved scroll space once its content has loaded.
+  //
+  // node.css reserves an approximate min-height on
+  // turbo-frame.document-chunk-placeholder so the browser does not fetch all
+  // below-the-fold chunks immediately. That reservation is only ever an
+  // estimate (average node height * chunk size), and this Turbo build never
+  // reflects load completion as an HTML attribute (it observes only
+  // "disabled", "loading", "src", and toggles "busy" while a fetch is
+  // in-flight -- there is no "complete" attribute to select against). Left
+  // alone, the estimated min-height would apply forever, leaving a permanent
+  // blank gap whenever the real content is shorter than the estimate.
+  // Removing the placeholder class on load hands sizing back to the actual
+  // rendered content.
+  document.addEventListener("turbo:frame-load", (event) => {
+    const frame = event.target;
+    if (!frame.id?.startsWith("document-chunk-")) return;
+    // Loaded chunks no longer need preload observation.
+    preloadObserver.unobserve(frame);
+    frame.classList.remove(CHUNK_PLACEHOLDER_CLASS);
+  });
+
+  // Preload chunks slightly ahead of scroll.
+  //
+  // Beyond the permanent-gap issue above, an unloaded chunk's fetch is only
+  // triggered once its placeholder has already scrolled into the viewport
+  // (Turbo's lazy-loading IntersectionObserver uses no rootMargin), so even
+  // a correctly-sized placeholder can show a brief blank flash while the
+  // fetch is in flight. Watch placeholders with a lead margin and switch
+  // them to eager loading before they are actually visible.
+  //
+  // Do not collect placeholders here. StrictDoc.onInsert below registers both
+  // existing placeholders and placeholders inserted later by Turbo updates.
+  const preloadObserver = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        preloadObserver.unobserve(entry.target);
+        entry.target.setAttribute("loading", "eager");
+      }
+    }, {
+      rootMargin: PRELOAD_MARGIN
+    },
+  );
+
+  function observePlaceholder(frame) {
+    // Only document chunk frames own this placeholder contract.
+    if (!frame.id?.startsWith("document-chunk-")) return;
+    if (!frame.classList.contains(CHUNK_PLACEHOLDER_CLASS)) return;
+    if (observedPlaceholders.has(frame)) return;
+    observedPlaceholders.add(frame);
+    preloadObserver.observe(frame);
+  }
+
+  // Covers placeholders rendered now and inserted later by Turbo updates.
+  window.StrictDoc.onInsert(
+    `.${CHUNK_PLACEHOLDER_CLASS}`,
+    observePlaceholder,
+  );
 })();

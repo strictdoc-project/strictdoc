@@ -19,6 +19,7 @@ from tests.end2end.server import SDocTestServer
 # of 10, so it proves that the legacy unchunked rendering path is used.
 CHUNK_0_XPATH = "//turbo-frame[@id='document-chunk-0']"
 LAST_CHUNK_XPATH = "//turbo-frame[@id='document-chunk-3']"
+LAST_CHUNK_ID = "document-chunk-3"
 # The TOC entry for the last requirement (Requirement 35), which lives in the
 # last chunk.
 LAST_TOC_LINK_XPATH = "(//turbo-frame[@id='frame-toc']//a[@anchor])[last()]"
@@ -89,6 +90,11 @@ class Test(E2ECase):
                 by=By.XPATH,
                 timeout=20,
             )
+            # Verify that loaded chunks leave the placeholder state, because
+            # chunk sizing after load must come from the real rendered content.
+            screen_document.assert_chunk_frame_placeholder_cleared(
+                LAST_CHUNK_ID
+            )
             screen_document.assert_text(
                 "The lazy loading fixture statement LAZYSTMT-035 "
                 "must appear exactly once."
@@ -146,6 +152,27 @@ class Test(E2ECase):
             screen_document.assert_text(
                 "The lazy loading fixture statement LAZYSTMT-035 "
                 "must appear exactly once."
+            )
+
+            #
+            # Scenario 6: Preload must also work for placeholders inserted
+            # after page load. This verifies the StrictDoc.onInsert wiring:
+            # a dynamically added placeholder is picked up by the preload code
+            # and switched from lazy to eager loading.
+            #
+            self.execute_script(
+                """
+                const frame = document.createElement("turbo-frame");
+                frame.id = "document-chunk-oninsert-test";
+                frame.className = "document-chunk-placeholder";
+                frame.setAttribute("loading", "lazy");
+                frame.style.cssText =
+                  "position: fixed; top: 0; left: 0; width: 1px; height: 1px;";
+                document.body.prepend(frame);
+                """
+            )
+            screen_document.assert_chunk_frame_loading_attribute(
+                "document-chunk-oninsert-test", "eager"
             )
 
             #

@@ -2,6 +2,15 @@ turbo-frame {
   display: contents;
 }
 
+/* Unloaded lazy document chunks reserve approximate scroll space
+   (320px ~ average rendered node height) so that the browser does not
+   fetch all below-the-fold chunks immediately. Turbo marks a frame with
+   the "complete" attribute once its content has loaded. */
+turbo-frame.document-chunk-placeholder:not([complete]) {
+  display: block;
+  min-height: calc(var(--document-chunk-size, 100) * 320px);
+}
+
 sdoc-node {
   display: block;
   position: relative;

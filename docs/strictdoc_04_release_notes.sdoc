@@ -68,6 +68,38 @@ via ``[LINK <uid>]``.
 3\) The web interface renders large documents faster. The initial MathJax
 typesetting and Mermaid diagram rendering are deferred to browser idle time so
 they no longer block the first paint of the document.
+
+4\) A project can now supply its own stylesheet via a new
+``custom_css_path`` project configuration option, to extend or override
+StrictDoc's default styles in the HTML export and on the server, mirroring
+the existing ``favicon_path`` option.
+
+5\) The Markdown reader now accepts headings nested deeper than six levels
+(7+ ``#`` characters), following the precedent of other Markdown readers
+such as Pandoc. In the HTML export, sections beyond level six still render
+as ``<h6>``, but now carry an ``aria-level`` attribute with the true depth
+so assistive technologies announce the correct level.
+
+6\) Creating a new document now validates the document path's extension
+against the project's editable formats (e.g. ``.sdoc``, ``.md``) up front,
+instead of silently forcing a ``.sdoc`` extension onto paths with none and
+only then reporting a confusing "not a valid path" error.
+
+7\) Fixed: the table of contents' current-section highlighting could miss
+sections whose anchors were added by a content-only DOM update (for
+example, in lazily-loaded document chunks) instead of a full page
+navigation.
+
+8\) Fixed: the diff and changelog screen no longer throws a JavaScript
+error when the page loads before both revisions of a document have been
+selected.
+
+9\) Fixed: a document's title no longer overflows its header on narrow
+viewports.
+
+10\) Fixed: following a fragment link (an anchor or a table of contents
+entry) on a short document no longer jumps the page further down than the
+target, past the end of the content.
 <<<
 
 [[/SECTION]]

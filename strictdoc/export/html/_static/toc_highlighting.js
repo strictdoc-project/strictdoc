@@ -98,16 +98,25 @@ window.addEventListener("load",function(){
   // * lazily-loaded document chunk inserting nodes whose anchors were not
   // * present at initial load. The TOC frame observer above does not see
   // * this case (see toc_highlighting.js task notes), so anchors are
-  // * re-scanned directly off content-frame mutations as well.
-  new MutationObserver(function () {
+  // * re-scanned via StrictDoc.onInsert as well, instead of a dedicated
+  // * MutationObserver - see the onInsert contract in app_core.js.
+  // * scheduleAnchorRescan() coalesces via requestAnimationFrame, since
+  // * onInsert calls back once per matched element, not once per batch.
+  // *
+  // * Fires only for CONTENT_ELEMENT_SELECTOR (sdoc-anchor) matches - the
+  // * inserted node itself or a descendant of it, per the onInsert
+  // * contract. Unaffected by mutations that don't insert an anchor:
+  // * opening a node's edit form replaces it with form markup that has no
+  // * sdoc-anchor at all, so this never fires while editing. It does fire
+  // * when a node's read view (with its anchor) is re-inserted afterwards -
+  // * both on save (already covered anyway by the TOC frame observer,
+  // * since saving also updates frame-toc) and on Cancel (which does not
+  // * touch frame-toc: previously this meant the observed anchor element
+  // * for that node stayed stale/detached after any Cancel, independently
+  // * of chunking - this re-scan fixes that case too).
+  strictDoc.onInsert(CONTENT_ELEMENT_SELECTOR, function () {
     scheduleAnchorRescan(contentFrame, anchorObserver);
-  }).observe(
-    contentFrame,
-    {
-      childList: true,
-      subtree: true,
-    }
-  );
+  });
 
   // * Refresh TOC highlights when collapsible_toc.js changes branch visibility.
   strictDoc.bus.on(TOC_STATE_CHANGED_EVENT, () => {

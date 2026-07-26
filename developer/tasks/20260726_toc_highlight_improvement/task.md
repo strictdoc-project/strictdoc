@@ -17,6 +17,11 @@ Success criteria:
 - No regression to existing highlighting behavior: node creation,
   update, deletion, and folder expand/collapse continue to update the
   current-section highlight exactly as today.
+- Fixes, as a side effect, a pre-existing and independent case of the
+  same underlying gap: canceling a node edit (Cancel, without saving)
+  re-inserts the node's read-view anchor without updating the TOC
+  frame, so the highlighting for that node went stale after any Cancel
+  before this task.
 - The fix must not depend on the specific mechanism, naming
   convention, or markup used by any given content-loading feature
   (e.g., must not assume a particular turbo-frame id pattern or a
@@ -64,14 +69,27 @@ This task addresses that gap ahead of the lazy-chunk-loading feature
 landing, so that TOC highlighting is already correct once it does,
 without requiring changes to the incoming feature itself.
 
+The same class of gap already exists today, independently of chunking:
+canceling a node edit (`cancel_edit_requirement`) calls
+`render_updated_nodes_and_toc([requirement], node_updated=False)` -
+with `node_updated=False`, the `frame-toc` update is skipped, so only
+the node's read-view content (with a freshly re-inserted anchor) is
+streamed back. This is the same "content changed, TOC frame did not"
+shape as the chunking case, just triggered by a different, already-
+shipped feature - and the fix in this task closes it too.
+
 ## HOW
 
-Add a second `MutationObserver`, alongside the existing one on
-`frame-toc`, targeting the stable content container
-(`[js-toc_highlighting-content_root]`), configured for
-`childList: true, subtree: true`. On a triggering mutation
-(coalesced via `requestAnimationFrame`, matching the existing
-debouncing pattern used elsewhere in the file), re-run
+React to new content anchors via the shared `StrictDoc.onInsert(selector,
+callback)` contract (`app_core.js`, introduced by
+`developer/tasks/20260724_stimulus_free/task.md`), registering for
+`CONTENT_ELEMENT_SELECTOR` (`sdoc-anchor`), instead of a dedicated
+`MutationObserver` on the content container — per that contract, feature
+scripts must not each run their own subtree-wide `MutationObserver` for
+this purpose. On a triggering call (coalesced via
+`requestAnimationFrame`, matching the existing debouncing pattern used
+elsewhere in the file — necessary here since `onInsert` calls back once
+per matched element, not once per mutation batch), re-run
 `processAnchorList()` for the content frame and recompute currently
 visible sections, without resetting the TOC link mappings
 (`processLinkList()` / `resetState()`).
@@ -83,11 +101,31 @@ appeared in the DOM. When `processAnchorList()` later discovers a new
 anchor id, it merges the newly found anchor element into the existing
 entry for that id, which already carries the correct TOC link.
 
-Given the coupling described above, this change is a no-op under all
-current (non-lazy-loading) content-mutation paths, since those already
-trigger the existing `frame-toc` observer. It only becomes active once
-a mechanism exists that inserts content without mutating `frame-toc`
-— which is exactly the case this task is meant to prepare for.
+The new `onInsert` registration fires only for elements matching
+`CONTENT_ELEMENT_SELECTOR` (`sdoc-anchor`) - either the inserted node
+itself or a descendant of it - and does not fire for removals or for
+unrelated markup changes. Concretely, for the existing edit flow:
+
+- Opening a node's edit form replaces its read view (turbo-stream
+  `replace`) with form markup that contains no `sdoc-anchor` at all -
+  this observer never fires while a node is being edited.
+- Saving a node re-inserts its read view (with a fresh anchor) *and*
+  updates `frame-toc` in the same response, so this observer's firing
+  here is redundant with the existing `frame-toc` observer - both run,
+  `processAnchorList()`'s own `anchorsCount`/`anchorsSig` check finds
+  nothing changed on the second pass, so the net effect is one extra
+  cheap, coalesced no-op pass.
+- Canceling a node's edit re-inserts its read view (with a fresh
+  anchor) *without* touching `frame-toc` (see WHY) - this is the one
+  existing-feature path where this observer is not redundant: it is
+  the only thing that re-associates the `IntersectionObserver` with
+  the newly-inserted anchor element, fixing the stale-highlight-after-
+  Cancel bug described above.
+
+Beyond today's existing flows, this observer is also what activates
+once a mechanism exists that inserts content without mutating
+`frame-toc` at all on initial insertion - which is the
+lazy-chunk-loading case this task is meant to prepare for.
 
 Open implementation consideration: `processAnchorList()` performs a
 full re-scan and signature computation over all anchors currently in
@@ -98,3 +136,16 @@ present. Start with the full re-scan approach; if measurement shows
 this to be a performance concern on large documents, consider
 processing `MutationRecord.addedNodes`/`removedNodes` directly for an
 incremental update instead of a full re-scan.
+
+Out of scope: the pre-existing `MutationObserver` on `frame-toc` is not
+migrated to `StrictDoc.onInsert` as part of this task. It reacts to the
+TOC container being replaced wholesale, not to a specific new element
+of interest appearing — a different kind of reaction than what
+`onInsert` is designed for. `TOC_ELEMENT_SELECTOR` (`'a'`) is also too
+generic to register page-wide via `onInsert` without matching unrelated
+links elsewhere on the page, and doing so would call back once per
+matched link instead of once per replace event, requiring a new
+coalescing wrapper that does not exist for this path today (unlike
+`scheduleAnchorRescan`/`scheduleHighlightRefresh`). Migrating it is a
+possible separate future cleanup, not required by this task's success
+criteria.

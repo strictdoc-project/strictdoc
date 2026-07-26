@@ -648,3 +648,98 @@ Some prose.
     assert section.node_type == "SECTION"
     assert section.reserved_uid == "SEC-1"
     assert [c.node_type for c in section.section_contents] == ["SECTION"]
+
+
+def test_029_markdown_reader_supports_headings_deeper_than_h6():
+    markdown_content = """\
+# Document title
+
+## Level 1
+
+### Level 2
+
+#### Level 3
+
+##### Level 4
+
+###### Level 5
+
+####### Level 6
+
+######## Deep requirement
+
+**UID**: REQ-DEEP-1
+
+**Statement**: Statement nested seven levels below the document.
+"""
+
+    reader = SDMarkdownReader()
+    document = reader.read(markdown_content, file_path=None)
+
+    node = document.section_contents[0]
+    for expected_title in [
+        "Level 1",
+        "Level 2",
+        "Level 3",
+        "Level 4",
+        "Level 5",
+        "Level 6",
+    ]:
+        assert isinstance(node, SDocNode)
+        assert node.node_type == "SECTION"
+        assert node.reserved_title == expected_title
+        assert len(node.section_contents) == 1
+        node = node.section_contents[0]
+
+    assert isinstance(node, SDocNode)
+    assert node.node_type == "REQUIREMENT"
+    assert node.reserved_uid == "REQ-DEEP-1"
+
+
+def test_030_markdown_reader_hashes_without_space_are_not_a_heading():
+    # CommonMark requires a space after the hashes; this must stay true for
+    # the extended 7+ hash headings as well.
+    markdown_content = """\
+# Document title
+
+## Section
+
+#######Not a heading.
+"""
+
+    reader = SDMarkdownReader()
+    document = reader.read(markdown_content, file_path=None)
+
+    section = document.section_contents[0]
+    assert isinstance(section, SDocNode)
+    assert section.node_type == "SECTION"
+    assert len(section.section_contents) == 1
+    text_node = section.section_contents[0]
+    assert isinstance(text_node, SDocNode)
+    assert text_node.node_type == "TEXT"
+    assert text_node.reserved_statement is not None
+    assert "#######Not a heading." in text_node.reserved_statement
+
+
+def test_031_markdown_reader_rejects_forward_jump_beyond_h6():
+    # Forward-jump validation must keep working in the extended range.
+    markdown_content = """\
+# Document title
+
+## Level 1
+
+### Level 2
+
+#### Level 3
+
+##### Level 4
+
+###### Level 5
+
+######## Level 7 reached by a forward jump
+"""
+
+    reader = SDMarkdownReader()
+    with pytest.raises(StrictDocSemanticError) as exc_info:
+        reader.read(markdown_content, file_path=None)
+    assert "forward jumps" in str(exc_info.value.title)

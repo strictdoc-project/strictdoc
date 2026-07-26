@@ -1,0 +1,17 @@
+#
+# Verify that sections nested deeper than six levels render with a valid
+# clamped <h6> tag carrying an aria-level attribute that communicates the
+# true heading depth (same convention as docutils/Sphinx).
+#
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Published: Deep sections doc
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+
+CHECK-HTML: <h6><sdoc-field>
+CHECK-HTML: Level 5 Section
+CHECK-HTML: <h6 aria-level="7"><sdoc-field>
+CHECK-HTML: Level 6 Section
+CHECK-HTML: <h6 aria-level="8"><sdoc-field>
+CHECK-HTML: Level 7 Section

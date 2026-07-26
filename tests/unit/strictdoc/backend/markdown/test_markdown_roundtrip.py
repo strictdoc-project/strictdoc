@@ -1181,3 +1181,67 @@ def test_028_section_prefix_with_type_drops_type_on_output():
     assert isinstance(section, SDocNode)
     assert section.node_type == "SECTION"
     assert section.get_prefix() == "LEVEL2-REQ-"
+
+
+def test_031_roundtrip_headings_deeper_than_h6():
+    input_sdoc = """\
+[DOCUMENT]
+TITLE: Document title
+
+[[SECTION]]
+TITLE: Level 1
+
+[[SECTION]]
+TITLE: Level 2
+
+[[SECTION]]
+TITLE: Level 3
+
+[[SECTION]]
+TITLE: Level 4
+
+[[SECTION]]
+TITLE: Level 5
+
+[[SECTION]]
+TITLE: Level 6
+
+[REQUIREMENT]
+UID: REQ-DEEP-1
+TITLE: Deep requirement
+STATEMENT: Statement nested seven levels below the document.
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[/SECTION]]
+"""
+    expected_markdown = """\
+# Document title
+
+## Level 1
+
+### Level 2
+
+#### Level 3
+
+##### Level 4
+
+###### Level 5
+
+####### Level 6
+
+######## Deep requirement
+
+**UID**: REQ-DEEP-1
+
+**Statement**: Statement nested seven levels below the document.
+"""
+    _assert_sdoc_to_markdown_roundtrip(input_sdoc, expected_markdown)

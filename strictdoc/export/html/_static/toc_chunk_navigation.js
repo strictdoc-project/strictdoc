@@ -77,23 +77,31 @@
 
   function navigateToFragment(fragment, link) {
     if (!fragment) return;
-    // Target already in the DOM: native navigation handles the scroll.
-    if (document.getElementById(fragment)) return;
+    // Target already in the DOM: scroll it ourselves rather than deferring
+    // to native fragment navigation. Native navigation also respects
+    // scroll-behavior: smooth on .main, and unloaded chunk placeholders can
+    // still sit between the current position and the target - the same
+    // mid-scroll layout-shift race scrollToFragment() guards against.
+    if (document.getElementById(fragment)) {
+      scrollToFragment(fragment);
+      return;
+    }
     const tocLink = link || tocLinkForFragment(fragment);
     if (!tocLink) return;
     const frameId = chunkFrameForLink(tocLink);
     if (frameId) loadChunkThenScroll(frameId, fragment);
   }
 
-  // TOC click. data-turbo="false" means a native hash navigation; intercept
-  // only when the target is missing so its chunk can be loaded first.
+  // TOC click. data-turbo="false" would otherwise mean a native hash
+  // navigation; always intercept so navigateToFragment controls the scroll,
+  // regardless of whether the target's own chunk still needs loading.
   document.addEventListener("click", (event) => {
     const link = event.target.closest
       ? event.target.closest("a[anchor]")
       : null;
     if (!link || !link.closest(TOC_FRAME_SELECTOR)) return;
     const fragment = link.getAttribute("anchor");
-    if (!fragment || document.getElementById(fragment)) return;
+    if (!fragment) return;
     event.preventDefault();
     history.pushState(null, "", "#" + encodeURIComponent(fragment));
     navigateToFragment(fragment, link);

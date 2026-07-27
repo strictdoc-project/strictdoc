@@ -10,8 +10,29 @@ turbo-frame {
    HTML attribute, so the class (not an attribute selector) is the only
    reliable signal here. */
 turbo-frame.document-chunk-placeholder {
+  /* --document-chunk-size comes form the "style" attribute in template. */
+  /* --chunk-node-height is taken as a reasonable average value. */
+  --chunk-node-height: 320px;
+
   display: block;
-  min-height: calc(var(--document-chunk-size, 100) * 320px);
+  min-height: calc(var(--document-chunk-size, 100) * var(--chunk-node-height));
+
+  background-image: conic-gradient(
+    from 0deg at 50% 160px,
+    rgba(60, 70, 82, 0),
+    rgba(60, 70, 82, 0.35)
+  );
+  background-size: 100% var(--chunk-node-height);
+  background-repeat: repeat-y;
+
+  mask-image: radial-gradient(
+    circle at 50% 160px,
+    transparent 0 10px,
+    #000 11px 15px,
+    transparent 16px
+  );
+  mask-size: 100% var(--chunk-node-height);
+  mask-repeat: repeat-y;
 }
 
 sdoc-node {

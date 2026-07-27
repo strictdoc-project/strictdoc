@@ -18,13 +18,32 @@
   window.__sdocTocChunkNavWired = true;
 
   const TOC_FRAME_SELECTOR = "turbo-frame#frame-toc";
+  const CONTENT_FRAME_SELECTOR = "[js-toc_highlighting-content_root]";
   const CHUNK_PLACEHOLDER_CLASS = "document-chunk-placeholder";
   const PRELOAD_MARGIN = "800px 0px";
   const observedPlaceholders = new WeakSet();
 
   function scrollToFragment(fragment) {
     const target = document.getElementById(fragment);
-    if (target) target.scrollIntoView();
+    if (!target) return;
+    // The scroll container has scroll-behavior: smooth (content.css), so a
+    // plain scrollIntoView() animates toward an endpoint computed once, up
+    // front. Chunks between the old position and the target can still be
+    // resolving from their estimated placeholder height to their real
+    // rendered height while that animation is in flight (preloadObserver
+    // below fetches them slightly ahead of scroll), shifting the target's
+    // actual position mid-animation - the scroll then lands short of it.
+    // Jump instantly instead: this removes the animation window entirely,
+    // so there is nothing left for a mid-flight layout shift to race
+    // against. Only this programmatic jump is affected - manual scrolling
+    // keeps the smooth behavior from the CSS.
+    const scrollContainer = document.querySelector(CONTENT_FRAME_SELECTOR);
+    const previousScrollBehavior = scrollContainer?.style.scrollBehavior;
+    if (scrollContainer) scrollContainer.style.scrollBehavior = "auto";
+    target.scrollIntoView();
+    if (scrollContainer) {
+      scrollContainer.style.scrollBehavior = previousScrollBehavior || "";
+    }
   }
 
   function chunkFrameForLink(link) {

@@ -2,6 +2,7 @@ from selenium.webdriver.common.by import By
 
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.components.toc import TOC
 from tests.end2end.helpers.screens.document.form_edit_requirement import (
     Form_EditRequirement,
 )
@@ -149,10 +150,60 @@ class Test(E2ECase):
                 by=By.XPATH,
                 timeout=20,
             )
+            # CSS :target must match the newly force-loaded node too. It
+            # does not do so automatically - toc_chunk_navigation.js
+            # explicitly refreshes location.hash once the target exists, to
+            # make the browser re-run its fragment-navigation algorithm.
+            screen_document.assert_target_by_anchor("REQ-035")
+            # DOM presence and :target do not by themselves prove the
+            # scroll actually reached the target on screen.
+            screen_document.assert_node_in_viewport_by_anchor("REQ-035")
+            # The current-section highlight must reflect the actual
+            # destination, not an intermediate node passed through while a
+            # chunk was still loading.
+            toc: TOC = screen_document.get_toc()
+            toc.assert_toc_link_has_attribute("REQ-035", "intersected")
             screen_document.assert_text(
                 "The lazy loading fixture statement LAZYSTMT-035 "
                 "must appear exactly once."
             )
+
+            #
+            # Scenario 7: Navigating to an already-loaded target while a
+            # chunk between the current position and it is still unloaded.
+            # Chunk 1 was never scrolled near (Scenario 5 jumped straight
+            # to chunk 3), so it is still a lazy placeholder at this point.
+            # (Chunk 2, immediately next to chunk 3, gets preloaded once we
+            # land there - its placeholder falls within the preload
+            # margin - so only chunk 1 is guaranteed to still be unloaded.)
+            # A smooth scroll animating across a chunk that is still
+            # resizing from placeholder to real height can land short of
+            # the target - scrollToFragment() forces an instant scroll to
+            # guard against exactly this.
+            #
+            self.assert_element_not_present(
+                "//turbo-frame[@id='document-chunk-1']//sdoc-node",
+                by=By.XPATH,
+            )
+            # Jump back to the top of the document (chunk 0, already
+            # loaded), then back down to the last requirement (chunk 3,
+            # already loaded since Scenario 5) - both legs cross chunk 1,
+            # which remains unloaded throughout.
+            FIRST_TOC_LINK_XPATH = (
+                "(//turbo-frame[@id='frame-toc']//a[@anchor])[1]"
+            )
+            self.click(FIRST_TOC_LINK_XPATH, by=By.XPATH)
+            screen_document.assert_node_in_viewport_by_anchor("REQ-001")
+            toc.assert_toc_link_has_attribute("REQ-001", "intersected")
+            self.assert_element_not_present(
+                "//turbo-frame[@id='document-chunk-1']//sdoc-node",
+                by=By.XPATH,
+            )
+
+            self.click(LAST_TOC_LINK_XPATH, by=By.XPATH)
+            screen_document.assert_target_by_anchor("REQ-035")
+            screen_document.assert_node_in_viewport_by_anchor("REQ-035")
+            toc.assert_toc_link_has_attribute("REQ-035", "intersected")
 
             #
             # Scenario 6: Preload must also work for placeholders inserted

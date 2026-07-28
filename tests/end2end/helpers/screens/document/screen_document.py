@@ -39,6 +39,33 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
         targeted_anchor = f"sdoc-anchor[id='{anchor}']:target"
         self.test_case.assert_element_present(targeted_anchor)
 
+    def assert_node_in_viewport_by_anchor(self, anchor) -> None:
+        # DOM presence and :target both leave open whether the scroll
+        # itself actually landed on the target - the real scroll container
+        # is the content div (js-toc_highlighting-content_root), which
+        # clips its content via overflow, not the outer window, so
+        # visibility must be checked against that container's own bounds.
+        is_in_viewport = self.test_case.execute_script(
+            f"""
+            const el = document.getElementById('{anchor}');
+            if (!el) return false;
+            const container = document.querySelector(
+                '[js-toc_highlighting-content_root]'
+            );
+            if (!container) return false;
+            const elRect = el.getBoundingClientRect();
+            const containerRect = container.getBoundingClientRect();
+            return (
+                elRect.bottom > containerRect.top &&
+                elRect.top < containerRect.bottom
+            );
+            """
+        )
+        assert is_in_viewport, (
+            f"Element with anchor '{anchor}' is not within the "
+            "content viewport."
+        )
+
     #
     # Actions on the page.
     #

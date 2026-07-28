@@ -10,7 +10,7 @@ turbo-frame {
    HTML attribute, so the class (not an attribute selector) is the only
    reliable signal here. */
 turbo-frame.document-chunk-placeholder {
-  /* --document-chunk-size comes form the "style" attribute in template. */
+  /* --document-chunk-size comes from the "style" attribute in template. */
   /* --chunk-node-height is taken as a reasonable average value. */
   --chunk-node-height: 320px;
 

@@ -57,18 +57,66 @@
     return toc.querySelector(`a[anchor="${CSS.escape(fragment)}"]`);
   }
 
+  function refreshTargetElement(fragment) {
+    // Fragment navigation (a TOC click, hashchange, or the initial page
+    // load) may already have run before this chunk had loaded, at which
+    // point no element matched the fragment. Browsers decide CSS :target
+    // once, when the "scroll to the fragment" algorithm runs for a
+    // navigation event (a real hash assignment, history traversal, or page
+    // load) - they do not re-run it later just because a matching element
+    // now exists in the DOM. This function forces that algorithm to run
+    // again now that the target actually exists.
+    //
+    // Re-assigning the exact same hash value is a no-op (no navigation, no
+    // "hashchange", no :target re-evaluation), so the current entry's hash
+    // is first changed to a placeholder via history.replaceState() - in
+    // place, no new history entry, and (like pushState) it does not run
+    // the fragment-navigation algorithm either. The placeholder is
+    // deliberately non-empty and never matches a real id: an *empty*
+    // fragment is special-cased by browsers to scroll to the top of the
+    // document, which a non-matching-but-non-empty one is not.
+    //
+    // The location.hash assignment that follows is then a genuine change
+    // from that placeholder, so it *does* run the fragment-navigation
+    // algorithm (finding the target and setting :target) and fires
+    // "hashchange" - which the listener below already handles, calling
+    // scrollToFragment() once it re-reads window.location.hash. It is also
+    // the only step that pushes a history entry, so back/forward behaves
+    // exactly as for a single, ordinary navigation to the fragment - the
+    // placeholder bounce leaves no trace in history.
+    const encoded = encodeURIComponent(fragment);
+    history.replaceState(
+      null,
+      "",
+      location.pathname + location.search + `#${encoded}--sdoc-target-refresh`
+    );
+    location.hash = encoded;
+  }
+
   function loadChunkThenScroll(frameId, fragment) {
     const frame = document.getElementById(frameId);
     if (!frame) return;
     if (!frame.classList.contains(CHUNK_PLACEHOLDER_CLASS)) {
-      scrollToFragment(fragment);
+      // The frame is loaded, but confirm the target actually exists before
+      // refreshing it. If it does not (e.g. a stale/renamed anchor whose
+      // TOC entry still points at an old id), refreshTargetElement()
+      // would bounce the hash, which fires "hashchange", which re-enters
+      // navigateToFragment() and right back here - an infinite loop, since
+      // nothing about the missing target would ever change.
+      if (document.getElementById(fragment)) {
+        refreshTargetElement(fragment);
+      }
       return;
     }
     // Register the load listener before triggering the fetch to avoid a race.
     const onFrameLoad = (event) => {
       if (event.target !== frame) return;
       document.removeEventListener("turbo:frame-load", onFrameLoad);
-      scrollToFragment(fragment);
+      // Same guard as above: only refresh if the target actually loaded
+      // into this chunk.
+      if (document.getElementById(fragment)) {
+        refreshTargetElement(fragment);
+      }
     };
     document.addEventListener("turbo:frame-load", onFrameLoad);
     // Switching loading from "lazy" to "eager" makes Turbo fetch src now.
@@ -92,9 +140,11 @@
     if (frameId) loadChunkThenScroll(frameId, fragment);
   }
 
-  // TOC click. data-turbo="false" would otherwise mean a native hash
-  // navigation; always intercept so navigateToFragment controls the scroll,
-  // regardless of whether the target's own chunk still needs loading.
+  // TOC click. Drive navigation via location.hash (not history.pushState(),
+  // which fires neither "hashchange" nor :target) so native hashchange and
+  // :target fire correctly. The same-hash case is handled separately just
+  // below. An unloaded target's chunk is refreshed once loaded - see
+  // refreshTargetElement().
   document.addEventListener("click", (event) => {
     const link = event.target.closest
       ? event.target.closest("a[anchor]")
@@ -103,8 +153,35 @@
     const fragment = link.getAttribute("anchor");
     if (!fragment) return;
     event.preventDefault();
-    history.pushState(null, "", "#" + encodeURIComponent(fragment));
-    navigateToFragment(fragment, link);
+
+    // Assigning the same value to location.hash is a no-op (no navigation,
+    // no "hashchange") - clicking the TOC entry for the section the URL is
+    // already on (e.g., after scrolling away manually and wanting to jump
+    // back to it) needs its own explicit scroll instead of relying on a
+    // hash change that will not happen.
+    if (decodeURIComponent(location.hash.slice(1)) === fragment) {
+      navigateToFragment(fragment, link);
+      return;
+    }
+
+    // The browser performs its own native scroll-to-fragment as part of
+    // processing the hash change below, using whatever scrollBehavior is
+    // current at that point - force it instant first, same reasoning as
+    // scrollToFragment(). If the target is not loaded yet, this native
+    // scroll silently finds nothing (same as always), and
+    // scrollToFragment() (invoked later, once the chunk loads) does its
+    // own instant scroll independently.
+    const scrollContainer = document.querySelector(CONTENT_FRAME_SELECTOR);
+    const previousScrollBehavior = scrollContainer?.style.scrollBehavior;
+    if (scrollContainer) scrollContainer.style.scrollBehavior = "auto";
+
+    location.hash = encodeURIComponent(fragment);
+
+    setTimeout(() => {
+      if (scrollContainer) {
+        scrollContainer.style.scrollBehavior = previousScrollBehavior || "";
+      }
+    }, 0);
   });
 
   // Direct URL deep-links, browser back/forward, and other hash changes.

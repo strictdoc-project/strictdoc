@@ -111,9 +111,9 @@ window.addEventListener("load",function(){
   // * when a node's read view (with its anchor) is re-inserted afterwards -
   // * both on save (already covered anyway by the TOC frame observer,
   // * since saving also updates frame-toc) and on Cancel (which does not
-  // * touch frame-toc: previously this meant the observed anchor element
-  // * for that node stayed stale/detached after any Cancel, independently
-  // * of chunking - this re-scan fixes that case too).
+  // * touch frame-toc at all): this re-scan is what keeps the
+  // * IntersectionObserver correctly associated with the re-inserted
+  // * anchor element in both cases.
   strictDoc.onInsert(CONTENT_ELEMENT_SELECTOR, function () {
     scheduleAnchorRescan(contentFrame, anchorObserver);
   });

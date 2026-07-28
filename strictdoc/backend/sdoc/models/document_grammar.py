@@ -160,7 +160,11 @@ class DocumentGrammar(SDocGrammarIF):
         return grammar
 
     @staticmethod
-    def create_for_test_report(parent: SDocDocumentIF) -> "DocumentGrammar":
+    def create_for_test_report(
+        parent: SDocDocumentIF,
+        *,
+        additional_fields: Optional[List[GrammarElementFieldString]] = None,
+    ) -> "DocumentGrammar":
         section_element: GrammarElement = (
             DocumentGrammar.create_default_section_element(
                 parent=None, enable_mid=parent.config.enable_mid == True
@@ -203,19 +207,25 @@ class DocumentGrammar(SDocGrammarIF):
                 human_title=None,
                 required="True",
             ),
-            GrammarElementFieldString(
-                parent=None,
-                title=RequirementFieldName.TITLE,
-                human_title=None,
-                required="True",
-            ),
-            GrammarElementFieldString(
-                parent=None,
-                title=RequirementFieldName.STATEMENT,
-                human_title=None,
-                required="False",
-            ),
         ]
+        if additional_fields is not None:
+            fields.extend(additional_fields)
+        fields.extend(
+            [
+                GrammarElementFieldString(
+                    parent=None,
+                    title=RequirementFieldName.TITLE,
+                    human_title=None,
+                    required="True",
+                ),
+                GrammarElementFieldString(
+                    parent=None,
+                    title=RequirementFieldName.STATEMENT,
+                    human_title=None,
+                    required="False",
+                ),
+            ]
+        )
         requirement_element = GrammarElement(
             parent=None,
             tag="TEST_RESULT",

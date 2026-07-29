@@ -19,6 +19,10 @@ def test_250_mids_with_chunk_size_100_produce_three_chunks():
     assert [chunk_.index for chunk_ in chunks] == [0, 1, 2]
     for chunk_ in chunks:
         assert chunk_.first_node_mid == node_mids[chunk_.index * 100]
+        assert (
+            list(chunk_.node_mids)
+            == node_mids[chunk_.index * 100 : (chunk_.index + 1) * 100]
+        )
 
 
 def test_exactly_chunk_size_mids_produce_one_chunk():
@@ -30,6 +34,7 @@ def test_exactly_chunk_size_mids_produce_one_chunk():
     assert chunks[0].index == 0
     assert chunks[0].first_node_mid == "MID_0"
     assert chunks[0].size == 100
+    assert list(chunks[0].node_mids) == node_mids
 
 
 def test_zero_chunk_size_raises_assertion_error():

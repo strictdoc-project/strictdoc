@@ -249,7 +249,12 @@ ${SEL_ITEM}[draggable="true"] .dragIndicator::before {
           'Accept': 'text/vnd.turbo-stream.html',
         },
       }).then((r) => r.text())
-      .then((html) => Turbo.renderStreamMessage(html));
+      .then((html) => {
+        // Move uses manual fetch + Turbo stream rendering. The shared
+        // before-stream-render handler captures immediately before the
+        // content frame is replaced.
+        window.StrictDoc.contentViewport.renderManualStreamMessage(html);
+      });
   }
 
   // [data-nodeid] excludes non-node <li>s that other scripts insert into

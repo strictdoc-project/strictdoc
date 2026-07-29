@@ -7,6 +7,7 @@ Supported shared namespaces:
 - StrictDoc.bus
 - StrictDoc.onInsert
 - StrictDoc.config
+- StrictDoc.contentViewport
 - StrictDoc.search
 - StrictDoc.project
 

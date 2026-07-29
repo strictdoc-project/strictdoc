@@ -82,10 +82,7 @@ ways:
 `../20260726_toc_highlight_improvement/task.md` for the original,
 detailed writeup): react to newly-inserted content anchors via the
 shared `StrictDoc.onInsert` contract, in addition to the existing
-TOC-frame observer. A follow-up diff-based rewrite of anchor
-(un)observation, and a related pre-existing latent gap it surfaced,
-were deliberately deferred - see
-`../20260726_toc_highlight_improvement/reports/investigation_deferred_observer_diff_optimization.md`.
+TOC-frame observer.
 
 **`toc_chunk_navigation.js`**:
 - `scrollToFragment()` temporarily forces the scroll container's

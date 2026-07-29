@@ -26,6 +26,12 @@
   function scrollToFragment(fragment) {
     const target = document.getElementById(fragment);
     if (!target) return;
+    const scrollElementToOffset =
+      window.StrictDoc.contentViewport?.scrollElementToOffset;
+    if (scrollElementToOffset) {
+      scrollElementToOffset(target, 0);
+      return;
+    }
     // The scroll container has scroll-behavior: smooth (content.css), so a
     // plain scrollIntoView() animates toward an endpoint computed once, up
     // front. Chunks between the old position and the target can still be
@@ -131,13 +137,17 @@
     // still sit between the current position and the target - the same
     // mid-scroll layout-shift race scrollToFragment() guards against.
     if (document.getElementById(fragment)) {
+      window.StrictDoc.contentViewport?.beginExplicitNavigation?.(null);
       scrollToFragment(fragment);
       return;
     }
     const tocLink = link || tocLinkForFragment(fragment);
     if (!tocLink) return;
     const frameId = chunkFrameForLink(tocLink);
-    if (frameId) loadChunkThenScroll(frameId, fragment);
+    if (frameId) {
+      window.StrictDoc.contentViewport?.beginExplicitNavigation?.(frameId);
+      loadChunkThenScroll(frameId, fragment);
+    }
   }
 
   // TOC click. Drive navigation via location.hash (not history.pushState(),

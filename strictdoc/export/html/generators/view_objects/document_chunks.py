@@ -18,12 +18,16 @@ class DocumentChunk:
 
     first_node_mid is a cursor into the document's node sequence: chunks are
     recomputed per request, so the cursor MID is resolved against the current
-    node order at render time. size is the requested window length.
+    node order at render time. node_mids is the complete client-side lookup
+    metadata for this frame. It must include nodes omitted from TOC (for
+    example untitled TEXT nodes), because operation targets are identified by
+    MID rather than by TOC membership.
     """
 
     index: int
     first_node_mid: str
     size: int
+    node_mids: Sequence[str]
 
 
 def slice_chunks(
@@ -38,6 +42,7 @@ def slice_chunks(
                 index=len(chunks),
                 first_node_mid=chunk_mids[0],
                 size=len(chunk_mids),
+                node_mids=chunk_mids,
             )
         )
     return chunks

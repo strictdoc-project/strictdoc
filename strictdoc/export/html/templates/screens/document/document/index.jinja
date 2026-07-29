@@ -17,6 +17,9 @@
   {%- if view_object.is_chunked_rendering() %}
   <script src="{{ view_object.render_static_url('toc_chunk_navigation.js') }}"></script>
   {%- endif %}
+  {%- if view_object.is_running_on_server -%}
+  <script src="{{ view_object.render_static_url('content_viewport_restoration.js') }}"></script>
+  {%- endif -%}
 
   <script src="{{ view_object.render_static_url('copy_to_clipboard.js') }}"></script>
 

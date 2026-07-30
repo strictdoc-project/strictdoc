@@ -4191,6 +4191,65 @@ template. The path can be absolute or relative to the project root.
 [[/SECTION]]
 
 [[SECTION]]
+MID: 92780916709f45f297bc5287261ddbbd
+UID: SECTION-UG-Path-to-custom-favicon
+TITLE: Path to custom favicon
+
+[TEXT]
+MID: 2e900240190f4d06b7abc2f0b33d4070
+STATEMENT: >>>
+By default, StrictDoc uses its own favicon for the HTML export and the server.
+
+A project can supply its own favicon file with the ``favicon_path`` option.
+
+.. code:: python
+
+    from strictdoc.core.project_config import ProjectConfig
+
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            favicon_path="your_folder/favicon.svg",
+        )
+        return config
+
+The path must be relative to the project root and point to an existing file.
+Any common favicon format is supported (``.svg``, ``.ico``, ``.png``, etc.).
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 9e1d20127e414cd9aef3ba264bfe1330
+UID: SECTION-UG-Path-to-custom-CSS
+TITLE: Path to custom CSS
+
+[TEXT]
+MID: c2f61430b5f34551a2fe8476a21a7225
+STATEMENT: >>>
+A project can supply its own stylesheet with the ``custom_css_path`` option, to
+extend or override StrictDoc's default styles in the HTML export and on the
+server.
+
+.. code:: python
+
+    from strictdoc.core.project_config import ProjectConfig
+
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            custom_css_path="your_folder/custom.css",
+        )
+        return config
+
+The path must be relative to the project root and point to an existing file.
+The referenced CSS file is applied on top of StrictDoc's own stylesheets, so
+only the rules that need to be changed have to be specified.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 593a2abbdaa5470988103c70e87c4cfc
 TITLE: Include/exclude document paths
 

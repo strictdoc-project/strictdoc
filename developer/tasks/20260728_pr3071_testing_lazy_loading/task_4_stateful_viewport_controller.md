@@ -165,6 +165,14 @@ the viewport therefore remains native browser flow: the shared controller
 measures the semantic witness but does not claim scroll ownership when the
 witness did not move.
 
+During active scrolling, response-time snapshots are rebased only while a
+current-generation passive chunk is still waiting to render. The scroll
+handler first filters pending chunks using state stored in memory. It calls
+the geometry-heavy `captureViewportAnchor()` only when at least one snapshot
+can actually accept the result. Stale requests may remain pending until their
+`turbo:frame-load` events, but they no longer cause a full loaded-document scan
+on every intervening scroll event.
+
 TOC navigation and viewport compensation use this primitive instead of
 independently changing and restoring inline `scrollBehavior`.
 

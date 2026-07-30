@@ -14,15 +14,24 @@ const TOC_LIST_SELECTOR = 'ul#toc';
 const TOC_ELEMENT_SELECTOR = 'a';
 const CONTENT_FRAME_SELECTOR = '[js-toc_highlighting-content_root]'; // stable container, never itself replaced by turbo
 const CONTENT_ELEMENT_SELECTOR = 'sdoc-anchor';
+const CONTENT_SCROLL_CONTAINER_SELECTOR = '.main';
 const TOC_STATE_CHANGED_EVENT = strictDoc.events.TOC_STATE_CHANGED;
 const TOC_FRAGMENT_RESOLVED_EVENT = strictDoc.events.TOC_FRAGMENT_RESOLVED;
 
 // Virtual viewport for TOC section highlighting.
-// We do not use the raw screen edges (0..innerHeight): we shrink the effective
-// area to [top+offset, bottom-offset]. This keeps the active range aligned with
-// what users perceive as "currently visible content" (header space, early closing of the previous node).
-const VIEWPORT_TOP_OFFSET_PX = 64;
-const VIEWPORT_BOTTOM_OFFSET_PX = 32;
+//
+// `.main`, rather than `window`, owns document scrolling. Its top and bottom
+// edges therefore define the real content viewport. The extra top inset closes
+// the previous section shortly after its boundary crosses the visible edge,
+// matching what users perceive as the current section.
+//
+// In the standard layout `.main` starts 48px below the window and ends 32px
+// above its bottom. The historical window-relative bounds 64px..height-32px
+// were consequently equivalent to `.main` plus this 16px top inset. Express
+// that geometry directly so highlighting continues to follow `.main` if the
+// surrounding header or footer layout changes.
+const HIGHLIGHT_VIEWPORT_TOP_INSET_PX = 16;
+const HIGHLIGHT_VIEWPORT_BOTTOM_INSET_PX = 0;
 
 // * Runtime state;
 // * anchorsCount/anchorsSig skip unnecessary re-observe on TOC mutations.
@@ -62,13 +71,18 @@ window.addEventListener("load",function(){
   const tocFrame = document.querySelector(TOC_FRAME_SELECTOR);
   const tocList = tocFrame ? tocFrame.querySelector(TOC_LIST_SELECTOR) : null;
   const contentFrame = document.querySelector(CONTENT_FRAME_SELECTOR);
+  // Document view marks `.main` itself as the content root; table view marks
+  // a descendant. closest() resolves the actual scroll owner in both cases.
+  const scrollContainer = contentFrame
+    ? contentFrame.closest(CONTENT_SCROLL_CONTAINER_SELECTOR)
+    : null;
 
-  if (!tocFrame || !contentFrame) { return }
+  if (!tocFrame || !contentFrame || !scrollContainer) { return }
 
   const anchorObserver = new IntersectionObserver(
     handleIntersect,
     {
-      root: null,
+      root: scrollContainer,
       rootMargin: "0px",
     });
 
@@ -299,12 +313,13 @@ function rebuildLinkedAnchors() {
 function handleIntersect(entries, observer) {
   // IntersectionObserver drives events, but the actual "which sections are
   // visible" decision is done by range geometry in updateVisibleSectionItems().
-  let topBound = VIEWPORT_TOP_OFFSET_PX;
-  let bottomBound = window.innerHeight - VIEWPORT_BOTTOM_OFFSET_PX;
-  if (entries.length > 0 && entries[0].rootBounds) {
-    topBound = entries[0].rootBounds.top + VIEWPORT_TOP_OFFSET_PX;
-    bottomBound = entries[0].rootBounds.bottom - VIEWPORT_BOTTOM_OFFSET_PX;
+  const viewportBounds = getHighlightViewportBounds(
+    entries.length > 0 ? entries[0].rootBounds : null
+  );
+  if (!viewportBounds) {
+    return;
   }
+  const { topBound, bottomBound } = viewportBounds;
 
   entries.forEach((entry) => {
 
@@ -570,11 +585,34 @@ function refreshHighlightFromCurrentState() {
     return;
   }
 
-  const topBound = VIEWPORT_TOP_OFFSET_PX;
-  const bottomBound = window.innerHeight - VIEWPORT_BOTTOM_OFFSET_PX;
+  const viewportBounds = getHighlightViewportBounds();
+  if (!viewportBounds) {
+    return;
+  }
+  const { topBound, bottomBound } = viewportBounds;
 
   updateVisibleSectionItems(topBound, bottomBound);
   handleHashChange();
+}
+
+function getHighlightViewportBounds(observerRootBounds = null) {
+  // IntersectionObserver normally supplies the rectangle of its `.main`
+  // root. Explicit refreshes (for example after collapsing a TOC branch) have
+  // no observer entry, so measure the same scroll container directly.
+  const scrollContainer = tocHighlightingState.contentFrameEl?.closest(
+    CONTENT_SCROLL_CONTAINER_SELECTOR
+  );
+  const rootBounds = observerRootBounds
+    ?? scrollContainer?.getBoundingClientRect();
+  if (!rootBounds) {
+    return null;
+  }
+  return {
+    topBound: rootBounds.top + HIGHLIGHT_VIEWPORT_TOP_INSET_PX,
+    bottomBound: (
+      rootBounds.bottom - HIGHLIGHT_VIEWPORT_BOTTOM_INSET_PX
+    ),
+  };
 }
 
 function updateVisibleSectionItems(topBound, bottomBound) {

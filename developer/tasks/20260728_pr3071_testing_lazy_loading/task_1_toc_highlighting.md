@@ -105,6 +105,19 @@ disjoint ranges in one frame, uses the established full reconciliation
 fallback. This preserves edit/save/cancel and structurally complex update
 semantics without imposing their cost on normal lazy chunk insertion.
 
+TOC highlighting uses the actual `.main` scroll container as its
+`IntersectionObserver` root and derives the virtual highlight viewport from
+that container's rectangle. Document view places the content-root marker on
+`.main` itself, while table view places it on a descendant; resolving the
+nearest `.main` supports both structures.
+
+The virtual viewport retains the established visual behavior: its upper edge
+is 16px inside `.main`, so a section closes shortly after its boundary passes
+the visible edge, and its lower edge is the bottom of `.main`. In the standard
+48px-header/32px-footer grid this is exactly the previous window-relative
+`64px..innerHeight-32px` range. Expressing it relative to `.main` removes the
+hidden dependency on those surrounding layout dimensions.
+
 **`toc_chunk_navigation.js`**:
 - `scrollToFragment()` temporarily forces the scroll container's
   `scrollBehavior` to `"auto"` for the duration of a single

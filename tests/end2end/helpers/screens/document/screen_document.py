@@ -446,6 +446,65 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
             )
         return geometry_read_count
 
+    def do_count_toc_observations(
+        self,
+        chunk_id: str,
+    ) -> int:
+        # Count semantic-anchor registrations rather than wall-clock time.
+        # Re-observing every previously loaded anchor makes lazy insertion
+        # progressively more expensive even when every chunk has the same
+        # size. Instrumenting IntersectionObserver.observe() exposes that
+        # algorithmic cost without depending on machine speed.
+        self.test_case.execute_async_script(
+            """
+            const done = arguments[0];
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                window.__strictdocTocAnchorObservationCount = 0;
+                window.__strictdocOriginalIntersectionObserve =
+                  IntersectionObserver.prototype.observe;
+                IntersectionObserver.prototype.observe = function(target) {
+                  if (target.matches?.("sdoc-anchor")) {
+                    window.__strictdocTocAnchorObservationCount += 1;
+                  }
+                  return (
+                    window.__strictdocOriginalIntersectionObserve
+                      .call(this, target)
+                  );
+                };
+                done();
+              });
+            });
+            """
+        )
+
+        observation_count = 0
+        try:
+            self.do_force_load_document_chunk(chunk_id)
+            # Chunk frame-load precedes the rAF-coalesced TOC anchor update.
+            # Wait for that registration work before restoring the prototype.
+            self.test_case.execute_async_script(
+                """
+                const done = arguments[0];
+                requestAnimationFrame(() => {
+                  requestAnimationFrame(done);
+                });
+                """
+            )
+        finally:
+            observation_count = self.test_case.execute_script(
+                """
+                IntersectionObserver.prototype.observe =
+                  window.__strictdocOriginalIntersectionObserve;
+                delete window.__strictdocOriginalIntersectionObserve;
+                const observationCount =
+                  window.__strictdocTocAnchorObservationCount;
+                delete window.__strictdocTocAnchorObservationCount;
+                return observationCount;
+                """
+            )
+        return observation_count
+
     def do_scroll_to_document_chunk(self, chunk_number: int) -> None:
         self.test_case.sdoc_do_scroll_to_element_by_xpath(
             f"//turbo-frame[@id='document-chunk-{chunk_number}']"

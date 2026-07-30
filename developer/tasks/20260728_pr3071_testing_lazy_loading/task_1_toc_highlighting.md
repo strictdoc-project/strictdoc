@@ -93,10 +93,17 @@ wall-clock time: the previous full scan performed 1199 reads for one update;
 the logarithmic implementation performs 19, with a browser-tolerant ceiling of
 64.
 
-Full anchor discovery and IntersectionObserver subscription still happen when
-the anchor set actually changes, for example after a lazy chunk insertion.
-That event-driven path remains linear in the loaded anchor count and is kept
-separate from the scrolling hot path.
+`StrictDoc.onInsert` coalesces anchors inserted in one frame. When they form
+one new contiguous DOM range with unique IDs, the range is inserted into the
+ordered anchor caches and only those new anchors are registered with
+IntersectionObserver. In a 600-node document, loading an equal 100-anchor chunk
+previously registered 200 anchors near the beginning and 600 near the end; the
+incremental path registers 100 in both positions.
+
+Replacing an existing anchor element with the same ID, or inserting several
+disjoint ranges in one frame, uses the established full reconciliation
+fallback. This preserves edit/save/cancel and structurally complex update
+semantics without imposing their cost on normal lazy chunk insertion.
 
 **`toc_chunk_navigation.js`**:
 - `scrollToFragment()` temporarily forces the scroll container's

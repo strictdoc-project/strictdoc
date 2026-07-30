@@ -505,6 +505,77 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
             )
         return observation_count
 
+    def do_start_toc_anchor_subscription_recording(
+        self,
+        anchor: str,
+    ) -> None:
+        # A Turbo Save/Cancel can replace an anchor with a new DOM element
+        # while preserving the same logical ID. Record observer calls by
+        # element identity so the test proves that the detached target is
+        # released and its replacement is subscribed.
+        self.test_case.execute_script(
+            """
+            const anchorId = arguments[0];
+            const oldAnchor = document.getElementById(anchorId);
+            if (!oldAnchor) {
+              throw new Error(`Missing anchor: ${anchorId}`);
+            }
+            const originalObserve =
+              IntersectionObserver.prototype.observe;
+            const originalUnobserve =
+              IntersectionObserver.prototype.unobserve;
+            const recording = {
+              anchorId,
+              oldAnchor,
+              newAnchorObserved: false,
+              oldAnchorUnobserved: false,
+              originalObserve,
+              originalUnobserve,
+            };
+            window.__strictdocTocSubscriptionRecording = recording;
+            IntersectionObserver.prototype.observe = function(target) {
+              if (
+                target.id === recording.anchorId &&
+                target !== recording.oldAnchor
+              ) {
+                recording.newAnchorObserved = true;
+              }
+              return recording.originalObserve.call(this, target);
+            };
+            IntersectionObserver.prototype.unobserve = function(target) {
+              if (target === recording.oldAnchor) {
+                recording.oldAnchorUnobserved = true;
+              }
+              return recording.originalUnobserve.call(this, target);
+            };
+            """,
+            anchor,
+        )
+
+    def do_stop_toc_anchor_subscription_recording(self) -> tuple[bool, bool]:
+        # Anchor reconciliation is coalesced to an animation frame. Wait until
+        # it has run before restoring the instrumented browser prototypes.
+        return self.test_case.execute_async_script(
+            """
+            const done = arguments[0];
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                const recording =
+                  window.__strictdocTocSubscriptionRecording;
+                IntersectionObserver.prototype.observe =
+                  recording.originalObserve;
+                IntersectionObserver.prototype.unobserve =
+                  recording.originalUnobserve;
+                delete window.__strictdocTocSubscriptionRecording;
+                done([
+                  recording.newAnchorObserved,
+                  recording.oldAnchorUnobserved,
+                ]);
+              });
+            });
+            """
+        )
+
     def do_scroll_to_document_chunk(self, chunk_number: int) -> None:
         self.test_case.sdoc_do_scroll_to_element_by_xpath(
             f"//turbo-frame[@id='document-chunk-{chunk_number}']"

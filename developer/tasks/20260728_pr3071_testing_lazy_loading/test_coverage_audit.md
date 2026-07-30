@@ -30,7 +30,7 @@ requirements.
 | 8 | Clicking the TOC entry for the section the URL is already on (`location.hash` unchanged - no `hashchange` fires for it) still scrolls back to it | `toc_click_navigation_chunked` |
 | 9 | Editing a node whose own chunk is loaded, while the chunks immediately before and after it are still unloaded placeholders, behaves the same as in a non-chunked document (TOC/highlighting update correctly, no error) | `test_edit_in_isolated_middle_chunk_keeps_neighbors_unloaded` |
 | 10 | Steady-state TOC highlighting locates the visible section in a 600-anchor document without a geometry scan proportional to all loaded anchors; the destination remains correctly highlighted | `tests/end2end/navigation/toc/toc_highlighting_large_document` |
-| 11 | Inserting an equal-size lazy chunk registers only its new anchors, independently of the number of anchors loaded earlier; replacing an existing anchor after Cancel remains supported by full reconciliation | `tests/end2end/navigation/toc/toc_highlighting_chunk_insertion` |
+| 11 | Inserting an equal-size lazy chunk registers only its new anchors, independently of the number of anchors loaded earlier; replacing an existing anchor after Cancel reconnects `IntersectionObserver` from the detached DOM element to its same-ID replacement | `tests/end2end/navigation/toc/toc_highlighting_chunk_insertion` |
 | 12 | Deleting a node under the same isolated-middle-chunk condition | The premise is obsolete: delete replaces the complete `frame_document_content`, so old neighboring placeholders do not survive. Delete restoration is covered by the viewport-controller tests. |
 | 13 | Creating a new node under the same isolated-middle-chunk condition | The premise is obsolete: create replaces the complete `frame_document_content`, so old neighboring placeholders do not survive. Local, distant, and non-chunked create are covered by the viewport-controller tests. |
 
@@ -83,38 +83,14 @@ distance in chunk-index terms.
 
 ## Content viewport restoration
 
-The content viewport restoration feature is defined in
-`task_2_content_viewport_restoration.md`.
-
-Direct coverage lives in:
+The final viewport invariant and architecture are defined in
+`task_4_stateful_viewport_controller.md`. Direct coverage lives in
 `tests/end2end/screens/document/lazy_loading_scroll_preservation`.
 
-The test fixture contains two documents:
-
-- `document.sdoc`: 35 requirements with `chunked_documents_threshold = 10`,
-  so the document renders as four chunks;
-- `control.sdoc`: 9 requirements, below the threshold, so it stays
-  non-chunked.
-
-The chunked tests first load chunk 1 and chunk 2 through normal scrolling.
-Chunk 1 is then loaded above the viewport. After a full document content
-replacement, that chunk becomes a placeholder again. This creates the geometry
-change that the restoration script must handle.
-
-| # | Required behavior | Verified by |
-|---|---|---|
-| 1 | Creating a node from a visible create form restores to the created node near the form's previous viewport position | `test_create_scrolls_to_new_node` |
-| 2 | Deleting a visible node keeps the top visible surviving node at the same viewport-relative position | `test_delete_preserves_top_visible_node_position` |
-| 3 | Deleting the last node falls back to the previous surviving node at the document end | `test_delete_last_node_falls_back_to_end_of_document` |
-| 4 | TOC drag-and-drop move keeps the top visible content node at the same viewport-relative position | `test_move_preserves_top_visible_node_position` |
-| 5 | Grammar edit keeps the current content viewport stable after the document content frame is replaced | `test_grammar_edit_preserves_top_visible_node_position` |
-| 6 | Node-local edit does not collapse an isolated loaded middle chunk or load its neighboring placeholders | `test_edit_in_isolated_middle_chunk_keeps_neighbors_unloaded` |
-| 7 | Local create in chunk 0 restores to the created node where the form was | `test_create_locally_does_not_jump` |
-| 8 | Local delete in chunk 0 keeps the visible top node at the same viewport-relative position | `test_delete_locally_does_not_jump` |
-| 9 | Non-chunked create keeps the existing create behavior while the restoration script is loaded | `test_non_chunked_create_unaffected` |
-| 10 | Non-chunked delete keeps the existing viewport behavior while the restoration script is loaded | `test_non_chunked_delete_unaffected` |
-| 11 | Non-chunked move keeps the existing viewport behavior while the restoration script is loaded | `test_non_chunked_move_unaffected` |
-| 12 | Non-chunked grammar edit keeps the existing viewport behavior while the restoration script is loaded | `test_non_chunked_grammar_edit_unaffected` |
-
-For non-chunked documents, the test checks that the restoration script does not
-change ordinary full-content update behavior.
+The complete viewport test matrix is kept in
+`task_4_stateful_viewport_controller_test_audit.md`. It covers semantic
+stability after chunk and full-content replacement, paint-interval correctness,
+natural wheel continuity in both directions, concurrent chunk loads, delayed
+node resizing, create/delete/move/grammar operations, and non-chunked
+counterparts. Keeping that matrix in one dedicated audit avoids duplicating a
+partial list here.

@@ -127,8 +127,9 @@ witness during one TOC drag.
 restoration across a full content-frame replacement initiated outside the
 content viewport.
 
-`test_edit_does_not_disturb_loaded_chunk` verifies that a node-local edit does
-not collapse its already loaded chunk.
+`test_edit_in_isolated_middle_chunk_keeps_neighbors_unloaded` verifies that a
+node-local edit does not collapse its already loaded chunk or load the
+unchanged placeholders on either side.
 
 Non-chunked move and grammar-edit counterparts verify that the shared
 controller does not regress the legacy rendering path.
@@ -144,59 +145,7 @@ Chunked stable-URL tests cover UID and MID links. Unit tests for
 `DocumentChunk` verify chunk slicing and preservation of every node MID used by
 the semantic placeholder index.
 
-## What current tests do not prove
-
-### No complete frame-by-frame smoothness assertion
-
-Most stability helpers begin sampling after the chunk placeholder has been
-cleared. They reliably catch an incorrect final position and continuing
-instability, but can miss this sequence:
-
-1. placeholder replacement moves the witness;
-2. one animation frame is painted at the wrong coordinate;
-3. controller compensation restores the witness;
-4. the test begins observing the already corrected result.
-
-The user can see step 2 even though the final assertion passes. This explains
-why manual testing found a smaller backward jump after the first automated
-regression was green.
-
-### No truly continuous automatic-scroll scenario
-
-The active-scroll test uses real wheel intent but applies a deterministic
-programmatic 120-pixel movement at a controlled Turbo lifecycle point. The
-chunk is explicitly switched to eager loading. It does not continuously scroll
-through the placeholder preload boundary and let the browser naturally trigger
-loading while multiple wheel/trackpad events remain in flight.
-
-### One pending/rendering chunk at a time
-
-The controller stores pending snapshots per frame, updates every pending
-passive snapshot during confirmed user movement, and freezes each frame
-independently when that frame starts mutating. This is designed for concurrent
-loads, but current tests exercise one pending chunk.
-
-Several near-simultaneous chunks are not a different geometric invariant: the
-net height delta above the witness is still the sum of their deltas. They are,
-however, a different scheduling case. Responses and frame mutations can
-interleave:
-
-```text
-capture A
-capture B
-render B
-restore B
-render A
-restore A
-```
-
-or one frame can start rendering while another snapshot is still live. A bug
-could double-compensate, restore an older coordinate, allow a layout-induced
-scroll event from A to rebase B, or let cleanup for one frame discard state for
-another. The multi-chunk test is therefore a concurrency/idempotence regression
-for the same stabilization mechanism, not a separate UX algorithm.
-
-### Delayed height changes are directly regressed
+## Delayed geometry coverage and limits
 
 After an idle chunk load, the controller observes rendered `sdoc-node` elements
 with `ResizeObserver`. A later node-height change schedules restoration of the
@@ -211,11 +160,6 @@ frame has loaded.
 - increases the outer height of a rendered upper node by 600 pixels;
 - proves that the height delta is substantial;
 - waits for semantic restoration and then samples a stable interval.
-
-The test initially failed: the witness moved by the node's padding increase.
-The observer used its default `content-box`, which does not change when padding
-changes. The controller now observes `border-box`, the outer box whose height
-actually moves following document content.
 
 The implementation guarantee is also bounded:
 
@@ -235,14 +179,7 @@ than the current implementation and tests. The intended UX invariant is
 geometry-source-independent, but its exact controller enforcement currently
 applies to observed chunk nodes while the relevant lock remains current.
 
-### Limited direction and structural combinations
-
-The deterministic active-scroll race covers one scroll direction. There is no
-separate reverse-direction scenario, no explicit assertion for a chunk below
-the witness, and no complex move scenario in which the moved subtree itself
-crosses the viewport or changes which fallback witness survives.
-
-## Implemented hardening tests
+## Hardening coverage
 
 The hardening scenarios use shared `Screen_Document` helpers. Browser and Turbo
 lifecycle instrumentation stays out of test cases; scenarios describe source
@@ -261,17 +198,10 @@ geometry, user action, and the expected semantic invariant.
 6. proves that the real/placeholder height delta is large;
 7. requires every paintable sample to remain within tolerance.
 
-The first recorder version sampled directly in `requestAnimationFrame`. That is
-too early because Turbo may run a later callback in the same animation-frame
-phase and still update geometry before paint. The final helper schedules a
-zero-delay task from rAF, observing geometry after the paint opportunity while
-ignoring synchronous intermediate JavaScript state.
-
-The test exposed a real movement of approximately 14938 pixels for one painted
-frame. Turbo inserted the tall DOM before `turbo:frame-load`, while the
-controller restored only on frame-load. The controller now also restores in
-the frame `MutationObserver` microtask, before paint, and retains frame-load as
-the final correction after placeholder-class removal.
+The recorder schedules a zero-delay task from `requestAnimationFrame`. This
+observes geometry after the paint opportunity, including later callbacks in
+the same animation-frame phase, while ignoring synchronous intermediate
+JavaScript state.
 
 ### Natural continuous scrolling across a preload boundary
 
@@ -320,7 +250,6 @@ snapshot.
 - force both possible response orders for concurrent chunks;
 - move a subtree from above to below the current viewport and the reverse;
 - delete a visible structural node with a large descendant subtree;
-- create a distant custom grammar node absent from TOC;
 - trigger multiple lazy loads while an operation-specific create target is
   locked.
 

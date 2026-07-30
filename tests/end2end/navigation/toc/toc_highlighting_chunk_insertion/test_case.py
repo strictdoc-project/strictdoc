@@ -69,10 +69,26 @@ class Test(E2ECase):
 
             # Replacing an existing anchor with a new DOM element is not a
             # pure insertion. It deliberately uses the full reconciliation
-            # fallback, which must reconnect TOC highlighting after Cancel.
-            requirement = screen_document.get_node_by_anchor(REPLACED_ANCHOR)
-            form = requirement.do_open_form_edit_requirement()
-            form.do_form_cancel()
+            # fallback. Logical ID/order equality must not hide the change in
+            # DOM identity from IntersectionObserver.
+            screen_document.do_start_toc_anchor_subscription_recording(
+                REPLACED_ANCHOR
+            )
+            try:
+                requirement = screen_document.get_node_by_anchor(
+                    REPLACED_ANCHOR
+                )
+                form = requirement.do_open_form_edit_requirement()
+                form.do_form_cancel()
+            finally:
+                (
+                    new_anchor_observed,
+                    old_anchor_unobserved,
+                ) = screen_document.do_stop_toc_anchor_subscription_recording()
+            assert new_anchor_observed
+            assert old_anchor_unobserved
+
+            # The reconnected anchor must also retain normal visible behavior.
             screen_document.do_scroll_anchor_to_viewport_center(REPLACED_ANCHOR)
             screen_document.get_toc().assert_toc_link_has_attribute(
                 REPLACED_ANCHOR,

@@ -84,6 +84,20 @@ detailed writeup): react to newly-inserted content anchors via the
 shared `StrictDoc.onInsert` contract, in addition to the existing
 TOC-frame observer.
 
+The steady-state scroll path keeps an ordered cache of anchors that have TOC
+links. Section intervals are vertically ordered, so two binary searches locate
+the interval overlapping the viewport without reading every loaded anchor's
+geometry. Only TOC links whose `intersected` state changed receive an attribute
+write. A 600-anchor regression records DOM geometry reads rather than unstable
+wall-clock time: the previous full scan performed 1199 reads for one update;
+the logarithmic implementation performs 19, with a browser-tolerant ceiling of
+64.
+
+Full anchor discovery and IntersectionObserver subscription still happen when
+the anchor set actually changes, for example after a lazy chunk insertion.
+That event-driven path remains linear in the loaded anchor count and is kept
+separate from the scrolling hot path.
+
 **`toc_chunk_navigation.js`**:
 - `scrollToFragment()` temporarily forces the scroll container's
   `scrollBehavior` to `"auto"` for the duration of a single

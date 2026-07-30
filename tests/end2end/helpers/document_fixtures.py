@@ -114,3 +114,27 @@ def write_long_text_document_with_large_section_subtree(
         "create_below_large_section.sdoc",
         "".join(document_parts),
     )
+
+
+def write_long_document_for_toc_geometry(
+    test_setup: End2EndTestSetup,
+    *,
+    node_count: int,
+) -> None:
+    document_parts = [
+        "[DOCUMENT]\nTITLE: TOC Geometry Performance Document\n\n"
+    ]
+
+    for node_index in range(1, node_count + 1):
+        document_parts.append(
+            f"[REQUIREMENT]\n"
+            f"UID: TOC-PERF-{node_index:04d}\n"
+            f"TITLE: TOC Geometry Requirement {node_index}\n"
+            f"STATEMENT: This short node provides one ordered TOC anchor.\n"
+            f"\n"
+        )
+
+    test_setup.write_to_sandbox_file(
+        "toc_geometry_performance.sdoc",
+        "".join(document_parts),
+    )

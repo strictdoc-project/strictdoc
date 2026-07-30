@@ -40,7 +40,8 @@ let tocHighlightingState = {
   folderSet: new Set(),
 };
 let tocRefreshRaf = null;
-let anchorRescanRaf = null;
+let anchorUpdateRaf = null;
+const pendingInsertedAnchors = new Set();
 
 function resetState() {
   // * Keep anchorsCount/anchorsSig to detect changes across TOC mutations.
@@ -101,10 +102,10 @@ window.addEventListener("load",function(){
   // * Content can also change without the TOC frame mutating - e.g. a
   // * lazily-loaded document chunk inserting nodes whose anchors were not
   // * present at initial load. The TOC frame observer above does not see
-  // * this case (see toc_highlighting.js task notes), so anchors are
-  // * re-scanned via StrictDoc.onInsert as well, instead of a dedicated
+  // * this case (see toc_highlighting.js task notes), so inserted anchors are
+  // * registered via StrictDoc.onInsert, instead of a dedicated
   // * MutationObserver - see the onInsert contract in app_core.js.
-  // * scheduleAnchorRescan() coalesces via requestAnimationFrame, since
+  // * scheduleAnchorUpdate() coalesces via requestAnimationFrame, since
   // * onInsert calls back once per matched element, not once per batch.
   // *
   // * Fires only for CONTENT_ELEMENT_SELECTOR (sdoc-anchor) matches - the
@@ -115,11 +116,11 @@ window.addEventListener("load",function(){
   // * when a node's read view (with its anchor) is re-inserted afterwards -
   // * both on save (already covered anyway by the TOC frame observer,
   // * since saving also updates frame-toc) and on Cancel (which does not
-  // * touch frame-toc at all): this re-scan is what keeps the
+  // * touch frame-toc at all): this update is what keeps the
   // * IntersectionObserver correctly associated with the re-inserted
   // * anchor element in both cases.
-  strictDoc.onInsert(CONTENT_ELEMENT_SELECTOR, function () {
-    scheduleAnchorRescan(contentFrame, anchorObserver);
+  strictDoc.onInsert(CONTENT_ELEMENT_SELECTOR, function (anchor) {
+    scheduleAnchorUpdate(contentFrame, anchorObserver, anchor);
   });
 
   // * Refresh TOC highlights when collapsible_toc.js changes branch visibility.
@@ -220,7 +221,9 @@ function processAnchorList(contentFrame, anchorObserver) {
   // * detect cheap changes via count + order-sensitive signature.
 
   // * Collects all anchors in the document
-  const newAnchors = contentFrame.querySelectorAll(CONTENT_ELEMENT_SELECTOR);
+  const newAnchors = Array.from(
+    contentFrame.querySelectorAll(CONTENT_ELEMENT_SELECTOR)
+  );
   tocHighlightingState.contentFrameEl = contentFrame;
 
   // * Build order-sensitive signature to detect renames/reorders without full re-subscribe.
@@ -250,8 +253,8 @@ function processAnchorList(contentFrame, anchorObserver) {
     newAnchors.forEach(anchor => {
       const id = anchor.id;
       tocHighlightingState.data[id] = {
-        'anchor': anchor,
-        ...tocHighlightingState.data[id]
+        ...tocHighlightingState.data[id],
+        'anchor': anchor
       };
     });
     rebuildLinkedAnchors();
@@ -268,8 +271,8 @@ function processAnchorList(contentFrame, anchorObserver) {
   newAnchors.forEach(anchor => {
     const id = anchor.id;
     tocHighlightingState.data[id] = {
-      'anchor': anchor,
-      ...tocHighlightingState.data[id]
+      ...tocHighlightingState.data[id],
+      'anchor': anchor
     };
     // * Adds an observer for the position of the anchor
     anchorObserver.observe(anchor);
@@ -386,20 +389,168 @@ function handleIntersect(entries, observer) {
 }
 
 // Coalesce multiple content-frame mutations (e.g. all nodes inserted by one
-// lazily-loaded chunk) into a single anchor re-scan.
-function scheduleAnchorRescan(contentFrame, anchorObserver) {
-  if (anchorRescanRaf !== null) {
+// lazily-loaded chunk) into a single anchor-cache update.
+function scheduleAnchorUpdate(contentFrame, anchorObserver, insertedAnchor) {
+  pendingInsertedAnchors.add(insertedAnchor);
+  if (anchorUpdateRaf !== null) {
     return;
   }
-  anchorRescanRaf = requestAnimationFrame(() => {
-    anchorRescanRaf = null;
+  anchorUpdateRaf = requestAnimationFrame(() => {
+    anchorUpdateRaf = null;
+    const insertedAnchors = Array.from(pendingInsertedAnchors);
+    pendingInsertedAnchors.clear();
     // * Deliberately not resetState()+processLinkList(): the TOC link for
     // * every node id was already captured by the initial full scan, so
     // * merging newly found anchors into the existing data[id] entries is
     // * enough - see toc_highlighting.js task notes.
-    processAnchorList(contentFrame, anchorObserver);
+    if (
+      !processContiguousInsertedAnchors(
+        contentFrame,
+        anchorObserver,
+        insertedAnchors
+      )
+    ) {
+      // Replacements of an existing ID or several disjoint insertion ranges
+      // are uncommon and structurally more complex. Preserve the established
+      // full reconciliation path for those cases.
+      processAnchorList(contentFrame, anchorObserver);
+    }
     refreshHighlightFromCurrentState();
   });
+}
+
+function processContiguousInsertedAnchors(
+  contentFrame,
+  anchorObserver,
+  insertedAnchors
+) {
+  const newAnchors = insertedAnchors.filter(anchor => {
+    return anchor.isConnected && contentFrame.contains(anchor);
+  });
+  if (newAnchors.length === 0) {
+    return true;
+  }
+
+  // onInsert also reports elements that already existed when the handler was
+  // registered. Ignore those exact elements. A different element with the
+  // same ID is a replacement (edit/save/cancel) and uses full reconciliation.
+  const uniqueNewAnchors = [];
+  const seenAnchorIds = new Set();
+  for (const anchor of newAnchors) {
+    if (seenAnchorIds.has(anchor.id)) {
+      return false;
+    }
+    seenAnchorIds.add(anchor.id);
+
+    const existingAnchor = tocHighlightingState.data[anchor.id]?.anchor;
+    if (existingAnchor === anchor) {
+      continue;
+    }
+    if (existingAnchor !== undefined) {
+      return false;
+    }
+    uniqueNewAnchors.push(anchor);
+  }
+  if (uniqueNewAnchors.length === 0) {
+    return true;
+  }
+
+  uniqueNewAnchors.sort(compareAnchorsByDomOrder);
+  const currentAnchors = tocHighlightingState.anchors ?? [];
+  if (currentAnchors.some(anchor => !anchor.isConnected)) {
+    // A pure insertion leaves every tracked anchor connected. A disconnected
+    // element means this batch also replaced or removed content, possibly
+    // under a different ID, so reconcile the complete current DOM.
+    return false;
+  }
+  const anchorInsertionIndex = findAnchorInsertionIndex(
+    currentAnchors,
+    uniqueNewAnchors[0],
+    anchor => anchor
+  );
+  const nextCurrentAnchor = currentAnchors[anchorInsertionIndex];
+  if (
+    nextCurrentAnchor !== undefined &&
+    !isBeforeInDom(
+      uniqueNewAnchors[uniqueNewAnchors.length - 1],
+      nextCurrentAnchor
+    )
+  ) {
+    // At least one existing anchor lies inside the inserted batch, so this is
+    // not a single new contiguous range.
+    return false;
+  }
+
+  uniqueNewAnchors.forEach(anchor => {
+    tocHighlightingState.data[anchor.id] = {
+      ...tocHighlightingState.data[anchor.id],
+      'anchor': anchor
+    };
+    anchorObserver.observe(anchor);
+  });
+  currentAnchors.splice(
+    anchorInsertionIndex,
+    0,
+    ...uniqueNewAnchors
+  );
+  tocHighlightingState.anchors = currentAnchors;
+
+  const newLinkedAnchors = uniqueNewAnchors.flatMap(anchor => {
+    const pair = tocHighlightingState.data[anchor.id];
+    if (pair?.link === undefined) {
+      return [];
+    }
+    return [{
+      anchor,
+      link: pair.link,
+    }];
+  });
+  if (newLinkedAnchors.length > 0) {
+    const linkedAnchorInsertionIndex = findAnchorInsertionIndex(
+      tocHighlightingState.linkedAnchors,
+      newLinkedAnchors[0].anchor,
+      linkedAnchor => linkedAnchor.anchor
+    );
+    tocHighlightingState.linkedAnchors.splice(
+      linkedAnchorInsertionIndex,
+      0,
+      ...newLinkedAnchors
+    );
+  }
+
+  // The ordered signature is only needed to recognize a future full scan as
+  // unchanged. Force that future scan to reconcile once; lazy insertions
+  // themselves continue through this incremental path.
+  tocHighlightingState.anchorsCount = -1;
+  return true;
+}
+
+function compareAnchorsByDomOrder(leftAnchor, rightAnchor) {
+  if (leftAnchor === rightAnchor) {
+    return 0;
+  }
+  return isBeforeInDom(leftAnchor, rightAnchor) ? -1 : 1;
+}
+
+function isBeforeInDom(leftAnchor, rightAnchor) {
+  return Boolean(
+    leftAnchor.compareDocumentPosition(rightAnchor) &
+    Node.DOCUMENT_POSITION_FOLLOWING
+  );
+}
+
+function findAnchorInsertionIndex(items, insertedAnchor, getAnchor) {
+  let lowerIndex = 0;
+  let upperIndex = items.length;
+  while (lowerIndex < upperIndex) {
+    const middleIndex = Math.floor((lowerIndex + upperIndex) / 2);
+    if (isBeforeInDom(getAnchor(items[middleIndex]), insertedAnchor)) {
+      lowerIndex = middleIndex + 1;
+    } else {
+      upperIndex = middleIndex;
+    }
+  }
+  return lowerIndex;
 }
 
 // Coalesce multiple TOC state changes into a single frame refresh.

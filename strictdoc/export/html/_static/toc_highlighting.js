@@ -53,10 +53,12 @@ let anchorUpdateRaf = null;
 const pendingInsertedAnchors = new Set();
 
 function resetState() {
-  // * Keep anchorsCount/anchorsSig to detect changes across TOC mutations.
+  // * Keep anchors and their signature across TOC mutations. The observer
+  // * remains subscribed while link mappings are rebuilt, and the retained
+  // * element identities let processAnchorList() detect a same-ID DOM
+  // * replacement such as Save/Cancel.
   tocHighlightingState.data = {};
   tocHighlightingState.links = null;
-  tocHighlightingState.anchors = null;
   tocHighlightingState.contentFrameEl = null;
   tocHighlightingState.linkedAnchors = [];
   tocHighlightingState.visibleLinks = new Set();
@@ -230,9 +232,35 @@ function processLinkList(tocFrame) {
   });
 }
 
+function syncAnchorObserverSubscriptions(anchorObserver, newAnchors) {
+  // Logical equality by anchor ID is insufficient for IntersectionObserver.
+  // Turbo can replace an <sdoc-anchor> with a new DOM element carrying the
+  // same ID. Subscribe the new identity and release the detached one while
+  // leaving every unchanged target untouched.
+  const previousAnchors = new Set(tocHighlightingState.anchors ?? []);
+  const nextAnchors = new Set(newAnchors);
+
+  newAnchors.forEach(anchor => {
+    const id = anchor.id;
+    tocHighlightingState.data[id] = {
+      ...tocHighlightingState.data[id],
+      'anchor': anchor
+    };
+    if (!previousAnchors.has(anchor)) {
+      anchorObserver.observe(anchor);
+    }
+  });
+  previousAnchors.forEach(anchor => {
+    if (!nextAnchors.has(anchor)) {
+      anchorObserver.unobserve(anchor);
+    }
+  });
+  tocHighlightingState.anchors = newAnchors;
+}
+
 function processAnchorList(contentFrame, anchorObserver) {
   // * Re-scan content anchors;
-  // * detect cheap changes via count + order-sensitive signature.
+  // * detect cheap logical changes via count + order-sensitive signature.
 
   // * Collects all anchors in the document
   const newAnchors = Array.from(
@@ -259,38 +287,18 @@ function processAnchorList(contentFrame, anchorObserver) {
     tocHighlightingState.anchorsSig === sig
   );
 
+  // Even an unchanged logical list can contain a replacement DOM element.
+  // Keep observer subscriptions synchronized by element identity first.
+  syncAnchorObserverSubscriptions(anchorObserver, newAnchors);
+
   if (unchanged) {
-    // * After resetState(), mapping in data[] is empty.
-    // We must rebuild anchor→data mapping even if the set is unchanged,
-    // otherwise IntersectionObserver events may hit undefined.
-    tocHighlightingState.anchors = newAnchors;
-    newAnchors.forEach(anchor => {
-      const id = anchor.id;
-      tocHighlightingState.data[id] = {
-        ...tocHighlightingState.data[id],
-        'anchor': anchor
-      };
-    });
     rebuildLinkedAnchors();
     return;
   }
 
-  // * Set changed → drop old IO targets and re‑subscribe.
-  anchorObserver.disconnect(); // ** Re-subscribe anchors only when content changed
-
-  tocHighlightingState.anchors = newAnchors;
   tocHighlightingState.anchorsCount = newAnchors.length;
   tocHighlightingState.anchorsSig = sig;
 
-  newAnchors.forEach(anchor => {
-    const id = anchor.id;
-    tocHighlightingState.data[id] = {
-      ...tocHighlightingState.data[id],
-      'anchor': anchor
-    };
-    // * Adds an observer for the position of the anchor
-    anchorObserver.observe(anchor);
-  });
   rebuildLinkedAnchors();
 }
 

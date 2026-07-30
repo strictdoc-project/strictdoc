@@ -213,9 +213,11 @@ target chunk and uses the shared immediate scroll primitive after the target
 exists.
 
 The controller captures ordinary chunk geometry on
-`turbo:before-fetch-response`. It restores on `turbo:frame-load`, after the
-earlier chunk-navigation listener has removed the placeholder class and its
-estimated `min-height`.
+`turbo:before-fetch-response`. A frame-local `MutationObserver` restores in the
+DOM mutation microtask so uncompensated geometry cannot reach a painted frame.
+The controller restores again on `turbo:frame-load`, after the earlier
+chunk-navigation listener has removed the placeholder class and its estimated
+`min-height`.
 
 ## Test contract
 

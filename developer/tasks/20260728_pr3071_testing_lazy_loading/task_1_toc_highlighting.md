@@ -102,8 +102,12 @@ incremental path registers 100 in both positions.
 
 Replacing an existing anchor element with the same ID, or inserting several
 disjoint ranges in one frame, uses the established full reconciliation
-fallback. This preserves edit/save/cancel and structurally complex update
-semantics without imposing their cost on normal lazy chunk insertion.
+fallback. Reconciliation synchronizes `IntersectionObserver` targets by DOM
+element identity: a Save/Cancel replacement subscribes the new element and
+releases the detached one even though the logical ID and order did not change.
+Unchanged elements keep their existing subscriptions. This preserves
+edit/save/cancel and structurally complex update semantics without imposing
+their cost on normal lazy chunk insertion.
 
 TOC highlighting uses the actual `.main` scroll container as its
 `IntersectionObserver` root and derives the virtual highlight viewport from

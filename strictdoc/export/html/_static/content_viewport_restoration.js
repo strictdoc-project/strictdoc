@@ -685,20 +685,31 @@
         return;
       }
 
-      const latestSnapshot = captureViewportAnchor();
-      if (!latestSnapshot) return;
-
+      const pendingSnapshotsToRebase = [];
       pendingChunkFrames.forEach((frame) => {
         const pendingSnapshot = pendingChunkSnapshots.get(frame);
         if (
-          !pendingSnapshot ||
-          pendingSnapshot.generation !== generation ||
-          pendingSnapshot.followsActiveViewportLock ||
-          pendingSnapshot.renderStarted
+          pendingSnapshot !== undefined &&
+          pendingSnapshot.generation === generation &&
+          !pendingSnapshot.followsActiveViewportLock &&
+          !pendingSnapshot.renderStarted
         ) {
-          return;
+          pendingSnapshotsToRebase.push(pendingSnapshot);
         }
+      });
+      if (pendingSnapshotsToRebase.length === 0) {
+        // User input invalidates the previous generation immediately, while
+        // its already-started frame requests may remain pending until their
+        // frame-load events arrive. Reject those cheap state-only candidates
+        // before captureViewportAnchor scans and measures every loaded node
+        // and anchor on this scroll event.
+        return;
+      }
 
+      const latestSnapshot = captureViewportAnchor();
+      if (!latestSnapshot) return;
+
+      pendingSnapshotsToRebase.forEach((pendingSnapshot) => {
         // Keep passive reading position current while the viewport is still
         // moving between response arrival and the actual frame mutation.
         // Once rendering starts, the observer freezes the last user position

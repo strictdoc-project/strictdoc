@@ -34,6 +34,8 @@ let tocHighlightingState = {
   anchorsSig: 0,
   contentFrameTop: undefined,
   contentFrameEl: null,
+  linkedAnchors: [],
+  visibleLinks: new Set(),
   closerForFolder: {},
   folderSet: new Set(),
 };
@@ -46,6 +48,8 @@ function resetState() {
   tocHighlightingState.links = null;
   tocHighlightingState.anchors = null;
   tocHighlightingState.contentFrameEl = null;
+  tocHighlightingState.linkedAnchors = [];
+  tocHighlightingState.visibleLinks = new Set();
   tocHighlightingState.closerForFolder = {};
   tocHighlightingState.folderSet = new Set();
 }
@@ -250,6 +254,7 @@ function processAnchorList(contentFrame, anchorObserver) {
         ...tocHighlightingState.data[id]
       };
     });
+    rebuildLinkedAnchors();
     return;
   }
 
@@ -269,6 +274,23 @@ function processAnchorList(contentFrame, anchorObserver) {
     // * Adds an observer for the position of the anchor
     anchorObserver.observe(anchor);
   });
+  rebuildLinkedAnchors();
+}
+
+function rebuildLinkedAnchors() {
+  const linkedAnchors = [];
+  tocHighlightingState.anchors.forEach(anchor => {
+    const id = anchor.id;
+    const pair = tocHighlightingState.data[id];
+    if (!pair || !pair.anchor || !pair.link) {
+      return;
+    }
+    linkedAnchors.push({
+      anchor: pair.anchor,
+      link: pair.link,
+    });
+  });
+  tocHighlightingState.linkedAnchors = linkedAnchors;
 }
 
 function handleIntersect(entries, observer) {
@@ -410,63 +432,93 @@ function updateVisibleSectionItems(topBound, bottomBound) {
   // [anchor_last.top, contentFrame.bottom).
   // If this interval overlaps the virtual viewport [topBound, bottomBound],
   // the corresponding TOC item is marked as intersected.
-  if (!tocHighlightingState.anchors || tocHighlightingState.anchors.length === 0) {
-    return;
-  }
-
-  const linkedAnchors = [];
-  tocHighlightingState.anchors.forEach(anchor => {
-    const id = anchor.id;
-    const pair = tocHighlightingState.data[id];
-    if (!pair || !pair.anchor || !pair.link) {
-      return;
-    }
-    linkedAnchors.push({ id, anchor: pair.anchor, link: pair.link });
-  });
-
+  const linkedAnchors = tocHighlightingState.linkedAnchors;
   if (linkedAnchors.length === 0) {
+    tocHighlightingState.visibleLinks.forEach(link => {
+      fireItem(link, false);
+    });
+    tocHighlightingState.visibleLinks = new Set();
     return;
   }
 
-  const visibleIds = new Set();
-  for (let i = 0; i < linkedAnchors.length; i++) {
-    const current = linkedAnchors[i];
-    const next = linkedAnchors[i + 1];
+  // Anchor positions follow DOM order. Locate the small interval overlapping
+  // the viewport with logarithmic geometry reads instead of measuring every
+  // loaded anchor on each IntersectionObserver callback.
+  //
+  // The section containing topBound starts at the last anchor whose top is
+  // <= topBound. Anchors at bottomBound start outside the open lower edge and
+  // are excluded. These bounds preserve the original interval definition:
+  // [anchor_i.top, anchor_{i+1}.top).
+  const firstAnchorBelowTop = findFirstAnchorTopGreaterThan(
+    linkedAnchors,
+    topBound
+  );
+  const firstAnchorAtOrBelowBottom = findFirstAnchorTopAtLeast(
+    linkedAnchors,
+    bottomBound
+  );
+  const firstVisibleSectionIndex = Math.max(0, firstAnchorBelowTop - 1);
 
-    // Section i is the interval [anchor_i, anchor_{i+1}).
-    const sectionTop = current.anchor.getBoundingClientRect().top;
-    const sectionBottom = next
-      ? next.anchor.getBoundingClientRect().top
-      : (tocHighlightingState.contentFrameEl?.getBoundingClientRect().bottom ?? bottomBound);
-
-    const sectionOverlapsViewport =
-      sectionBottom > topBound && sectionTop < bottomBound;
-
-    if (sectionOverlapsViewport) {
-      visibleIds.add(current.id);
+  // If a TOC child is hidden by a collapsed branch, its first visible ancestor
+  // owns the highlight. Several visible children can therefore resolve to the
+  // same link, so collect the result in a Set.
+  const nextVisibleLinks = new Set();
+  for (
+    let index = firstVisibleSectionIndex;
+    index < firstAnchorAtOrBelowBottom;
+    index += 1
+  ) {
+    const link = resolveVisibleTocLink(linkedAnchors[index].link);
+    if (link) {
+      nextVisibleLinks.add(link);
     }
   }
 
-  // Reset previous "intersected" states.
-  linkedAnchors.forEach(item => {
-    fireItem(item.link, false);
-  });
-
-  // Highlight visible links. If a link is hidden under collapsed parents,
-  // move highlight up to the first visible ancestor link.
-  const visibleLinks = new Set();
-  linkedAnchors.forEach(item => {
-    if (visibleIds.has(item.id)) {
-      const link = resolveVisibleTocLink(item.link);
-      if (link) {
-        visibleLinks.add(link);
-      }
+  // Attribute writes can trigger style recalculation. Touch only links whose
+  // state actually changed instead of clearing and rebuilding all N links.
+  tocHighlightingState.visibleLinks.forEach(link => {
+    if (!nextVisibleLinks.has(link)) {
+      fireItem(link, false);
     }
   });
-
-  visibleLinks.forEach(link => {
-    fireItem(link, true);
+  nextVisibleLinks.forEach(link => {
+    if (!tocHighlightingState.visibleLinks.has(link)) {
+      fireItem(link, true);
+    }
   });
+  tocHighlightingState.visibleLinks = nextVisibleLinks;
+}
+
+function findFirstAnchorTopGreaterThan(linkedAnchors, boundary) {
+  let lowerIndex = 0;
+  let upperIndex = linkedAnchors.length;
+  while (lowerIndex < upperIndex) {
+    const middleIndex = Math.floor((lowerIndex + upperIndex) / 2);
+    const anchorTop =
+      linkedAnchors[middleIndex].anchor.getBoundingClientRect().top;
+    if (anchorTop <= boundary) {
+      lowerIndex = middleIndex + 1;
+    } else {
+      upperIndex = middleIndex;
+    }
+  }
+  return lowerIndex;
+}
+
+function findFirstAnchorTopAtLeast(linkedAnchors, boundary) {
+  let lowerIndex = 0;
+  let upperIndex = linkedAnchors.length;
+  while (lowerIndex < upperIndex) {
+    const middleIndex = Math.floor((lowerIndex + upperIndex) / 2);
+    const anchorTop =
+      linkedAnchors[middleIndex].anchor.getBoundingClientRect().top;
+    if (anchorTop < boundary) {
+      lowerIndex = middleIndex + 1;
+    } else {
+      upperIndex = middleIndex;
+    }
+  }
+  return lowerIndex;
 }
 
 function isElementVisible(element) {

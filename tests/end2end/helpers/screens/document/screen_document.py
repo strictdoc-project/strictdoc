@@ -389,6 +389,63 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
             element,
         )
 
+    def do_count_toc_geometry_reads(
+        self,
+        anchor: str,
+    ) -> int:
+        # Wall-clock performance assertions are unstable in end-to-end tests.
+        # Count the expensive geometry reads performed on semantic anchors
+        # instead. This captures the algorithmic cost of one TOC highlight
+        # update independently of machine speed.
+        #
+        # Element geometry can only be instrumented in the browser. Two
+        # animation frames let initial IntersectionObserver delivery settle
+        # before replacing the DOM method; the replacement is always restored
+        # after the measurement.
+        self.test_case.execute_async_script(
+            """
+            const done = arguments[0];
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                window.__strictdocTocGeometryReadCount = 0;
+                window.__strictdocOriginalGetBoundingClientRect =
+                  Element.prototype.getBoundingClientRect;
+                Element.prototype.getBoundingClientRect = function() {
+                  if (this.matches?.("sdoc-anchor")) {
+                    window.__strictdocTocGeometryReadCount += 1;
+                  }
+                  return (
+                    window.__strictdocOriginalGetBoundingClientRect
+                      .apply(this, arguments)
+                  );
+                };
+                done();
+              });
+            });
+            """
+        )
+
+        geometry_read_count = 0
+        try:
+            self.do_scroll_anchor_to_viewport_center(anchor)
+            self.get_toc().assert_toc_link_has_attribute(
+                anchor,
+                "intersected",
+            )
+        finally:
+            geometry_read_count = self.test_case.execute_script(
+                """
+                Element.prototype.getBoundingClientRect =
+                  window.__strictdocOriginalGetBoundingClientRect;
+                delete window.__strictdocOriginalGetBoundingClientRect;
+                const geometryReadCount =
+                  window.__strictdocTocGeometryReadCount;
+                delete window.__strictdocTocGeometryReadCount;
+                return geometryReadCount;
+                """
+            )
+        return geometry_read_count
+
     def do_scroll_to_document_chunk(self, chunk_number: int) -> None:
         self.test_case.sdoc_do_scroll_to_element_by_xpath(
             f"//turbo-frame[@id='document-chunk-{chunk_number}']"

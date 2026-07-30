@@ -29,6 +29,7 @@ requirements.
 | 7 | `intersected` reflects the actual destination (not an intermediate node passed through while a chunk was loading) after a TOC-click/hash-driven navigation to a force-loaded or gap-crossing target | `lazy_loading`, Scenarios 5 and 7 |
 | 8 | Clicking the TOC entry for the section the URL is already on (`location.hash` unchanged - no `hashchange` fires for it) still scrolls back to it | `toc_click_navigation_chunked` |
 | 9 | Editing a node whose own chunk is loaded, while the chunks immediately before and after it are still unloaded placeholders, behaves the same as in a non-chunked document (TOC/highlighting update correctly, no error) | `test_edit_in_isolated_middle_chunk_keeps_neighbors_unloaded` |
+| 10 | Steady-state TOC highlighting locates the visible section in a 600-anchor document without a geometry scan proportional to all loaded anchors; the destination remains correctly highlighted | `tests/end2end/navigation/toc/toc_highlighting_large_document` |
 | 10 | Deleting a node under the same isolated-middle-chunk condition | The premise is obsolete: delete replaces the complete `frame_document_content`, so old neighboring placeholders do not survive. Delete restoration is covered by the viewport-controller tests. |
 | 11 | Creating a new node under the same isolated-middle-chunk condition | The premise is obsolete: create replaces the complete `frame_document_content`, so old neighboring placeholders do not survive. Local, distant, and non-chunked create are covered by the viewport-controller tests. |
 

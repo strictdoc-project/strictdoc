@@ -1,4 +1,8 @@
-# Stateful viewport controller: test audit
+# Content viewport stability: test audit
+
+This audit maps the behavioral contract in
+`task_2_content_viewport_stability.md` to automated coverage and records the
+remaining optional hardening scenarios.
 
 This document records what is currently tested, what each test proves, and
 which stronger regressions are intentionally deferred. It is separate from the
@@ -257,6 +261,8 @@ These extend confidence but are lower priority now that paint-interval,
 continuous-scroll, concurrent-load, and delayed-resize regressions are present.
 
 ## Current assessment
+
+The final full project suite completed with 402 passing tests.
 
 The suite gives good protection for settled semantic correctness, painted
 idle-frame correctness, natural wheel continuity in both directions,

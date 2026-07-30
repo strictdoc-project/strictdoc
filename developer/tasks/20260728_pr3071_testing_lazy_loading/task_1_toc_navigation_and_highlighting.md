@@ -1,4 +1,4 @@
-# TOC navigation and highlighting correctness under chunked (lazy-loaded) documents
+# TOC navigation and highlighting in chunked documents
 
 ## WHAT
 
@@ -30,11 +30,13 @@ once it exists):
   the URL's hash is already on does not change `location.hash`, so no
   `hashchange` fires there either - that case scrolls to the target
   directly instead of going through the hash-change path.
-- No regression to non-chunked documents or to any existing
-  navigation/highlighting behavior (node create/update/delete, folder
-  collapse/expand, Cancel) - including when the edited/created/deleted
-  node's own chunk is already loaded but the chunks immediately before
-  and after it are still unloaded placeholders.
+- No regression to non-chunked documents or to existing
+  navigation/highlighting behavior (node edits, folder collapse/expand,
+  Cancel), including replacement of a loaded node while the chunks
+  immediately before and after it remain unloaded placeholders.
+- Viewport positioning after create/delete/move belongs to
+  `task_2_content_viewport_stability.md`; this task owns TOC navigation
+  and highlighting.
 - `toc_highlighting.js`'s reaction to newly-inserted content must not
   depend on the specific mechanism of any one chunking implementation -
   it must generalize to "content appeared in the DOM," regardless of
@@ -44,7 +46,7 @@ once it exists):
   chunking implementation.
 
 Current test-coverage status against these criteria:
-`test_coverage_audit.md` in this directory.
+`test_audit_toc_navigation_and_highlighting.md` in this directory.
 
 ## WHY
 
@@ -123,10 +125,11 @@ the visible edge, and its lower edge is the bottom of `.main`. In the standard
 hidden dependency on those surrounding layout dimensions.
 
 **`toc_chunk_navigation.js`**:
-- `scrollToFragment()` temporarily forces the scroll container's
-  `scrollBehavior` to `"auto"` for the duration of a single
-  programmatic jump, removing the animation window a mid-flight layout
-  shift could otherwise race against.
+- `scrollToFragment()` uses the viewport controller's shared immediate
+  positioning primitive. The local fallback applies the same temporary
+  `scrollBehavior: auto` rule when the controller is unavailable. This removes
+  the animation window that a mid-flight layout shift could otherwise race
+  against.
 - All TOC-link-click navigation is driven uniformly through a real
   `location.hash` assignment (not `history.pushState`), whether the
   target is already loaded or needs force-loading, so `hashchange` and

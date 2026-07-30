@@ -1,14 +1,16 @@
-# TOC + chunked lazy loading — test coverage
+# TOC navigation and highlighting: test audit
 
-Maps each success criterion in `task_1_toc_highlighting.md` to the e2e
-test that verifies it. A test only counts as coverage here if it does not
-depend on the project's ambient `chunked_documents_threshold` default - each
-test sets its own `strictdoc_config.py` (or otherwise forces the fixture
-document over its chunking threshold) so it keeps exercising chunking regardless
-of what that default is.
+Maps each success criterion in
+`task_1_toc_navigation_and_highlighting.md` to the e2e test that verifies it.
+A test only counts as coverage here if it does not depend on the project's
+ambient `chunked_documents_threshold` default - each test sets its own
+`strictdoc_config.py` (or otherwise forces the fixture document over its
+chunking threshold) so it keeps exercising chunking regardless of what that
+default is.
 
 Scope: TOC current-section highlighting and TOC/hash navigation
-correctness under chunking, per `task_1_toc_highlighting.md`. Two things are
+correctness under chunking, per
+`task_1_toc_navigation_and_highlighting.md`. Two things are
 visible on this branch but out of scope here: chunk-preload behavior itself
 (`StrictDoc.onInsert` wiring for placeholders inserted after page load,
 `lazy_loading` Scenario 6) has its own existing coverage; the
@@ -31,21 +33,11 @@ requirements.
 | 9 | Editing a node whose own chunk is loaded, while the chunks immediately before and after it are still unloaded placeholders, behaves the same as in a non-chunked document (TOC/highlighting update correctly, no error) | `test_edit_in_isolated_middle_chunk_keeps_neighbors_unloaded` |
 | 10 | Steady-state TOC highlighting locates the visible section in a 600-anchor document without a geometry scan proportional to all loaded anchors; the destination remains correctly highlighted | `tests/end2end/navigation/toc/toc_highlighting_large_document` |
 | 11 | Inserting an equal-size lazy chunk registers only its new anchors, independently of the number of anchors loaded earlier; replacing an existing anchor after Cancel reconnects `IntersectionObserver` from the detached DOM element to its same-ID replacement | `tests/end2end/navigation/toc/toc_highlighting_chunk_insertion` |
-| 12 | Deleting a node under the same isolated-middle-chunk condition | The premise is obsolete: delete replaces the complete `frame_document_content`, so old neighboring placeholders do not survive. Delete restoration is covered by the viewport-controller tests. |
-| 13 | Creating a new node under the same isolated-middle-chunk condition | The premise is obsolete: create replaces the complete `frame_document_content`, so old neighboring placeholders do not survive. Local, distant, and non-chunked create are covered by the viewport-controller tests. |
 
-Row 9 is the surviving isolated-middle-chunk scenario. A node edit uses
+Row 9 is the relevant isolated-middle-chunk scenario. A node edit uses
 `DocumentScreenViewObject.render_updated_nodes_and_toc()`: it updates the whole
 TOC and replaces only the affected node frame. The test therefore verifies that
 chunk N remains rendered while the unchanged N-1/N+1 placeholders remain lazy.
-
-Create and delete use different response templates: both replace the complete
-`frame_document_content`. Chunk boundaries, MID indexes, and placeholder
-cursor URLs are regenerated from the current document tree. Consequently, the
-old concern that neighboring placeholders retain stale pre-operation cursors
-does not apply to these actions. Their viewport positioning and subsequent
-target-chunk loading are covered in
-`tests/end2end/screens/document/lazy_loading_scroll_preservation`.
 
 `loadChunkThenScroll()` also guards against a stale/moved TOC anchor
 (a target that never actually appears once its chunk loads) bouncing
@@ -80,17 +72,3 @@ distance in chunk-index terms.
   absent, or a specific unrelated chunk stays unloaded after the
   scenario) rather than relying on the fixture's sizing alone to make
   it true.
-
-## Content viewport restoration
-
-The final viewport invariant and architecture are defined in
-`task_4_stateful_viewport_controller.md`. Direct coverage lives in
-`tests/end2end/screens/document/lazy_loading_scroll_preservation`.
-
-The complete viewport test matrix is kept in
-`task_4_stateful_viewport_controller_test_audit.md`. It covers semantic
-stability after chunk and full-content replacement, paint-interval correctness,
-natural wheel continuity in both directions, concurrent chunk loads, delayed
-node resizing, create/delete/move/grammar operations, and non-chunked
-counterparts. Keeping that matrix in one dedicated audit avoids duplicating a
-partial list here.

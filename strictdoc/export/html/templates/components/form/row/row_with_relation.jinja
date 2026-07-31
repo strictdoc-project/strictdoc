@@ -46,11 +46,10 @@
     {%- endfor -%}
   {%- endif -%}
 
-  {# FIXME: #}
   {% if relation_row_context.field.field_type == "File" %}
-    <div style="color: orange; margin-top: calc(var(--base-rhythm) * (-3)); font-size: 0.75em;">
-      <b>Warning: Editing file relations is not supported yet.</b>
-    </div>
+    <sdoc-form-error>
+      Warning: Editing file relations is not supported yet.
+    </sdoc-form-error>
   {% endif %}
 
   {%- with

@@ -1,0 +1,31 @@
+[DOCUMENT]
+TITLE: Document
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: SECTION
+  PROPERTIES:
+    IS_COMPOSITE: True
+  FIELDS:
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  RELATIONS:
+  - TYPE: Parent
+
+[[SECTION]]
+TITLE: Section title
+
+[[/SECTION]]
+
+[REQUIREMENT]
+UID: REQ-001
+TITLE: Requirement title

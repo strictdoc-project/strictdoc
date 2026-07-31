@@ -37,6 +37,7 @@
 
         {%- if column == "RELATIONS" %}
           {%- set ns.past_reserved = true %}
+          {%- if view_object.is_table_cell_editable(node.node_type, "RELATIONS") %}
           <td class="content-view-td content-view-td-meta content-view-td-related"
               data-field-name="RELATIONS"
               {%- if is_server %}
@@ -51,6 +52,12 @@
               {%- include "screens/document/table/field_display_mode/relations.jinja" %}
             </div>
           </td>
+          {%- else %}
+          <td class="content-view-td content-view-td-meta content-view-td-related content-view-td--dimmed"
+              data-field-name="RELATIONS">
+            <div class="content-view-td--dimmed_tips"></div>
+          </td>
+          {%- endif %}
 
         {%- elif column == "TITLE" %}
           {%- set ns.past_reserved = true %}

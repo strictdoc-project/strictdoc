@@ -60,6 +60,9 @@ This release contains the following enhancements:
 
 1\) The JUnit XML test report reader now maps testcase ``<properties>`` to
 fields on generated ``TEST_RESULT`` nodes.
+
+4\) Fixed: the TABLE VIEW now renders the Relation cell as non-editable for node
+types whose grammar does not declare relations.
 <<<
 
 [[/SECTION]]

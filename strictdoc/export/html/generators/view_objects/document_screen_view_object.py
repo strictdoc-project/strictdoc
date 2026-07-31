@@ -671,6 +671,12 @@ class DocumentScreenViewObject:
         self, element_type: str, field_name: str
     ) -> bool:
         """Returns True if the field is declared in grammar and can be edited on TABLE screen."""
+        if field_name == "RELATIONS":
+            grammar = self.document.grammar
+            if grammar is None:
+                return False
+            element = grammar.elements_by_type.get(element_type)
+            return element is not None and len(element.relations) > 0
         return (
             self.get_table_cell_edit_mode(element_type, field_name)
             != TableCellEditMode.READONLY

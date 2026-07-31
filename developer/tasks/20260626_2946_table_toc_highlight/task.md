@@ -9,8 +9,17 @@ already works on the Document screen.
 
 ## WHY
 
-Issue #2946. `toc_highlighting.js` looks up the page's content
-container by a hardcoded selector:
+Issue #2946. TOC highlighting (issue #2946) is expected to work the
+same way on the Table screen as it does on the Document screen. Right
+now it silently doesn't: the highlighting setup bails out early on the
+Table screen, so scrolling through a table never highlights the
+corresponding TOC entry — nothing is logged, so the failure is only
+noticeable by watching the TOC while scrolling.
+
+## HOW
+
+`toc_highlighting.js` looks up the page's content container by a
+hardcoded selector:
 
 ```js
 const CONTENT_FRAME_SELECTOR = 'turbo-frame#frame_document_content';
@@ -32,8 +41,6 @@ lookup fails, causing `contentFrame` to be `undefined` and the entire
 highlighting setup (link/anchor mapping, IntersectionObserver,
 MutationObserver) to bail out at the guard clause above before doing
 anything.
-
-## HOW
 
 `contentFrame` is resolved once, when the script's `load` handler runs,
 and kept as a closure variable for the rest of the page's lifetime - it

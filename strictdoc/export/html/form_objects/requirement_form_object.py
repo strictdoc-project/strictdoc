@@ -861,7 +861,15 @@ class RequirementFormObject(ErrorObject):
         requirement_uid: Optional[str] = (
             self.fields["UID"][0].field_value if "UID" in self.fields else None
         )
-        if len(self.reference_fields) > 0 and (
+        has_requirement_relations = any(
+            reference_field.field_type
+            in (
+                RequirementReferenceFormField.FieldType.PARENT,
+                RequirementReferenceFormField.FieldType.CHILD,
+            )
+            for reference_field in self.reference_fields
+        )
+        if has_requirement_relations and (
             requirement_uid is None or len(requirement_uid) == 0
         ):
             self.add_error(
@@ -875,7 +883,7 @@ class RequirementFormObject(ErrorObject):
             self.existing_requirement_uid is not None
             and self.existing_requirement_uid != requirement_uid
         ):
-            if len(self.reference_fields) > 0:
+            if has_requirement_relations:
                 self.add_error(
                     "UID",
                     "Not supported yet: "

@@ -472,10 +472,6 @@
     });
   }
 
-  function renderManualStreamMessage(html) {
-    Turbo.renderStreamMessage(html);
-  }
-
   function isFullContentFrameReplace(streamElement) {
     return (
       streamElement?.tagName === "TURBO-STREAM" &&
@@ -772,7 +768,5 @@
   strictDoc.contentViewport.capture = captureViewportAnchor;
   strictDoc.contentViewport.invalidate = invalidateViewport;
   strictDoc.contentViewport.restore = restoreViewportAnchor;
-  strictDoc.contentViewport.renderManualStreamMessage =
-    renderManualStreamMessage;
   strictDoc.contentViewport.scrollElementToOffset = restoreElementTop;
 })();

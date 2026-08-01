@@ -33,12 +33,51 @@
       t.setAttribute('aria-expanded', isThis);
       content.setAttribute('aria-hidden', !isThis);
     });
+    positionMenu(toggle);
   }
 
   function hide(toggle) {
     const content = contentOf(toggle);
     toggle.setAttribute('aria-expanded', false);
-    if (content) content.setAttribute('aria-hidden', true);
+    if (content) {
+      content.setAttribute('aria-hidden', true);
+      content.classList.remove('is-flipped');
+    }
+  }
+
+  // A menu that opens downward from a node near the bottom of the scroll
+  // area can render past the visible edge and become unreachable - there is
+  // no CSS-only way to detect that, so this measures the menu after it's
+  // shown and, if it would overflow, flips it to open upward instead
+  // (mirrors the CSS `top: 0` anchor to `bottom: 0` via `.is-flipped`, see
+  // element.css). If even the flipped position doesn't fully fit inside the
+  // scroll container, nudge the scroll position so the whole menu stays
+  // reachable rather than being clipped.
+  function positionMenu(toggle) {
+    const content = contentOf(toggle);
+    if (!content) return;
+
+    content.classList.remove('is-flipped');
+
+    const container = content.closest('.main');
+    const containerRect = container
+      ? container.getBoundingClientRect()
+      : { top: 0, bottom: window.innerHeight };
+
+    if (content.getBoundingClientRect().bottom > containerRect.bottom) {
+      content.classList.add('is-flipped');
+    }
+
+    if (!container) return;
+
+    const rect = content.getBoundingClientRect();
+    const overflowBelow = rect.bottom - containerRect.bottom;
+    const overflowAbove = containerRect.top - rect.top;
+    if (overflowBelow > 0) {
+      container.scrollTop += overflowBelow;
+    } else if (overflowAbove > 0) {
+      container.scrollTop -= overflowAbove;
+    }
   }
 
   window.StrictDoc.onInsert('[data-dropdown-handler]', (toggle) => {

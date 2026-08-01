@@ -1166,6 +1166,13 @@ sdoc-menu menu {
 
 }
 
+/* Set by dropdown_menu.js when the menu would otherwise overflow past the
+   bottom of the scroll area - opens upward instead of downward. */
+sdoc-menu menu.is-flipped {
+  top: auto;
+  bottom: 0;
+}
+
 sdoc-menu.add_node menu {
   display: grid;
   grid-template-columns:  minmax(min-content, max-content)

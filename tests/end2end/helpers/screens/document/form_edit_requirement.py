@@ -218,6 +218,28 @@ class Form_EditRequirement(Form):  # pylint: disable=invalid-name
             staleness_of(field_element_before_reset)
         )
 
+    # Restore UID button
+
+    def assert_uid_field_has_restore_button(self) -> None:
+        self.test_case.assert_element_present(
+            "//*[@data-testid='restore-uid-field-action']",
+            by=By.XPATH,
+        )
+
+    def assert_uid_field_has_not_restore_button(self) -> None:
+        self.test_case.assert_element_not_present(
+            "//*[@data-testid='restore-uid-field-action']",
+            by=By.XPATH,
+        )
+
+    def do_restore_uid_field(self) -> None:
+        # Unlike the reset button, restoring is a plain client-side DOM
+        # update (restorable_field.js), no server round-trip: no need to
+        # wait for a DOM swap, only for the field's text to change.
+        self.test_case.click_xpath(
+            "//*[@data-testid='restore-uid-field-action']"
+        )
+
     def assert_field_is_readonly(self, field_name: str) -> None:
         """Verifies that a specific field has contenteditable set to false."""
         selector = (

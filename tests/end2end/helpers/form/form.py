@@ -38,6 +38,11 @@ class Form:  # pylint: disable=invalid-name
             f"//sdoc-form-error[contains(., '{message}')]", by=By.XPATH
         )
 
+    def assert_error_not_present(self, message: str) -> None:
+        self.test_case.assert_element_not_present(
+            f"//sdoc-form-error[contains(., '{message}')]", by=By.XPATH
+        )
+
     def assert_contenteditable_contains(self, text: str) -> None:
         self.test_case.assert_element(
             f"//sdoc-contenteditable[contains(., '{text}')]", by=By.XPATH

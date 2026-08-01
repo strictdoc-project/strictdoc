@@ -71,5 +71,19 @@
 {% endblock row_content %}
 
 {% block row_right %}
-  {# Explicitly nothing. #}
+  {%- if
+    text_field_row_context.field.field_name == "UID"
+    and text_field_row_context.uid_restore_available is defined
+    and text_field_row_context.uid_restore_available
+  -%}
+    <a
+      class="field_action"
+      href="#"
+      title="Restore UID"
+      data-action-type="restore"
+      data-js-restore-field-action
+      data-restore-value="{{ text_field_row_context.existing_requirement_uid }}"
+      data-testid="restore-uid-field-action"
+    >{% include "icons/ico16_restore.svg" %}</a>
+  {%- endif -%}
 {% endblock row_right %}

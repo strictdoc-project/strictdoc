@@ -23,6 +23,10 @@ Follow the StrictDoc Developer Guide (`SDG`) for all tasks in this repository:
 When implementing features or making code changes, comply with all rules and
 conventions in `SDG`.
 
+## Technical writing
+
+Follow the technical writing guidelines in the StrictDoc Developer Guide.
+
 ## Development tasks
 
 When requested by a user to work on a task defined in

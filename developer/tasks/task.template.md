@@ -2,6 +2,8 @@
 
 <!--
 Describe the task using the WHY–WHAT–HOW structure. Separate the problem, requirements, and solution details.
+
+Follow the technical writing guidelines in the StrictDoc Developer Guide.
 -->
 
 ## WHAT
@@ -19,5 +21,8 @@ Explain the context, motivation, user needs, and the problem being solved. Do no
 ## HOW
 
 <!--
+The HOW section should start with a top-down (bottom line up front) summary of
+the implemented solution.
+
 Describe the chosen technical approach, architecture, design decisions, implementation details, and trade-offs.
 -->

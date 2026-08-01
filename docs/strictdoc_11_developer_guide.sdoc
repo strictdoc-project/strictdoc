@@ -533,6 +533,65 @@ STATEMENT: >>>
 [[/SECTION]]
 
 [[SECTION]]
+MID: d20e67d776c04dfab340c924bb70e89f
+TITLE: Technical writing
+
+[TEXT]
+MID: 33b4625be18043f7968fff19781633ac
+STATEMENT: >>>
+These guidelines for technical writing apply to humans and AI.
+
+They are applicable to:
+
+- Documentation
+- Code comments
+- PR descriptions.
+<<<
+
+[[SECTION]]
+MID: e985ff5ffc244e42b2d64ab7c5830717
+TITLE: Use Bottom Line Up Front style
+
+[TEXT]
+MID: b8da36976717443fa52a52b691b1ec48
+STATEMENT: >>>
+Present the main point first, then provide supporting details. Readers should
+understand the conclusion, decision, or request without reading the entire
+message.
+
+This is a **deductive** writing style: start with the conclusion, then explain
+the reasoning, evidence, or background that supports it. Avoid an **inductive**
+structure, where the reader must follow the entire chain of reasoning before
+discovering the main point at the end. Deductive writing reduces cognitive
+effort and helps readers decide immediately whether they need to read the
+supporting details.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 9f3e125d01934a0fac7de7396d1e836a
+TITLE: Use active voice
+
+[TEXT]
+MID: 0f8b436e783e4cc986139172a61e89f8
+STATEMENT: >>>
+State who did what instead of using passive constructions. This makes messages
+easier to understand and reduces ambiguity about ownership and actions. Active
+voice makes responsibilities, decisions, and actions explicit, allowing readers
+to quickly identify who is responsible for each action. Use passive voice only
+when the actor is genuinely unknown or irrelevant.
+
+**Recommended**: The engineer linked the requirement to the test case.
+
+**Not recommended**: The requirement was linked to the test case.
+<<<
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: a44e3b99323b4ac291f4b4d3948c3cc0
 TITLE: Conventions
 

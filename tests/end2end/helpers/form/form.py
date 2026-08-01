@@ -84,6 +84,16 @@ class Form:  # pylint: disable=invalid-name
             f"//*[@data-testid='form-tab-{tab_name}']"
         )
 
+    def assert_tab_error_count(self, tab_name: str, count: int) -> None:
+        assert isinstance(tab_name, str)
+        assert isinstance(count, int)
+        self.test_case.assert_attribute(
+            f"//*[@data-testid='form-tab-{tab_name}']",
+            "data-errors",
+            str(count),
+            by=By.XPATH,
+        )
+
     #
     # Work with fields containers.
     #

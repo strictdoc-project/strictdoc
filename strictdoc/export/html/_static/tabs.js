@@ -29,9 +29,19 @@
     const tabs = {};
     const errorTabs = [];
 
+    // A field can carry more than one <sdoc-form-error> (e.g. a UID field
+    // failing both the uniqueness check and the rename-with-relations
+    // check at once). The badge must count invalid fields, not messages,
+    // so errors are deduplicated by their closest field-owning ancestor.
+    const FIELD_WRAPPER_SELECTOR = 'sdoc-form-row, sdoc-form-field-group, sdoc-form-field';
+
     sdocTabContent.forEach((contentEl, index) => {
       const key = contentEl.id;
-      const errors = contentEl.querySelectorAll('sdoc-form-error');
+      const errorFields = new Set(
+        [...contentEl.querySelectorAll('sdoc-form-error')].map(
+          (errorEl) => errorEl.closest(FIELD_WRAPPER_SELECTOR) || errorEl
+        )
+      );
 
       const tabEl = document.createElement('sdoc-tab');
       tabEl.style.order = index;
@@ -39,8 +49,8 @@
       tabEl.setAttribute('data-testid', `form-tab-${key}`);
       tabEl.addEventListener('mouseup', () => activateTab(tabs, key));
       if (contentEl.hasAttribute('active')) tabEl.setAttribute('active', '');
-      if (errors.length) {
-        tabEl.setAttribute('data-errors', errors.length);
+      if (errorFields.size) {
+        tabEl.setAttribute('data-errors', errorFields.size);
         errorTabs.push(key);
       }
 

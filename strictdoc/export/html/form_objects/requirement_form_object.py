@@ -280,6 +280,10 @@ class RequirementFormObject(ErrorObject):
         self.existing_requirement_uid: Optional[str] = existing_requirement_uid
         self.grammar: DocumentGrammar = grammar
         self.relation_types: List[str] = relation_types
+        # Set by validate() when a UID rename is rejected because the
+        # requirement still has parent/child relations, so the template can
+        # offer a button to restore existing_requirement_uid into the field.
+        self.uid_rename_blocked_by_relations: bool = False
 
     @staticmethod
     def create_from_request(
@@ -879,6 +883,7 @@ class RequirementFormObject(ErrorObject):
                     "parent requirement relations. For now, manually delete the "
                     "relations, rename the UID, recreate the relations.",
                 )
+                self.uid_rename_blocked_by_relations = True
 
             existing_node = assert_cast(
                 traceability_index.get_node_by_uid_weak(
@@ -895,6 +900,7 @@ class RequirementFormObject(ErrorObject):
                     "child requirement relations. For now, manually delete the "
                     "relations, rename the UID, recreate the relations.",
                 )
+                self.uid_rename_blocked_by_relations = True
                 return
 
         if requirement_uid is not None:

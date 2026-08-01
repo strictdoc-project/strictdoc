@@ -52,6 +52,8 @@
       {% set text_field_row_context.field_editable = field_.is_editable %}
       {% set text_field_row_context.field_type = "singleline" %}
       {% set text_field_row_context.reference_mid = form_object.requirement_mid %}
+      {% set text_field_row_context.existing_requirement_uid = form_object.existing_requirement_uid %}
+      {% set text_field_row_context.uid_restore_available = form_object.uid_rename_blocked_by_relations %}
       {%- if form_object.element_type != "TEXT" and field_.field_name == "UID" and field_.field_value == "" -%}
         <turbo-frame id="uid_with_reset-{{ text_field_row_context.reference_mid }}">
           {# this template is turbo-frame and has a button to reset to the default value: #}

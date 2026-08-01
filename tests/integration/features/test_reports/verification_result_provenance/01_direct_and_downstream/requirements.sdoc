@@ -1,0 +1,31 @@
+[DOCUMENT]
+TITLE: Verification result provenance
+
+[REQUIREMENT]
+UID: REQ-GRANDPARENT
+TITLE: Grandparent requirement
+STATEMENT: The system shall provide a capability group.
+
+[REQUIREMENT]
+UID: REQ-PARENT
+TITLE: Parent requirement
+STATEMENT: The system shall provide a verified capability.
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-GRANDPARENT
+
+[REQUIREMENT]
+UID: REQ-DIRECT
+TITLE: Directly verified requirement
+STATEMENT: The system shall provide a directly tested behavior.
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-PARENT
+
+[REQUIREMENT]
+UID: REQ-MEDIATED
+TITLE: Test-case-verified requirement
+STATEMENT: The system shall provide a behavior tested through a test case.
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-PARENT

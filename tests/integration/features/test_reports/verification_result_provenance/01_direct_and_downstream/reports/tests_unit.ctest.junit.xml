@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="verification result provenance"
+           tests="2"
+           failures="2"
+           disabled="0"
+           skipped="0"
+           time="0">
+  <testcase name="DirectSuite.Failure"
+            classname="DirectSuite.Failure"
+            time="0.1"
+            status="run">
+    <failure>Direct test failure.</failure>
+  </testcase>
+  <testcase name="MediatedSuite.Failure"
+            classname="MediatedSuite.Failure"
+            time="0.1"
+            status="run">
+    <failure>Mediated test failure.</failure>
+  </testcase>
+</testsuite>

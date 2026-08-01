@@ -1,0 +1,6 @@
+# Verify that result links retain whether a failure is direct or mediated by a
+# generated test case. The parent requirement has only hierarchical child links,
+# so both failures remain downstream effects rather than direct failures.
+
+RUN: cd %S
+RUN: python %S/check_provenance.py

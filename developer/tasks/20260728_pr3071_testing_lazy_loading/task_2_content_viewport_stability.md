@@ -79,14 +79,19 @@ chunk loads continue changing geometry after the initial replacement. A
 one-time restoration immediately after inserting the response is therefore
 not sufficient.
 
-Native browser scroll anchoring helps with ordinary layout changes, but it does
-not cover the complete product behavior:
+Native browser scroll anchoring helps with ordinary layout changes, but it
+cannot coordinate the complete product behavior:
 
 - it cannot preserve an element after that element's DOM has been replaced;
 - it cannot know that a newly created node is the intended destination;
 - it cannot implement the required deletion boundary;
 - application code may still issue a delayed correction based on an older
   position and pull against the user's current scrolling.
+
+The content viewport therefore opts out of native scroll anchoring. Otherwise
+the browser and the controller can compensate the same chunk change in
+different rendering phases and move the content twice. One controller owns all
+geometry compensation inside the content viewport.
 
 The application therefore needs one coordinated mechanism that understands
 semantic document identities, asynchronous rendering stages, operation
@@ -163,10 +168,18 @@ the generation. A callback from an older generation then becomes a no-op. This
 prevents a late chunk response or `requestAnimationFrame` callback from
 returning the viewport to an obsolete position.
 
-Wheel, touch, pointer, and scrolling-key input are treated as direct evidence
-of user intent. A `scroll` event by itself is not enough: layout changes and
-controller-applied compensation also produce `scroll` events, and those events
-must not be mistaken for a new user action.
+A passive chunk response that is still waiting to render is different from an
+obsolete operation target. When another wheel or keyboard event advances the
+generation, that pending passive snapshot moves into the new generation.
+Passive resize locks for already loaded chunks move with it. Otherwise user
+input between response arrival and DOM insertion would discard compensation
+for the chunk that the user is approaching.
+
+Wheel, touch, pointer, and scrolling-key input cancel an operation-specific
+position from the previous state. Ordinary `scroll` events update the
+`scrollTop` baseline stored in passive locks. They do not start a new
+generation because layout changes and controller-applied corrections also
+produce `scroll` events.
 
 ### Loading a lazy chunk while the viewport is idle
 
@@ -186,13 +199,14 @@ The event sequence for an idle viewport is:
    when the request starts would be too early because the user could scroll
    while the network response is in flight.
 2. A frame-local `MutationObserver` detects the actual DOM insertion. Its
-   microtask immediately restores the snapshot. This early correction matters
+   microtask immediately compensates the measured geometry change. This early
+   correction matters
    because Turbo can insert the real DOM one paint opportunity before emitting
    `turbo:frame-load`; waiting for frame-load alone would allow the user to see
    one uncompensated jump.
 3. On `turbo:frame-load`, after the estimated `min-height` has been removed,
-   restore the snapshot again. This is the final correction for the complete
-   placeholder-to-rendered-content height difference.
+   compensate only the remaining geometry change. This is the final correction
+   for the complete placeholder-to-rendered-content height difference.
 
 The result is that a chunk above the viewport may change the document's total
 height substantially, while the witness visible inside `.main` remains at the
@@ -205,36 +219,50 @@ the result to normal browser layout.
 
 ### Loading a lazy chunk during continuous user scrolling
 
-Exact restoration is correct while the viewport is idle, but it can feel wrong
-while the user is actively scrolling.
+Passive compensation preserves geometry, not an old viewport coordinate. For
+each witness the snapshot stores its coordinate inside the scrollable document:
 
-During continuous movement, a snapshot captured on the preceding scroll event
-is already slightly behind the user's current gesture. Restoring that exact
-coordinate can produce a small step in the opposite direction: for example, a
-brief downward jump while the user is scrolling upward.
+```text
+content_top = witness_viewport_top + scrollTop
+```
 
-To avoid fighting the user, the controller tracks a short **user-scroll
-session**:
+User scrolling changes `witness_viewport_top` and `scrollTop` by opposite
+amounts, so `content_top` stays unchanged. Inserting or resizing content above
+the witness changes `content_top`. The controller adds that geometry delta to
+the current `scrollTop`; it never replaces the current position with the value
+captured before the gesture. Wheel, keyboard, touch, and scrollbar movement
+therefore continue in their original direction while the layout correction is
+composed with them.
 
-- wheel, touch, pointer, or scrolling-key input starts the session;
-- subsequent `.main` scroll events extend it;
-- automatic layout scrolling and controller-owned compensation cannot start
-  such a session.
+When shrinking content makes the document shorter near its end, the browser
+must clamp `scrollTop` to the new maximum even though native anchoring is
+disabled. The controller subtracts this already-applied automatic movement
+from the measured geometry delta and adds only the uncompensated remainder.
+Without this subtraction, one height change would be handled twice.
 
-While a passive chunk response is waiting to render, genuine user scroll events
-update its snapshot to the newest semantic position. A frame
-`MutationObserver` freezes that snapshot when DOM insertion begins, so any
-scroll event caused by the insertion itself cannot be recorded as user intent.
+Several chunks can change before all of their observers run. After one passive
+lock compensates the geometry visible at that moment, the controller updates
+the document-coordinate baselines of every current passive lock. A later
+callback then measures only geometry that appeared after that correction. If
+each lock updated only itself, another lock could include an already handled
+chunk delta and move the viewport twice.
 
-If the chunk finishes rendering while the user-scroll session is still active,
-the controller does not force exact passive restoration for that frame.
-Instead, native browser scroll anchoring handles the layout change while the
-gesture continues. Once scrolling becomes idle, later chunk loads use exact
-semantic compensation again.
+This mechanism applies to geometry changes of every size and does not depend
+on a time window, input speed, or input device. A viewport-height threshold is
+incorrect because even a modest mismatch between estimated and real chunk
+height creates a clearly visible jump during very slow scrolling.
 
 This exception applies only to passive reading. An explicit navigation target
 or operation-specific target remains authoritative even if additional chunks
 load while it is being positioned.
+
+For an operation-specific target, the controller restores once when
+`turbo:frame-load` reports that the placeholder has been removed and once more
+on the next animation frame. Related frame-load work can finish changing
+geometry after the event handler; without the second correction, that late
+change can move the target away from its saved coordinate. Direct user input
+advances the viewport generation, so the delayed correction cannot pull
+against a newer user action.
 
 ### Placeholder height estimates and preloading
 
@@ -313,8 +341,9 @@ font, or nested layout may acquire its final size later.
 
 For the current viewport-lock generation, the controller observes rendered
 `sdoc-node` elements with `ResizeObserver`. When an observed node changes size,
-the controller schedules restoration of the same semantic lock on the next
-animation frame.
+the controller compensates in the observer callback, after layout and before
+paint. Waiting for another animation frame would expose the displaced content
+for one paint opportunity.
 
 The observer uses each node's `border-box`, not the default `content-box`.
 Changes to padding or border alter the node's outer height and move every
@@ -325,8 +354,8 @@ positioning.
 This guarantee is deliberately bounded. The controller observes relevant
 rendered chunk nodes while the corresponding lock generation is current. It
 does not claim to detect every possible geometry mutation anywhere on the
-page, and passive delayed restoration is not imposed on a confirmed active
-user-scroll frame.
+page. Passive observation survives direct user scrolling so a delayed resize
+can be composed with the reader's current position.
 
 ### Operation-specific behavior
 
@@ -365,8 +394,7 @@ while the user may still change the viewport.
 
 ### Applying scroll compensation
 
-One shared function performs immediate vertical positioning for both viewport
-restoration and TOC navigation:
+Explicit navigation and operation targets use exact vertical positioning:
 
 1. Measure the target's current coordinate relative to `.main`.
 2. Subtract the requested viewport-relative coordinate to obtain the remaining
@@ -381,12 +409,12 @@ Skipping negligible writes is important. A needless `scrollTop` assignment
 would create another scroll event and could make the controller appear to own
 a frame in which the browser already produced the correct result.
 
-During active scrolling, the scroll handler updates snapshots only if at least
-one current-generation passive chunk is still waiting to render and can accept
-the newer snapshot. It checks this pending state in memory before calling the
-geometry-heavy `captureViewportAnchor()`. Ordinary scroll events and stale
-pending requests therefore do not scan and measure all loaded document
-content.
+Passive chunk loading and delayed resizing use additive geometry compensation
+instead. The controller compares the witness's saved and current
+document-relative coordinates, subtracts any `scrollTop` clamp already applied
+by the browser, and adds only the remaining delta. Ordinary scroll events
+update the passive locks' `scrollTop` baselines without rescanning visible
+document content.
 
 ### Runtime integration
 

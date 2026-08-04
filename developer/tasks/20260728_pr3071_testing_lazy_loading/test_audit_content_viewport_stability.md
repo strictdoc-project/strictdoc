@@ -28,13 +28,13 @@ the controller must compensate the scroll by the same `delta`, leaving
 `witness_top` unchanged. Geometry below the witness should require no
 compensation.
 
-During continuous user scrolling, exact restoration has a different problem:
-a captured witness coordinate is already one scroll frame behind the user's
-movement. Restoring it can produce a short step opposite to the scrolling
-direction. During a confirmed active scroll session the browser therefore owns
-the current passive-reading frame. Exact semantic restoration resumes after
-scrolling settles. Explicit operation targets such as a newly created node
-remain authoritative.
+During continuous user scrolling, restoring an earlier exact viewport
+coordinate can reverse part of the user's movement. Passive preservation
+therefore stores the witness's coordinate inside the scrollable document and
+adds only changes to that geometry to the current `scrollTop`. Native scroll
+anchoring is disabled in the content viewport so the browser and controller do
+not both compensate one mutation. Explicit operation targets such as a newly
+created node still use exact semantic restoration.
 
 ## Current fixtures
 
@@ -52,22 +52,9 @@ several short chunks. "Add TEXT below" creates a sibling far from the visible
 form. The created `TEXT` has no TOC entry, so the test also exercises the
 complete MID-to-chunk index.
 
-A nine-node control document remains below the chunk threshold and verifies
-that the controller does not regress non-chunked behavior.
-
 ## Current automated coverage
 
 ### Passive chunk geometry
-
-`test_visible_anchor_stays_stable_when_tall_chunk_above_loads`
-
-- loads a lower chunk and keeps the adjacent tall upper chunk as a placeholder;
-- records a semantic witness in the lower chunk;
-- replaces the upper placeholder with much taller real content;
-- verifies that the witness has the same viewport-relative coordinate after
-  loading and remains stable during the following sampling interval.
-
-This proves idle compensation for one large geometry delta above the viewport.
 
 `test_user_scroll_during_chunk_request_supersedes_old_position`
 
@@ -113,13 +100,7 @@ replacement. It does not reproduce a long physical trackpad gesture.
 - verifies over time that the operation-specific new-node lock survives the
   later geometry change above it.
 
-`test_create_locally_does_not_jump` covers creation in the inline chunk.
-`test_non_chunked_create_unaffected` covers the non-chunked path.
-
 ### Delete
-
-`test_delete_preserves_top_visible_node_position` verifies that an unaffected
-visible witness remains at its coordinate.
 
 `test_delete_keeps_removed_node_boundary_in_place` verifies the stronger UX
 contract: the next surviving node occupies the viewport boundary from which
@@ -127,9 +108,6 @@ the visible node was removed.
 
 `test_delete_last_node_falls_back_to_end_of_document` verifies the fallback to
 the previous surviving node when no next node exists.
-
-`test_delete_locally_does_not_jump` and
-`test_non_chunked_delete_unaffected` cover inline and non-chunked paths.
 
 ### Move, grammar, and local updates
 
@@ -145,9 +123,6 @@ content viewport.
 node-local edit does not collapse its already loaded chunk or load the
 unchanged placeholders on either side.
 
-Non-chunked move and grammar-edit counterparts verify that the shared
-controller does not regress the legacy rendering path.
-
 ### Related coverage outside the controller test file
 
 The chunked TOC tests separately verify:
@@ -159,18 +134,22 @@ Chunked stable-URL tests cover UID and MID links. Unit tests for
 `DocumentChunk` verify chunk slicing and preservation of every node MID used by
 the semantic placeholder index.
 
+Create, delete, move, and grammar editing are also exercised by their own
+non-chunked feature suites. This file does not repeat those operation tests:
+its chunked scenarios exercise the same viewport-controller paths and add
+full-frame replacement, lazy target resolution, or later chunk geometry.
+
 ## Delayed geometry coverage and limits
 
-After an idle chunk load, the controller observes rendered `sdoc-node` elements
-with `ResizeObserver`. A later node-height change schedules restoration of the
-same semantic lock on the next animation frame. This is intended to cover such
-causes as content inside a node acquiring its final height after the Turbo
-frame has loaded.
+After a chunk load, the controller observes rendered `sdoc-node` elements with
+`ResizeObserver`. A later node-height change is compensated after layout and
+before paint in the observer callback. This covers such causes as content
+inside a node acquiring its final height after the Turbo frame has loaded.
 
 `test_delayed_chunk_height_change_above_viewport_stays_stable`:
 
 - loads and settles an upper chunk above a lower witness;
-- disables native scroll anchoring to isolate controller behavior;
+- relies on the production controller to disable native scroll anchoring;
 - increases the outer height of a rendered upper node by 600 pixels;
 - proves that the height delta is substantial;
 - waits for semantic restoration and then samples a stable interval.
@@ -182,9 +161,8 @@ The implementation guarantee is also bounded:
 - a resize inside such a node is visible through the node's border-box change;
 - arbitrary geometry changes outside the observed nodes are not automatically
   covered;
-- during confirmed active scrolling, passive exact restoration and delayed
-  geometry locking for that frame are deliberately skipped in favor of native
-  browser anchoring;
+- passive geometry locks survive direct user scrolling and compose a later
+  resize delta with the reader's current position;
 - a newer user intent or navigation advances the controller generation and
   invalidates old locks.
 
@@ -219,13 +197,11 @@ JavaScript state.
 
 ### Natural continuous scrolling across a preload boundary
 
-`test_natural_upward_wheel_scroll_does_not_step_backward` and
 `test_natural_downward_wheel_scroll_does_not_step_backward`:
 
 1. start with an unloaded chunk in the direction of travel and a witness in
    the currently loaded chunk;
-2. generate Selenium W3C wheel actions at intervals shorter than the
-   active-scroll window;
+2. generate Selenium W3C wheel actions at short intervals;
 3. cross the natural preload boundary without setting `loading="eager"`;
 4. record the semantic witness trajectory after paint opportunities;
 5. prove that the browser-triggered lazy frame loaded;
@@ -233,10 +209,70 @@ JavaScript state.
    direction.
 
 Unlike idle stability, the witness is expected to move. The assertion is about
-direction and discontinuity, not equality to a fixed coordinate. The upward
-test approaches an unloaded chunk above the witness; the downward test
-approaches an unloaded chunk below it. Together they prove that neither
-replacement creates a painted step against the user's gesture.
+direction and discontinuity, not equality to a fixed coordinate. This case
+approaches an unloaded chunk below the witness and verifies that geometry below
+visible content does not trigger a correction. The production-shaped tests
+below cover upward scrolling while upper geometry changes.
+
+`test_slow_upward_scroll_does_not_jump_when_oversized_chunk_loads`:
+
+1. keeps an unloaded chunk with an oversized penultimate node above an
+   ordinary unloaded chunk;
+2. navigates to the following chunk so both earlier chunks remain unloaded;
+3. slowly scrolls upward until the ordinary chunk loads and its first node
+   moves down past the viewport top;
+4. proves that the oversized earlier chunk loads next and that its node is
+   taller than the viewport;
+5. samples the ordinary chunk's first node around that load and rejects any
+   step larger than three 80px wheel inputs;
+6. separately samples a witness that already existed in the initially loaded
+   chunk while the ordinary intermediate chunk appears.
+
+Before semantic geometry compensation, the oversized chunk moved the
+witness by `20878.8125px` in one painted step in two consecutive runs. With
+compensation, the test passes. The separate existing-witness samples show no
+corresponding large jump when the ordinary intermediate chunk loads; the
+earlier `1347px` change belonged to the newly appearing witness and did not
+establish a visible jump of existing content.
+
+`test_very_slow_upward_scroll_preserves_short_last_node` reproduces the
+reported sub-viewport jump with five nodes sized to `150`, `900`, `145`, `460`,
+and `140px`, followed by `520` and `140px` nodes. It scrolls upward in `8px`
+wheel steps and continuously samples a node that already exists in the lower
+loaded chunk. With compensation limited to displacements larger than one
+viewport, loading the upper chunk moved that witness by `199px` in one painted
+step. Additive compensation of the measured document-geometry delta removes
+the jump.
+
+`test_50px_upward_scroll_preserves_short_last_node` runs the same five-node
+geometry with continuous `50px` wheel input. The recorder stores cumulative
+wheel movement beside every painted coordinate and asserts on their
+difference, so wheel events batched into one frame cannot be mistaken for a
+layout jump. Before passive locks followed user-driven generation changes,
+this test exposed a `199px` displacement with no corresponding wheel input.
+Carrying passive, but not operation-specific, locks into the new generation
+removes that race.
+
+`test_60px_upward_scroll_preserves_delayed_chunk_height_change` adds a distinct
+geometry source: it increases an upper node by `120px` after load and verifies
+that ResizeObserver compensation composes with continuing wheel input without
+an intermediate painted jump.
+
+`test_arrow_up_scroll_does_not_reverse_when_chunk_loads` sends ArrowUp every
+`50ms` through the same boundary and increases the upper chunk mismatch by
+about `200px`. Exact restoration of the pre-render coordinate reproduced a
+painted `435px` forward jump; live diagnostics on the L2 requirements page had
+also shown smaller reverse steps at chunks 34 and 33. The permanent fixture
+rejects both movement opposite to ArrowUp and a forward step too large to come
+from one key action. Additive document-geometry compensation passes without a
+keyboard-specific timing exception.
+
+The complete regression run also exposed a separate late adjustment in
+`test_created_node_stays_stable_when_chunk_above_loads`. The controller restored
+the created node at `turbo:frame-load`, but later rendering work moved it by
+about `101px` after that event. Repeating the operation-specific restore on the
+next animation frame removes the race. This path remains separate from passive
+additive compensation.
 
 ### Near-simultaneous loading of multiple chunks
 
@@ -255,6 +291,12 @@ for the other and that neither delta is applied twice. Response order is not
 artificially controlled; the test exercises the naturally produced
 interleaving.
 
+The pruned 19-test run made one interleaving reproducible: one lock compensated
+the geometry of both chunks, but only updated its own baseline. The other lock
+then applied `767.5px` of already handled geometry again. Synchronizing all
+current passive baselines after each correction makes the isolated regression
+pass and protects the common additive-compensation mechanism.
+
 A later optional variant could combine concurrent loading with active
 scrolling, where neither passive frame may pull the viewport back to an older
 snapshot.
@@ -272,12 +314,17 @@ continuous-scroll, concurrent-load, and delayed-resize regressions are present.
 
 ## Current assessment
 
+The pruned viewport-stability file passes all 19 tests in approximately 2
+minutes 9 seconds. Before pruning, 33 tests took approximately 13 minutes.
+Removed numeric variants did not represent separate branches of the final
+algorithm; removing their server startups accounts for most of the reduction.
+
 The previously recorded full project suite completed with 402 passing tests.
 The multiple-open-form regression was added afterward and passes in its
 targeted run. The full project suite has not been rerun after this addition.
 
-The suite gives good protection for settled semantic correctness, painted
-idle-frame correctness, natural wheel continuity in both directions,
+The 19-test suite gives good protection for semantic correctness, painted
+idle-frame correctness, wheel continuity in both directions,
 concurrent upper loads, delayed observed-node resize, operation positioning,
 full-content replacement, and the known stale-snapshot race.
 

@@ -280,6 +280,16 @@ Before `frame_document_content` is replaced, the controller records either:
 - the operation-specific target and its requested viewport coordinate; or
 - the passive semantic viewport snapshot.
 
+For creation, several forms may be open at the same time. DOM order does not
+identify which form produced the response. When Turbo starts submitting a
+create form, the controller records that form's frame ID. The server reuses
+the same frame ID for the created node, so the controller can restore the node
+that belongs to the submitted form rather than another open form.
+
+If submission fails, the controller discards this target because no full
+content replacement will consume it. After a successful submission, the
+controller keeps the target until the replacement stream starts rendering.
+
 After replacement, the controller resolves the same semantic identity in the
 new DOM. If it belongs to an unloaded chunk, the controller first finds that
 chunk through the MID index and loads it. Only then can it position the actual
@@ -322,9 +332,10 @@ user-scroll frame.
 
 Create:
 
-- use the visible creation form to identify the node that the operation will
-  create;
-- obtain the created node's MID from the response;
+- record the submitted creation form rather than selecting an open form by DOM
+  order;
+- use the form's frame ID to identify the created node, which receives the same
+  frame ID from the server;
 - find and load the node's chunk even if the node has no TOC entry;
 - place the rendered node at the top of the content viewport;
 - retain that target through related chunk loads and delayed height changes.

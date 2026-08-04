@@ -1,3 +1,5 @@
+from selenium.webdriver.support.ui import WebDriverWait
+
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.document_fixtures import (
@@ -416,6 +418,71 @@ class Test(E2ECase):
             self.assert_text("Injected Node")
             screen_document.assert_node_containing_text_viewport_top_close(
                 "Injected Node", CONTENT_VIEWPORT_TOP, tolerance=24
+            )
+
+    def test_create_from_second_open_form_scrolls_to_its_new_node(self):
+        test_setup = End2EndTestSetup(path_to_test_file=__file__)
+        with SDocTestServer(
+            input_path=test_setup.path_to_sandbox
+        ) as test_server:
+            self.open(test_server.get_host_and_port())
+            screen_document = self._open_main_document()
+            screen_document.get_toc().do_toc_go_to_anchor(MID_CHUNK_TARGET)
+
+            first_requirement = screen_document.get_node_by_anchor("REQ-024")
+            (
+                first_requirement.do_open_node_menu().do_node_add_requirement_above()
+            )
+
+            second_requirement = screen_document.get_node_by_anchor(
+                MID_CHUNK_TARGET
+            )
+            second_form = second_requirement.do_open_node_menu().do_node_add_requirement_above()
+
+            WebDriverWait(self.driver, 3).until(
+                lambda _: self.execute_script(
+                    """
+                    return document.querySelectorAll(
+                      'form[action="/actions/document/create_requirement"]'
+                    ).length === 2;
+                    """
+                )
+            )
+
+            create_forms = self.execute_script(
+                """
+                return Array.from(document.querySelectorAll(
+                  'form[action="/actions/document/create_requirement"]'
+                )).map((form) => ({
+                  frameId: form.closest('turbo-frame')?.id,
+                  referenceMid: form.querySelector(
+                    'input[name="reference_mid"]'
+                  )?.value,
+                }));
+                """
+            )
+            assert len(create_forms) == 2, create_forms
+
+            # Submit the second form explicitly. Generic form helpers select
+            # the first matching field or button and cannot distinguish two
+            # simultaneously open forms.
+            second_form.do_fill_in(
+                "TITLE", "Created From Second Open Form", field_order=-1
+            )
+            self.execute_script(
+                """
+                const forms = document.querySelectorAll(
+                  'form[action="/actions/document/create_requirement"]'
+                );
+                forms[forms.length - 1].requestSubmit();
+                """
+            )
+
+            self.assert_text("Created From Second Open Form")
+            screen_document.assert_node_containing_text_viewport_top_close(
+                "Created From Second Open Form",
+                CONTENT_VIEWPORT_TOP,
+                tolerance=24,
             )
 
     def test_create_text_below_large_section_scrolls_to_distant_new_node(self):

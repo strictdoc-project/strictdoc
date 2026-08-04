@@ -89,6 +89,15 @@ replacement. It does not reproduce a long physical trackpad gesture.
 - creates a requirement in a chunked document after full content replacement;
 - verifies that the new node appears at the top of the content viewport.
 
+`test_create_from_second_open_form_scrolls_to_its_new_node`
+
+- opens two creation forms at the same time;
+- submits the second form explicitly;
+- verifies that the controller uses the submitted form's frame ID rather than
+  the first form in DOM order;
+- verifies that the node created from the second form appears at the top of the
+  content viewport.
+
 `test_create_text_below_large_section_scrolls_to_distant_new_node`
 
 - opens "Add TEXT below" on a section with a large subtree;
@@ -263,7 +272,9 @@ continuous-scroll, concurrent-load, and delayed-resize regressions are present.
 
 ## Current assessment
 
-The final full project suite completed with 402 passing tests.
+The previously recorded full project suite completed with 402 passing tests.
+The multiple-open-form regression was added afterward and passes in its
+targeted run. The full project suite has not been rerun after this addition.
 
 The suite gives good protection for settled semantic correctness, painted
 idle-frame correctness, natural wheel continuity in both directions,

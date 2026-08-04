@@ -295,11 +295,15 @@ target element cannot be positioned until its chunk has been rendered.
 
 Each lazy placeholder therefore contains the MIDs of all document nodes in its
 chunk. The controller uses this complete MID-to-chunk index to find and load
-the frame that owns a requested node.
+the frame that owns a requested node. A saved anchor witness records both its
+exact anchor ID and the `article-<MID>` frame of its containing node. The MID
+locates the lazy chunk after replacement; the anchor ID locates the exact
+position after that chunk renders.
 
 This index must be independent of TOC data. Some valid operation targets, such
 as untitled `TEXT` nodes, have no TOC entry. TOC metadata remains suitable for
-TOC navigation, but it cannot serve as the complete index of document content.
+TOC navigation, but the viewport controller does not read it when resolving
+operation targets or passive witnesses.
 
 ### Full content replacement
 

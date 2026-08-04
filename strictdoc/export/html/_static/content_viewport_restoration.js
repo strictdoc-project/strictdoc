@@ -1,38 +1,52 @@
-// Keep the document content that the user is reading visually stable while
-// lazy chunks and server operations change the document around it.
+// PROBLEM
+// The document is loaded and edited in pieces: lazy chunks, create/delete
+// operations, full-content replacements. Each of these can change the height
+// of content above the visible area. If content above the viewport gets
+// taller or shorter, everything below it shifts on screen even though
+// scrollTop has not changed — the user loses their place mid-read.
 //
-// When content above the viewport becomes taller or shorter, everything below
-// it moves. Keeping the same scrollTop would therefore show the user a
-// different part of the document. To prevent this jump, save several visible
-// nodes and anchors before the page changes. For each one, remember where it is
-// in the viewport and where it is in the whole scrollable document.
+// STRATEGY
+// Before a change, save one or more visible document nodes/anchors as
+// "candidates", identified by their stable semantic IDs. For each candidate,
+// record two coordinates: its offset inside the viewport, and its offset
+// inside the whole scrollable document.
 //
-// After the page changes, find a saved node or anchor again and measure how far
-// the document change moved it. Add that distance to the current scrollTop.
-// This moves the content back by exactly the amount introduced by the page
-// change, without undoing scrolling performed by the user at the same time.
-// The saved node MID also tells us which lazy chunk to load when the node is not
-// currently rendered.
+// After the change, find a saved candidate again and measure how far the
+// change moved it: compare its new document-offset to the saved one. Add
+// that distance to whatever scrollTop is *right now* (not the old saved
+// value), so the correction combines with any scrolling the user did in the
+// meantime instead of overwriting it. If a candidate's node is not currently
+// rendered, its remembered node MID tells us which lazy chunk to load to
+// bring it back.
 //
-// Loading a chunk can move the content twice. First Turbo inserts the real
-// nodes. Then the chunk loses the estimated height that reserved its place
-// while it was unloaded. Correct the position after both changes. Continue
-// watching the loaded nodes and correct the position again if their height
-// changes later. Native scroll anchoring is disabled here so the browser does
-// not apply a second correction for the same change.
+// Loading a lazy chunk can shift content twice: first when Turbo inserts the
+// real nodes, then again when the chunk's placeholder loses the estimated
+// height that had reserved its place. Both shifts are corrected separately.
+// After that, the nodes in a chunk whose load is being compensated remain
+// watched (via ResizeObserver), so a later height change in that chunk is also
+// corrected. Native browser scroll anchoring is disabled for this viewport so
+// it cannot apply its own, competing correction for the same layout change.
 //
-// A full document replacement normally restores the visible content saved just
-// before replacement. Create and delete have their own result instead. Put the
-// created node at the top of the viewport. After deletion, put the next node at
-// the place where the deleted node started. If there is no next node, keep the
-// bottom of the previous node at that place. Keep this requested position while
-// related chunks finish loading.
+// TWO WAYS TO RESTORE A POSITION
+// - Passive: keep the current reading position stable — used for ordinary
+//   lazy-chunk loads. This is the case described above: measure a candidate,
+//   add the delta to the current scrollTop.
+// - Exact: place one specific element edge at one specific viewport
+//   coordinate — used after a full-document replacement. Most replacements
+//   put a surviving visible candidate back where it was. Create puts the new
+//   node at the top of the viewport. Deleting a visible node puts the next
+//   node where the deleted node started; if there is no next node, the previous
+//   node's bottom is placed there instead. The exact position is applied again
+//   when related chunks load or change height.
 //
-// Navigation or a newer document replacement cancels work saved for the
-// previous viewport state. User scrolling cancels a saved exact position, but
-// keeps corrections for ordinary chunk loads because their height changes
-// still need to be added to the user's new position. Therefore, each delayed
-// action checks which viewport state it belongs to before it changes scrollTop.
+// CANCELLING STALE WORK
+// Explicit navigation or a newer full-document replacement cancels restore
+// work saved for the previous state ("generation"). User scrolling is more
+// selective: it cancels an active exact position because the user's scrolling
+// should win, but keeps passive corrections for chunks already loading. Their
+// eventual height change still has to be added to the user's new position.
+// Every delayed callback therefore checks which generation it belongs to
+// before it is allowed to touch scrollTop.
 (() => {
 
   const strictDoc = window.StrictDoc;
@@ -65,7 +79,7 @@
   ]);
   // Browser layout can place a zero-height anchor a fraction of a pixel across
   // the viewport edge. Treat positions within two pixels as the edge so the
-  // controller does not lose an otherwise valid semantic witness to rounding.
+  // controller does not discard an otherwise valid candidate due to rounding.
   const VIEWPORT_EDGE_TOLERANCE = 2;
   // Keep the semantic snapshot and insertion watcher for every chunk whose
   // response has arrived but whose rendering lifecycle has not finished. The
@@ -76,9 +90,9 @@
   // so user input and one chunk's correction can update every still-relevant
   // passive snapshot. Removing a frame from this Set ends that shared work.
   const pendingChunkFrames = new Set();
-  // Remember chunks loaded for an explicit TOC or fragment destination. Their
-  // response must not capture the reading position and pull the viewport away
-  // from the requested target; the navigation code owns their final position.
+  // Remember the chunk being loaded for explicit navigation. Its response must
+  // not capture the reading position and pull the viewport away from the
+  // requested target; the navigation code owns its final position.
   const explicitNavigationFrames = new WeakMap();
   // Associate each submitted create form with the frame ID derived from that
   // form's `requirement_mid`. The rendered node frame uses
@@ -120,7 +134,7 @@
   }
 
   // Decide whether an element's position lies inside the content viewport and
-  // can be saved as a witness coordinate. Inclusive comparisons retain a
+  // can be saved as a candidate coordinate. Inclusive comparisons retain a
   // zero-height anchor on either edge: the anchor itself has no visible area,
   // but its semantic ID and edge coordinate are still usable after replacement.
   function isInContentViewport(element, rootRect) {
@@ -183,8 +197,8 @@
   }
 
   // Stop observing nodes owned by the previous viewport state. The DOM nodes
-  // may remain and resize later, but their saved witness may describe content
-  // or an operation target that the user has already left.
+  // may remain and resize later, but their saved candidate may describe
+  // content or an operation target that the user has already left.
   function clearGeometryObservation() {
     if (geometryResizeObserver) {
       // Stop observing each node registered for the previous viewport state.
@@ -226,20 +240,21 @@
 
   // Describe the current reading position with semantic identities rather
   // than a raw scrollTop. Save an exact operation target when one exists, plus
-  // several visible nodes and anchors as fallbacks for DOM replacement. Each
-  // candidate records both its viewport offset, used for exact restoration,
-  // and its coordinate inside the scrollable document, used to measure only
-  // later geometry changes while the user continues scrolling.
+  // several visible nodes and anchors as candidates to fall back on for DOM
+  // replacement. Each candidate records both its viewport offset, used for
+  // exact restoration, and its coordinate inside the scrollable document,
+  // used to measure later geometry changes while the user keeps scrolling.
   function captureViewportAnchor(target = null) {
     const root = contentRoot();
     if (!root) return null;
 
     const rootRect = root.getBoundingClientRect();
 
-    // Store several possible witnesses because a server operation can remove
-    // or move any one of them. Every witness uses a stable anchor ID for its
-    // exact position and its containing node's frame ID for finding the lazy
-    // chunk if replacement leaves that content outside the DOM.
+    // Save several candidates, not just one, because a server operation can
+    // remove or move any single one of them. Every candidate uses a stable
+    // anchor ID for its exact position and its containing node's frame ID for
+    // finding the lazy chunk if replacement leaves that content outside the
+    // DOM.
     const candidates = [];
     const candidateAnchorIds = new Set();
 
@@ -293,7 +308,7 @@
     // unchanged.
     if (!target && candidates.length === 0) return null;
     // Prefer a node that contains the viewport's top edge; otherwise try
-    // witnesses in order of the distance between their top and that edge.
+    // candidates in order of the distance between their top and that edge.
     candidates.sort((left, right) => left.distance - right.distance);
     return { target, candidates, scrollTop: root.scrollTop };
   }
@@ -378,10 +393,11 @@
   }
 
   // Add a passive geometry correction to the viewport position that exists
-  // now. If content above the witness gained 200 pixels, add 200 pixels; do
-  // not assign the scrollTop saved before the user moved. Wheel, keyboard,
-  // touch, and scrollbar movement therefore remains intact. As with exact
-  // positioning, apply the correction immediately rather than animating it.
+  // right now, rather than assigning the scrollTop saved before the user
+  // moved: if content above the candidate gained 200 pixels, add 200 pixels
+  // to the current scrollTop. Wheel, keyboard, touch, and scrollbar movement
+  // therefore remain intact. As with exact positioning, apply the correction
+  // immediately rather than animating it.
   function compensateScrollTopBy(delta) {
     const root = contentRoot();
     if (!root || Math.abs(delta) <= 1) return;
@@ -392,12 +408,14 @@
     root.style.scrollBehavior = previousScrollBehavior || "";
   }
 
-  // Record the post-correction document geometry in every current passive
-  // lock, not only in the lock whose observer happened to run first. Two
-  // chunks can both finish before either observer callback runs. The first
-  // callback then measures and compensates their combined effect. If the
-  // second lock kept its older baseline, its callback would interpret part of
-  // that already handled movement as new and move the viewport twice.
+  // After one correction has been applied, record the new document geometry
+  // in every current passive lock — not only in the lock whose observer
+  // happened to run first. This matters because two chunks can both finish
+  // before either observer callback runs: the first callback then measures
+  // and compensates their *combined* effect. If the second lock kept its
+  // older baseline, its own callback would later mistake part of that
+  // already-handled movement for something new, and move the viewport a
+  // second time for the same layout change.
   function synchronizePassiveGeometryBaselines(root, currentSnapshot) {
     const snapshots = new Set([currentSnapshot]);
     pendingChunkFrames.forEach((frame) => {
@@ -433,12 +451,13 @@
   }
 
   // Preserve passive reading by measuring geometry independently of user
-  // movement. For a witness, `viewportTop + scrollTop` is its coordinate
-  // inside the scrollable document. User scrolling changes those two terms in
-  // opposite directions, leaving their sum unchanged; inserting or resizing
-  // content above the witness changes the sum. Add only that change to the
-  // current scrollTop, so the correction composes with simultaneous input
-  // instead of pulling toward an older viewport coordinate.
+  // movement. For a candidate, `viewportTop + scrollTop` gives its coordinate
+  // inside the scrollable document. User scrolling changes viewportTop and
+  // scrollTop in opposite directions, so their sum stays the same; inserting
+  // or resizing content above the candidate is what changes that sum. Add
+  // only that change to the current scrollTop, so the correction composes
+  // with whatever scrolling is happening at the same time instead of pulling
+  // the viewport back toward an older coordinate.
   function compensatePassiveGeometry(snapshot, expectedGeneration) {
     if (!snapshot || !isCurrentGeneration(expectedGeneration)) return;
     const root = contentRoot();
@@ -561,7 +580,7 @@
   // Make an operation target available when full replacement puts its node in
   // an unloaded chunk. The target can be the result of a submitted create form
   // or the node next to a deletion. Find its chunk from the complete MID index;
-  // saved visible witnesses provide additional known chunks. A create form
+  // saved candidates provide additional known chunks to try. A create form
   // temporarily has the future node's frame ID, so accept the frame only after
   // it contains rendered node content instead.
   function ensureNodeFrameLoaded(
@@ -637,8 +656,9 @@
 
     addFrame(chunkFrameForNodeFrame(frameId));
     // If direct MID lookup did not make the target appear, also load chunks
-    // associated with saved witnesses. Each completed load rechecks the whole
-    // DOM for frameId; a witness does not have to be the operation target.
+    // associated with saved candidates. Each completed load rechecks the
+    // whole DOM for frameId; a candidate does not have to be the operation
+    // target itself.
     candidates.forEach((candidate) => {
       addFrame(chunkFrameForNodeFrame(candidate.nodeFrameId));
     });
@@ -668,7 +688,7 @@
   // create target puts the submitted form's resulting node at the viewport
   // top. A delete target puts the next node's top, or the previous node's
   // bottom, at the deleted node's former boundary. Other replacements try the
-  // saved visible witnesses in priority order. A missing witness may require
+  // saved candidates in priority order. A missing candidate may require
   // loading its chunk before its viewport edge can be measured.
   function restoreViewportAnchor(snapshot, expectedGeneration = generation) {
     if (!snapshot || !isCurrentGeneration(expectedGeneration)) return;
@@ -705,8 +725,8 @@
       return;
     }
 
-    // Choose the first saved witness that already exists or has a known lazy
-    // chunk that can be loaded.
+    // Choose the first saved candidate that already exists or has a known
+    // lazy chunk that can be loaded.
     const candidate = snapshot.candidates.find((item) => {
       const frame = chunkFrameForNodeFrame(item.nodeFrameId);
       return document.getElementById(item.id) || frame;
@@ -715,7 +735,7 @@
     // leave the current scroll position unchanged.
     if (!candidate) return;
 
-    // Put the chosen witness back at its saved viewport coordinate.
+    // Put the chosen candidate back at its saved viewport coordinate.
     ensureAnchorLoaded(
       candidate.id,
       candidate.nodeFrameId,
@@ -736,7 +756,7 @@
   // its rendered nodes can change height later. ResizeObserver reports after
   // layout and before paint, allowing passive geometry compensation or exact
   // operation restoration before the displaced content is shown. A change
-  // below the witness yields a zero witness delta and therefore no scroll.
+  // below the candidate yields a zero measured delta and therefore no scroll.
   function observeChunkGeometry(frame, viewportLock) {
     if (!window.ResizeObserver) return;
 
@@ -778,7 +798,7 @@
 
     // Associate every rendered node with the lock current when its chunk
     // loaded. Watching every node is necessary because any one above the
-    // witness can later add or remove space before the visible content.
+    // candidate can later add or remove space before the visible content.
     frame.querySelectorAll("sdoc-node").forEach((node) => {
       // The callback will use this association to choose passive additive
       // compensation or exact operation restoration for the resize.
@@ -794,8 +814,8 @@
 
   // Recognize the one Turbo stream handled as a full document replacement.
   // Only this stream removes `frame_document_content` and therefore activates
-  // the exact create/delete target or the full-replacement witness capture in
-  // the listener below.
+  // the exact create/delete target or the full-replacement candidate capture
+  // in the listener below.
   function isFullContentFrameReplace(streamElement) {
     return (
       streamElement?.tagName === "TURBO-STREAM" &&
@@ -888,7 +908,7 @@
 
   // --- Invalidating delayed work after user navigation ---
 
-  // Give an explicit TOC or fragment navigation ownership of its destination.
+  // Give explicit navigation ownership of its destination.
   // Discard a created-node destination saved when an earlier form submission
   // started: the request may still update the document, but its later response
   // must not move the viewport away from the destination selected afterward.
@@ -1008,7 +1028,7 @@
   // Before a confirmed delete, save the visible node's boundary together with
   // the MID of its actual next or previous document node. If the node is not
   // visible or its position cannot be determined, leave no special delete
-  // target; full replacement will preserve an ordinary visible witness.
+  // target; full replacement will fall back to an ordinary visible candidate.
   document.addEventListener("click", (event) => {
     const confirmLink = event.target.closest?.(
       "a[data-testid='confirm-action']"
@@ -1026,7 +1046,7 @@
   // Immediately before Turbo removes the current document DOM, choose the one
   // semantic result that owns the replacement. A visible delete boundary has
   // priority; otherwise creation supplies an exact new-node target, and other
-  // operations preserve the current reading witnesses. Capturing at this last
+  // operations preserve the current reading candidates. Capturing at this last
   // pre-render event avoids saving a position that became stale while the
   // server request was in flight.
   document.addEventListener("turbo:before-stream-render", (event) => {
@@ -1035,8 +1055,8 @@
     // Save what the user sees immediately before Turbo replaces the document
     // content.
     // The stream replaces frame_document_content after creating or deleting a
-    // node, moving a node in the TOC, or saving grammar changes.
-    // For a TOC move, draggable_list.js passes the fetch response to
+    // node, moving a node by drag-and-drop, or saving grammar changes.
+    // For a drag-and-drop move, draggable_list.js passes the fetch response to
     // Turbo.renderStreamMessage(), which causes Turbo to dispatch this event.
     const restoreGeneration = advanceGeneration();
     const createTarget = pendingCreateTarget;
@@ -1079,8 +1099,9 @@
     }
 
     // Explicit navigation deliberately skips passive capture for its own
-    // destination chunk. Saving the current reading witness here would let the
-    // chunk response compete with the anchor that navigation is trying to show.
+    // destination chunk. Saving the current reading candidate here would let
+    // the chunk response compete with the anchor that navigation is trying to
+    // show.
     const navigationGeneration = explicitNavigationFrames.get(frame);
     if (navigationGeneration === generation) {
       return;
@@ -1186,8 +1207,8 @@
   });
 
   // Keep every passive lock's scroll baseline aligned with ordinary viewport
-  // movement. The witness's document coordinate does not need rebasing when the
-  // user scrolls, but snapshot.scrollTop does: a later correction uses its
+  // movement. The candidate's document coordinate does not need rebasing when
+  // the user scrolls, but snapshot.scrollTop does: a later correction uses its
   // difference from the current value to recognize the exceptional synchronous
   // clamp caused by a shorter document. Updating only passive locks avoids
   // weakening an exact operation target.
@@ -1225,8 +1246,8 @@
   // content viewport. If native scroll anchoring remains eligible, the browser
   // can move scrollTop in one rendering phase and this controller can apply the
   // same measured chunk delta in another, producing a double correction or a
-  // small reverse step. Exclude both the scrolling root and every candidate
-  // descendant so no native anchor remains inside this viewport. Mandatory
+  // small reverse step. Exclude both the scrolling root and every descendant
+  // so no native anchor remains inside this viewport. Mandatory
   // scroll-range clamping still occurs when the document becomes too short and
   // is handled separately by compensatePassiveGeometry().
   function disableNativeScrollAnchoring() {

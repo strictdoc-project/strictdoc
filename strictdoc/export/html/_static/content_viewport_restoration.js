@@ -1004,32 +1004,32 @@
   // Capture the identity of the form that actually started the create request.
   // Several forms can be open at once; choosing the first visible form would
   // associate the server response with the wrong future node.
-  document.addEventListener("turbo:submit-start", (event) => {
+  function handleSubmitStart(event) {
     const target = createTargetForSubmittedForm(event.target);
     if (target) {
       submittedCreateTargets.set(event.target, target);
       pendingCreateTarget = target;
     }
-  });
+  }
 
   // Remove the per-form association when its request ends. On failure, also
   // discard the pending exact target because no created node or replacement
   // will consume it. On success, keep the target across submit-end: the Turbo
   // stream that replaces the document is processed afterward and still needs
   // to know which node must appear at the viewport top.
-  document.addEventListener("turbo:submit-end", (event) => {
+  function handleSubmitEnd(event) {
     const target = submittedCreateTargets.get(event.target);
     submittedCreateTargets.delete(event.target);
     if (!event.detail.success && pendingCreateTarget === target) {
       pendingCreateTarget = null;
     }
-  });
+  }
 
   // Before a confirmed delete, save the visible node's boundary together with
   // the MID of its actual next or previous document node. If the node is not
   // visible or its position cannot be determined, leave no special delete
   // target; full replacement will fall back to an ordinary visible candidate.
-  document.addEventListener("click", (event) => {
+  function handleDeleteConfirmation(event) {
     const confirmLink = event.target.closest?.(
       "a[data-testid='confirm-action']"
     );
@@ -1041,7 +1041,7 @@
     pendingDeleteBoundary = nodeId
       ? captureDeleteBoundary(nodeId)
       : null;
-  });
+  }
 
   // Immediately before Turbo removes the current document DOM, choose the one
   // semantic result that owns the replacement. A visible delete boundary has
@@ -1049,7 +1049,7 @@
   // operations preserve the current reading candidates. Capturing at this last
   // pre-render event avoids saving a position that became stale while the
   // server request was in flight.
-  document.addEventListener("turbo:before-stream-render", (event) => {
+  function handleBeforeStreamRender(event) {
     if (!isFullContentFrameReplace(event.target)) return;
 
     // Save what the user sees immediately before Turbo replaces the document
@@ -1079,7 +1079,7 @@
         restoreViewportAnchor(snapshot, restoreGeneration);
       });
     }, 0);
-  });
+  }
 
   // --- Lazy chunk event handlers ---
 
@@ -1089,7 +1089,7 @@
   // then catches insertion before the later frame-load stage removes the
   // placeholder's estimated height; both stages can independently move lower
   // content and both must be compensated.
-  document.addEventListener("turbo:before-fetch-response", (event) => {
+  function handleBeforeChunkRender(event) {
     const frame = event.target;
     if (
       !frame?.id?.startsWith("document-chunk-") ||
@@ -1151,14 +1151,14 @@
     });
     pendingChunkSnapshots.set(frame, pendingSnapshot);
     pendingChunkFrames.add(frame);
-  });
+  }
 
   // Finish the placeholder-to-content transition at frame-load. Another script
   // has now removed the estimated min-height, which can create a second geometry
   // delta after node insertion. Correct only this remaining delta, then observe
   // the rendered nodes because their height can change after the loading
   // lifecycle itself is complete.
-  document.addEventListener("turbo:frame-load", (event) => {
+  function handleChunkLoad(event) {
     const frame = event.target;
     if (!frame?.id?.startsWith("document-chunk-")) return;
 
@@ -1195,16 +1195,16 @@
         pendingSnapshot.generation
       );
     });
-  });
+  }
 
   // If a lazy chunk request fails, discard its saved position and navigation
   // marker because that response can no longer change the page geometry.
-  document.addEventListener("turbo:fetch-request-error", (event) => {
+  function handleChunkLoadError(event) {
     const frame = event.target;
     if (!frame?.id?.startsWith("document-chunk-")) return;
     clearPendingChunkSnapshot(frame);
     explicitNavigationFrames.delete(frame);
-  });
+  }
 
   // Keep every passive lock's scroll baseline aligned with ordinary viewport
   // movement. The candidate's document coordinate does not need rebasing when
@@ -1212,33 +1212,29 @@
   // difference from the current value to recognize the exceptional synchronous
   // clamp caused by a shorter document. Updating only passive locks avoids
   // weakening an exact operation target.
-  document.addEventListener(
-    "scroll",
-    (event) => {
-      const root = contentRoot();
-      if (event.target !== root) return;
+  function handleViewportScroll(event) {
+    const root = contentRoot();
+    if (event.target !== root) return;
 
-      pendingChunkFrames.forEach((frame) => {
-        const viewportLock = pendingChunkSnapshots.get(frame);
-        if (
-          viewportLock?.generation === generation &&
-          !viewportLock.followsActiveViewportLock
-        ) {
-          viewportLock.snapshot.scrollTop = root.scrollTop;
-        }
-      });
-      observedGeometryElements.forEach((element) => {
-        const viewportLock = geometryLocks.get(element);
-        if (
-          viewportLock?.generation === generation &&
-          !viewportLock.followsActiveViewportLock
-        ) {
-          viewportLock.snapshot.scrollTop = root.scrollTop;
-        }
-      });
-    },
-    { capture: true, passive: true }
-  );
+    pendingChunkFrames.forEach((frame) => {
+      const viewportLock = pendingChunkSnapshots.get(frame);
+      if (
+        viewportLock?.generation === generation &&
+        !viewportLock.followsActiveViewportLock
+      ) {
+        viewportLock.snapshot.scrollTop = root.scrollTop;
+      }
+    });
+    observedGeometryElements.forEach((element) => {
+      const viewportLock = geometryLocks.get(element);
+      if (
+        viewportLock?.generation === generation &&
+        !viewportLock.followsActiveViewportLock
+      ) {
+        viewportLock.snapshot.scrollTop = root.scrollTop;
+      }
+    });
+  }
 
   // --- User input event handlers ---
 
@@ -1256,47 +1252,73 @@
     document.head.append(style);
   }
 
-  disableNativeScrollAnchoring();
-
-  document.addEventListener("wheel", invalidateForUserInput, {
-    capture: true,
-    passive: true,
-  });
-
-  document.addEventListener("touchstart", invalidateForUserInput, {
-    capture: true,
-    passive: true,
-  });
-
-  document.addEventListener("pointerdown", invalidateForUserInput, {
-    capture: true,
-    passive: true,
-  });
-
   // Treat a scrolling key outside editable controls as direct user intent.
   // Browser keyboard scrolling can continue over several animation frames
   // after keydown. Cancel an active exact lock and a pending delete target
   // immediately, but keep passive document coordinates: later chunk deltas are
   // added to the keyboard's continuing movement instead of restoring an
   // earlier frame.
-  document.addEventListener("keydown", (event) => {
+  function handleScrollingKey(event) {
     if (!SCROLL_KEYS.has(event.key)) return;
     if (event.target.matches?.("input, textarea, [contenteditable='true']")) {
       return;
     }
     pendingDeleteBoundary = null;
     advanceGenerationForUserScroll();
-  });
+  }
 
-  // --- Hooks used by other document scripts ---
+  // --- Controller initialization and hooks used by other document scripts ---
 
-  // Other document scripts use these hooks to mark intentional navigation,
-  // capture a position, restore it, or move an element to a saved offset.
-  strictDoc.contentViewport = strictDoc.contentViewport || {};
-  strictDoc.contentViewport.beginExplicitNavigation =
-    beginExplicitNavigation;
-  strictDoc.contentViewport.capture = captureViewportAnchor;
-  strictDoc.contentViewport.invalidate = invalidateViewport;
-  strictDoc.contentViewport.restore = restoreViewportAnchor;
-  strictDoc.contentViewport.scrollElementToOffset = restoreElementTop;
+  // Activate viewport protection after every function it uses has been defined.
+  // Register the document lifecycle and user-input handlers in one place, then
+  // expose the small set of actions that other document scripts need.
+  function initialize() {
+    disableNativeScrollAnchoring();
+
+    document.addEventListener("turbo:submit-start", handleSubmitStart);
+    document.addEventListener("turbo:submit-end", handleSubmitEnd);
+    document.addEventListener("click", handleDeleteConfirmation);
+    document.addEventListener(
+      "turbo:before-stream-render",
+      handleBeforeStreamRender
+    );
+    document.addEventListener(
+      "turbo:before-fetch-response",
+      handleBeforeChunkRender
+    );
+    document.addEventListener("turbo:frame-load", handleChunkLoad);
+    document.addEventListener(
+      "turbo:fetch-request-error",
+      handleChunkLoadError
+    );
+    document.addEventListener("scroll", handleViewportScroll, {
+      capture: true,
+      passive: true,
+    });
+    document.addEventListener("wheel", invalidateForUserInput, {
+      capture: true,
+      passive: true,
+    });
+    document.addEventListener("touchstart", invalidateForUserInput, {
+      capture: true,
+      passive: true,
+    });
+    document.addEventListener("pointerdown", invalidateForUserInput, {
+      capture: true,
+      passive: true,
+    });
+    document.addEventListener("keydown", handleScrollingKey);
+
+    // Other document scripts use these hooks to mark intentional navigation,
+    // capture a position, restore it, or move an element to a saved offset.
+    strictDoc.contentViewport = strictDoc.contentViewport || {};
+    strictDoc.contentViewport.beginExplicitNavigation =
+      beginExplicitNavigation;
+    strictDoc.contentViewport.capture = captureViewportAnchor;
+    strictDoc.contentViewport.invalidate = invalidateViewport;
+    strictDoc.contentViewport.restore = restoreViewportAnchor;
+    strictDoc.contentViewport.scrollElementToOffset = restoreElementTop;
+  }
+
+  initialize();
 })();

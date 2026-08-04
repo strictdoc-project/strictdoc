@@ -1,46 +1,38 @@
 // Keep the document content that the user is reading visually stable while
-// lazy chunks and server operations change the document around it. A raw
-// scrollTop cannot provide this guarantee: when content above the viewport
-// changes height, the same scrollTop points to different document content.
+// lazy chunks and server operations change the document around it.
 //
-// For ordinary reading, remember where several visible document nodes or
-// anchors sit. Each saved witness records an anchor ID, the `article-<MID>`
-// identity of its containing node, its position inside the viewport, and its
-// coordinate inside the whole scrollable document. The node MID locates an
-// unloaded lazy chunk through the chunk's complete `data-node-mids` index;
-// this controller does not use TOC as a document index because valid nodes
-// such as untitled TEXT may be absent from TOC.
+// When content above the viewport becomes taller or shorter, everything below
+// it moves. Keeping the same scrollTop would therefore show the user a
+// different part of the document. To prevent this jump, save several visible
+// nodes and anchors before the page changes. For each one, remember where it is
+// in the viewport and where it is in the whole scrollable document.
 //
-// A lazy chunk changes geometry in two separate loading stages: Turbo
-// inserts the real nodes, then `turbo:frame-load` removes the placeholder's
-// estimated min-height. A MutationObserver compensates the insertion before an
-// intermediate position can be painted; the frame-load handler compensates
-// the remaining height difference. ResizeObserver continues watching the
-// rendered nodes for later border-box changes caused by images, widgets, fonts,
-// padding, or similar content.
+// After the page changes, find a saved node or anchor again and measure how far
+// the document change moved it. Add that distance to the current scrollTop.
+// This moves the content back by exactly the amount introduced by the page
+// change, without undoing scrolling performed by the user at the same time.
+// The saved node MID also tells us which lazy chunk to load when the node is not
+// currently rendered.
 //
-// Passive compensation preserves the user's movement, not an old viewport
-// coordinate. It measures how much the witness's document coordinate changed
-// and adds only that geometry delta to the current scrollTop. Wheel, keyboard,
-// touch, and scrollbar movement therefore continues while layout corrections
-// are composed with it. Native scroll anchoring is disabled inside this
-// viewport so the browser and this controller cannot compensate the same
-// geometry change twice.
+// Loading a chunk can move the content twice. First Turbo inserts the real
+// nodes. Then the chunk loses the estimated height that reserved its place
+// while it was unloaded. Correct the position after both changes. Continue
+// watching the loaded nodes and correct the position again if their height
+// changes later. Native scroll anchoring is disabled here so the browser does
+// not apply a second correction for the same change.
 //
-// Server operations that replace the full content frame either select an exact
-// result or preserve the current reading position. Creation puts the node
-// produced by the submitted form at the viewport top. Deletion puts the actual
-// next node's top at the removed node's former top, or the previous node's
-// bottom there when the last node was removed. Other replacements restore the
-// first surviving witness in saved priority order. An exact target remains
-// active through related lazy loads and delayed resizes until a newer viewport
-// generation supersedes that active lock.
+// A full document replacement normally restores the visible content saved just
+// before replacement. Create and delete have their own result instead. Put the
+// created node at the top of the viewport. After deletion, put the next node at
+// the place where the deleted node started. If there is no next node, keep the
+// bottom of the previous node at that place. Keep this requested position while
+// related chunks finish loading.
 //
-// Every delayed callback carries the generation in which its snapshot was
-// created. Navigation, another replacement, or direct user input advances the
-// generation so callbacks from an older viewport state cannot move the user
-// back later. Pending passive locks follow user-scroll generations because the
-// geometry they protect still has to be composed with the new reading position.
+// Navigation or a newer document replacement cancels work saved for the
+// previous viewport state. User scrolling cancels a saved exact position, but
+// keeps corrections for ordinary chunk loads because their height changes
+// still need to be added to the user's new position. Therefore, each delayed
+// action checks which viewport state it belongs to before it changes scrollTop.
 (() => {
 
   const strictDoc = window.StrictDoc;
@@ -318,11 +310,9 @@
     return anchor;
   }
 
-  // Find the lazy chunk that contains the node MID encoded in an
-  // `article-<MID>` frame ID. Every lazy placeholder indexes all nodes in the
-  // chunk through `data-node-mids`, including TEXT nodes without titles. The
-  // viewport controller therefore does not depend on TOC, which intentionally
-  // represents only the subset of nodes that can appear in navigation.
+  // Find the lazy chunk containing the node MID encoded in an `article-<MID>`
+  // frame ID. Every lazy placeholder indexes all nodes in its chunk through
+  // `data-node-mids`.
   function chunkFrameForNodeFrame(frameId) {
     const nodeId = frameId?.startsWith("article-")
       ? frameId.slice("article-".length)
@@ -742,9 +732,8 @@
 
   // --- Keeping the viewport stable while loaded content changes size ---
 
-  // Keep protecting the viewport after Turbo declares a chunk loaded. Images,
-  // formulas, fonts, or widgets inside its nodes can acquire their final size
-  // later and change all geometry below them. ResizeObserver reports after
+  // Keep protecting the viewport after Turbo declares a chunk loaded because
+  // its rendered nodes can change height later. ResizeObserver reports after
   // layout and before paint, allowing passive geometry compensation or exact
   // operation restoration before the displaced content is shown. A change
   // below the witness yields a zero witness delta and therefore no scroll.
@@ -795,8 +784,8 @@
       // compensation or exact operation restoration for the resize.
       geometryLocks.set(node, viewportLock);
       observedGeometryElements.add(node);
-      // Watch the outer box too. A padding or border change can push every node
-      // below this one even when the content inside it keeps the same size.
+      // Watch the node's outer box because its outer height determines the
+      // position of every node below it.
       geometryResizeObserver.observe(node, { box: "border-box" });
     });
   }
@@ -817,12 +806,11 @@
 
   // --- Remembering the result of a delete operation ---
 
-  // Return the MIDs of all document nodes in semantic order, including TEXT
-  // nodes without titles. An unloaded lazy chunk contributes its complete
-  // `data-node-mids` index. The inline first chunk and a non-chunked document
-  // contribute the rendered `article-<MID>` frames in DOM order. Loaded lazy
-  // frames normally retain their MID index; if one does not, its rendered node
-  // frames provide the same local order.
+  // Return the MIDs of all document nodes in semantic order. An unloaded lazy
+  // chunk contributes its complete `data-node-mids` index. The inline first
+  // chunk and a non-chunked document contribute the rendered `article-<MID>`
+  // frames in DOM order. Loaded lazy frames normally retain their MID index;
+  // if one does not, its rendered node frames provide the same local order.
   function nodeIdsInDocumentOrder() {
     const root = contentRoot();
     if (!root) return [];
@@ -852,10 +840,9 @@
   }
 
   // Preserve the place from which a visible node is about to disappear. Find
-  // its real neighbors in the complete document order, not in TOC: untitled
-  // TEXT nodes and any other nodes omitted from TOC must behave identically.
-  // After deletion, put the next node's top at the deleted node's former top.
-  // If the deleted node was last, put the previous node's bottom there instead.
+  // its actual neighbors in the complete document order. After deletion, put
+  // the next node's top at the deleted node's former top. If the deleted node
+  // was last, put the previous node's bottom there instead.
   function captureDeleteBoundary(nodeId) {
     const root = contentRoot();
     const frame = document.getElementById(`article-${nodeId}`);
@@ -1148,8 +1135,8 @@
   // Finish the placeholder-to-content transition at frame-load. Another script
   // has now removed the estimated min-height, which can create a second geometry
   // delta after node insertion. Correct only this remaining delta, then observe
-  // the rendered nodes because images or other content can change their height
-  // after the loading lifecycle itself is complete.
+  // the rendered nodes because their height can change after the loading
+  // lifecycle itself is complete.
   document.addEventListener("turbo:frame-load", (event) => {
     const frame = event.target;
     if (!frame?.id?.startsWith("document-chunk-")) return;

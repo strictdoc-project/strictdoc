@@ -373,7 +373,11 @@ Delete:
 
 - before sending the confirmed delete operation, determine whether the removed
   node intersects the viewport;
-- record the removed node's visible boundary and adjacent semantic content;
+- build the complete semantic node order from rendered `article-<MID>` frames
+  and the MID indexes of unloaded chunks, rather than from TOC entries;
+- record the removed node's visible boundary and the MID of its actual next or
+  previous node, including nodes such as untitled `TEXT` that are absent from
+  TOC;
 - after replacement, place the next surviving node at that boundary;
 - at the end of the document, use the previous surviving node's bottom edge
   when no next node exists.

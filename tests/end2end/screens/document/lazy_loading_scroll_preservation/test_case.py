@@ -3,6 +3,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
+from tests.end2end.helpers.components.node.node import Node
 from tests.end2end.helpers.document_fixtures import (
     write_long_document_with_tall_chunk_above_viewport,
     write_long_text_document_with_large_section_subtree,
@@ -29,6 +30,8 @@ LAST_CHUNK_TARGET = "REQ-035"
 CHUNK_ABOVE_TARGET = "CAB-032"
 USER_SCROLL_INITIAL_TARGET = "CAB-040"
 CONTENT_VIEWPORT_TOP = 0
+UNTITLED_TEXT_24_MID = f"{24:032x}"
+UNTITLED_TEXT_25_MID = f"{25:032x}"
 
 
 class Test(E2ECase):
@@ -769,6 +772,53 @@ class Test(E2ECase):
             )
             screen_document.assert_anchor_viewport_top_stable(
                 "REQ-026",
+                deleted_node_top,
+                duration=1.0,
+            )
+
+    def test_delete_untitled_text_keeps_removed_boundary_in_place(self):
+        test_setup = End2EndTestSetup(path_to_test_file=__file__)
+        write_long_text_document_with_large_section_subtree(test_setup)
+
+        with SDocTestServer(
+            input_path=test_setup.path_to_sandbox
+        ) as test_server:
+            self.open(test_server.get_host_and_port())
+            screen_document = self._open_create_below_large_section_document()
+
+            # The TOC target loads chunk 2, which also contains the two TEXT
+            # siblings used below. Neither TEXT has a title or a TOC item.
+            screen_document.get_toc().do_toc_go_to_anchor(
+                "CREATE-NEXT-SECTION"
+            )
+            screen_document.assert_document_chunk_loaded(CHUNK_2_ID)
+            self.assert_element_not_present(
+                f"#frame_toc li[data-nodeid='{UNTITLED_TEXT_24_MID}']",
+            )
+
+            screen_document.do_scroll_anchor_to_viewport_top(
+                UNTITLED_TEXT_24_MID
+            )
+            deleted_node_top = screen_document.get_anchor_viewport_top(
+                UNTITLED_TEXT_24_MID
+            )
+            text_node = Node(
+                test_case=self,
+                node_xpath=(
+                    "//sdoc-node[.//*[@id="
+                    f"'{UNTITLED_TEXT_24_MID}'"
+                    "]]"
+                ),
+            )
+            text_node.do_delete_node()
+
+            self.assert_text_not_visible("Section child text 24.")
+            screen_document.assert_anchor_viewport_top_close(
+                UNTITLED_TEXT_25_MID,
+                deleted_node_top,
+            )
+            screen_document.assert_anchor_viewport_top_stable(
+                UNTITLED_TEXT_25_MID,
                 deleted_node_top,
                 duration=1.0,
             )

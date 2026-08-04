@@ -106,6 +106,11 @@ replacement. It does not reproduce a long physical trackpad gesture.
 contract: the next surviving node occupies the viewport boundary from which
 the visible node was removed.
 
+`test_delete_untitled_text_keeps_removed_boundary_in_place` uses two adjacent
+untitled `TEXT` nodes in a lazy chunk. It first proves that the deleted node has
+no TOC item, then verifies that the controller finds its next sibling through
+the complete MID order and puts that sibling at the deleted boundary.
+
 `test_delete_last_node_falls_back_to_end_of_document` verifies the fallback to
 the previous surviving node when no next node exists.
 
@@ -314,8 +319,10 @@ continuous-scroll, concurrent-load, and delayed-resize regressions are present.
 
 ## Current assessment
 
-The pruned viewport-stability file passes all 19 tests in approximately 2
-minutes 9 seconds. Before pruning, 33 tests took approximately 13 minutes.
+The viewport-stability file now contains 20 tests. The 19-test pruned suite
+passed in approximately 2 minutes 9 seconds; the untitled-`TEXT` deletion
+regression passes in its targeted run. Before pruning, 33 tests took
+approximately 13 minutes.
 Removed numeric variants did not represent separate branches of the final
 algorithm; removing their server startups accounts for most of the reduction.
 

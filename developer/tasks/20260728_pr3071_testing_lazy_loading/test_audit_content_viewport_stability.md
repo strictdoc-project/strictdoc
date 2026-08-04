@@ -49,8 +49,9 @@ when the upper placeholder is replaced.
 
 A generated `SECTION + TEXT` fixture contains a section whose subtree spans
 several short chunks. "Add TEXT below" creates a sibling far from the visible
-form. The created `TEXT` has no TOC entry, so the test also exercises the
-complete MID-to-chunk index.
+form. The same fixture also provides adjacent untitled text nodes for deletion.
+These `TEXT` nodes have no TOC entries, so the tests exercise the complete
+MID-to-chunk index and the complete semantic deletion order.
 
 ## Current automated coverage
 
@@ -322,6 +323,7 @@ continuous-scroll, concurrent-load, and delayed-resize regressions are present.
 The viewport-stability file now contains 20 tests and passes in approximately
 2 minutes. Before pruning, the suite contained 33 tests and took approximately
 13 minutes.
+
 Removed numeric variants did not represent separate branches of the final
 algorithm; removing their server startups accounts for most of the reduction.
 
@@ -329,7 +331,7 @@ The previously recorded full project suite completed with 402 passing tests.
 The multiple-open-form regression was added afterward and passes in its
 targeted run. The full project suite has not been rerun after this addition.
 
-The 19-test suite gives good protection for semantic correctness, painted
+The 20-test suite gives good protection for semantic correctness, painted
 idle-frame correctness, wheel continuity in both directions,
 concurrent upper loads, delayed observed-node resize, operation positioning,
 full-content replacement, and the known stale-snapshot race.

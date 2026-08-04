@@ -61,8 +61,16 @@
   // The server replaces the content frame, while the content root is the
   // independently scrollable viewport whose visible document geometry must
   // remain stable.
-  const CONTENT_FRAME_ID = "frame_document_content";
-  const CONTENT_ROOT_SELECTOR = "[js-toc_highlighting-content_root]";
+  const CONTENT_FRAME_ID = "frame_document_content"; // <turbo-frame id="frame_document_content"><div class="content">...
+  const CONTENT_ROOT_SELECTOR = "[js-content-viewport]"; // <div class="main" js-content-viewport>...</div>
+  const NODE_FRAME_ID_PREFIX = "article-";
+  const CHUNK_FRAME_ID_PREFIX = "document-chunk-";
+  const DOCUMENT_NODE_SELECTOR = "sdoc-node";
+  const DOCUMENT_ANCHOR_SELECTOR = "sdoc-anchor[id]";
+  const NODE_FRAME_SELECTOR =
+    `turbo-frame[id^='${NODE_FRAME_ID_PREFIX}']`;
+  const CHUNK_FRAME_SELECTOR =
+    `turbo-frame[id^='${CHUNK_FRAME_ID_PREFIX}']`;
   const CHUNK_PLACEHOLDER_CLASS = "document-chunk-placeholder";
   const CREATE_REQUIREMENT_ACTION = "/actions/document/create_requirement";
   // These keys can move the content viewport when focus is not inside an
@@ -175,7 +183,7 @@
   // its frame so positioning still works for markup that has no sdoc-node
   // wrapper.
   function contentTargetForNodeFrame(frame) {
-    return frame.querySelector("sdoc-node") || frame;
+    return frame.querySelector(DOCUMENT_NODE_SELECTOR) || frame;
   }
 
   // Start a completely new viewport state for navigation or content
@@ -235,7 +243,7 @@
   // the lazy chunk, while the anchor ID identifies the exact place inside the
   // rendered node.
   function nodeFrameIdForElement(element) {
-    return element.closest("turbo-frame[id^='article-']")?.id || null;
+    return element.closest(NODE_FRAME_SELECTOR)?.id || null;
   }
 
   // Describe the current reading position with semantic identities rather
@@ -259,9 +267,9 @@
     const candidateAnchorIds = new Set();
 
     // Save every visible node that has an anchor usable as a stable identity.
-    root.querySelectorAll("sdoc-node").forEach((node) => {
+    root.querySelectorAll(DOCUMENT_NODE_SELECTOR).forEach((node) => {
       if (!isNodeInContentViewport(node, rootRect)) return;
-      const anchor = node.querySelector("sdoc-anchor[id]");
+      const anchor = node.querySelector(DOCUMENT_ANCHOR_SELECTOR);
       if (!anchor) return;
 
       // Use the visible node, not only its anchor. An anchor can have no
@@ -285,7 +293,7 @@
     });
 
     // Save visible anchors not already represented by their containing node.
-    root.querySelectorAll("sdoc-anchor[id]").forEach((anchor) => {
+    root.querySelectorAll(DOCUMENT_ANCHOR_SELECTOR).forEach((anchor) => {
       if (candidateAnchorIds.has(anchor.id)) return;
       if (!isInContentViewport(anchor, rootRect)) return;
 
@@ -320,7 +328,7 @@
     // A node candidate represents the whole visible node. An anchor candidate
     // represents only that anchor, so restore the exact kind of target saved.
     if (candidate.type === "node") {
-      return anchor.closest("sdoc-node") || anchor;
+      return anchor.closest(DOCUMENT_NODE_SELECTOR) || anchor;
     }
     return anchor;
   }
@@ -329,8 +337,8 @@
   // frame ID. Every lazy placeholder indexes all nodes in its chunk through
   // `data-node-mids`.
   function chunkFrameForNodeFrame(frameId) {
-    const nodeId = frameId?.startsWith("article-")
-      ? frameId.slice("article-".length)
+    const nodeId = frameId?.startsWith(NODE_FRAME_ID_PREFIX)
+      ? frameId.slice(NODE_FRAME_ID_PREFIX.length)
       : null;
     if (!nodeId) return null;
 
@@ -799,7 +807,7 @@
     // Associate every rendered node with the lock current when its chunk
     // loaded. Watching every node is necessary because any one above the
     // candidate can later add or remove space before the visible content.
-    frame.querySelectorAll("sdoc-node").forEach((node) => {
+    frame.querySelectorAll(DOCUMENT_NODE_SELECTOR).forEach((node) => {
       // The callback will use this association to choose passive additive
       // compensation or exact operation restoration for the resize.
       geometryLocks.set(node, viewportLock);
@@ -813,7 +821,7 @@
   // --- Detecting a full document-content replacement ---
 
   // Recognize the one Turbo stream handled as a full document replacement.
-  // Only this stream removes `frame_document_content` and therefore activates
+  // Only this stream removes Turbo-frame with Content and therefore activates
   // the exact create/delete target or the full-replacement candidate capture
   // in the listener below.
   function isFullContentFrameReplace(streamElement) {
@@ -840,14 +848,14 @@
     // the document's semantic node sequence.
     function renderedNodeIds(container) {
       return Array.from(
-        container.querySelectorAll("turbo-frame[id^='article-']")
+        container.querySelectorAll(NODE_FRAME_SELECTOR)
       )
         .filter((frame) => frame.querySelector(":scope > sdoc-node"))
-        .map((frame) => frame.id.slice("article-".length));
+        .map((frame) => frame.id.slice(NODE_FRAME_ID_PREFIX.length));
     }
 
     const chunkFrames = Array.from(
-      root.querySelectorAll("turbo-frame[id^='document-chunk-']")
+      root.querySelectorAll(CHUNK_FRAME_SELECTOR)
     );
     if (chunkFrames.length === 0) return renderedNodeIds(root);
 
@@ -865,8 +873,8 @@
   // was last, put the previous node's bottom there instead.
   function captureDeleteBoundary(nodeId) {
     const root = contentRoot();
-    const frame = document.getElementById(`article-${nodeId}`);
-    const node = frame?.querySelector("sdoc-node");
+    const frame = document.getElementById(`${NODE_FRAME_ID_PREFIX}${nodeId}`);
+    const node = frame?.querySelector(DOCUMENT_NODE_SELECTOR);
     if (!root || !node) return null;
 
     const rootRect = root.getBoundingClientRect();
@@ -885,7 +893,7 @@
       return {
         target: {
           type: "nodeBoundary",
-          frameId: `article-${nextNodeId}`,
+          frameId: `${NODE_FRAME_ID_PREFIX}${nextNodeId}`,
           edge: "top",
           offsetTop: boundaryOffset,
         },
@@ -896,7 +904,7 @@
       return {
         target: {
           type: "nodeBoundary",
-          frameId: `article-${previousNodeId}`,
+          frameId: `${NODE_FRAME_ID_PREFIX}${previousNodeId}`,
           edge: "bottom",
           offsetTop: boundaryOffset,
         },
@@ -1054,8 +1062,8 @@
 
     // Save what the user sees immediately before Turbo replaces the document
     // content.
-    // The stream replaces frame_document_content after creating or deleting a
-    // node, moving a node by drag-and-drop, or saving grammar changes.
+    // The stream replaces Turbo-frame with Content after creating or deleting
+    // a node, moving a node by drag-and-drop, or saving grammar changes.
     // For a drag-and-drop move, draggable_list.js passes the fetch response to
     // Turbo.renderStreamMessage(), which causes Turbo to dispatch this event.
     const restoreGeneration = advanceGeneration();
@@ -1092,7 +1100,7 @@
   function handleBeforeChunkRender(event) {
     const frame = event.target;
     if (
-      !frame?.id?.startsWith("document-chunk-") ||
+      !frame?.id?.startsWith(CHUNK_FRAME_ID_PREFIX) ||
       !frame.classList.contains(CHUNK_PLACEHOLDER_CLASS)
     ) {
       return;
@@ -1160,7 +1168,7 @@
   // lifecycle itself is complete.
   function handleChunkLoad(event) {
     const frame = event.target;
-    if (!frame?.id?.startsWith("document-chunk-")) return;
+    if (!frame?.id?.startsWith(CHUNK_FRAME_ID_PREFIX)) return;
 
     const pendingSnapshot = clearPendingChunkSnapshot(frame);
     explicitNavigationFrames.delete(frame);
@@ -1201,7 +1209,7 @@
   // marker because that response can no longer change the page geometry.
   function handleChunkLoadError(event) {
     const frame = event.target;
-    if (!frame?.id?.startsWith("document-chunk-")) return;
+    if (!frame?.id?.startsWith(CHUNK_FRAME_ID_PREFIX)) return;
     clearPendingChunkSnapshot(frame);
     explicitNavigationFrames.delete(frame);
   }

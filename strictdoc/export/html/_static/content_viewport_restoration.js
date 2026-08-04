@@ -28,7 +28,6 @@
   // remain stable.
   const CONTENT_FRAME_ID = "frame_document_content";
   const CONTENT_ROOT_SELECTOR = "[js-toc_highlighting-content_root]";
-  const TOC_FRAME_SELECTOR = "turbo-frame#frame-toc";
   const CHUNK_PLACEHOLDER_CLASS = "document-chunk-placeholder";
   const CREATE_REQUIREMENT_ACTION = "/actions/document/create_requirement";
   // These keys can move the content viewport when focus is not inside an
@@ -196,6 +195,14 @@
     };
   }
 
+  // Return the stable `article-<MID>` identity of the document node that
+  // contains an element. The anchor ID identifies the exact place to restore;
+  // this frame ID independently identifies the node and therefore the lazy
+  // chunk that must be loaded before that anchor can exist again.
+  function nodeFrameIdForElement(element) {
+    return element.closest("turbo-frame[id^='article-']")?.id || null;
+  }
+
   // Describe the current reading position with semantic identities rather
   // than a raw scrollTop. Save an exact operation target when one exists, plus
   // several visible nodes and anchors as fallbacks for DOM replacement. Each
@@ -209,9 +216,9 @@
     const rootRect = root.getBoundingClientRect();
 
     // Store several possible witnesses because a server operation can remove
-    // or move any one of them. Every witness uses a stable anchor ID, which
-    // also lets the controller locate and load its lazy chunk if replacement
-    // leaves that content outside the DOM.
+    // or move any one of them. Every witness uses a stable anchor ID for its
+    // exact position and its containing node's frame ID for finding the lazy
+    // chunk if replacement leaves that content outside the DOM.
     const candidates = [];
     const candidateAnchorIds = new Set();
 
@@ -231,6 +238,7 @@
       candidates.push({
         type: "node",
         id: anchor.id,
+        nodeFrameId: nodeFrameIdForElement(node),
         offsetTop: rect.top - rootRect.top,
         contentTop: rect.top - rootRect.top + root.scrollTop,
         distance: containsViewportTop
@@ -252,6 +260,7 @@
       candidates.push({
         type: "anchor",
         id: anchor.id,
+        nodeFrameId: nodeFrameIdForElement(anchor),
         offsetTop: rect.top - rootRect.top,
         contentTop: rect.top - rootRect.top + root.scrollTop,
         distance: Math.abs(rect.top - rootRect.top),
@@ -280,34 +289,11 @@
     return anchor;
   }
 
-  // Return the document node containing an anchor, or the anchor itself when
-  // no containing node exists.
-  function nodeTargetForAnchor(anchor) {
-    return anchor.closest("sdoc-node") || anchor;
-  }
-
-  // Find the TOC link that points to a content anchor. The link tells the
-  // controller which lazy chunk contains that anchor.
-  function tocLinkForAnchor(anchorId) {
-    const toc = document.querySelector(TOC_FRAME_SELECTOR);
-    if (!toc) return null;
-    return toc.querySelector(`a[anchor="${CSS.escape(anchorId)}"]`);
-  }
-
-  // Find the lazy chunk that contains the anchor whose position the controller
-  // needs to restore.
-  function chunkFrameForAnchor(anchorId) {
-    const link = tocLinkForAnchor(anchorId);
-    const item = link?.closest("li");
-    const frameId = item?.getAttribute("data-chunk-frame");
-    return frameId ? document.getElementById(frameId) : null;
-  }
-
   // Find the lazy chunk that contains the node MID encoded in an
-  // `article-<MID>` frame ID. Search `data-node-mids` first because it indexes
-  // every node, including TEXT nodes that have no TOC item. If that lookup
-  // finds no frame, try the TOC mapping, which can still locate nodes that do
-  // have TOC entries.
+  // `article-<MID>` frame ID. Every lazy placeholder indexes all nodes in the
+  // chunk through `data-node-mids`, including TEXT nodes without titles. The
+  // viewport controller therefore does not depend on TOC, which intentionally
+  // represents only the subset of nodes that can appear in navigation.
   function chunkFrameForNodeFrame(frameId) {
     const nodeId = frameId?.startsWith("article-")
       ? frameId.slice("article-".length)
@@ -315,18 +301,10 @@
     if (!nodeId) return null;
 
     // Use the node IDs stored on each placeholder to find the chunk even when
-    // the node content is not loaded and the node is not present in the TOC.
-    const indexedFrame = contentRoot()?.querySelector(
+    // the node content is not loaded and has no navigation entry.
+    return contentRoot()?.querySelector(
       `turbo-frame[data-node-mids~="${CSS.escape(nodeId)}"]`
-    );
-    if (indexedFrame) return indexedFrame;
-
-    // If the placeholder has no node-ID list, find the chunk through the TOC.
-    const toc = document.querySelector(TOC_FRAME_SELECTOR);
-    if (!toc) return null;
-    const item = toc.querySelector(`li[data-nodeid="${CSS.escape(nodeId)}"]`);
-    const chunkFrameId = item?.getAttribute("data-chunk-frame");
-    return chunkFrameId ? document.getElementById(chunkFrameId) : null;
+    ) || null;
   }
 
   // --- Applying a saved position ---
@@ -482,7 +460,12 @@
   // to be, so eagerly load its known chunk and check for a bounded number of
   // browser frames. Stop as soon as the anchor appears or a newer generation
   // makes the requested position obsolete.
-  function ensureAnchorLoaded(anchorId, callback, expectedGeneration) {
+  function ensureAnchorLoaded(
+    anchorId,
+    nodeFrameId,
+    callback,
+    expectedGeneration
+  ) {
     let completed = false;
 
     // Stop waiting and remove the frame-load listener so later frame loads
@@ -530,7 +513,7 @@
       return;
     }
 
-    const frame = chunkFrameForAnchor(anchorId);
+    const frame = chunkFrameForNodeFrame(nodeFrameId);
     if (!frame) {
       return;
     }
@@ -559,9 +542,9 @@
   // Make an operation target available when full replacement puts its node in
   // an unloaded chunk. The target can be the result of a submitted create form
   // or the node next to a deletion. Find its chunk from the complete MID index;
-  // saved visible witnesses provide fallback chunks for older markup without
-  // that index. A create form temporarily has the future node's frame ID, so
-  // accept the frame only after it contains rendered node content instead.
+  // saved visible witnesses provide additional known chunks. A create form
+  // temporarily has the future node's frame ID, so accept the frame only after
+  // it contains rendered node content instead.
   function ensureNodeFrameLoaded(
     frameId,
     candidates,
@@ -637,7 +620,7 @@
     // associated with saved witnesses. Each completed load rechecks the whole
     // DOM for frameId; a witness does not have to be the operation target.
     candidates.forEach((candidate) => {
-      addFrame(chunkFrameForAnchor(candidate.id));
+      addFrame(chunkFrameForNodeFrame(candidate.nodeFrameId));
     });
 
     // When any possible chunk finishes loading, check whether the frame for the
@@ -705,7 +688,7 @@
     // Choose the first saved witness that already exists or has a known lazy
     // chunk that can be loaded.
     const candidate = snapshot.candidates.find((item) => {
-      const frame = chunkFrameForAnchor(item.id);
+      const frame = chunkFrameForNodeFrame(item.nodeFrameId);
       return document.getElementById(item.id) || frame;
     });
     // If every node and anchor saved before the replacement has disappeared,
@@ -713,13 +696,18 @@
     if (!candidate) return;
 
     // Put the chosen witness back at its saved viewport coordinate.
-    ensureAnchorLoaded(candidate.id, (target) => {
-      if (!isCurrentGeneration(expectedGeneration)) return;
-      restoreElementTop(
-        targetForCandidate(candidate, target),
-        candidate.offsetTop
-      );
-    }, expectedGeneration);
+    ensureAnchorLoaded(
+      candidate.id,
+      candidate.nodeFrameId,
+      (target) => {
+        if (!isCurrentGeneration(expectedGeneration)) return;
+        restoreElementTop(
+          targetForCandidate(candidate, target),
+          candidate.offsetTop
+        );
+      },
+      expectedGeneration
+    );
   }
 
   // --- Keeping the viewport stable while loaded content changes size ---

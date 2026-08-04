@@ -793,7 +793,7 @@ class Test(E2ECase):
             )
             screen_document.assert_document_chunk_loaded(CHUNK_2_ID)
             self.assert_element_not_present(
-                f"#frame_toc li[data-nodeid='{UNTITLED_TEXT_24_MID}']",
+                f"#frame-toc li[data-nodeid='{UNTITLED_TEXT_24_MID}']",
             )
 
             screen_document.do_scroll_anchor_to_viewport_top(

@@ -319,10 +319,9 @@ continuous-scroll, concurrent-load, and delayed-resize regressions are present.
 
 ## Current assessment
 
-The viewport-stability file now contains 20 tests. The 19-test pruned suite
-passed in approximately 2 minutes 9 seconds; the untitled-`TEXT` deletion
-regression passes in its targeted run. Before pruning, 33 tests took
-approximately 13 minutes.
+The viewport-stability file now contains 20 tests and passes in approximately
+2 minutes. Before pruning, the suite contained 33 tests and took approximately
+13 minutes.
 Removed numeric variants did not represent separate branches of the final
 algorithm; removing their server startups accounts for most of the reduction.
 

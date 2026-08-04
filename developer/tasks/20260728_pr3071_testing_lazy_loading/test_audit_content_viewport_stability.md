@@ -87,14 +87,15 @@ replacement. It does not reproduce a long physical trackpad gesture.
 `test_create_scrolls_to_new_node`
 
 - creates a requirement in a chunked document after full content replacement;
-- verifies that the new node appears at the visible form coordinate.
+- verifies that the new node appears at the top of the content viewport.
 
 `test_create_text_below_large_section_scrolls_to_distant_new_node`
 
 - opens "Add TEXT below" on a section with a large subtree;
 - creates a sibling that belongs to a distant unloaded chunk;
 - verifies that a node absent from TOC is resolved through the placeholder MID
-  index, its actual chunk is loaded, and it is placed at the form coordinate.
+  index, its actual chunk is loaded, and it is placed at the top of the content
+  viewport.
 
 `test_created_node_stays_stable_when_chunk_above_loads`
 

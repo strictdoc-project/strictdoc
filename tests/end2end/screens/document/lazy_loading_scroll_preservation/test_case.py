@@ -28,6 +28,7 @@ LAST_CHUNK_TARGET = "REQ-035"
 # end would be governed by scroll clamping rather than only by upper geometry.
 CHUNK_ABOVE_TARGET = "CAB-032"
 USER_SCROLL_INITIAL_TARGET = "CAB-040"
+CONTENT_VIEWPORT_TOP = 0
 
 
 class Test(E2ECase):
@@ -406,16 +407,15 @@ class Test(E2ECase):
             form = (
                 requirement.do_open_node_menu().do_node_add_requirement_above()
             )
-            # Create has its own target: the new node should appear where the
-            # form was.
-            # The helper waits for the form's own scroll-into-view first.
-            form_top = screen_document.get_new_requirement_form_viewport_top()
+            # The form must be visible before submit. After creation, the new
+            # node must start at the top of the content viewport.
+            screen_document.wait_for_new_requirement_form_visible()
             form.do_fill_in_field_title("Injected Node")
             form.do_form_submit()
 
             self.assert_text("Injected Node")
             screen_document.assert_node_containing_text_viewport_top_close(
-                "Injected Node", form_top, tolerance=64
+                "Injected Node", CONTENT_VIEWPORT_TOP, tolerance=24
             )
 
     def test_create_text_below_large_section_scrolls_to_distant_new_node(self):
@@ -430,15 +430,15 @@ class Test(E2ECase):
 
             section = screen_document.get_node_by_anchor("CREATE-PARENT")
             form = section.do_open_node_menu().do_node_add_element_below("TEXT")
-            form_top = screen_document.get_new_requirement_form_viewport_top()
+            screen_document.wait_for_new_requirement_form_visible()
             form.do_fill_in_field_statement("Created text after large section")
             form.do_form_submit()
 
             self.assert_text("Created text after large section")
             screen_document.assert_node_containing_text_viewport_top_close(
                 "Created text after large section",
-                form_top,
-                tolerance=64,
+                CONTENT_VIEWPORT_TOP,
+                tolerance=24,
             )
 
     def test_created_node_stays_stable_when_chunk_above_loads(self):
@@ -459,7 +459,7 @@ class Test(E2ECase):
             form = (
                 requirement.do_open_node_menu().do_node_add_requirement_above()
             )
-            screen_document.get_new_requirement_form_viewport_top()
+            screen_document.wait_for_new_requirement_form_visible()
             form.do_fill_in_field_title("Created Before Last Chunk Node")
             form.do_form_submit()
             self.assert_text("Created Before Last Chunk Node")
@@ -661,14 +661,14 @@ class Test(E2ECase):
             form = (
                 requirement.do_open_node_menu().do_node_add_requirement_below()
             )
-            # Local create stays in chunk 0. The created node should appear
-            # where the form was.
-            form_top = screen_document.get_new_requirement_form_viewport_top()
+            # Local create stays in chunk 0. The created node must start at the
+            # top of the content viewport.
+            screen_document.wait_for_new_requirement_form_visible()
             form.do_fill_in_field_title("Locally Injected Node")
             form.do_form_submit()
             self.assert_text("Locally Injected Node")
             screen_document.assert_node_containing_text_viewport_top_close(
-                "Locally Injected Node", form_top, tolerance=64
+                "Locally Injected Node", CONTENT_VIEWPORT_TOP, tolerance=24
             )
 
     def test_delete_locally_does_not_jump(self):
@@ -712,12 +712,12 @@ class Test(E2ECase):
             form = (
                 requirement.do_open_node_menu().do_node_add_requirement_below()
             )
-            form_top = screen_document.get_new_requirement_form_viewport_top()
+            screen_document.wait_for_new_requirement_form_visible()
             form.do_fill_in_field_title("Control Injected Node")
             form.do_form_submit()
             self.assert_text("Control Injected Node")
             screen_document.assert_node_containing_text_viewport_top_close(
-                "Control Injected Node", form_top, tolerance=64
+                "Control Injected Node", CONTENT_VIEWPORT_TOP, tolerance=24
             )
 
     def test_non_chunked_delete_unaffected(self):

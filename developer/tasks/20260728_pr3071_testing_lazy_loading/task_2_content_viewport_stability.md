@@ -38,9 +38,8 @@ not return the viewport to that recorded position.
 Some operations intentionally request a new position instead of preserving the
 old one:
 
-- after creating a node, the new node must appear at the viewport coordinate
-  where the creation form was shown and remain there while surrounding content
-  finishes loading;
+- after creating a node, the new node must appear at the top of the content
+  viewport and remain there while surrounding content finishes loading;
 - after deleting a visible node, the next surviving node must occupy the
   boundary from which the deleted node disappeared; when the last node is
   deleted, the previous surviving node provides the fallback boundary;
@@ -323,10 +322,11 @@ user-scroll frame.
 
 Create:
 
-- record the creation form's viewport coordinate;
+- use the visible creation form to identify the node that the operation will
+  create;
 - obtain the created node's MID from the response;
 - find and load the node's chunk even if the node has no TOC entry;
-- place the rendered node at the recorded form coordinate;
+- place the rendered node at the top of the content viewport;
 - retain that target through related chunk loads and delayed height changes.
 
 Delete:

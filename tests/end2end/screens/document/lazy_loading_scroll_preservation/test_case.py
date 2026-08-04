@@ -687,6 +687,103 @@ class Test(E2ECase):
                 tolerance=24,
             )
 
+    def test_explicit_navigation_supersedes_pending_create_target(self):
+        test_setup = End2EndTestSetup(path_to_test_file=__file__)
+        with SDocTestServer(
+            input_path=test_setup.path_to_sandbox
+        ) as test_server:
+            self.open(test_server.get_host_and_port())
+            screen_document = self._open_main_document()
+
+            # Load the later navigation target before submitting the form. The
+            # user can then reach it while the create response is held, without
+            # introducing another chunk-response race into this test.
+            screen_document.get_toc().do_toc_go_to_anchor(MID_CHUNK_TARGET)
+            screen_document.assert_document_chunk_loaded(CHUNK_2_ID)
+            screen_document.get_toc().do_toc_go_to_anchor("REQ-005")
+
+            requirement = screen_document.get_node_by_anchor("REQ-005")
+            form = (
+                requirement.do_open_node_menu().do_node_add_requirement_above()
+            )
+            screen_document.wait_for_new_requirement_form_visible()
+            form.do_fill_in_field_title("Created Before Explicit Navigation")
+
+            # Hold only delivery of the create response to Turbo. The server
+            # may finish creating the node, but the old DOM remains visible
+            # until releaseCreateResponse() resolves the intercepted promise.
+            self.execute_script(
+                """
+                const originalFetch = window.fetch.bind(window);
+                const gate = {
+                  requestStarted: false,
+                  responseReady: false,
+                  releaseRequested: false,
+                  releaseResponse: null,
+                };
+                window.__viewportCreateResponseGate = gate;
+                window.fetch = function(...args) {
+                  const input = args[0];
+                  const options = args[1] || {};
+                  const url = String(input?.url || input);
+                  const method = String(
+                    options.method || input?.method || "GET"
+                  ).toUpperCase();
+                  const responsePromise = originalFetch(...args);
+                  if (
+                    url.includes("/actions/document/create_requirement") &&
+                    method === "POST"
+                  ) {
+                    gate.requestStarted = true;
+                    return responsePromise.then((response) => {
+                      return new Promise((resolve) => {
+                        gate.responseReady = true;
+                        gate.releaseResponse = () => resolve(response);
+                        if (gate.releaseRequested) gate.releaseResponse();
+                      });
+                    });
+                  }
+                  return responsePromise;
+                };
+                """
+            )
+
+            # Do not use do_form_submit(): it waits for the held response to
+            # replace the form. Click only, then prove the request has started.
+            self.click('[data-testid="form-submit-action"]')
+            WebDriverWait(self.driver, 10).until(
+                lambda _: self.execute_script(
+                    "return window.__viewportCreateResponseGate.requestStarted"
+                )
+            )
+
+            # This navigation is newer than form submission and must own the
+            # final viewport position even after the create response arrives.
+            screen_document.get_toc().do_toc_go_to_anchor(MID_CHUNK_TARGET)
+            screen_document.assert_anchor_viewport_top_close(
+                MID_CHUNK_TARGET,
+                CONTENT_VIEWPORT_TOP,
+            )
+
+            self.execute_script(
+                """
+                const gate = window.__viewportCreateResponseGate;
+                gate.releaseRequested = true;
+                gate.releaseResponse?.();
+                """
+            )
+
+            self.assert_text("Created Before Explicit Navigation")
+            screen_document.assert_anchor_viewport_top_close(
+                MID_CHUNK_TARGET,
+                CONTENT_VIEWPORT_TOP,
+            )
+            screen_document.assert_anchor_viewport_top_stable(
+                MID_CHUNK_TARGET,
+                CONTENT_VIEWPORT_TOP,
+                duration=1.0,
+            )
+
     def test_create_text_below_large_section_scrolls_to_distant_new_node(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
         write_long_text_document_with_large_section_subtree(test_setup)

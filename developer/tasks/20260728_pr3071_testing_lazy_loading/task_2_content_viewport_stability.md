@@ -188,6 +188,12 @@ operation can first show its result at the defined destination. Once the new
 node has become the active lock, direct user input supersedes its positioning
 in the same way as any other active exact target.
 
+Explicit TOC or URL-fragment navigation is stronger than a create target that
+is still waiting for its response. When navigation starts, the controller
+discards the pending created-node destination. The request may still complete
+and replace the document, but that replacement preserves the newer navigation
+position instead of moving the viewport to the created node.
+
 ### Loading a lazy chunk while the viewport is idle
 
 An ordinary lazy chunk load changes geometry in two stages:
@@ -379,7 +385,9 @@ Create:
   frame ID from the server;
 - find and load the node's chunk even if the node has no TOC entry;
 - place the rendered node at the top of the content viewport;
-- retain that target through related chunk loads and delayed height changes.
+- retain that target through related chunk loads and delayed height changes;
+- discard a target still waiting for its response when the user explicitly
+  navigates to a TOC or URL-fragment destination selected afterward.
 
 Delete:
 

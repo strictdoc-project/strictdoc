@@ -86,6 +86,18 @@ replacement. It does not reproduce a long physical trackpad gesture.
 - verifies that the node created from the second form appears at the top of the
   content viewport.
 
+`test_explicit_navigation_supersedes_pending_create_target`
+
+- loads a later TOC target before form submission so navigation itself does not
+  introduce another response race;
+- intercepts delivery of the create response to Turbo while allowing the real
+  server request to run;
+- navigates to a different chunk after submission and releases the held
+  response only after that newer destination reaches the viewport top;
+- verifies that the created node is present after full replacement while the
+  explicitly selected TOC node, not the created node, retains the viewport
+  position.
+
 `test_create_text_below_large_section_scrolls_to_distant_new_node`
 
 - opens "Add TEXT below" on a section with a large subtree;
@@ -320,9 +332,9 @@ continuous-scroll, concurrent-load, and delayed-resize regressions are present.
 
 ## Current assessment
 
-The viewport-stability file now contains 20 tests and passes in approximately
-2 minutes. Before pruning, the suite contained 33 tests and took approximately
-13 minutes.
+The viewport-stability file now contains 21 tests and passes in approximately
+2 minutes 9 seconds. Before pruning, the suite contained 33 tests and took
+approximately 13 minutes.
 
 Removed numeric variants did not represent separate branches of the final
 algorithm; removing their server startups accounts for most of the reduction.
@@ -331,7 +343,7 @@ The previously recorded full project suite completed with 402 passing tests.
 The multiple-open-form regression was added afterward and passes in its
 targeted run. The full project suite has not been rerun after this addition.
 
-The 20-test suite gives good protection for semantic correctness, painted
+The 21-test suite gives good protection for semantic correctness, painted
 idle-frame correctness, wheel continuity in both directions,
 concurrent upper loads, delayed observed-node resize, operation positioning,
 full-content replacement, and the known stale-snapshot race.

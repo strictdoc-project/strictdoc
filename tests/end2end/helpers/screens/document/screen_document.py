@@ -139,7 +139,7 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
         )
         return top
 
-    def get_new_requirement_form_viewport_top(self) -> float:
+    def wait_for_new_requirement_form_visible(self) -> None:
         def _form_top(_) -> dict | None:
             return self.test_case.execute_script(
                 """
@@ -164,8 +164,7 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
                 """
             )
 
-        result = WebDriverWait(self.test_case.driver, 20).until(_form_top)
-        return result["top"]
+        WebDriverWait(self.test_case.driver, 20).until(_form_top)
 
     def get_node_containing_text_viewport_top(self, text: str) -> float:
         top = self.test_case.execute_script(

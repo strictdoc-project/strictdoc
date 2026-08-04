@@ -162,7 +162,7 @@
     return {
       type: "nodeFrame",
       frameId: frame.id,
-      offsetTop: rect.top - rootRect.top,
+      offsetTop: 0,
     };
   }
 

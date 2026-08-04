@@ -8,10 +8,10 @@
 // instead of returning the viewport to an older saved position.
 //
 // Some operations request an exact result instead: a newly created node is put
-// at the top, and deletion of a visible TOC-listed node puts an adjacent
-// TOC-listed survivor at the deleted boundary. These operation-specific
-// targets stay authoritative until the related replacement and lazy loading
-// finish, unless newer user input cancels them.
+// at the top, and deletion of a visible node puts its actual next or previous
+// document node at the deleted boundary. This also covers nodes omitted from
+// TOC. These operation-specific targets stay authoritative until the related
+// replacement and lazy loading finish, unless newer user input cancels them.
 (() => {
 
   const strictDoc = window.StrictDoc;
@@ -556,12 +556,12 @@
     waitForTarget(60);
   }
 
-  // Make the newly created node available even when full replacement places it
-  // in an unloaded chunk. Prefer the placeholder whose MID index contains the
-  // future node ID, and also try chunks associated with saved fallback
-  // witnesses. The old create form can temporarily have the same frame ID, so
-  // accept the target only after that form has disappeared. Stop waiting when
-  // the node appears or a newer generation cancels the create destination.
+  // Make an operation target available when full replacement puts its node in
+  // an unloaded chunk. The target can be the result of a submitted create form
+  // or the node next to a deletion. Find its chunk from the complete MID index;
+  // saved visible witnesses provide fallback chunks for older markup without
+  // that index. A create form temporarily has the future node's frame ID, so
+  // accept the frame only after it contains rendered node content instead.
   function ensureNodeFrameLoaded(
     frameId,
     candidates,
@@ -577,10 +577,9 @@
       document.removeEventListener("turbo:frame-load", onFrameLoad);
     }
 
-    // Find the frame id assigned to the created node. If a frame with this id
-    // still contains a create form, keep waiting. When a frame without the form
-    // appears, call the restore callback with its sdoc-node or with the frame
-    // itself. Stop when the viewport state is no longer current.
+    // Find the rendered node frame with the requested MID. If the same frame
+    // still contains a create form, keep waiting for the replacement. Stop
+    // when the node appears or a newer viewport state supersedes this target.
     function finishIfTargetExists() {
       if (!isCurrentGeneration(expectedGeneration)) {
         stop();
@@ -595,9 +594,9 @@
       return false;
     }
 
-    // The created node may be inside a lazy chunk that is not loaded yet.
-    // While the possible chunks are loading, keep checking whether the frame
-    // for the created node has appeared in the DOM.
+    // The requested node may be inside a lazy chunk that is not loaded yet.
+    // While possible chunks load, keep checking whether its frame has appeared
+    // in the DOM.
     // Stop checking when the frame appears, the viewport state changes, or no
     // attempts remain.
     function waitForTarget(attempts) {
@@ -636,8 +635,7 @@
     addFrame(chunkFrameForNodeFrame(frameId));
     // If direct MID lookup did not make the target appear, also load chunks
     // associated with saved witnesses. Each completed load rechecks the whole
-    // DOM for frameId; the code does not assume that a witness itself is the
-    // created node.
+    // DOM for frameId; a witness does not have to be the operation target.
     candidates.forEach((candidate) => {
       addFrame(chunkFrameForAnchor(candidate.id));
     });
@@ -686,16 +684,21 @@
       return;
     }
 
-    if (snapshot.target?.type === "anchorBoundary") {
-      // Put the surviving node edge at the deleted node's former boundary.
-      ensureAnchorLoaded(snapshot.target.id, (target) => {
-        if (!isCurrentGeneration(expectedGeneration)) return;
-        restoreElementEdge(
-          nodeTargetForAnchor(target),
-          snapshot.target.edge,
-          snapshot.target.offsetTop
-        );
-      }, expectedGeneration);
+    if (snapshot.target?.type === "nodeBoundary") {
+      ensureNodeFrameLoaded(
+        snapshot.target.frameId,
+        snapshot.candidates,
+        // Put the surviving node edge at the deleted node's former boundary.
+        (target) => {
+          if (!isCurrentGeneration(expectedGeneration)) return;
+          restoreElementEdge(
+            target,
+            snapshot.target.edge,
+            snapshot.target.offsetTop
+          );
+        },
+        expectedGeneration
+      );
       return;
     }
 
@@ -796,12 +799,45 @@
 
   // --- Remembering the result of a delete operation ---
 
-  // Preserve the boundary of a visible node that also has a TOC item, rather
-  // than trying to restore the node that is about to disappear. Use the next
-  // TOC item's node top at that boundary. If there is no next TOC item, use the
-  // previous TOC item's node bottom. A visible node absent from TOC produces no
-  // delete boundary here; the full-replacement handler then falls back to its
-  // ordinary visible-witness capture.
+  // Return the MIDs of all document nodes in semantic order, including TEXT
+  // nodes without titles. An unloaded lazy chunk contributes its complete
+  // `data-node-mids` index. The inline first chunk and a non-chunked document
+  // contribute the rendered `article-<MID>` frames in DOM order. Loaded lazy
+  // frames normally retain their MID index; if one does not, its rendered node
+  // frames provide the same local order.
+  function nodeIdsInDocumentOrder() {
+    const root = contentRoot();
+    if (!root) return [];
+
+    // Read only frames that contain a document node directly. Forms and other
+    // nested Turbo frames can also have `article-` IDs but are not positions in
+    // the document's semantic node sequence.
+    function renderedNodeIds(container) {
+      return Array.from(
+        container.querySelectorAll("turbo-frame[id^='article-']")
+      )
+        .filter((frame) => frame.querySelector(":scope > sdoc-node"))
+        .map((frame) => frame.id.slice("article-".length));
+    }
+
+    const chunkFrames = Array.from(
+      root.querySelectorAll("turbo-frame[id^='document-chunk-']")
+    );
+    if (chunkFrames.length === 0) return renderedNodeIds(root);
+
+    return chunkFrames.flatMap((frame) => {
+      const indexedNodeIds = frame.dataset.nodeMids?.trim().split(/\s+/);
+      return indexedNodeIds?.length
+        ? indexedNodeIds
+        : renderedNodeIds(frame);
+    });
+  }
+
+  // Preserve the place from which a visible node is about to disappear. Find
+  // its real neighbors in the complete document order, not in TOC: untitled
+  // TEXT nodes and any other nodes omitted from TOC must behave identically.
+  // After deletion, put the next node's top at the deleted node's former top.
+  // If the deleted node was last, put the previous node's bottom there instead.
   function captureDeleteBoundary(nodeId) {
     const root = contentRoot();
     const frame = document.getElementById(`article-${nodeId}`);
@@ -811,41 +847,31 @@
     const rootRect = root.getBoundingClientRect();
     if (!isNodeInContentViewport(node, rootRect)) return null;
 
-    const toc = document.querySelector(TOC_FRAME_SELECTOR);
-    if (!toc) return null;
-    const tocItems = Array.from(toc.querySelectorAll("li[data-nodeid]"));
-    // Find the deleted node's place in document order as represented by TOC.
-    const deletedItemIndex = tocItems.findIndex(
-      (item) => item.getAttribute("data-nodeid") === nodeId
-    );
-    if (deletedItemIndex < 0) return null;
+    const nodeIds = nodeIdsInDocumentOrder();
+    const deletedNodeIndex = nodeIds.indexOf(nodeId);
+    if (deletedNodeIndex < 0) return null;
 
-    const nextLink = tocItems[deletedItemIndex + 1]?.querySelector("a[anchor]");
-    const previousLink =
-      tocItems[deletedItemIndex - 1]?.querySelector("a[anchor]");
+    const nextNodeId = nodeIds[deletedNodeIndex + 1];
+    const previousNodeId = nodeIds[deletedNodeIndex - 1];
     const nodeRect = node.getBoundingClientRect();
     const boundaryOffset = nodeRect.top - rootRect.top;
 
-    // Keep the deleted node's top position.
-    // If a next node exists, put its top at that position.
-    // If the deleted node was last, put the previous node's bottom at the same
-    // position.
-    if (nextLink) {
+    if (nextNodeId) {
       return {
         target: {
-          type: "anchorBoundary",
-          id: nextLink.getAttribute("anchor"),
+          type: "nodeBoundary",
+          frameId: `article-${nextNodeId}`,
           edge: "top",
           offsetTop: boundaryOffset,
         },
         candidates: [],
       };
     }
-    if (previousLink) {
+    if (previousNodeId) {
       return {
         target: {
-          type: "anchorBoundary",
-          id: previousLink.getAttribute("anchor"),
+          type: "nodeBoundary",
+          frameId: `article-${previousNodeId}`,
           edge: "bottom",
           offsetTop: boundaryOffset,
         },
@@ -969,10 +995,10 @@
     }
   });
 
-  // Before a confirmed delete, try to save the visible node boundary together
-  // with its adjacent TOC-listed survivor. If the node is not visible or has
-  // no TOC item, leave no special delete target; full replacement will preserve
-  // an ordinary visible witness instead.
+  // Before a confirmed delete, save the visible node's boundary together with
+  // the MID of its actual next or previous document node. If the node is not
+  // visible or its position cannot be determined, leave no special delete
+  // target; full replacement will preserve an ordinary visible witness.
   document.addEventListener("click", (event) => {
     const confirmLink = event.target.closest?.(
       "a[data-testid='confirm-action']"

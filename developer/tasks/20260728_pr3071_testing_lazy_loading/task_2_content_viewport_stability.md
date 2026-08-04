@@ -134,8 +134,9 @@ visible node preserves that position correctly.
 
 A snapshot stores:
 
-- the stable semantic identifier used to find the element after DOM
-  replacement;
+- the anchor ID used to find the exact semantic position after DOM replacement;
+- the `article-<MID>` frame ID used to find the node's lazy chunk independently
+  of TOC;
 - the kind of witness that was selected;
 - the witness's vertical coordinate relative to the top of `.main`;
 - additional witnesses in visual order that can be used as fallbacks.
@@ -152,7 +153,7 @@ time. The controller resolves such conflicts using the following priority:
 1. Explicit navigation, such as a TOC click or URL-fragment change, controls
    the final position because the user requested a specific destination.
 2. An operation-specific target controls the position when the operation has a
-   defined UX result. A newly created node is the main example.
+   defined UX result. Creation and deletion both use such targets.
 3. Otherwise, the controller preserves the passive reading snapshot captured
    from the currently visible content.
 
@@ -180,6 +181,12 @@ position from the previous state. Ordinary `scroll` events update the
 `scrollTop` baseline stored in passive locks. They do not start a new
 generation because layout changes and controller-applied corrections also
 produce `scroll` events.
+
+A submitted create target waiting for the server response is not yet an active
+viewport lock. The controller retains that target so the completed create
+operation can first show its result at the defined destination. Once the new
+node has become the active lock, direct user input supersedes its positioning
+in the same way as any other active exact target.
 
 ### Loading a lazy chunk while the viewport is idle
 
@@ -256,13 +263,14 @@ This exception applies only to passive reading. An explicit navigation target
 or operation-specific target remains authoritative even if additional chunks
 load while it is being positioned.
 
-For an operation-specific target, the controller restores once when
-`turbo:frame-load` reports that the placeholder has been removed and once more
-on the next animation frame. Related frame-load work can finish changing
-geometry after the event handler; without the second correction, that late
-change can move the target away from its saved coordinate. Direct user input
-advances the viewport generation, so the delayed correction cannot pull
-against a newer user action.
+For an operation-specific target, the insertion MutationObserver restores when
+Turbo inserts the real chunk nodes. The controller restores again when
+`turbo:frame-load` reports that the placeholder estimate has been removed, and
+once more on the next animation frame. Related frame-load work can finish
+changing geometry after the event handler; without the delayed correction,
+that late change can move the target away from its saved coordinate. Direct
+user input advances the viewport generation, so an already scheduled delayed
+correction cannot pull against a newer user action.
 
 ### Placeholder height estimates and preloading
 
@@ -407,11 +415,14 @@ Explicit navigation and operation targets use exact vertical positioning:
 1. Measure the target's current coordinate relative to `.main`.
 2. Subtract the requested viewport-relative coordinate to obtain the remaining
    vertical difference.
-3. Add that difference to `.main.scrollTop`.
+3. Skip the write when the difference is negligible.
 4. Temporarily avoid smooth scrolling so compensation is applied in the same
    rendering step instead of animating toward a coordinate that may change
    again.
-5. Skip the write when the remaining difference is negligible.
+5. Add the measured difference to `.main.scrollTop`.
+6. Measure the target again and apply any remaining error caused by scroll
+   clamping, fractional layout, or synchronous geometry changes.
+7. Restore the element's previous scrolling behavior.
 
 Skipping negligible writes is important. A needless `scrollTop` assignment
 would create another scroll event and could make the controller appear to own
@@ -438,11 +449,14 @@ namespace:
   position;
 - `scrollElementToOffset(element, offset)` applies the shared immediate
   positioning behavior;
-- `renderManualStreamMessage(html)` renders the drag-and-drop response through
-  the lifecycle that captures immediately before the Turbo stream mutation.
 
 `toc_chunk_navigation.js` calls `beginExplicitNavigation()` before
 force-loading the chunk that contains a navigation destination. It then uses
 `scrollElementToOffset()` after the target exists. This ordering ensures that
 passive chunk compensation cannot override an explicit TOC or URL-fragment
 destination.
+
+`draggable_list.js` passes its manually fetched move response directly to
+`Turbo.renderStreamMessage()`. Turbo then emits the same
+`turbo:before-stream-render` event used by ordinary stream responses, so the
+controller captures immediately before the move replaces the content frame.

@@ -1,17 +1,46 @@
 // Keep the document content that the user is reading visually stable while
-// lazy chunks and server operations change the document around it.
+// lazy chunks and server operations change the document around it. A raw
+// scrollTop cannot provide this guarantee: when content above the viewport
+// changes height, the same scrollTop points to different document content.
 //
-// For ordinary reading, remember where a visible semantic node or anchor sits
-// inside the scrollable document. If content above it later gains or loses
-// height, add only that geometry difference to the user's current scroll
-// position. This preserves wheel, keyboard, touch, and scrollbar movement
-// instead of returning the viewport to an older saved position.
+// For ordinary reading, remember where several visible document nodes or
+// anchors sit. Each saved witness records an anchor ID, the `article-<MID>`
+// identity of its containing node, its position inside the viewport, and its
+// coordinate inside the whole scrollable document. The node MID locates an
+// unloaded lazy chunk through the chunk's complete `data-node-mids` index;
+// this controller does not use TOC as a document index because valid nodes
+// such as untitled TEXT may be absent from TOC.
 //
-// Some operations request an exact result instead: a newly created node is put
-// at the top, and deletion of a visible node puts its actual next or previous
-// document node at the deleted boundary. This also covers nodes omitted from
-// TOC. These operation-specific targets stay authoritative until the related
-// replacement and lazy loading finish, unless newer user input cancels them.
+// A lazy chunk changes geometry in two separate loading stages: Turbo
+// inserts the real nodes, then `turbo:frame-load` removes the placeholder's
+// estimated min-height. A MutationObserver compensates the insertion before an
+// intermediate position can be painted; the frame-load handler compensates
+// the remaining height difference. ResizeObserver continues watching the
+// rendered nodes for later border-box changes caused by images, widgets, fonts,
+// padding, or similar content.
+//
+// Passive compensation preserves the user's movement, not an old viewport
+// coordinate. It measures how much the witness's document coordinate changed
+// and adds only that geometry delta to the current scrollTop. Wheel, keyboard,
+// touch, and scrollbar movement therefore continues while layout corrections
+// are composed with it. Native scroll anchoring is disabled inside this
+// viewport so the browser and this controller cannot compensate the same
+// geometry change twice.
+//
+// Server operations that replace the full content frame either select an exact
+// result or preserve the current reading position. Creation puts the node
+// produced by the submitted form at the viewport top. Deletion puts the actual
+// next node's top at the removed node's former top, or the previous node's
+// bottom there when the last node was removed. Other replacements restore the
+// first surviving witness in saved priority order. An exact target remains
+// active through related lazy loads and delayed resizes until a newer viewport
+// generation supersedes that active lock.
+//
+// Every delayed callback carries the generation in which its snapshot was
+// created. Navigation, another replacement, or direct user input advances the
+// generation so callbacks from an older viewport state cannot move the user
+// back later. Pending passive locks follow user-scroll generations because the
+// geometry they protect still has to be composed with the new reading position.
 (() => {
 
   const strictDoc = window.StrictDoc;
@@ -195,10 +224,10 @@
     };
   }
 
-  // Return the stable `article-<MID>` identity of the document node that
-  // contains an element. The anchor ID identifies the exact place to restore;
-  // this frame ID independently identifies the node and therefore the lazy
-  // chunk that must be loaded before that anchor can exist again.
+  // Return the stable `article-<MID>` identity of the document node containing
+  // an element. A snapshot stores this beside its anchor ID: the frame ID finds
+  // the lazy chunk, while the anchor ID identifies the exact place inside the
+  // rendered node.
   function nodeFrameIdForElement(element) {
     return element.closest("turbo-frame[id^='article-']")?.id || null;
   }
@@ -588,7 +617,8 @@
         return;
       }
       // Repeat on the next browser frame to give the chunks time to add the
-      // created node, and stop after the bounded number of attempts.
+      // requested operation target, and stop after the bounded number of
+      // attempts.
       requestAnimationFrame(() => waitForTarget(attempts - 1));
     }
 
@@ -623,8 +653,8 @@
       addFrame(chunkFrameForNodeFrame(candidate.nodeFrameId));
     });
 
-    // When any possible chunk finishes loading, check whether the frame for the
-    // created node has appeared in the DOM.
+    // When any possible chunk finishes loading, check whether the requested
+    // node frame has appeared in the DOM.
     function onFrameLoad(event) {
       if (!frames.includes(event.target)) return;
       if (!isCurrentGeneration(expectedGeneration)) {
@@ -887,9 +917,9 @@
   }
 
   // Start a viewport state chosen by direct user scrolling without discarding
-  // passive geometry protection. User input cancels an exact create/delete or
-  // replacement target: keeping it would pull the viewport back against the
-  // user's choice. Pending passive chunks and passive resize observations are
+  // passive geometry protection. Advancing the generation cancels the active
+  // exact lock: keeping it would pull the viewport back against the user's
+  // choice. Pending passive chunks and passive resize observations are
   // different—their future height changes still affect whatever content the
   // user is approaching—so carry those locks into the new generation.
   function advanceGenerationForUserScroll() {
@@ -925,11 +955,12 @@
   }
 
   // Treat pointer, wheel, or touch interaction inside the content viewport as
-  // newer user intent. Cancel operation-specific positioning, but keep passive
-  // chunks so any height they later add above the reader is composed with the
-  // new user-selected position. The event need not have produced a scroll yet;
-  // invalidating before browser movement prevents a delayed exact callback
-  // from winning the same interaction.
+  // newer user intent. Cancel an active exact lock and a delete target waiting
+  // for its response, but keep passive chunks so any height they later add
+  // above the reader is composed with the new user-selected position. The
+  // event need not have produced a scroll yet; invalidating before browser
+  // movement prevents an already scheduled exact callback from winning the
+  // same interaction.
   function invalidateForUserInput(event) {
     if (!event.target.closest?.(CONTENT_ROOT_SELECTOR)) return;
     pendingDeleteBoundary = null;
@@ -1232,9 +1263,10 @@
 
   // Treat a scrolling key outside editable controls as direct user intent.
   // Browser keyboard scrolling can continue over several animation frames
-  // after keydown. Cancel exact operation positioning immediately, but keep
-  // passive document coordinates: later chunk deltas are added to the
-  // keyboard's continuing movement instead of restoring an earlier frame.
+  // after keydown. Cancel an active exact lock and a pending delete target
+  // immediately, but keep passive document coordinates: later chunk deltas are
+  // added to the keyboard's continuing movement instead of restoring an
+  // earlier frame.
   document.addEventListener("keydown", (event) => {
     if (!SCROLL_KEYS.has(event.key)) return;
     if (event.target.matches?.("input, textarea, [contenteditable='true']")) {

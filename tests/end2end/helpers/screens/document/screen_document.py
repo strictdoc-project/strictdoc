@@ -870,14 +870,185 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
         )
         return samples
 
-    def do_disable_native_scroll_anchoring(self) -> None:
+    def do_record_anchor_while_scrolling_upward(
+        self,
+        *,
+        chunk_id_to_load: str,
+        prerequisite_chunk_id: str,
+        witness_anchor: str,
+        initial_witness_anchor: str,
+        wheel_delta: int,
+        max_steps: int,
+        pause_between_steps: float,
+        continuous_input: bool = False,
+        scroll_key: str | None = None,
+    ) -> dict:
+        # Record both anchors after paint opportunities during stepwise wheel
+        # or keyboard input. Also record frame-load order and the sample index
+        # at each relevant load so the test can inspect the corresponding
+        # trajectory.
         self.test_case.execute_script(
             """
-            const container = document.querySelector(
-              "[js-toc_highlighting-content_root]"
-            );
-            container.style.overflowAnchor = "none";
+            const state = {
+              complete: false,
+              initialInputSamples: [],
+              initialSamples: [],
+              inputSamples: [],
+              loadedChunkIds: [],
+              prerequisiteLoadSampleIndex: null,
+              samples: [],
+              targetLoadInitialSampleIndex: null,
+              targetLoadSampleIndex: null,
+              wheelMovement: 0
+            };
+            window.__strictdocSlowUpwardGeometry = state;
+            document.addEventListener("wheel", (event) => {
+              state.wheelMovement -= event.deltaY;
+            }, { capture: true, passive: true });
+
+            const schedulePostPaintSample = () => {
+              requestAnimationFrame(() => {
+                setTimeout(sample, 0);
+              });
+            };
+            const sample = () => {
+              const target = document.getElementById(arguments[0]);
+              const initialTarget = document.getElementById(arguments[2]);
+              const container = document.querySelector(
+                "[js-toc_highlighting-content_root]"
+              );
+              if (initialTarget) {
+                state.initialInputSamples.push(state.wheelMovement);
+                state.initialSamples.push(
+                  initialTarget.getBoundingClientRect().top -
+                  container.getBoundingClientRect().top
+                );
+              }
+              if (target) {
+                state.inputSamples.push(state.wheelMovement);
+                state.samples.push(
+                  target.getBoundingClientRect().top -
+                  container.getBoundingClientRect().top
+                );
+              }
+              if (!state.complete) {
+                schedulePostPaintSample();
+              }
+            };
+            schedulePostPaintSample();
+
+            document.addEventListener("turbo:frame-load", (event) => {
+              if (!event.target.id?.startsWith("document-chunk-")) return;
+              state.loadedChunkIds.push(event.target.id);
+              if (event.target.id === arguments[1]) {
+                state.targetLoadSampleIndex = state.samples.length;
+                state.targetLoadInitialSampleIndex =
+                  state.initialSamples.length;
+              }
+              if (event.target.id === arguments[3]) {
+                state.prerequisiteLoadSampleIndex =
+                  state.initialSamples.length;
+              }
+            });
+            """,
+            witness_anchor,
+            chunk_id_to_load,
+            initial_witness_anchor,
+            prerequisite_chunk_id,
+        )
+
+        container = self.test_case.find_element(
+            "[js-toc_highlighting-content_root]"
+        )
+        scroll_origin = ScrollOrigin.from_element(container)
+        if scroll_key is not None:
+            self.test_case.execute_script(
+                "arguments[0].tabIndex = -1; arguments[0].focus();",
+                container,
+            )
+        target_loaded = False
+        if continuous_input:
+            actions = ActionChains(self.test_case.driver)
+            for _ in range(max_steps):
+                actions.scroll_from_origin(scroll_origin, 0, wheel_delta)
+                actions.pause(pause_between_steps)
+            actions.perform()
+            target_loaded = bool(
+                self.test_case.execute_script(
+                    """
+                    const frame = document.getElementById(arguments[0]);
+                    return !frame.classList.contains(
+                      "document-chunk-placeholder"
+                    );
+                    """,
+                    chunk_id_to_load,
+                )
+            )
+        for _ in range(max_steps):
+            if continuous_input:
+                break
+            actions = ActionChains(self.test_case.driver)
+            if scroll_key is not None:
+                actions.send_keys(scroll_key)
+            else:
+                actions.scroll_from_origin(scroll_origin, 0, wheel_delta)
+            actions.pause(pause_between_steps)
+            actions.perform()
+            target_loaded = bool(
+                self.test_case.execute_script(
+                    """
+                    const frame = document.getElementById(arguments[0]);
+                    return !frame.classList.contains(
+                      "document-chunk-placeholder"
+                    );
+                    """,
+                    chunk_id_to_load,
+                )
+            )
+            if target_loaded:
+                break
+
+        assert target_loaded, (
+            f"Chunk '{chunk_id_to_load}' did not load after "
+            f"{max_steps} upward wheel steps."
+        )
+        self.assert_document_chunk_loaded(prerequisite_chunk_id)
+
+        state = self.test_case.execute_async_script(
             """
+            const done = arguments[0];
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                setTimeout(() => {
+                  const state = window.__strictdocSlowUpwardGeometry;
+                  state.complete = true;
+                  done(state);
+                }, 0);
+              });
+            });
+            """
+        )
+        return state
+
+    def do_set_future_node_heights(self, heights_by_anchor: dict[str, int]):
+        # Add fixed heights before lazy chunks render, so replacing their
+        # placeholders produces the exact vertical geometry required by the
+        # test instead of depending on font metrics or statement wrapping.
+        self.test_case.execute_script(
+            """
+            const style = document.createElement("style");
+            style.textContent = Object.entries(arguments[0])
+              .map(([anchor, height]) => `
+                sdoc-node:has(sdoc-anchor#${CSS.escape(anchor)}) {
+                  box-sizing: border-box;
+                  height: ${height}px !important;
+                  overflow: hidden;
+                }
+              `)
+              .join("\\n");
+            document.head.append(style);
+            """,
+            heights_by_anchor,
         )
 
     def do_increase_first_node_height_in_chunk(

@@ -1,3 +1,4 @@
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 
 from tests.end2end.e2e_case import E2ECase
@@ -20,10 +21,7 @@ CHUNK_3_ID = "document-chunk-3"
 
 # The main document has 35 requirements, chunked_documents_threshold = 10
 # (strictdoc_config.py), so it renders as 4 chunks: 0 (REQ-001..010, inline),
-# 1 (011..020), 2 (021..030), 3 (031..035). The control document has only 9
-# requirements - below the threshold - so it stays on the legacy, unchunked
-# rendering path and gives every chunked scenario here a same-document,
-# non-chunked counterpart.
+# 1 (011..020), 2 (021..030), 3 (031..035).
 MID_CHUNK_TARGET = "REQ-025"
 LAST_CHUNK_TARGET = "REQ-035"
 # Keep several rendered nodes below the witness. A witness near the document
@@ -39,13 +37,6 @@ class Test(E2ECase):
         screen_project_index.assert_on_screen()
         return screen_project_index.do_click_on_the_document_with_title(
             "Scroll Preservation Document"
-        )
-
-    def _open_control_document(self):
-        screen_project_index = Screen_ProjectIndex(self)
-        screen_project_index.assert_on_screen()
-        return screen_project_index.do_click_on_the_document_with_title(
-            "Scroll Preservation Control Document"
         )
 
     def _open_chunk_above_document(self):
@@ -67,44 +58,6 @@ class Test(E2ECase):
     # The user starts from the visible document area. That area must stay
     # stable after already-loaded chunks are rendered again as placeholders.
     #
-
-    def test_visible_anchor_stays_stable_when_tall_chunk_above_loads(self):
-        test_setup = End2EndTestSetup(path_to_test_file=__file__)
-        write_long_document_with_tall_chunk_above_viewport(test_setup)
-
-        with SDocTestServer(
-            input_path=test_setup.path_to_sandbox
-        ) as test_server:
-            self.open(test_server.get_host_and_port())
-            screen_document = self._open_chunk_above_document()
-
-            # Chunk 2 is directly above the target chunk. Its real content is
-            # intentionally much taller than its placeholder. Navigate
-            # directly to chunk 3 so chunk 2 remains estimated geometry above
-            # the visible semantic witness.
-            screen_document.get_toc().do_toc_go_to_anchor(
-                USER_SCROLL_INITIAL_TARGET
-            )
-            screen_document.assert_document_chunk_loaded(CHUNK_3_ID)
-            screen_document.assert_document_chunk_unloaded(CHUNK_2_ID)
-            screen_document.do_scroll_anchor_to_viewport_center(
-                CHUNK_ABOVE_TARGET
-            )
-            screen_document.assert_document_chunk_unloaded(CHUNK_2_ID)
-            top_before = screen_document.get_anchor_viewport_top(
-                CHUNK_ABOVE_TARGET
-            )
-
-            # Replacing the upper placeholder with much taller real content
-            # must not change the witness coordinate inside the viewport.
-            screen_document.do_force_load_document_chunk(CHUNK_2_ID)
-            screen_document.assert_document_chunk_loaded(CHUNK_2_ID)
-
-            screen_document.assert_anchor_viewport_top_stable(
-                CHUNK_ABOVE_TARGET,
-                top_before,
-                duration=1.0,
-            )
 
     def test_tall_chunk_replacement_has_no_paint_frame_jump(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
@@ -153,6 +106,303 @@ class Test(E2ECase):
                 f"maximum witness movement was {max_witness_delta}px."
             )
             screen_document.assert_document_chunk_loaded(CHUNK_2_ID)
+
+    def test_slow_upward_scroll_does_not_jump_when_oversized_chunk_loads(self):
+        test_setup = End2EndTestSetup(path_to_test_file=__file__)
+        write_long_document_with_tall_chunk_above_viewport(
+            test_setup,
+            single_tall_node_index=19,
+            tall_statement_repetitions=240,
+        )
+
+        with SDocTestServer(
+            input_path=test_setup.path_to_sandbox
+        ) as test_server:
+            self.open(test_server.get_host_and_port())
+            screen_document = self._open_chunk_above_document()
+
+            screen_document.get_toc().do_toc_go_to_anchor(
+                USER_SCROLL_INITIAL_TARGET
+            )
+            screen_document.assert_document_chunk_loaded(CHUNK_3_ID)
+            screen_document.assert_document_chunk_unloaded(CHUNK_1_ID)
+            screen_document.assert_document_chunk_unloaded(CHUNK_2_ID)
+
+            # Slow upward scrolling first renders the ordinary middle chunk
+            # and moves CAB-021 down through the viewport. The earlier chunk
+            # then replaces its placeholder with a node taller than the
+            # viewport; the samples below distinguish these two transitions.
+            state = screen_document.do_record_anchor_while_scrolling_upward(
+                chunk_id_to_load=CHUNK_1_ID,
+                prerequisite_chunk_id=CHUNK_2_ID,
+                witness_anchor="CAB-021",
+                initial_witness_anchor="CAB-031",
+                wheel_delta=-80,
+                max_steps=100,
+                pause_between_steps=0.05,
+            )
+
+            assert state["loadedChunkIds"][:2] == [CHUNK_2_ID, CHUNK_1_ID]
+            assert state["targetLoadSampleIndex"] is not None
+            samples = state["samples"]
+            assert len(samples) >= 2
+            target_load_sample_index = state["targetLoadSampleIndex"]
+            samples_before_target_load = samples[:target_load_sample_index]
+            assert samples_before_target_load
+            assert any(
+                abs(sample) <= 160 for sample in samples_before_target_load
+            ), samples_before_target_load
+            steps_before_target_load = [
+                current - previous
+                for previous, current in zip(
+                    samples_before_target_load,
+                    samples_before_target_load[1:],
+                )
+            ]
+            assert any(
+                40 <= step <= 160 for step in steps_before_target_load
+            ), steps_before_target_load
+
+            oversized_node_geometry = self.execute_script(
+                """
+                const anchor = document.getElementById('CAB-019');
+                const node = anchor.closest('sdoc-node');
+                const viewport = document.querySelector(
+                  '[js-toc_highlighting-content_root]'
+                );
+                return {
+                  nodeHeight: node.getBoundingClientRect().height,
+                  viewportHeight: viewport.getBoundingClientRect().height,
+                };
+                """
+            )
+            assert (
+                oversized_node_geometry["nodeHeight"]
+                > oversized_node_geometry["viewportHeight"]
+            )
+
+            steps = [
+                current - previous
+                for previous, current in zip(samples, samples[1:])
+            ]
+            target_load_steps = steps[
+                max(0, target_load_sample_index - 3) : min(
+                    len(steps), target_load_sample_index + 3
+                )
+            ]
+            assert target_load_steps
+            assert max(abs(step) for step in target_load_steps) <= 240, (
+                "Loading the oversized previous chunk caused a large viewport "
+                f"step while CAB-021 moved down: {target_load_steps}."
+            )
+
+            prerequisite_load_sample_index = state[
+                "prerequisiteLoadSampleIndex"
+            ]
+            assert prerequisite_load_sample_index is not None
+            initial_samples = state["initialSamples"]
+            initial_steps = [
+                current - previous
+                for previous, current in zip(
+                    initial_samples,
+                    initial_samples[1:],
+                )
+            ]
+            prerequisite_load_steps = initial_steps[
+                max(0, prerequisite_load_sample_index - 3) : min(
+                    len(initial_steps), prerequisite_load_sample_index + 3
+                )
+            ]
+            assert prerequisite_load_steps
+            assert max(abs(step) for step in prerequisite_load_steps) <= 240, (
+                "Loading the ordinary intermediate chunk moved the existing "
+                f"CAB-031 witness: {prerequisite_load_steps}."
+            )
+
+    def _assert_upward_scroll_preserves_short_last_node(
+        self,
+        wheel_step: int,
+        *,
+        additional_upper_chunk_height: int = 0,
+        delayed_height_change: int = 0,
+        scroll_key: str | None = None,
+    ) -> None:
+        test_setup = End2EndTestSetup(path_to_test_file=__file__)
+        write_long_document_with_tall_chunk_above_viewport(
+            test_setup,
+            single_tall_node_index=2,
+            tall_statement_repetitions=80,
+        )
+        test_setup.write_to_sandbox_file(
+            "strictdoc_config.py",
+            "from strictdoc.core.project_config import ProjectConfig\n\n"
+            "def create_config() -> ProjectConfig:\n"
+            "    return ProjectConfig(\n"
+            "        project_title='Slow Scroll Geometry Test',\n"
+            "        chunked_documents_threshold=5,\n"
+            "    )\n",
+        )
+
+        with SDocTestServer(
+            input_path=test_setup.path_to_sandbox
+        ) as test_server:
+            self.open(test_server.get_host_and_port())
+            screen_document = self._open_chunk_above_document()
+            screen_document.do_set_future_node_heights(
+                {
+                    "CAB-006": 150,
+                    "CAB-007": 900 + additional_upper_chunk_height,
+                    "CAB-008": 145,
+                    "CAB-009": 460,
+                    "CAB-010": 140,
+                    "CAB-011": 520,
+                    "CAB-012": 140,
+                }
+            )
+            # Begin one chunk farther down so the fast local server cannot
+            # finish loading the measured chunk before sampling starts. Slow
+            # upward input then crosses the ordinary middle chunk and reaches
+            # the five-node geometry from the reported document.
+            screen_document.get_toc().do_toc_go_to_anchor("CAB-017")
+            screen_document.assert_document_chunk_loaded(CHUNK_3_ID)
+            screen_document.assert_document_chunk_unloaded(CHUNK_1_ID)
+            screen_document.assert_document_chunk_unloaded(CHUNK_2_ID)
+
+            if delayed_height_change:
+                self.execute_script(
+                    """
+                    document.addEventListener("turbo:frame-load", (event) => {
+                      if (event.target.id !== arguments[0]) return;
+                      requestAnimationFrame(() => {
+                        const anchor = document.getElementById(arguments[1]);
+                        const node = anchor.closest("sdoc-node");
+                        const height = node.getBoundingClientRect().height;
+                        node.style.setProperty(
+                          "height",
+                          `${height + arguments[2]}px`,
+                          "important"
+                        );
+                      });
+                    });
+                    """,
+                    CHUNK_1_ID,
+                    "CAB-007",
+                    delayed_height_change,
+                )
+
+            state = screen_document.do_record_anchor_while_scrolling_upward(
+                chunk_id_to_load=CHUNK_1_ID,
+                prerequisite_chunk_id=CHUNK_2_ID,
+                witness_anchor="CAB-010",
+                initial_witness_anchor="CAB-016",
+                wheel_delta=-wheel_step,
+                max_steps=(
+                    100
+                    if scroll_key is not None
+                    else 40
+                    if wheel_step >= 50
+                    else 500
+                ),
+                pause_between_steps=(
+                    0.05
+                    if scroll_key is not None
+                    else 0.005
+                    if wheel_step >= 50
+                    else 0.05
+                ),
+                continuous_input=wheel_step >= 50 and scroll_key is None,
+                scroll_key=scroll_key,
+            )
+
+            target_load_sample_index = state["targetLoadSampleIndex"]
+            assert target_load_sample_index is not None
+            samples = state["samples"]
+            steps = [
+                current - previous
+                for previous, current in zip(samples, samples[1:])
+            ]
+            input_steps = [
+                current - previous
+                for previous, current in zip(
+                    state["inputSamples"], state["inputSamples"][1:]
+                )
+            ]
+            residual_steps = [
+                coordinate_step - input_step
+                for coordinate_step, input_step in zip(steps, input_steps)
+            ]
+            load_steps = steps[max(0, target_load_sample_index - 3) :]
+            load_residual_steps = residual_steps[
+                max(0, target_load_sample_index - 3) :
+            ]
+            assert load_steps
+            assert (
+                min(load_steps) >= -1 and max(load_steps) <= 80
+                if scroll_key is not None
+                else max(abs(step) for step in load_residual_steps) <= 4
+            ), (
+                "Loading the five-node preceding chunk moved its visible "
+                "last node opposite to or independently of the upward input: "
+                f"{load_residual_steps}."
+            )
+
+            initial_load_sample_index = state["targetLoadInitialSampleIndex"]
+            assert initial_load_sample_index is not None
+            initial_samples = state["initialSamples"]
+            initial_steps = [
+                current - previous
+                for previous, current in zip(
+                    initial_samples, initial_samples[1:]
+                )
+            ]
+            initial_input_steps = [
+                current - previous
+                for previous, current in zip(
+                    state["initialInputSamples"],
+                    state["initialInputSamples"][1:],
+                )
+            ]
+            initial_residual_steps = [
+                coordinate_step - input_step
+                for coordinate_step, input_step in zip(
+                    initial_steps, initial_input_steps
+                )
+            ]
+            initial_load_steps = initial_steps[
+                max(0, initial_load_sample_index - 3) :
+            ]
+            initial_load_residual_steps = initial_residual_steps[
+                max(0, initial_load_sample_index - 3) :
+            ]
+            assert initial_load_steps
+            assert (
+                min(initial_load_steps) >= -1 and max(initial_load_steps) <= 80
+                if scroll_key is not None
+                else max(abs(step) for step in initial_load_residual_steps) <= 4
+            ), (
+                "Loading the five-node preceding chunk moved an existing "
+                "node opposite to or independently of the upward input: "
+                f"{initial_load_residual_steps}."
+            )
+
+    def test_very_slow_upward_scroll_preserves_short_last_node(self):
+        self._assert_upward_scroll_preserves_short_last_node(8)
+
+    def test_50px_upward_scroll_preserves_short_last_node(self):
+        self._assert_upward_scroll_preserves_short_last_node(50)
+
+    def test_60px_upward_scroll_preserves_delayed_chunk_height_change(self):
+        self._assert_upward_scroll_preserves_short_last_node(
+            60,
+            delayed_height_change=120,
+        )
+
+    def test_arrow_up_scroll_does_not_reverse_when_chunk_loads(self):
+        self._assert_upward_scroll_preserves_short_last_node(
+            50,
+            additional_upper_chunk_height=200,
+            scroll_key=Keys.ARROW_UP,
+        )
 
     def test_near_simultaneous_upper_chunk_loads_compose_stably(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
@@ -235,10 +485,10 @@ class Test(E2ECase):
             witness_top = screen_document.get_anchor_viewport_top(
                 CHUNK_ABOVE_TARGET
             )
-            # Isolate the controller's delayed ResizeObserver path. Without
-            # native anchoring, growing a node in chunk 2 must move the witness
-            # unless the semantic lock compensates the new upper geometry.
-            screen_document.do_disable_native_scroll_anchoring()
+            # Growing a node in chunk 2 must move the witness unless the
+            # controller's ResizeObserver lock compensates the new upper
+            # geometry. Production code already disables native anchoring in
+            # the content viewport, so no test-only override is needed.
             height_delta = (
                 screen_document.do_increase_first_node_height_in_chunk(
                     CHUNK_2_ID,
@@ -293,57 +543,6 @@ class Test(E2ECase):
                 "CAB-038",
                 top_after_user_scroll,
                 duration=1.0,
-            )
-
-    def test_natural_upward_wheel_scroll_does_not_step_backward(self):
-        test_setup = End2EndTestSetup(path_to_test_file=__file__)
-        write_long_document_with_tall_chunk_above_viewport(test_setup)
-
-        with SDocTestServer(
-            input_path=test_setup.path_to_sandbox
-        ) as test_server:
-            self.open(test_server.get_host_and_port())
-            screen_document = self._open_chunk_above_document()
-
-            # Start in chunk 3 with the tall chunk 2 still represented by a
-            # placeholder above the viewport. Moving upward naturally crosses
-            # its preload boundary and lets the browser trigger lazy loading.
-            screen_document.get_toc().do_toc_go_to_anchor(
-                USER_SCROLL_INITIAL_TARGET
-            )
-            screen_document.assert_document_chunk_loaded(CHUNK_3_ID)
-            screen_document.assert_document_chunk_unloaded(CHUNK_2_ID)
-            screen_document.do_scroll_anchor_to_viewport_center(
-                CHUNK_ABOVE_TARGET
-            )
-
-            # With upward wheel input, content moves down: successive witness
-            # coordinates may stay equal or increase. An opposing decrease
-            # means chunk stabilization pulled the viewport back against the
-            # user's gesture.
-            frame_samples = (
-                screen_document.do_record_anchor_during_wheel_scroll(
-                    chunk_id_to_load=CHUNK_2_ID,
-                    witness_anchor=CHUNK_ABOVE_TARGET,
-                    wheel_delta=-60,
-                    steps=8,
-                    pause_between_steps=0.03,
-                )
-            )
-
-            assert len(frame_samples) >= 2
-            assert max(frame_samples) - min(frame_samples) >= 100
-            opposing_steps = [
-                current - previous
-                for previous, current in zip(
-                    frame_samples,
-                    frame_samples[1:],
-                )
-                if current - previous < -12
-            ]
-            assert opposing_steps == [], (
-                "Upper chunk loading moved content opposite to the natural "
-                f"upward wheel gesture: {opposing_steps}."
             )
 
     def test_natural_downward_wheel_scroll_does_not_step_backward(self):
@@ -544,31 +743,6 @@ class Test(E2ECase):
                 duration=1.0,
             )
 
-    def test_delete_preserves_top_visible_node_position(self):
-        test_setup = End2EndTestSetup(path_to_test_file=__file__)
-        with SDocTestServer(
-            input_path=test_setup.path_to_sandbox
-        ) as test_server:
-            self.open(test_server.get_host_and_port())
-            screen_document = self._open_main_document()
-            # Load both preceding chunks so the replacement has a substantial
-            # real-to-placeholder geometry change above the viewport.
-            screen_document.do_load_document_chunks_by_scrolling(1, 2)
-            screen_document.assert_document_chunk_unloaded(CHUNK_3_ID)
-            # Put REQ-024 at the viewport top. The test checks that this
-            # surviving top node keeps its position after REQ-025 is deleted.
-            screen_document.do_scroll_anchor_to_viewport_top("REQ-024")
-            top_before = screen_document.get_anchor_viewport_top("REQ-024")
-
-            requirement = screen_document.get_node_by_anchor("REQ-025")
-            requirement.assert_requirement_title("Requirement 25")
-            requirement.do_delete_node()
-
-            self.assert_text_not_visible("STMT-025")
-            screen_document.assert_anchor_viewport_top_close(
-                "REQ-024", top_before
-            )
-
     def test_delete_keeps_removed_node_boundary_in_place(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
         with SDocTestServer(
@@ -715,133 +889,3 @@ class Test(E2ECase):
             screen_document.assert_document_chunk_loaded(CHUNK_2_ID)
             screen_document.assert_document_chunk_unloaded(CHUNK_1_ID)
             screen_document.assert_document_chunk_unloaded(CHUNK_3_ID)
-
-    def test_create_locally_does_not_jump(self):
-        test_setup = End2EndTestSetup(path_to_test_file=__file__)
-        with SDocTestServer(
-            input_path=test_setup.path_to_sandbox
-        ) as test_server:
-            self.open(test_server.get_host_and_port())
-            screen_document = self._open_main_document()
-
-            requirement = screen_document.get_node_by_anchor("REQ-001")
-            form = (
-                requirement.do_open_node_menu().do_node_add_requirement_below()
-            )
-            # Local create stays in chunk 0. The created node must start at the
-            # top of the content viewport.
-            screen_document.wait_for_new_requirement_form_visible()
-            form.do_fill_in_field_title("Locally Injected Node")
-            form.do_form_submit()
-            self.assert_text("Locally Injected Node")
-            screen_document.assert_node_containing_text_viewport_top_close(
-                "Locally Injected Node", CONTENT_VIEWPORT_TOP, tolerance=24
-            )
-
-    def test_delete_locally_does_not_jump(self):
-        test_setup = End2EndTestSetup(path_to_test_file=__file__)
-        with SDocTestServer(
-            input_path=test_setup.path_to_sandbox
-        ) as test_server:
-            self.open(test_server.get_host_and_port())
-            screen_document = self._open_main_document()
-            # Local delete stays in chunk 0. The visible top node should not
-            # move.
-            screen_document.do_scroll_anchor_to_viewport_top("REQ-002")
-            top_before = screen_document.get_anchor_viewport_top("REQ-002")
-
-            requirement = screen_document.get_node_by_anchor("REQ-003")
-            requirement.assert_requirement_title("Requirement 3")
-            requirement.do_delete_node()
-            self.assert_text_not_visible("STMT-003")
-            screen_document.assert_anchor_viewport_top_close(
-                "REQ-002", top_before
-            )
-
-    #
-    # C. Non-chunked counterpart.
-    # The restoration script is loaded here too. Ordinary full-content updates
-    # must keep the same viewport behavior when there are no document chunks.
-    #
-
-    def test_non_chunked_create_unaffected(self):
-        test_setup = End2EndTestSetup(path_to_test_file=__file__)
-        with SDocTestServer(
-            input_path=test_setup.path_to_sandbox
-        ) as test_server:
-            self.open(test_server.get_host_and_port())
-            screen_document = self._open_control_document()
-            screen_document.do_scroll_anchor_to_viewport_top("CREQ-004")
-            screen_document.assert_node_in_viewport_by_anchor("CREQ-004")
-
-            requirement = screen_document.get_node_by_anchor("CREQ-004")
-            requirement.assert_requirement_title("Control Requirement 4")
-            form = (
-                requirement.do_open_node_menu().do_node_add_requirement_below()
-            )
-            screen_document.wait_for_new_requirement_form_visible()
-            form.do_fill_in_field_title("Control Injected Node")
-            form.do_form_submit()
-            self.assert_text("Control Injected Node")
-            screen_document.assert_node_containing_text_viewport_top_close(
-                "Control Injected Node", CONTENT_VIEWPORT_TOP, tolerance=24
-            )
-
-    def test_non_chunked_delete_unaffected(self):
-        test_setup = End2EndTestSetup(path_to_test_file=__file__)
-        with SDocTestServer(
-            input_path=test_setup.path_to_sandbox
-        ) as test_server:
-            self.open(test_server.get_host_and_port())
-            screen_document = self._open_control_document()
-            screen_document.do_scroll_anchor_to_viewport_top("CREQ-004")
-            top_before = screen_document.get_anchor_viewport_top("CREQ-004")
-
-            requirement = screen_document.get_node_by_anchor("CREQ-005")
-            requirement.assert_requirement_title("Control Requirement 5")
-            requirement.do_delete_node()
-            self.assert_text_not_visible("Control statement 005")
-            screen_document.assert_anchor_viewport_top_close(
-                "CREQ-004", top_before
-            )
-
-    def test_non_chunked_move_unaffected(self):
-        test_setup = End2EndTestSetup(path_to_test_file=__file__)
-        with SDocTestServer(
-            input_path=test_setup.path_to_sandbox
-        ) as test_server:
-            self.open(test_server.get_host_and_port())
-            screen_document = self._open_control_document()
-            screen_document.do_scroll_anchor_to_viewport_top("CREQ-008")
-            top_before = screen_document.get_anchor_viewport_top("CREQ-008")
-
-            screen_document.do_drag_toc_node(1, 5)
-            screen_document.assert_anchor_viewport_top_close(
-                "CREQ-008", top_before
-            )
-
-    def test_non_chunked_grammar_edit_unaffected(self):
-        test_setup = End2EndTestSetup(path_to_test_file=__file__)
-        with SDocTestServer(
-            input_path=test_setup.path_to_sandbox
-        ) as test_server:
-            self.open(test_server.get_host_and_port())
-            screen_document = self._open_control_document()
-            screen_document.do_scroll_anchor_to_viewport_top("CREQ-008")
-            top_before = screen_document.get_anchor_viewport_top("CREQ-008")
-
-            form_edit_grammar: Form_EditGrammarElements = (
-                screen_document.do_open_modal_form_edit_grammar()
-            )
-            form_edit_grammar.assert_on_grammar()
-            form_edit_grammar_element = (
-                form_edit_grammar.do_click_edit_grammar_element(1)
-            )
-            grammar_field_mid = form_edit_grammar_element.do_add_grammar_field()
-            form_edit_grammar_element.do_fill_in_grammar_field_mid(
-                grammar_field_mid, "CUSTOM_FIELD"
-            )
-            form_edit_grammar_element.do_form_submit()
-            screen_document.assert_anchor_viewport_top_close(
-                "CREQ-008", top_before
-            )

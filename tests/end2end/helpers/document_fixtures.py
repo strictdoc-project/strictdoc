@@ -3,6 +3,9 @@ from tests.end2end.end2end_test_setup import End2EndTestSetup
 
 def write_long_document_with_tall_chunk_above_viewport(
     test_setup: End2EndTestSetup,
+    *,
+    single_tall_node_index: int | None = None,
+    tall_statement_repetitions: int = 18,
 ) -> None:
     document_parts = [
         "[DOCUMENT]\nTITLE: Chunk Above Viewport Stability Document\n\n"
@@ -18,9 +21,13 @@ def write_long_document_with_tall_chunk_above_viewport(
 
     for node_index in range(1, 41):
         uid = f"CAB-{node_index:03d}"
-        is_tall_chunk_node = 21 <= node_index <= 30
+        is_tall_chunk_node = (
+            node_index == single_tall_node_index
+            if single_tall_node_index is not None
+            else 21 <= node_index <= 30
+        )
         statement = (
-            "\n\n".join([tall_statement] * 18)
+            "\n\n".join([tall_statement] * tall_statement_repetitions)
             if is_tall_chunk_node
             else normal_statement
         )

@@ -51,6 +51,9 @@
   // Remember chunks owned by explicit navigation so passive restoration does
   // not compete with the requested destination.
   const explicitNavigationFrames = new WeakMap();
+  // Associate each submitted create form with its future node, so another open
+  // form cannot select the wrong node merely because it comes first in the DOM.
+  const submittedCreateTargets = new WeakMap();
 
   // Track saved viewport positions and delayed corrections for loaded chunks.
   // Each correction records the current viewport version, called a generation.
@@ -61,6 +64,7 @@
   const observedGeometryElements = new Set();
   let activeViewportLock = null;
   let geometryResizeObserver = null;
+  let pendingCreateTarget = null;
   let pendingDeleteBoundary = null;
   let pendingResizeLock = null;
   let resizeRestoreScheduled = false;
@@ -146,16 +150,12 @@
 
   // --- Saving the visible document position ---
 
-  // If the first create form is visible, save its frame id as the identity of
-  // the future node. The server reuses that id for the created node, so the
-  // controller can find it even if it appears inside a lazy chunk and put its
-  // top at the top of the content viewport.
-  function captureVisibleCreateForm(rootRect) {
-    const form = Array.from(document.querySelectorAll("sdoc-form form")).find(
-      isCreateRequirementForm
-    );
-    if (!form || !isInContentViewport(form, rootRect)) return null;
-
+  // Save the submitted create form's frame id as the identity of the future
+  // node. The server reuses that id for the created node, so the controller can
+  // find it even if it appears inside a lazy chunk and put its top at the top
+  // of the content viewport.
+  function createTargetForSubmittedForm(form) {
+    if (!isCreateRequirementForm(form)) return null;
     const frame = form.closest("turbo-frame[id]");
     if (!frame) return null;
 
@@ -166,14 +166,14 @@
     };
   }
 
-  // Save several visible nodes and anchors before the DOM replacement. If the
-  // first saved node disappears, the controller can try another saved place.
-  function captureViewportAnchor() {
+  // Combine an operation-specific target, when supplied, with several visible
+  // nodes and anchors saved before DOM replacement. If one visible witness
+  // disappears, the controller can try another saved place.
+  function captureViewportAnchor(target = null) {
     const root = contentRoot();
     if (!root) return null;
 
     const rootRect = root.getBoundingClientRect();
-    const target = captureVisibleCreateForm(rootRect);
 
     // Store possible places for restoring the viewport after DOM replacement.
     // Each item identifies either a visible node or a visible anchor.
@@ -224,8 +224,8 @@
       });
     });
 
-    // If there is no visible create form, node, or anchor to save, return no
-    // restore target. The caller then leaves the current scroll position
+    // If there is no operation target, visible node, or anchor to save, return
+    // no restore target. The caller then leaves the current scroll position
     // unchanged.
     if (!target && candidates.length === 0) return null;
     // Prefer a node that contains the viewport's top edge; otherwise try
@@ -771,6 +771,28 @@
 
   // --- Handling delete confirmation and full document-content replacement ---
 
+  // Remember which create form the user submitted. Several create forms can be
+  // open at once, so later code must not infer the target from DOM order.
+  document.addEventListener("turbo:submit-start", (event) => {
+    const target = createTargetForSubmittedForm(event.target);
+    if (target) {
+      submittedCreateTargets.set(event.target, target);
+      pendingCreateTarget = target;
+    }
+  });
+
+  // Forget the form-to-target association when its request ends. If creation
+  // failed, also discard the pending target because no full document
+  // replacement will consume it. A successful response keeps the target until
+  // its Turbo stream starts replacing the document.
+  document.addEventListener("turbo:submit-end", (event) => {
+    const target = submittedCreateTargets.get(event.target);
+    submittedCreateTargets.delete(event.target);
+    if (!event.detail.success && pendingCreateTarget === target) {
+      pendingCreateTarget = null;
+    }
+  });
+
   // Before a confirmed delete, save the visible node boundary that its nearest
   // surviving neighbour must occupy after replacement.
   document.addEventListener("click", (event) => {
@@ -799,8 +821,10 @@
     // For a TOC move, draggable_list.js passes the fetch response to
     // Turbo.renderStreamMessage(), which causes Turbo to dispatch this event.
     const restoreGeneration = advanceGeneration();
+    const createTarget = pendingCreateTarget;
+    pendingCreateTarget = null;
     const snapshot =
-      pendingDeleteBoundary || captureViewportAnchor();
+      pendingDeleteBoundary || captureViewportAnchor(createTarget);
     pendingDeleteBoundary = null;
     if (!snapshot) return;
     activeViewportLock = {
@@ -821,9 +845,9 @@
 
   // --- Lazy chunk event handlers ---
 
-  // When a lazy chunk response arrives but before it changes the DOM, save the
-  // current semantic position. Watch the chunk while Turbo inserts its content
-  // so geometry changes above the witness do not move it in the viewport.
+  // When a lazy chunk response arrives, save the current semantic position and
+  // watch Turbo insert the content so geometry changes above the witness do not
+  // move it in the viewport.
   document.addEventListener("turbo:before-fetch-response", (event) => {
     const frame = event.target;
     if (

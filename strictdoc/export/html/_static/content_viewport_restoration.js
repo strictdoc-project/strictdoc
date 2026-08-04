@@ -29,13 +29,6 @@
     "PageUp",
     " ",
   ]);
-  // Treat 120 ms after direct scrolling input as user-controlled time.
-  // A lazy chunk may finish loading during this interval and change the page
-  // height above the visible content. Restoring the previously saved position
-  // at that moment could move the viewport against the user's ongoing scroll.
-  // While this interval is active, passive chunk loading leaves compensation
-  // to the browser instead. Each subsequent user scroll extends the interval.
-  const ACTIVE_SCROLL_WINDOW_MS = 120;
   // Count an anchor on the viewport edge as visible, even when it has no
   // height.
   const VIEWPORT_EDGE_TOLERANCE = 2;
@@ -45,8 +38,8 @@
   // the real content and again when the placeholder's estimated height is
   // removed.
   const pendingChunkSnapshots = new WeakMap();
-  // Keep pending frames iterable so their passive positions can follow user
-  // scrolling before rendering begins.
+  // Keep pending frames iterable so their passive geometry corrections survive
+  // viewport generations started by user input.
   const pendingChunkFrames = new Set();
   // Remember chunks owned by explicit navigation so passive restoration does
   // not compete with the requested destination.
@@ -67,11 +60,7 @@
   let pendingCreateTarget = null;
   let pendingDeleteBoundary = null;
   let pendingResizeLock = null;
-  let resizeRestoreScheduled = false;
-  let controlledScrollActive = false;
-  let controlledScrollToken = 0;
   let generation = 0;
-  let userScrollActiveUntil = Number.NEGATIVE_INFINITY;
 
   // --- Measuring the content viewport ---
 
@@ -200,6 +189,7 @@
         type: "node",
         id: anchor.id,
         offsetTop: rect.top - rootRect.top,
+        contentTop: rect.top - rootRect.top + root.scrollTop,
         distance: containsViewportTop
           ? 0
           : Math.abs(rect.top - rootRect.top),
@@ -220,6 +210,7 @@
         type: "anchor",
         id: anchor.id,
         offsetTop: rect.top - rootRect.top,
+        contentTop: rect.top - rootRect.top + root.scrollTop,
         distance: Math.abs(rect.top - rootRect.top),
       });
     });
@@ -231,7 +222,7 @@
     // Prefer a node that contains the viewport's top edge; otherwise try
     // witnesses in order of the distance between their top and that edge.
     candidates.sort((left, right) => left.distance - right.distance);
-    return { target, candidates };
+    return { target, candidates, scrollTop: root.scrollTop };
   }
 
   // --- Finding nodes, anchors, and their lazy chunks ---
@@ -315,16 +306,6 @@
     // smooth scrolling so animation cannot race with changing chunk sizes.
     const previousScrollBehavior = root.style.scrollBehavior;
     root.style.scrollBehavior = "auto";
-    controlledScrollActive = true;
-    controlledScrollToken += 1;
-    const currentControlledScrollToken = controlledScrollToken;
-    // Stop classifying later scroll events as controller-owned after the next
-    // browser frame, unless a newer correction has started meanwhile.
-    requestAnimationFrame(() => {
-      if (currentControlledScrollToken === controlledScrollToken) {
-        controlledScrollActive = false;
-      }
-    });
 
     root.scrollTop += delta;
 
@@ -344,6 +325,95 @@
   // from the top of the content viewport.
   function restoreElementTop(target, offsetTop) {
     restoreElementEdge(target, "top", offsetTop);
+  }
+
+  // Move the viewport by a measured geometry delta without replacing the
+  // user's current scroll position. The delta adds only space gained or lost
+  // above the saved content, so wheel, keyboard, and scrollbar movement that
+  // happened meanwhile remains part of scrollTop.
+  function compensateScrollTopBy(delta) {
+    const root = contentRoot();
+    if (!root || Math.abs(delta) <= 1) return;
+
+    const previousScrollBehavior = root.style.scrollBehavior;
+    root.style.scrollBehavior = "auto";
+    root.scrollTop += delta;
+    root.style.scrollBehavior = previousScrollBehavior || "";
+  }
+
+  // Move every current passive lock to the geometry that exists after one
+  // correction. Several chunks can change before their observers run. Once
+  // one lock compensates that combined change, the other locks must start
+  // from the same new document coordinates or they would apply part of the
+  // change again when their own callbacks run.
+  function synchronizePassiveGeometryBaselines(root, currentSnapshot) {
+    const snapshots = new Set([currentSnapshot]);
+    pendingChunkFrames.forEach((frame) => {
+      const viewportLock = pendingChunkSnapshots.get(frame);
+      if (
+        viewportLock?.generation === generation &&
+        !viewportLock.followsActiveViewportLock
+      ) {
+        snapshots.add(viewportLock.snapshot);
+      }
+    });
+    observedGeometryElements.forEach((element) => {
+      const viewportLock = geometryLocks.get(element);
+      if (
+        viewportLock?.generation === generation &&
+        !viewportLock.followsActiveViewportLock
+      ) {
+        snapshots.add(viewportLock.snapshot);
+      }
+    });
+
+    const rootTop = root.getBoundingClientRect().top;
+    snapshots.forEach((snapshot) => {
+      snapshot.candidates.forEach((candidate) => {
+        const anchor = document.getElementById(candidate.id);
+        if (!anchor) return;
+        const target = targetForCandidate(candidate, anchor);
+        candidate.contentTop =
+          target.getBoundingClientRect().top - rootTop + root.scrollTop;
+      });
+      snapshot.scrollTop = root.scrollTop;
+    });
+  }
+
+  // Measure how far the saved content moved inside the scrollable document,
+  // then move scrollTop by exactly that geometry change. Coordinates inside
+  // the scrollable document do not change when the user scrolls, so this does
+  // not need to guess whether a simultaneous scroll event came from the user,
+  // the browser, or this controller.
+  function compensatePassiveGeometry(snapshot, expectedGeneration) {
+    if (!snapshot || !isCurrentGeneration(expectedGeneration)) return;
+    const root = contentRoot();
+    if (!root) return;
+
+    const rootTop = root.getBoundingClientRect().top;
+    let geometryDelta = null;
+    snapshot.candidates.forEach((candidate) => {
+      const anchor = document.getElementById(candidate.id);
+      if (!anchor) return;
+      const target = targetForCandidate(candidate, anchor);
+      const contentTop =
+        target.getBoundingClientRect().top - rootTop + root.scrollTop;
+      if (geometryDelta === null) {
+        geometryDelta = contentTop - candidate.contentTop;
+      }
+    });
+    if (geometryDelta === null) return;
+
+    // When content shrinks near the end of the document, the browser may have
+    // already clamped scrollTop to its new maximum. Subtract that automatic
+    // movement so the controller applies only the unhandled part of the
+    // geometry change.
+    const automaticScrollDelta = root.scrollTop - snapshot.scrollTop;
+    compensateScrollTopBy(geometryDelta - automaticScrollDelta);
+    // Give every passive lock the new document geometry. Another chunk may
+    // already have changed before its own observer runs; leaving its old
+    // baseline would make it apply this same delta a second time.
+    synchronizePassiveGeometryBaselines(root, snapshot);
   }
 
   // --- Waiting for a saved node or anchor to appear ---
@@ -589,15 +659,16 @@
 
   // Watch every document node in a loaded chunk for later outer-size changes.
   // For example, an image or formula above the visible content can acquire its
-  // final height later and push that content down. Restore the saved witness on
-  // the next browser frame so it stays at the same viewport coordinate. A
-  // change below the witness produces no displacement and therefore no scroll.
+  // final height later and push that content down. Compensate after layout and
+  // before paint so the saved content never appears at the displaced
+  // coordinate. A change below the witness produces no displacement and
+  // therefore no scroll.
   function observeChunkGeometry(frame, viewportLock) {
     if (!window.ResizeObserver) return;
 
     if (!geometryResizeObserver) {
-      // Convert size notifications into one restoration of an applicable
-      // current viewport lock on the next browser frame.
+      // Convert all size notifications in one observer delivery into one
+      // correction using the applicable current viewport lock.
       geometryResizeObserver = new ResizeObserver((entries) => {
         // Select a current lock associated with any node that changed size.
         entries.forEach((entry) => {
@@ -609,21 +680,22 @@
                 : entryLock;
           }
         });
-        if (!pendingResizeLock || resizeRestoreScheduled) return;
-
-        resizeRestoreScheduled = true;
-        // Combine all resize notifications received before the next frame into
-        // one restoration.
-        requestAnimationFrame(() => {
-          resizeRestoreScheduled = false;
-          const viewportLockToRestore = pendingResizeLock;
-          pendingResizeLock = null;
-          if (!viewportLockToRestore) return;
+        const viewportLockToRestore = pendingResizeLock;
+        pendingResizeLock = null;
+        if (!viewportLockToRestore) return;
+        // ResizeObserver runs after layout but before paint. Compensate here so
+        // the changed geometry is never painted at an intermediate position.
+        if (viewportLockToRestore.followsActiveViewportLock) {
           restoreViewportAnchor(
             viewportLockToRestore.snapshot,
             viewportLockToRestore.generation
           );
-        });
+        } else {
+          compensatePassiveGeometry(
+            viewportLockToRestore.snapshot,
+            viewportLockToRestore.generation
+          );
+        }
       });
     }
 
@@ -726,17 +798,50 @@
     return navigationGeneration;
   }
 
-  // When the user interacts with the document through a pointer, wheel, or
-  // touch input, cancel delayed restores from the previous viewport state.
-  // Mark the next 120 ms as user-controlled scrolling so a lazy chunk does not
-  // pull the viewport away from the place the user is choosing.
-  // A scroll event alone is not enough: page-size changes and this controller
-  // also emit scroll events.
+  // Start a viewport state chosen by direct scrolling. Keep passive chunk
+  // responses in the new state because their geometry changes still belong to
+  // the content the user is approaching. Keep passive resize observation for
+  // chunks that are already loaded, but discard operation-specific locks.
+  function advanceGenerationForUserScroll() {
+    generation += 1;
+    const userGeneration = generation;
+    activeViewportLock = null;
+    pendingResizeLock = null;
+
+    // A later resize in passively loaded content still changes geometry above
+    // the reader, so carry its lock into the new user-selected viewport state.
+    // Stop watching nodes owned by an explicit operation that user input has
+    // cancelled.
+    observedGeometryElements.forEach((element) => {
+      const viewportLock = geometryLocks.get(element);
+      if (viewportLock && !viewportLock.followsActiveViewportLock) {
+        viewportLock.generation = userGeneration;
+      } else {
+        geometryResizeObserver?.unobserve(element);
+        observedGeometryElements.delete(element);
+      }
+    });
+
+    pendingChunkFrames.forEach((frame) => {
+      const pendingSnapshot = pendingChunkSnapshots.get(frame);
+      if (
+        pendingSnapshot !== undefined &&
+        !pendingSnapshot.followsActiveViewportLock
+      ) {
+        pendingSnapshot.generation = userGeneration;
+      }
+    });
+    return userGeneration;
+  }
+
+  // When the user scrolls through a pointer, wheel, or touch input, cancel an
+  // operation-specific position from the previous viewport state. Keep pending
+  // passive chunks so their later height changes can still be added to the
+  // user's new scroll position.
   function invalidateForUserInput(event) {
     if (!event.target.closest?.(CONTENT_ROOT_SELECTOR)) return;
-    userScrollActiveUntil = performance.now() + ACTIVE_SCROLL_WINDOW_MS;
     pendingDeleteBoundary = null;
-    advanceGeneration();
+    advanceGenerationForUserScroll();
   }
 
   // Cancel a pending delete position and delayed restores from the previous
@@ -756,17 +861,6 @@
     pendingChunkFrames.delete(frame);
     pendingSnapshot?.renderObserver?.disconnect();
     return pendingSnapshot;
-  }
-
-  // Return true when the user is still scrolling and this chunk load is not
-  // part of a full content replacement with its own restore position.
-  // In this case, let the browser follow the user's scrolling instead of
-  // restoring the position saved for the chunk.
-  function passiveUserScrollIsActive(pendingSnapshot) {
-    return (
-      !pendingSnapshot.followsActiveViewportLock &&
-      performance.now() <= userScrollActiveUntil
-    );
   }
 
   // --- Handling delete confirmation and full document-content replacement ---
@@ -878,14 +972,18 @@
       generation,
       snapshot,
       followsActiveViewportLock,
-      renderStarted: false,
       renderObserver: null,
     };
-    // Once Turbo starts inserting chunk DOM, freeze snapshot rebasing and
-    // correct its mutations unless active user scrolling owns the viewport.
+    // As Turbo inserts chunk DOM, compensate each geometry change above the
+    // saved content. The saved document coordinate stays valid even if the
+    // user scrolls at the same time.
     pendingSnapshot.renderObserver = new MutationObserver(() => {
-      pendingSnapshot.renderStarted = true;
-      if (!passiveUserScrollIsActive(pendingSnapshot)) {
+      if (!pendingSnapshot.followsActiveViewportLock) {
+        compensatePassiveGeometry(
+          pendingSnapshot.snapshot,
+          pendingSnapshot.generation
+        );
+      } else {
         // Restore soon after Turbo inserts the real chunk content. Restore once
         // more at frame-load, after the placeholder loses its estimated height.
         restoreViewportAnchor(
@@ -912,10 +1010,15 @@
     explicitNavigationFrames.delete(frame);
     if (!pendingSnapshot) return;
 
-    if (passiveUserScrollIsActive(pendingSnapshot)) {
-      // This chunk has no operation-specific restore position. The user is
-      // actively scrolling, so let the browser keep the viewport moving
-      // instead of pulling it back to the saved place.
+    if (!pendingSnapshot.followsActiveViewportLock) {
+      // Add only the final geometry difference produced when the placeholder
+      // loses its estimated height. Any simultaneous user movement remains in
+      // scrollTop and continues in the same direction.
+      compensatePassiveGeometry(
+        pendingSnapshot.snapshot,
+        pendingSnapshot.generation
+      );
+      observeChunkGeometry(frame, pendingSnapshot);
       return;
     }
 
@@ -926,6 +1029,17 @@
       pendingSnapshot.generation
     );
     observeChunkGeometry(frame, pendingSnapshot);
+    // Restore once more during the next rendering update. Turbo or related
+    // frame-load work may finish changing geometry after this handler, and
+    // that late change must not move an operation-specific target away from
+    // its saved position. New user input starts another generation and makes
+    // this delayed correction a no-op.
+    requestAnimationFrame(() => {
+      restoreViewportAnchor(
+        pendingSnapshot.snapshot,
+        pendingSnapshot.generation
+      );
+    });
   });
 
   // If a lazy chunk request fails, discard its saved position and navigation
@@ -937,78 +1051,52 @@
     explicitNavigationFrames.delete(frame);
   });
 
-  // Update passive lazy-load restores while the user scrolls. A restore tied
-  // to an explicit content operation keeps the position selected by that
-  // operation.
-  document.addEventListener("scroll", (event) => {
+  // Record ordinary movement of the content viewport in every passive
+  // geometry lock. A later chunk change compares against this latest scrollTop
+  // so wheel, keyboard, touch, and scrollbar movement are not mistaken for an
+  // automatic clamp caused by changing document height.
+  document.addEventListener(
+    "scroll",
+    (event) => {
       const root = contentRoot();
       if (event.target !== root) return;
-      if (
-        !controlledScrollActive &&
-        performance.now() <= userScrollActiveUntil
-      ) {
-        // Extend only a period that started with direct user input. Page-size
-        // changes and this controller's corrections also emit scroll events;
-        // they do not mean that the user chose a new place.
-        userScrollActiveUntil =
-          performance.now() + ACTIVE_SCROLL_WINDOW_MS;
-      }
-      if (
-        pendingChunkFrames.size === 0 ||
-        performance.now() > userScrollActiveUntil
-      ) {
-        return;
-      }
 
-      // The user can scroll while a lazy chunk is loading.
-      //
-      // For a chunk that has not started rendering, save the node or anchor
-      // that the user sees now and its place in the viewport.
-      //
-      // Do not change a position saved for a full content replacement. That
-      // replacement already selected what the code must restore.
-      const pendingSnapshotsToRebase = [];
-      // Collect passive chunk snapshots that still describe pre-render DOM and
-      // therefore may follow the user's newest scroll position.
       pendingChunkFrames.forEach((frame) => {
-        const pendingSnapshot = pendingChunkSnapshots.get(frame);
+        const viewportLock = pendingChunkSnapshots.get(frame);
         if (
-          pendingSnapshot !== undefined &&
-          pendingSnapshot.generation === generation &&
-          !pendingSnapshot.followsActiveViewportLock &&
-          !pendingSnapshot.renderStarted
+          viewportLock?.generation === generation &&
+          !viewportLock.followsActiveViewportLock
         ) {
-          pendingSnapshotsToRebase.push(pendingSnapshot);
+          viewportLock.snapshot.scrollTop = root.scrollTop;
         }
       });
-      if (pendingSnapshotsToRebase.length === 0) {
-        // No pending chunk can use the user's current position.
-        // Some requests belong to an earlier page state.
-        // Some chunks have already started rendering.
-        // An explicit operation has fixed the position for some chunks.
-        // Some requests no longer have a saved position.
-        // There is nothing to update, so skip scanning all visible nodes and
-        // anchors.
-        return;
-      }
-
-      const latestSnapshot = captureViewportAnchor();
-      if (!latestSnapshot) return;
-
-      // Give every eligible pending chunk the same latest semantic position.
-      pendingSnapshotsToRebase.forEach((pendingSnapshot) => {
-        // Stop updating when rendering starts, so layout-induced scrolling
-        // cannot replace the user's last pre-render position.
-        pendingSnapshot.snapshot = latestSnapshot;
+      observedGeometryElements.forEach((element) => {
+        const viewportLock = geometryLocks.get(element);
+        if (
+          viewportLock?.generation === generation &&
+          !viewportLock.followsActiveViewportLock
+        ) {
+          viewportLock.snapshot.scrollTop = root.scrollTop;
+        }
       });
     },
-    {
-      capture: true,
-      passive: true,
-    }
+    { capture: true, passive: true }
   );
 
   // --- User input event handlers ---
+
+  // Give this controller sole ownership of geometry compensation in the
+  // content viewport. Otherwise native scroll anchoring and the controller can
+  // both react to one chunk replacement in different rendering phases. Exclude
+  // the viewport's descendants because anchor exclusion applies to candidate
+  // subtrees, not to the scrolling box that owns them.
+  function disableNativeScrollAnchoring() {
+    const style = document.createElement("style");
+    style.textContent = `${CONTENT_ROOT_SELECTOR}, ${CONTENT_ROOT_SELECTOR} * { overflow-anchor: none; }`;
+    document.head.append(style);
+  }
+
+  disableNativeScrollAnchoring();
 
   document.addEventListener("wheel", invalidateForUserInput, {
     capture: true,
@@ -1025,15 +1113,16 @@
     passive: true,
   });
 
-  // Treat a scrolling key outside editable controls as newer user intent and
-  // cancel delayed restoration of an older viewport position.
+  // Treat a scrolling key outside editable controls as direct scrolling.
+  // Cancel operation-specific positions, but keep pending passive geometry
+  // corrections so they can be added to the keyboard's continuing movement.
   document.addEventListener("keydown", (event) => {
     if (!SCROLL_KEYS.has(event.key)) return;
     if (event.target.matches?.("input, textarea, [contenteditable='true']")) {
       return;
     }
-    userScrollActiveUntil = performance.now() + ACTIVE_SCROLL_WINDOW_MS;
-    invalidateViewport();
+    pendingDeleteBoundary = null;
+    advanceGenerationForUserScroll();
   });
 
   // --- Hooks used by other document scripts ---

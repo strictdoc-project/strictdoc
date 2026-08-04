@@ -885,9 +885,7 @@ class Test(E2ECase):
 
             # The TOC target loads chunk 2, which also contains the two TEXT
             # siblings used below. Neither TEXT has a title or a TOC item.
-            screen_document.get_toc().do_toc_go_to_anchor(
-                "CREATE-NEXT-SECTION"
-            )
+            screen_document.get_toc().do_toc_go_to_anchor("CREATE-NEXT-SECTION")
             screen_document.assert_document_chunk_loaded(CHUNK_2_ID)
             self.assert_element_not_present(
                 f"#frame-toc li[data-nodeid='{UNTITLED_TEXT_24_MID}']",
@@ -901,11 +899,7 @@ class Test(E2ECase):
             )
             text_node = Node(
                 test_case=self,
-                node_xpath=(
-                    "//sdoc-node[.//*[@id="
-                    f"'{UNTITLED_TEXT_24_MID}'"
-                    "]]"
-                ),
+                node_xpath=(f"//sdoc-node[.//*[@id='{UNTITLED_TEXT_24_MID}']]"),
             )
             text_node.do_delete_node()
 

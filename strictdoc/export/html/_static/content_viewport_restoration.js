@@ -902,11 +902,15 @@
   // --- Invalidating delayed work after user navigation ---
 
   // Give an explicit TOC or fragment navigation ownership of its destination.
-  // Start a new generation so older restores cannot win later, and mark the
-  // destination chunk so its response is not mistaken for an ordinary passive
-  // load. The navigation code, not the reading-position controller, will place
-  // the requested anchor.
+  // Discard a created-node destination saved when an earlier form submission
+  // started: the request may still update the document, but its later response
+  // must not move the viewport away from the destination selected afterward.
+  // Start a new generation so already scheduled restores cannot win either,
+  // and mark the destination chunk so its response is not mistaken for an
+  // ordinary passive load. The navigation code will place the requested
+  // anchor.
   function beginExplicitNavigation(frameId) {
+    pendingCreateTarget = null;
     pendingDeleteBoundary = null;
     const navigationGeneration = advanceGeneration();
     const frame = frameId ? document.getElementById(frameId) : null;

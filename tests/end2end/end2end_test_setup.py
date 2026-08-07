@@ -43,6 +43,18 @@ class End2EndTestSetup:
         assert os.path.isfile(path_to_sandbox_file), path_to_sandbox_file
         return path_to_sandbox_file
 
+    def write_to_sandbox_file(self, file_name, content):
+        path_to_sandbox_file = os.path.join(self.path_to_sandbox, file_name)
+        path_to_parent_dir = os.path.dirname(path_to_sandbox_file)
+        os.makedirs(path_to_parent_dir, exist_ok=True)
+        with open(
+            path_to_sandbox_file,
+            "w",
+            encoding="utf-8",
+        ) as output_file:
+            output_file.write(content)
+        return path_to_sandbox_file
+
     def path_to_expected_output_dir_file(self, file_name):
         path_to_expected_output_dir_file = os.path.join(
             self.path_to_expected_output_dir, file_name

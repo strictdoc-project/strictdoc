@@ -14,15 +14,24 @@ const TOC_LIST_SELECTOR = 'ul#toc';
 const TOC_ELEMENT_SELECTOR = 'a';
 const CONTENT_FRAME_SELECTOR = '[js-toc_highlighting-content_root]'; // stable container, never itself replaced by turbo
 const CONTENT_ELEMENT_SELECTOR = 'sdoc-anchor';
+const CONTENT_SCROLL_CONTAINER_SELECTOR = '.main';
 const TOC_STATE_CHANGED_EVENT = strictDoc.events.TOC_STATE_CHANGED;
 const TOC_FRAGMENT_RESOLVED_EVENT = strictDoc.events.TOC_FRAGMENT_RESOLVED;
 
 // Virtual viewport for TOC section highlighting.
-// We do not use the raw screen edges (0..innerHeight): we shrink the effective
-// area to [top+offset, bottom-offset]. This keeps the active range aligned with
-// what users perceive as "currently visible content" (header space, early closing of the previous node).
-const VIEWPORT_TOP_OFFSET_PX = 64;
-const VIEWPORT_BOTTOM_OFFSET_PX = 32;
+//
+// `.main`, rather than `window`, owns document scrolling. Its top and bottom
+// edges therefore define the real content viewport. The extra top inset closes
+// the previous section shortly after its boundary crosses the visible edge,
+// matching what users perceive as the current section.
+//
+// In the standard layout `.main` starts 48px below the window and ends 32px
+// above its bottom. The historical window-relative bounds 64px..height-32px
+// were consequently equivalent to `.main` plus this 16px top inset. Express
+// that geometry directly so highlighting continues to follow `.main` if the
+// surrounding header or footer layout changes.
+const HIGHLIGHT_VIEWPORT_TOP_INSET_PX = 16;
+const HIGHLIGHT_VIEWPORT_BOTTOM_INSET_PX = 0;
 
 // * Runtime state;
 // * anchorsCount/anchorsSig skip unnecessary re-observe on TOC mutations.
@@ -34,18 +43,25 @@ let tocHighlightingState = {
   anchorsSig: 0,
   contentFrameTop: undefined,
   contentFrameEl: null,
+  linkedAnchors: [],
+  visibleLinks: new Set(),
   closerForFolder: {},
   folderSet: new Set(),
 };
 let tocRefreshRaf = null;
-let anchorRescanRaf = null;
+let anchorUpdateRaf = null;
+const pendingInsertedAnchors = new Set();
 
 function resetState() {
-  // * Keep anchorsCount/anchorsSig to detect changes across TOC mutations.
+  // * Keep anchors and their signature across TOC mutations. The observer
+  // * remains subscribed while link mappings are rebuilt, and the retained
+  // * element identities let processAnchorList() detect a same-ID DOM
+  // * replacement such as Save/Cancel.
   tocHighlightingState.data = {};
   tocHighlightingState.links = null;
-  tocHighlightingState.anchors = null;
   tocHighlightingState.contentFrameEl = null;
+  tocHighlightingState.linkedAnchors = [];
+  tocHighlightingState.visibleLinks = new Set();
   tocHighlightingState.closerForFolder = {};
   tocHighlightingState.folderSet = new Set();
 }
@@ -57,13 +73,18 @@ window.addEventListener("load",function(){
   const tocFrame = document.querySelector(TOC_FRAME_SELECTOR);
   const tocList = tocFrame ? tocFrame.querySelector(TOC_LIST_SELECTOR) : null;
   const contentFrame = document.querySelector(CONTENT_FRAME_SELECTOR);
+  // Document view marks `.main` itself as the content root; table view marks
+  // a descendant. closest() resolves the actual scroll owner in both cases.
+  const scrollContainer = contentFrame
+    ? contentFrame.closest(CONTENT_SCROLL_CONTAINER_SELECTOR)
+    : null;
 
-  if (!tocFrame || !contentFrame) { return }
+  if (!tocFrame || !contentFrame || !scrollContainer) { return }
 
   const anchorObserver = new IntersectionObserver(
     handleIntersect,
     {
-      root: null,
+      root: scrollContainer,
       rootMargin: "0px",
     });
 
@@ -97,10 +118,10 @@ window.addEventListener("load",function(){
   // * Content can also change without the TOC frame mutating - e.g. a
   // * lazily-loaded document chunk inserting nodes whose anchors were not
   // * present at initial load. The TOC frame observer above does not see
-  // * this case (see toc_highlighting.js task notes), so anchors are
-  // * re-scanned via StrictDoc.onInsert as well, instead of a dedicated
+  // * this case (see toc_highlighting.js task notes), so inserted anchors are
+  // * registered via StrictDoc.onInsert, instead of a dedicated
   // * MutationObserver - see the onInsert contract in app_core.js.
-  // * scheduleAnchorRescan() coalesces via requestAnimationFrame, since
+  // * scheduleAnchorUpdate() coalesces via requestAnimationFrame, since
   // * onInsert calls back once per matched element, not once per batch.
   // *
   // * Fires only for CONTENT_ELEMENT_SELECTOR (sdoc-anchor) matches - the
@@ -111,11 +132,11 @@ window.addEventListener("load",function(){
   // * when a node's read view (with its anchor) is re-inserted afterwards -
   // * both on save (already covered anyway by the TOC frame observer,
   // * since saving also updates frame-toc) and on Cancel (which does not
-  // * touch frame-toc: previously this meant the observed anchor element
-  // * for that node stayed stale/detached after any Cancel, independently
-  // * of chunking - this re-scan fixes that case too).
-  strictDoc.onInsert(CONTENT_ELEMENT_SELECTOR, function () {
-    scheduleAnchorRescan(contentFrame, anchorObserver);
+  // * touch frame-toc at all): this update is what keeps the
+  // * IntersectionObserver correctly associated with the re-inserted
+  // * anchor element in both cases.
+  strictDoc.onInsert(CONTENT_ELEMENT_SELECTOR, function (anchor) {
+    scheduleAnchorUpdate(contentFrame, anchorObserver, anchor);
   });
 
   // * Refresh TOC highlights when collapsible_toc.js changes branch visibility.
@@ -211,12 +232,40 @@ function processLinkList(tocFrame) {
   });
 }
 
+function syncAnchorObserverSubscriptions(anchorObserver, newAnchors) {
+  // Logical equality by anchor ID is insufficient for IntersectionObserver.
+  // Turbo can replace an <sdoc-anchor> with a new DOM element carrying the
+  // same ID. Subscribe the new identity and release the detached one while
+  // leaving every unchanged target untouched.
+  const previousAnchors = new Set(tocHighlightingState.anchors ?? []);
+  const nextAnchors = new Set(newAnchors);
+
+  newAnchors.forEach(anchor => {
+    const id = anchor.id;
+    tocHighlightingState.data[id] = {
+      ...tocHighlightingState.data[id],
+      'anchor': anchor
+    };
+    if (!previousAnchors.has(anchor)) {
+      anchorObserver.observe(anchor);
+    }
+  });
+  previousAnchors.forEach(anchor => {
+    if (!nextAnchors.has(anchor)) {
+      anchorObserver.unobserve(anchor);
+    }
+  });
+  tocHighlightingState.anchors = newAnchors;
+}
+
 function processAnchorList(contentFrame, anchorObserver) {
   // * Re-scan content anchors;
-  // * detect cheap changes via count + order-sensitive signature.
+  // * detect cheap logical changes via count + order-sensitive signature.
 
   // * Collects all anchors in the document
-  const newAnchors = contentFrame.querySelectorAll(CONTENT_ELEMENT_SELECTOR);
+  const newAnchors = Array.from(
+    contentFrame.querySelectorAll(CONTENT_ELEMENT_SELECTOR)
+  );
   tocHighlightingState.contentFrameEl = contentFrame;
 
   // * Build order-sensitive signature to detect renames/reorders without full re-subscribe.
@@ -238,48 +287,47 @@ function processAnchorList(contentFrame, anchorObserver) {
     tocHighlightingState.anchorsSig === sig
   );
 
+  // Even an unchanged logical list can contain a replacement DOM element.
+  // Keep observer subscriptions synchronized by element identity first.
+  syncAnchorObserverSubscriptions(anchorObserver, newAnchors);
+
   if (unchanged) {
-    // * After resetState(), mapping in data[] is empty.
-    // We must rebuild anchor→data mapping even if the set is unchanged,
-    // otherwise IntersectionObserver events may hit undefined.
-    tocHighlightingState.anchors = newAnchors;
-    newAnchors.forEach(anchor => {
-      const id = anchor.id;
-      tocHighlightingState.data[id] = {
-        'anchor': anchor,
-        ...tocHighlightingState.data[id]
-      };
-    });
+    rebuildLinkedAnchors();
     return;
   }
 
-  // * Set changed → drop old IO targets and re‑subscribe.
-  anchorObserver.disconnect(); // ** Re-subscribe anchors only when content changed
-
-  tocHighlightingState.anchors = newAnchors;
   tocHighlightingState.anchorsCount = newAnchors.length;
   tocHighlightingState.anchorsSig = sig;
 
-  newAnchors.forEach(anchor => {
+  rebuildLinkedAnchors();
+}
+
+function rebuildLinkedAnchors() {
+  const linkedAnchors = [];
+  tocHighlightingState.anchors.forEach(anchor => {
     const id = anchor.id;
-    tocHighlightingState.data[id] = {
-      'anchor': anchor,
-      ...tocHighlightingState.data[id]
-    };
-    // * Adds an observer for the position of the anchor
-    anchorObserver.observe(anchor);
+    const pair = tocHighlightingState.data[id];
+    if (!pair || !pair.anchor || !pair.link) {
+      return;
+    }
+    linkedAnchors.push({
+      anchor: pair.anchor,
+      link: pair.link,
+    });
   });
+  tocHighlightingState.linkedAnchors = linkedAnchors;
 }
 
 function handleIntersect(entries, observer) {
   // IntersectionObserver drives events, but the actual "which sections are
   // visible" decision is done by range geometry in updateVisibleSectionItems().
-  let topBound = VIEWPORT_TOP_OFFSET_PX;
-  let bottomBound = window.innerHeight - VIEWPORT_BOTTOM_OFFSET_PX;
-  if (entries.length > 0 && entries[0].rootBounds) {
-    topBound = entries[0].rootBounds.top + VIEWPORT_TOP_OFFSET_PX;
-    bottomBound = entries[0].rootBounds.bottom - VIEWPORT_BOTTOM_OFFSET_PX;
+  const viewportBounds = getHighlightViewportBounds(
+    entries.length > 0 ? entries[0].rootBounds : null
+  );
+  if (!viewportBounds) {
+    return;
   }
+  const { topBound, bottomBound } = viewportBounds;
 
   entries.forEach((entry) => {
 
@@ -364,20 +412,168 @@ function handleIntersect(entries, observer) {
 }
 
 // Coalesce multiple content-frame mutations (e.g. all nodes inserted by one
-// lazily-loaded chunk) into a single anchor re-scan.
-function scheduleAnchorRescan(contentFrame, anchorObserver) {
-  if (anchorRescanRaf !== null) {
+// lazily-loaded chunk) into a single anchor-cache update.
+function scheduleAnchorUpdate(contentFrame, anchorObserver, insertedAnchor) {
+  pendingInsertedAnchors.add(insertedAnchor);
+  if (anchorUpdateRaf !== null) {
     return;
   }
-  anchorRescanRaf = requestAnimationFrame(() => {
-    anchorRescanRaf = null;
+  anchorUpdateRaf = requestAnimationFrame(() => {
+    anchorUpdateRaf = null;
+    const insertedAnchors = Array.from(pendingInsertedAnchors);
+    pendingInsertedAnchors.clear();
     // * Deliberately not resetState()+processLinkList(): the TOC link for
     // * every node id was already captured by the initial full scan, so
     // * merging newly found anchors into the existing data[id] entries is
     // * enough - see toc_highlighting.js task notes.
-    processAnchorList(contentFrame, anchorObserver);
+    if (
+      !processContiguousInsertedAnchors(
+        contentFrame,
+        anchorObserver,
+        insertedAnchors
+      )
+    ) {
+      // Replacements of an existing ID or several disjoint insertion ranges
+      // are uncommon and structurally more complex. Preserve the established
+      // full reconciliation path for those cases.
+      processAnchorList(contentFrame, anchorObserver);
+    }
     refreshHighlightFromCurrentState();
   });
+}
+
+function processContiguousInsertedAnchors(
+  contentFrame,
+  anchorObserver,
+  insertedAnchors
+) {
+  const newAnchors = insertedAnchors.filter(anchor => {
+    return anchor.isConnected && contentFrame.contains(anchor);
+  });
+  if (newAnchors.length === 0) {
+    return true;
+  }
+
+  // onInsert also reports elements that already existed when the handler was
+  // registered. Ignore those exact elements. A different element with the
+  // same ID is a replacement (edit/save/cancel) and uses full reconciliation.
+  const uniqueNewAnchors = [];
+  const seenAnchorIds = new Set();
+  for (const anchor of newAnchors) {
+    if (seenAnchorIds.has(anchor.id)) {
+      return false;
+    }
+    seenAnchorIds.add(anchor.id);
+
+    const existingAnchor = tocHighlightingState.data[anchor.id]?.anchor;
+    if (existingAnchor === anchor) {
+      continue;
+    }
+    if (existingAnchor !== undefined) {
+      return false;
+    }
+    uniqueNewAnchors.push(anchor);
+  }
+  if (uniqueNewAnchors.length === 0) {
+    return true;
+  }
+
+  uniqueNewAnchors.sort(compareAnchorsByDomOrder);
+  const currentAnchors = tocHighlightingState.anchors ?? [];
+  if (currentAnchors.some(anchor => !anchor.isConnected)) {
+    // A pure insertion leaves every tracked anchor connected. A disconnected
+    // element means this batch also replaced or removed content, possibly
+    // under a different ID, so reconcile the complete current DOM.
+    return false;
+  }
+  const anchorInsertionIndex = findAnchorInsertionIndex(
+    currentAnchors,
+    uniqueNewAnchors[0],
+    anchor => anchor
+  );
+  const nextCurrentAnchor = currentAnchors[anchorInsertionIndex];
+  if (
+    nextCurrentAnchor !== undefined &&
+    !isBeforeInDom(
+      uniqueNewAnchors[uniqueNewAnchors.length - 1],
+      nextCurrentAnchor
+    )
+  ) {
+    // At least one existing anchor lies inside the inserted batch, so this is
+    // not a single new contiguous range.
+    return false;
+  }
+
+  uniqueNewAnchors.forEach(anchor => {
+    tocHighlightingState.data[anchor.id] = {
+      ...tocHighlightingState.data[anchor.id],
+      'anchor': anchor
+    };
+    anchorObserver.observe(anchor);
+  });
+  currentAnchors.splice(
+    anchorInsertionIndex,
+    0,
+    ...uniqueNewAnchors
+  );
+  tocHighlightingState.anchors = currentAnchors;
+
+  const newLinkedAnchors = uniqueNewAnchors.flatMap(anchor => {
+    const pair = tocHighlightingState.data[anchor.id];
+    if (pair?.link === undefined) {
+      return [];
+    }
+    return [{
+      anchor,
+      link: pair.link,
+    }];
+  });
+  if (newLinkedAnchors.length > 0) {
+    const linkedAnchorInsertionIndex = findAnchorInsertionIndex(
+      tocHighlightingState.linkedAnchors,
+      newLinkedAnchors[0].anchor,
+      linkedAnchor => linkedAnchor.anchor
+    );
+    tocHighlightingState.linkedAnchors.splice(
+      linkedAnchorInsertionIndex,
+      0,
+      ...newLinkedAnchors
+    );
+  }
+
+  // The ordered signature is only needed to recognize a future full scan as
+  // unchanged. Force that future scan to reconcile once; lazy insertions
+  // themselves continue through this incremental path.
+  tocHighlightingState.anchorsCount = -1;
+  return true;
+}
+
+function compareAnchorsByDomOrder(leftAnchor, rightAnchor) {
+  if (leftAnchor === rightAnchor) {
+    return 0;
+  }
+  return isBeforeInDom(leftAnchor, rightAnchor) ? -1 : 1;
+}
+
+function isBeforeInDom(leftAnchor, rightAnchor) {
+  return Boolean(
+    leftAnchor.compareDocumentPosition(rightAnchor) &
+    Node.DOCUMENT_POSITION_FOLLOWING
+  );
+}
+
+function findAnchorInsertionIndex(items, insertedAnchor, getAnchor) {
+  let lowerIndex = 0;
+  let upperIndex = items.length;
+  while (lowerIndex < upperIndex) {
+    const middleIndex = Math.floor((lowerIndex + upperIndex) / 2);
+    if (isBeforeInDom(getAnchor(items[middleIndex]), insertedAnchor)) {
+      lowerIndex = middleIndex + 1;
+    } else {
+      upperIndex = middleIndex;
+    }
+  }
+  return lowerIndex;
 }
 
 // Coalesce multiple TOC state changes into a single frame refresh.
@@ -397,11 +593,34 @@ function refreshHighlightFromCurrentState() {
     return;
   }
 
-  const topBound = VIEWPORT_TOP_OFFSET_PX;
-  const bottomBound = window.innerHeight - VIEWPORT_BOTTOM_OFFSET_PX;
+  const viewportBounds = getHighlightViewportBounds();
+  if (!viewportBounds) {
+    return;
+  }
+  const { topBound, bottomBound } = viewportBounds;
 
   updateVisibleSectionItems(topBound, bottomBound);
   handleHashChange();
+}
+
+function getHighlightViewportBounds(observerRootBounds = null) {
+  // IntersectionObserver normally supplies the rectangle of its `.main`
+  // root. Explicit refreshes (for example after collapsing a TOC branch) have
+  // no observer entry, so measure the same scroll container directly.
+  const scrollContainer = tocHighlightingState.contentFrameEl?.closest(
+    CONTENT_SCROLL_CONTAINER_SELECTOR
+  );
+  const rootBounds = observerRootBounds
+    ?? scrollContainer?.getBoundingClientRect();
+  if (!rootBounds) {
+    return null;
+  }
+  return {
+    topBound: rootBounds.top + HIGHLIGHT_VIEWPORT_TOP_INSET_PX,
+    bottomBound: (
+      rootBounds.bottom - HIGHLIGHT_VIEWPORT_BOTTOM_INSET_PX
+    ),
+  };
 }
 
 function updateVisibleSectionItems(topBound, bottomBound) {
@@ -410,63 +629,93 @@ function updateVisibleSectionItems(topBound, bottomBound) {
   // [anchor_last.top, contentFrame.bottom).
   // If this interval overlaps the virtual viewport [topBound, bottomBound],
   // the corresponding TOC item is marked as intersected.
-  if (!tocHighlightingState.anchors || tocHighlightingState.anchors.length === 0) {
-    return;
-  }
-
-  const linkedAnchors = [];
-  tocHighlightingState.anchors.forEach(anchor => {
-    const id = anchor.id;
-    const pair = tocHighlightingState.data[id];
-    if (!pair || !pair.anchor || !pair.link) {
-      return;
-    }
-    linkedAnchors.push({ id, anchor: pair.anchor, link: pair.link });
-  });
-
+  const linkedAnchors = tocHighlightingState.linkedAnchors;
   if (linkedAnchors.length === 0) {
+    tocHighlightingState.visibleLinks.forEach(link => {
+      fireItem(link, false);
+    });
+    tocHighlightingState.visibleLinks = new Set();
     return;
   }
 
-  const visibleIds = new Set();
-  for (let i = 0; i < linkedAnchors.length; i++) {
-    const current = linkedAnchors[i];
-    const next = linkedAnchors[i + 1];
+  // Anchor positions follow DOM order. Locate the small interval overlapping
+  // the viewport with logarithmic geometry reads instead of measuring every
+  // loaded anchor on each IntersectionObserver callback.
+  //
+  // The section containing topBound starts at the last anchor whose top is
+  // <= topBound. Anchors at bottomBound start outside the open lower edge and
+  // are excluded. These bounds preserve the original interval definition:
+  // [anchor_i.top, anchor_{i+1}.top).
+  const firstAnchorBelowTop = findFirstAnchorTopGreaterThan(
+    linkedAnchors,
+    topBound
+  );
+  const firstAnchorAtOrBelowBottom = findFirstAnchorTopAtLeast(
+    linkedAnchors,
+    bottomBound
+  );
+  const firstVisibleSectionIndex = Math.max(0, firstAnchorBelowTop - 1);
 
-    // Section i is the interval [anchor_i, anchor_{i+1}).
-    const sectionTop = current.anchor.getBoundingClientRect().top;
-    const sectionBottom = next
-      ? next.anchor.getBoundingClientRect().top
-      : (tocHighlightingState.contentFrameEl?.getBoundingClientRect().bottom ?? bottomBound);
-
-    const sectionOverlapsViewport =
-      sectionBottom > topBound && sectionTop < bottomBound;
-
-    if (sectionOverlapsViewport) {
-      visibleIds.add(current.id);
+  // If a TOC child is hidden by a collapsed branch, its first visible ancestor
+  // owns the highlight. Several visible children can therefore resolve to the
+  // same link, so collect the result in a Set.
+  const nextVisibleLinks = new Set();
+  for (
+    let index = firstVisibleSectionIndex;
+    index < firstAnchorAtOrBelowBottom;
+    index += 1
+  ) {
+    const link = resolveVisibleTocLink(linkedAnchors[index].link);
+    if (link) {
+      nextVisibleLinks.add(link);
     }
   }
 
-  // Reset previous "intersected" states.
-  linkedAnchors.forEach(item => {
-    fireItem(item.link, false);
-  });
-
-  // Highlight visible links. If a link is hidden under collapsed parents,
-  // move highlight up to the first visible ancestor link.
-  const visibleLinks = new Set();
-  linkedAnchors.forEach(item => {
-    if (visibleIds.has(item.id)) {
-      const link = resolveVisibleTocLink(item.link);
-      if (link) {
-        visibleLinks.add(link);
-      }
+  // Attribute writes can trigger style recalculation. Touch only links whose
+  // state actually changed instead of clearing and rebuilding all N links.
+  tocHighlightingState.visibleLinks.forEach(link => {
+    if (!nextVisibleLinks.has(link)) {
+      fireItem(link, false);
     }
   });
-
-  visibleLinks.forEach(link => {
-    fireItem(link, true);
+  nextVisibleLinks.forEach(link => {
+    if (!tocHighlightingState.visibleLinks.has(link)) {
+      fireItem(link, true);
+    }
   });
+  tocHighlightingState.visibleLinks = nextVisibleLinks;
+}
+
+function findFirstAnchorTopGreaterThan(linkedAnchors, boundary) {
+  let lowerIndex = 0;
+  let upperIndex = linkedAnchors.length;
+  while (lowerIndex < upperIndex) {
+    const middleIndex = Math.floor((lowerIndex + upperIndex) / 2);
+    const anchorTop =
+      linkedAnchors[middleIndex].anchor.getBoundingClientRect().top;
+    if (anchorTop <= boundary) {
+      lowerIndex = middleIndex + 1;
+    } else {
+      upperIndex = middleIndex;
+    }
+  }
+  return lowerIndex;
+}
+
+function findFirstAnchorTopAtLeast(linkedAnchors, boundary) {
+  let lowerIndex = 0;
+  let upperIndex = linkedAnchors.length;
+  while (lowerIndex < upperIndex) {
+    const middleIndex = Math.floor((lowerIndex + upperIndex) / 2);
+    const anchorTop =
+      linkedAnchors[middleIndex].anchor.getBoundingClientRect().top;
+    if (anchorTop < boundary) {
+      lowerIndex = middleIndex + 1;
+    } else {
+      upperIndex = middleIndex;
+    }
+  }
+  return lowerIndex;
 }
 
 function isElementVisible(element) {

@@ -1,0 +1,27 @@
+[DOCUMENT]
+TITLE: Control Document
+
+[REQUIREMENT]
+UID: CREQ-001
+TITLE: Control Requirement 1
+STATEMENT: The control fixture statement CTRLSTMT-001 must appear exactly once.
+
+[REQUIREMENT]
+UID: CREQ-002
+TITLE: Control Requirement 2
+STATEMENT: The control fixture statement CTRLSTMT-002 must appear exactly once.
+
+[REQUIREMENT]
+UID: CREQ-003
+TITLE: Control Requirement 3
+STATEMENT: The control fixture statement CTRLSTMT-003 must appear exactly once.
+
+[REQUIREMENT]
+UID: CREQ-004
+TITLE: Control Requirement 4
+STATEMENT: The control fixture statement CTRLSTMT-004 must appear exactly once.
+
+[REQUIREMENT]
+UID: CREQ-005
+TITLE: Control Requirement 5
+STATEMENT: The control fixture statement CTRLSTMT-005 must appear exactly once.

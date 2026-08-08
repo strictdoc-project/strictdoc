@@ -63,6 +63,10 @@ fields on generated ``TEST_RESULT`` nodes.
 
 4\) Fixed: the TABLE VIEW now renders the Relation cell as non-editable for node
 types whose grammar does not declare relations.
+
+5\) The traceability index now preserves whether each result verifies the
+selected requirement or one of its descendants, and whether a generated test
+case mediates the link.
 <<<
 
 [[/SECTION]]

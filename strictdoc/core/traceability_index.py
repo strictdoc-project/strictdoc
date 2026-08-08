@@ -4,6 +4,7 @@
 
 import datetime
 from copy import copy, deepcopy
+from dataclasses import dataclass
 from typing import Any, Dict, Generator, List, Optional, Tuple, Union
 
 from strictdoc.backend.sdoc.document_reference import DocumentReference
@@ -23,7 +24,7 @@ from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     SourceFileTraceabilityInfo,
 )
 from strictdoc.core.asset_manager import AssetManager
-from strictdoc.core.constants import GraphLinkType
+from strictdoc.core.constants import GraphEdgeLabel, GraphLinkType
 from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
@@ -46,6 +47,13 @@ from strictdoc.helpers.mid import MID
 from strictdoc.helpers.ordered_set import OrderedSet
 from strictdoc.helpers.paths import SDocRelativePath
 from strictdoc.helpers.sorting import alphanumeric_sort
+
+
+@dataclass(frozen=True)
+class VerificationResultProvenance:
+    verified_requirement: SDocNode
+    test_case: Optional[SDocNode]
+    test_result: SDocNode
 
 
 class TraceabilityIndex:
@@ -353,6 +361,57 @@ class TraceabilityIndex:
                 edge=role,
             )
         )
+
+    def get_verification_result_provenance(
+        self, requirement: SDocNode
+    ) -> List[VerificationResultProvenance]:
+        assert isinstance(requirement, SDocNode)
+
+        result_provenance: List[VerificationResultProvenance] = []
+        visited_requirements: OrderedSet[SDocNode] = OrderedSet()
+        requirements_to_visit: List[SDocNode] = [requirement]
+
+        while len(requirements_to_visit) > 0:
+            current_requirement: SDocNode = requirements_to_visit.pop()
+            if current_requirement in visited_requirements:
+                continue
+            visited_requirements.add(current_requirement)
+
+            hierarchy_children: List[SDocNode] = []
+            for child_node_, edge_label_ in self.get_child_relations_with_roles(
+                current_requirement
+            ):
+                if edge_label_ == GraphEdgeLabel.IS_SATISFIED_BY:
+                    result_provenance.append(
+                        VerificationResultProvenance(
+                            verified_requirement=current_requirement,
+                            test_case=None,
+                            test_result=child_node_,
+                        )
+                    )
+                    continue
+
+                if edge_label_ == GraphEdgeLabel.IS_VERIFIED_BY:
+                    for (
+                        test_result_,
+                        test_case_edge_label_,
+                    ) in self.get_child_relations_with_roles(child_node_):
+                        if test_case_edge_label_ == GraphEdgeLabel.HAS_RESULT:
+                            result_provenance.append(
+                                VerificationResultProvenance(
+                                    verified_requirement=current_requirement,
+                                    test_case=child_node_,
+                                    test_result=test_result_,
+                                )
+                            )
+                    continue
+
+                if not isinstance(edge_label_, GraphEdgeLabel):
+                    hierarchy_children.append(child_node_)
+
+            requirements_to_visit.extend(reversed(hierarchy_children))
+
+        return result_provenance
 
     def get_display_role_for_parent_relation(
         self,

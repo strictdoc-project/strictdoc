@@ -164,17 +164,27 @@ feature's architecture (`strictdoc/features/tree_map/`):
 1. Resolve the WebGL/Selenium-Chrome environment issue (see Testing above)
    and add the automated end-to-end test coverage this feature currently
    lacks.
-2. Add `RELATIONS`-derived edges (Parent/Child/Refines/etc.) as a second,
+2. Graph view switcher: let the user pick between different 3d-force-graph
+   layouts (default force-directed vs. `dagMode` tree layouts — `td`, `lr`,
+   `radialout`, etc.) from the screen itself, without a page reload.
+3. Add `RELATIONS`-derived edges (Parent/Child/Refines/etc.) as a second,
    visually distinct edge type layered on top of the containment DAG.
-3. Click-to-preview a node's content (e.g., a hover/click side panel).
-4. Click-to-open a node in the document editor/viewer (reusing
+4. Add source files as graph nodes: requirements/sections that have
+   traceability links to source files (the same data
+   `tree_map`/`source_coverage` use, via
+   `traceability_index.get_file_traceability_index()`) get an additional
+   node per linked file (or per file, deduplicated) and an edge from the
+   requirement to it — so the graph shows not just the document structure
+   but which artifacts (source/test files) back which requirements.
+5. Click-to-preview a node's content (e.g., a hover/click side panel).
+6. Click-to-open a node in the document editor/viewer (reusing
    `LinkRenderer.render_node_link`, as `tree_map` already does for its
    "Open in document" links).
-5. Filters/grouping (by document, node type, coverage, free text).
-6. Single-document graph view (in addition to the project-wide graph).
-7. Consider an SRS requirement in
+7. Filters/grouping (by document, node type, coverage, free text).
+8. Single-document graph view (in addition to the project-wide graph).
+9. Consider an SRS requirement in
    `docs/strictdoc_21_l2_high_level_requirements.sdoc` for this screen,
    as exists for `tree_map` (`SDOC-SRS-157`).
-8. Performance ceiling is untested against large projects — if the graph
-   becomes sluggish on big document trees, revisit (e.g., a node-count
-   warning).
+10. Performance ceiling is untested against large projects — if the graph
+    becomes sluggish on big document trees, revisit (e.g., a node-count
+    warning).

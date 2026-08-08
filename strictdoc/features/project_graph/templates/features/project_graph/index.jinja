@@ -26,6 +26,20 @@
 {% endblock header_content %}
 
 {% block main_content %}
+  <div
+    id="project_graph-view-switcher"
+    style="position: absolute; z-index: 1; margin: 12px; font-family: sans-serif; font-size: 13px;"
+  >
+    <label style="color: #ccc;">
+      View:
+      <select id="project_graph-view-select" data-testid="project-graph-view-select">
+        <option value="force">Force-directed</option>
+        <option value="td" selected>Tree (top-down)</option>
+        <option value="lr">Tree (left-right)</option>
+        <option value="radialout">Radial</option>
+      </select>
+    </label>
+  </div>
   <div id="project_graph-container" style="width: 100%; height: calc(100vh - 60px);"></div>
 
   <script id="project_graph-data" type="application/json">{{ view_object.graph_data_json }}</script>
@@ -40,13 +54,21 @@
         requirement: "#F76707",
       };
 
-      ForceGraph3D()(document.getElementById("project_graph-container"))
+      const graph = ForceGraph3D()(document.getElementById("project_graph-container"))
         .graphData(graphData)
         .nodeId("id")
         .nodeLabel("name")
         .nodeColor((node) => nodeColors[node.type] || "#AAAAAA")
         .nodeVal((node) => (node.type === "document" ? 6 : 2))
-        .linkDirectionalArrowLength(3);
+        .linkDirectionalArrowLength(3)
+        .dagMode("td");
+
+      document
+        .getElementById("project_graph-view-select")
+        .addEventListener("change", (event) => {
+          const mode = event.target.value;
+          graph.dagMode(mode === "force" ? null : mode);
+        });
     })();
   </script>
 {% endblock main_content %}

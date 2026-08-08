@@ -43,6 +43,8 @@
       <span style="color: #868e96;">&mdash;</span> containment
       &nbsp;
       <span style="color: #FF00FF; font-weight: bold;">&mdash;</span> relation
+      &nbsp;
+      <span style="color: #00FFFF; font-weight: bold;">&mdash;</span> file
     </div>
   </div>
   <div id="project_graph-container" style="width: 100%; height: calc(100vh - 60px);"></div>
@@ -57,10 +59,13 @@
         document: "#4C6EF5",
         section: "#82C91E",
         requirement: "#F76707",
+        source_file: "#15AABF",
+        test_file: "#0C8599",
       };
       const linkColors = {
         containment: "#868e96",
         relation: "#FF00FF",
+        file: "#00FFFF",
       };
 
       const graph = ForceGraph3D()(document.getElementById("project_graph-container"))

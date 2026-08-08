@@ -6,7 +6,7 @@ nodes) as a JSON node/link graph, rendered client-side with 3d-force-graph.
 """
 
 import os
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, List, Set, Union
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
@@ -24,11 +24,14 @@ class ProjectGraphNodeType:
     DOCUMENT = "document"
     SECTION = "section"
     REQUIREMENT = "requirement"
+    SOURCE_FILE = "source_file"
+    TEST_FILE = "test_file"
 
 
 class ProjectGraphLinkKind:
     CONTAINMENT = "containment"
     RELATION = "relation"
+    FILE = "file"
 
 
 def _node_type(node_: Union[SDocDocument, SDocNode]) -> str:
@@ -57,6 +60,9 @@ class ProjectGraphGenerator:
     ) -> None:
         nodes: List[Dict[str, Any]] = []
         links: List[Dict[str, str]] = []
+        seen_file_paths: Set[str] = set()
+
+        file_traceability_index = traceability_index.get_file_traceability_index()
 
         for document_ in traceability_index.document_tree.document_list:
             if document_.document_is_included():
@@ -103,6 +109,29 @@ class ProjectGraphGenerator:
                                 "source": parent_node_.reserved_mid,
                                 "target": node_.reserved_mid,
                                 "kind": ProjectGraphLinkKind.RELATION,
+                            }
+                        )
+
+                    for file_link_ in file_traceability_index.get_requirement_file_links(
+                        node_
+                    ):
+                        file_path_ = file_link_[0]
+                        if file_path_ not in seen_file_paths:
+                            seen_file_paths.add(file_path_)
+                            nodes.append(
+                                {
+                                    "id": file_path_,
+                                    "name": file_path_,
+                                    "type": ProjectGraphNodeType.TEST_FILE
+                                    if "tests/" in file_path_
+                                    else ProjectGraphNodeType.SOURCE_FILE,
+                                }
+                            )
+                        links.append(
+                            {
+                                "source": node_.reserved_mid,
+                                "target": file_path_,
+                                "kind": ProjectGraphLinkKind.FILE,
                             }
                         )
 

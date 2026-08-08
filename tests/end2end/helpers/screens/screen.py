@@ -18,6 +18,12 @@ class Screen:
     def assert_no_js_errors(self) -> None:
         self.test_case.assert_no_js_errors()
 
+    def assert_nav_link_active(self, data_link: str) -> None:
+        self.test_case.assert_element(
+            f'//a[@data-link="{data_link}"][contains(@class, "active")]',
+            by=By.XPATH,
+        )
+
     def assert_text(self, text: str) -> None:
         self.test_case.assert_text(text)
 

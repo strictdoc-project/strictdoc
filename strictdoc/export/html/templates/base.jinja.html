@@ -40,6 +40,7 @@
 </head>
 
 <body data-viewtype="{%- block viewtype -%}{%- endblock viewtype -%}" data-turbo="false">
+{%- set nav_active_view = self.viewtype() -%}
 
 <div class="mars">
   {% if view_object.project_config.is_running_on_server %}

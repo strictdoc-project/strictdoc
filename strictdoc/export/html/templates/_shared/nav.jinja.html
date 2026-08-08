@@ -3,8 +3,8 @@
 {# TODO: title="Project name" #}
 
   <a
-    data-link="index"
-    class="nav_button"
+    data-link="document-tree"
+    class="nav_button{% if nav_active_view == 'document-tree' %} active{% endif %}"
     href="{{ view_object.render_url('index.html') }}"
     title="Project index"
     data-testid="project-tree-link-project-index"
@@ -15,8 +15,8 @@
 {%- set project_statistics_feature = view_object.project_config.get_feature("PROJECT_STATISTICS_SCREEN") -%}
 {%- if project_statistics_feature is not none -%}
   <a
-    data-link="project_information"
-    class="nav_button"
+    data-link="project-statistics"
+    class="nav_button{% if nav_active_view == 'project-statistics' %} active{% endif %}"
     href="{{ view_object.render_url('project_statistics.html') }}"
     title="Project statistics"
     data-testid="project-tree-link-project-statistics"
@@ -28,7 +28,7 @@
 {%- if view_object.project_config.is_activated_requirements_coverage() -%}
   <a
     data-link="traceability-matrix"
-    class="nav_button"
+    class="nav_button{% if nav_active_view == 'traceability-matrix' %} active{% endif %}"
     href="{{ view_object.render_url('traceability_matrix.html') }}"
     title="Traceability matrix"
     data-testid="project-tree-link-requirements-coverage"
@@ -39,8 +39,8 @@
 
 {%- if view_object.project_config.is_activated_requirements_to_source_traceability() -%}
   <a
-    data-link="source_coverage"
-    class="nav_button"
+    data-link="coverage-tree"
+    class="nav_button{% if nav_active_view == 'coverage-tree' %} active{% endif %}"
     href="{{ view_object.render_url('source_coverage.html') }}"
     title="Source coverage"
     data-testid="project-tree-link-source-coverage"
@@ -52,7 +52,7 @@
 {%- if view_object.project_config.is_activated_search() -%}
   <a
     data-link="search"
-    class="nav_button"
+    class="nav_button{% if nav_active_view == 'search' %} active{% endif %}"
     href="{{ view_object.render_url('search') }}"
     title="Search"
     data-testid="project-tree-link-search"
@@ -64,7 +64,7 @@
 {%- if view_object.project_config.is_running_on_server and view_object.project_config.is_activated_diff() -%}
   <a
     data-link="diff"
-    class="nav_button"
+    class="nav_button{% if nav_active_view in ('diff', 'changelog') %} active{% endif %}"
     href="{{ view_object.render_url('diff') }}"
     title="Diff"
     data-testid="project-tree-link-diff"
@@ -75,8 +75,8 @@
 
 {%- if view_object.project_config.is_activated_tree_map() -%}
   <a
-    data-link="tree_map"
-    class="nav_button"
+    data-link="tree-map"
+    class="nav_button{% if nav_active_view == 'tree-map' %} active{% endif %}"
     href="{{ view_object.render_url('tree_map.html') }}"
     title="Tree map"
     data-testid="project-tree-link-tree-map"
@@ -87,8 +87,8 @@
 
 {%- if view_object.project_config.is_activated_project_graph() -%}
   <a
-    data-link="project_graph"
-    class="nav_button"
+    data-link="project-graph"
+    class="nav_button{% if nav_active_view == 'project-graph' %} active{% endif %}"
     href="{{ view_object.render_url('project_graph.html') }}"
     title="Project graph"
     data-testid="project-tree-link-project-graph"

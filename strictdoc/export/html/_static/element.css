@@ -711,16 +711,10 @@ sdoc-node[show-anchors] sdoc-anchor:hover .anchor_back_links_number {
   border-color: var(--color-bg-contrast);
 }
 
-/* should be like .nav .nav_button:hover */
-[data-viewtype="document-tree"] [data-link="index"],
-[data-viewtype="search"] [data-link="search"],
-[data-viewtype="diff"] [data-link="diff"],
-[data-viewtype="requirements-coverage"] [data-link="requirements_coverage"],
-[data-viewtype="traceability-matrix"] [data-link="traceability-matrix"],
-[data-viewtype="project-statistics"] [data-link="project_information"],
-[data-viewtype="tree-map"] [data-link="tree_map"],
-[data-viewtype="project-graph"] [data-link="project_graph"],
-[data-viewtype="coverage-tree"] [data-link="source_coverage"] {
+/* Active nav link: nav.jinja.html sets this class per-link by comparing
+   the current screen's viewtype (base.jinja.html's nav_active_view) against
+   its own target, so no per-screen pair needs to be listed here. */
+.nav .nav_button.active {
   color: var(--color-bg-contrast);
   border-color: var(--color-bg-contrast);
   cursor: default;

@@ -20,15 +20,44 @@ document tree as an interactive 3D force-directed graph, using
     between requirements (`traceability_index.get_parent_requirements()`),
     i.e. the same parent/child requirement graph the traceability matrix
     is built from. Magenta, width 2.
-  - `traceability` — one edge per requirement → linked source/test file,
-    from `traceability_index.get_file_traceability_index()` (the same data
-    `tree_map`/`source_coverage` read). Cyan.
+  - `file` — one edge per requirement → linked source/test file, from
+    `traceability_index.get_file_traceability_index()` (the same data
+    `tree_map`/`source_coverage` read). Cyan, width 1.
 - Each node is labeled with its title (and UID, when present); file nodes
   are labeled with their relative path and colored differently for test
   files (path containing `tests/`) vs. other source files.
 - A view switcher (top-left dropdown) lets the user swap the layout live,
-  without a page reload: force-directed (default), or one of
-  3d-force-graph's `dagMode` tree layouts (top-down, left-right, radial).
+  without a page reload:
+  - `force` — plain force-directed (no `dagMode`).
+  - `td` / `lr` / `radialout` — 3d-force-graph's built-in `dagMode` tree
+    layouts (top-down is the default view on load).
+  - `byDocument` — a custom layout, not a `dagMode` preset: every node is
+    tagged with a `docIndex` (`generator.py`) identifying which document
+    it belongs to; each document and its nodes are pinned to their own
+    horizontal plane via a fixed `z` (`docIndex * PLANE_SPACING`), planes
+    stacked one above another so all document-center nodes share the same
+    `x`/`y` and differ only in `z`. The document node itself is pulled to
+    its plane's center (`x=0, y=0`); its other nodes keep `z` pinned to
+    the same plane but are left free on `x`/`y`, so the normal charge/link
+    forces settle them into a radial arrangement around the document
+    center. A file node referenced from multiple documents is pinned to
+    the plane of whichever document happened to reference it first — an
+    approximation, not exact.
+    - Implementation quirks specific to this vendored 3d-force-graph
+      build: `x` can be hard-pinned via `node.fx`, but `node.fy` gets
+      silently cleared back to `undefined` every tick (apparently a
+      residual effect of `dagMode`'s "td"/"bu" modes owning the y axis,
+      even after `dagMode(null)`), so `y` is instead pulled toward 0 via
+      a genuine custom `d3Force` that nudges velocity (`vy`) rather than
+      fixing position.
+    - Dragging a node pins its `fx`/`fy`/`fz` to the drop point and they
+      stay there — which would otherwise let a dragged document ball end
+      up permanently off-center, or a dragged child node end up on the
+      wrong plane. An `onNodeDragEnd` handler snaps `z` back to the
+      node's document plane for any node, and additionally snaps the
+      document node itself back to `(0, 0)` — so document balls always
+      return to the same fixed point after being dragged, and other
+      nodes can move freely within their plane but never leave it.
 - The graph is otherwise navigable with the controls 3d-force-graph
   provides out of the box (orbit/rotate, zoom, pan). No click interaction
   (click-to-open, click-to-preview, filters) is implemented.
@@ -116,12 +145,13 @@ feature's architecture (`strictdoc/features/tree_map/`):
   color legend, and a small inline script that parses the JSON and calls
   `ForceGraph3D()` on the container, coloring nodes by type
   (document/section/requirement/source_file/test_file), coloring/widening
-  links by `kind` (containment/relation/traceability — note:
-  `.linkLineDash()` was tried first for the relation/containment
-  distinction but does not exist on this vendored 3d-force-graph build;
-  `.linkColor()` + `.linkWidth()` are used instead), and re-applying
-  `.dagMode()` on the graph instance whenever the view-switcher selection
-  changes.
+  links by `kind` (containment/relation/file — note: `.linkLineDash()` was
+  tried first for the relation/containment distinction but does not exist
+  on this vendored 3d-force-graph build; `.linkColor()` + `.linkWidth()`
+  are used instead), and applying either `.dagMode()` or the custom
+  `byDocument` fixed-coordinate layout (see Scope) whenever the
+  view-switcher selection changes, followed by `.d3ReheatSimulation()` so
+  the new layout actually takes effect.
 - Vendored asset:
   `strictdoc/features/project_graph/assets/project_graph/3d-force-graph.min.js`
   (+ `LICENSE-3D-FORCE-GRAPH`, MIT). This is 3d-force-graph's own prebuilt
@@ -157,10 +187,10 @@ feature's architecture (`strictdoc/features/tree_map/`):
 ```json
 {
   "nodes": [
-    {"id": "<MID or file path>", "name": "<title/UID or file path>", "type": "document|section|requirement|source_file|test_file"}
+    {"id": "<MID or file path>", "name": "<title/UID or file path>", "type": "document|section|requirement|source_file|test_file", "docIndex": 0}
   ],
   "links": [
-    {"source": "<MID>", "target": "<MID or file path>", "kind": "containment|relation|traceability"}
+    {"source": "<MID>", "target": "<MID or file path>", "kind": "containment|relation|file"}
   ]
 }
 ```
@@ -174,8 +204,12 @@ so a file referenced by multiple requirements is still a single node.
 `traceability_index.get_parent_requirements(node)` for every node with a
 `reserved_uid`, resolving `RELATIONS: TYPE: Parent` references to their
 target node's MID — the same resolved graph the traceability matrix reads
-from, not a re-parse of the `RELATIONS` field. `traceability` links come
-from `traceability_index.get_file_traceability_index().get_requirement_file_links(node)`.
+from, not a re-parse of the `RELATIONS` field. `file` links come from
+`traceability_index.get_file_traceability_index().get_requirement_file_links(node)`.
+`docIndex` is the 0-based position of the node's document among the
+project's non-included documents (assigned while iterating
+`document_tree.document_list` in `generator.py`); it is only consumed by
+the `byDocument` view.
 
 ### Verification performed
 
@@ -192,7 +226,7 @@ from `traceability_index.get_file_traceability_index().get_requirement_file_link
   exported JSON, alongside the `"kind": "containment"` links.
 - A hand-written project with a `@relation(REQ-1, scope=file)` marker in a
   source file (with `REQUIREMENT_TO_SOURCE_TRACEABILITY` enabled) produces
-  a `source_file` node for that file and a `"kind": "traceability"` link
+  a `source_file` node for that file and a `"kind": "file"` link
   from the requirement to it.
 - `invoke lint-ruff` and `invoke lint-mypy` pass on all changed/added
   Python files.
@@ -210,7 +244,7 @@ from `traceability_index.get_file_traceability_index().get_requirement_file_link
    `LinkRenderer.render_node_link`, as `tree_map` already does for its
    "Open in document" links).
 5. Filters/grouping (by document, node type, coverage, free text; e.g. a
-   toggle to hide `relation`/`traceability` edges and see just the plain
+   toggle to hide `relation`/`file` edges and see just the plain
    containment tree).
 6. Single-document graph view (in addition to the project-wide graph).
 7. Consider an SRS requirement in

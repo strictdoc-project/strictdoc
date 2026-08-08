@@ -64,15 +64,18 @@ class ProjectGraphGenerator:
 
         file_traceability_index = traceability_index.get_file_traceability_index()
 
+        doc_index_ = -1
         for document_ in traceability_index.document_tree.document_list:
             if document_.document_is_included():
                 continue
+            doc_index_ += 1
 
             nodes.append(
                 {
                     "id": document_.reserved_mid,
                     "name": _node_label(document_),
                     "type": ProjectGraphNodeType.DOCUMENT,
+                    "docIndex": doc_index_,
                 }
             )
 
@@ -90,6 +93,7 @@ class ProjectGraphGenerator:
                         "id": node_.reserved_mid,
                         "name": _node_label(node_),
                         "type": _node_type(node_),
+                        "docIndex": doc_index_,
                     }
                 )
                 links.append(
@@ -125,6 +129,7 @@ class ProjectGraphGenerator:
                                     "type": ProjectGraphNodeType.TEST_FILE
                                     if "tests/" in file_path_
                                     else ProjectGraphNodeType.SOURCE_FILE,
+                                    "docIndex": doc_index_,
                                 }
                             )
                         links.append(

@@ -28,9 +28,9 @@
 {% block main_content %}
   <div
     id="project_graph-view-switcher"
-    style="position: absolute; z-index: 1; margin: 12px; font-family: sans-serif; font-size: 13px;"
+    style="position: absolute; z-index: 1; margin: 12px; font-family: sans-serif; font-size: 13px; color: #ccc;"
   >
-    <label style="color: #ccc;">
+    <label>
       View:
       <select id="project_graph-view-select" data-testid="project-graph-view-select">
         <option value="force">Force-directed</option>
@@ -39,6 +39,11 @@
         <option value="radialout">Radial</option>
       </select>
     </label>
+    <div style="margin-top: 6px;">
+      <span style="color: #868e96;">&mdash;</span> containment
+      &nbsp;
+      <span style="color: #FF00FF; font-weight: bold;">&mdash;</span> relation
+    </div>
   </div>
   <div id="project_graph-container" style="width: 100%; height: calc(100vh - 60px);"></div>
 
@@ -53,6 +58,10 @@
         section: "#82C91E",
         requirement: "#F76707",
       };
+      const linkColors = {
+        containment: "#868e96",
+        relation: "#FF00FF",
+      };
 
       const graph = ForceGraph3D()(document.getElementById("project_graph-container"))
         .graphData(graphData)
@@ -60,6 +69,8 @@
         .nodeLabel("name")
         .nodeColor((node) => nodeColors[node.type] || "#AAAAAA")
         .nodeVal((node) => (node.type === "document" ? 6 : 2))
+        .linkColor((link) => linkColors[link.kind] || "#868e96")
+        .linkWidth((link) => (link.kind === "relation" ? 2 : 1))
         .linkDirectionalArrowLength(3)
         .dagMode("td");
 

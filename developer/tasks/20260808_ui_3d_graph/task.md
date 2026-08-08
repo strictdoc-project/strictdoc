@@ -11,13 +11,21 @@ document tree as an interactive 3D force-directed graph, using
 - Graph nodes: documents, sections, and requirement-like nodes
   (`SDocNode` with a reserved title/UID), across all documents in the project
   tree. Plain `TEXT` nodes are excluded.
-- Graph edges: structural containment only — document → section → node,
-  following the same parent/child hierarchy `tree_map` uses
-  (`SDocDocumentIterator`). This is a single-root DAG per document.
+- Graph edges, two kinds, visually distinguished (solid gray vs. dashed
+  pink, see legend on the screen):
+  - `containment` — structural document → section → node hierarchy,
+    following the same traversal `tree_map` uses (`SDocDocumentIterator`).
+  - `relation` — one edge per resolved `RELATIONS: TYPE: Parent` link
+    between requirements (`traceability_index.get_parent_requirements()`),
+    i.e. the same parent/child requirement graph the traceability matrix
+    is built from.
 - Each node is labeled with its title (and UID, when present).
-- The graph is navigable with the controls 3d-force-graph provides out of the
-  box (orbit/rotate, zoom, pan). No custom interaction (click-to-open,
-  click-to-preview, filters) is implemented.
+- A view switcher (top-left dropdown) lets the user swap the layout live,
+  without a page reload: force-directed (default), or one of
+  3d-force-graph's `dagMode` tree layouts (top-down, left-right, radial).
+- The graph is otherwise navigable with the controls 3d-force-graph
+  provides out of the box (orbit/rotate, zoom, pan). No click interaction
+  (click-to-open, click-to-preview, filters) is implemented.
 - Rendered as its own screen (`project_graph.html`), gated by the
   `PROJECT_GRAPH_SCREEN` project feature, reachable from the project tree nav.
 - Works in both static HTML export and server mode.
@@ -29,13 +37,18 @@ document tree as an interactive 3D force-directed graph, using
 ### Out of scope (not implemented)
 
 - Rendering a single document's tree in isolation (project-wide graph only).
-- Turning `RELATIONS` (Parent/Child/Refines/etc.) into additional graph
-  edges.
+- Source files as graph nodes/edges (requirement → linked source/test
+  file), even though the underlying data
+  (`traceability_index.get_file_traceability_index()`) already exists and
+  is used by `tree_map`/`source_coverage`.
+- `RELATIONS` types other than `Parent` (e.g. role-qualified relations,
+  `Refines`, etc.) — only the plain parent/child requirement graph is
+  rendered.
 - Click-to-preview a node's content.
 - Click-to-open a node in the document editor/viewer.
 - Filtering or grouping nodes (by document, by requirement type, by
   coverage, etc.).
-- Any persistence of camera position/layout between sessions.
+- Any persistence of camera position/layout/selected view between sessions.
 
 ### Testing
 
@@ -97,9 +110,12 @@ feature's architecture (`strictdoc/features/tree_map/`):
   following `tree_map/index.jinja`'s structure: a `<script src="...">` tag
   loading the vendored 3d-force-graph bundle, a
   `<script type="application/json">` tag holding the graph data, a
-  `<div id="project_graph-container">`, and a small inline script that
-  parses the JSON and calls `ForceGraph3D()` on the container, coloring
-  nodes by type (document/section/requirement).
+  `<div id="project_graph-container">`, a view-switcher `<select>` plus a
+  color legend, and a small inline script that parses the JSON and calls
+  `ForceGraph3D()` on the container, coloring nodes by type
+  (document/section/requirement), coloring/dashing links by `kind`
+  (containment vs. relation), and re-applying `.dagMode()` on the graph
+  instance whenever the view-switcher selection changes.
 - Vendored asset:
   `strictdoc/features/project_graph/assets/project_graph/3d-force-graph.min.js`
   (+ `LICENSE-3D-FORCE-GRAPH`, MIT). This is 3d-force-graph's own prebuilt
@@ -138,13 +154,17 @@ feature's architecture (`strictdoc/features/tree_map/`):
     {"id": "<MID>", "name": "<title or 'title (UID)'>", "type": "document|section|requirement"}
   ],
   "links": [
-    {"source": "<parent MID>", "target": "<child MID>"}
+    {"source": "<parent MID>", "target": "<child MID>", "kind": "containment|relation"}
   ]
 }
 ```
 
 `MID` (`reserved_mid`) is reused as the graph node id, matching how
-`tree_map` already keys its rows.
+`tree_map` already keys its rows. `relation` links are produced by walking
+`traceability_index.get_parent_requirements(node)` for every node with a
+`reserved_uid`, resolving `RELATIONS: TYPE: Parent` references to their
+target node's MID — the same resolved graph the traceability matrix reads
+from, not a re-parse of the `RELATIONS` field.
 
 ### Verification performed
 
@@ -156,6 +176,9 @@ feature's architecture (`strictdoc/features/tree_map/`):
 - Same check in server mode (route returns the equivalent page).
 - The exported page opened in a real (non-Selenium) browser: graph renders
   and is orbit/zoom/pan-navigable, matching the intended behavior.
+- A hand-written project with a `RELATIONS: TYPE: Parent` link between two
+  requirements produces the expected extra `"kind": "relation"` link in the
+  exported JSON, alongside the `"kind": "containment"` links.
 - `invoke lint-ruff` and `invoke lint-mypy` pass on all changed/added
   Python files.
 
@@ -164,27 +187,26 @@ feature's architecture (`strictdoc/features/tree_map/`):
 1. Resolve the WebGL/Selenium-Chrome environment issue (see Testing above)
    and add the automated end-to-end test coverage this feature currently
    lacks.
-2. Graph view switcher: let the user pick between different 3d-force-graph
-   layouts (default force-directed vs. `dagMode` tree layouts — `td`, `lr`,
-   `radialout`, etc.) from the screen itself, without a page reload.
-3. Add `RELATIONS`-derived edges (Parent/Child/Refines/etc.) as a second,
-   visually distinct edge type layered on top of the containment DAG.
-4. Add source files as graph nodes: requirements/sections that have
+2. Add source files as graph nodes: requirements/sections that have
    traceability links to source files (the same data
    `tree_map`/`source_coverage` use, via
    `traceability_index.get_file_traceability_index()`) get an additional
    node per linked file (or per file, deduplicated) and an edge from the
    requirement to it — so the graph shows not just the document structure
    but which artifacts (source/test files) back which requirements.
-5. Click-to-preview a node's content (e.g., a hover/click side panel).
-6. Click-to-open a node in the document editor/viewer (reusing
+3. Broaden `relation` edges beyond plain `Parent` links (role-qualified
+   relations, `Refines`, etc.), and/or let the legend's `relation` category
+   distinguish between relation subtypes.
+4. Click-to-preview a node's content (e.g., a hover/click side panel).
+5. Click-to-open a node in the document editor/viewer (reusing
    `LinkRenderer.render_node_link`, as `tree_map` already does for its
    "Open in document" links).
-7. Filters/grouping (by document, node type, coverage, free text).
-8. Single-document graph view (in addition to the project-wide graph).
-9. Consider an SRS requirement in
+6. Filters/grouping (by document, node type, coverage, free text; e.g. a
+   toggle to hide `relation` edges and see the plain containment tree).
+7. Single-document graph view (in addition to the project-wide graph).
+8. Consider an SRS requirement in
    `docs/strictdoc_21_l2_high_level_requirements.sdoc` for this screen,
    as exists for `tree_map` (`SDOC-SRS-157`).
-10. Performance ceiling is untested against large projects — if the graph
-    becomes sluggish on big document trees, revisit (e.g., a node-count
-    warning).
+9. Performance ceiling is untested against large projects — if the graph
+   becomes sluggish on big document trees, revisit (e.g., a node-count
+   warning).

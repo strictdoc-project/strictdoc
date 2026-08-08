@@ -26,6 +26,11 @@ class ProjectGraphNodeType:
     REQUIREMENT = "requirement"
 
 
+class ProjectGraphLinkKind:
+    CONTAINMENT = "containment"
+    RELATION = "relation"
+
+
 def _node_type(node_: Union[SDocDocument, SDocNode]) -> str:
     if isinstance(node_, SDocDocument):
         return ProjectGraphNodeType.DOCUMENT
@@ -85,8 +90,21 @@ class ProjectGraphGenerator:
                     {
                         "source": node_.parent.reserved_mid,
                         "target": node_.reserved_mid,
+                        "kind": ProjectGraphLinkKind.CONTAINMENT,
                     }
                 )
+
+                if node_.reserved_uid is not None:
+                    for parent_node_ in traceability_index.get_parent_requirements(
+                        node_
+                    ):
+                        links.append(
+                            {
+                                "source": parent_node_.reserved_mid,
+                                "target": node_.reserved_mid,
+                                "kind": ProjectGraphLinkKind.RELATION,
+                            }
+                        )
 
         graph_data = {"nodes": nodes, "links": links}
 

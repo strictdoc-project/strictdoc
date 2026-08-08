@@ -164,6 +164,7 @@ def create_config() -> ProjectConfig:
             # Experimental features.
             # "PROJECT_STATISTICS_SCREEN",
             # "TREE_MAP_SCREEN",
+            # "PROJECT_GRAPH_SCREEN",
             # "REQIF",
             # "HTML2PDF",
             # "DIFF",

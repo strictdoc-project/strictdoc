@@ -84,4 +84,16 @@
     M
   </a>
 {%- endif -%}
+
+{%- if view_object.project_config.is_activated_project_graph() -%}
+  <a
+    data-link="project_graph"
+    class="nav_button"
+    href="{{ view_object.render_url('project_graph.html') }}"
+    title="Project graph"
+    data-testid="project-tree-link-project-graph"
+  >
+    G
+  </a>
+{%- endif -%}
 </div>

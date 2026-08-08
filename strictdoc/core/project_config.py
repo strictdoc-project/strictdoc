@@ -73,6 +73,7 @@ class ProjectFeature(str, Enum):
     DIFF = "DIFF"
     PROJECT_STATISTICS_SCREEN = "PROJECT_STATISTICS_SCREEN"
     TREE_MAP_SCREEN = "TREE_MAP_SCREEN"
+    PROJECT_GRAPH_SCREEN = "PROJECT_GRAPH_SCREEN"
     TRACEABILITY_MATRIX_SCREEN = "TRACEABILITY_MATRIX_SCREEN"
     REQUIREMENT_TO_SOURCE_TRACEABILITY = "REQUIREMENT_TO_SOURCE_TRACEABILITY"
     SOURCE_FILE_LANGUAGE_PARSERS = "SOURCE_FILE_LANGUAGE_PARSERS"
@@ -896,6 +897,9 @@ class ProjectConfig:
 
     def is_activated_tree_map(self) -> bool:
         return ProjectFeature.TREE_MAP_SCREEN in self.project_features
+
+    def is_activated_project_graph(self) -> bool:
+        return ProjectFeature.PROJECT_GRAPH_SCREEN in self.project_features
 
     def is_activated_search(self) -> bool:
         return (

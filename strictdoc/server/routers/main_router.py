@@ -4715,6 +4715,18 @@ def create_main_router(
                     )
                 elif (
                     document_relative_path.relative_path
+                    == "project_graph.html"
+                ):
+                    if not project_config.is_activated_project_graph():
+                        return Response(
+                            content="The Project Graph feature is not activated in the project config.",
+                            status_code=HTTP_STATUS_PRECONDITION_FAILED,
+                        )
+                    html_generator.export_project_graph_screen(
+                        traceability_index=export_action.traceability_index,
+                    )
+                elif (
+                    document_relative_path.relative_path
                     == "source_coverage.html"
                 ):
                     if not project_config.is_activated_requirements_to_source_traceability():

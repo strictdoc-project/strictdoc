@@ -31,6 +31,7 @@ from strictdoc.features.deep_trace.generator import (
 from strictdoc.features.html2pdf.generator import (
     DocumentHTML2PDFGenerator,
 )
+from strictdoc.features.project_graph.generator import ProjectGraphGenerator
 from strictdoc.features.project_index.generator import (
     DocumentTreeHTMLGenerator,
 )
@@ -173,6 +174,9 @@ class HTMLGenerator:
 
         if self.project_config.is_activated_tree_map():
             self.export_tree_map_screen(traceability_index)
+
+        if self.project_config.is_activated_project_graph():
+            self.export_project_graph_screen(traceability_index)
 
         # Project statistics is exported by the ExportAction class via the
         # Feature abstraction (see the ProjectStatisticsFeature class), not
@@ -789,6 +793,16 @@ class HTMLGenerator:
         traceability_index: TraceabilityIndex,
     ) -> None:
         TreeMapGenerator.export(
+            project_config=self.project_config,
+            traceability_index=traceability_index,
+            html_templates=self.html_templates,
+        )
+
+    def export_project_graph_screen(
+        self,
+        traceability_index: TraceabilityIndex,
+    ) -> None:
+        ProjectGraphGenerator.export(
             project_config=self.project_config,
             traceability_index=traceability_index,
             html_templates=self.html_templates,

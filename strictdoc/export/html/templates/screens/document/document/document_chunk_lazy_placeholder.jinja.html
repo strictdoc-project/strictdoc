@@ -1,0 +1,24 @@
+{#
+  Lazy chunk placeholder contract:
+  - id="document-chunk-N" identifies the frame as a document chunk.
+  - class="document-chunk-placeholder" marks an unloaded placeholder.
+  - loading="lazy" lets Turbo defer the fragment request.
+  - src points to the server endpoint that returns this chunk's content.
+  - data-node-mids maps every semantic node, including nodes
+    omitted from TOC, to the frame that can load it.
+
+  - node.css uses the placeholder class to reserve approximate
+    scroll space until Turbo loads the chunk content.
+  - toc_chunk_navigation.js observes placeholders by this class,
+    validates the document-chunk-* id, eagerly preloads them near
+    the viewport, and removes the class on turbo:frame-load.
+#}
+<turbo-frame
+  id="document-chunk-{{ chunk.index }}"
+  class="document-chunk-placeholder"
+  loading="lazy"
+  src="/fragments/document/{{ view_object.document.reserved_mid }}/chunk?from_node={{ chunk.first_node_mid }}&amp;count={{ chunk.size }}&amp;chunk={{ chunk.index }}"
+  style="--document-chunk-size: {{ chunk.size }};"
+  data-node-mids="{{ chunk.node_mids | join(' ') }}"
+  data-testid="document-chunk-placeholder"
+></turbo-frame>

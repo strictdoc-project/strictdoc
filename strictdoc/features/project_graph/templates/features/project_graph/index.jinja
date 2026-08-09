@@ -33,13 +33,33 @@
     <label>
       View:
       <select id="project_graph-view-select" data-testid="project-graph-view-select">
+        <option value="byDocument" selected>By document (stacked planes)</option>
         <option value="force">Force-directed</option>
-        <option value="td" selected>Tree (top-down)</option>
+        <option value="td">Tree (top-down)</option>
         <option value="lr">Tree (left-right)</option>
         <option value="radialout">Radial</option>
-        <option value="byDocument">By document (stacked planes)</option>
       </select>
     </label>
+    <div id="project_graph-plane-spacing-wrapper" style="margin-top: 6px;">
+      <label>
+        Plane spacing:
+        <input
+          type="number"
+          id="project_graph-plane-spacing-input"
+          data-testid="project-graph-plane-spacing-input"
+          value="500"
+          min="50"
+          step="50"
+          style="width: 70px;"
+        />
+      </label>
+      &nbsp;
+      <button
+        type="button"
+        id="project_graph-plane-reset-button"
+        data-testid="project-graph-plane-reset-button"
+      >Reset</button>
+    </div>
     <div style="margin-top: 6px;">
       <span style="color: #868e96;">&mdash;</span> containment
       &nbsp;
@@ -71,11 +91,10 @@
 
       // "By document" view: each document and its nodes are pinned to
       // their own horizontal plane (a fixed z), stacked one above another
-      // (document 0 at z=0, document 1 at z=PLANE_SPACING, etc. — all
-      // document-center nodes therefore share the same x/y and differ
-      // only in z). The document node itself is pulled to the center of
-      // its plane (x=0, y=0); every other node in that document keeps its
-      // z pinned to the same plane but is left free on x/y, so the usual
+      // so all document-center nodes share the same x/y and differ only
+      // in z. The document node itself is pulled to the center of its
+      // plane (x=0, y=0); every other node in that document keeps its z
+      // pinned to the same plane but is left free on x/y, so the usual
       // charge/link forces settle it into a radial arrangement around the
       // document center.
       //
@@ -88,9 +107,59 @@
       // pulled toward 0 via a genuine custom d3Force nudging velocity
       // (vy), which doesn't touch fy and isn't affected by whatever keeps
       // resetting it.
-      const PLANE_SPACING = 500;
-
+      //
+      // Plane z-positions are mutable state (planeZ[docIndex]), not a
+      // fixed formula: dragging a document node along z and releasing it
+      // records its new plane position, then pushes only the neighboring
+      // plane(s) that would end up closer than MIN_PLANE_SPACING — and
+      // rigidly shifts everything beyond that neighbor by the same
+      // amount, preserving their already-valid mutual spacing. Planes
+      // that were already farther apart than the minimum are left alone
+      // (never pulled closer).
+      let MIN_PLANE_SPACING = 500;
+      let planeZ = [];
       let byDocumentActive = false;
+
+      function numDocuments() {
+        return (
+          Math.max(0, ...graphData.nodes.map((node) => node.docIndex ?? -1)) +
+          1
+        );
+      }
+
+      function resetPlaneZ() {
+        planeZ = Array.from(
+          { length: numDocuments() },
+          (_, i) => i * MIN_PLANE_SPACING
+        );
+      }
+
+      function resolvePlaneSpacing(movedIndex) {
+        const n = planeZ.length;
+        if (movedIndex + 1 < n) {
+          const gap = planeZ[movedIndex + 1] - planeZ[movedIndex];
+          if (gap < MIN_PLANE_SPACING) {
+            const deficit = MIN_PLANE_SPACING - gap;
+            for (let k = movedIndex + 1; k < n; k++) planeZ[k] += deficit;
+          }
+        }
+        if (movedIndex - 1 >= 0) {
+          const gap = planeZ[movedIndex] - planeZ[movedIndex - 1];
+          if (gap < MIN_PLANE_SPACING) {
+            const deficit = MIN_PLANE_SPACING - gap;
+            for (let k = movedIndex - 1; k >= 0; k--) planeZ[k] -= deficit;
+          }
+        }
+      }
+
+      function applyPlaneZToAllNodes() {
+        graph.graphData().nodes.forEach((node) => {
+          if (node.docIndex === undefined) return;
+          const z = planeZ[node.docIndex];
+          node.fz = z;
+          node.z = z;
+        });
+      }
 
       function forceDocumentCenterYFactory() {
         let nodes = [];
@@ -110,17 +179,18 @@
       }
 
       function applyByDocumentLayout() {
+        resetPlaneZ();
         graph.graphData().nodes.forEach((node) => {
           if (node.docIndex === undefined) return;
-          node.fz = node.docIndex * PLANE_SPACING;
-          node.z = node.fz;
           if (node.type === "document") {
             node.fx = 0;
             node.x = 0;
+            node.y = 0;
           } else {
             delete node.fx;
           }
         });
+        applyPlaneZToAllNodes();
         byDocumentActive = true;
       }
 
@@ -132,19 +202,28 @@
         });
       }
 
-      // Dragging a node in 3d-force-graph pins fx/fy/fz to the drop point
-      // and they stay pinned there — that's how a dragged-away document
-      // ball ends up stuck off-center, and how a dragged child node could
-      // end up on the wrong document's plane. Snap both back on drag end.
+      // Dragging a node pins fx/fy/fz to the drop point and they stay
+      // pinned there. For a document node, that drop position becomes
+      // its plane's new z (x/y are forced back to 0); for any other
+      // node, it just needs its z snapped back onto its own document's
+      // (possibly just-updated) plane.
+      function onNodeDrag(node) {
+        if (!byDocumentActive || node.type !== "document") return;
+        node.fx = 0;
+        node.x = 0;
+        node.y = 0;
+      }
+
       function onNodeDragEnd(node) {
         if (!byDocumentActive || node.docIndex === undefined) return;
-        node.fz = node.docIndex * PLANE_SPACING;
-        node.z = node.fz;
         if (node.type === "document") {
+          planeZ[node.docIndex] = node.z;
+          resolvePlaneSpacing(node.docIndex);
           node.fx = 0;
           node.x = 0;
           node.y = 0;
         }
+        applyPlaneZToAllNodes();
         graph.d3ReheatSimulation();
       }
 
@@ -157,27 +236,79 @@
         .linkColor((link) => linkColors[link.kind] || "#868e96")
         .linkWidth((link) => (link.kind === "relation" ? 2 : 1))
         .linkDirectionalArrowLength(3)
+        // Setting a real dagMode here (even though applyMode() below may
+        // immediately override it) avoids a crash
+        // ("Cannot read properties of undefined (reading 'tick')" inside
+        // the vendored bundle's tick loop) that happens if the very first
+        // animation frame ticks before dagMode has ever been set.
         .dagMode("td")
         .d3Force("documentCenterY", forceDocumentCenterYFactory())
+        .onNodeDrag(onNodeDrag)
         .onNodeDragEnd(onNodeDragEnd);
 
       // Exposed for debugging via the browser console, e.g.:
       // graph.graphData().nodes.filter(n => n.type === "document")
       window.graph = graph;
 
+      const planeSpacingWrapper = document.getElementById(
+        "project_graph-plane-spacing-wrapper"
+      );
+
+      function applyMode(mode) {
+        if (mode === "byDocument") {
+          clearByDocumentLayout();
+          graph.dagMode(null);
+          applyByDocumentLayout();
+        } else {
+          clearByDocumentLayout();
+          graph.dagMode(mode === "force" ? null : mode);
+        }
+        planeSpacingWrapper.style.display =
+          mode === "byDocument" ? "" : "none";
+        graph.d3ReheatSimulation();
+      }
+
+      // Apply the view selected by default (see the <select>'s `selected`
+      // option). Deferred to the next animation frame: calling
+      // dagMode()/graphData() synchronously right after building the
+      // graph (i.e. before the library's own first-frame setup has run)
+      // crashes the vendored bundle's tick loop with "Cannot read
+      // properties of undefined (reading 'tick')" — its internal layout
+      // engine isn't created yet at that point.
+      requestAnimationFrame(() => {
+        applyMode(document.getElementById("project_graph-view-select").value);
+      });
+
       document
         .getElementById("project_graph-view-select")
         .addEventListener("change", (event) => {
-          const mode = event.target.value;
-          if (mode === "byDocument") {
-            clearByDocumentLayout();
-            graph.dagMode(null);
-            applyByDocumentLayout();
-          } else {
-            clearByDocumentLayout();
-            graph.dagMode(mode === "force" ? null : mode);
-          }
-          graph.d3ReheatSimulation();
+          applyMode(event.target.value);
+        });
+
+      // Re-lays out all planes evenly at MIN_PLANE_SPACING, discarding
+      // any manual per-plane drag adjustments. Shared by the spacing
+      // input's change handler (new spacing value) and the Reset button
+      // (same spacing value, just re-applied).
+      function resetPlanePositions() {
+        if (!byDocumentActive) return;
+        resetPlaneZ();
+        applyPlaneZToAllNodes();
+        graph.d3ReheatSimulation();
+      }
+
+      document
+        .getElementById("project_graph-plane-spacing-input")
+        .addEventListener("change", (event) => {
+          const value = parseFloat(event.target.value);
+          if (!Number.isFinite(value) || value <= 0) return;
+          MIN_PLANE_SPACING = value;
+          resetPlanePositions();
+        });
+
+      document
+        .getElementById("project_graph-plane-reset-button")
+        .addEventListener("click", () => {
+          resetPlanePositions();
         });
     })();
   </script>

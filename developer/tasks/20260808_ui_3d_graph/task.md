@@ -27,22 +27,33 @@ document tree as an interactive 3D force-directed graph, using
   are labeled with their relative path and colored differently for test
   files (path containing `tests/`) vs. other source files.
 - A view switcher (top-left dropdown) lets the user swap the layout live,
-  without a page reload:
-  - `force` — plain force-directed (no `dagMode`).
-  - `td` / `lr` / `radialout` — 3d-force-graph's built-in `dagMode` tree
-    layouts (top-down is the default view on load).
+  without a page reload. `byDocument` is first in the list and selected by
+  default on load; the other options follow:
   - `byDocument` — a custom layout, not a `dagMode` preset: every node is
     tagged with a `docIndex` (`generator.py`) identifying which document
     it belongs to; each document and its nodes are pinned to their own
-    horizontal plane via a fixed `z` (`docIndex * PLANE_SPACING`), planes
-    stacked one above another so all document-center nodes share the same
-    `x`/`y` and differ only in `z`. The document node itself is pulled to
-    its plane's center (`x=0, y=0`); its other nodes keep `z` pinned to
-    the same plane but are left free on `x`/`y`, so the normal charge/link
-    forces settle them into a radial arrangement around the document
-    center. A file node referenced from multiple documents is pinned to
-    the plane of whichever document happened to reference it first — an
+    horizontal plane via a `z` position, planes stacked one above another
+    so all document-center nodes share the same `x`/`y` and differ only
+    in `z`. The document node itself is pulled to its plane's center
+    (`x=0, y=0`); its other nodes keep `z` pinned to the same plane but
+    are left free on `x`/`y`, so the normal charge/link forces settle
+    them into a radial arrangement around the document center. A file
+    node referenced from multiple documents is pinned to the plane of
+    whichever document happened to reference it first — an
     approximation, not exact.
+    - Plane `z` positions are mutable state (`planeZ[docIndex]`), not a
+      fixed formula: dragging a document node along `z` and releasing it
+      (`x`/`y` stay pinned to `0` throughout the drag) records that new
+      position, then pushes only the neighboring plane(s) that would end
+      up closer than the spacing input's value — rigidly shifting
+      everything beyond that neighbor by the same amount, preserving
+      their already-valid mutual spacing. Planes already farther apart
+      than the minimum are left alone (never pulled closer).
+    - A "Plane spacing" number input (visible only in this view) sets the
+      minimum distance and, on change, resets all planes to that even
+      spacing (any manual per-plane drag adjustments are discarded — a
+      "Reset" button next to it does the same re-layout on demand,
+      without needing to touch the input's value).
     - On this vendored 3d-force-graph build, `x` can be hard-pinned via
       `node.fx`, but `node.fy` is silently cleared back to `undefined`
       every tick — a residual effect of `dagMode`'s "td"/"bu" modes owning
@@ -57,6 +68,18 @@ document tree as an interactive 3D force-directed graph, using
       document node itself back to `(0, 0)` — so document balls always
       return to the same fixed point after being dragged, and other
       nodes can move freely within their plane but never leave it.
+    - Applying the default view is deferred to the next animation frame
+      (`requestAnimationFrame`) rather than run synchronously right after
+      building the graph: calling `dagMode()`/`graphData()` before the
+      vendored bundle's own first-frame setup has run crashes its tick
+      loop with `Cannot read properties of undefined (reading 'tick')`
+      (its internal layout engine isn't created yet at that point). The
+      initial `.dagMode("td")` call in the graph's construction chain
+      exists for the same reason — some real `dagMode` value has to be
+      set before the first tick, even though it's about to be overridden.
+  - `force` — plain force-directed (no `dagMode`).
+  - `td` / `lr` / `radialout` — 3d-force-graph's built-in `dagMode` tree
+    layouts.
 - The graph is otherwise navigable with the controls 3d-force-graph
   provides out of the box (orbit/rotate, zoom, pan). No click interaction
   (click-to-open, click-to-preview, filters) is implemented.
@@ -214,10 +237,14 @@ should be checked against:
   the project's actual document → section → requirement structure, plus
   the vendored JS reference under `_static/project_graph/`.
 - The same holds in server mode (the route returns the equivalent page).
-- The exported page, opened in a real (non-Selenium) browser: the graph
-  renders and is orbit/zoom/pan-navigable; each view-switcher option
-  (`force`/`td`/`lr`/`radialout`/`byDocument`) produces a distinct,
-  sane layout.
+- The exported page, opened in a real (non-Selenium) browser, loads with
+  no console errors and the `byDocument` view already applied (default
+  selection); each view-switcher option (`byDocument`/`force`/`td`/`lr`/
+  `radialout`) produces a distinct, sane layout; in `byDocument`, the
+  "Plane spacing" input and "Reset" button are visible only in that view,
+  dragging a document node along `z` and releasing it re-spaces planes as
+  described in Scope, and changing the spacing input or clicking Reset
+  re-lays out all planes evenly.
 - A project with a `RELATIONS: TYPE: Parent` link between two
   requirements produces the corresponding `"kind": "relation"` link in
   the exported JSON, alongside `"kind": "containment"` links.

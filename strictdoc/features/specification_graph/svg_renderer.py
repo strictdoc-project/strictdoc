@@ -27,6 +27,14 @@ LINE_HEIGHT = 16
 MAX_TITLE_LINES = 2
 TITLE_WRAP_WIDTH = 24
 
+# Skip edges (see layout.get_skip_edges()) are routed through a dedicated
+# vertical "lane" to the right of all document columns, instead of as a
+# straight line, so they don't visually overlap the direct chain of
+# normal edges they bypass (both can otherwise land on the same x
+# coordinate when every row has a single document).
+SKIP_LANE_START_GAP = 30
+SKIP_LANE_GAP = 30
+
 EMPTY_GRAPH_SVG = (
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 60" '
     'width="320" height="60" role="img" '
@@ -82,10 +90,9 @@ def _render_document_box(
     )
 
 
-def _render_edge(
+def _render_normal_edge(
     edge: DocumentRelationEdge,
     layout: Dict[SDocDocumentIF, DocumentPosition],
-    is_skip: bool,
 ) -> str:
     child_document_, parent_document_ = edge
     child_row, child_column = layout[child_document_]
@@ -96,18 +103,43 @@ def _render_edge(
     x2 = _box_x(parent_column) + BOX_WIDTH / 2
     y2 = _box_y(parent_row) + BOX_HEIGHT
 
-    if is_skip:
-        stroke = "#b45309"
-        dash = ' stroke-dasharray="6,4"'
-        marker = "specification_graph_arrow_skip"
-    else:
-        stroke = "black"
-        dash = ""
-        marker = "specification_graph_arrow"
+    return (
+        f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="black" '
+        'marker-end="url(#specification_graph_arrow)" />'
+    )
+
+
+def _render_skip_edge(
+    edge: DocumentRelationEdge,
+    layout: Dict[SDocDocumentIF, DocumentPosition],
+    lane_x: float,
+) -> str:
+    """
+    Route a skip edge out to the right of the child box, straight down/up
+    a dedicated vertical lane, then into the right side of the parent
+    box — instead of a straight line — so it doesn't overlap the normal
+    edges of the direct chain it bypasses.
+    """
+    child_document_, parent_document_ = edge
+    child_row, child_column = layout[child_document_]
+    parent_row, parent_column = layout[parent_document_]
+
+    start_x = _box_x(child_column) + BOX_WIDTH
+    start_y = _box_y(child_row) + BOX_HEIGHT / 2
+    end_x = _box_x(parent_column) + BOX_WIDTH
+    end_y = _box_y(parent_row) + BOX_HEIGHT / 2
+
+    path = (
+        f"M {start_x},{start_y} "
+        f"L {lane_x},{start_y} "
+        f"L {lane_x},{end_y} "
+        f"L {end_x},{end_y}"
+    )
 
     return (
-        f'<line x1="{x1}" y1="{y1}" x2="{x2}" y2="{y2}" stroke="{stroke}"'
-        f'{dash} marker-end="url(#{marker})" />'
+        f'<path d="{path}" fill="none" stroke="#b45309" '
+        'stroke-dasharray="6,4" '
+        'marker-end="url(#specification_graph_arrow_skip)" />'
     )
 
 
@@ -122,10 +154,26 @@ def render_svg(
     max_row = max(row_ for row_, _ in layout.values())
     max_column = max(column_ for _, column_ in layout.values())
 
-    width = MARGIN * 2 + (max_column + 1) * BOX_WIDTH + max_column * COLUMN_GAP
+    width: float = (
+        MARGIN * 2 + (max_column + 1) * BOX_WIDTH + max_column * COLUMN_GAP
+    )
     height = MARGIN * 2 + (max_row + 1) * BOX_HEIGHT + max_row * ROW_GAP
 
     skip_edge_set: Set[DocumentRelationEdge] = set(skip_edges)
+
+    rightmost_box_edge_x = _box_x(max_column) + BOX_WIDTH
+    lane_x_by_edge: Dict[DocumentRelationEdge, float] = {
+        edge_: rightmost_box_edge_x + SKIP_LANE_START_GAP + index_ * SKIP_LANE_GAP
+        for index_, edge_ in enumerate(skip_edges)
+    }
+    if skip_edges:
+        width = max(
+            width,
+            rightmost_box_edge_x
+            + SKIP_LANE_START_GAP
+            + len(skip_edges) * SKIP_LANE_GAP
+            + MARGIN,
+        )
 
     parts: List[str] = [
         (
@@ -150,9 +198,12 @@ def render_svg(
     ]
 
     for edge_ in edges:
-        parts.append(
-            _render_edge(edge_, layout, is_skip=edge_ in skip_edge_set)
-        )
+        if edge_ in skip_edge_set:
+            parts.append(
+                _render_skip_edge(edge_, layout, lane_x_by_edge[edge_])
+            )
+        else:
+            parts.append(_render_normal_edge(edge_, layout))
 
     for document_, position_ in layout.items():
         parts.append(_render_document_box(document_, position_))

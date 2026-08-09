@@ -1,6 +1,7 @@
 # ruff: noqa: F821
 
 import os
+import shutil
 from typing import Any
 
 import lit.formats
@@ -81,6 +82,9 @@ config.suffixes = [".itest"]
 config.is_windows = lit_config.isWindows
 if not lit_config.isWindows:
     config.available_features.add("PLATFORM_IS_NOT_WINDOWS")
+
+if shutil.which("nix") is not None:
+    config.available_features.add("NIX_AVAILABLE")
 
 if "TEST_HTML2PDF" in lit_config.params:
     config.name = "StrictDoc HTML2PDF integration tests"

@@ -20,7 +20,7 @@ CHUNK_1_ID = "document-chunk-1"
 CHUNK_2_ID = "document-chunk-2"
 CHUNK_3_ID = "document-chunk-3"
 
-# The main document has 35 requirements, chunked_documents_threshold = 10
+# The main document has 35 requirements, lazy_document_loading_threshold = 10
 # (strictdoc_config.py), so it renders as 4 chunks: 0 (REQ-001..010, inline),
 # 1 (011..020), 2 (021..030), 3 (031..035).
 MID_CHUNK_TARGET = "REQ-025"
@@ -242,7 +242,7 @@ class Test(E2ECase):
             "def create_config() -> ProjectConfig:\n"
             "    return ProjectConfig(\n"
             "        project_title='Slow Scroll Geometry Test',\n"
-            "        chunked_documents_threshold=5,\n"
+            "        lazy_document_loading_threshold=5,\n"
             "    )\n",
         )
 

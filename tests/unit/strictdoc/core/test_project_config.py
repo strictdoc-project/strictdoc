@@ -142,7 +142,7 @@ def create_config():
         os.unlink(path)
 
 
-def test_80_chunked_documents_threshold_from_config(tmp_path):
+def test_80_lazy_document_loading_threshold_from_config(tmp_path):
     path_to_config = tmp_path / "strictdoc_config.py"
     path_to_config.write_text(
         """\
@@ -150,16 +150,16 @@ from strictdoc.core.project_config import ProjectConfig
 
 
 def create_config():
-    return ProjectConfig(chunked_documents_threshold=50)
+    return ProjectConfig(lazy_document_loading_threshold=50)
 """
     )
     project_config = ProjectConfigLoader.load_from_path_or_get_default(
         path_to_config=str(path_to_config)
     )
-    assert project_config.chunked_documents_threshold == 50
+    assert project_config.lazy_document_loading_threshold == 50
 
 
-def test_81_chunked_documents_threshold_default_when_absent(tmp_path):
+def test_81_lazy_document_loading_threshold_default_when_absent(tmp_path):
     path_to_config = tmp_path / "strictdoc_config.py"
     path_to_config.write_text(
         """\
@@ -173,14 +173,14 @@ def create_config():
     project_config = ProjectConfigLoader.load_from_path_or_get_default(
         path_to_config=str(path_to_config)
     )
-    assert project_config.chunked_documents_threshold == 200
+    assert project_config.lazy_document_loading_threshold == 200
 
 
-def test_82_chunked_documents_threshold_zero_disables():
-    project_config = ProjectConfig(chunked_documents_threshold=0)
-    assert project_config.chunked_documents_threshold == 0
+def test_82_lazy_document_loading_threshold_zero_disables():
+    project_config = ProjectConfig(lazy_document_loading_threshold=0)
+    assert project_config.lazy_document_loading_threshold == 0
 
 
-def test_83_chunked_documents_threshold_negative_rejected():
+def test_83_lazy_document_loading_threshold_negative_rejected():
     with pytest.raises(AssertionError):
-        _ = ProjectConfig(chunked_documents_threshold=-1)
+        _ = ProjectConfig(lazy_document_loading_threshold=-1)

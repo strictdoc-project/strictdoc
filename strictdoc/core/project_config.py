@@ -101,7 +101,7 @@ class ProjectConfigDefault:
     ]
     DEFAULT_SERVER_HOST = "127.0.0.1"
     DEFAULT_SERVER_PORT = 5111
-    DEFAULT_CHUNKED_DOCUMENTS_THRESHOLD = 200
+    DEFAULT_LAZY_DOCUMENT_LOADING_THRESHOLD = 200
     DEFAULT_BUNDLE_DOCUMENT_VERSION = "@GIT_VERSION (Git branch: @GIT_BRANCH)"
     DEFAULT_BUNDLE_DOCUMENT_COMMIT_DATE = "@GIT_COMMIT_DATETIME"
     DEFAULT_SECTION_BEHAVIOR = "[SECTION]"
@@ -135,8 +135,8 @@ class ProjectConfig:
         project_features: Optional[List[Union[str, Feature]]] = None,
         server_host: str = ProjectConfigDefault.DEFAULT_SERVER_HOST,
         server_port: int = ProjectConfigDefault.DEFAULT_SERVER_PORT,
-        chunked_documents_threshold: int = (
-            ProjectConfigDefault.DEFAULT_CHUNKED_DOCUMENTS_THRESHOLD
+        lazy_document_loading_threshold: int = (
+            ProjectConfigDefault.DEFAULT_LAZY_DOCUMENT_LOADING_THRESHOLD
         ),
         input_paths: Optional[List[str]] = None,
         include_doc_paths: Optional[List[str]] = None,
@@ -262,17 +262,22 @@ class ProjectConfig:
         self.server_port: int = server_port
 
         #
-        # chunked_documents_threshold
-        # A value of 0 disables the chunked rendering of documents.
+        # lazy_document_loading_threshold
+        # Applies only to the document screen. Documents with more content
+        # nodes than this are rendered in lazily loaded chunks on the
+        # server instead of all at once. A value of 0 disables the chunked
+        # rendering of documents.
         #
         assert (
-            isinstance(chunked_documents_threshold, int)
-            and chunked_documents_threshold >= 0
+            isinstance(lazy_document_loading_threshold, int)
+            and lazy_document_loading_threshold >= 0
         ), (
-            "config: chunked_documents_threshold: must be a non-negative "
-            f"integer: {chunked_documents_threshold}."
+            "config: lazy_document_loading_threshold: must be a non-negative "
+            f"integer: {lazy_document_loading_threshold}."
         )
-        self.chunked_documents_threshold: int = chunked_documents_threshold
+        self.lazy_document_loading_threshold: int = (
+            lazy_document_loading_threshold
+        )
 
         #
         # input_paths
@@ -1215,8 +1220,8 @@ class ProjectConfigLoader:
         )
         server_host = ProjectConfigDefault.DEFAULT_SERVER_HOST
         server_port = ProjectConfigDefault.DEFAULT_SERVER_PORT
-        chunked_documents_threshold = (
-            ProjectConfigDefault.DEFAULT_CHUNKED_DOCUMENTS_THRESHOLD
+        lazy_document_loading_threshold = (
+            ProjectConfigDefault.DEFAULT_LAZY_DOCUMENT_LOADING_THRESHOLD
         )
         include_doc_paths: List[str] = []
         exclude_doc_paths: List[str] = []
@@ -1367,8 +1372,9 @@ class ProjectConfigLoader:
             server_content = config_dict["server"]
             server_host = server_content.get("host", server_host)
             server_port = server_content.get("port", server_port)
-            chunked_documents_threshold = server_content.get(
-                "chunked_documents_threshold", chunked_documents_threshold
+            lazy_document_loading_threshold = server_content.get(
+                "lazy_document_loading_threshold",
+                lazy_document_loading_threshold,
             )
 
         if "reqif" in config_dict:
@@ -1386,7 +1392,7 @@ class ProjectConfigLoader:
             project_features=project_features,
             server_host=server_host,
             server_port=server_port,
-            chunked_documents_threshold=chunked_documents_threshold,
+            lazy_document_loading_threshold=lazy_document_loading_threshold,
             include_doc_paths=include_doc_paths,
             exclude_doc_paths=exclude_doc_paths,
             source_root_path=source_root_path,

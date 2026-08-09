@@ -26,7 +26,7 @@ def create_view_object(
     document = document_builder.build()
 
     project_config = document_builder.project_config
-    project_config.chunked_documents_threshold = threshold
+    project_config.lazy_document_loading_threshold = threshold
     project_config.is_running_on_server = is_running_on_server
 
     document_tree = DocumentTree(

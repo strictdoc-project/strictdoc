@@ -498,7 +498,7 @@ class DocumentScreenViewObject:
         Chunked mode: server edit screen for large documents only.
 
         Activates only when the document contains strictly more content nodes
-        than the chunked_documents_threshold option value.
+        than the lazy_document_loading_threshold option value.
 
         The result is computed once and memoized because the node counting
         requires a full document walk.
@@ -506,7 +506,7 @@ class DocumentScreenViewObject:
         if self._chunked_rendering is not None:
             return self._chunked_rendering
 
-        threshold = self.project_config.chunked_documents_threshold
+        threshold = self.project_config.lazy_document_loading_threshold
         if (
             threshold == 0
             or not self.is_running_on_server
@@ -525,7 +525,7 @@ class DocumentScreenViewObject:
         than CHUNK_SIZE, a document that activates chunked rendering must
         still be split into more than one chunk.
         """
-        threshold = self.project_config.chunked_documents_threshold
+        threshold = self.project_config.lazy_document_loading_threshold
         if 0 < threshold < CHUNK_SIZE:
             return threshold
         return CHUNK_SIZE

@@ -11,7 +11,7 @@ from tests.end2end.server import SDocTestServer
 
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
-# The fixture has 35 requirements and chunked_documents_threshold = 10 (see
+# The fixture has 35 requirements and lazy_document_loading_threshold = 10 (see
 # strictdoc_config.py), so REQ-035 (the target) is the last node of chunk 3,
 # and chunk 1 is neither the initially-loaded chunk (0) nor the target chunk
 # (3) nor adjacent to it - it has no reason to load as part of this test.
@@ -26,7 +26,7 @@ class Test(E2ECase):
     up with the anchor marked as CSS :target, its TOC entry marked
     "targeted", and actually scrolled into view - the same as
     tests/end2end/stable_url_links/02_web_server, but
-    with chunked_documents_threshold forced low enough (see
+    with lazy_document_loading_threshold forced low enough (see
     strictdoc_config.py) to guarantee the target sits outside the
     initially-loaded chunk 0, rather than only accidentally so depending on
     the project's ambient default threshold.

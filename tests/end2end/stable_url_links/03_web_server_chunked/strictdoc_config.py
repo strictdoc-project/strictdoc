@@ -14,6 +14,6 @@ def create_config() -> ProjectConfig:
         # for that. The test itself still asserts the target chunk is
         # unloaded before navigating, rather than relying on this comment
         # alone.
-        chunked_documents_threshold=10,
+        lazy_document_loading_threshold=10,
     )
     return config

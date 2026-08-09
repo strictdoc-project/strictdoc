@@ -9,7 +9,7 @@ from tests.end2end.helpers.screens.project_index.screen_project_index import (
 from tests.end2end.server import SDocTestServer
 
 # The document has 35 requirements, and strictdoc_config.py sets
-# chunked_documents_threshold = 10, so the document is rendered as four
+# lazy_document_loading_threshold = 10, so the document is rendered as four
 # chunks: 0, 1, 2, 3. The last chunk sits several thousand pixels below the
 # viewport, so it is guaranteed to stay lazy (not eagerly loaded by Turbo)
 # until the page is scrolled down to it - see

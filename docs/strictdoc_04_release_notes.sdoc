@@ -62,7 +62,7 @@ This release contains the following enhancements:
 fields on generated ``TEST_RESULT`` nodes.
 
 2\) The web interface now renders large documents in lazily loaded chunks.
-Documents containing more than ``chunked_documents_threshold`` nodes (200 by
+Documents containing more than ``lazy_document_loading_threshold`` nodes (200 by
 default, configurable in ``strictdoc.toml``, 0 disables chunking) initially
 load only the first chunk of nodes together with the table of contents, and
 the remaining chunks are fetched automatically as the user scrolls. This

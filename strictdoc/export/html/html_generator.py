@@ -43,6 +43,9 @@ from strictdoc.features.source_coverage.generator import (
 from strictdoc.features.source_file_view.generator import (
     SourceFileViewHTMLGenerator,
 )
+from strictdoc.features.specification_graph.generator import (
+    SpecificationGraphGenerator,
+)
 from strictdoc.features.trace.generator import (
     DocumentTraceHTMLGenerator,
 )
@@ -223,6 +226,12 @@ class HTMLGenerator:
 
         # Export JavaScript map of the document tree (project map)
         self.export_project_map(traceability_index=traceability_index)
+
+        if self.project_config.is_activated_tree_map():
+            self.export_tree_map_screen(traceability_index)
+
+        if self.project_config.is_activated_specification_graph():
+            self.export_specification_graph_screen(traceability_index)
 
         # Project statistics is exported by the ExportAction class via the
         # Feature abstraction (see the ProjectStatisticsFeature class), not
@@ -868,4 +877,24 @@ class HTMLGenerator:
 
         traceability_index.search_index_timestamp = get_file_modification_time(
             output_html_source_coverage
+        )
+
+    def export_tree_map_screen(
+        self,
+        traceability_index: TraceabilityIndex,
+    ) -> None:
+        TreeMapGenerator.export(
+            project_config=self.project_config,
+            traceability_index=traceability_index,
+            html_templates=self.html_templates,
+        )
+
+    def export_specification_graph_screen(
+        self,
+        traceability_index: TraceabilityIndex,
+    ) -> None:
+        SpecificationGraphGenerator.export(
+            project_config=self.project_config,
+            traceability_index=traceability_index,
+            html_templates=self.html_templates,
         )

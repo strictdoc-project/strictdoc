@@ -91,4 +91,16 @@
     {% include tree_map_feature.screen_icon() %}
   </a>
 {%- endif -%}
+
+{%- if view_object.project_config.is_activated_specification_graph() -%}
+  <a
+    data-link="specification_graph"
+    class="nav_button"
+    href="{{ view_object.render_url('specification_graph.html') }}"
+    title="Specification graph"
+    data-testid="project-tree-link-specification-graph"
+  >
+    Ж
+  </a>
+{%- endif -%}
 </div>

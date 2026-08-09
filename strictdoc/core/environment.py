@@ -18,6 +18,7 @@ HTML_TEMPLATE_DIRS = [
     os.path.join("strictdoc", "features", "search", "templates"),
     os.path.join("strictdoc", "features", "source_coverage", "templates"),
     os.path.join("strictdoc", "features", "source_file_view", "templates"),
+    os.path.join("strictdoc", "features", "specification_graph", "templates"),
     os.path.join("strictdoc", "features", "traceability_matrix", "templates"),
     os.path.join("strictdoc", "features", "tree_map", "templates"),
     os.path.join("strictdoc", "features", "trace", "templates"),

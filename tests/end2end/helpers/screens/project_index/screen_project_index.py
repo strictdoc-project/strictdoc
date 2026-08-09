@@ -22,6 +22,9 @@ from tests.end2end.helpers.screens.search.search import Screen_Search
 from tests.end2end.helpers.screens.source_coverage.screen_source_coverage import (
     Screen_SourceCoverage,
 )
+from tests.end2end.helpers.screens.specification_graph.specification_graph import (
+    Screen_SpecificationGraph,
+)
 from tests.end2end.helpers.screens.traceability_matrix.screen_requirements_coverage import (
     Screen_RequirementsCoverage,
 )
@@ -245,6 +248,14 @@ class Screen_ProjectIndex(Screen):  # pylint: disable=invalid-name
             '//a[@data-testid="project-tree-link-tree-map"]',
         )
         return Screen_TreeMap(self.test_case)
+
+    def do_click_on_specification_graph_screen_link(
+        self,
+    ) -> Screen_SpecificationGraph:
+        self.test_case.click_xpath(
+            '//a[@data-testid="project-tree-link-specification-graph"]',
+        )
+        return Screen_SpecificationGraph(self.test_case)
 
     #
     # Static HTML search.

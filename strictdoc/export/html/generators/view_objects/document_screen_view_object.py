@@ -495,7 +495,10 @@ class DocumentScreenViewObject:
 
     def is_chunked_rendering(self) -> bool:
         """
-        Chunked mode: server edit screen for large documents only.
+        Chunked mode: DOCUMENT screens for large documents only (both the
+        FastAPI server and static HTML export - the two differ only in how a
+        chunk's HTML reaches the browser, see chunk_frame_id_for() /
+        static_chunk_relative_path()).
 
         Activates only when the document contains strictly more content nodes
         than the lazy_document_loading_threshold option value.
@@ -507,11 +510,7 @@ class DocumentScreenViewObject:
             return self._chunked_rendering
 
         threshold = self.project_config.lazy_document_loading_threshold
-        if (
-            threshold == 0
-            or not self.is_running_on_server
-            or not self.document_type.is_document()
-        ):
+        if threshold == 0 or not self.document_type.is_document():
             self._chunked_rendering = False
         else:
             self._chunked_rendering = self._count_content_nodes() > threshold
@@ -619,6 +618,30 @@ class DocumentScreenViewObject:
             yielded += 1
             if yielded == count:
                 return
+
+    def static_chunk_relative_path(self, chunk: DocumentChunk) -> str:
+        """
+        Filename of the generated .js file that delivers this chunk's HTML
+        for static export, e.g. "document-chunk-3.js". Written by
+        DocumentHTMLGenerator.export next to the document's own HTML output,
+        and referenced client-side by toc_chunk_navigation.js's static
+        delivery path (no FastAPI server to fetch a fragment route from).
+        """
+        assert self.document.meta is not None
+        return (
+            f"{self.document.meta.document_filename_base}"
+            f"-chunk-{chunk.index}.js"
+        )
+
+    def static_chunk_key(self, chunk: DocumentChunk) -> str:
+        """
+        Key under window.StrictDoc.chunks that the generated .js file for
+        this chunk assigns its rendered HTML to.
+        """
+        assert self.document.meta is not None
+        return (
+            f"{self.document.meta.document_filename_base}-chunk-{chunk.index}"
+        )
 
     def _count_content_nodes(self) -> int:
         # This is a full document walk: no precomputed node count exists on

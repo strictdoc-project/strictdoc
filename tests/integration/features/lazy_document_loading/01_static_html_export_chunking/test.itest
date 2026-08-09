@@ -1,0 +1,41 @@
+RUN: %strictdoc export %S --output-dir %T | filecheck %s
+CHECK: Published: Lazy Chunking Doc
+
+RUN: %check_exists --file "%T/html/%THIS_TEST_FOLDER/input.html"
+RUN: %check_exists --file "%T/html/%THIS_TEST_FOLDER/input-chunk-1.js"
+RUN: %check_exists --file "%T/html/%THIS_TEST_FOLDER/input-chunk-2.js"
+
+# Chunk 0 (requirements 001-010) is rendered inline. Chunks 1 and 2 are
+# static placeholders: no FastAPI server to fetch a fragment from, so they
+# point at the generated .js files instead of a Turbo "src"/"loading" pair.
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHECK-MAIN --dump-input=fail
+CHECK-MAIN: id="document-chunk-0"
+CHECK-MAIN: Statement of requirement 001
+CHECK-MAIN-NOT: Statement of requirement 011
+CHECK-MAIN: data-chunk-src="input-chunk-1.js"
+CHECK-MAIN: data-chunk-key="input-chunk-1"
+CHECK-MAIN: data-chunk-src="input-chunk-2.js"
+CHECK-MAIN: data-chunk-key="input-chunk-2"
+CHECK-MAIN-NOT: loading="lazy"
+CHECK-MAIN-NOT: src="/fragments/
+
+# Each generated chunk .js file is one long line (a single JSON-escaped
+# string), so it's checked with one positive CHECK per filecheck invocation
+# rather than several in sequence.
+
+# Chunk 1 covers requirements 011-020 only.
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input-chunk-1.js | filecheck %s --check-prefix CHECK-CHUNK-1-KEY --dump-input=fail
+CHECK-CHUNK-1-KEY: window.StrictDoc.chunks["input-chunk-1"] = "<turbo-frame id=\"document-chunk-1\">
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input-chunk-1.js | filecheck %s --check-prefix CHECK-CHUNK-1-CONTENT --dump-input=fail
+CHECK-CHUNK-1-CONTENT: Statement of requirement 015
+CHECK-CHUNK-1-CONTENT-NOT: Statement of requirement 005
+CHECK-CHUNK-1-CONTENT-NOT: Statement of requirement 025
+
+# Chunk 2 covers requirements 021-025 only.
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input-chunk-2.js | filecheck %s --check-prefix CHECK-CHUNK-2-KEY --dump-input=fail
+CHECK-CHUNK-2-KEY: window.StrictDoc.chunks["input-chunk-2"] = "<turbo-frame id=\"document-chunk-2\">
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input-chunk-2.js | filecheck %s --check-prefix CHECK-CHUNK-2-CONTENT --dump-input=fail
+CHECK-CHUNK-2-CONTENT: Statement of requirement 025
+CHECK-CHUNK-2-CONTENT-NOT: Statement of requirement 015

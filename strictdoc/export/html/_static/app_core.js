@@ -128,4 +128,25 @@ onInsert(selector, callback) contract:
       document.querySelectorAll(selector).forEach(callback);
     };
   }
+
+  // Load a generated .js file (e.g. the static search index or a static
+  // document chunk) by injecting a <script src>, instead of fetch()/XHR:
+  // script-tag loading isn't subject to the file:// same-origin restriction
+  // that blocks fetch()/XHR between sibling file:// URLs, which matters
+  // because static HTML export is frequently opened directly as a file
+  // rather than served over HTTP.
+  if (!strictDoc.loadScript) {
+    strictDoc.loadScript = function(url) {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = url;
+        script.onload = () => {
+          script.remove();
+          resolve();
+        };
+        script.onerror = () => reject(new Error(`Failed to load script ${url}`));
+        document.head.appendChild(script);
+      });
+    };
+  }
 })(window);

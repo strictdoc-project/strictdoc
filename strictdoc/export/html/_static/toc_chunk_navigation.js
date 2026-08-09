@@ -23,6 +23,41 @@
   const PRELOAD_MARGIN = "800px 0px";
   const observedPlaceholders = new WeakSet();
 
+  // Server mode fetches a chunk from /fragments/document/.../chunk via a
+  // Turbo frame (loading="eager" flips a lazy frame to load its src). Static
+  // export has no server for that route, so its chunks are pre-rendered to
+  // .js files and delivered as a <script src> instead (see
+  // document_chunk_lazy_placeholder_static.jinja.html and
+  // DocumentHTMLGenerator._export_static_chunks) - only loadStaticChunk()
+  // and its two call sites differ; TOC click/hashchange handling, scrolling,
+  // and the turbo:frame-load cleanup listener below are delivery-agnostic.
+  const IS_STATIC_EXPORT = document.querySelector(
+    'meta[name="strictdoc-export-type"]'
+  )?.content === "static";
+
+  // Load a static chunk's .js file, splice its rendered HTML into the
+  // placeholder, and dispatch the same "turbo:frame-load" event Turbo fires
+  // for server-mode frame loads, so every existing listener (the preload
+  // observer's unobserve, the placeholder-class cleanup below, and this
+  // file's own onFrameLoad handlers) keeps working unchanged.
+  async function loadStaticChunk(frame) {
+    const src = frame.dataset.chunkSrc;
+    const key = frame.dataset.chunkKey;
+    if (!src || !key) return;
+    await window.StrictDoc.loadScript(src);
+    const html = window.StrictDoc.chunks?.[key];
+    if (html === undefined) return;
+    // The generated .js file wraps the chunk's HTML exactly as rendered by
+    // document_chunk.jinja.html, i.e. a single <turbo-frame id="...">...
+    // </turbo-frame> root. Splice in its *inner* content only, so this same
+    // placeholder element (not a replacement) stays the live DOM node the
+    // rest of this file dispatches/observes events on.
+    const template = document.createElement("template");
+    template.innerHTML = html.trim();
+    frame.innerHTML = template.content.firstElementChild.innerHTML;
+    frame.dispatchEvent(new Event("turbo:frame-load", { bubbles: true }));
+  }
+
   function scrollToFragment(fragment) {
     const target = document.getElementById(fragment);
     if (!target) return;
@@ -125,8 +160,12 @@
       }
     };
     document.addEventListener("turbo:frame-load", onFrameLoad);
-    // Switching loading from "lazy" to "eager" makes Turbo fetch src now.
-    frame.setAttribute("loading", "eager");
+    if (IS_STATIC_EXPORT) {
+      loadStaticChunk(frame);
+    } else {
+      // Switching loading from "lazy" to "eager" makes Turbo fetch src now.
+      frame.setAttribute("loading", "eager");
+    }
   }
 
   function navigateToFragment(fragment, link) {
@@ -244,7 +283,11 @@
       for (const entry of entries) {
         if (!entry.isIntersecting) continue;
         preloadObserver.unobserve(entry.target);
-        entry.target.setAttribute("loading", "eager");
+        if (IS_STATIC_EXPORT) {
+          loadStaticChunk(entry.target);
+        } else {
+          entry.target.setAttribute("loading", "eager");
+        }
       }
     }, {
       rootMargin: PRELOAD_MARGIN

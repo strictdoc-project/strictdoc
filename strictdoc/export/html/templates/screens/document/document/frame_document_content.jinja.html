@@ -14,7 +14,11 @@
                 {% include "screens/document/document/document_chunk.jinja.html" %}
               {%- endwith %}
             {%- else %}
-              {% include "screens/document/document/document_chunk_lazy_placeholder.jinja.html" %}
+              {%- if view_object.is_running_on_server %}
+                {% include "screens/document/document/document_chunk_lazy_placeholder.jinja.html" %}
+              {%- else %}
+                {% include "screens/document/document/document_chunk_lazy_placeholder_static.jinja.html" %}
+              {%- endif %}
             {%- endif %}
           {%- endfor %}
         {%- else %}

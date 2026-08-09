@@ -72,12 +72,16 @@ def test_threshold_zero_disables_chunked_rendering():
     assert view_object.is_chunked_rendering() is False
 
 
-def test_not_running_on_server_disables_chunked_rendering():
+def test_static_export_also_activates_chunked_rendering():
+    # Static HTML export has no FastAPI server to fetch a chunk fragment
+    # from, but it still activates chunked rendering: DocumentHTMLGenerator
+    # delivers each chunk as a generated .js file instead (see
+    # static_chunk_relative_path()/static_chunk_key() below).
     view_object = create_view_object(
         node_count=30, threshold=10, is_running_on_server=False
     )
 
-    assert view_object.is_chunked_rendering() is False
+    assert view_object.is_chunked_rendering() is True
 
 
 def test_chunked_rendering_activates_above_threshold():
@@ -213,6 +217,22 @@ def test_chunk_content_iterator_yields_remainder_when_count_past_end():
     ]
 
     assert chunk_mids == node_mids[24:30]
+
+
+def test_static_chunk_naming_helpers_are_keyed_by_document_and_index():
+    view_object = create_view_object(
+        node_count=30, threshold=10, is_running_on_server=False
+    )
+    chunks = view_object.document_content_chunks()
+
+    assert [
+        view_object.static_chunk_relative_path(chunk_) for chunk_ in chunks
+    ] == ["input-chunk-0.js", "input-chunk-1.js", "input-chunk-2.js"]
+    assert [view_object.static_chunk_key(chunk_) for chunk_ in chunks] == [
+        "input-chunk-0",
+        "input-chunk-1",
+        "input-chunk-2",
+    ]
 
 
 def test_chunk_content_iterator_yields_nothing_for_unknown_cursor():

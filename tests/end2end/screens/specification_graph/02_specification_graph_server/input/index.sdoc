@@ -1,15 +1,15 @@
 [DOCUMENT]
-MID: 6a8bc1d467c348dbad29707cd6a3f262
+MID: 6a8bc1d467c348dbad29707cd6a3f261
 TITLE: Specification Graph Screen Test
 OPTIONS:
   ENABLE_MID: True
 
 [[SECTION]]
-MID: sect-3456
+MID: sect-2345
 TITLE: Test section
 
 [REQUIREMENT]
-MID: req-3456
+MID: req-2345
 UID: REQ-1
 TITLE: Sample requirement
 STATEMENT: >>>

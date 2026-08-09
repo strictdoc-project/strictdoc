@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Doc C
+
+[REQUIREMENT]
+UID: REQ-C1
+TITLE: Requirement C1
+STATEMENT: Statement C1
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-B1

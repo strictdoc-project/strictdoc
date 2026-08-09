@@ -198,11 +198,23 @@ The feature is built bottom-up in self-contained commits/PRs, each passing
    conflict, an isolated document). Add integration and/or end-to-end
    tests against these fixtures per the SDG testing requirement.
 
-### Open questions for implementation phase
+### Implementation decisions made during step 4
 
-- Exact SVG geometry (box sizing/wrapping for long document titles, spacing
-  between rows/columns, arrow routing when two documents are far apart
-  horizontally) is not decided yet and should be worked out during
-  implementation step 4, informed by the fixtures authored at that step.
-- Exact visual encoding for "skip" arrows (color vs. dash pattern vs. both)
-  is not decided yet.
+- SVG geometry: fixed-size boxes (180x60), titles wrapped to max 2 lines
+  and truncated with "…" if still too long, arrows routed as a single
+  straight line from the child box's top edge to the parent box's bottom
+  edge (no obstacle-avoidance routing — a skip arrow can visually cross
+  through an intermediate row's box). See
+  `strictdoc/features/specification_graph/svg_renderer.py` for exact
+  constants; these were chosen ad hoc for a first working version, not
+  derived from any design spec, and can be revisited.
+- Skip arrows: distinct marker id, orange stroke, and
+  `stroke-dasharray="6,4"` (both color and dash pattern, not just one).
+- Not yet decided: whether relation direction/role should ever be labeled
+  on arrows (still no — see "Diagram content"); whether arrow routing
+  needs to avoid crossing through intermediate boxes (not needed for the
+  fixtures built so far, revisit if it becomes a real readability problem).
+- Whether this feature needs an SRS entry in the SDG (`@relation(SDOC-SRS-...)`
+  annotations, as `tree_map`'s code and tests carry) was raised but not
+  resolved — same open question as the separate, unrelated `ui_3d_graph`
+  task hit for its `project_graph` feature.

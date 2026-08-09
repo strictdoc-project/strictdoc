@@ -1,0 +1,7 @@
+[DOCUMENT]
+TITLE: Doc E
+
+[REQUIREMENT]
+UID: REQ-E1
+TITLE: Requirement E1
+STATEMENT: Doc E has no relations to any other document.

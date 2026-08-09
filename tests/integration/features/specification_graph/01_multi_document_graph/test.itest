@@ -1,0 +1,29 @@
+#
+# This test verifies the Specification Graph screen for a project with:
+# - a simple parent chain across documents (Doc A <- Doc B <- Doc C)
+# - a "highway" conflict: Doc D has parent relations to both Doc A (row 0)
+#   and Doc C (row 2); the deeper chain via Doc C wins the row assignment,
+#   and the shallower Doc D -> Doc A relation is rendered as a "skip" arrow.
+# - an isolated document (Doc E) with no relations to any other document.
+#
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK-DAG: Published: Doc A
+CHECK-DAG: Published: Doc B
+CHECK-DAG: Published: Doc C
+CHECK-DAG: Published: Doc D
+CHECK-DAG: Published: Doc E
+CHECK: Export completed
+
+RUN: %check_exists --file "%T/html/specification_graph.html"
+
+RUN: %cat "%T/html/specification_graph.html" | filecheck %s --dump-input=fail --check-prefix CHECK-SVG
+CHECK-SVG: <svg
+CHECK-SVG-DAG: >Doc A<
+CHECK-SVG-DAG: >Doc B<
+CHECK-SVG-DAG: >Doc C<
+CHECK-SVG-DAG: >Doc D<
+CHECK-SVG-DAG: >Doc E<
+CHECK-SVG-DAG: marker-end="url(#specification_graph_arrow)"
+CHECK-SVG-DAG: stroke-dasharray
+CHECK-SVG-DAG: marker-end="url(#specification_graph_arrow_skip)"

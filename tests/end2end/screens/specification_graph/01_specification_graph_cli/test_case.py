@@ -26,3 +26,9 @@ class Test(E2ECase):
                 screen_project_index.do_click_on_specification_graph_screen_link()
             )
             specification_graph_screen.assert_on_screen()
+            # The title is wrapped across two <tspan> lines inside the SVG
+            # (see svg_renderer.py), so only assert on a substring that is
+            # guaranteed to land on a single line.
+            specification_graph_screen.assert_contains_text(
+                "Specification Graph"
+            )

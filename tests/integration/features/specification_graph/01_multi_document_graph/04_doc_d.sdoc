@@ -1,0 +1,15 @@
+[DOCUMENT]
+TITLE: Doc D
+
+[REQUIREMENT]
+UID: REQ-D1
+TITLE: Requirement D1
+STATEMENT: >>>
+Doc D relates to both Doc A (shallow) and Doc C (deep), on purpose: this
+is the "highway" conflict fixture for the Specification Graph screen.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-A1
+- TYPE: Parent
+  VALUE: REQ-C1

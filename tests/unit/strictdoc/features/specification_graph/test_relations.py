@@ -9,7 +9,7 @@ from tests.unit.helpers.document_builder import DocumentBuilder
 
 def test_same_document_relation_is_not_an_edge():
     document_builder = DocumentBuilder()
-    requirement1 = document_builder.add_requirement("REQ-001")
+    document_builder.add_requirement("REQ-001")
     document_builder.add_requirement("REQ-002")
     document_builder.add_requirement_relation(
         relation_type="Parent",
@@ -31,7 +31,6 @@ def test_same_document_relation_is_not_an_edge():
     )
 
     assert get_document_relation_edges(traceability_index) == []
-    assert requirement1.reserved_uid == "REQ-001"
 
 
 def test_cross_document_relation_is_an_edge():

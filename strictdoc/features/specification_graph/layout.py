@@ -8,7 +8,7 @@ See developer/tasks/20260809_feat_specification_graph/task.md for the full
 "highway" layout rule this implements.
 """
 
-from typing import Dict, List, Tuple
+from typing import Dict, List, Sequence, Tuple
 
 from strictdoc.backend.sdoc.models.model import SDocDocumentIF
 from strictdoc.features.specification_graph.relations import (
@@ -20,7 +20,7 @@ DocumentPosition = Tuple[int, int]
 
 
 def compute_document_layout(
-    documents: List[SDocDocumentIF],
+    documents: Sequence[SDocDocumentIF],
     edges: List[DocumentRelationEdge],
 ) -> Dict[SDocDocumentIF, DocumentPosition]:
     """

@@ -167,9 +167,13 @@
   // Distinguish a create request from other forms that can live in the same
   // Turbo frames. Only create requests give their frame ID to a future node.
   function isCreateRequirementForm(form) {
+    if (!form) return false;
+
+    const formAction = form.getAttribute("action");
     return (
-      form?.getAttribute("action") === CREATE_REQUIREMENT_ACTION ||
-      form?.action.endsWith(CREATE_REQUIREMENT_ACTION)
+      formAction === CREATE_REQUIREMENT_ACTION ||
+      (typeof form.action === "string" &&
+        form.action.endsWith(CREATE_REQUIREMENT_ACTION))
     );
   }
 

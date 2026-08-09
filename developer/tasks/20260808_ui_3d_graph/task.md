@@ -43,13 +43,12 @@ document tree as an interactive 3D force-directed graph, using
     center. A file node referenced from multiple documents is pinned to
     the plane of whichever document happened to reference it first — an
     approximation, not exact.
-    - Implementation quirks specific to this vendored 3d-force-graph
-      build: `x` can be hard-pinned via `node.fx`, but `node.fy` gets
-      silently cleared back to `undefined` every tick (apparently a
-      residual effect of `dagMode`'s "td"/"bu" modes owning the y axis,
-      even after `dagMode(null)`), so `y` is instead pulled toward 0 via
-      a genuine custom `d3Force` that nudges velocity (`vy`) rather than
-      fixing position.
+    - On this vendored 3d-force-graph build, `x` can be hard-pinned via
+      `node.fx`, but `node.fy` is silently cleared back to `undefined`
+      every tick — a residual effect of `dagMode`'s "td"/"bu" modes owning
+      the y axis, which persists even after `dagMode(null)`. `y` is
+      therefore pulled toward 0 via a custom `d3Force` that nudges
+      velocity (`vy`) instead of fixing position.
     - Dragging a node pins its `fx`/`fy`/`fz` to the drop point and they
       stay there — which would otherwise let a dragged document ball end
       up permanently off-center, or a dragged child node end up on the
@@ -83,28 +82,23 @@ document tree as an interactive 3D force-directed graph, using
 
 ### Testing
 
-No automated test coverage for this screen yet.
+No automated test coverage for this screen. This is a deliberate,
+documented exception (see SDG's "one test per feature" rule): 3d-force-graph
+requires a WebGL context (via Three.js), and this project's
+SeleniumBase-driven Chrome (`invoke test-end2end`, both `--headless` and
+`--headed`) has no WebGL context available — Chrome reports `"disabled by
+enterprise policy or commandline switch"` and `ForceGraph3D()` throws on
+init. This is not headless-specific; it is how SeleniumBase's Chrome is
+launched/configured in this environment. The screen renders and behaves
+correctly in a regular (non-Selenium) browser.
 
-An end-to-end test (mirroring the `tree_map` screen's Selenium-based tests)
-was written and then removed after investigation showed it cannot pass in
-this project's e2e test environment: 3d-force-graph requires a WebGL
-context (via Three.js), and the Chrome instance SeleniumBase launches for
-`invoke test-end2end` has no WebGL context available — Chrome reports
-`"disabled by enterprise policy or commandline switch"` and
-`ForceGraph3D()` throws on init. This reproduces identically in both
-`--headless` and `--headed` runs, so it is not a headless-specific
-limitation — it is how SeleniumBase's Chrome is launched/configured in this
-environment. Manually opening the exported `project_graph.html` in a
-regular browser renders and behaves correctly.
-
-Fixing this would mean passing software-WebGL Chrome flags (e.g.
+Resolving this requires passing software-WebGL Chrome flags (e.g.
 `--use-gl=angle --use-angle=swiftshader`) into the shared e2e Chrome launch
-config (`tasks.py`), which is shared e2e test infrastructure, not local to
-this feature, and needs a deliberate decision before touching it. Until
-that's resolved, this screen's correctness is verified manually
-(`strictdoc export` producing the expected `project_graph.html`, checked in
-a real browser) rather than by an automated test — a deliberate,
-documented exception, not an oversight.
+config (`tasks.py`) — shared e2e test infrastructure, not local to this
+feature, so it needs a deliberate decision before touching it (see Next
+increments). Until then, this screen is verified manually: export a project
+with `PROJECT_GRAPH_SCREEN` enabled and check `project_graph.html` in a
+real browser.
 
 ## WHY
 
@@ -145,10 +139,9 @@ feature's architecture (`strictdoc/features/tree_map/`):
   color legend, and a small inline script that parses the JSON and calls
   `ForceGraph3D()` on the container, coloring nodes by type
   (document/section/requirement/source_file/test_file), coloring/widening
-  links by `kind` (containment/relation/file — note: `.linkLineDash()` was
-  tried first for the relation/containment distinction but does not exist
-  on this vendored 3d-force-graph build; `.linkColor()` + `.linkWidth()`
-  are used instead), and applying either `.dagMode()` or the custom
+  links by `kind` (containment/relation/file — via `.linkColor()` +
+  `.linkWidth()`; `.linkLineDash()` is not available on this vendored
+  3d-force-graph build), and applying either `.dagMode()` or the custom
   `byDocument` fixed-coordinate layout (see Scope) whenever the
   view-switcher selection changes, followed by `.d3ReheatSimulation()` so
   the new layout actually takes effect.
@@ -211,25 +204,28 @@ project's non-included documents (assigned while iterating
 `document_tree.document_list` in `generator.py`); it is only consumed by
 the `byDocument` view.
 
-### Verification performed
+### Manual verification checklist
 
-- `strictdoc export` on a small hand-written project (one document, one
-  section, one requirement) with `PROJECT_GRAPH_SCREEN` enabled produces a
-  `project_graph.html` containing the expected node/link JSON
-  (document → section → requirement, 2 links) and the vendored JS
-  reference under `_static/project_graph/`.
-- Same check in server mode (route returns the equivalent page).
-- The exported page opened in a real (non-Selenium) browser: graph renders
-  and is orbit/zoom/pan-navigable, matching the intended behavior.
-- A hand-written project with a `RELATIONS: TYPE: Parent` link between two
-  requirements produces the expected extra `"kind": "relation"` link in the
-  exported JSON, alongside the `"kind": "containment"` links.
-- A hand-written project with a `@relation(REQ-1, scope=file)` marker in a
-  source file (with `REQUIREMENT_TO_SOURCE_TRACEABILITY` enabled) produces
-  a `source_file` node for that file and a `"kind": "file"` link
-  from the requirement to it.
-- `invoke lint-ruff` and `invoke lint-mypy` pass on all changed/added
-  Python files.
+In the absence of automated coverage (see Testing), changes to this screen
+should be checked against:
+
+- `strictdoc export` on a project with `PROJECT_GRAPH_SCREEN` enabled
+  produces a `project_graph.html` whose embedded node/link JSON matches
+  the project's actual document → section → requirement structure, plus
+  the vendored JS reference under `_static/project_graph/`.
+- The same holds in server mode (the route returns the equivalent page).
+- The exported page, opened in a real (non-Selenium) browser: the graph
+  renders and is orbit/zoom/pan-navigable; each view-switcher option
+  (`force`/`td`/`lr`/`radialout`/`byDocument`) produces a distinct,
+  sane layout.
+- A project with a `RELATIONS: TYPE: Parent` link between two
+  requirements produces the corresponding `"kind": "relation"` link in
+  the exported JSON, alongside `"kind": "containment"` links.
+- A project with a `@relation(REQ-1, scope=file)` marker in a source file
+  (with `REQUIREMENT_TO_SOURCE_TRACEABILITY` enabled) produces a
+  `source_file` node for that file and a `"kind": "file"` link from the
+  requirement to it.
+- `invoke lint-ruff` and `invoke lint-mypy` pass.
 
 ## Next increments (not implemented, for future tasks)
 

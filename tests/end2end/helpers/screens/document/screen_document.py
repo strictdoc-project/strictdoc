@@ -631,15 +631,19 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
             );
             window.__strictdocViewportRace = null;
 
-            container.dispatchEvent(new WheelEvent("wheel", {
-              bubbles: true,
-              deltaY: scrollDelta
-            }));
             document.addEventListener(
               "turbo:before-fetch-response",
               (event) => {
                 if (event.target !== frame) return;
 
+                // The production listener was registered during page
+                // initialization and has already captured its response-time
+                // snapshot. Establish newer user intent before Turbo is
+                // allowed to mutate the frame.
+                container.dispatchEvent(new WheelEvent("wheel", {
+                  bubbles: true,
+                  deltaY: scrollDelta
+                }));
                 const containerTop =
                   container.getBoundingClientRect().top;
                 const topBefore =
@@ -891,9 +895,11 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
             """
             const state = {
               complete: false,
+              detailedSamples: [],
               initialInputSamples: [],
               initialSamples: [],
               inputSamples: [],
+              lifecycleEvents: [],
               loadedChunkIds: [],
               prerequisiteLoadSampleIndex: null,
               samples: [],
@@ -917,20 +923,29 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
               const container = document.querySelector(
                 "[js-toc_highlighting-content_root]"
               );
+              const detailedSample = {
+                initialWitnessTop: null,
+                loadedChunkIds: [...state.loadedChunkIds],
+                scrollTop: container.scrollTop,
+                timestamp: performance.now(),
+                wheelMovement: state.wheelMovement,
+                witnessTop: null,
+              };
               if (initialTarget) {
-                state.initialInputSamples.push(state.wheelMovement);
-                state.initialSamples.push(
+                detailedSample.initialWitnessTop =
                   initialTarget.getBoundingClientRect().top -
-                  container.getBoundingClientRect().top
-                );
+                  container.getBoundingClientRect().top;
+                state.initialInputSamples.push(state.wheelMovement);
+                state.initialSamples.push(detailedSample.initialWitnessTop);
               }
               if (target) {
-                state.inputSamples.push(state.wheelMovement);
-                state.samples.push(
+                detailedSample.witnessTop =
                   target.getBoundingClientRect().top -
-                  container.getBoundingClientRect().top
-                );
+                  container.getBoundingClientRect().top;
+                state.inputSamples.push(state.wheelMovement);
+                state.samples.push(detailedSample.witnessTop);
               }
+              state.detailedSamples.push(detailedSample);
               if (!state.complete) {
                 schedulePostPaintSample();
               }
@@ -940,6 +955,14 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
             document.addEventListener("turbo:frame-load", (event) => {
               if (!event.target.id?.startsWith("document-chunk-")) return;
               state.loadedChunkIds.push(event.target.id);
+              state.lifecycleEvents.push({
+                chunkId: event.target.id,
+                detailedSampleIndex: state.detailedSamples.length,
+                initialSampleIndex: state.initialSamples.length,
+                sampleIndex: state.samples.length,
+                timestamp: performance.now(),
+                type: "turbo:frame-load",
+              });
               if (event.target.id === arguments[1]) {
                 state.targetLoadSampleIndex = state.samples.length;
                 state.targetLoadInitialSampleIndex =

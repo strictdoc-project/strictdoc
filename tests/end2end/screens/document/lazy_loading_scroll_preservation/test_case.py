@@ -338,15 +338,32 @@ class Test(E2ECase):
             load_residual_steps = residual_steps[
                 max(0, target_load_sample_index - 3) :
             ]
+            load_input_steps = input_steps[
+                max(0, target_load_sample_index - 3) :
+            ]
             assert load_steps
+            # A W3C action sequence can place one wheel event on the opposite
+            # side of an animation-frame sample from the scroll/layout update
+            # it causes. Permit that single input quantum, but continue to
+            # reject the original independent 199px geometry displacement.
+            # See test_50px_upward_scroll_regression.md for the full contract
+            # and the production mutations this assertion must reject.
+            residual_tolerance = (
+                wheel_step + 4 if wheel_step >= 50 and scroll_key is None else 4
+            )
             assert (
                 min(load_steps) >= -1 and max(load_steps) <= 80
                 if scroll_key is not None
-                else max(abs(step) for step in load_residual_steps) <= 4
+                else max(abs(step) for step in load_residual_steps)
+                <= residual_tolerance
             ), (
                 "Loading the five-node preceding chunk moved its visible "
                 "last node opposite to or independently of the upward input: "
-                f"{load_residual_steps}."
+                f"residual_steps={load_residual_steps}, "
+                f"coordinate_steps={load_steps}, "
+                f"input_steps={load_input_steps}, "
+                f"lifecycle_events={state['lifecycleEvents']}, "
+                f"detailed_samples={state['detailedSamples']}."
             )
 
             initial_load_sample_index = state["targetLoadInitialSampleIndex"]
@@ -377,21 +394,34 @@ class Test(E2ECase):
             initial_load_residual_steps = initial_residual_steps[
                 max(0, initial_load_sample_index - 3) :
             ]
+            initial_load_input_steps = initial_input_steps[
+                max(0, initial_load_sample_index - 3) :
+            ]
             assert initial_load_steps
             assert (
                 min(initial_load_steps) >= -1 and max(initial_load_steps) <= 80
                 if scroll_key is not None
-                else max(abs(step) for step in initial_load_residual_steps) <= 4
+                else max(abs(step) for step in initial_load_residual_steps)
+                <= residual_tolerance
             ), (
                 "Loading the five-node preceding chunk moved an existing "
                 "node opposite to or independently of the upward input: "
-                f"{initial_load_residual_steps}."
+                f"residual_steps={initial_load_residual_steps}, "
+                f"coordinate_steps={initial_load_steps}, "
+                "input_steps="
+                f"{initial_load_input_steps}, "
+                f"lifecycle_events={state['lifecycleEvents']}, "
+                f"detailed_samples={state['detailedSamples']}."
             )
 
     def test_very_slow_upward_scroll_preserves_short_last_node(self):
         self._assert_upward_scroll_preserves_short_last_node(8)
 
     def test_50px_upward_scroll_preserves_short_last_node(self):
+        # The complete regression contract and the required mutation checks
+        # for any instrumentation change are documented in:
+        # developer/tasks/20260728_pr3071_testing_lazy_loading/
+        # test_50px_upward_scroll_regression.md
         self._assert_upward_scroll_preserves_short_last_node(50)
 
     def test_60px_upward_scroll_preserves_delayed_chunk_height_change(self):
@@ -511,6 +541,10 @@ class Test(E2ECase):
             )
 
     def test_user_scroll_during_chunk_request_supersedes_old_position(self):
+        # This is the deterministic lifecycle-ordering companion to the
+        # production-shaped continuous-wheel tests. See the complete contract:
+        # developer/tasks/20260728_pr3071_testing_lazy_loading/
+        # test_50px_upward_scroll_regression.md
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
         write_long_document_with_tall_chunk_above_viewport(test_setup)
 

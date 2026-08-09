@@ -1,0 +1,179 @@
+[DOCUMENT]
+TITLE: Lazy Loading Document
+
+[REQUIREMENT]
+UID: REQ-001
+TITLE: Requirement 1
+STATEMENT: The lazy loading fixture statement LAZYSTMT-001 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-002
+TITLE: Requirement 2
+STATEMENT: >>>
+The modified statement LAZYSTMT-002-EDITED must appear exactly once.
+<<<
+
+[REQUIREMENT]
+UID: REQ-003
+TITLE: Requirement 3
+STATEMENT: The lazy loading fixture statement LAZYSTMT-003 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-004
+TITLE: Requirement 4
+STATEMENT: The lazy loading fixture statement LAZYSTMT-004 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-005
+TITLE: Requirement 5
+STATEMENT: The lazy loading fixture statement LAZYSTMT-005 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-006
+TITLE: Requirement 6
+STATEMENT: The lazy loading fixture statement LAZYSTMT-006 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-007
+TITLE: Requirement 7
+STATEMENT: The lazy loading fixture statement LAZYSTMT-007 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-008
+TITLE: Requirement 8
+STATEMENT: The lazy loading fixture statement LAZYSTMT-008 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-009
+TITLE: Requirement 9
+STATEMENT: The lazy loading fixture statement LAZYSTMT-009 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-010
+TITLE: Requirement 10
+STATEMENT: The lazy loading fixture statement LAZYSTMT-010 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-011
+TITLE: Requirement 11
+STATEMENT: The lazy loading fixture statement LAZYSTMT-011 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-012
+TITLE: Requirement 12
+STATEMENT: The lazy loading fixture statement LAZYSTMT-012 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-013
+TITLE: Requirement 13
+STATEMENT: The lazy loading fixture statement LAZYSTMT-013 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-014
+TITLE: Requirement 14
+STATEMENT: The lazy loading fixture statement LAZYSTMT-014 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-015
+TITLE: Requirement 15
+STATEMENT: The lazy loading fixture statement LAZYSTMT-015 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-016
+TITLE: Requirement 16
+STATEMENT: The lazy loading fixture statement LAZYSTMT-016 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-017
+TITLE: Requirement 17
+STATEMENT: The lazy loading fixture statement LAZYSTMT-017 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-018
+TITLE: Requirement 18
+STATEMENT: The lazy loading fixture statement LAZYSTMT-018 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-019
+TITLE: Requirement 19
+STATEMENT: The lazy loading fixture statement LAZYSTMT-019 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-020
+TITLE: Requirement 20
+STATEMENT: The lazy loading fixture statement LAZYSTMT-020 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-021
+TITLE: Requirement 21
+STATEMENT: The lazy loading fixture statement LAZYSTMT-021 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-022
+TITLE: Requirement 22
+STATEMENT: The lazy loading fixture statement LAZYSTMT-022 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-023
+TITLE: Requirement 23
+STATEMENT: The lazy loading fixture statement LAZYSTMT-023 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-024
+TITLE: Requirement 24
+STATEMENT: The lazy loading fixture statement LAZYSTMT-024 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-025
+TITLE: Requirement 25
+STATEMENT: The lazy loading fixture statement LAZYSTMT-025 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-026
+TITLE: Requirement 26
+STATEMENT: The lazy loading fixture statement LAZYSTMT-026 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-027
+TITLE: Requirement 27
+STATEMENT: The lazy loading fixture statement LAZYSTMT-027 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-028
+TITLE: Requirement 28
+STATEMENT: The lazy loading fixture statement LAZYSTMT-028 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-029
+TITLE: Requirement 29
+STATEMENT: The lazy loading fixture statement LAZYSTMT-029 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-030
+TITLE: Requirement 30
+STATEMENT: The lazy loading fixture statement LAZYSTMT-030 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-031
+TITLE: Requirement 31
+STATEMENT: The lazy loading fixture statement LAZYSTMT-031 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-032
+TITLE: Requirement 32
+STATEMENT: The lazy loading fixture statement LAZYSTMT-032 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-033
+TITLE: Requirement 33
+STATEMENT: The lazy loading fixture statement LAZYSTMT-033 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-034
+TITLE: Requirement 34
+STATEMENT: The lazy loading fixture statement LAZYSTMT-034 must appear exactly once.
+
+[REQUIREMENT]
+UID: REQ-035
+TITLE: Requirement 35
+STATEMENT: The lazy loading fixture statement LAZYSTMT-035 must appear exactly once.

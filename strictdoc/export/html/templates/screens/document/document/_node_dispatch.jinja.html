@@ -1,0 +1,12 @@
+{%- if node.is_document() %}
+  {% include "components/section/index_extends_node.jinja" %}
+{%- elif node.is_requirement() %}
+  {# FIXME: Remove this commented out code. #}
+  {# {%- if node.is_text_node() %}
+    {% include "components/text_node/index_extends_node.jinja" %}
+  {% else %} #}
+    {% include "components/node_content/index_extends_node.jinja" %}
+  {# {% endif %} #}
+{%- else %}
+  {% assert false, "Must not reach here." %}
+{%- endif %}

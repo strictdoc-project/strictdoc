@@ -68,6 +68,7 @@ def create_config() -> ProjectConfig:
             "reports/tests_integration_html2pdf.lit.junit.xml": "tests/integration",
         },
         document_line_width=80,
+        lazy_document_loading_threshold=5,
         # Waiting for a fix to be released soon.
         html2pdf_strict=False,
         launcher_logo_path=None,

@@ -1,5 +1,3 @@
-import unittest
-
 from selenium.webdriver.common.by import By
 
 from tests.end2end.e2e_case import E2ECase
@@ -11,7 +9,7 @@ from tests.end2end.helpers.screens.project_index.screen_project_index import (
 from tests.end2end.server import SDocTestServer
 
 # The document has 35 requirements, and strictdoc_config.py sets
-# chunked_documents_threshold = 10, so the document is rendered as four
+# lazy_document_loading_threshold = 10, so the document is rendered as four
 # chunks: 0, 1, 2, 3. The last chunk sits several thousand pixels below the
 # viewport, so it is guaranteed to stay lazy (not eagerly loaded by Turbo)
 # until the page is scrolled down to it - see
@@ -21,14 +19,6 @@ LAST_CHUNK_XPATH = "//turbo-frame[@id='document-chunk-3']"
 
 
 class Test(E2ECase):
-    @unittest.skip(
-        "Disabled on this branch: chunked_documents_threshold and "
-        "server-side lazy chunk loading do not exist here yet (see "
-        "developer/tasks/20260726_toc_highlight_improvement/task.md). "
-        "Re-enable this test on the branch that adds lazy-loaded document "
-        "chunks, to verify TOC current-section highlighting keeps working "
-        "correctly once that feature lands."
-    )
     def test(self):
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 

@@ -1,0 +1,22 @@
+REQUIRES: PLATFORM_IS_NOT_WINDOWS
+REQUIRES: NIX_AVAILABLE
+
+#
+# Small smoke test for the project's Nix flake (flake.nix): verifies that
+# `nix flake check` passes, that `nix develop` produces a working shell
+# with the expected Python interpreter, and that StrictDoc's own CLI
+# actually runs inside that shell (exercising the full pip-installed
+# environment, including the numpy/pandas + patchelf RPATH fix in
+# flake.nix's shellHook -- see flake.nix for why that's needed).
+#
+
+RUN: cd "%strictdoc_root" && nix --extra-experimental-features "nix-command flakes" flake check --no-build
+
+RUN: cd "%strictdoc_root" && nix --extra-experimental-features "nix-command flakes" develop --command python3 --version | filecheck %s --check-prefix=CHECK-PYTHON
+
+CHECK-PYTHON: Python 3.12
+
+# strictdoc has no literal "help" subcommand -- --help is its help flag.
+RUN: cd "%strictdoc_root" && nix --extra-experimental-features "nix-command flakes" develop --command bash -c "pip install --quiet -e '.[development]' && python -m strictdoc.cli.main --help" | filecheck %s --check-prefix=CHECK-HELP
+
+CHECK-HELP: usage: strictdoc

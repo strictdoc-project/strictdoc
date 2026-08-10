@@ -640,29 +640,18 @@
     });
   }
 
-  // Load the generated search index JavaScript file into the page.
-  function loadScript(url) {
-    return new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = url;
-      script.onload = () => {
-        script.remove();
-        resolve();
-      };
-      script.onerror = () => reject(new Error(
-        `Failed to load script ${url}`));
-      document.head.appendChild(script);
-    });
-  }
-
   // Load the generated search index, optionally bypassing the browser cache.
+  // Delivered as a <script src> rather than fetched (see
+  // window.StrictDoc.loadScript in app_core.js): fetch()/XHR to a sibling
+  // file:// URL is blocked by the browser, and static HTML export is
+  // frequently opened directly as a file rather than served over HTTP.
   async function loadSearchIndexFromScript(pathToSearchIndex, cacheBusting) {
     const searchIndexURL = new URL(pathToSearchIndex, window.location.href);
     if (cacheBusting) {
       searchIndexURL.searchParams.set("_refresh", Date.now().toString());
     }
     console.time("Search: LOAD_JS_INDEX");
-    await loadScript(searchIndexURL.href);
+    await window.StrictDoc.loadScript(searchIndexURL.href);
     console.timeEnd("Search: LOAD_JS_INDEX");
     console.log("Search: JS search index loaded successfully.");
   }

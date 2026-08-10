@@ -1,0 +1,34 @@
+{#
+  Lazy chunk placeholder contract (static export variant):
+  - id="document-chunk-N" identifies the frame as a document chunk.
+  - class="document-chunk-placeholder" marks an unloaded placeholder.
+  - data-chunk-src/data-chunk-key point toc_chunk_navigation.js's static
+    delivery path (loadStaticChunk()) at the generated .js file and the
+    window.StrictDoc.chunks key it assigns - there is no FastAPI server to
+    fetch a fragment route from, and fetch()/XHR to a sibling file is
+    blocked under file://, so the chunk's HTML is delivered as a <script>
+    instead (see document.py's DocumentHTMLGenerator._export_static_chunks).
+  - data-node-mids maps every semantic node, including nodes
+    omitted from TOC, to the frame that can load it.
+
+  - node.css uses the placeholder class to reserve approximate
+    scroll space until the chunk script loads.
+  - toc_chunk_navigation.js observes placeholders by this class,
+    validates the document-chunk-* id, eagerly preloads them near
+    the viewport, and removes the class once the chunk has loaded.
+
+  LIMITATION: unlike server mode, static export does not load
+  content_viewport_restoration.js (it is edit-focused and gated on
+  is_running_on_server), so a background-preloaded chunk above the reading
+  position that resolves from its estimated height to its real height can
+  still cause a small, uncompensated scroll jump. Accepted for now.
+#}
+<turbo-frame
+  id="document-chunk-{{ chunk.index }}"
+  class="document-chunk-placeholder"
+  data-chunk-src="{{ view_object.static_chunk_relative_path(chunk) }}"
+  data-chunk-key="{{ view_object.static_chunk_key(chunk) }}"
+  style="--document-chunk-size: {{ chunk.size }};"
+  data-node-mids="{{ chunk.node_mids | join(' ') }}"
+  data-testid="document-chunk-placeholder"
+></turbo-frame>

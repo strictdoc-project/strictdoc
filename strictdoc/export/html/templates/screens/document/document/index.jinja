@@ -17,7 +17,19 @@
   {%- if view_object.is_chunked_rendering() %}
   <script src="{{ view_object.render_static_url('toc_chunk_navigation.js') }}"></script>
   {%- endif %}
-  {%- if view_object.is_running_on_server -%}
+  {#- content_viewport_restoration.js conditions:
+      * is_chunked_rendering()
+      In static export, the script is only needed for chunked documents —
+      to stabilize scroll position while chunks load.
+      * is_running_on_server
+      On the server, the script is needed for all documents, chunked or not —
+      beyond scroll stabilization, it also positions the viewport precisely
+      after create/delete/move/grammar-edit operations, more precisely than
+      the browser does on its own.
+      Removing the script for non-chunked server documents wouldn't cause errors,
+      but this precise positioning would be lost.
+  -#}
+  {%- if view_object.is_running_on_server or view_object.is_chunked_rendering() -%}
   <script src="{{ view_object.render_static_url('content_viewport_restoration.js') }}"></script>
   {%- endif -%}
 

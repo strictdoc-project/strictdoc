@@ -31,15 +31,21 @@
   // DocumentHTMLGenerator._export_static_chunks) - only loadStaticChunk()
   // and its two call sites differ; TOC click/hashchange handling, scrolling,
   // and the turbo:frame-load cleanup listener below are delivery-agnostic.
+  // loadStaticChunk() also dispatches a synthetic "turbo:before-fetch-response"
+  // that real Turbo frame loads emit natively, so content_viewport_restoration.js
+  // (loaded for both modes when the document is chunked) treats both delivery
+  // paths the same.
   const IS_STATIC_EXPORT = document.querySelector(
     'meta[name="strictdoc-export-type"]'
   )?.content === "static";
 
   // Load a static chunk's .js file, splice its rendered HTML into the
-  // placeholder, and dispatch the same "turbo:frame-load" event Turbo fires
-  // for server-mode frame loads, so every existing listener (the preload
-  // observer's unobserve, the placeholder-class cleanup below, and this
-  // file's own onFrameLoad handlers) keeps working unchanged.
+  // placeholder, and dispatch the same "turbo:before-fetch-response" and
+  // "turbo:frame-load" events Turbo fires around a server-mode frame load,
+  // so every existing listener (content_viewport_restoration.js's geometry
+  // snapshot/compensation, the preload observer's unobserve, the
+  // placeholder-class cleanup below, and this file's own onFrameLoad
+  // handlers) keeps working unchanged.
   async function loadStaticChunk(frame) {
     const src = frame.dataset.chunkSrc;
     const key = frame.dataset.chunkKey;
@@ -54,6 +60,13 @@
     // rest of this file dispatches/observes events on.
     const template = document.createElement("template");
     template.innerHTML = html.trim();
+    // Fired before the placeholder's content changes so
+    // content_viewport_restoration.js can snapshot the pre-load viewport
+    // geometry, exactly as it does for the real fetch response server mode
+    // gets from Turbo before that library inserts a frame's content.
+    frame.dispatchEvent(
+      new Event("turbo:before-fetch-response", { bubbles: true })
+    );
     frame.innerHTML = template.content.firstElementChild.innerHTML;
     frame.dispatchEvent(new Event("turbo:frame-load", { bubbles: true }));
   }

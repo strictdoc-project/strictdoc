@@ -17,11 +17,11 @@
     validates the document-chunk-* id, eagerly preloads them near
     the viewport, and removes the class once the chunk has loaded.
 
-  LIMITATION: unlike server mode, static export does not load
-  content_viewport_restoration.js (it is edit-focused and gated on
-  is_running_on_server), so a background-preloaded chunk above the reading
-  position that resolves from its estimated height to its real height can
-  still cause a small, uncompensated scroll jump. Accepted for now.
+  content_viewport_restoration.js is loaded for chunked static documents too
+  (see document/index.jinja) and compensates the scroll position when a
+  background-preloaded chunk above the reading position resolves from its
+  estimated height to its real height; toc_chunk_navigation.js's
+  loadStaticChunk() dispatches the synthetic events it listens for.
 #}
 <turbo-frame
   id="document-chunk-{{ chunk.index }}"

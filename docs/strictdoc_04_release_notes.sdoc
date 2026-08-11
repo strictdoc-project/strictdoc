@@ -58,23 +58,41 @@ MID: c9ceba5f4cc74d04b7f389962b1f127a
 STATEMENT: >>>
 This release contains the following enhancements:
 
-1\) The JUnit XML test report reader now maps testcase ``<properties>`` to
+1\) Both the web interface and the static HTML export now render large
+documents in lazily loaded chunks. Documents containing more than
+``lazy_document_loading_threshold`` nodes (200 by default, configurable in
+``strictdoc.toml``, 0 disables chunking) initially load only the first chunk
+of nodes together with the table of contents, and the remaining chunks are
+fetched automatically as the user scrolls. This keeps documents with
+thousands of requirements responsive both in the editing GUI and in the
+static export. Lazily loaded documents preserve the content currently
+visible to the user when placeholders are replaced by rendered chunks of
+different heights, viewport positioning is coordinated with node creation,
+deletion, moving, and editing, and the table of contents stays in sync with
+the user's scroll position instead of racing a lazy chunk load.
+
+2\) The JUnit XML test report reader now maps testcase ``<properties>`` to
 fields on generated ``TEST_RESULT`` nodes.
 
-2\) The web interface now renders large documents in lazily loaded chunks.
-Documents containing more than ``lazy_document_loading_threshold`` nodes (200 by
-default, configurable in ``strictdoc.toml``, 0 disables chunking) initially
-load only the first chunk of nodes together with the table of contents, and
-the remaining chunks are fetched automatically as the user scrolls. This
-keeps documents with thousands of requirements responsive in the editing GUI.
-
-3\) Lazily loaded documents preserve the content currently visible to the user
-when placeholders are replaced by rendered chunks of different heights.
-Viewport positioning is also coordinated with node creation, deletion, moving,
-and editing.
-
-4\) Fixed: the TABLE VIEW now renders the Relation cell as non-editable for node
+3\) Fixed: the TABLE VIEW now renders the Relation cell as non-editable for node
 types whose grammar does not declare relations.
+
+4\) A "Restore UID" button appears next to a requirement's UID field when a
+rename is rejected because the requirement still has parent/child relations,
+letting the user put the original UID back without retyping it or closing the
+form.
+
+5\) Fixed: the diff tab no longer fails to render when viewing a static page
+export.
+
+6\) Fixed: a table caption no longer inflates the table's width when printing.
+
+7\) Fixed: the node edit form's tab badge now counts invalid fields instead
+of error messages, so it no longer overcounts when a single field has
+multiple validation errors.
+
+8\) Fixed: node dropdown menus near the bottom of the scroll area are now
+kept fully visible instead of being clipped.
 <<<
 
 [[/SECTION]]

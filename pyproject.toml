@@ -10,6 +10,12 @@ build-backend = "hatchling.build"
 path = "strictdoc/__init__.py"
 
 [tool.hatch.build]
+exclude = [
+    # Without this, the folder is still included to the output tar.gz because it has a Markdown file.
+    "/developer",
+]
+
+[tool.hatch.build.targets.sdist]
 include = [
     "/strictdoc/",
     "LICENSE",
@@ -18,9 +24,9 @@ include = [
     "pyproject.toml"
 ]
 
-exclude = [
-    # Without this, the folder is still included to the output tar.gz because it has a Markdown file.
-    "/developer",
+[tool.hatch.build.targets.wheel]
+include = [
+    "/strictdoc/",
 ]
 
 [project]
@@ -87,7 +93,7 @@ dependencies = [
 
     # ReqIF
     # @relation(SDOC-SRS-73, scope=line)
-    "reqif >= 0.0.39, == 0.*",
+    "reqif >= 0.1.0, == 0.1.*",
 
     # SPDX
     "spdx-tools >= 0.8.5",

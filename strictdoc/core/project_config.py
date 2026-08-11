@@ -439,6 +439,7 @@ class ProjectConfig:
 
         self.diff_git_revisions: Optional[str] = diff_git_revisions
         self.diff_dir_revisions: Optional[Tuple[str, str]] = diff_dir_revisions
+        self.diff_page = False
 
         self.chromedriver: Optional[str] = chromedriver
         self.section_behavior: Optional[str] = section_behavior
@@ -678,8 +679,10 @@ class ProjectConfig:
         if ProjectFeature.DIFF in self.project_features:
             if export_config.generate_diff_git is not None:
                 self.diff_git_revisions = export_config.generate_diff_git
+                self.diff_page = True
             if export_config.generate_diff_dirs is not None:
                 self.diff_dir_revisions = export_config.generate_diff_dirs
+                self.diff_page = True
 
         self.chromedriver = export_config.chromedriver
 

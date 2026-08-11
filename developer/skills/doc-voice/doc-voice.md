@@ -65,6 +65,14 @@ profile. Do not trigger it as a side effect of a normal doc-voice pass.
    onward), the developer guide, and release notes are different genres even
    when the same person wrote them. Note genre-specific deviations as
    sub-profiles inside the file rather than flattening them into one voice.
+5. A single correction is not a pattern. Whether during the initial build or
+   later, when a user objects to a specific sentence, that's one data point,
+   not automatically a rule — before adding a hard ban or an allowed-habit
+   entry to `style_profile.md`, check the correction is backed by more than
+   one instance in the corpus, or ask the user whether it's a one-off or a
+   standing preference. An overfit rule built from a single incident is
+   worse than no rule: it will misfire on the next text and read as
+   authoritative when it isn't.
 
 ## 4. Refreshing the vendor copy
 

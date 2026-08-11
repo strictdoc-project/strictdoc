@@ -1,23 +1,25 @@
 ---
 name: release-notes
 description: |
-  Use at the end of a task when the user asks to update the changelog or
-  release notes, or when the user asks for a PR title and description.
-  Writes release notes entries into docs/strictdoc_04_release_notes.sdoc
-  following the existing SDG playbook, and drafts PR titles/descriptions
-  using a fixed two-sentence result+mechanism+reason formula. Not for
-  docs/*.sdoc feature documentation — see the feature-docs skill for that.
+  Use when the user asks to update the changelog or release notes. Also
+  offer this proactively whenever the user asks for a PR title/description
+  (see the commit-message skill) for a non-trivial change — that request is
+  the reliable signal the work is considered done, which is otherwise not
+  something this agent can infer on its own. Writes entries into
+  docs/strictdoc_04_release_notes.sdoc following the existing SDG playbook.
+  Not for commit/PR titles and descriptions themselves — see the
+  commit-message skill for those. Not for docs/*.sdoc feature documentation
+  — see the feature-docs skill for that.
 ---
 
-# Release notes and PR summaries
-
-Two related but distinct outputs. Work out which one the user wants before
-writing anything — they are not interchangeable, and a task's end can call
-for either or both.
-
-## Mode 1: release notes entry
+# Release notes
 
 Target file: `docs/strictdoc_04_release_notes.sdoc`.
+
+Trigger: an explicit request, or offered proactively when the user asks for
+a PR title/description for a non-trivial change — see "Also consider" in the
+commit-message skill. Don't try to guess "the task is done" any other way;
+the user decides that, and asking for PR text is how that decision shows up.
 
 The format is already specified in the SDG
 (`docs/strictdoc_11_developer_guide.sdoc`, section "How to update release
@@ -48,29 +50,12 @@ git describe --tags --abbrev=0
 git log <tag>..HEAD --oneline
 ```
 
-## Mode 2: PR title and description
+## Before writing
 
-Triggered when the user asks for a PR title/description, typically once the
-implementation is done.
+This file is a `.sdoc` file. Follow `sdoc-conventions` (line width, no
+hand-authored `MID`, matching existing structure).
 
-Description formula, two sentences, no more:
-
-1. Result, stated as a fact, action verb, past tense, no lead-up. What was
-   done — not what the problem used to be.
-2. The concrete mechanism (the actual event, function, or entity — not an
-   abstraction like "changed the logic") plus the reason, one clause:
-   "because X needed Y."
-
-Forbidden in the description: "was/became" before/after framing, testing
-details, bug or investigation history, any trailing "let me know if..."
-closer.
-
-Title: short, matches the style of recent merged PR titles on `main`
-(`git log --oneline -20 main`) — this repo mixes imperative and
-`area: change` noun-phrase titles depending on scope; follow whichever the
-target files' recent history uses.
-
-## Before returning either output
+## Before returning the result
 
 Run `doc-voice` on the drafted text and apply its findings before presenting
 the result.

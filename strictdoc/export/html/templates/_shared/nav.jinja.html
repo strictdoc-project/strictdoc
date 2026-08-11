@@ -61,11 +61,15 @@
   </a>
 {%- endif -%}
 
-{%- if view_object.project_config.is_running_on_server and view_object.project_config.is_activated_diff() -%}
+{%- if (view_object.project_config.is_running_on_server or view_object.project_config.diff_page)  and view_object.project_config.is_activated_diff() -%}
   <a
     data-link="diff"
     class="nav_button"
+    {%- if view_object.project_config.is_running_on_server -%}
     href="{{ view_object.render_url('diff') }}"
+    {%- else -%}
+    href="{{ view_object.render_url('diff.html') }}"
+    {%- endif -%}
     title="Diff"
     data-testid="project-tree-link-diff"
   >

@@ -41,6 +41,12 @@ sdoc-autogen table {
 sdoc-autogen table caption {
   font-weight: bold;
   padding-bottom: 1rem;
+  /* issue#3089: caption and table normally share one wrapper width
+    (whichever needs more space wins, the other is forced to match);
+    display:block detaches caption from that wrapper
+    so caption and table size independently
+  */
+  display: block;
 }
 
 sdoc-autogen table th {
@@ -53,7 +59,11 @@ sdoc-autogen table td {
   vertical-align: top;
   text-align: left;
   border: 1px solid #ccc;
+}
 
+sdoc-autogen table caption,
+sdoc-autogen table th,
+sdoc-autogen table td {
   /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
   /*** add scroll for wide tables (unset) */
   white-space: initial;

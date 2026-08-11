@@ -23,6 +23,14 @@
   const PRELOAD_MARGIN = "800px 0px";
   const observedPlaceholders = new WeakSet();
 
+  // The fragment the user most recently navigated to. A chunk requested for
+  // an earlier navigateToFragment() call can still be mid-flight (loading or
+  // fetching) when a later one starts and resolves first - without this,
+  // the earlier chunk's load listener would fire afterwards and bounce
+  // location.hash back to its now-stale fragment. Comparing against this on
+  // resolution lets a superseded load recognize itself and skip the bounce.
+  let pendingFragment = null;
+
   // Server mode fetches a chunk from /fragments/document/.../chunk via a
   // Turbo frame (loading="eager" flips a lazy frame to load its src). Static
   // export has no server for that route, so its chunks are pre-rendered to
@@ -166,6 +174,9 @@
     const onFrameLoad = (event) => {
       if (event.target !== frame) return;
       document.removeEventListener("turbo:frame-load", onFrameLoad);
+      // A newer navigateToFragment() call may have superseded this one
+      // while its chunk was still loading - see pendingFragment above.
+      if (fragment !== pendingFragment) return;
       // Same guard as above: only refresh if the target actually loaded
       // into this chunk.
       if (document.getElementById(fragment)) {
@@ -183,6 +194,10 @@
 
   function navigateToFragment(fragment, link) {
     if (!fragment) return;
+    // This is now the desired target - any chunk load still in flight for a
+    // fragment requested by an earlier call is superseded (see
+    // pendingFragment above).
+    pendingFragment = fragment;
     // Target already in the DOM: scroll it ourselves rather than deferring
     // to native fragment navigation. Native navigation also respects
     // scroll-behavior: smooth on .main, and unloaded chunk placeholders can

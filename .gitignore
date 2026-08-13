@@ -42,6 +42,7 @@ __pycache__
 /docs/_fixture/
 /docs/_test/
 /.claude/
+/.agents/
 
 ### webdriver_manager: cache with downloaded Chrome Driver binaries ###
 /strictdoc/export/html2pdf/.wdm

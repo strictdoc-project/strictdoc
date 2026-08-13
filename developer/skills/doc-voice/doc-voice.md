@@ -36,11 +36,13 @@ forbidden in isolation.
 
 See `style_profile.md`.
 
-Current status: **not yet built.** Corpus analysis is a separate, explicit
-step — see below. Until `style_profile.md` has real content, the only house
-rule to enforce is the SDG's own "Technical writing" section
+Current status: one genre sub-profile built ("User-facing docs", from
+`docs/strictdoc_01_user_guide.sdoc`). Other genres (developer guide, release
+notes, PR/commit descriptions) have no sub-profile yet — for those, the only
+house rule to enforce is still the SDG's own "Technical writing" section
 (`docs/strictdoc_11_developer_guide.sdoc`): Bottom Line Up Front, active
-voice. Do not invent house-style rules beyond that in the meantime.
+voice. Do not apply the "User-facing docs" sub-profile to other genres, and
+do not invent rules for an unsampled genre.
 
 ## 3. Building style_profile.md
 

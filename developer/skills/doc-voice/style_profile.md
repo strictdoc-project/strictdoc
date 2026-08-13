@@ -46,7 +46,11 @@ it will read as authoritative.
    restates a benefit or consequence — "...enabling X", "...ensuring Y",
    "...allowing Z". Across the ~250 sampled lines this occurs once each for
    "enabling" and "ensuring" in the whole 6073-line document; the near-total
-   absence is itself the pattern, not a handful of counterexamples.
+   absence is itself the pattern, not a handful of counterexamples. The ban
+   targets the construction, not any claim riding on it. If the tail states
+   a real fact (for example, that mandatory fields keep documents
+   consistent), keep the fact as its own plain sentence and cut only the
+   "-ing" framing.
 2. Don't route a capability through an abstracted "the feature allows users
    to...". Name the product/component as the grammatical subject directly:
    "StrictDoc allows declaration of document grammars...", "StrictDoc's

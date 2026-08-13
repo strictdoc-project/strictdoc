@@ -32,6 +32,13 @@ that should stay consistent, em dash / bold / emoji overuse, chat leftovers
 by whether a pattern appears at all — none of these are individually
 forbidden in isolation.
 
+Cutting a banned construction must not silently cut the claim it carried.
+Before finalizing, check that every factual claim in the source survives
+the rewrite in some form, even after its "-ing" tail, promotional
+adjective, or padded phrasing is gone. If a claim would otherwise be lost,
+state it as its own plain sentence instead of dropping it along with the
+construction.
+
 ## 2. StrictDoc house voice
 
 See `style_profile.md`.

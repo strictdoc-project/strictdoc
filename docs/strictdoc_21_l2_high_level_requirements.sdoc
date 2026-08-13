@@ -1401,6 +1401,483 @@ RELATIONS:
 
 [[/SECTION]]
 
+[[SECTION]]
+MID: 1fe41e0a93774810b172816b63f77f5c
+TITLE: Feature: Git workspace
+
+[TEXT]
+MID: ef723fa975a54ca3a1b2dfd23c39f04e
+STATEMENT: >>>
+The users of StrictDoc could benefit from being able to commit to Git directly
+from StrictDoc's UI.
+
+Resolving conflicts using the existing Diff infrastructure should help the users
+to resolve the Git conflicts using the user interface without using Git command
+line or Git GUI tools.
+<<<
+
+[[SECTION]]
+MID: 32de4195a7c749018666b9011e2c3010
+TITLE: Git visual interface
+
+[REQUIREMENT]
+MID: f1e01e524a5a4942bb1d3f3b3be9d2b2
+UID: SDOC-SRS-210
+STATUS: Active
+TITLE: Synergy between Git workspace and Diff/Changelog
+STATEMENT: >>>
+StrictDoc shall leverage the infrastructure of the existing Git Diff/Changelog
+feature.
+<<<
+
+[REQUIREMENT]
+MID: e2a4488ca1b74f3b9bc783d10bbfe8b4
+UID: SDOC-SRS-207
+STATUS: Active
+TITLE: Committing to Git
+STATEMENT: >>>
+StrictDoc shall allow committing documentation content to Git.
+<<<
+
+[REQUIREMENT]
+MID: 9421b741f6fd4e9fa00c9ceaa8da20cc
+UID: SDOC-SRS-208
+STATUS: Active
+TITLE: Working with Git branches
+STATEMENT: >>>
+StrictDoc shall allow a user to work on a selected Git branch, such as ``main``
+or a non-main branch.
+<<<
+
+[REQUIREMENT]
+MID: efe60975fb7747efaa8beba932212570
+UID: SDOC-SRS-211
+STATUS: Active
+TITLE: Git workspaces
+STATEMENT: >>>
+StrictDoc's Git branching workflow shall be based on Git workspaces.
+<<<
+RATIONALE: >>>
+- Enables the main workspace main branch to always be intact during conflict
+  resolution (rebasing).
+- Prepares for the use case when multiple users use the same StrictDoc instance.
+<<<
+
+[REQUIREMENT]
+MID: dcea0b6050254d738b3be1933fa7e472
+UID: SDOC-SRS-212
+STATUS: Active
+TITLE: Active
+STATEMENT: >>>
+The project's default workspace is always under the main branch.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: c89ffb5b60b14d95a7424ed3054c60fa
+TITLE: Git branches synchronization
+
+[TEXT]
+MID: 7067bef235d54cf5a9fa9167c169ab98
+STATEMENT: >>>
+"Synchronize" means rebasing the current branch onto a selected target branch.
+It is not a commit action: it does not create a commit, and it does not require
+the target branch to have a remote counterpart.
+
+The target branch is any branch selected by the user via a UI control (local or
+remote-tracking), not necessarily the main branch and not necessarily a remote
+branch.
+
+Committing (recording staged documentation changes under a commit message) is a
+distinct, separate step from synchronizing.
+
+Pushing the result to a remote is also a distinct, separate step from
+synchronizing. Synchronize never pushes on its own.
+<<<
+
+[REQUIREMENT]
+MID: 68fecf6cc57f4ccaaf6c1fd512778ce4
+UID: SDOC-SRS-213
+STATUS: Active
+TITLE: Synchronize works with committed state
+STATEMENT: >>>
+The StrictDoc's Git Workspace screen shall only allow synchronizing/rebasing on
+top of other branches when the current workspace's branch is fully committed
+(has no uncommitted) changes.
+<<<
+
+[REQUIREMENT]
+MID: 2753f2ece1284b85a0a16f5f5ca8210f
+UID: SDOC-SRS-217
+STATUS: Active
+TITLE: Synchronization happens through left-right diff workflow
+STATEMENT: >>>
+The StrictDoc's Git synchronization shall happen on a screen where a user can
+allocate their changes (left column) to the target branch changes (right
+column).
+
+By default, this screen shall always be shown after a Synchronize action,
+whether or not there is a Git conflict between the source and target
+branches -- even when every change auto-merges and nothing needs to be
+manually allocated, the user shall still review the result and explicitly
+commit it.
+
+StrictDoc shall provide an optional "fast-forward" setting, off by
+default, that a user can enable to let Synchronize skip this screen and
+publish the result immediately whenever there are no true conflicts to
+resolve.
+
+NOTE: Whether or not fast-forward is enabled, synchronization is always a
+prerequisite to pushing: a user cannot push work without having gone
+through Synchronize (and, if conflicts were found, resolved and committed
+them) first.
+<<<
+
+[REQUIREMENT]
+MID: ee952c81c64a414da75d3947d9c3edd0
+UID: SDOC-SRS-218
+STATUS: Active
+TITLE: Git workspace screen surfaces a pending synchronization
+STATEMENT: >>>
+The Git Workspace screen shall detect when a synchronization is already
+pending -- persisted synchronization state exists that has not yet been
+committed or aborted, including a pending synchronization left behind by a
+server restart -- and shall surface this prominently on the screen itself,
+without requiring the user to navigate to the conflict resolution screen
+manually.
+
+When a pending synchronization is detected, the Git Workspace screen shall
+present two clearly visible actions: one to abort the pending
+synchronization, and one to continue it (navigating to the conflict
+resolution screen to review and commit).
+<<<
+
+[REQUIREMENT]
+MID: 52531d2496354ef5ab65d06b20fb1791
+UID: SDOC-SRS-219
+STATUS: Active
+TITLE: Warn when a document does not have MIDs enabled
+STATEMENT: >>>
+The Git Workspace screen shall warn the user if at least one document in
+the project tree does not have MIDs enabled (its ``ENABLE_MID`` option is
+not set to ``True``).
+<<<
+RATIONALE: >>>
+Synchronization matches the same logical node across branches primarily
+by its MID. A node's MID is only stable across independent parses of a
+document if the document has MIDs enabled; otherwise a fresh, random MID
+is assigned on every parse, and matching silently falls back to UID, then
+title/content similarity -- both heuristic and less reliable, especially
+for nodes with no UID or title (e.g. a document's own [TEXT] nodes). A
+document without MIDs enabled therefore makes synchronization for its
+nodes less trustworthy, which the user should know about upfront, before
+relying on Synchronize.
+<<<
+
+[REQUIREMENT]
+MID: f46eb6c85b4e459f89142e20eb66dedd
+UID: SDOC-SRS-222
+STATUS: Active
+TITLE: Synchronization is repeatable and never a terminal action
+STATEMENT: >>>
+After a synchronization has been reviewed and committed, StrictDoc shall
+allow the user to synchronize again immediately, any number of times,
+without first requiring a push.
+<<<
+RATIONALE: >>>
+A user's local branch commonly needs to be synchronized against a moving
+target branch more than once - teammates keep landing changes on the
+target branch while the user is still working - before the user is
+ready to push.
+<<<
+
+[REQUIREMENT]
+MID: ebd2b90b758647a8bd9f0ff2ab3204c0
+UID: SDOC-SRS-223
+STATUS: Active
+TITLE: No redundant work for a single Git conflicts action
+STATEMENT: >>>
+A single user action on the Git conflicts screen shall not cause
+StrictDoc to redo the same branch comparison more than once.
+<<<
+RATIONALE: >>>
+Comparing branches is expensive; repeating it unnecessarily slows down
+every action on this screen for no benefit.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: bb31648887fb4e71ab3149b4d4c5d8b9
+TITLE: Git conflict resolution
+
+[TEXT]
+MID: ab0ed0681d0a43e7b5e575c42bc04aa2
+STATEMENT: >>>
+To enable the Git workflow in the UI, the users need to be able to handle Git
+conflicts in a well-defined way.
+<<<
+
+[REQUIREMENT]
+MID: b48d36f18f354e52a80b33f422d27da2
+UID: SDOC-SRS-209
+STATUS: Active
+TITLE: Dedicated screen for conflict resolution
+STATEMENT: >>>
+StrictDoc shall allow Git conflict resolution on a dedicated screen.
+<<<
+
+[REQUIREMENT]
+MID: ef29e9250bbc4a059c7cf54e0bdd40c8
+UID: SDOC-SRS-205
+STATUS: Active
+TITLE: Conflict resolution based on Git rebase
+STATEMENT: >>>
+StrictDoc's conflict resolution should be always based on a rebase principle:
+the target branch always takes preference, the conflict resolution has to find a
+way to build on top of the target (rebase, not merge).
+<<<
+
+[REQUIREMENT]
+MID: e7388c365145451b8e041d30b287640f
+UID: SDOC-SRS-216
+STATUS: Active
+TITLE: Algorithm for visual and logical Git conflict resolution
+STATEMENT: >>>
+StrictDoc shall provide visual handles for a user to resolve Git conflicts
+based on the following algorithm:
+
+- StrictDoc presents the user's branch (incoming) on the left and the
+  target branch on the right, similar to how the existing Diff/Changelog
+  screen does it.
+- For each conflicted file, StrictDoc computes a three-way comparison
+  (base, target, incoming) per node and classifies every node as either
+  unchanged, non-conflicting (changed by only one side, or changed
+  identically by both), or truly conflicting (changed differently by both
+  sides relative to the base).
+- Unchanged and non-conflicting nodes are pre-populated on the target
+  (right) side automatically and are visually marked as such; they do not
+  require user action.
+- For each truly conflicting node, StrictDoc allows the user to select or
+  drag-and-drop it from the incoming (left) side onto the target (right)
+  side, so that the target side is enriched with the incoming side's
+  change.
+- StrictDoc tracks how many truly conflicting nodes remain unallocated and
+  decreases this count each time the user allocates one.
+- When no truly conflicting nodes remain unallocated, StrictDoc enables a
+  button that lets the user commit all the changes in one go.
+- When the user commits, StrictDoc discards the branch's prior
+  (pre-resolution) commits and replaces them with a single new commit,
+  containing the resolved content, placed directly on top of the target
+  branch's tip.
+- Result: the user's branch ends up at target tip + one commit with all
+  the user's changes, free of conflicts.
+
+NOTE: The UI shall allow a user to allocate an entire section at once, not
+just individual nodes, when the whole section is new or modified.
+<<<
+RATIONALE: >>>
+The intuition is that Git conflict resolution can be reduced to a set of
+drag-and-drop actions where the right column (target branch) is populated
+from the left column (incoming branch worked on by the user).
+Non-conflicting differences are auto-merged into the right column without
+user action; only nodes where both branches genuinely disagree require the
+user to choose. Once every true conflict has been allocated, the target
+branch can be committed with all the changes on top of it, and the
+resulting commit can be used as the actual replacement for the user's
+branch.
+<<<
+
+[REQUIREMENT]
+MID: b62a028a49be4f12bfd5a6d85c566b44
+UID: SDOC-SRS-206
+STATUS: Active
+TITLE: Conflict resolution visual design
+STATEMENT: >>>
+The Screen for resolving Git conflicts shall be derived from the layout of the
+Diff screen, specifically the Diff results screen where left-hand- and
+right-hand-side trees are presented side by side.
+<<<
+
+[REQUIREMENT]
+MID: 1fdcbe7ccd8b4b2e887cb9530a3039ea
+UID: SDOC-SRS-220
+STATUS: Active
+TITLE: Warn when nodes lack unique MIDs for allocation
+STATEMENT: >>>
+The Git conflict resolution (left-right) screen shall warn the user that
+allocating changes is not reliable when the nodes involved do not have
+unique, stable MIDs.
+<<<
+RATIONALE: >>>
+Per SDOC-SRS-219, allocating a node from the incoming (left) side onto the
+target (right) side depends on StrictDoc being able to recognize both
+sides as the same logical node. Without a unique, stable MID, that
+recognition falls back to title/content similarity, which can mis-pair
+unrelated nodes or fail to pair related ones -- silently allocating the
+wrong content, or none at all. The user needs to know when they are
+looking at an allocation whose correctness cannot be guaranteed, rather
+than trusting it implicitly.
+<<<
+
+[REQUIREMENT]
+MID: c36b85e11b664ab2ab93c652d42bd1c5
+UID: SDOC-SRS-221
+STATUS: Active
+TITLE: Modified nodes expanded, unmodified nodes collapsed by default
+STATEMENT: >>>
+On the Git conflict resolution (left-right) screen, every node classified
+as changed (true conflict, delete/modify conflict, or auto-merged) shall
+be shown expanded by default. Every node classified as unchanged shall be
+shown collapsed by default.
+<<<
+RATIONALE: >>>
+The screen's purpose is to let the user review and act on what actually
+changed. A document can contain many unchanged nodes alongside a handful
+of real changes; expanding everything forces the user to scroll past
+content that needs no attention, while collapsing everything hides the
+changes that do. Expanding only what changed keeps the signal (what to
+review or resolve) visible without the noise (what StrictDoc already knows
+is untouched).
+<<<
+
+[REQUIREMENT]
+MID: 23c8dcf2054349ccb2e6030df69be98c
+UID: SDOC-SRS-224
+STATUS: Active
+TITLE: Warn and block synchronization when non-document files changed
+STATEMENT: >>>
+The Git conflict resolution screen shall warn the user and disable
+committing the synchronization whenever the branches being synchronized
+contain a change to any file that is not a readable StrictDoc format
+extension.
+<<<
+RATIONALE: >>>
+StrictDoc's Git synchronization only merges files in a readable StrictDoc
+format through its 3-way classifier; any other changed file is not
+reconciled between branches and can be silently lost or left
+inconsistent. Warning the user and blocking the commit until this is
+resolved outside StrictDoc avoids silently discarding non-document work.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: f857bb62495c475e93928c5fc4dcb64b
+TITLE: Scenarios: Git workspace workflows
+
+[REQUIREMENT]
+MID: 1b42c04e987a4affb585e1764cd68085
+UID: SDOC-SRS-214
+STATUS: Active
+TITLE: Primary scenario: Committing to Git (conflict-free)
+STATEMENT: >>>
+1) The user launches StrictDoc server from a project directory with
+   documentation content.
+
+2) The user switches to the Git screen and chooses to work on a new branch by
+   selecting it using a UI control.
+
+3) The user edits documentation content.
+
+4) The user commits the current changes under a commit message.
+
+5) The user selects a target branch and clicks the button "Synchronize changes
+   to the target branch", which rebases the current branch onto the selected
+   target branch.
+
+6) The user sees a message "synchronization finished" after StrictDoc has
+   rebased the current branch onto the target branch.
+<<<
+
+[REQUIREMENT]
+MID: ea551f30f78c4ceb8bcb5afe9cd014af
+UID: SDOC-SRS-215
+STATUS: Active
+TITLE: Scenario: Committing to Git and resolving conflicts
+STATEMENT: >>>
+1) The user launches StrictDoc server from a project directory with
+   documentation content. The content consists of only one Hello World SDoc document with ENABLE_MID: True.
+
+2) The user switches to the Git screen and chooses to work on a new branch by
+   selecting it using a UI control.
+
+3) The user edits documentation content according to a sub-scenario (see
+   sub-scenarios listed below).
+
+4) In the meantime the Git main branch gets one more commit that simulates an
+   action by another user according to a the same sub-scenario (see
+   sub-scenarios listed below). The commit shall be titled "Change by another
+   user".
+
+5) The user is still on their working branch and commits the current changes
+   under a commit message "Change by our user".
+
+5) The user selects a target branch and clicks the button "Synchronize changes
+   to the target branch".
+
+6) StrictDoc presents a Git conflict resolution screen.
+
+7) The user resolves the conflicts by clicking on the text node from their
+   branch (left side) which synchronizes the change to the target branch (right side). For some sub-scenarios, the user drags the left node to the correct location in the right tree of the right column to specify the exact insertion point.
+
+NOTE: The goal of this step is to bring the user state to a conflict free state
+with the target branch.
+
+8) The user clicks the button "Synchronize changes to the target branch".
+
+9) The user sees a message "synchronization finished" after StrictDoc has
+   rebased the current branch onto the target branch.
+
+Sub-scenarios for this scenario:
+
+1) Our user (the user) modifies an existing text node on their branch while at
+   the same time another user modifies the same text node on the main branch.
+
+2) Our user (the user) creates a new section with a text node on their branch while at
+   the same time another user creates another new section with a text node on the main branch. In order to resolve a conflict the user drags the left new node to be BELOW the node added by another user.
+
+3) Our user (the user) removes a section with a text node on their branch while at
+   the same time another user remove another section (direct neighbor to the section removed by our user) with a text node on the main branch.
+
+4) Our user (the user) adds a new document with a text node on their branch
+   while at the same time another user creates another new document with a text
+   node on their branch.
+
+5) Our user (the user) removes an existing document with a text node on their
+   branch while at the same time another user removes another document with a
+   text node on their branch.
+
+6) Our user (the user) modifies an existing text node in a section on their
+   branch while at the same time another user deletes the entire section on the
+   main branch.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 7f1a8a4a6fab4505973dadfe397e6104
+TITLE: Known issues
+
+[TEXT]
+MID: a860028eb42e4df2b3a65c1bb74d172b
+STATEMENT: >>>
+When Git workspace synchronization classifies the base, target, and
+incoming revisions, it reuses the already-loaded, in-memory project
+configuration from server startup for all three, rather than re-reading
+``strictdoc_config.py`` from each revision's own
+checkout. If a commit being compared changes the project configuration
+itself (for example the document grammar, or which paths are included or
+excluded), that change is not picked up during classification -- all
+three revisions are parsed using the one, current live configuration
+instead of their own.
+<<<
+
+[[/SECTION]]
+
+[[/SECTION]]
+
 [[/SECTION]]
 
 [[SECTION]]

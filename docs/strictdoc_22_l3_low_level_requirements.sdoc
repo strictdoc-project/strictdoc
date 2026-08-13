@@ -862,3 +862,52 @@ Example of the "new" command usage:
 [[/SECTION]]
 
 [[/SECTION]]
+
+[[SECTION]]
+MID: 37cf108c688a47cd89aafb7d0e370ea4
+TITLE: features/diff_and_changelog
+
+[[SECTION]]
+MID: adbec7eec6404bab85a139f3740455f5
+TITLE: features/diff_and_changelog/git_client.py
+
+[REQUIREMENT]
+MID: 7bbb37192358424d9b17039b34b15668
+UID: SDOC-LLR-210
+STATUS: Active
+TITLE: Sparse checkout limited to SDoc and Markdown document paths
+STATEMENT: >>>
+When creating a git worktree to classify a revision for Git workspace
+synchronization, StrictDoc shall check out only the paths recognized as
+SDoc or Markdown documents, not the full working tree.
+<<<
+RATIONALE: >>>
+The classifier only ever reads document structure for this path (source
+file traceability is always skipped here) -- checking out unrelated
+files (source code, build artifacts, assets) costs time proportional to
+total repository size for no benefit.
+<<<
+
+[REQUIREMENT]
+MID: 93bcbf3aca334bfd99ffda6235f013d3
+UID: SDOC-LLR-211
+STATUS: Active
+TITLE: Reused, revision-keyed worktree for sparse document checkouts
+STATEMENT: >>>
+When creating a sparse, doc-paths-only checkout of a revision for Git
+workspace synchronization, StrictDoc shall check it out at a
+deterministic path keyed by that revision and reuse it across repeated
+requests for the same revision, instead of creating and discarding a
+fresh checkout each time.
+<<<
+RATIONALE: >>>
+A revision's content is immutable, and StrictDoc's parsed-document cache
+is keyed partly by each file's absolute path; reusing the same checkout
+path lets that cache actually be hit on repeated synchronizations against
+the same revision, instead of always missing because the previous
+checkout's path no longer exists.
+<<<
+
+[[/SECTION]]
+
+[[/SECTION]]

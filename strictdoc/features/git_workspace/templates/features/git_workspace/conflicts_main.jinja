@@ -1,0 +1,142 @@
+<div class="main">
+
+  <div class="main_sticky_header">
+    {% if view_object.message is not none %}
+      <div class="sdoc-form-message" data-testid="git-conflicts-message">{{ view_object.message }}</div>
+    {% endif %}
+    {% if view_object.error_message is not none %}
+      <div class="sdoc-form-error" data-testid="git-conflicts-error">{{ view_object.error_message }}</div>
+    {% endif %}
+
+    {% if view_object.is_active and view_object.has_non_document_changes %}
+      {#
+        SDOC-SRS-224: synchronization only merges document content through
+        the 3-way classifier -- a changed file outside a readable StrictDoc
+        format would otherwise be silently taken from target alone, or
+        dropped entirely, on commit.
+      #}
+      <div class="sdoc-form-error" data-testid="git-conflicts-non-document-warning">
+        The branches being synchronized change files that are not in a
+        readable StrictDoc format. Committing is disabled until these are
+        resolved outside StrictDoc:
+        <ul>
+          {% for path in view_object.non_document_changed_paths %}
+            <li data-testid="git-conflicts-non-document-path">{{ path }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    {% if view_object.is_active %}
+      <div class="diff_controls">
+        <span data-testid="git-conflicts-counter">
+          {{ view_object.remaining_true_conflicts }} conflict(s) remaining
+        </span>
+
+        <sdoc-form>
+          <form action="/git_conflicts/commit" method="POST" data-testid="git-conflicts-commit-form">
+            <input type="hidden" name="target_branch" value="{{ view_object.target_branch }}"/>
+            <button
+              type="submit"
+              {% if not view_object.all_resolved or view_object.has_non_document_changes %}disabled{% endif %}
+              data-testid="git-conflicts-commit-action"
+            >Commit</button>
+          </form>
+
+          <form action="/git_conflicts/abort" method="POST" data-testid="git-conflicts-abort-form">
+            <input type="hidden" name="target_branch" value="{{ view_object.target_branch }}"/>
+            <button type="submit" data-testid="git-conflicts-abort-action">Abort</button>
+          </form>
+        </sdoc-form>
+      </div>
+    {% endif %}
+  </div>
+
+  {% if not view_object.is_active %}
+
+    <div data-testid="git-conflicts-legend">No synchronization is currently in progress.</div>
+    <a href="{{ view_object.render_url('git_workspace') }}" data-testid="git-conflicts-back-to-workspace">Back to Git workspace</a>
+
+  {% else %}
+
+    {#
+      Two independent side-by-side trees, styled exactly like the Diff
+      results screen (features/diff_and_changelog/templates/.../
+      frame_diff_result.jinja): same .diff_column/.diff_inner/.diff_content
+      classes, same .diff_document/.diff_node/.diff_node_fields structure
+      per node (see conflict_node.jinja), just driven by this screen's own
+      merge/conflict data instead of a 2-way ChangeContainer.
+    #}
+    {#
+      Single hidden form, filled in and submitted by
+      git_conflicts_reorder.js on drop -- SDOC-SRS-215 sub-scenario 2:
+      dragging a genuinely-new (auto-merged, non-conflicting) node from
+      the left column onto a drop zone in the right column repositions it
+      among its siblings before commit.
+    #}
+    <form
+      action="/git_conflicts/place_node"
+      method="POST"
+      data-testid="git-conflicts-place-node-form"
+      hidden
+    >
+      <input type="hidden" name="target_branch" value="{{ view_object.target_branch }}"/>
+      <input type="hidden" name="node_key" value=""/>
+      <input type="hidden" name="after_key" value=""/>
+    </form>
+
+    <div class="git_conflicts_diff">
+      <div class="diff_column" left>
+        <div class="diff_inner">
+          <div class="diff_content">
+            {% for document in view_object.conflicted_documents %}
+              <details class="diff_document" open modified="left" data-testid="git-conflicts-document" data-conflict-path="{{ document.rel_path }}">
+                <summary>
+                  {%- include "icons/ico16_document.svg" -%}
+                  <span class="document_title">{{ document.rel_path }} (your branch)</span>
+                </summary>
+                {% for node in document.nodes %}
+                  {% set side = "incoming" %}
+                  {% include "features/git_workspace/conflict_node.jinja" %}
+                {% endfor %}
+              </details>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <div class="diff_column" right>
+        <div class="diff_inner">
+          <div class="diff_content">
+            {% for document in view_object.conflicted_documents %}
+              <details class="diff_document" open modified="right" data-testid="git-conflicts-document-target" data-conflict-path="{{ document.rel_path }}">
+                <summary>
+                  {%- include "icons/ico16_document.svg" -%}
+                  <span class="document_title">{{ document.rel_path }} ({{ view_object.target_branch }})</span>
+                </summary>
+                {% for node in document.nodes %}
+                  {% if node.is_first_child %}
+                    <div
+                      class="git_conflicts_drop_zone"
+                      data-testid="git-conflicts-drop-zone"
+                      data-after-key="{{ view_object.PLACEMENT_START }}"
+                    ></div>
+                  {% endif %}
+                  {% set side = "target" %}
+                  {% include "features/git_workspace/conflict_node.jinja" %}
+                  <div
+                    class="git_conflicts_drop_zone"
+                    data-testid="git-conflicts-drop-zone"
+                    data-after-key="{{ node.key }}"
+                  ></div>
+                {% endfor %}
+              </details>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+  {% endif %}
+
+</div>

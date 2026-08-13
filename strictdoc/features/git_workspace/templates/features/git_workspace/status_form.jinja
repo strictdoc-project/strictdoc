@@ -1,0 +1,44 @@
+<sdoc-form>
+  <form action="/git_workspace/stage" method="POST" data-testid="git-workspace-stage-form">
+    <input type="hidden" name="target_branch" value="{{ view_object.target_branch }}"/>
+
+    {% if view_object.status.status_entries|length == 0 %}
+      <div data-testid="git-workspace-status-clean">Working tree clean.</div>
+    {% else %}
+      <table data-testid="git-workspace-status-table">
+        {% for entry in view_object.status.status_entries %}
+          <tr data-testid="git-workspace-status-row" data-status-path="{{ entry.path }}">
+            <td>
+              <input
+                type="checkbox"
+                name="paths"
+                value="{{ entry.path }}"
+                data-testid="git-workspace-status-row-checkbox"
+              />
+            </td>
+            <td>{{ entry.index_status }}{{ entry.worktree_status }}</td>
+            <td>{{ entry.path }}</td>
+            {% if entry.is_conflicted %}
+              <td data-testid="git-workspace-status-row-conflicted">conflicted</td>
+            {% endif %}
+          </tr>
+        {% endfor %}
+      </table>
+      <button type="submit" data-testid="git-workspace-stage-action">Stage selected</button>
+    {% endif %}
+  </form>
+
+  <form action="/git_workspace/commit" method="POST" data-testid="git-workspace-commit-form">
+    <input type="hidden" name="target_branch" value="{{ view_object.target_branch }}"/>
+    <textarea
+      name="message"
+      placeholder="Commit message"
+      data-testid="git-workspace-commit-message-field"
+    ></textarea>
+    <button
+      type="submit"
+      {% if not view_object.status.has_staged_changes %}disabled{% endif %}
+      data-testid="git-workspace-commit-action"
+    >Commit</button>
+  </form>
+</sdoc-form>

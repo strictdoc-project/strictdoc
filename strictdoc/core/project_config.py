@@ -71,6 +71,7 @@ class ProjectFeature(str, Enum):
     HTML2PDF = "HTML2PDF"
     REQIF = "REQIF"
     DIFF = "DIFF"
+    GIT_WORKSPACE_EXPERIMENTAL = "GIT_WORKSPACE_EXPERIMENTAL"
     PROJECT_STATISTICS_SCREEN = "PROJECT_STATISTICS_SCREEN"
     TREE_MAP_SCREEN = "TREE_MAP_SCREEN"
     TRACEABILITY_MATRIX_SCREEN = "TRACEABILITY_MATRIX_SCREEN"
@@ -933,6 +934,16 @@ class ProjectConfig:
 
     def is_activated_diff(self) -> bool:
         return ProjectFeature.DIFF in self.project_features
+
+    def is_activated_git_workspace(self) -> bool:
+        # This feature mutates the real repository (commit/rebase/push), so
+        # it must not piggyback on the read-only DIFF flag and is only
+        # meaningful while StrictDoc is running as a server.
+        return (
+            self.is_running_on_server
+            and ProjectFeature.GIT_WORKSPACE_EXPERIMENTAL
+            in self.project_features
+        )
 
     def is_activated_reqif(self) -> bool:
         return ProjectFeature.REQIF in self.project_features

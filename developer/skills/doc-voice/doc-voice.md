@@ -12,6 +12,12 @@ description: |
 Self-check pass, not a drafting tool. Run it on text someone else (or another
 skill) already wrote, right before it ships.
 
+Fix violations, not taste. Only change a passage that breaks a hard rule,
+misstates a fact, or is missing a house-voice trait the applicable
+sub-profile calls for. If a passage already passes every check, leave it
+exactly as it is. Do not rewrite compliant text for variety, smoother
+phrasing, or personal preference.
+
 ## 1. Hard rules — AI-writing patterns
 
 Apply `humanizer_upstream.md` in this directory (vendored from

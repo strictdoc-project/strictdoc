@@ -104,7 +104,7 @@ because it will read as authoritative.
 
 **Reference examples** (verbatim, StrictDoc's own text)
 
-From the Introduction (`docs/strictdoc_01_user_guide.sdoc:50-64`):
+From docs/strictdoc_01_user_guide.sdoc, section "Introduction" (2024-06-20):
 
 > StrictDoc is software for technical documentation and requirements
 > management.
@@ -117,7 +117,8 @@ From the Introduction (`docs/strictdoc_01_user_guide.sdoc:50-64`):
 > - StrictDoc reads these files and builds an in-memory representation of a
 >   document tree.
 
-From "Document grammar" (`docs/strictdoc_01_user_guide.sdoc:1913-1921`):
+From docs/strictdoc_01_user_guide.sdoc, section "Document grammar"
+(2025-04-12):
 
 > For anything beyond a small project, it's best to define a document
 > grammar early. The default implicit document grammar works for quick
@@ -130,7 +131,8 @@ From "Document grammar" (`docs/strictdoc_01_user_guide.sdoc:1913-1921`):
 > First, such fields have to be registered on a document level using the
 > ``[GRAMMAR]`` field.
 
-From "Strict rule #1" (`docs/strictdoc_01_user_guide.sdoc:2633-2637`):
+From docs/strictdoc_01_user_guide.sdoc, section "Strict rule #1"
+(2022-12-07):
 
 > StrictDoc's grammar requires each node, such as ``[REQUIREMENT]``,
 > ``[[SECTION]]``, etc., to be separated with exactly one empty line from
@@ -138,7 +140,8 @@ From "Strict rule #1" (`docs/strictdoc_01_user_guide.sdoc:2633-2637`):
 > empty line or presence of more than one empty line between two nodes will
 > result in an SDoc parsing error.
 
-From "Parent vs Child relations" (`docs/strictdoc_01_user_guide.sdoc:2354-2360`):
+From docs/strictdoc_01_user_guide.sdoc, section "Parent vs Child relations"
+(2023-10-21):
 
 > **TL;DR** If there is no compelling reason to use the Child relations,
 > avoid using them.
@@ -148,7 +151,7 @@ From "Parent vs Child relations" (`docs/strictdoc_01_user_guide.sdoc:2354-2360`)
 > project is typically child-to-parent, where the higher-level parent
 > requirements are referred to as "Parents" by their child requirements.
 
-From "Hello World" (`docs/strictdoc_01_user_guide.sdoc:176-190`):
+From docs/strictdoc_01_user_guide.sdoc, section "Hello World" (2023-09-06):
 
 > Open a command-line terminal program supported on your system.
 >

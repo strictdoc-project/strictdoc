@@ -8,10 +8,10 @@ skill discovery by running this script locally:
     python developer/skills/install_skills.py
 
 Convention this script relies on: each skill lives in its own directory
-under developer/skills/, and its main file is named after that directory,
-e.g. developer/skills/release-notes/release-notes.md. Any other files in
-that directory are supporting material the main file may reference; they
-are not copied or parsed here.
+under developer/skills/, and its main file is named SKILL.md, e.g.
+developer/skills/release-notes/SKILL.md. Any other files in that directory
+are supporting material the main file may reference; they are not copied
+or parsed here.
 
 Safe to re-run any time: it regenerates all stubs deterministically and
 removes stale stubs for skills that no longer exist in developer/skills/,
@@ -35,7 +35,7 @@ any supporting files it references) live outside `.claude/` (which is
 gitignored in this repo) so they are tracked in git and reusable by other
 agents/tools.
 
-Read `developer/skills/{name}/{name}.md` in full and follow it, including
+Read `developer/skills/{name}/SKILL.md` in full and follow it, including
 any sibling files in that directory it points to.
 """
 
@@ -52,7 +52,7 @@ def extract_frontmatter(text: str) -> str | None:
 
 def install_skill(skill_dir: Path) -> str | None:
     name = skill_dir.name
-    main_file = skill_dir / f"{name}.md"
+    main_file = skill_dir / "SKILL.md"
     if not main_file.is_file():
         print(f"skip {name}: no {main_file.relative_to(REPO_ROOT)}")
         return None

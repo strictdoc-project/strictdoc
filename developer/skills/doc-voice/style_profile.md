@@ -10,11 +10,11 @@ in, but stays subordinate to explicit user instructions and to the SDG's
 "Technical writing" section (`docs/strictdoc_11_developer_guide.sdoc`), which
 remains the baseline requirement regardless of what this file says.
 
-To build or extend it, see "Building style_profile.md" in `doc-voice.md` in
-this directory. Do not fill this file in without that explicit
-corpus-selection step with the user — a profile built from an
-unrepresentative or self-selected corpus is worse than no profile, because
-it will read as authoritative.
+To build or extend it, see "Building style_profile.md" in
+`developer/skills/doc-voice/SKILL.md`. Do not fill this file in without
+that explicit corpus-selection step with the user — a profile built from
+an unrepresentative or self-selected corpus is worse than no profile,
+because it will read as authoritative.
 
 ## Corpus notes
 
@@ -34,7 +34,7 @@ it will read as authoritative.
   not part of this profile-building effort.
 - Developer guide, release notes, and PR/commit descriptions: not yet
   sampled. Do not assume the rules below apply to them — see "Genre
-  sub-profiles" in `doc-voice.md`.
+  sub-profiles" in `developer/skills/doc-voice/SKILL.md`.
 
 ## Genre sub-profiles
 

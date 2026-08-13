@@ -71,10 +71,17 @@ Higher bar: this ships to users.
    it explicitly, if the feature-docs skill was invoked for this change.
 3. Run `doc-voice`'s full check (hard rules + style profile, once it exists +
    reference examples) on the result before presenting it.
-4. Follow `sdoc-conventions`' "After writing" step (`invoke docs`) once done.
+4. Follow `sdoc-conventions`' "After writing" step once done.
 
 ## Both modes
 
 Never state a requirement, UI behavior, or config default that hasn't been
 verified against the actual code or confirmed by the user. If unverified,
 say so and ask rather than writing it as fact.
+
+The same applies in reverse when removing existing content. Before cutting
+a claim because it looks unverified, search more broadly than what's
+already been read for this edit (grep the corpus for the term or a related
+one) instead of concluding "unverified" from a single section. A narrow
+read produces false negatives, not just false positives: it deletes real
+content as readily as it invents fake content.

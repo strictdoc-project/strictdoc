@@ -37,6 +37,9 @@ Before editing, read 2-3 neighboring sections in the target file. Match:
 
 ## After writing
 
-Run `invoke docs` to regenerate documentation output and catch structural
-problems (e.g. line-width violations, broken grammar) before presenting the
-result.
+Validate parsing:
+
+    strictdoc export . --formats=html --output-dir /tmp/strictdoc_check
+
+A non-zero exit or parser error means the edit broke structure or grammar;
+fix before presenting the result. Delete the throwaway directory afterward.

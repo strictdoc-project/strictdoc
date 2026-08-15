@@ -1,7 +1,6 @@
 import os
 import shutil
 from collections import defaultdict
-from functools import partial
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
 
@@ -55,7 +54,7 @@ from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.file_system import sync_dir
 from strictdoc.helpers.git_client import GitClient
 from strictdoc.helpers.mid import MID
-from strictdoc.helpers.parallelizer import Parallelizer
+from strictdoc.helpers.parallelizer import Parallelizer, get_worker_context
 from strictdoc.helpers.paths import SDocRelativePath, path_to_posix_path
 from strictdoc.helpers.timing import measure_performance, timing_decorator
 
@@ -67,19 +66,45 @@ def render_favicon_svg(
     # Deliberately not using html_templates.jinja_environment(): for large
     # projects it is a CompiledHTMLTemplates instance that lazily caches a
     # ModuleLoader-backed Environment (holding unpicklable compiled
-    # _TemplateModule objects) on first call. HTMLGenerator instances are
-    # captured by the closure passed to the document-export parallelizer,
-    # so populating that cache here, in the main process, before parallel
-    # export starts, makes the whole HTMLGenerator (and its html_templates)
-    # unpicklable for the worker pool. A standalone, uncached environment
-    # sidesteps that entirely; favicon.svg.jinja is small enough that
-    # skipping template compilation has no measurable cost.
+    # _TemplateModule objects) on first call. The HTMLGenerator instance is
+    # sent once to each worker process via the document-export parallelizer's
+    # pool initializer (see export_complete_tree()), so populating that cache
+    # here, in the main process, before parallel export starts, would make
+    # the whole HTMLGenerator (and its html_templates) unpicklable for the
+    # worker pool. A standalone, uncached environment sidesteps that
+    # entirely; favicon.svg.jinja is small enough that skipping template
+    # compilation has no measurable cost.
     variant = project_config.get_favicon_variant()
     return (
         NormalHTMLTemplates()
         .jinja_environment()
         .get_template("_shared/favicon.svg.jinja")
         .render(variant=variant)
+    )
+
+
+def _export_single_document_worker(document_mid: MID) -> None:
+    """
+    Module-level (picklable-by-reference) task function for the document
+    export parallelizer. The (HTMLGenerator, TraceabilityIndex) pair is not
+    passed as an argument here: it is sent to each worker process exactly
+    once via run_parallel_with_context()'s pool initializer, instead of
+    being pickled fresh into every submitted document's task.
+
+    Only the document's MID travels per-task, not the SDocDocument object
+    itself: the document is looked up in this worker's own copy of
+    traceability_index instead. Nodes reachable from a document that was
+    pickled separately (e.g. as a direct task argument) would not be the
+    same Python objects as the ones inside the worker's traceability_index
+    (a different, earlier pickle/unpickle of the same content) - and
+    identity-sensitive lookups, such as NodeFilter's blacklist (a plain
+    `set`, hashed/compared by object identity), would then silently fail
+    to recognize them.
+    """
+    html_generator, traceability_index = get_worker_context()
+    document = traceability_index.get_node_by_mid(document_mid)
+    html_generator.export_single_document_with_performance(
+        document, traceability_index
     )
 
 
@@ -114,12 +139,6 @@ class HTMLGenerator:
             traceability_index=traceability_index
         )
 
-        # Export all documents in parallel.
-        export_binding = partial(
-            self.export_single_document_with_performance,
-            traceability_index=traceability_index,
-        )
-
         # By default, do not export included documents. Only, if the option to
         # include is provided.
         documents_to_export: List[SDocDocument] = []
@@ -151,15 +170,11 @@ class HTMLGenerator:
                 documents_to_export.append(document_)
 
         if len(documents_to_export) > 0:
-            if len(traceability_index.document_tree.document_list) <= 25:
-                parallelizer.run_parallel(documents_to_export, export_binding)
-            else:
-                print(  # noqa: T201
-                    "NOTE: Running document export without parallelization "
-                    "because the document tree contains more than 25 documents."
-                )
-                for document_ in documents_to_export:
-                    export_binding(document_)
+            parallelizer.run_parallel_with_context(
+                [document_.reserved_mid for document_ in documents_to_export],
+                _export_single_document_worker,
+                (self, traceability_index),
+            )
 
         # Export document tree.
         # FIXME: It is important that this export is **after** the parallelized

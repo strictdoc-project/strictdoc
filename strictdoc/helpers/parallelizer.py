@@ -18,6 +18,17 @@ from strictdoc.helpers.exception import (
 
 MultiprocessingLambdaType = Callable[[Any], Any]
 
+# Where run_parallel_with_context() cannot use the fork+copy-on-write fast
+# path (Windows, always - or a caller that is not single-threaded when it
+# runs), this caps how many tasks it will still dispatch via the
+# pool-initializer mechanism before falling back to running in-process
+# instead. Task count is only a rough proxy for the size of the shared
+# `context` object actually being duplicated per worker, but this is the
+# same document-count cutoff (25) html_generator.py used to apply
+# unconditionally before the fork+COW path existed - see
+# run_parallel_with_context() below for the measurements behind it.
+_LARGE_CONTEXT_FALLBACK_THRESHOLD = 25
+
 # Set once per worker process by _init_worker_context() (either via a pool
 # initializer under multiprocessing, or directly in-process under
 # NullParallelizer). run_parallel_with_context() exists so that a large,
@@ -207,17 +218,32 @@ class MultiprocessingParallelizer(Parallelizer):
                 max_workers=self.process_number,
                 mp_context=multiprocessing.get_context("fork"),
             )
-        else:
-            # Not safe to fork here (other threads are alive) or fork isn't
-            # available (Windows). Fall back to sending `context` once per
-            # worker via the pool initializer - still only process_number
-            # pickles instead of one per task, just not copy-on-write-free.
+            return self.run_parallel(contents, processing_func)
+
+        # Not safe to fork here (other threads are alive), or fork isn't
+        # available at all (Windows - the measured regression above is not
+        # a POSIX-only curiosity, it applies there unconditionally, every
+        # time, regardless of tree size). Below a modest number of tasks,
+        # sending `context` once per worker via the pool initializer is
+        # still fine (process_number pickles, not one per task). Above it,
+        # skip multiprocessing for this call entirely and run in-process:
+        # this is the same safety net this parallelizer relied on (as a
+        # document-count cutoff one level up, in html_generator.py) before
+        # the fork+COW path existed, now scoped to exactly the cases that
+        # cannot use that path.
+        if len(contents) > _LARGE_CONTEXT_FALLBACK_THRESHOLD:
             self.executor = ProcessPoolExecutor(
-                max_workers=self.process_number,
-                mp_context=self.mp_context,
-                initializer=_init_worker_context,
-                initargs=(context,),
+                max_workers=self.process_number, mp_context=self.mp_context
             )
+            _init_worker_context(context)
+            return [processing_func(item) for item in contents]
+
+        self.executor = ProcessPoolExecutor(
+            max_workers=self.process_number,
+            mp_context=self.mp_context,
+            initializer=_init_worker_context,
+            initargs=(context,),
+        )
         return self.run_parallel(contents, processing_func)
 
     def shutdown(self) -> None:

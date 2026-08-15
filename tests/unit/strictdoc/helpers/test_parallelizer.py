@@ -151,6 +151,35 @@ def test_run_parallel_with_context_falls_back_when_not_safe_to_fork():
         parallelizer.shutdown()
 
 
+def test_run_parallel_with_context_runs_in_process_when_not_safe_to_fork_and_many_tasks():
+    # Without fork+COW (Windows, always - or a caller that isn't
+    # single-threaded), sending a large `context` to every worker via the
+    # pool initializer doesn't scale (see run_parallel_with_context()'s
+    # comments for the measurements). Above the task-count threshold used
+    # as a size proxy, this must skip multiprocessing for the call
+    # entirely rather than duplicate `context` into a whole pool of
+    # workers - the same protection html_generator.py's now-removed
+    # document-count cutoff used to provide unconditionally.
+    parallelizer = MultiprocessingParallelizer()
+
+    try:
+        many_items = list(range(30))
+
+        with mock.patch(
+            "strictdoc.helpers.parallelizer._can_fork_safely",
+            return_value=False,
+        ):
+            output_items = parallelizer.run_parallel_with_context(
+                many_items,
+                child_process_that_reads_the_worker_context,
+                "large-fallback-context",
+            )
+
+        assert output_items == ["large-fallback-context"] * len(many_items)
+    finally:
+        parallelizer.shutdown()
+
+
 def test_run_parallel_with_context_null_parallelizer():
     parallelizer = NullParallelizer()
 

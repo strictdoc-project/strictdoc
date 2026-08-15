@@ -27,6 +27,19 @@ conventions in `SDG`.
 
 Follow the technical writing guidelines in the StrictDoc Developer Guide.
 
+Before presenting any text written into a project artifact (commit
+messages, PR descriptions, docs, code comments, task files, or similar),
+apply `developer/skills/humanizer/SKILL.md`. This applies regardless of
+which skill, if any, is used for the task.
+
+## Skills
+
+Reusable instructions for writing tasks (release notes, commit/PR text,
+task docs, feature docs) live in `developer/skills/<name>/SKILL.md`.
+After any change to a skill, regenerate the Claude/Codex pointer stubs:
+
+    python developer/skills/install_skills.py
+
 ## Development tasks
 
 When requested by a user to work on a task defined in

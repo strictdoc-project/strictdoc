@@ -9,6 +9,7 @@ ALLOWED_TYPES = [
     "docs",
     "feat",
     "fix",
+    "perf",
     "refactor",
     "release",
     "test",

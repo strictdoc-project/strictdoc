@@ -3,7 +3,7 @@ from typing import Any, Optional
 
 
 def pickle_dump(obj: Any) -> bytes:
-    return pickle.dumps(obj, 0)
+    return pickle.dumps(obj, pickle.HIGHEST_PROTOCOL)
 
 
 def pickle_load(content: bytes) -> Optional[Any]:

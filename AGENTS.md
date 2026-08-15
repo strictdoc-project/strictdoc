@@ -27,6 +27,14 @@ conventions in `SDG`.
 
 Follow the technical writing guidelines in the StrictDoc Developer Guide.
 
+## Skills
+
+Reusable instructions for writing tasks (release notes, commit/PR text,
+task docs, feature docs) live in `developer/skills/<name>/SKILL.md`.
+After any change to a skill, regenerate the Claude/Codex pointer stubs:
+
+    python developer/skills/install_skills.py
+
 ## Development tasks
 
 When requested by a user to work on a task defined in

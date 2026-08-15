@@ -1,0 +1,103 @@
+---
+name: doc-voice
+description: |
+  Internal style-and-cleanup layer used by the release-notes and feature-docs
+  skills. Strips AI-writing tells and enforces StrictDoc's house voice on any
+  text about to ship: release notes, PR descriptions, docs/*.sdoc content.
+  Call directly for ad-hoc cleanup of a drafted passage before it ships.
+---
+
+# doc-voice
+
+Self-check pass, not a drafting tool. Run it on text someone else (or another
+skill) already wrote, right before it ships.
+
+Fix violations, not taste. Only change a passage that breaks a hard rule,
+misstates a fact, or is missing a house-voice trait the applicable
+sub-profile calls for. If a passage already passes every check, leave it
+exactly as it is. Do not rewrite compliant text for variety, smoother
+phrasing, or personal preference.
+
+## 1. Hard rules — AI-writing patterns
+
+Apply `humanizer_upstream.md` in this directory (vendored from
+github.com/blader/humanizer, MIT license, see `HUMANIZER_LICENSE`). Read it in
+full before the check — it defines the patterns, severity, and the
+draft/audit/final process.
+
+Do not hand-edit `humanizer_upstream.md`. It is a wholesale vendor copy; local
+customization goes in `style_profile.md` instead, so refreshing the vendor
+file never clobbers house rules. See "Refreshing the vendor copy" below.
+
+What that file already covers, so this skill doesn't repeat it: inflated
+symbolism, promotional language, participial "-ing" tails, rule of three,
+"not just X, it's Y" parallelisms, "represents/serves as" hedging around a
+plain "is", unnamed authorities ("experts say"), synonym-cycling for a term
+that should stay consistent, em dash / bold / emoji overuse, chat leftovers
+("hope this helps"). Per that skill's own instructions: judge by density, not
+by whether a pattern appears at all — none of these are individually
+forbidden in isolation.
+
+Cutting a banned construction must not silently cut the claim it carried.
+Before finalizing, check that every factual claim in the source survives
+the rewrite in some form, even after its "-ing" tail, promotional
+adjective, or padded phrasing is gone. If a claim would otherwise be lost,
+state it as its own plain sentence instead of dropping it along with the
+construction.
+
+## 2. StrictDoc house voice
+
+See `style_profile.md`.
+
+Current status: one genre sub-profile built ("User-facing docs", from
+`docs/strictdoc_01_user_guide.sdoc`). Other genres (developer guide, release
+notes, PR/commit descriptions) have no sub-profile yet — for those, the only
+house rule to enforce is still the SDG's own "Technical writing" section
+(`docs/strictdoc_11_developer_guide.sdoc`): Bottom Line Up Front, active
+voice. Do not apply the "User-facing docs" sub-profile to other genres, and
+do not invent rules for an unsampled genre.
+
+## 3. Building style_profile.md
+
+Only do this when the user explicitly asks to build or update the style
+profile. Do not trigger it as a side effect of a normal doc-voice pass.
+
+1. Ask the user which existing docs, PRs, or release notes are representative
+   of the voice to match. Do not assume — StrictDoc has more than one doc
+   author, and their voices differ. Get a corpus of roughly 15-30 texts.
+2. Read the corpus. Extract observations backed by quotes from the corpus,
+   not adjectives. "Sentences in the User Guide average 12-18 words, rarely
+   compound" is usable; "the style is clear and professional" is not.
+3. Split findings into three sections inside `style_profile.md`:
+   - Hard bans — constructions, words, or formatting confirmed absent from
+     the corpus.
+   - Allowed and encouraged — habits the corpus shows that a model would
+     otherwise sand down out of caution (StrictDoc's terse imperative mood,
+     specific technical nouns over paraphrase, etc.).
+   - Reference examples — 3-4 corpus passages included verbatim. These
+     outrank the abstract rules when the two conflict.
+4. Keep genre apart from voice: user-facing docs (`docs/strictdoc_01_*`
+   onward), the developer guide, and release notes are different genres even
+   when the same person wrote them. Note genre-specific deviations as
+   sub-profiles inside the file rather than flattening them into one voice.
+5. A single correction is not a pattern. Whether during the initial build or
+   later, when a user objects to a specific sentence, that's one data point,
+   not automatically a rule — before adding a hard ban or an allowed-habit
+   entry to `style_profile.md`, check the correction is backed by more than
+   one instance in the corpus, or ask the user whether it's a one-off or a
+   standing preference. An overfit rule built from a single incident is
+   worse than no rule: it will misfire on the next text and read as
+   authoritative when it isn't.
+
+## 4. Refreshing the vendor copy
+
+Re-fetch and overwrite wholesale:
+
+```
+curl -s https://raw.githubusercontent.com/blader/humanizer/main/SKILL.md \
+  -o developer/skills/doc-voice/humanizer_upstream.md
+```
+
+Never hand-edit `humanizer_upstream.md` before or after a refresh — anything
+StrictDoc-specific belongs in `style_profile.md`, which this refresh never
+touches.

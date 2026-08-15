@@ -5,18 +5,22 @@ REQUIRES: NIX_AVAILABLE
 # Small smoke test for the project's Nix flake (flake.nix): verifies that
 # `nix flake check` passes, that `nix develop` produces a working shell
 # with the expected Python interpreter, and that StrictDoc's own CLI
-# actually runs inside that shell (exercising the full pip-installed
-# environment, including the numpy/pandas + patchelf RPATH fix in
-# flake.nix's shellHook -- see flake.nix for why that's needed).
+# actually runs inside that shell.
 #
 
 RUN: cd "%strictdoc_root" && nix --extra-experimental-features "nix-command flakes" flake check --no-build
 
 RUN: cd "%strictdoc_root" && nix --extra-experimental-features "nix-command flakes" develop --command python3 --version | filecheck %s --check-prefix=CHECK-PYTHON
 
-CHECK-PYTHON: Python 3.12
+CHECK-PYTHON: Python 3.13
+
+# A dependency from nixpkgs, and one built by flake.nix because nixpkgs does not
+# carry it.
+RUN: cd "%strictdoc_root" && nix --extra-experimental-features "nix-command flakes" develop --command python3 -c "import pandas, tree_sitter_c; print('dependencies ok')" | filecheck %s --check-prefix=CHECK-DEPS
+
+CHECK-DEPS: dependencies ok
 
 # strictdoc has no literal "help" subcommand -- --help is its help flag.
-RUN: cd "%strictdoc_root" && nix --extra-experimental-features "nix-command flakes" develop --command bash -c "pip install --quiet -e '.[development]' && python -m strictdoc.cli.main --help" | filecheck %s --check-prefix=CHECK-HELP
+RUN: cd "%strictdoc_root" && nix --extra-experimental-features "nix-command flakes" develop --command python3 -m strictdoc.cli.main --help | filecheck %s --check-prefix=CHECK-HELP
 
 CHECK-HELP: usage: strictdoc

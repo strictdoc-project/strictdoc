@@ -1,6 +1,6 @@
 /.idea/
 /.venv/
-/.venv-nix/
+/.direnv/
 /.vscode/
 /build/
 /developer/tasks/**/Context.md

@@ -1,9 +1,7 @@
 import importlib.metadata as importlib_metadata
 import os
-import shutil
 import subprocess
 import sys
-import sysconfig
 import tempfile
 
 import toml
@@ -18,44 +16,6 @@ class PackageVersionConflict(Exception):
     pass
 
 
-def link_nix_numpy_stack_if_available() -> None:
-    """
-    If STRICTDOC_NIX_NUMPY_STACK is set (only ever done by flake.nix's
-    devShell, never on a non-Nix setup), symlink those Nix-built
-    packages (numpy, pandas, ...) into this venv's site-packages instead
-    of leaving them to be pip-installed from PyPI below. This avoids
-    pip-installed manylinux wheels for numpy/pandas needing libstdc++.so.6
-    at runtime, which Nix's own dynamic linker won't find unpatched --
-    see flake.nix for the full explanation.
-    """
-    nix_stack_paths = os.environ.get("STRICTDOC_NIX_NUMPY_STACK")
-    if not nix_stack_paths:
-        return
-
-    site_packages = sysconfig.get_path("purelib")
-    python_dir = f"python{sys.version_info.major}.{sys.version_info.minor}"
-
-    for nix_pkg_path in nix_stack_paths.split():
-        nix_site_packages = os.path.join(
-            nix_pkg_path, "lib", python_dir, "site-packages"
-        )
-        if not os.path.isdir(nix_site_packages):
-            continue
-        for entry in os.listdir(nix_site_packages):
-            source = os.path.join(nix_site_packages, entry)
-            target = os.path.join(site_packages, entry)
-            if os.path.islink(target) and os.readlink(target) == source:
-                # Already linked to this exact Nix store path.
-                continue
-            if os.path.isdir(target) and not os.path.islink(target):
-                # A real (e.g. pip-installed) copy from before -- replace
-                # it so this is self-healing on an existing venv.
-                shutil.rmtree(target)
-            elif os.path.exists(target) or os.path.islink(target):
-                os.remove(target)
-            os.symlink(source, target)
-
-
 # A simplified version inspired by:
 # https://github.com/HansBug/hbutils/blob/37879186c489bced2791309c43d131f1703b7bd4/hbutils/system/python/package.py#L171
 def check_if_package_installed(package_name: str):
@@ -67,8 +27,6 @@ def check_if_package_installed(package_name: str):
     if not requirement.specifier.contains(version):
         raise PackageVersionConflict(version)
 
-
-link_nix_numpy_stack_if_available()
 
 print(  # noqa: T201
     "pip_install_strictdoc_deps.py: "

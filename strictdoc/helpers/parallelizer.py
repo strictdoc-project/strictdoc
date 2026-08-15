@@ -5,6 +5,7 @@ Run StrictDoc child tasks as separate processes.
 """
 
 import multiprocessing
+import threading
 from abc import ABC, abstractmethod
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from typing import Any, Callable, Iterable, List, Optional, Tuple
@@ -39,6 +40,18 @@ def get_worker_context() -> Any:
     main process) by a processing_func passed to run_parallel_with_context().
     """
     return _worker_context_box[0]
+
+
+def _can_fork_safely() -> bool:
+    """
+    Forking a *multithreaded* process risks a deadlock (a lock held by a
+    thread that doesn't exist in the child), not forking per se. "fork" is
+    also simply unavailable on some platforms (Windows).
+    """
+    return (
+        threading.active_count() == 1
+        and "fork" in multiprocessing.get_all_start_methods()
+    )
 
 
 def processing_func_wrapper(
@@ -162,18 +175,49 @@ class MultiprocessingParallelizer(Parallelizer):
         processing_func: MultiprocessingLambdaType,
         context: Any,
     ) -> Iterable[Any]:
-        # A pool initializer only runs once, when a worker process starts.
-        # Recreate the pool so that every worker (fork/forkserver/spawn
-        # alike) is (re)started with the initializer bound to this call's
-        # context, instead of relying on each submitted task to carry its
-        # own copy of `context` to be pickled and sent individually.
+        # shutdown(wait=True) joins the previous pool's management/feeder
+        # threads. In the common case (a one-shot CLI export) that leaves
+        # the process single-threaded, which is what _can_fork_safely()
+        # needs to be true. But this parallelizer can also be reused inside
+        # a long-lived process (e.g. the dev server, or a test suite that
+        # keeps other threads around), where that does not hold - hence
+        # checking rather than assuming.
         self.executor.shutdown(wait=True)
-        self.executor = ProcessPoolExecutor(
-            max_workers=self.process_number,
-            mp_context=self.mp_context,
-            initializer=_init_worker_context,
-            initargs=(context,),
-        )
+
+        # `context` (e.g. a whole traceability index) can be large - tens to
+        # hundreds of MB for a big documentation tree. Pickling it into every
+        # worker via a pool initializer (initargs) means each worker pays a
+        # full deserialization of that payload, and under "forkserver"/
+        # "spawn" those deserializations happen independently and
+        # concurrently in every worker, which for a large enough payload
+        # turns into severe memory/CPU contention - worse than not
+        # parallelizing at all (measured: a 138MB index caused a 12-worker
+        # export to run ~3.5x SLOWER than sequential on one real, large
+        # document tree).
+        #
+        # Where it's safe to fork, sidestep this entirely: set the context
+        # in this (parent) process, then fork. Forked children share the
+        # already-built object graph via copy-on-write - no pickling of
+        # `context` at all, and no redundant per-worker reconstruction.
+        # Measured effect on the same 138MB-index tree: export dropped from
+        # ~98s to ~15s, faster than not parallelizing.
+        if _can_fork_safely():
+            _init_worker_context(context)
+            self.executor = ProcessPoolExecutor(
+                max_workers=self.process_number,
+                mp_context=multiprocessing.get_context("fork"),
+            )
+        else:
+            # Not safe to fork here (other threads are alive) or fork isn't
+            # available (Windows). Fall back to sending `context` once per
+            # worker via the pool initializer - still only process_number
+            # pickles instead of one per task, just not copy-on-write-free.
+            self.executor = ProcessPoolExecutor(
+                max_workers=self.process_number,
+                mp_context=self.mp_context,
+                initializer=_init_worker_context,
+                initargs=(context,),
+            )
         return self.run_parallel(contents, processing_func)
 
     def shutdown(self) -> None:

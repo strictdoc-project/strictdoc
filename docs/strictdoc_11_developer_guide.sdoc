@@ -384,20 +384,45 @@ MID: 6e9707c99199464583f091056d1ae458
 UID: DEVGUIDE_GIT_WORKFLOW
 TITLE: Git workflow
 
+[[SECTION]]
+MID: 697ff4fa8bf14dbb88bf9021a50729ed
+TITLE: Commit and pull request workflow
+
 [TEXT]
-MID: 0e916453596b460b84a89f722354a825
+MID: 32a1967e18f942d697e67adf52466870
 STATEMENT: >>>
-The preferred Git workflow is "1 commit per 1 PR". If the work truly deserves a
-sequence of commits, each commit shall be self-contained and pass all checks
-from the ``invoke check`` command.
+For smaller pull requests, the preferred Git workflow is "1 commit per 1 PR".
+
+If the work truly deserves a sequence of commits, each commit shall be
+self-contained and pass all checks from the ``invoke check`` command.
 
 For larger pull requests involving too many changes, the preferred approach:
 split the work into several independent PRs to simplify the work of the
 reviewer.
 
-The branch should be always rebased against the main branch. The ``git fetch &&
-git rebase origin/main`` is preferred over ``git fetch && git merge main``.
+When resolving conflicts, the development branch should be always rebased
+against the main branch. Merging ``main`` into development branches shall be
+avoided, i.e.,
 
+**Preferred**: ``git fetch && git rebase origin/main``
+
+**Avoid**: ``git fetch && git merge main``
+
+Contributors are encouraged to proactively use ``git rebase --interactive`` to
+refine their commit history into self-contained commits before opening a GitHub
+pull request.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 39e26da767964709ada28fde7a2d417b
+UID: DEVGUIDE_GIT_COMMIT_MESSAGE
+TITLE: Git commit message
+
+[TEXT]
+MID: abd7a4dc753142928e9a2d31251fb2e9
+STATEMENT: >>>
 The Git commit message should follow the format of
 `Conventional Commits <https://www.conventionalcommits.org/en/v1.0.0/>`_:
 
@@ -431,6 +456,8 @@ scopes. Example:
 
     The Conventional Commits specification lists ``scope`` as optional. However, most StrictDoc commits do have a scope. Most of the time, there is a specific feature or area being worked on, so it should be straightforward to identify the right scope.
 <<<
+
+[[/SECTION]]
 
 [[/SECTION]]
 

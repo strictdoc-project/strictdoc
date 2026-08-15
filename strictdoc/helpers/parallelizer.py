@@ -17,6 +17,29 @@ from strictdoc.helpers.exception import (
 
 MultiprocessingLambdaType = Callable[[Any], Any]
 
+# Set once per worker process by _init_worker_context() (either via a pool
+# initializer under multiprocessing, or directly in-process under
+# NullParallelizer). run_parallel_with_context() exists so that a large,
+# shared, read-only value (e.g. a whole traceability index) is sent to each
+# worker process exactly once, instead of being pickled fresh into every
+# submitted task's closure/arguments.
+#
+# A single-item box, rather than a rebound module-level name, so that
+# _init_worker_context() can set it without a `global` statement.
+_worker_context_box: List[Any] = [None]
+
+
+def _init_worker_context(context: Any) -> None:
+    _worker_context_box[0] = context
+
+
+def get_worker_context() -> Any:
+    """
+    Called from within a worker process (or, under NullParallelizer, the
+    main process) by a processing_func passed to run_parallel_with_context().
+    """
+    return _worker_context_box[0]
+
 
 def processing_func_wrapper(
     func: MultiprocessingLambdaType, input_arg: Any
@@ -41,6 +64,21 @@ class Parallelizer(ABC):
         contents: List[Any],
         processing_func: MultiprocessingLambdaType,
     ) -> Iterable[Any]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def run_parallel_with_context(
+        self,
+        contents: List[Any],
+        processing_func: MultiprocessingLambdaType,
+        context: Any,
+    ) -> Iterable[Any]:
+        """
+        Like run_parallel(), but `context` is sent to each worker process
+        exactly once instead of being pickled into every task. `processing_func`
+        must be a plain, module-level function (not a bound method or a
+        closure) that retrieves the context via get_worker_context().
+        """
         raise NotImplementedError
 
     @abstractmethod
@@ -87,9 +125,10 @@ class MultiprocessingParallelizer(Parallelizer):
                 if "forkserver" in multiprocessing.get_all_start_methods()
                 else "spawn"
             )
-        mp_context = multiprocessing.get_context(start_method)
+        self.process_number = process_number
+        self.mp_context = multiprocessing.get_context(start_method)
         self.executor = ProcessPoolExecutor(
-            max_workers=process_number, mp_context=mp_context
+            max_workers=self.process_number, mp_context=self.mp_context
         )
 
     def run_parallel(
@@ -117,6 +156,26 @@ class MultiprocessingParallelizer(Parallelizer):
         except Exception as e:
             raise e
 
+    def run_parallel_with_context(
+        self,
+        contents: List[Any],
+        processing_func: MultiprocessingLambdaType,
+        context: Any,
+    ) -> Iterable[Any]:
+        # A pool initializer only runs once, when a worker process starts.
+        # Recreate the pool so that every worker (fork/forkserver/spawn
+        # alike) is (re)started with the initializer bound to this call's
+        # context, instead of relying on each submitted task to carry its
+        # own copy of `context` to be pickled and sent individually.
+        self.executor.shutdown(wait=True)
+        self.executor = ProcessPoolExecutor(
+            max_workers=self.process_number,
+            mp_context=self.mp_context,
+            initializer=_init_worker_context,
+            initargs=(context,),
+        )
+        return self.run_parallel(contents, processing_func)
+
     def shutdown(self) -> None:
         self.executor.shutdown(wait=True)
 
@@ -131,6 +190,15 @@ class NullParallelizer(Parallelizer):
         for content in contents:
             results.append(processing_func(content))
         return results
+
+    def run_parallel_with_context(
+        self,
+        contents: List[Any],
+        processing_func: MultiprocessingLambdaType,
+        context: Any,
+    ) -> Iterable[Any]:
+        _init_worker_context(context)
+        return self.run_parallel(contents, processing_func)
 
     def shutdown(self) -> None:
         pass

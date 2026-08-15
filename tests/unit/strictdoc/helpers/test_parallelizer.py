@@ -7,7 +7,11 @@ from time import sleep
 import pytest
 
 from strictdoc.helpers.exception import StrictDocChildProcessException
-from strictdoc.helpers.parallelizer import MultiprocessingParallelizer
+from strictdoc.helpers.parallelizer import (
+    MultiprocessingParallelizer,
+    NullParallelizer,
+    get_worker_context,
+)
 
 
 def child_process_that_multiplies_by_two(input_number):
@@ -21,6 +25,10 @@ def child_process_that_fails(_):
 def child_that_sigterms_itself_and_hangs(_):
     os.kill(os.getpid(), signal.SIGTERM)
     sleep(120)
+
+
+def child_process_that_reads_the_worker_context(_):
+    return get_worker_context()
 
 
 def test_nominal_use_case():
@@ -53,6 +61,48 @@ def test_if_child_process_fails_then_parallelizer_exits_with_non_zero():
         )
     finally:
         parallelizer.shutdown()
+
+
+def test_run_parallel_with_context_sends_context_once_per_worker():
+    parallelizer = MultiprocessingParallelizer()
+
+    try:
+        output_items = parallelizer.run_parallel_with_context(
+            [1, 2, 3],
+            child_process_that_reads_the_worker_context,
+            "shared-context",
+        )
+
+        assert list(output_items) == ["shared-context"] * 3
+    finally:
+        parallelizer.shutdown()
+
+
+def test_run_parallel_with_context_can_be_called_again_with_a_new_context():
+    parallelizer = MultiprocessingParallelizer()
+
+    try:
+        first_result = parallelizer.run_parallel_with_context(
+            [1], child_process_that_reads_the_worker_context, "first"
+        )
+        second_result = parallelizer.run_parallel_with_context(
+            [1], child_process_that_reads_the_worker_context, "second"
+        )
+
+        assert list(first_result) == ["first"]
+        assert list(second_result) == ["second"]
+    finally:
+        parallelizer.shutdown()
+
+
+def test_run_parallel_with_context_null_parallelizer():
+    parallelizer = NullParallelizer()
+
+    output_items = parallelizer.run_parallel_with_context(
+        [1, 2], child_process_that_reads_the_worker_context, "null-context"
+    )
+
+    assert output_items == ["null-context", "null-context"]
 
 
 @pytest.mark.skipif(

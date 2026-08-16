@@ -4,90 +4,191 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+
+    pyproject-nix = {
+      url = "github:pyproject-nix/pyproject.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, flake-utils }:
-    flake-utils.lib.eachDefaultSystem (system:
+  outputs =
+    {
+      nixpkgs,
+      flake-utils,
+      pyproject-nix,
+      ...
+    }:
+    flake-utils.lib.eachDefaultSystem (
+      system:
       let
         pkgs = import nixpkgs { inherit system; };
 
-        # Built by nixpkgs itself -- numpy/pandas's compiled extensions
-        # are already correctly linked against Nix's own libstdc++ (no
-        # patchelf needed for these specifically). Symlinked directly
-        # into .venv-nix's site-packages in shellHook below, instead of
-        # pip-installing this whole stack from PyPI. six/python-dateutil/
-        # pytz/tzdata are pandas's own runtime deps, pulled in the same
-        # way so pip never needs to touch any of this.
-        nixNumpyStack = with pkgs.python312Packages; [
-          numpy
-          pandas
-          six
-          python-dateutil
-          pytz
-          tzdata
-        ];
+        # This pulls in all of the python dependencies defined by
+        # pyproject.toml, but none from tox.ini. This means we have enough
+        # to run strictdoc, but not the developer tooling.
+        project = pyproject-nix.lib.project.loadPyproject { projectRoot = ./.; };
+
+        # Use 3.13 for the environment because the nixpkgs cache contains
+        # cached builds for some of the larger python dependencies like
+        # scipy. When using 3.12, it requires building scipy from source.
+        python = pkgs.python313.override {
+          self = python;
+          packageOverrides = pkgs.lib.composeExtensions treeSitterOverrides versionOverrides;
+        };
+
+        # pyproject.toml pins versions that are not in nixpkgs, so we override
+        # the versions with the following. If strictdoc adopts uv, then the
+        # uv2nix project (which is a subproject of pyproject-nix), can use
+        # the uv.lock to automatically resolve these versions.
+        versionOverrides = final: prev: {
+          reqif = prev.reqif.overrideAttrs (_old: rec {
+            version = "0.1.0";
+            # From the repository rather than the sdist, because nixpkgs' own
+            # derivation patches a file under tests/, which the sdist omits.
+            src = pkgs.fetchFromGitHub {
+              owner = "strictdoc-project";
+              repo = "reqif";
+              tag = version;
+              hash = "sha256-aMjq2x9/aC7HRDL2T2v/yvz+TP+AAKSY3e/TmboKq9Q=";
+            };
+          });
+
+          python-datauri = prev.python-datauri.overrideAttrs (_old: rec {
+            version = "2.2.0";
+            src = final.fetchPypi {
+              inherit version;
+              pname = "python_datauri";
+              hash = "sha256-j6WCIpdf7lQc455rC51WU878wkga0mKe/AN41IsT9Ds=";
+            };
+
+            # tests/assets holds fixture files, one of which is EBCDIC-encoded
+            # and named test_*, so pytest tries to collect it as a module and
+            # fails to decode it. In 2.2.0 that directory is not excluded for us.
+            disabledTestPaths = [ "tests/assets" ];
+          });
+        };
+
+        treeSitterOverrides = final: _prev: {
+          # nixpkgs packages most of the tree-sitter grammars for Python, but
+          # not these two. Both are built the same way as their siblings there,
+          # from the grammar's own repository.
+          tree-sitter-c = final.buildPythonPackage rec {
+            pname = "tree-sitter-c";
+            version = "0.24.2";
+            pyproject = true;
+
+            src = pkgs.fetchFromGitHub {
+              owner = "tree-sitter";
+              repo = "tree-sitter-c";
+              tag = "v${version}";
+              hash = "sha256-Juuf57GQI7OAP6O03KtSzyKJAoXtGKjyYJ+sTM1A4mU=";
+            };
+
+            build-system = [ final.setuptools ];
+            doCheck = false; # The grammar carries no Python tests.
+            pythonImportsCheck = [ "tree_sitter_c" ];
+          };
+
+          tree-sitter-cpp = final.buildPythonPackage rec {
+            pname = "tree-sitter-cpp";
+            version = "0.23.4";
+            pyproject = true;
+
+            src = pkgs.fetchFromGitHub {
+              owner = "tree-sitter";
+              repo = "tree-sitter-cpp";
+              tag = "v${version}";
+              hash = "sha256-tP5Tu747V8QMCEBYwOEmMQUm8OjojpJdlRmjcJTbe2k=";
+            };
+
+            build-system = [ final.setuptools ];
+            doCheck = false;
+            pythonImportsCheck = [ "tree_sitter_cpp" ];
+          };
+        };
+
+        # The runtime dependencies plus the "development" extra.
+        # Everything else the tox environments need is still installed by tox
+        # itself, from PyPI, into build/tox/.
+        pythonEnv = python.withPackages (
+          project.renderers.withPackages {
+            inherit python;
+            extras = [ "development" ];
+          }
+        );
+
+        # nixpkgs' invoke wrapper puts its own `bin/` first on PATH and drops
+        # `NIX_PYTHONPATH`, so the `invoke ...` that tasks.py spawns runs a bare
+        # invoke with no access to our Python environment.
+        # `python -m invoke` skips that wrapper.
+        invokeWrapper = pkgs.writeShellScriptBin "invoke" ''
+          exec ${pythonEnv}/bin/python3 -m invoke "$@"
+        '';
+
+        # pyproject.toml declares the version dynamic, so the renderer below
+        # cannot supply one. hatchling reads it out of this file. Read it the
+        # same way rather than repeating the number here.
+        version =
+          let
+            match = builtins.match ''.*__version__ = "([^"]+)".*'' (builtins.readFile ./strictdoc/__init__.py);
+          in
+          if match == null then
+            throw "flake.nix: no __version__ found in strictdoc/__init__.py"
+          else
+            builtins.head match;
+
+        strictdoc = python.pkgs.buildPythonPackage (
+          project.renderers.buildPythonPackage { inherit python; } // { inherit version; }
+        );
       in
       {
-        # `nix develop` (or ./bootstrap_nix.sh) gives a shell with the
-        # system-level dependencies that pip cannot install: a Python
-        # interpreter, libtidy (used by pytidylib in integration tests),
-        # a browser (seleniumbase/playwright end2end + screencast tests),
-        # and Ruby (`gem install github_changelog_generator`).
-        #
-        # All Python dependencies themselves are still installed via pip,
-        # exactly as the existing `.envrc` workflow already does -- this
-        # flake does not attempt to map them onto nixpkgs' own Python
-        # package set.
-        #
-        # This shell uses its own `.venv-nix/`, separate from `.envrc`'s
-        # `.venv/`. Sharing one venv between Nix's Python and the system
-        # Python is unsafe: re-running `python -m venv` against an
-        # existing venv rewrites pyvenv.cfg to point at whichever python3
-        # is currently first on PATH, but does NOT repoint the bin/python
-        # symlink -- so alternating between the two providers leaves
-        # compiled stdlib extensions (_ssl, termios, ...) mismatched
-        # against the running interpreter's glibc, breaking imports with
-        # GLIBC_* errors. Separate venv directories avoid that entirely.
+        # This shell provides the Python environment the project declares,
+        # plus the system-level tools that are not Python packages at all:
+        # libtidy (pytidylib, integration tests), a browser and a matching
+        # driver, both of which seleniumbase picks up from PATH
+        # (end2end and screencast tests), and github_changelog_generator.
         devShells.default = pkgs.mkShell {
           packages = [
-            pkgs.python312
+            invokeWrapper # Must come before pythonEnv, to shadow its `invoke`.
+            pythonEnv
             pkgs.html-tidy
             pkgs.chromium
-            pkgs.ruby
+            pkgs.chromedriver
+            pkgs.github-changelog-generator
           ];
 
-          shellHook = ''
-            export PYTHONPYCACHEPREFIX=build/pycache
-            # Read by developer/pip_install_strictdoc_deps.py: when set,
-            # it symlinks these store paths' packages into whichever venv
-            # it's running in (e.g. tox's build/tox/py312-check) instead
-            # of pip-installing numpy/pandas from PyPI there too. Only
-            # ever set inside this Nix shell, so it's a complete no-op
-            # for anyone not using Nix.
-            export STRICTDOC_NIX_NUMPY_STACK="${toString nixNumpyStack}"
-            echo "strictdoc: activating virtual environment (.venv-nix)."
-            # Pip-install the project's own bootstrap set (toml, invoke,
-            # packaging, ...) once, right when .venv-nix is first created,
-            # so `invoke` and scripts like
-            # developer/pip_install_strictdoc_deps.py work immediately
-            # without a manual step.
-            #
-            # numpy/pandas and pandas's own runtime deps are NOT
-            # pip-installed at all -- symlinked in from nixNumpyStack
-            # instead (module dir + .dist-info, so pip still recognizes
-            # them as installed and won't try to pull its own).
-            if [ ! -d .venv-nix ]; then
-              python3 -m venv .venv-nix/
-              site_packages=".venv-nix/lib/python3.12/site-packages"
-              for nix_pkg_path in ${toString nixNumpyStack}; do
-                for entry in "$nix_pkg_path"/lib/python3.12/site-packages/*; do
-                  ln -s "$entry" "$site_packages/$(basename "$entry")"
-                done
-              done
-              .venv-nix/bin/pip install --quiet -r requirements.bootstrap.txt
-            fi
-            source .venv-nix/bin/activate
-          '';
+          # Keep __pycache__ out of the source tree.
+          PYTHONPYCACHEPREFIX = "build/pycache";
+
+          # The packages that tox installs from PyPI load shared libraries the
+          # way a normal FHS distribution provides them: pytidylib dlopen()s
+          # libtidy.so.58 by name, and manylinux wheels link their C extensions
+          # against libstdc++/libz. A Nix interpreter does not search any of the
+          # usual locations for them, so point the dynamic linker at the
+          # Nix-provided copies. Without this, `import numpy` inside a tox
+          # environment fails with
+          # "libstdc++.so.6: cannot open shared object file".
+          LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
+            pkgs.stdenv.cc.cc.lib
+            pkgs.zlib
+            pkgs.html-tidy
+          ];
+
+          # tasks.py runs every task through tox, and tox creates its own
+          # virtualenvs under build/tox. Put this environment's site-packages
+          # on their PYTHONPATH, so that the runtime dependencies of
+          # pyproject.toml come from Nix and tox installs only the development
+          # dependencies of tox.ini.
+          TOX_OVERRIDE = "testenv.set_env+=PYTHONPATH=${pythonEnv}/${python.sitePackages};testenv.pass_env+=LD_LIBRARY_PATH";
         };
-      });
+
+        # `nix build` and, through the app below, `nix run <this flake>`.
+        packages.default = strictdoc;
+
+        apps.default = {
+          type = "app";
+          program = "${strictdoc}/bin/strictdoc";
+        };
+      }
+    );
 }

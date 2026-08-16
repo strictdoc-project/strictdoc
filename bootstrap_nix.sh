@@ -1,12 +1,17 @@
 #!/usr/bin/env bash
 #
-# Enters the Nix dev shell defined in flake.nix, which provides the
-# system-level dependencies (Python, libtidy, a browser for
-# end2end/screencast tests, Ruby for the changelog generator) that the
-# existing .envrc + .venv + invoke workflow does not install by itself.
+# Enters the Nix dev shell defined in flake.nix. That shell provides a Python
+# interpreter with the runtime dependencies of pyproject.toml and with Invoke
+# and Tox, plus the tools that are not Python packages: libtidy (integration
+# tests), Chromium and a matching driver (end2end and screencast tests), and
+# github_changelog_generator.
 #
-# Uses its own .venv-nix/ (separate from .envrc's .venv/) so switching
-# between the system Python and Nix's Python never corrupts either venv.
+# Tox still creates its own virtual environments under build/tox/, but it
+# installs only the development dependencies of tox.ini there. The runtime
+# dependencies of pyproject.toml come from the Nix shell.
+#
+# This is an alternative to the .envrc + .venv + invoke workflow, which keeps
+# working unchanged. The two do not share a virtual environment.
 #
 # Usage:
 #   ./bootstrap_nix.sh        # enter an interactive dev shell

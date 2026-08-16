@@ -1,5 +1,5 @@
 RUN: %strictdoc export %S --output-dir %T/ | filecheck %s --dump-input=fail --check-prefix CHECK-EXPORT
-CHECK-EXPORT: Published: HTML escaping of source file content
+CHECK-EXPORT: Export completed.
 
 RUN: %cat %T/html/_source_files/file.py.html | filecheck %s --check-prefix CHECK-SRC
 

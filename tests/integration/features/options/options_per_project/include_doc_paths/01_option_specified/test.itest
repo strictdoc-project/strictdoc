@@ -1,4 +1,4 @@
-RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+RUN: %strictdoc --debug export %S --output-dir %T | filecheck %s --dump-input=fail
 
 CHECK: Published: Document 1
 CHECK-NOT: Published: Document 2

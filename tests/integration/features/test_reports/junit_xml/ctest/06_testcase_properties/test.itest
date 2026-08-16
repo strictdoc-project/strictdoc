@@ -1,7 +1,7 @@
 RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 
 # Ensure that the test report document is generated.
-CHECK: Published: Test report: testcase properties
+CHECK: Export completed.
 RUN: %check_exists --file "%T/html/%THIS_TEST_FOLDER/reports/tests_unit.ctest.junit.html"
 
 # Ensure that testcase properties are rendered as TEST_RESULT fields.

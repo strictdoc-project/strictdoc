@@ -1,5 +1,5 @@
 RUN: %strictdoc export %S --output-dir %T | filecheck %s
-CHECK: Published: Lazy Chunking Doc
+CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/%THIS_TEST_FOLDER/input.html"
 RUN: %check_exists --file "%T/html/%THIS_TEST_FOLDER/input-chunk-1.js"

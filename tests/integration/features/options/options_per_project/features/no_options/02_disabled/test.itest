@@ -1,5 +1,5 @@
 RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
-CHECK: Published: Hello world doc
+CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/02_disabled/input-TABLE.html"
 RUN: %check_exists --file "%T/html/02_disabled/input-TRACE.html"

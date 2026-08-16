@@ -5,7 +5,7 @@
 #
 
 RUN: %strictdoc export %S --formats=html --output-dir %T | filecheck %s --dump-input=fail
-CHECK: Published: Anchor example
+CHECK: Export completed.
 
 RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 

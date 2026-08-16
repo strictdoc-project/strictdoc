@@ -8,7 +8,7 @@ CHECK: warning: STATEMENT field is really bad. Node: System A -> B behavior
 CHECK: warning: RATIONALE field is really bad. Node: System A -> B behavior
 CHECK: warning: COMMENT field is really bad. Node: System A -> B behavior
 CHECK: warning: CUSTOM_CONTENT_FIELD field is really bad. Node: System A -> B behavior
-CHECK: Published: Hello world doc
+CHECK: Export completed.
 
 RUN: %cat %T/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-INDEX
 CHECK-INDEX: Hello world doc

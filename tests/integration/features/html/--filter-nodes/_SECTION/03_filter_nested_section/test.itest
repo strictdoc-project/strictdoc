@@ -2,7 +2,7 @@ RUN: %strictdoc export %S --output-dir %T --filter-nodes='"MUST_BE_FILTERED 1" n
 RUN: %cat %T/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 RUN: %cat %T/html/03_filter_nested_section/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOC
 
-CHECK: Published: Hello world doc
+CHECK: Export completed.
 
 CHECK-HTML: Hello world doc
 CHECK-HTML: input.sdoc

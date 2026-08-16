@@ -1,5 +1,5 @@
 RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
-CHECK: Published: TEST DOCUMENT
+CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/_source_files/file1.py.html"
 RUN: %check_exists --file "%T/html/_source_files/file2.py.html"

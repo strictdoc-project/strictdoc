@@ -1,5 +1,5 @@
 RUN: %strictdoc export %S --output-dir Output/CustomDir | filecheck %s --dump-input=fail
-CHECK: Published: Hello world doc
+CHECK: Export completed.
 
 RUN: %check_exists --dir Output/CustomDir/html/_static/
 RUN: %check_exists --file Output/CustomDir/html/_static/base.css

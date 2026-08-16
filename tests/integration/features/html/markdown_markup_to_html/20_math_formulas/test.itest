@@ -1,5 +1,5 @@
 RUN: %strictdoc export %S --formats=html --enable-mathjax --output-dir %T | filecheck %s --dump-input=fail
-CHECK: Published: Math formulas document
+CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/_static/mathjax/tex-mml-chtml.js"
 

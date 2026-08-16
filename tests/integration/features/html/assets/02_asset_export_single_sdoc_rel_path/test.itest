@@ -1,5 +1,5 @@
 RUN: %strictdoc export %S/input.sdoc --output-dir %T | filecheck %s --dump-input=fail
-CHECK: Published: Hello world doc
+CHECK: Export completed.
 
 RUN: %check_exists --dir %T/html/02_asset_export_single_sdoc_rel_path/_assets
 RUN: %check_exists --file %T/html/02_asset_export_single_sdoc_rel_path/_assets/sandbox1.svg

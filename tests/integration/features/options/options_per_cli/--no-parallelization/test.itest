@@ -1,8 +1,7 @@
 RUN: %strictdoc export %S --output-dir=%T | filecheck %s --dump-input=fail --check-prefix CHECK-PARAL
 
 CHECK-PARAL: Parallelization: Enabled
-CHECK-PARAL: Published:
-CHECK-PARAL: Published:
+CHECK-PARAL: Published: 2...
 
 RUN: %check_exists --file %T/html/--no-parallelization/input1.html
 RUN: %check_exists --file %T/html/--no-parallelization/input2.html
@@ -15,8 +14,7 @@ RUN: %rm %T/html
 RUN: %strictdoc export %S --no-parallelization --output-dir=%T | filecheck %s --dump-input=fail --check-prefix CHECK-NO-PARAL
 
 CHECK-NO-PARAL: Parallelization: Disabled
-CHECK-NO-PARAL: Published:
-CHECK-NO-PARAL: Published:
+CHECK-NO-PARAL: Published: 2...
 
 RUN: %check_exists --file %T/html/--no-parallelization/input1.html
 RUN: %check_exists --file %T/html/--no-parallelization/input2.html

@@ -3,7 +3,7 @@
 #
 
 RUN: %strictdoc export %S --included-documents --output-dir %T | filecheck %s --dump-input=fail
-CHECK: Published: Hello world doc
+CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/20_included_documents_in_nested_folders/_assets/file.svg"
 RUN: %check_exists --file "%T/html/20_included_documents_in_nested_folders/nested/_assets/file.svg"

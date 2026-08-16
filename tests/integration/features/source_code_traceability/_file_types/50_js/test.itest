@@ -3,7 +3,7 @@
 #
 
 RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
-CHECK: Published: Example: Traceability between requirements and source files
+CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/_source_files/file.js.html"
 

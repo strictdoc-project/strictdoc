@@ -6,7 +6,7 @@ NOTE: The first link is created from a forward marker, the second from a backwar
       Ensure that both links are identical from the UI perspective.
 
 RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
-CHECK: Published: Hello world doc
+CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/_source_files/file.py.html"
 

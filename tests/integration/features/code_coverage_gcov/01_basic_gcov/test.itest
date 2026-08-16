@@ -14,4 +14,4 @@ RUN: cp %S/strictdoc_config.py %T/docs/
 RUN: cp -r %S/src %T/docs/
 RUN: cd %T/docs && %strictdoc export .  | filecheck %s
 
-CHECK: Published: Code coverage report
+CHECK: Export completed.

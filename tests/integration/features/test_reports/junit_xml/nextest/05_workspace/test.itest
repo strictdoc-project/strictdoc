@@ -3,7 +3,7 @@
 # satisfied by its own crate's test.
 
 RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
-CHECK: Published: Workspace
+CHECK: Export completed.
 
 RUN: %cat "%T/html/%THIS_TEST_FOLDER/docs/input.html" | filecheck %s --check-prefix CHECK-REQS
 CHECK-REQS: REQ-ALPHA

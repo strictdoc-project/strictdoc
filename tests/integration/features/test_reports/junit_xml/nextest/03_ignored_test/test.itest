@@ -6,7 +6,7 @@
 RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 
 # Ensure that the test report document is generated.
-CHECK: Published: Test report: hello_world_crate
+CHECK: Export completed.
 RUN: %check_exists --file "%T/html/%THIS_TEST_FOLDER/reports/tests_unit.nextest.junit.html"
 
 # Ensure that the source file is generated.

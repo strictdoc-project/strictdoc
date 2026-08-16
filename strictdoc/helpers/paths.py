@@ -5,6 +5,18 @@ def path_to_posix_path(path: str) -> str:
     return path.replace("\\", "/")
 
 
+def shorten_path(path: str) -> str:
+    """
+    Collapse a deep relative path down to its first and last segments, e.g.
+    "tests/integration/features/.../file.py" -> "tests/.../file.py", so that
+    progress lines stay readable instead of being dominated by long paths.
+    """
+    parts = path_to_posix_path(path).split("/")
+    if len(parts) <= 5:
+        return path
+    return f"{parts[0]}/.../{parts[-1]}"
+
+
 class SDocRelativePath:
     """
     Class to encapsulate a path as both a native OS path and a POSIX path.

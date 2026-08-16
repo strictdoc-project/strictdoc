@@ -1,5 +1,6 @@
 import os
 import shutil
+import time
 from collections import defaultdict
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set, Tuple
@@ -10,7 +11,7 @@ from html2pdf4doc import PATH_TO_HTML2PDF4DOC_JS
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.core.asset_manager import AssetDir
 from strictdoc.core.document_meta import DocumentMeta
-from strictdoc.core.file_system.source_tree import SourceTree
+from strictdoc.core.file_system.source_tree import SourceFile, SourceTree
 from strictdoc.core.project_config import ProjectConfig, ProjectFeature
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
@@ -55,8 +56,16 @@ from strictdoc.helpers.file_system import sync_dir
 from strictdoc.helpers.git_client import GitClient
 from strictdoc.helpers.mid import MID
 from strictdoc.helpers.parallelizer import Parallelizer, get_worker_context
-from strictdoc.helpers.paths import SDocRelativePath, path_to_posix_path
-from strictdoc.helpers.timing import measure_performance, timing_decorator
+from strictdoc.helpers.paths import (
+    SDocRelativePath,
+    path_to_posix_path,
+    shorten_path,
+)
+from strictdoc.helpers.timing import (
+    measure_performance,
+    measure_performance_loop,
+    timing_decorator,
+)
 
 
 def render_favicon_svg(
@@ -83,7 +92,7 @@ def render_favicon_svg(
     )
 
 
-def _export_single_document_worker(document_mid: MID) -> None:
+def _export_single_document_worker(document_mid: MID) -> Tuple[str, float]:
     """
     Module-level (picklable-by-reference) task function for the document
     export parallelizer. The (HTMLGenerator, TraceabilityIndex) pair is not
@@ -100,12 +109,20 @@ def _export_single_document_worker(document_mid: MID) -> None:
     identity-sensitive lookups, such as NodeFilter's blacklist (a plain
     `set`, hashed/compared by object identity), would then silently fail
     to recognize them.
+
+    Returns the document's title and export duration instead of printing
+    directly: the caller (running in the main process) reports progress for
+    all documents through a single measure_performance_loop(), which a
+    worker process can't safely share (concurrent in-place progress-line
+    writes from multiple processes would interleave and corrupt the
+    terminal output).
     """
     html_generator, traceability_index = get_worker_context()
     document = traceability_index.get_node_by_mid(document_mid)
-    html_generator.export_single_document_with_performance(
-        document, traceability_index
-    )
+    time_start = time.time()
+    html_generator.export_single_document(document, traceability_index)
+    time_end = time.time()
+    return document.title, time_end - time_start
 
 
 class HTMLGenerator:
@@ -148,33 +165,52 @@ class HTMLGenerator:
                 traceability_index.document_tree.document_list
             )
         else:
-            for document_ in traceability_index.document_tree.document_list:
-                if document_.document_is_included():
-                    continue
-
-                document_meta = assert_cast(document_.meta, DocumentMeta)
-
-                input_doc_full_path = document_meta.input_doc_full_path
-                output_doc_full_path = document_meta.output_document_full_path
-
-                if os.path.isfile(output_doc_full_path) and (
-                    get_file_modification_time(input_doc_full_path)
-                    < get_file_modification_time(output_doc_full_path)
-                    and not traceability_index.file_dependency_manager.must_generate(
-                        document_meta.output_document_full_path
-                    )
-                ):
-                    with measure_performance(f"Skip: {document_.title}"):
+            with measure_performance_loop(
+                "Skip",
+                len(traceability_index.document_tree.document_list),
+            ) as report_progress:
+                for document_ in traceability_index.document_tree.document_list:
+                    if document_.document_is_included():
                         continue
 
-                documents_to_export.append(document_)
+                    document_meta = assert_cast(document_.meta, DocumentMeta)
+
+                    input_doc_full_path = document_meta.input_doc_full_path
+                    output_doc_full_path = (
+                        document_meta.output_document_full_path
+                    )
+
+                    if os.path.isfile(output_doc_full_path) and (
+                        get_file_modification_time(input_doc_full_path)
+                        < get_file_modification_time(output_doc_full_path)
+                        and not traceability_index.file_dependency_manager.must_generate(
+                            document_meta.output_document_full_path
+                        )
+                    ):
+                        with report_progress(document_.title):
+                            continue
+
+                    documents_to_export.append(document_)
 
         if len(documents_to_export) > 0:
-            parallelizer.run_parallel_with_context(
-                [document_.reserved_mid for document_ in documents_to_export],
-                _export_single_document_worker,
-                (self, traceability_index),
-            )
+            with measure_performance_loop(
+                "Published", len(documents_to_export)
+            ) as report_progress:
+
+                def on_item_complete(_: int, result: Tuple[str, float]) -> None:
+                    title, elapsed_time = result
+                    with report_progress(title, elapsed_time=elapsed_time):
+                        pass
+
+                parallelizer.run_parallel_with_context(
+                    [
+                        document_.reserved_mid
+                        for document_ in documents_to_export
+                    ],
+                    _export_single_document_worker,
+                    (self, traceability_index),
+                    on_item_complete,
+                )
 
         # Export document tree.
         # FIXME: It is important that this export is **after** the parallelized
@@ -567,18 +603,47 @@ class HTMLGenerator:
             traceability_index.document_tree.source_tree, SourceTree
         ), traceability_index.document_tree.source_tree
         print("Generating source files:")  # noqa: T201
-        for (
-            source_file
-        ) in traceability_index.document_tree.source_tree.source_files:
-            if not source_file.is_referenced:
-                continue
 
-            SourceFileViewHTMLGenerator.export_to_file(
-                project_config=self.project_config,
-                source_file=source_file,
-                traceability_index=traceability_index,
-                html_templates=self.html_templates,
-            )
+        referenced_source_files = [
+            source_file
+            for source_file in traceability_index.document_tree.source_tree.source_files
+            if source_file.is_referenced
+        ]
+
+        source_files_to_export: List[SourceFile] = []
+        with measure_performance_loop(
+            "Skip", len(referenced_source_files)
+        ) as report_progress:
+            for source_file in referenced_source_files:
+                if not traceability_index.file_dependency_manager.must_generate(
+                    source_file.output_file_full_path
+                ):
+                    with report_progress(
+                        source_file.in_doctree_source_file_rel_path,
+                        short_title=shorten_path(
+                            source_file.in_doctree_source_file_rel_path
+                        ),
+                    ):
+                        continue
+                source_files_to_export.append(source_file)
+
+        if len(source_files_to_export) > 0:
+            with measure_performance_loop(
+                "File", len(source_files_to_export)
+            ) as report_progress:
+                for source_file in source_files_to_export:
+                    with report_progress(
+                        source_file.in_doctree_source_file_rel_path,
+                        short_title=shorten_path(
+                            source_file.in_doctree_source_file_rel_path
+                        ),
+                    ):
+                        SourceFileViewHTMLGenerator.export_to_file(
+                            project_config=self.project_config,
+                            source_file=source_file,
+                            traceability_index=traceability_index,
+                            html_templates=self.html_templates,
+                        )
 
     def export_source_coverage_screen(
         self,
@@ -631,7 +696,7 @@ class HTMLGenerator:
                 relative_path_to_source_file
                 == source_file.in_doctree_source_file_rel_path_posix
             ):
-                SourceFileViewHTMLGenerator.export_to_file(
+                SourceFileViewHTMLGenerator.export_to_file_with_performance(
                     project_config=self.project_config,
                     source_file=source_file,
                     traceability_index=traceability_index,

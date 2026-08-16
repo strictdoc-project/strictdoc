@@ -73,7 +73,12 @@ from strictdoc.helpers.file_modification_time import (
 )
 from strictdoc.helpers.mid import MID
 from strictdoc.helpers.parallelizer import Parallelizer
-from strictdoc.helpers.timing import measure_performance, timing_decorator
+from strictdoc.helpers.paths import shorten_path
+from strictdoc.helpers.timing import (
+    measure_performance,
+    measure_performance_loop,
+    timing_decorator,
+)
 
 
 class TraceabilityIndexBuilder:
@@ -159,51 +164,55 @@ class TraceabilityIndexBuilder:
 
             source_files = source_tree.source_files
             source_file: SourceFile
-            for source_file in source_files:
-                with measure_performance(
-                    f"Reading source: {source_file.in_doctree_source_file_rel_path}"
-                ):
-                    source_nodes_cfg_entry = (
-                        project_config.get_relevant_source_nodes_entry(
-                            source_file.full_path
-                        )
-                    )
-                    if source_nodes_cfg_entry is not None:
-                        source_node_grammar_element = (
-                            traceability_index.get_grammar_element(
-                                source_nodes_cfg_entry.uid,
-                                source_nodes_cfg_entry.node_type,
+            with measure_performance_loop(
+                "Reading source", len(source_files)
+            ) as report_progress:
+                for source_file in source_files:
+                    with report_progress(
+                        source_file.in_doctree_source_file_rel_path,
+                        short_title=shorten_path(
+                            source_file.in_doctree_source_file_rel_path
+                        ),
+                    ):
+                        source_nodes_cfg_entry = (
+                            project_config.get_relevant_source_nodes_entry(
+                                source_file.full_path
                             )
                         )
-                        assert source_node_grammar_element is not None, (
-                            "Missing grammar element for node: "
-                            f"{source_nodes_cfg_entry.uid} {source_nodes_cfg_entry.node_type}"
-                        )
-                        source_node_tags = (
-                            TraceabilityIndexBuilder.source_node_parser_tags(
+                        if source_nodes_cfg_entry is not None:
+                            source_node_grammar_element = (
+                                traceability_index.get_grammar_element(
+                                    source_nodes_cfg_entry.uid,
+                                    source_nodes_cfg_entry.node_type,
+                                )
+                            )
+                            assert source_node_grammar_element is not None, (
+                                "Missing grammar element for node: "
+                                f"{source_nodes_cfg_entry.uid} {source_nodes_cfg_entry.node_type}"
+                            )
+                            source_node_tags = TraceabilityIndexBuilder.source_node_parser_tags(
                                 source_nodes_cfg_entry,
                                 source_node_grammar_element,
                             )
-                        )
-                    else:
-                        source_node_tags = None
+                        else:
+                            source_node_tags = None
 
-                    traceability_info = (
-                        SourceFileTraceabilityCachingReader.read_from_file(
-                            source_file.full_path,
-                            project_config,
-                            source_node_tags,
+                        traceability_info = (
+                            SourceFileTraceabilityCachingReader.read_from_file(
+                                source_file.full_path,
+                                project_config,
+                                source_node_tags,
+                            )
                         )
-                    )
 
-                if traceability_info:
-                    traceability_index.create_traceability_info(
-                        source_file,
-                        traceability_info,
-                    )
-                    # Is file referenced by backwards links?
-                    if len(traceability_info.markers) > 0:
-                        source_file.is_referenced = True
+                    if traceability_info:
+                        traceability_index.create_traceability_info(
+                            source_file,
+                            traceability_info,
+                        )
+                        # Is file referenced by backwards links?
+                        if len(traceability_info.markers) > 0:
+                            source_file.is_referenced = True
 
             file_tracability_index.validate_and_resolve(
                 traceability_index, project_config

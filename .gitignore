@@ -5,6 +5,7 @@
 /build/
 /developer/tasks/**/Context.md
 /developer/**/_draft/
+/docs/sphinx/build/
 /reports/
 /Output/
 /output/

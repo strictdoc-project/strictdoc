@@ -4,6 +4,7 @@
 
 import os
 import sys
+import time
 from functools import partial
 from typing import Dict, List, Tuple, Union
 
@@ -25,7 +26,11 @@ from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.parallelizer import Parallelizer
 from strictdoc.helpers.paths import SDocRelativePath
 from strictdoc.helpers.textx import drop_textx_meta
-from strictdoc.helpers.timing import measure_performance, timing_decorator
+from strictdoc.helpers.timing import (
+    measure_performance,
+    measure_performance_loop,
+    timing_decorator,
+)
 
 # Each entry: (extension, Format instance, is_grammar).
 # Sorted longest-extension-first so that e.g. ".gra.md" is matched before
@@ -92,43 +97,55 @@ class DocumentFinder:
     def _process_worker_parse_document(
         document_triple: Tuple[Union[Folder, File], File, str],
         project_config: ProjectConfig,
-    ) -> Tuple[File, str, Union[SDocDocument, DocumentGrammar]]:
+    ) -> Tuple[File, str, Union[SDocDocument, DocumentGrammar], float]:
+        """
+        Returns the read document/grammar together with the read's duration
+        instead of printing directly: the caller (running in the main
+        process) reports progress for all documents through a single
+        measure_performance_loop(), which a worker process can't safely
+        share (concurrent in-place progress-line writes from multiple
+        processes would interleave and corrupt the terminal output).
+        """
         _, doc_file, file_tree_mount_folder = document_triple
         doc_full_path = doc_file.full_path
 
-        with measure_performance(
-            f"Reading SDOC: {os.path.basename(doc_full_path)}"
-        ):
-            document_or_grammar: Union[SDocDocument, DocumentGrammar, None] = (
-                None
-            )
+        time_start = time.time()
 
-            # @relation(SDOC-SRS-104, scope=range_start)
-            for (
-                extension_,
-                format_,
-                is_grammar_,
-            ) in _build_extension_dispatch_table(project_config):
-                if not doc_full_path.endswith(extension_):
-                    continue
-                if is_grammar_:
-                    document_or_grammar = format_.read_grammar(
-                        doc_file, project_config
-                    )
-                    assert isinstance(document_or_grammar, DocumentGrammar)
-                else:
-                    document_or_grammar = format_.read_from_file(
-                        doc_file, project_config
-                    )
-                    assert isinstance(document_or_grammar, SDocDocument)
-                break
-            # @relation(SDOC-SRS-104, scope=range_end)
+        document_or_grammar: Union[SDocDocument, DocumentGrammar, None] = None
 
-            if document_or_grammar is None:
-                raise NotImplementedError
+        # @relation(SDOC-SRS-104, scope=range_start)
+        for (
+            extension_,
+            format_,
+            is_grammar_,
+        ) in _build_extension_dispatch_table(project_config):
+            if not doc_full_path.endswith(extension_):
+                continue
+            if is_grammar_:
+                document_or_grammar = format_.read_grammar(
+                    doc_file, project_config
+                )
+                assert isinstance(document_or_grammar, DocumentGrammar)
+            else:
+                document_or_grammar = format_.read_from_file(
+                    doc_file, project_config
+                )
+                assert isinstance(document_or_grammar, SDocDocument)
+            break
+        # @relation(SDOC-SRS-104, scope=range_end)
+
+        if document_or_grammar is None:
+            raise NotImplementedError
         drop_textx_meta(document_or_grammar)
 
-        return doc_file, file_tree_mount_folder, document_or_grammar
+        time_end = time.time()
+
+        return (
+            doc_file,
+            file_tree_mount_folder,
+            document_or_grammar,
+            time_end - time_start,
+        )
 
     @staticmethod
     def _build_document_tree(
@@ -160,12 +177,30 @@ class DocumentFinder:
         )
 
         with measure_performance("Completed parsing all documents"):
-            found_documents = parallelizer.run_parallel(
-                file_tree_list, process_document_binding
-            )
+            with measure_performance_loop(
+                "Reading SDOC", len(file_tree_list)
+            ) as report_progress:
+
+                def on_item_complete(
+                    item_index: int,  # noqa: ARG001
+                    result: Tuple[
+                        File, str, Union[SDocDocument, DocumentGrammar], float
+                    ],
+                ) -> None:
+                    doc_file_ = result[0]
+                    elapsed_time = result[3]
+                    title = os.path.basename(doc_file_.full_path)
+                    with report_progress(title, elapsed_time=elapsed_time):
+                        pass
+
+                found_documents = parallelizer.run_parallel(
+                    file_tree_list,
+                    process_document_binding,
+                    on_item_complete,
+                )
 
         doc_file: File
-        for doc_file, file_tree_mount_folder, document in found_documents:
+        for doc_file, file_tree_mount_folder, document, _ in found_documents:
             assert isinstance(file_tree_mount_folder, str), (
                 file_tree_mount_folder
             )

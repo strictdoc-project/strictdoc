@@ -1,5 +1,5 @@
 RUN: %strictdoc export %S --enable-mathjax --output-dir %T | filecheck %s --dump-input=fail
-CHECK: Published: Hello world doc
+CHECK: Export completed.
 
 RUN: %check_exists --invert --file "%T/html/01_enabled/input-TABLE.html"
 RUN: %check_exists --invert --file "%T/html/01_enabled/input-TRACE.html"

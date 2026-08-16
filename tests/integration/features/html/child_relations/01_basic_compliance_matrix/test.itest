@@ -1,5 +1,5 @@
 RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail --check-prefix=CHECK
-CHECK: Published: Compliance matrix
+CHECK: Export completed.
 
 # The most important assertion of this test is that the supplier document is
 # rendered with all its requirements having the parent relations, even though

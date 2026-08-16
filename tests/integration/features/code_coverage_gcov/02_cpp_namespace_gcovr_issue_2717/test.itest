@@ -15,7 +15,7 @@ RUN: cp %S/strictdoc_config.py %T/docs/
 RUN: cp -r %S/src %T/docs/
 RUN: cd %T/docs && %strictdoc export . | filecheck %s --dump-input=fail
 
-CHECK: Published: Code coverage report
+CHECK: Export completed.
 
 RUN: %cat %T/docs/output/html/source_coverage.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-COVERAGE
 CHECK-SOURCE-COVERAGE: src/functions.cpp

@@ -4,7 +4,7 @@
 
 RUN: %strictdoc export %S --output-dir %T | filecheck %s
 
-CHECK: Published: Requirements
+CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/_source_files/tests/file.c.html"
 

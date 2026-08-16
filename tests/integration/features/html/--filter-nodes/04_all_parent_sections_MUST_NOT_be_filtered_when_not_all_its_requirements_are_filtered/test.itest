@@ -1,5 +1,5 @@
 RUN: %strictdoc export %S --output-dir %T --filter-nodes='("1" in node["TITLE"] or "2" in node["TITLE"] or "5" in node["TITLE"])' | filecheck %s --dump-input=fail
-CHECK: Published: Hello world doc
+CHECK: Export completed.
 
 RUN: %cat %T/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: Hello world doc

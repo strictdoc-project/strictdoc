@@ -1,7 +1,7 @@
 # @relation(SDOC-SRS-148, scope=file)
 
 RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
-CHECK: Published: Hello world doc
+CHECK: Export completed.
 
 RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: <a{{.*}}href="../_source_files/file.robot.html#REQ-1#5#7">

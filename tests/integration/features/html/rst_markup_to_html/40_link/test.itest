@@ -1,5 +1,5 @@
 RUN: %strictdoc export %S --formats=html --output-dir %T | filecheck %s --dump-input=fail
-CHECK: Published: Links
+CHECK: Export completed.
 
 RUN: %cat %T/html/40_link/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-FILE
 CHECK-HTML-FILE: <a href="#THING-1">🔗&nbsp;Thing</a> may be followed by whitespace.

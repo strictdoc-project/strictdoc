@@ -7,7 +7,7 @@
 # the .sdoc document references files in the src/ folder.
 
 RUN: %strictdoc export %S/project --output-dir %T | filecheck %s
-CHECK: Published: TEST DOCUMENT
+CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/_source_files/src/file1.py.html"
 RUN: %check_exists --file "%T/html/_source_files/src/file2.py.html"

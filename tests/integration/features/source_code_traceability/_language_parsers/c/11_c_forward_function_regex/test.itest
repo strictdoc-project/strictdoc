@@ -1,7 +1,7 @@
 # @relation(SDOC-LLR-207, scope=file)
 
 RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
-CHECK: Published: Hello world doc
+CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/_source_files/file.cpp.html"
 

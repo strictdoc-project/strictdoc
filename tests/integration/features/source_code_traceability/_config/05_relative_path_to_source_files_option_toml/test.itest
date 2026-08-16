@@ -1,7 +1,7 @@
 # FIXME: Migrate this test to %T.
 
 RUN: (cd %S/root && %strictdoc export %S/root --output-dir %T | filecheck %s --dump-input=fail)
-CHECK: Published: Hello world doc
+CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/_source_files/file.py.html"
 

@@ -1,5 +1,5 @@
 RUN: %expect_exit 0 %strictdoc export %S/input.sdoc --formats=sdoc --output-dir=%T | filecheck %s --dump-input=fail
-CHECK: Reading SDOC: input.sdoc
+CHECK: Total execution time
 
 RUN: %cat %T/sdoc/input.sdoc | filecheck %s --dump-input=fail --check-prefix=CHECK-OUT-SDOC
 NOTE: Ensure that the MIDs are generated for Document, Section and two Requirements.

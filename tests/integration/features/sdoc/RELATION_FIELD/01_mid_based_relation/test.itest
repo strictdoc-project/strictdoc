@@ -1,5 +1,5 @@
 RUN: %strictdoc export %S --output-dir %T | filecheck %s
-CHECK: Published: Test document
+CHECK: Export completed.
 
 RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHECK-HTML
 

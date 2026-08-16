@@ -1,5 +1,5 @@
 RUN: %strictdoc export %S --formats=html --output-dir %T | filecheck %s --dump-input=fail
-CHECK: Published: Images in Markdown document
+CHECK: Export completed.
 
 RUN: %check_exists --dir %T/html/20_images_root_level/_assets
 RUN: %check_exists --file %T/html/20_images_root_level/_assets/sandbox1.svg

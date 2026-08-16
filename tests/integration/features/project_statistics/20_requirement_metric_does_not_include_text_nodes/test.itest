@@ -6,7 +6,7 @@
 #
 
 RUN: %strictdoc export %S --output-dir %T | filecheck %s
-CHECK: Published: Hello world doc
+CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/project_statistics.html"
 

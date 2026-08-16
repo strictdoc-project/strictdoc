@@ -1,5 +1,5 @@
 RUN: %strictdoc export %S --formats=html --output-dir %T | filecheck %s --dump-input=fail
-CHECK: Published: Images in nested Markdown document
+CHECK: Export completed.
 
 RUN: %check_exists --dir %T/html/21_images_nested_dir/nested/_assets
 RUN: %check_exists --file %T/html/21_images_nested_dir/nested/_assets/sandbox1.svg

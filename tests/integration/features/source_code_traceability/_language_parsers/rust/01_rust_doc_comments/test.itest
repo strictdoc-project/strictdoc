@@ -1,5 +1,5 @@
 RUN: %strictdoc export %S --output-dir %T | filecheck %s
-CHECK: Published: Hello world doc
+CHECK: Export completed.
 
 # Check that all source files are generated
 RUN: %check_exists --file "%T/html/_source_files/outer_line_docs.rs.html"

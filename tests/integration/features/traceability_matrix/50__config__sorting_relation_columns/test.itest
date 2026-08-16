@@ -3,7 +3,7 @@
 #
 
 RUN: %strictdoc export %S/input --output-dir %T | filecheck %s
-CHECK: Published: Hello world doc
+CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/traceability_matrix.html"
 

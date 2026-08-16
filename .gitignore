@@ -21,6 +21,7 @@ __pycache__
 ### LIT/FileCheck integration tests' artifacts. ###
 /tests/integration/**/[Oo]utput/**
 /tests/integration/**/sandbox/
+/tests/integration/**/output/
 
 ### Coverage ###
 /htmlcov/

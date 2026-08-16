@@ -1,7 +1,7 @@
 # A document-level or section-level **UID**: in Markdown must be linkable via [LINK: uid].
 
 RUN: %strictdoc export %S --formats=html --output-dir %T | filecheck %s --dump-input=fail
-CHECK: Published: Document
+CHECK: Export completed.
 
 RUN: %cat %T/html/%THIS_TEST_FOLDER/input1.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOC1
 

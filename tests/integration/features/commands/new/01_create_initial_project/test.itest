@@ -36,7 +36,7 @@ CHECK-LLR: VALUE: HLR-1
 RUN: %cat %T/project/src/main.c | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE
 CHECK-SOURCE: {{@}}relation(LLR-1, scope=file)
 
-RUN: %strictdoc export %T/project --output-dir %T/output --no-parallelization | filecheck %s --dump-input=fail --check-prefix CHECK-EXPORT
+RUN: %strictdoc --debug export %T/project --output-dir %T/output --no-parallelization | filecheck %s --dump-input=fail --check-prefix CHECK-EXPORT
 CHECK-EXPORT: Published: High-Level Requirements
 CHECK-EXPORT: Published: Low-Level Requirements
 

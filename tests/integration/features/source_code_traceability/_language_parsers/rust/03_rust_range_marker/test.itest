@@ -1,7 +1,7 @@
 # @relation(SDOC-LLR-171, scope=file)
 
 RUN: %strictdoc export %S --output-dir %T | filecheck %s
-CHECK: Published: Hello world doc
+CHECK: Export completed.
 
 # Check that all source files are generated
 RUN: %check_exists --file "%T/html/_source_files/line_range.rs.html"

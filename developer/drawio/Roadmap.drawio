@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.2.5 Chrome/138.0.7204.251 Electron/37.6.1 Safari/537.36">
   <diagram name="Roadmap" id="QL4QDE5GQBR7DcBM7GMb">
-    <mxGraphModel dx="3360" dy="3974" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="3300" math="0" shadow="0">
+    <mxGraphModel dx="6832" dy="6110" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="3300" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <object label="Background" id="e4xbaoC47YMUbLc9hft--7">
@@ -537,7 +537,7 @@
         <mxCell id="avZaHCUyBh2S1JCu4Szq-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;div&gt;Markdown:&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Grammar, LINK/ANCHOR, parsing corner cases&lt;/span&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="70" width="220" x="1520" y="1080" as="geometry" />
         </mxCell>
-        <mxCell id="rtCiIeL7m7KNmv-1_1vX-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" value="&lt;div&gt;Stabilization 2026 Q3&lt;/div&gt;" vertex="1">
+        <mxCell id="rtCiIeL7m7KNmv-1_1vX-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" value="&lt;div&gt;Stabilization 2026 Q3: Significant performance improvements (focus: POSIX), AI skills for software development and technical writing.&lt;/div&gt;" vertex="1">
           <mxGeometry height="70" width="460" x="1690" y="1440" as="geometry" />
         </mxCell>
         <mxCell id="rtCiIeL7m7KNmv-1_1vX-2" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;div&gt;Build documentation with unresolved relations&lt;/div&gt;" vertex="1">
@@ -546,14 +546,14 @@
         <mxCell id="rtCiIeL7m7KNmv-1_1vX-4" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;div&gt;Browsing very large documentation trees&lt;/div&gt;" vertex="1">
           <mxGeometry height="70" width="390" x="1530" y="1350" as="geometry" />
         </mxCell>
-        <mxCell id="rtCiIeL7m7KNmv-1_1vX-5" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" value="&lt;div&gt;Committing to Git from UI and resolving conflicts&lt;/div&gt;" vertex="1">
-          <mxGeometry height="70" width="460" x="2040" y="900" as="geometry" />
-        </mxCell>
         <mxCell id="rtCiIeL7m7KNmv-1_1vX-6" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" value="&lt;div&gt;Read/write SPDX JSON-LD&lt;/div&gt;" vertex="1">
-          <mxGeometry height="70" width="460" x="2050" y="990" as="geometry" />
+          <mxGeometry height="70" width="260" x="2360" y="990" as="geometry" />
         </mxCell>
         <mxCell id="0pcIbbVFq0l88sWlPEwm-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;div&gt;Format and Feature abstractions for fine-grained Python API&lt;/div&gt;" vertex="1">
           <mxGeometry height="70" width="280" x="1710" y="900" as="geometry" />
+        </mxCell>
+        <mxCell id="XVpcCsqV4PskCUVZw08P-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;span style=&quot;color: rgb(51, 51, 51);&quot;&gt;Committing to Git from UI and resolving conflicts&lt;/span&gt;" vertex="1">
+          <mxGeometry height="70" width="380" x="1870" y="1080" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

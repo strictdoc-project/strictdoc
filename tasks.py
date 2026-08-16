@@ -1380,7 +1380,7 @@ def drawio(context):
                 --export
                 --format png
                 -o {path_to_png_}
-                --page-index 0
+                --page-index 1
                 {path_to_drawio_}
             """,
             pty=True,

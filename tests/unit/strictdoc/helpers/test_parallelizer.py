@@ -3,7 +3,6 @@ import signal
 import sys
 from concurrent.futures.process import BrokenProcessPool
 from time import sleep
-from unittest import mock
 
 import pytest
 
@@ -11,8 +10,19 @@ from strictdoc.helpers.exception import StrictDocChildProcessException
 from strictdoc.helpers.parallelizer import (
     MultiprocessingParallelizer,
     NullParallelizer,
-    _can_fork_safely,
     get_worker_context,
+)
+
+# MultiprocessingParallelizer(dynamic=False) always forks (see its
+# docstring), which is correct for the real, genuinely single-threaded CLI
+# export process it's built for. Under pytest, though, the process is not
+# single-threaded: pytest-rerunfailures starts its own background thread
+# (ServerStatusDB.run_server) unconditionally, just by being installed, with
+# no relation to these tests or to --reruns being passed. That's what makes
+# fork() below emit CPython's "process is multi-threaded" DeprecationWarning
+# here - not anything about this module's code.
+pytestmark = pytest.mark.filterwarnings(
+    "ignore::DeprecationWarning:multiprocessing.popen_fork"
 )
 
 
@@ -100,50 +110,34 @@ def test_run_parallel_with_context_can_be_called_again_with_a_new_context():
 @pytest.mark.skipif(
     sys.platform.startswith("win"), reason="fork is not available on Windows"
 )
-def test_can_fork_safely_true_when_single_threaded():
-    with mock.patch(
-        "strictdoc.helpers.parallelizer.threading.active_count",
-        return_value=1,
-    ):
-        assert _can_fork_safely() is True
+def test_non_dynamic_parallelizer_uses_fork():
+    parallelizer = MultiprocessingParallelizer(dynamic=False)
+    try:
+        assert parallelizer.mp_context.get_start_method() == "fork"
+    finally:
+        parallelizer.shutdown()
 
 
-def test_can_fork_safely_false_when_not_single_threaded():
-    # A live background thread makes forking unsafe: a lock it holds could
-    # be left permanently locked (and never released) in the forked child,
-    # which only inherits a frozen snapshot of the parent's memory, not
-    # the thread that was about to release that lock.
-    with mock.patch(
-        "strictdoc.helpers.parallelizer.threading.active_count",
-        return_value=2,
-    ):
-        assert _can_fork_safely() is False
+@pytest.mark.skipif(
+    sys.platform.startswith("win"), reason="fork is not available on Windows"
+)
+def test_dynamic_parallelizer_uses_forkserver_not_fork():
+    parallelizer = MultiprocessingParallelizer(dynamic=True)
+    try:
+        assert parallelizer.mp_context.get_start_method() != "fork"
+    finally:
+        parallelizer.shutdown()
 
 
-def test_can_fork_safely_false_when_fork_unavailable():
-    with mock.patch(
-        "strictdoc.helpers.parallelizer.threading.active_count",
-        return_value=1,
-    ), mock.patch(
-        "strictdoc.helpers.parallelizer.multiprocessing.get_all_start_methods",
-        return_value=["spawn"],
-    ):
-        assert _can_fork_safely() is False
-
-
-def test_run_parallel_with_context_falls_back_when_not_safe_to_fork():
-    parallelizer = MultiprocessingParallelizer()
+def test_run_parallel_with_context_falls_back_when_dynamic():
+    parallelizer = MultiprocessingParallelizer(dynamic=True)
 
     try:
-        with mock.patch(
-            "strictdoc.helpers.parallelizer._can_fork_safely",
-            return_value=False,
-        ):
-            output_items = parallelizer.run_parallel_with_context(
-                [1, 2, 3],
-                child_process_that_reads_the_worker_context,
-                "fallback-context",
-            )
+        output_items = parallelizer.run_parallel_with_context(
+            [1, 2, 3],
+            child_process_that_reads_the_worker_context,
+            "fallback-context",
+        )
 
         assert list(output_items) == ["fallback-context"] * 3
         assert parallelizer.executor._mp_context.get_start_method() != "fork"
@@ -151,29 +145,24 @@ def test_run_parallel_with_context_falls_back_when_not_safe_to_fork():
         parallelizer.shutdown()
 
 
-def test_run_parallel_with_context_runs_in_process_when_not_safe_to_fork_and_many_tasks():
-    # Without fork+COW (Windows, always - or a caller that isn't
-    # single-threaded), sending a large `context` to every worker via the
-    # pool initializer doesn't scale (see run_parallel_with_context()'s
-    # comments for the measurements). Above the task-count threshold used
-    # as a size proxy, this must skip multiprocessing for the call
-    # entirely rather than duplicate `context` into a whole pool of
-    # workers - the same protection html_generator.py's now-removed
-    # document-count cutoff used to provide unconditionally.
-    parallelizer = MultiprocessingParallelizer()
+def test_run_parallel_with_context_runs_in_process_when_dynamic_and_many_tasks():
+    # A dynamic Parallelizer never uses "fork" (see __init__), so a large
+    # `context` sent to every worker via the pool initializer doesn't scale
+    # (see run_parallel_with_context()'s comments for the measurements).
+    # Above the task-count threshold used as a size proxy, this must skip
+    # multiprocessing for the call entirely rather than duplicate `context`
+    # into a whole pool of workers - the same protection html_generator.py's
+    # now-removed document-count cutoff used to provide unconditionally.
+    parallelizer = MultiprocessingParallelizer(dynamic=True)
 
     try:
         many_items = list(range(30))
 
-        with mock.patch(
-            "strictdoc.helpers.parallelizer._can_fork_safely",
-            return_value=False,
-        ):
-            output_items = parallelizer.run_parallel_with_context(
-                many_items,
-                child_process_that_reads_the_worker_context,
-                "large-fallback-context",
-            )
+        output_items = parallelizer.run_parallel_with_context(
+            many_items,
+            child_process_that_reads_the_worker_context,
+            "large-fallback-context",
+        )
 
         assert output_items == ["large-fallback-context"] * len(many_items)
     finally:

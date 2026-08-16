@@ -5,7 +5,6 @@ Run StrictDoc child tasks as separate processes.
 """
 
 import multiprocessing
-import threading
 from abc import ABC, abstractmethod
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from typing import Any, Callable, Iterable, List, Optional, Tuple
@@ -19,14 +18,15 @@ from strictdoc.helpers.exception import (
 MultiprocessingLambdaType = Callable[[Any], Any]
 
 # Where run_parallel_with_context() cannot use the fork+copy-on-write fast
-# path (Windows, always - or a caller that is not single-threaded when it
-# runs), this caps how many tasks it will still dispatch via the
-# pool-initializer mechanism before falling back to running in-process
-# instead. Task count is only a rough proxy for the size of the shared
-# `context` object actually being duplicated per worker, but this is the
-# same document-count cutoff (25) html_generator.py used to apply
-# unconditionally before the fork+COW path existed - see
-# run_parallel_with_context() below for the measurements behind it.
+# path (Windows, always - or a dynamic MultiprocessingParallelizer, which
+# never uses "fork" - see MultiprocessingParallelizer.__init__()), this caps
+# how many tasks it will still dispatch via the pool-initializer mechanism
+# before falling back to running in-process instead. Task count is only a
+# rough proxy for the size of the shared `context` object actually being
+# duplicated per worker, but this is the same document-count cutoff (25)
+# html_generator.py used to apply unconditionally before the fork+COW path
+# existed - see run_parallel_with_context() below for the measurements
+# behind it.
 _LARGE_CONTEXT_FALLBACK_THRESHOLD = 25
 
 # Set once per worker process by _init_worker_context() (either via a pool
@@ -53,18 +53,6 @@ def get_worker_context() -> Any:
     return _worker_context_box[0]
 
 
-def _can_fork_safely() -> bool:
-    """
-    Forking a *multithreaded* process risks a deadlock (a lock held by a
-    thread that doesn't exist in the child), not forking per se. "fork" is
-    also simply unavailable on some platforms (Windows).
-    """
-    return (
-        threading.active_count() == 1
-        and "fork" in multiprocessing.get_all_start_methods()
-    )
-
-
 def processing_func_wrapper(
     func: MultiprocessingLambdaType, input_arg: Any
 ) -> Tuple[Optional[Any], Optional[StrictDocChildProcessException]]:
@@ -77,9 +65,17 @@ def processing_func_wrapper(
 
 class Parallelizer(ABC):
     @staticmethod
-    def create(parallelize: bool) -> "Parallelizer":
+    def create(parallelize: bool, *, dynamic: bool = False) -> "Parallelizer":
+        """
+        `dynamic` must reflect whether the calling process is known to stay
+        single-threaded for as long as this Parallelizer lives (a one-shot
+        CLI export - `dynamic=False`) or not (a long-lived, multithreaded
+        process such as the dev server - `dynamic=True`). See
+        MultiprocessingParallelizer.__init__() for what this controls; it is
+        a fixed, static choice, not re-evaluated at runtime.
+        """
         if parallelize:
-            return MultiprocessingParallelizer()
+            return MultiprocessingParallelizer(dynamic=dynamic)
         return NullParallelizer()
 
     @abstractmethod
@@ -87,7 +83,15 @@ class Parallelizer(ABC):
         self,
         contents: List[Any],
         processing_func: MultiprocessingLambdaType,
+        on_item_complete: Optional[Callable[[int, Any], None]] = None,
     ) -> Iterable[Any]:
+        """
+        `on_item_complete`, if given, is called from the caller's own
+        process as each item finishes (in completion order, not submission
+        order), with the item's original index into `contents` and its
+        result - e.g. to drive a live progress indicator without adding a
+        return-value contract of its own.
+        """
         raise NotImplementedError
 
     @abstractmethod
@@ -96,6 +100,7 @@ class Parallelizer(ABC):
         contents: List[Any],
         processing_func: MultiprocessingLambdaType,
         context: Any,
+        on_item_complete: Optional[Callable[[int, Any], None]] = None,
     ) -> Iterable[Any]:
         """
         Like run_parallel(), but `context` is sent to each worker process
@@ -111,7 +116,35 @@ class Parallelizer(ABC):
 
 
 class MultiprocessingParallelizer(Parallelizer):
-    def __init__(self) -> None:
+    def __init__(self, *, dynamic: bool = False) -> None:
+        """
+        `dynamic` is a fixed, one-time choice for this instance's whole
+        lifetime - never re-evaluated per call:
+
+        - dynamic=False (a one-shot CLI export): the process is single-
+          threaded for as long as this Parallelizer lives, so "fork" is
+          always safe on POSIX (cheapest option - no fresh interpreter
+          startup or module re-import per worker, just a copy-on-write
+          clone of this already-warmed-up process).
+        - dynamic=True (a long-lived, multithreaded process, e.g. the dev
+          server): forking a multithreaded process risks a deadlock (a
+          lock held by a thread that doesn't exist in the child), so use
+          "forkserver" instead (cheap forks from a clean, single-threaded
+          server process it maintains separately).
+
+        Neither is available on Windows, where "spawn" is used regardless
+        of `dynamic`.
+
+        Exception: PyInstaller/Nuitka-frozen binaries. "spawn"/"forkserver"
+        re-invoke sys.executable with an internal bootstrap command line,
+        but for a frozen binary sys.executable is the strictdoc executable
+        itself, so that bootstrap string gets parsed by strictdoc's own
+        argparse CLI and fails (e.g. "invalid choice: 'from
+        multiprocessing.forkserver import main; ...'"). The Python docs
+        confirm "spawn"/"forkserver" generally cannot be used with frozen
+        executables on POSIX and that "fork" may work there instead. So
+        frozen binaries keep the "fork" default regardless of `dynamic`.
+        """
         process_number: int = multiprocessing.cpu_count()
 
         if environment.is_github_ci_windows():  # pragma: no cover
@@ -124,29 +157,18 @@ class MultiprocessingParallelizer(Parallelizer):
             )
             process_number = 2
 
-        # The implicit "fork" start method forks the whole (multithreaded)
-        # interpreter and is deprecated by CPython since 3.12 (raises
-        # DeprecationWarning) because it can deadlock in a threaded process;
-        # CPython 3.14 switched the POSIX default to "forkserver" for this
-        # reason. Use "forkserver" where available (cheap forks from a
-        # clean, single-threaded server process) and fall back to "spawn"
-        # elsewhere (e.g., Windows).
-        #
-        # Exception: PyInstaller/Nuitka-frozen binaries. "spawn"/"forkserver"
-        # re-invoke sys.executable with an internal bootstrap command line,
-        # but for a frozen binary sys.executable is the strictdoc executable
-        # itself, so that bootstrap string gets parsed by strictdoc's own
-        # argparse CLI and fails (e.g. "invalid choice: 'from
-        # multiprocessing.forkserver import main; ...'"). The Python docs
-        # confirm "spawn"/"forkserver" generally cannot be used with frozen
-        # executables on POSIX and that "fork" may work there instead. So
-        # frozen binaries keep the "fork" default.
         if environment.is_binary_dist:
             start_method = "fork"
-        else:
+        elif dynamic:
             start_method = (
                 "forkserver"
                 if "forkserver" in multiprocessing.get_all_start_methods()
+                else "spawn"
+            )
+        else:
+            start_method = (
+                "fork"
+                if "fork" in multiprocessing.get_all_start_methods()
                 else "spawn"
             )
         self.process_number = process_number
@@ -159,6 +181,7 @@ class MultiprocessingParallelizer(Parallelizer):
         self,
         contents: List[Any],
         processing_func: MultiprocessingLambdaType,
+        on_item_complete: Optional[Callable[[int, Any], None]] = None,
     ) -> Iterable[Any]:
         try:
             future_to_index = {
@@ -175,6 +198,8 @@ class MultiprocessingParallelizer(Parallelizer):
                 if result[1] is not None:
                     raise result[1]
                 results[idx] = result[0]
+                if on_item_complete is not None:
+                    on_item_complete(idx, result[0])
 
             return results
         except Exception as e:
@@ -185,14 +210,8 @@ class MultiprocessingParallelizer(Parallelizer):
         contents: List[Any],
         processing_func: MultiprocessingLambdaType,
         context: Any,
+        on_item_complete: Optional[Callable[[int, Any], None]] = None,
     ) -> Iterable[Any]:
-        # shutdown(wait=True) joins the previous pool's management/feeder
-        # threads. In the common case (a one-shot CLI export) that leaves
-        # the process single-threaded, which is what _can_fork_safely()
-        # needs to be true. But this parallelizer can also be reused inside
-        # a long-lived process (e.g. the dev server, or a test suite that
-        # keeps other threads around), where that does not hold - hence
-        # checking rather than assuming.
         self.executor.shutdown(wait=True)
 
         # `context` (e.g. a whole traceability index) can be large - tens to
@@ -206,37 +225,55 @@ class MultiprocessingParallelizer(Parallelizer):
         # export to run ~3.5x SLOWER than sequential on one real, large
         # document tree).
         #
-        # Where it's safe to fork, sidestep this entirely: set the context
-        # in this (parent) process, then fork. Forked children share the
-        # already-built object graph via copy-on-write - no pickling of
+        # Where self.mp_context is "fork" (always true for a non-dynamic
+        # Parallelizer, see __init__ above), sidestep this entirely: set the
+        # context in this (parent) process, then fork. Forked children share
+        # the already-built object graph via copy-on-write - no pickling of
         # `context` at all, and no redundant per-worker reconstruction.
-        # Measured effect on the same 138MB-index tree: export dropped from
-        # ~98s to ~15s, faster than not parallelizing.
-        if _can_fork_safely():
+        # Measured effect on a 138MB-index tree: export dropped from ~98s to
+        # ~15s, faster than not parallelizing.
+        #
+        # The shutdown() above and the rebuild below are both required, not
+        # just leftover caution: ProcessPoolExecutor workers, once forked,
+        # are long-lived - they don't re-fork per task. If self.executor
+        # still held workers forked before _init_worker_context(context)
+        # ran (e.g. left over from an earlier run_parallel() call for
+        # document reading), those workers' memory would never see the
+        # newly-set _worker_context_box[0], since copy-on-write sharing
+        # only happens at the moment of forking. So new workers must be
+        # forked after the context is set in the parent - which means
+        # throwing away any existing pool and creating a new one.
+        if self.mp_context.get_start_method() == "fork":
             _init_worker_context(context)
             self.executor = ProcessPoolExecutor(
-                max_workers=self.process_number,
-                mp_context=multiprocessing.get_context("fork"),
+                max_workers=self.process_number, mp_context=self.mp_context
             )
-            return self.run_parallel(contents, processing_func)
+            return self.run_parallel(
+                contents, processing_func, on_item_complete
+            )
 
-        # Not safe to fork here (other threads are alive), or fork isn't
-        # available at all (Windows - the measured regression above is not
-        # a POSIX-only curiosity, it applies there unconditionally, every
-        # time, regardless of tree size). Below a modest number of tasks,
-        # sending `context` once per worker via the pool initializer is
-        # still fine (process_number pickles, not one per task). Above it,
-        # skip multiprocessing for this call entirely and run in-process:
-        # this is the same safety net this parallelizer relied on (as a
-        # document-count cutoff one level up, in html_generator.py) before
-        # the fork+COW path existed, now scoped to exactly the cases that
-        # cannot use that path.
+        # "forkserver"/"spawn" (a dynamic Parallelizer, or Windows - the
+        # measured regression above is not a POSIX-only curiosity, it
+        # applies there unconditionally, every time, regardless of tree
+        # size). Below a modest number of tasks, sending `context` once per
+        # worker via the pool initializer is still fine (process_number
+        # pickles, not one per task). Above it, skip multiprocessing for
+        # this call entirely and run in-process: this is the same safety
+        # net this parallelizer relied on (as a document-count cutoff one
+        # level up, in html_generator.py) before the fork+COW path existed,
+        # now scoped to exactly the cases that cannot use that path.
         if len(contents) > _LARGE_CONTEXT_FALLBACK_THRESHOLD:
             self.executor = ProcessPoolExecutor(
                 max_workers=self.process_number, mp_context=self.mp_context
             )
             _init_worker_context(context)
-            return [processing_func(item) for item in contents]
+            results = []
+            for idx, item in enumerate(contents):
+                result = processing_func(item)
+                results.append(result)
+                if on_item_complete is not None:
+                    on_item_complete(idx, result)
+            return results
 
         self.executor = ProcessPoolExecutor(
             max_workers=self.process_number,
@@ -244,7 +281,7 @@ class MultiprocessingParallelizer(Parallelizer):
             initializer=_init_worker_context,
             initargs=(context,),
         )
-        return self.run_parallel(contents, processing_func)
+        return self.run_parallel(contents, processing_func, on_item_complete)
 
     def shutdown(self) -> None:
         self.executor.shutdown(wait=True)
@@ -255,10 +292,14 @@ class NullParallelizer(Parallelizer):
         self,
         contents: List[Any],
         processing_func: MultiprocessingLambdaType,
+        on_item_complete: Optional[Callable[[int, Any], None]] = None,
     ) -> Iterable[Any]:
         results = []
-        for content in contents:
-            results.append(processing_func(content))
+        for idx, content in enumerate(contents):
+            result = processing_func(content)
+            results.append(result)
+            if on_item_complete is not None:
+                on_item_complete(idx, result)
         return results
 
     def run_parallel_with_context(
@@ -266,9 +307,10 @@ class NullParallelizer(Parallelizer):
         contents: List[Any],
         processing_func: MultiprocessingLambdaType,
         context: Any,
+        on_item_complete: Optional[Callable[[int, Any], None]] = None,
     ) -> Iterable[Any]:
         _init_worker_context(context)
-        return self.run_parallel(contents, processing_func)
+        return self.run_parallel(contents, processing_func, on_item_complete)
 
     def shutdown(self) -> None:
         pass

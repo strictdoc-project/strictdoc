@@ -19,7 +19,7 @@ __pycache__
 /tests/screencast/temp/
 
 ### LIT/FileCheck integration tests' artifacts. ###
-/tests/integration/**/Output/**
+/tests/integration/**/[Oo]utput/**
 /tests/integration/**/sandbox/
 
 ### Coverage ###

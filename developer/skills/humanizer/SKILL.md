@@ -1,7 +1,7 @@
 ---
 name: humanizer
 description: |
-  Mandatory pass for any text this agent writes into a project artifact —
+  Mandatory pass for any text this agent writes into a project artifact:
   commit messages, PR descriptions, documentation, code comments, task
   files, chat replies saved to a file, anything shipped. Strips
   AI-writing tells. Required project-wide per AGENTS.md, not opt-in.

@@ -12,8 +12,12 @@ description: |
 
 Apply `humanizer_upstream.md` in this directory (vendored from
 github.com/blader/humanizer, MIT license, see `HUMANIZER_LICENSE`). Read
-it in full and apply it — this is the whole skill, there is no separate
-process here.
+it in full and apply it.
+
+Every check named in `humanizer_upstream.md` must be executed individually
+as its own action, with its result shown. A single overall reading of the
+text does not satisfy this requirement. The skill is not complete until
+every one of its named checks has been executed this way.
 
 Do not hand-edit `humanizer_upstream.md`. It is a wholesale vendor copy;
 project-specific voice rules belong in a separate file a task-specific

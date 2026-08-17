@@ -655,3 +655,38 @@ static void handle_softirqs()
 
     assert info.functions[0].name == "handle_softirqs()"
     assert info.functions[0].display_name == "handle_softirqs"
+
+
+def test_104_function_with_pointer_return_type():
+    """
+    Ensure that functions with pointer return types are detected.
+
+    https://github.com/strictdoc-project/strictdoc/issues/3119
+    """
+
+    input_string = b"""\
+SomeType *some_function(void)
+{
+    return NULL;
+}
+
+SomeType **some_function_double_pointer(void)
+{
+    return NULL;
+}
+
+SomeType *some_function_declaration(void);
+"""
+
+    reader = SourceFileTraceabilityReader_C()
+
+    info: SourceFileTraceabilityInfo = reader.read(
+        input_string, file_path="foo.c"
+    )
+
+    assert isinstance(info, SourceFileTraceabilityInfo)
+    assert len(info.functions) == 3
+
+    assert info.functions[0].display_name == "some_function"
+    assert info.functions[1].display_name == "some_function_double_pointer"
+    assert info.functions[2].display_name == "some_function_declaration"

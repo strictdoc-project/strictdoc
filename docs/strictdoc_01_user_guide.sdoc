@@ -4959,8 +4959,12 @@ TITLE: Markdown support (experimental)
 [TEXT]
 MID: 5ca22eb4638e4b13867a88176b217ce0
 STATEMENT: >>>
-Since 2026 Q1, StrictDoc supports reading Markdown documents and can recognize
-requirements and other traceable nodes according to the following syntax.
+StrictDoc supports Markdown as an input and output format for traceable
+documents. Markdown documents can contain sections, requirements, custom node
+types, metadata, and traceability relations.
+
+This section provides a short introduction. For custom node types, fields,
+grammars, and relations, see [LINK: SDOC_MARKDOWN_SPEC].
 
 **1. Minimal example:**
 
@@ -5002,7 +5006,9 @@ to a requirement statement.
 
     **UID**: REQ-2 \
     **Status**: Active \
-    **Relations**: REQ-1
+    **Relations**:
+    - **Type**: Parent \
+      **ID**: REQ-1
 
     **Statement**: The system shall show "Hello".
 
@@ -5010,18 +5016,9 @@ to a requirement statement.
 
 .. note::
 
-    The backward slashes are needed to ensure that, when browsing in non-StrictDoc Markdown browsers, the meta fields are rendered close to each other, forming a meta information block.
-
-Open points for a further implementation:
-
-- How to relate Markdown files with grammars. Use JSON schema, Pydantic or
-  similar?
-- How to support node types? The way forward seems to be via a dedicated meta
-  field ``Type: Requirement``.
-- The syntax for Parent vs Child relations as well as relation roles.
-
-The Markdown epic is tracked here:
-https://github.com/strictdoc-project/strictdoc/issues/1321.
+    The backward slashes are needed to ensure that, when browsing in
+    non-StrictDoc Markdown browsers, the meta fields are rendered close to each
+    other, forming a meta information block.
 <<<
 
 [[SECTION]]

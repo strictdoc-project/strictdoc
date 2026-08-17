@@ -1,6 +1,7 @@
 # Markdown Specification
 
 **Grammar**: Markdown.gra.md \
+**UID**: SDOC_MARKDOWN_SPEC \
 **Prefix**: MD-
 
 This specification defines a Markdown-based format for writing traceable

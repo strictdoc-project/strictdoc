@@ -156,24 +156,14 @@ class SourceFileTraceabilityReader_C:
                                 )
 
             elif node_.type in ("declaration", "field_declaration"):
-                function_declarator_node = ts_find_child_node_by_type(
-                    node_, "function_declarator"
+                # Pointer return types ("SomeType *foo();") and C++
+                # reference declarations ("TrkVertex& operator-=(...);")
+                # wrap the function declarator one or more times.
+                function_declarator_node = self._find_function_declarator_node(
+                    node_
                 )
-
-                # C++ reference declaration wrap the function declaration one time.
                 if function_declarator_node is None:
-                    # Example: "TrkVertex& operator-=(const TrkVertex& c);".
-                    reference_declarator_node = ts_find_child_node_by_type(
-                        node_, "reference_declarator"
-                    )
-                    if reference_declarator_node is None:
-                        continue
-
-                    function_declarator_node = ts_find_child_node_by_type(
-                        reference_declarator_node, "function_declarator"
-                    )
-                    if function_declarator_node is None:
-                        continue
+                    continue
 
                 # For normal C functions the identifier is "identifier".
                 # For C++, there are:
@@ -277,27 +267,20 @@ class SourceFileTraceabilityReader_C:
             elif node_.type == "function_definition":
                 function_name = ""
 
+                # Pointer return types ("SomeType *foo() { ... }") and C++
+                # reference declarations ("Foo& Foo::operator+(...) {...}")
+                # wrap the function declarator one or more times.
                 try:
-                    function_declarator_node = ts_find_child_node_by_type(
-                        node_, "function_declarator", raise_on_error=True
+                    function_declarator_node = (
+                        self._find_function_declarator_node(
+                            node_, raise_on_error=True
+                        )
                     )
                 except LookupError:
                     # Probably confused by macro, skip node to avoid processing random subtrees.
                     continue
-                # C++ reference declaration wrap the function declaration one time.
                 if function_declarator_node is None:
-                    # Example: Foo& Foo::operator+(const Foo& c) { return *this; }
-                    reference_declarator_node = ts_find_child_node_by_type(
-                        node_, "reference_declarator"
-                    )
-                    if reference_declarator_node is None:
-                        continue
-
-                    function_declarator_node = ts_find_child_node_by_type(
-                        reference_declarator_node, "function_declarator"
-                    )
-                    if function_declarator_node is None:
-                        continue
+                    continue
 
                 assert function_declarator_node is not None, node_.text
 
@@ -471,6 +454,32 @@ class SourceFileTraceabilityReader_C:
             sdoc_content = file.read()
             sdoc = self.read(sdoc_content, file_path=file_path)
             return sdoc
+
+    @staticmethod
+    def _find_function_declarator_node(
+        node: Node, raise_on_error: bool = False
+    ) -> Optional[Node]:
+        """
+        Find a "function_declarator" among the node's children, descending
+        through "pointer_declarator" (pointer return types, e.g. "SomeType
+        *foo();") and "reference_declarator" (C++ reference return types,
+        e.g. "TrkVertex& foo();") wrappers, which may be nested (e.g.
+        "SomeType **foo();").
+        """
+        function_declarator_node = ts_find_child_node_by_type(
+            node, "function_declarator", raise_on_error=raise_on_error
+        )
+        if function_declarator_node is not None:
+            return function_declarator_node
+
+        for wrapper_type_ in ("pointer_declarator", "reference_declarator"):
+            wrapper_node = ts_find_child_node_by_type(node, wrapper_type_)
+            if wrapper_node is not None:
+                return SourceFileTraceabilityReader_C._find_function_declarator_node(
+                    wrapper_node, raise_on_error=raise_on_error
+                )
+
+        return None
 
     @staticmethod
     def _get_function_name_node(

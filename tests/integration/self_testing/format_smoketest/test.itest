@@ -1,17 +1,21 @@
 REQUIRES: PLATFORM_IS_NOT_WINDOWS
 
 #
-# Smoke test: run format against StrictDoc's own docs/ twice to verify that
+# Smoke test: run format against StrictDoc's own docs/ and spec/ twice:
 # (1) formatting succeeds on real documentation and (2) the formatter is
 # idempotent (a second pass produces no changes).
 #
 
 RUN: cp -r %strictdoc_root/docs %T/docs
+RUN: cp -r %strictdoc_root/spec %T/spec
 
-RUN: %strictdoc format %T/docs
+RUN: %strictdoc format %T
 
-RUN: cp -r %T/docs %T/docs_pass2
+RUN: mkdir -p %T_pass2
+RUN: cp -r %T/docs %T_pass2/docs
+RUN: cp -r %T/spec %T_pass2/spec
 
-RUN: %strictdoc format %T/docs_pass2
+RUN: %strictdoc format %T_pass2
 
-RUN: diff -r %T/docs %T/docs_pass2
+RUN: diff -r %T/docs %T_pass2/docs
+RUN: diff -r %T/spec %T_pass2/spec

@@ -1,5 +1,5 @@
 RUN: %strictdoc --debug export %S --output-dir %T/ | filecheck %s --dump-input=fail --check-prefix CHECK-EXPORT
-CHECK-EXPORT: Published: <b>"escaping"&nbsp;'document title'</b>
+CHECK-EXPORT: Export to HTML: <b>"escaping"&nbsp;'document title'</b>
 
 RUN: %cat %T/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-INDEX
 RUN: %cat %T/html/traceability_matrix.html | filecheck %s --dump-input=fail --check-prefix CHECK-TRACEABILITY-MATRIX

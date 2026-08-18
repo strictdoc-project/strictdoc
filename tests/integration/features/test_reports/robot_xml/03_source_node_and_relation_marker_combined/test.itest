@@ -1,6 +1,6 @@
 RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
-CHECK-DAG: Published: Requirements
-CHECK-DAG: Published: Test Specification
+CHECK-DAG: Export to HTML: Requirements
+CHECK-DAG: Export to HTML: Test Specification
 CHECK: Export completed
 
 # The TEST_CASE node auto-linked to both the requirement it verifies

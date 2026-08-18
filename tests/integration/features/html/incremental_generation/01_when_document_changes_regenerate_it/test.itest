@@ -4,7 +4,7 @@
 
 RUN: %strictdoc --debug export %S --output-dir %T --no-parallelization | filecheck %s --dump-input=fail --check-prefix=CHECK-FIRST
 CHECK-FIRST: Build search index
-CHECK-FIRST: Published: Parent doc
+CHECK-FIRST: Export to HTML: Parent doc
 CHECK-FIRST-NOT: All documents are up-to-date. Skipping the generation of the tree map screen.
 
 RUN: %strictdoc --debug export %S --output-dir %T --no-parallelization | filecheck %s --dump-input=fail --check-prefix=CHECK-SECOND
@@ -15,5 +15,5 @@ CHECK-SECOND: All documents are up-to-date. Skipping the generation of the tree 
 RUN: %touch %S/parent.sdoc
 RUN: %strictdoc --debug export %S --output-dir %T --no-parallelization | filecheck %s --dump-input=fail --check-prefix=CHECK-THIRD
 CHECK-THIRD: Build search index
-CHECK-THIRD: Published: Parent doc
+CHECK-THIRD: Export to HTML: Parent doc
 CHECK-THIRD-NOT: All documents are up-to-date. Skipping the generation of the tree map screen.

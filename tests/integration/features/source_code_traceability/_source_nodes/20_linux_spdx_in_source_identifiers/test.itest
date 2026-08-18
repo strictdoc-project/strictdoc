@@ -4,7 +4,7 @@
 
 RUN: %strictdoc --debug export %S --output-dir %T | filecheck %s
 
-CHECK: Published: Hello world doc
+CHECK: Export to HTML: Hello world doc
 
 RUN: %check_exists --file "%T/html/_source_files/src/example/example.c.html"
 

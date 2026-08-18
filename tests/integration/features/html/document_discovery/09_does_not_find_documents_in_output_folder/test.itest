@@ -3,5 +3,5 @@ RUN: %mkdir %T/Output
 RUN: %cp %S/input/input.sdoc %T/input/input.sdoc
 RUN: %cp %S/input2.sdoc_ %T/Output/input2.sdoc
 RUN: %strictdoc --debug export %T --no-parallelization --output-dir %T/Output | filecheck %s --dump-input=fail
-CHECK-NOT: Published: Hello world doc 2
-CHECK: Published: Hello world doc 1
+CHECK-NOT: Export to HTML: Hello world doc 2
+CHECK: Export to HTML: Hello world doc 1

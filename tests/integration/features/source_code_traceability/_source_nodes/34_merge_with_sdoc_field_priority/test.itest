@@ -17,7 +17,7 @@
 
 RUN: %strictdoc --debug export %S --output-dir %T | filecheck %s
 
-CHECK: Published: Requirements from Source Nodes
+CHECK: Export to HTML: Requirements from Source Nodes
 
 RUN: %cat %T/html/%THIS_TEST_FOLDER/source_node_base.html | filecheck %s --check-prefix CHECK-HTML
 

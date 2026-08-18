@@ -69,7 +69,7 @@ def test_tty_trailing_newline_is_emitted_even_if_loop_raises(
     assert captured.out.count("\n") == 1
 
 
-def test_non_tty_prints_only_a_single_summary_line(monkeypatch, capsys):
+def test_non_tty_prints_summary_line_then_a_dot_per_item(monkeypatch, capsys):
     monkeypatch.setattr(environment, "is_debug_mode", False)
     monkeypatch.setattr(sys.stdout, "isatty", lambda: False)
 
@@ -80,4 +80,25 @@ def test_non_tty_prints_only_a_single_summary_line(monkeypatch, capsys):
 
     captured = capsys.readouterr()
 
-    assert captured.out == "Reading items: 5...\n"
+    assert captured.out == "Reading items: 5 tasks\n.....\n"
+
+
+def test_non_tty_trailing_newline_is_emitted_even_if_loop_raises(
+    monkeypatch, capsys
+):
+    monkeypatch.setattr(environment, "is_debug_mode", False)
+    monkeypatch.setattr(sys.stdout, "isatty", lambda: False)
+
+    class BoomError(Exception):
+        pass
+
+    with pytest.raises(BoomError):
+        with measure_performance_loop("Reading items", 2) as report_progress:
+            with report_progress("item one"):
+                pass
+            with report_progress("item two"):
+                raise BoomError
+
+    captured = capsys.readouterr()
+
+    assert captured.out == "Reading items: 2 tasks\n.\n"

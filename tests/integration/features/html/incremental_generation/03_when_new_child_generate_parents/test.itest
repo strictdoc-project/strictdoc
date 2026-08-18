@@ -7,27 +7,27 @@ RUN: %mkdir %S/sandbox
 RUN: %cp %S/parent.sdoc %S/sandbox/
 
 RUN: %strictdoc --debug export %S/sandbox --output-dir %T --no-parallelization | filecheck %s --dump-input=fail --check-prefix=CHECK-FIRST
-CHECK-FIRST: Published: Parent doc
+CHECK-FIRST: Export to HTML: Parent doc
 
 RUN: %strictdoc --debug export %S/sandbox --output-dir %T --no-parallelization | filecheck %s --dump-input=fail --check-prefix=CHECK-SECOND
 CHECK-SECOND: Skip: Parent doc
 
 RUN: %cp %S/child.sdoc %S/sandbox/child.sdoc
 RUN: %strictdoc --debug export %S/sandbox --output-dir %T --no-parallelization | filecheck %s --dump-input=fail --check-prefix=CHECK-THIRD
-CHECK-THIRD: Published: Child doc
-CHECK-THIRD: Published: Parent doc
+CHECK-THIRD: Export to HTML: Child doc
+CHECK-THIRD: Export to HTML: Parent doc
 
 RUN: %cp %S/grandchild.sdoc %S/sandbox/grandchild.sdoc
 RUN: %strictdoc --debug export %S/sandbox --output-dir %T --no-parallelization | filecheck %s --dump-input=fail --check-prefix=CHECK-FOURTH
 CHECK-FOURTH: Skip: Parent doc
-CHECK-FOURTH: Published: Child doc
-CHECK-FOURTH: Published: Grandchild doc
+CHECK-FOURTH: Export to HTML: Child doc
+CHECK-FOURTH: Export to HTML: Grandchild doc
 
 RUN: rm %S/sandbox/grandchild.sdoc
 RUN: %strictdoc --debug export %S/sandbox --output-dir %T --no-parallelization | filecheck %s --dump-input=fail --check-prefix=CHECK-FIFTH
 CHECK-FIFTH: Skip: Parent doc
-CHECK-FIFTH: Published: Child doc
+CHECK-FIFTH: Export to HTML: Child doc
 
 RUN: rm %S/sandbox/child.sdoc
 RUN: %strictdoc --debug export %S/sandbox --output-dir %T --no-parallelization | filecheck %s --dump-input=fail --check-prefix=CHECK-SIXTH
-CHECK-SIXTH: Published: Parent doc
+CHECK-SIXTH: Export to HTML: Parent doc

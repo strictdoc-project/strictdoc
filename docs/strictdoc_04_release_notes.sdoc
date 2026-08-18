@@ -76,6 +76,13 @@ slowest, largest one.
 memory: worker processes now get the traceability index and HTML generator
 through fork() with copy-on-write instead of through a pickled pool
 initializer which makes the entire process much faster on Linux and macOS.
+
+5\) The C/C++ source file reader now recognizes function declarations that
+return a function pointer.
+
+6\) Fixed: ``pygments`` is now pinned to a specific version to avoid
+inconsistent syntax highlighting of source files caused by unpinned
+upstream releases.
 <<<
 
 [[/SECTION]]

@@ -194,7 +194,7 @@ class HTMLGenerator:
 
         if len(documents_to_export) > 0:
             with measure_performance_loop(
-                "Published", len(documents_to_export)
+                "Export to HTML", len(documents_to_export)
             ) as report_progress:
 
                 def on_item_complete(_: int, result: Tuple[str, float]) -> None:

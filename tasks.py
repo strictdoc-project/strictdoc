@@ -176,6 +176,7 @@ def server(context, input_path=".", config=None, port=None):
                     --reload
                     --watch
         """,
+        pty=True,
     )
 
 

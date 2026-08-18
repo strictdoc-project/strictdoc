@@ -80,7 +80,8 @@ def measure_performance_loop(
     printed, so existing --debug output is unaffected. Otherwise, if stdout
     is a terminal, prints a single line that is overwritten in place for
     each item; if stdout is not a terminal (piped/redirected), prints one
-    summary line up front and stays silent per item.
+    summary line up front, then a "." per completed item, ending with a
+    newline once the loop is done.
 
     Usage is normally `with report_progress(title): ...`, timing the body
     of the `with` block. When the work already happened elsewhere (e.g. in
@@ -94,7 +95,7 @@ def measure_performance_loop(
     printed_progress_line = False
 
     if not is_debug_mode and not is_tty:
-        print(f"{prefix}: {total}...", flush=True)  # noqa: T201
+        print(f"{prefix}: {total} tasks", flush=True)  # noqa: T201
 
     @contextlib.contextmanager
     def report_progress(
@@ -131,6 +132,8 @@ def measure_performance_loop(
             return
 
         if not is_tty:
+            print(".", end="", flush=True)  # noqa: T201
+            printed_progress_line = True
             return
 
         display_title = short_title if short_title is not None else title

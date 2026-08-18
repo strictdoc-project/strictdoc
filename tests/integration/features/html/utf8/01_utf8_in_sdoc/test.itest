@@ -1,8 +1,8 @@
-TODO: On Windows: Published: Hello world doc with UTF-8 symbols: \x96 ............ 0.35s\r\n
+TODO: On Windows: Export to HTML: Hello world doc with UTF-8 symbols: \x96 ............ 0.35s\r\n
 REQUIRES: PLATFORM_IS_NOT_WINDOWS
 
 RUN: %strictdoc --debug export %S --formats=html,rst --output-dir %T | filecheck %s --dump-input=fail
-CHECK: Published: Hello world doc with UTF-8 symbols: –
+CHECK: Export to HTML: Hello world doc with UTF-8 symbols: –
 
 RUN: %cat %T/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOCTREE
 CHECK-HTML-DOCTREE: Hello world doc with UTF-8 symbols: –

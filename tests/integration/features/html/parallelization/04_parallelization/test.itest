@@ -3,7 +3,7 @@
 #
 
 RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
-CHECK: Published: 10...
+CHECK: Export to HTML: 10 tasks
 
 RUN: %check_exists --file %T/html/04_parallelization/input1.html
 RUN: %check_exists --file %T/html/04_parallelization/input2.html

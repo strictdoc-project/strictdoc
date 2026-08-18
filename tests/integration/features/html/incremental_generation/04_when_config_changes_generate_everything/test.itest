@@ -3,9 +3,9 @@
 #
 
 RUN: %strictdoc --debug export %S --no-parallelization --config %S/strictdoc_config.py --output-dir %T | filecheck %s --dump-input=fail --check-prefix=CHECK-FIRST
-CHECK-FIRST: Published: Parent doc
-CHECK-FIRST: Published: Child doc
-CHECK-FIRST: Published: Grandchild doc
+CHECK-FIRST: Export to HTML: Parent doc
+CHECK-FIRST: Export to HTML: Child doc
+CHECK-FIRST: Export to HTML: Grandchild doc
 
 RUN: %strictdoc --debug export %S --no-parallelization --config %S/strictdoc_config.py --output-dir %T | filecheck %s --dump-input=fail --check-prefix=CHECK-SECOND
 RUN: %strictdoc --debug export %S --no-parallelization --config %S/strictdoc_config.py --output-dir %T | filecheck %s --dump-input=fail --check-prefix=CHECK-SECOND
@@ -15,6 +15,6 @@ CHECK-SECOND: Skip: Grandchild doc
 
 RUN: %touch %S/strictdoc_config.py
 RUN: %strictdoc --debug export %S --no-parallelization --config %S/strictdoc_config.py --output-dir %T | filecheck %s --dump-input=fail --check-prefix=CHECK-THIRD
-CHECK-THIRD: Published: Parent doc
-CHECK-THIRD: Published: Child doc
-CHECK-THIRD: Published: Grandchild doc
+CHECK-THIRD: Export to HTML: Parent doc
+CHECK-THIRD: Export to HTML: Child doc
+CHECK-THIRD: Export to HTML: Grandchild doc

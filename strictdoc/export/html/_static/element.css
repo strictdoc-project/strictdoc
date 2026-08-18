@@ -112,6 +112,7 @@ a.action_button:visited {
   padding-left: calc(var(--base-rhythm)*1.5);
   padding-right: calc(var(--base-rhythm)*1.5);
   min-height: calc(var(--base-rhythm)*4);
+  height: min-content; /* to prevent it from stretching inside the flex container */
   max-width: 100%;
 
   /* box-shadow: rgb(0 0 0 / 10%) 0px 1px 2px 0px; */
@@ -1357,6 +1358,7 @@ a.tree_item,
     content's intrinsic size and makes width: 99% overflow the parent on
     narrow viewports (flexbox min-width:auto pitfall). */
   min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .document_title[data-file_name]::after {
@@ -1367,6 +1369,7 @@ a.tree_item,
   width: 99%; /* To calculate cite overflow  */
   font-weight:400;
   opacity:0.6;
+  overflow-wrap: normal;
 }
 
 /** TOC **/
@@ -2048,4 +2051,3 @@ sdoc-node-content .field_issue-ribbon::before {
 .icon-checkbox input[type="checkbox"]:not(:checked) ~ * {
   color: var(--color-fg-secondary);
 }
-

@@ -77,6 +77,18 @@
   </a>
 {%- endif -%}
 
+{%- if view_object.project_config.is_activated_git_workspace() -%}
+  <a
+    data-link="git_workspace"
+    class="nav_button"
+    href="{{ view_object.render_url('git_workspace') }}"
+    title="Git"
+    data-testid="project-tree-link-git-workspace"
+  >
+    G
+  </a>
+{%- endif -%}
+
 {%- if view_object.project_config.is_activated_tree_map() -%}
   <a
     data-link="tree_map"

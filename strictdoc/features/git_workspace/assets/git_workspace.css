@@ -1,0 +1,81 @@
+[data-testid="git-workspace-status-table"] {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+[data-testid="git-workspace-status-row"] td {
+  padding: 0.25rem 0.5rem;
+}
+
+[data-testid="git-workspace-status-row-conflicted"] {
+  color: var(--color-fg-danger, #b3261e);
+  font-weight: bold;
+}
+
+/*
+ * Git conflicts screen: two-column layout mirroring the Diff screen
+ * (features/diff_and_changelog/assets/diff.css), reusing its
+ * .diff_column/.diff_inner/.diff_content/.diff_document/.diff_node/
+ * .diff_node_fields/.diff_node_field/.sdoc_pre_content/.badge classes
+ * directly -- diff.css must be linked on this screen (see
+ * conflicts_index.jinja) for those to apply. This class only supplies the
+ * two-column grid itself, since .diff's own grid also reserves a row for
+ * Diff-screen-specific revision controls this screen doesn't have.
+ */
+.git_conflicts_diff {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--base-rhythm);
+  min-height: 0;
+}
+
+.git_conflicts_diff .diff_column {
+  min-height: 40vh;
+}
+
+[data-testid="git-conflicts-counter"] {
+  font-weight: 700;
+}
+
+[data-testid="git-conflicts-node-resolved"] {
+  color: var(--color-fg-accent);
+  font-size: var(--font-size-sm);
+}
+
+/* SDOC-SRS-215 sub-scenario 2: drag-and-drop placement of a genuinely-new
+ * (auto-merged, non-conflicting) node from the left/incoming column onto a
+ * drop zone in the right/target column. */
+.git_conflicts_diff [draggable="true"] {
+  cursor: grab;
+}
+
+.git_conflicts_diff [draggable="true"]:active {
+  cursor: grabbing;
+}
+
+.git_conflicts_drop_zone {
+  height: 6px;
+  margin: 2px 0;
+  border-radius: 3px;
+}
+
+.git_conflicts_drop_zone--active {
+  height: 10px;
+  background: var(--color-fg-accent, #b3261e);
+  opacity: 0.5;
+}
+
+/* SDOC-SRS-218: pending-synchronization banner on the Git Workspace screen. */
+[data-testid="git-workspace-pending-sync-banner"] {
+  display: flex;
+  align-items: center;
+  gap: var(--base-rhythm);
+  border: 1px solid var(--color-fg-accent, #b3261e);
+  border-radius: 4px;
+  padding: var(--base-rhythm);
+}
+
+[data-testid="git-workspace-pending-sync-banner"] .sdoc-form-message {
+  flex-grow: 1;
+  margin: 0;
+}

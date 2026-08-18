@@ -37,7 +37,6 @@ from starlette.responses import (
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
 from strictdoc.backend.json.json_generator import JSONGenerator
-from strictdoc.backend.markdown.writer import SDMarkdownWriter
 from strictdoc.backend.reqif.p01_sdoc.reqif_to_sdoc_converter import (
     P01_ReqIFToSDocConverter,
 )
@@ -61,7 +60,6 @@ from strictdoc.backend.sdoc.models.model import (
 from strictdoc.backend.sdoc.models.node import (
     SDocNode,
 )
-from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     SourceFileTraceabilityInfo,
 )
@@ -169,6 +167,7 @@ from strictdoc.server.document_watcher import (
     get_watched_document_extensions,
 )
 from strictdoc.server.error_object import ErrorObject
+from strictdoc.server.helpers.document_writer import DocumentWriter
 from strictdoc.server.helpers.hierarchical_rw_lock_manager import (
     HierarchicalRWLockManager,
 )
@@ -307,42 +306,8 @@ def create_main_router(
         export_output_html_root=project_config.export_output_html_root,
     )
 
-    sdoc_writer = SDWriter(project_config)
-
-    def write_document_to_file(document: SDocDocument) -> None:
-        """
-        FIXME: Factorize this into an OOP class.
-
-        FIXME: The writer dispatch below is hardcoded to ".md"/".markdown"
-        vs. everything else, not derived from project_config.formats /
-        Format.supports_edit(). Document creation now accepts any editable
-        format's extension (see ProjectConfig.get_editable_document_extensions()),
-        so a third editable format would pass creation validation but get
-        silently mis-written here.
-        """
-
-        assert isinstance(document, SDocDocument)
-
-        # Inhibit before writing so the watcher's debounce always fires into
-        # an already-suppressed state — no race window between write and hash.
-        if document.meta is not None:
-            document_watcher = getattr(app.state, "document_watcher", None)
-            if document_watcher is not None:
-                document_watcher.inhibit_next_change(
-                    document.meta.input_doc_full_path
-                )
-
-        if (
-            document.meta is not None
-            and document.meta.input_doc_full_path.lower().endswith(
-                (".md", ".markdown")
-            )
-        ):
-            SDMarkdownWriter.write_to_file(
-                document, line_width=project_config.document_line_width
-            )
-        else:
-            sdoc_writer.write_to_file(document)
+    document_writer = DocumentWriter(project_config=project_config, app=app)
+    write_document_to_file = document_writer.write_document_to_file
 
     def env() -> JinjaEnvironment:
         return html_templates.jinja_environment()

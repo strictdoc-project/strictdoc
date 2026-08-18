@@ -1,0 +1,111 @@
+{#
+  Renders one node for one side ("incoming" or "target"), mirroring
+  features/diff_and_changelog/templates/features/diff_and_changelog/
+  node/requirement.jinja + fields/requirement_fields.jinja so the two
+  columns look like the Diff screen's. Expects `node` (ConflictNodeView)
+  and `side` in context (shares the including template's context, per
+  Jinja's default include behavior).
+#}
+{% set diff_side = "left" if side == "incoming" else "right" %}
+{% set is_draggable = side == "incoming" and node.is_draggable_from_incoming %}
+<details
+  class="diff_node"
+  {% if node.is_expanded_by_default %}open{% endif %}
+  {% if node.is_conflict %}modified="{{ diff_side }}"{% endif %}
+  {% if is_draggable %}draggable="true"{% endif %}
+  style="margin-left: {{ node.depth * 20 }}px"
+  data-testid="git-conflicts-node"
+  data-node-key="{{ node.key }}"
+>
+  <summary>
+    {%- with badge_text = node.node_type[0].upper() -%}
+      {%- include "components/badge/index.jinja" -%}
+    {%- endwith -%}
+    {#
+      Only a short, single-line label here -- never the full field content
+      (that lives in .diff_node_fields below, inside the collapsible
+      body). <summary> is always visible regardless of the node's
+      open/closed state, so putting full content here would make
+      collapsing a node (SDOC-SRS-221) have no visible effect for a TEXT
+      node with a long STATEMENT and no TITLE.
+    #}
+    {%- if node.classification == "unchanged" -%}
+      <span data-testid="git-conflicts-node-unchanged">{{ node.resolved_summary }}</span>
+    {%- elif node.classification == "auto_merged" -%}
+      {#
+        Show each side's own pre-merge content here, not the shared
+        resolved value -- rendering the same resolved text on both
+        columns made a real one-sided change (e.g. target still says
+        "111", incoming says "2222") look identical side-by-side, i.e.
+        indistinguishable from "nothing changed".
+      #}
+      <span data-testid="git-conflicts-node-auto-merged">&#10003; {{ node.incoming_summary if side == "incoming" else node.target_summary }}</span>
+    {%- elif side == "incoming" -%}
+      <span>{{ node.incoming_summary }}</span>
+    {%- else -%}
+      <span>{{ node.target_summary }}</span>
+    {%- endif -%}
+  </summary>
+
+  {% if node.is_conflict %}
+    <div class="diff_node_fields">
+      {% set field_diffs = node.incoming_field_diffs if side == "incoming" else node.target_field_diffs %}
+      {% for field_name, colored in field_diffs %}
+        <div class="diff_node_field" modified="{{ diff_side }}">
+          {%- with badge_text = field_name -%}
+            {%- include "components/badge/index.jinja" -%}
+          {%- endwith -%}
+          <span class="sdoc_pre_content">{{ colored }}</span>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% set decided = node.key in view_object.allocations %}
+    {% if decided %}
+      <span data-testid="git-conflicts-node-resolved">resolved: {{ view_object.allocations[node.key] }}</span>
+    {% else %}
+      <form action="/git_conflicts/resolve_node" method="POST" data-testid="git-conflicts-resolve-node-form">
+        <input type="hidden" name="target_branch" value="{{ view_object.target_branch }}"/>
+        <input type="hidden" name="node_key" value="{{ node.key }}"/>
+        {% if side == "incoming" %}
+          <button type="submit" name="decision" value="incoming" data-testid="git-conflicts-use-incoming-action">
+            {{ "Restore incoming's " ~ node.node_type ~ " node" if node.is_delete_modify else "Use incoming " ~ node.node_type ~ " node (your branch)" }}
+          </button>
+        {% else %}
+          <button type="submit" name="decision" value="target" data-testid="git-conflicts-use-target-action">
+            {{ "Confirm deletion of this " ~ node.node_type ~ " node" if node.is_delete_modify else "Use " ~ view_object.target_branch ~ " " ~ node.node_type ~ " node (target)" }}
+          </button>
+        {% endif %}
+      </form>
+    {% endif %}
+  {% else %}
+    {#
+      Unchanged/auto-merged: no sides to compare, but the full field
+      content still needs a home other than <summary> so that collapsing
+      the node (SDOC-SRS-221) actually hides it.
+    #}
+    <div class="diff_node_fields">
+      {% set fields = node.incoming_fields if side == "incoming" else node.target_fields %}
+      {% for field_name, value in fields %}
+        <div class="diff_node_field">
+          {%- with badge_text = field_name -%}
+            {%- include "components/badge/index.jinja" -%}
+          {%- endwith -%}
+          <span class="sdoc_pre_content">{{ value }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% if node.is_section and node.has_conflicting_descendant %}
+    <form action="/git_conflicts/resolve_section" method="POST" data-testid="git-conflicts-resolve-section-form">
+      <input type="hidden" name="target_branch" value="{{ view_object.target_branch }}"/>
+      <input type="hidden" name="section_key" value="{{ node.key }}"/>
+      {% if side == "incoming" %}
+        <button type="submit" name="decision" value="incoming" data-testid="git-conflicts-use-incoming-section-action">Use incoming for whole {{ node.node_type }} node</button>
+      {% else %}
+        <button type="submit" name="decision" value="target" data-testid="git-conflicts-use-target-section-action">Use target for whole {{ node.node_type }} node</button>
+      {% endif %}
+    </form>
+  {% endif %}
+</details>

@@ -154,6 +154,7 @@ exclude = ["tests/**/invalid_file*"]
 
 [lint.per-file-ignores]
 "strictdoc/server/routers/main_router.py" = ["B008"]
+"strictdoc/server/routers/other_router.py" = ["B008"]
 
 # Some of our helpers have deliberatly the name of a standard library module
 

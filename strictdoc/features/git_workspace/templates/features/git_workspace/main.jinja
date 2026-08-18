@@ -1,0 +1,110 @@
+<div class="main">
+
+  <div class="main_sticky_header">
+    <sdoc-form sticky>
+      <div data-testid="git-workspace-current-branch">
+        Current branch: <strong>{{ view_object.status.current_branch }}</strong>
+        {% if view_object.status.is_sync_pending %}
+          <span data-testid="git-workspace-rebase-in-progress">
+            (synchronization pending -- resolve conflicts to continue)
+          </span>
+        {% endif %}
+      </div>
+    </sdoc-form>
+
+    {% if view_object.status.is_sync_pending %}
+      {#
+        SDOC-SRS-218: surface a pending synchronization (e.g. left behind
+        by a server restart, or simply not yet committed/aborted) directly
+        on this screen, so the user never has to know or type the
+        /git_conflicts URL by hand.
+      #}
+      <sdoc-form data-testid="git-workspace-pending-sync-banner">
+        <div class="sdoc-form-message">
+          A synchronization is pending and has not been committed or aborted yet.
+        </div>
+        <a
+          href="{{ view_object.render_url('git_conflicts') }}?target_branch={{ view_object.target_branch }}"
+          data-testid="git-workspace-continue-sync-action"
+        >Continue synchronization</a>
+
+        <form action="/git_conflicts/abort" method="POST" data-testid="git-workspace-abort-sync-form">
+          <input type="hidden" name="target_branch" value="{{ view_object.target_branch }}"/>
+          <button type="submit" data-testid="git-workspace-abort-sync-action">Abort synchronization</button>
+        </form>
+      </sdoc-form>
+    {% endif %}
+
+    {% if view_object.message is not none %}
+      <div class="sdoc-form-message" data-testid="git-workspace-message">{{ view_object.message }}</div>
+    {% endif %}
+    {% if view_object.error_message is not none %}
+      <div class="sdoc-form-error" data-testid="git-workspace-error">{{ view_object.error_message }}</div>
+    {% endif %}
+  </div>
+
+  {% include "features/git_workspace/status_form.jinja" %}
+
+  <sdoc-form>
+    <form action="/git_workspace/branch" method="POST" data-testid="git-workspace-branch-form">
+      <input type="hidden" name="target_branch" value="{{ view_object.target_branch }}"/>
+      <label>
+        Switch to / create branch:
+        <input type="text" name="branch_name" placeholder="branch name" data-testid="git-workspace-branch-name-field"/>
+      </label>
+      <button type="submit" name="action" value="switch" data-testid="git-workspace-branch-switch-action">Switch</button>
+      <button type="submit" name="action" value="create" data-testid="git-workspace-branch-create-action">Create &amp; switch</button>
+    </form>
+  </sdoc-form>
+
+  <sdoc-form>
+    <form action="/git_workspace" method="GET" data-testid="git-workspace-target-branch-form">
+      <label>
+        Target branch:
+        <select name="target_branch" data-testid="git-workspace-target-branch-field">
+          {% for branch in view_object.status.branches %}
+            <option value="{{ branch }}" {% if branch == view_object.target_branch %}selected{% endif %}>{{ branch }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <button type="submit" data-testid="git-workspace-target-branch-submit">Set target branch</button>
+    </form>
+  </sdoc-form>
+
+  <sdoc-form>
+    {#
+      Synchronize is a rebase only: it never commits and never pushes.
+      Committing (above) and pushing (below) are separate, explicit steps.
+      Per SDOC-SRS-222, a completed synchronization is never a terminal
+      state -- the user can synchronize again any number of times before
+      pushing (e.g. the target branch keeps moving while they work), so
+      this button is only ever disabled for a dirty working tree or an
+      unresolved pending sync, never because a sync was just done.
+    #}
+    <form action="/git_workspace/sync" method="POST" data-testid="git-workspace-sync-form">
+      <input type="hidden" name="target_branch" value="{{ view_object.target_branch }}"/>
+      <label>
+        <input type="checkbox" name="fast_forward" value="true" data-testid="git-workspace-fast-forward-checkbox"/>
+        Skip review when there are no conflicts (fast-forward)
+      </label>
+      <button
+        type="submit"
+        {% if not view_object.status.is_clean or view_object.status.is_sync_pending %}disabled{% endif %}
+        data-testid="git-workspace-sync-action"
+      >Synchronize changes to the {{ view_object.target_branch }} branch</button>
+    </form>
+  </sdoc-form>
+
+  <sdoc-form>
+    <form action="/git_workspace/push" method="POST" data-testid="git-workspace-push-form">
+      <input type="hidden" name="target_branch" value="{{ view_object.target_branch }}"/>
+      <button type="submit" data-testid="git-workspace-push-action">Push</button>
+    </form>
+
+    <form action="/git_workspace/force_push" method="POST" data-testid="git-workspace-force-push-form">
+      <input type="hidden" name="target_branch" value="{{ view_object.target_branch }}"/>
+      <button type="submit" data-testid="git-workspace-force-push-action">Force push (overwrites the remote branch, use after a rebase)</button>
+    </form>
+  </sdoc-form>
+
+</div>

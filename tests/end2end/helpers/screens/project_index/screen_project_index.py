@@ -8,6 +8,9 @@ from tests.end2end.helpers.screens.diff.diff import Screen_Diff
 from tests.end2end.helpers.screens.document.screen_document import (
     Screen_Document,
 )
+from tests.end2end.helpers.screens.git_workspace.git_workspace import (
+    Screen_GitWorkspace,
+)
 from tests.end2end.helpers.screens.project_index.form_add_document import (
     Form_AddDocument,
 )
@@ -182,6 +185,12 @@ class Screen_ProjectIndex(Screen):  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
+    def assert_link_to_git_workspace_screen_present(self) -> None:
+        self.test_case.assert_element(
+            '//a[@data-testid="project-tree-link-git-workspace"]',
+            by=By.XPATH,
+        )
+
     def do_click_on_first_document(self) -> Screen_Document:
         self.test_case.click_xpath('//*[@data-testid="tree-file-link"]')
         return Screen_Document(self.test_case)
@@ -223,6 +232,14 @@ class Screen_ProjectIndex(Screen):  # pylint: disable=invalid-name
             '//a[@data-testid="project-tree-link-diff"]',
         )
         return Screen_Diff(self.test_case)
+
+    def do_click_on_git_workspace_screen_link(
+        self,
+    ) -> Screen_GitWorkspace:
+        self.test_case.click_xpath(
+            '//a[@data-testid="project-tree-link-git-workspace"]',
+        )
+        return Screen_GitWorkspace(self.test_case)
 
     def do_click_on_the_document(self, doc_order: int = 1) -> Screen_Document:
         self.test_case.click_xpath(

@@ -7,6 +7,7 @@ def create_config() -> ProjectConfig:
         dir_for_sdoc_assets="assets",
         dir_for_sdoc_cache="output/_cache",
         project_features=[
+            "GIT_WORKSPACE_EXPERIMENTAL",
             # Stable features.
             "TABLE_SCREEN",
             "TRACEABILITY_SCREEN",

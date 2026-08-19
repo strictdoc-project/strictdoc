@@ -862,3 +862,37 @@ Example of the "new" command usage:
 [[/SECTION]]
 
 [[/SECTION]]
+
+[[SECTION]]
+MID: eb0685f50def4479b361cc475d4bd795
+TITLE: Project config
+
+[[SECTION]]
+MID: 17ee741a300748f2989cd85d0638906c
+TITLE: ProjectConfig
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: e92f1e6fa2c84636a0a7c3d4d7cbe75f
+TITLE: strictdoc_config.py
+
+[REQUIREMENT]
+MID: da446e6d3c6d4b13badd4a47bdbcc5a3
+UID: SDOC-SRS-37
+STATUS: Active
+TITLE: strictdoc_config.py config file
+STATEMENT: >>>
+StrictDoc shall support a configuration of project-level options through a
+Python file named ``strictdoc_config.py``.
+<<<
+RELATIONS:
+- TYPE: File
+  FORMAT: Sourcecode
+  PATH: strictdoc/core/project_config.py
+- TYPE: Parent
+  VALUE: SDOC-SRS-205
+
+[[/SECTION]]
+
+[[/SECTION]]

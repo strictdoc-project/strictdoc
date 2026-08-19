@@ -321,6 +321,55 @@ Anchors allow authors to define precise reference points within SDoc node
 fields.
 <<<
 
+[[SECTION]]
+MID: 26a0233258ec4d7ab6338d915ddea3e6
+TITLE: Capability: Automatic generation of UID
+
+[REQUIREMENT]
+MID: 1ff58c59c8ab48cdabfba942ba98bab7
+UID: SDOC-SRS-206
+STATUS: Active
+TITLE: Default UID generation algorithm
+STATEMENT: >>>
+StrictDoc shall generate a missing UID for a node according to the following
+algorithm:
+
+- The node's applicable UID prefix shall be resolved by evaluating, in order
+  of precedence: the node's own PREFIX field, the grammar element's PREFIX
+  property, the parent section's prefix, and the document's PREFIX setting,
+  which shall default to "REQ-" if not configured.
+- The highest numeric suffix currently in use with the resolved prefix shall
+  be determined by scanning the entire document tree.
+- The node shall be assigned a UID composed of the resolved prefix and the
+  next unused integer suffix, computed as the highest existing suffix
+  incremented by one, or one if no existing suffix is found.
+- Where multiple nodes share the same resolved prefix and lack a UID,
+  consecutive integer suffixes shall be assigned to them in document order.
+<<<
+
+[REQUIREMENT]
+MID: 4ed550f6074c4d8cb27196184f7fe234
+UID: SDOC-SRS-207
+STATUS: Active
+TITLE: Custom UID algorithms
+STATEMENT: >>>
+StrictDoc shall allow a user to customize the UID algorithm to their needs.
+<<<
+COMMENT: >>>
+An example of a custom algorithm suggested by a user:
+
+The expected behavior could be:
+
+- The prefix of a type is defined in the grammar.
+- A document can optionally define an additional prefix.
+- If both prefixes are present, they are concatenated.
+- If only the grammar prefix is present, it is used on its own.
+- If only the document prefix is present, it is used on its own.
+- If neither is present, the existing behavior should be preserved.
+<<<
+
+[[/SECTION]]
+
 [[/SECTION]]
 
 [[SECTION]]
@@ -1996,18 +2045,14 @@ UID: SECTION-SRS-Configurability
 TITLE: Configurability
 
 [REQUIREMENT]
-MID: da446e6d3c6d4b13badd4a47bdbcc5a3
-UID: SDOC-SRS-37
+MID: 8777318f4a5b481596ac1f43e73b24c9
+UID: SDOC-SRS-205
 STATUS: Active
-TITLE: strictdoc.toml file
+TITLE: Python configuration file
 STATEMENT: >>>
-StrictDoc shall support a configuration of project-level options through a TOML
-file named ``strictdoc.toml``.
+StrictDoc shall allow configuration of projects settings using a Python file.
 <<<
 RELATIONS:
-- TYPE: File
-  FORMAT: Sourcecode
-  VALUE: strictdoc/core/project_config.py
 - TYPE: Parent
   VALUE: SDOC-SSS-92
 
@@ -2018,7 +2063,7 @@ STATUS: Active
 TITLE: Feature toggles
 STATEMENT: >>>
 StrictDoc shall allow a user to select a subset of StrictDoc's available
-features by listing them in the ``strictdoc.toml`` file.
+features by listing them in the Python configuration file.
 <<<
 RELATIONS:
 - TYPE: Parent

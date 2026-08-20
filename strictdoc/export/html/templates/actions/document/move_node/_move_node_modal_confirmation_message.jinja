@@ -1,0 +1,42 @@
+<div
+  class="move_node_confirmation_target_document"
+>
+  <span
+    class="move_node_confirmation_message_label"
+    data-js-move-node-tree-confirm-message-label
+    data-testid="move-node-confirm-message-label"
+  >{#- Move to / Move into -#}</span>
+  <span class="move_node_tree__document_icon" aria-hidden="true">
+    {%- include "icons/ico16_document.svg" -%}
+  </span>
+  <span
+    class="move_node_tree__title"
+    data-js-move-node-tree-confirm-target-document-title
+    data-testid="move-node-confirm-target-document-title"
+    title=""
+  >{#- Target document title -#}</span>
+</div>
+{# should receive display: contents; if needed: #}
+<div
+  class="move_node_confirmation_target_node"
+  data-js-move-node-tree-confirm-target-node-info
+>
+  <span
+    class="move_node_confirmation_placement_label"
+    data-js-move-node-tree-confirm-placement-label
+    data-testid="move-node-confirm-placement-label"
+  >{#- before / after / inside -#}</span>
+  <span
+    data-js-move-node-tree-confirm-target-node-type
+    data-testid="move-node-confirm-target-node-type"
+  >
+    {% with badge_text = "→" %}
+      {% include "components/badge/index.jinja" %}
+    {% endwith %}
+  </span>
+  <span
+    class="move_node_confirmation_target_node_title"
+    data-js-move-node-tree-confirm-target-node-title
+    data-testid="move-node-confirm-target-node-title"
+  >{#- Target node title -#}</span>
+</div>

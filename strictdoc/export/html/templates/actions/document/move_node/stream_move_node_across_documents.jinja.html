@@ -1,0 +1,15 @@
+<turbo-stream action="replace" target="frame_document_content">
+  <template>
+    {% include "screens/document/document/frame_document_content.jinja.html" %}
+  </template>
+</turbo-stream>
+<turbo-stream action="update" target="frame-toc">
+  <template>
+    {% include "screens/document/_shared/toc.jinja" %}
+  </template>
+</turbo-stream>
+<turbo-stream action="update" target="modal">
+  <template>
+    {% include "actions/document/move_node/frame_move_node_success.jinja" %}
+  </template>
+</turbo-stream>

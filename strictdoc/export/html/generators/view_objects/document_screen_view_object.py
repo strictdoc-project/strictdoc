@@ -2,6 +2,7 @@
 @relation(SDOC-SRS-54, scope=file)
 """
 
+import re
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
@@ -67,6 +68,57 @@ from strictdoc.helpers.file_system import file_open_read_utf8
 from strictdoc.helpers.git_client import GitClient
 from strictdoc.helpers.string import interpolate_at_pattern_lazy
 from strictdoc.server.helpers.turbo import render_turbo_stream
+
+MOVE_NODE_TREE_PREVIEW_LENGTH = 80
+
+_MOVE_NODE_TREE_IMAGE_ONLY_PATTERNS = (
+    re.compile(
+        r"\A\s*\.\.\s+(?:image|figure)::\s*(?P<path>\S+)"
+        r"(?:\s*\n\s+:[^\n]+:.*)*\s*\Z",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\A\s*!\[[^\]]*\]\(\s*(?P<path>[^\s\)]+)"
+        r"(?:\s+['\"][^'\"]*['\"])?\s*\)\s*\Z",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\A\s*<img\b[^>]*\bsrc\s*=\s*['\"](?P<path>[^'\"]+)['\"]"
+        r"[^>]*>\s*\Z",
+        re.IGNORECASE,
+    ),
+)
+
+_MOVE_NODE_TREE_SECONDARY_FIELD_EXCLUSIONS = frozenset(
+    (
+        RequirementFieldName.MID,
+        RequirementFieldName.UID,
+        RequirementFieldName.PREFIX,
+        RequirementFieldName.LEVEL,
+        RequirementFieldName.STATUS,
+        RequirementFieldName.TAGS,
+        RequirementFieldName.TITLE,
+    )
+)
+
+
+def _create_move_node_tree_field_preview(field_value: str) -> Optional[str]:
+    for image_pattern_ in _MOVE_NODE_TREE_IMAGE_ONLY_PATTERNS:
+        image_match = image_pattern_.fullmatch(field_value)
+        if image_match is None:
+            continue
+        image_path = image_match.group("path").split("?", maxsplit=1)[0]
+        image_path = image_path.split("#", maxsplit=1)[0].rstrip("/\\")
+        image_filename = re.split(r"[/\\]", image_path)[-1]
+        if len(image_filename) > 0:
+            return image_filename
+
+    normalized_value = " ".join(field_value.split())
+    if len(normalized_value) == 0:
+        return None
+    if len(normalized_value) <= MOVE_NODE_TREE_PREVIEW_LENGTH:
+        return normalized_value
+    return normalized_value[: MOVE_NODE_TREE_PREVIEW_LENGTH - 1].rstrip() + "…"
 
 
 class TableCellEditMode(str, Enum):
@@ -474,6 +526,9 @@ class DocumentScreenViewObject:
             full_path
         )
 
+    def get_project_documents(self) -> List[SDocDocument]:
+        return self.traceability_index.document_tree.document_list
+
     def get_grammar_elements(self) -> List[GrammarElement]:
         assert self.document.grammar is not None
         return self.document.grammar.elements
@@ -797,6 +852,73 @@ class DocumentScreenViewObject:
 
     def can_move_node(self, node: Union[SDocDocument, SDocNode]) -> bool:
         return self.traceability_index.can_move_node(node)
+
+    def can_move_node_across_documents(self, node: SDocNode) -> bool:
+        return self.traceability_index.can_move_node_across_documents(node)
+
+    def get_move_node_tree_child_nodes(
+        self, parent: Union[SDocDocument, SDocNode]
+    ) -> List[SDocNode]:
+        return [
+            child_
+            for child_ in parent.section_contents
+            if isinstance(child_, SDocNode)
+        ]
+
+    def get_move_node_tree_title(self, node: SDocNode) -> str:
+        if node.reserved_title is not None:
+            normalized_title = node.reserved_title.strip()
+            if len(normalized_title) > 0:
+                return normalized_title
+
+        document = assert_cast(node.get_document(), SDocDocumentIF)
+        grammar = document.grammar
+        grammar_element = (
+            grammar.elements_by_type.get(node.node_type)
+            if grammar is not None
+            else None
+        )
+
+        candidate_field_names: List[str] = []
+        if (
+            grammar_element is not None
+            and grammar_element.content_field[1] != -1
+        ):
+            candidate_field_names.append(grammar_element.content_field[0])
+
+        grammar_field_names = (
+            grammar_element.field_titles
+            if grammar_element is not None
+            else list(node.ordered_fields_lookup.keys())
+        )
+        candidate_field_names.extend(
+            field_name_
+            for field_name_ in grammar_field_names
+            if field_name_ not in _MOVE_NODE_TREE_SECONDARY_FIELD_EXCLUSIONS
+        )
+        candidate_field_names.append(RequirementFieldName.UID)
+        candidate_field_names.extend(grammar_field_names)
+
+        visited_field_names: Set[str] = set()
+        for field_name_ in candidate_field_names:
+            if field_name_ in visited_field_names:
+                continue
+            visited_field_names.add(field_name_)
+            node_fields = node.ordered_fields_lookup.get(field_name_, [])
+            for node_field_ in node_fields:
+                field_preview = _create_move_node_tree_field_preview(
+                    node_field_.get_text_value()
+                )
+                if field_preview is not None:
+                    return field_preview
+
+        return f"{node.node_type} with no content"
+
+    def node_subtree_has_image(self, node: SDocNode) -> bool:
+        return self.traceability_index.subtree_has_image(node)
+
+    def node_subtree_has_autogenerated_content(self, node: SDocNode) -> bool:
+        return self.traceability_index.subtree_has_autogenerated_content(node)
 
     # Table editing
     #

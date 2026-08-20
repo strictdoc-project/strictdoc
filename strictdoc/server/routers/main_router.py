@@ -8,7 +8,7 @@ import uuid
 from collections import defaultdict
 from mimetypes import guess_type
 from pathlib import Path
-from typing import Any, Dict, Iterator, List, Optional, Union
+from typing import Any, Dict, Iterator, List, Optional, Set, Union
 from urllib.parse import quote
 
 from fastapi import (
@@ -78,6 +78,9 @@ from strictdoc.core.transforms.constants import NodeCreationOrder
 from strictdoc.core.transforms.delete_requirement import (
     DeleteRequirementCommand,
 )
+from strictdoc.core.transforms.move_node_across_documents import (
+    MoveNodeAcrossDocumentsCommand,
+)
 from strictdoc.core.transforms.update_document_config import (
     UpdateDocumentConfigTransform,
 )
@@ -97,6 +100,7 @@ from strictdoc.core.transforms.update_requirement import (
 from strictdoc.core.transforms.validation_error import (
     MultipleValidationError,
     MultipleValidationErrorAsList,
+    SingleValidationError,
 )
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.form_objects.document_config_form_object import (
@@ -2723,6 +2727,184 @@ def create_main_router(
             content=view_object.render_update_document_content_with_moved_node(
                 moved_node
             ),
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @read_router.get(
+        "/actions/document/show_move_node", response_class=Response
+    )
+    def get_show_move_node(node_mid: str) -> Response:
+        moved_node = export_action.traceability_index.get_node_by_mid(
+            MID(node_mid)
+        )
+        moved_node = assert_cast(moved_node, SDocNode)
+        source_document: SDocDocument = assert_cast(
+            moved_node.get_document(), SDocDocument
+        )
+        if not export_action.traceability_index.can_move_node_across_documents(
+            moved_node
+        ):
+            raise HTTPException(
+                status_code=403,
+                detail="Moving is disabled for this node.",
+            )
+
+        assert source_document.meta is not None
+        link_renderer = LinkRenderer(
+            root_path=source_document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
+        )
+        markup_renderer = MarkupRenderer.create(
+            markup=source_document.config.get_markup(),
+            traceability_index=export_action.traceability_index,
+            link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
+            config=project_config,
+            context_document=source_document,
+        )
+        view_object = DocumentScreenViewObject(
+            document_type=DocumentType.DOCUMENT,
+            document=source_document,
+            traceability_index=export_action.traceability_index,
+            project_config=project_config,
+            link_renderer=link_renderer,
+            markup_renderer=markup_renderer,
+            jinja_environment=env(),
+            git_client=html_generator.git_client,
+        )
+        subtree_mids = export_action.traceability_index.get_subtree_mids(
+            moved_node
+        )
+        initially_expanded_mids: Set[str] = {str(source_document.reserved_mid)}
+        ancestor_node = moved_node.parent
+        while isinstance(ancestor_node, SDocNode):
+            initially_expanded_mids.add(str(ancestor_node.reserved_mid))
+            ancestor_node = ancestor_node.parent
+        incompatible_document_mids: Dict[str, List[str]] = {}
+        for (
+            document_
+        ) in export_action.traceability_index.document_tree.document_list:
+            if document_ is source_document:
+                continue
+            grammar_incompatibilities = export_action.traceability_index.get_move_grammar_incompatibilities(
+                moved_node, document_
+            )
+            if len(grammar_incompatibilities) > 0:
+                incompatible_document_mids[str(document_.reserved_mid)] = (
+                    grammar_incompatibilities
+                )
+        output = env().render_template_as_markup(
+            "actions/document/move_node/stream_show_move_node.jinja",
+            view_object=view_object,
+            moved_node=moved_node,
+            subtree_mids=subtree_mids,
+            initially_expanded_mids=initially_expanded_mids,
+            source_document=source_document,
+            incompatible_document_mids=incompatible_document_mids,
+        )
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            headers={
+                "Content-Type": "text/vnd.turbo-stream.html",
+            },
+        )
+
+    @write_router.post(
+        "/actions/document/move_node_across_documents",
+        response_class=Response,
+    )
+    def post_move_node_across_documents(
+        moved_node_mid: str,
+        target_mid: str,
+        whereto: str,
+        context_document_mid: str,
+    ) -> Response:
+        moved_node = export_action.traceability_index.get_node_by_mid(
+            MID(moved_node_mid)
+        )
+        moved_node = assert_cast(moved_node, SDocNode)
+        target_node = export_action.traceability_index.get_node_by_mid(
+            MID(target_mid)
+        )
+        target_node = assert_cast(target_node, (SDocDocument, SDocNode))
+
+        command = MoveNodeAcrossDocumentsCommand(
+            moved_node=moved_node,
+            target_node=target_node,
+            whereto=whereto,
+            traceability_index=export_action.traceability_index,
+        )
+        try:
+            command.perform()
+        except SingleValidationError as exception_:
+            error_output = env().render_template_as_markup(
+                "actions/document/move_node/stream_move_node_error.jinja.html",
+                error_message=exception_.args[0],
+            )
+            return HTMLResponse(
+                content=error_output,
+                status_code=422,
+                headers={
+                    "Content-Type": "text/vnd.turbo-stream.html",
+                },
+            )
+
+        if not command.move_was_performed:
+            no_change_output = env().render_template_as_markup(
+                "actions/document/move_node/"
+                "stream_move_node_no_change.jinja.html",
+            )
+            return HTMLResponse(
+                content=no_change_output,
+                headers={
+                    "Content-Type": "text/vnd.turbo-stream.html",
+                },
+            )
+
+        # Saving new content to .SDoc file(s).
+        write_document_to_file(command.source_document)
+        if command.destination_document is not command.source_document:
+            write_document_to_file(command.destination_document)
+
+        context_document = export_action.traceability_index.get_node_by_mid(
+            MID(context_document_mid)
+        )
+        context_document = assert_cast(context_document, SDocDocument)
+
+        assert context_document.meta is not None
+        link_renderer = LinkRenderer(
+            root_path=context_document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
+        )
+        markup_renderer = MarkupRenderer.create(
+            markup=context_document.config.get_markup(),
+            traceability_index=export_action.traceability_index,
+            link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
+            config=project_config,
+            context_document=context_document,
+        )
+        view_object = DocumentScreenViewObject(
+            document_type=DocumentType.DOCUMENT,
+            document=context_document,
+            traceability_index=export_action.traceability_index,
+            project_config=project_config,
+            link_renderer=link_renderer,
+            markup_renderer=markup_renderer,
+            jinja_environment=env(),
+            git_client=html_generator.git_client,
+        )
+        output = env().render_template_as_markup(
+            "actions/document/move_node/"
+            "stream_move_node_across_documents.jinja.html",
+            view_object=view_object,
+            new_location_href=view_object.render_node_link(moved_node),
+        )
+        return HTMLResponse(
+            content=output,
             headers={
                 "Content-Type": "text/vnd.turbo-stream.html",
             },

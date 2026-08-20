@@ -1,0 +1,8 @@
+{% extends "components/modal/index.jinja" %}
+{%- block modal__context -%}move-node-no-change{%- endblock -%}
+{%- block modal_container %}
+  <sdoc-modal-message data-testid="move-node-no-change-message">
+    <p class="move_node_modal_message">✔</p>
+    <p class="move_node_modal_message">The node is already at the selected location.</p>
+  </sdoc-modal-message>
+{% endblock modal_container %}

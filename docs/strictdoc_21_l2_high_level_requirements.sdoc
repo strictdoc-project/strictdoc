@@ -1060,6 +1060,23 @@ RELATIONS:
   VALUE: SDOC-SSS-5
 
 [REQUIREMENT]
+MID: 7a06d1433e4c4b0eaf55ede14507eac9
+UID: SDOC-SRS-94
+STATUS: Active
+TITLE: Move requirement / section nodes between documents
+STATEMENT: >>>
+StrictDoc's Document screen shall provide a capability to move the nodes between
+documents.
+<<<
+RATIONALE: >>>
+Moving the nodes within a document is a convenience feature that speeds up the
+requirements editing process significantly.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-70
+
+[REQUIREMENT]
 MID: 197e00dd3b1d42309250c89de23ea51b
 UID: SDOC-SRS-56
 STATUS: Active

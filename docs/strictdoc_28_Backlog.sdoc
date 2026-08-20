@@ -82,43 +82,6 @@ issues, which are primarily focused on actual implementation work.
 <<<
 
 [[SECTION]]
-MID: d1e697dea73144c48a4b88d0d784a517
-UID: SECTION-SB-Open-source-requirements-tool-challenges
-TITLE: StrictDoc challenges
-
-[TEXT]
-MID: d65fe32e8ea444ceb99c174bfc06df7d
-STATEMENT: >>>
-- Limited development time.
-- Not easy to develop certain capabilities and scale to a multi-user environment
-  quickly.
-<<<
-
-[REQUIREMENT]
-MID: fc76b207c152433888a86a166f58a425
-UID: SDOC-SRS-13
-STATUS: Backlog
-TITLE: Real-time editing out of scope
-STATEMENT: >>>
-StrictDoc shall not implement the real-time editing capability to its web
-interface.
-<<<
-RATIONALE: >>>
-The real-time editing feature is hard to achieve with a small part-time
-involvement from the development team. This requirement can only be
-reconsidered, if StrictDoc would experience a significant increase in the
-development power.
-<<<
-
-[[/SECTION]]
-
-[[SECTION]]
-MID: 17cc0a3e936b45e581de5ed57bcba801
-TITLE: Backlog high-level overview
-
-[[/SECTION]]
-
-[[SECTION]]
 MID: 7614a9f4f7bd4b1c9899995ac3d1e6ad
 UID: SECTION-SB-Backlog
 TITLE: Backlog
@@ -389,23 +352,6 @@ TITLE: Tables HTML editor
 STATEMENT: >>>
 StrictDoc shall provide a solution for editing tables in its web interface.
 <<<
-
-[REQUIREMENT]
-MID: 7a06d1433e4c4b0eaf55ede14507eac9
-UID: SDOC-SRS-94
-STATUS: Backlog
-TITLE: Move requirement / section nodes between documents
-STATEMENT: >>>
-StrictDoc's Document screen shall provide a capability to move the nodes between
-documents.
-<<<
-RATIONALE: >>>
-Moving the nodes within a document is a convenience feature that speeds up the
-requirements editing process significantly.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: SDOC-SSS-70
 
 [REQUIREMENT]
 MID: 45b8513623744776899abfbf99c95286

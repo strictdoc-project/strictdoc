@@ -118,7 +118,7 @@
         <mxCell id="7P98y9b_jIk4aWlVt2MC-1" parent="xBUwhWlFWRuDQ3vYKA49-38" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" value="UI: Upload images" vertex="1">
           <mxGeometry height="50" width="280" x="20" y="520" as="geometry" />
         </mxCell>
-        <mxCell id="7P98y9b_jIk4aWlVt2MC-2" parent="xBUwhWlFWRuDQ3vYKA49-38" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" value="UI: Mode nodes between documents" vertex="1">
+        <mxCell id="7P98y9b_jIk4aWlVt2MC-2" parent="xBUwhWlFWRuDQ3vYKA49-38" style="text;html=1;strokeColor=#82b366;fillColor=#d5e8d4;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" value="UI: Mode nodes between documents" vertex="1">
           <mxGeometry height="50" width="280" x="20" y="580" as="geometry" />
         </mxCell>
         <mxCell id="xBUwhWlFWRuDQ3vYKA49-41" parent="my6LpwKuQYxvOHTBM5B0-1" style="swimlane;" value="Formats" vertex="1">

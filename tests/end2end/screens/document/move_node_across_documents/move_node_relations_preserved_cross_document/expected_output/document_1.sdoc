@@ -1,0 +1,7 @@
+[DOCUMENT]
+TITLE: Document One
+
+[REQUIREMENT]
+UID: REQ-002
+TITLE: Parent requirement
+STATEMENT: The system shall do the parent thing.

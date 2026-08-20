@@ -1,0 +1,12 @@
+[DOCUMENT]
+TITLE: Document One
+
+[REQUIREMENT]
+UID: REQ-001
+TITLE: First requirement
+STATEMENT: The system shall do the first thing.
+
+[REQUIREMENT]
+UID: REQ-002
+TITLE: Second requirement
+STATEMENT: The system shall do the second thing.

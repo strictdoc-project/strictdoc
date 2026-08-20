@@ -103,6 +103,62 @@ class Node:  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
+    # Node move (move to another document / another position)
+
+    def assert_move_node_action_is_unlocked(self) -> None:
+        self.test_case.assert_element_present(
+            f"{self.node_xpath}//*[@data-testid='node-move-action']",
+            by=By.XPATH,
+        )
+        self.test_case.assert_element_absent(
+            f"{self.node_xpath}//*[@data-testid='node-move-action-disabled']",
+            by=By.XPATH,
+        )
+
+    def assert_move_node_action_is_locked(self) -> None:
+        self.test_case.assert_element_absent(
+            f"{self.node_xpath}//*[@data-testid='node-move-action']",
+            by=By.XPATH,
+        )
+        self.test_case.assert_element_present(
+            f"{self.node_xpath}//*[@data-testid='node-move-action-disabled']",
+            by=By.XPATH,
+        )
+
+    def assert_move_node_action_is_locked_with_tooltip(
+        self, expected_tooltip: str
+    ) -> None:
+        self.assert_move_node_action_is_locked()
+        disabled_action = self.test_case.driver.find_element(
+            By.XPATH,
+            f"{self.node_xpath}//*[@data-testid='node-move-action-disabled']",
+        )
+        assert disabled_action.get_attribute("title") == expected_tooltip
+        assert (
+            self.test_case.driver.execute_script(
+                "return getComputedStyle(arguments[0]).pointerEvents;",
+                disabled_action,
+            )
+            == "auto"
+        )
+
+    def do_open_move_node_modal(self):
+        from tests.end2end.helpers.components.move_node_modal import (  # noqa: PLC0415
+            MoveNodeModal,
+        )
+
+        self.test_case.hover_and_click(
+            hover_selector=f"{self.node_xpath}",
+            click_selector=(
+                f"{self.node_xpath}//*[@data-testid='node-move-action']"
+            ),
+            hover_by=By.XPATH,
+            click_by=By.XPATH,
+        )
+        modal = MoveNodeModal(self.test_case)
+        modal.assert_modal()
+        return modal
+
     # Node delete
 
     def _get_node_delete_confirm(self) -> Confirm:

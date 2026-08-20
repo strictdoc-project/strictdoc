@@ -11,7 +11,16 @@ import types
 from dataclasses import dataclass, field
 from enum import Enum
 from pathlib import Path
-from typing import TYPE_CHECKING, Any, Dict, List, Optional, Tuple, Union
+from typing import (
+    TYPE_CHECKING,
+    Any,
+    Callable,
+    Dict,
+    List,
+    Optional,
+    Tuple,
+    Union,
+)
 
 import toml
 
@@ -37,7 +46,35 @@ from strictdoc.helpers.net import is_valid_host
 from strictdoc.helpers.path_filter import validate_mask
 
 if TYPE_CHECKING:
+    from strictdoc.backend.sdoc.models.document import SDocDocument
+    from strictdoc.backend.sdoc.models.grammar_element import GrammarElement
+    from strictdoc.backend.sdoc.models.node import SDocNode
     from strictdoc.core.format import Format
+    from strictdoc.core.traceability_index import TraceabilityIndex
+
+CustomNodePrefixFunction = Callable[
+    [
+        Union["SDocNode", "SDocDocument"],
+        "GrammarElement",
+        "SDocDocument",
+        "TraceabilityIndex",
+        "ProjectConfig",
+    ],
+    Optional[str],
+]
+
+CustomNodeUidFunction = Callable[
+    [
+        str,
+        int,
+        Union["SDocNode", "SDocDocument"],
+        "GrammarElement",
+        "SDocDocument",
+        "TraceabilityIndex",
+        "ProjectConfig",
+    ],
+    Optional[str],
+]
 
 
 def parse_relation_tuple(column_name: str) -> Optional[Tuple[str, str]]:
@@ -186,6 +223,11 @@ class ProjectConfig:
         # on the server.
         custom_css_path: Optional[str] = None,
         user_plugin: Optional[StrictDocPlugin] = None,
+        # Optional custom Python function for defining a node's UID prefix.
+        custom_node_prefix_function: Optional[CustomNodePrefixFunction] = None,
+        # Optional custom Python function for composing a node's full UID
+        # from its resolved prefix and next available number.
+        custom_node_uid_function: Optional[CustomNodeUidFunction] = None,
         formats: Optional[List["Format"]] = None,
         # Reserved for StrictDoc's internal use.
         _config_last_update: Optional[datetime.datetime] = None,
@@ -456,6 +498,14 @@ class ProjectConfig:
 
         self.user_plugin: Optional[StrictDocPlugin] = user_plugin
 
+        self.custom_node_prefix_function: Optional[CustomNodePrefixFunction] = (
+            custom_node_prefix_function
+        )
+
+        self.custom_node_uid_function: Optional[CustomNodeUidFunction] = (
+            custom_node_uid_function
+        )
+
         # Optional launcher logo path (absolute or workspace-relative).
         self.launcher_logo_path: Optional[str] = launcher_logo_path
 
@@ -476,6 +526,47 @@ class ProjectConfig:
     @staticmethod
     def default_config() -> "ProjectConfig":
         return ProjectConfig()
+
+    def resolve_custom_node_prefix(
+        self,
+        node: Union["SDocNode", "SDocDocument"],
+        grammar_element: "GrammarElement",
+        document: "SDocDocument",
+        traceability_index: "TraceabilityIndex",
+    ) -> Optional[str]:
+        """
+        @relation(SDOC-LLR-209, scope=function)
+        """
+        if self.custom_node_prefix_function is None:
+            return None
+        return self.custom_node_prefix_function(
+            node, grammar_element, document, traceability_index, self
+        )
+
+    def resolve_custom_node_uid(
+        self,
+        prefix: str,
+        next_number: int,
+        *,
+        node: Union["SDocNode", "SDocDocument"],
+        grammar_element: "GrammarElement",
+        document: "SDocDocument",
+        traceability_index: "TraceabilityIndex",
+    ) -> Optional[str]:
+        """
+        @relation(SDOC-LLR-210, scope=function)
+        """
+        if self.custom_node_uid_function is None:
+            return None
+        return self.custom_node_uid_function(
+            prefix,
+            next_number,
+            node,
+            grammar_element,
+            document,
+            traceability_index,
+            self,
+        )
 
     @staticmethod
     def default_formats() -> List["Format"]:

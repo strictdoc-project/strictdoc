@@ -471,16 +471,39 @@ def create_main_router(
         if element_type not in ("TEXT", "SECTION"):
             document_tree_stats: DocumentTreeStats = (
                 DocumentUIDAnalyzer.analyze_document_tree(
-                    export_action.traceability_index
+                    export_action.traceability_index,
+                    project_config=export_action.project_config,
                 )
             )
+            assert document.grammar is not None
+            grammar_element: GrammarElement = document.grammar.elements_by_type[
+                element_type
+            ]
             if (
-                node_prefix := reference_node.get_prefix_for_new_node(
-                    element_type
+                node_prefix
+                := export_action.project_config.resolve_custom_node_prefix(
+                    reference_node,
+                    grammar_element,
+                    document,
+                    export_action.traceability_index,
                 )
+                or reference_node.get_prefix_for_new_node(element_type)
             ) is not None:
-                next_uid = document_tree_stats.get_next_requirement_uid(
-                    node_prefix
+                next_number = (
+                    document_tree_stats.get_next_requirement_uid_number(
+                        node_prefix
+                    )
+                )
+                next_uid = (
+                    export_action.project_config.resolve_custom_node_uid(
+                        node_prefix,
+                        next_number,
+                        node=reference_node,
+                        grammar_element=grammar_element,
+                        document=document,
+                        traceability_index=export_action.traceability_index,
+                    )
+                    or f"{node_prefix}{next_number}"
                 )
         form_object = RequirementFormObject.create_new(
             document=document,
@@ -563,7 +586,8 @@ def create_main_router(
         )
         document_tree_stats: DocumentTreeStats = (
             DocumentUIDAnalyzer.analyze_document_tree(
-                export_action.traceability_index
+                export_action.traceability_index,
+                project_config=export_action.project_config,
             )
         )
         next_uid: str = ""
@@ -834,7 +858,8 @@ def create_main_router(
     def reset_uid(reference_mid: str) -> Response:
         document_tree_stats: DocumentTreeStats = (
             DocumentUIDAnalyzer.analyze_document_tree(
-                export_action.traceability_index
+                export_action.traceability_index,
+                project_config=export_action.project_config,
             )
         )
         reference_node = export_action.traceability_index.get_node_by_mid_weak(
@@ -1182,16 +1207,35 @@ def create_main_router(
         if element_type not in ("TEXT", "SECTION"):
             document_tree_stats: DocumentTreeStats = (
                 DocumentUIDAnalyzer.analyze_document_tree(
-                    export_action.traceability_index
+                    export_action.traceability_index,
+                    project_config=export_action.project_config,
                 )
             )
             if (
-                node_prefix := reference_node.get_prefix_for_new_node(
-                    element_type
+                node_prefix
+                := export_action.project_config.resolve_custom_node_prefix(
+                    reference_node,
+                    element,
+                    document,
+                    export_action.traceability_index,
                 )
+                or reference_node.get_prefix_for_new_node(element_type)
             ) is not None:
-                next_uid = document_tree_stats.get_next_requirement_uid(
-                    node_prefix
+                next_number = (
+                    document_tree_stats.get_next_requirement_uid_number(
+                        node_prefix
+                    )
+                )
+                next_uid = (
+                    export_action.project_config.resolve_custom_node_uid(
+                        node_prefix,
+                        next_number,
+                        node=reference_node,
+                        grammar_element=element,
+                        document=document,
+                        traceability_index=export_action.traceability_index,
+                    )
+                    or f"{node_prefix}{next_number}"
                 )
 
         form_object = RequirementFormObject.create_new(

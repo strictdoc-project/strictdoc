@@ -1,0 +1,9 @@
+#
+# When ProjectConfig.custom_node_prefix_function is set, manage new shall use
+# the prefix it returns instead of the grammar-derived default.
+#
+
+RUN: cp %S/input.sdoc %T/
+RUN: cp %S/strictdoc_config.py %T/
+RUN: %strictdoc manage new %T/
+RUN: %diff %S/input.expected.sdoc %T/input.sdoc

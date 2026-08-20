@@ -3,6 +3,9 @@ import sys
 from typing import Dict, Optional
 
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
+from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.grammar_element import GrammarElement
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.backend.sdoc_source_code.marker_writer import MarkerWriter
@@ -20,6 +23,7 @@ from strictdoc.core.analyzers.document_uid_analyzer import DocumentUIDAnalyzer
 from strictdoc.core.project_config import ProjectConfig, ProjectConfigLoader
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
+from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.parallelizer import Parallelizer
 from strictdoc.helpers.sha256 import get_random_sha256, get_sha256, is_sha256
 from strictdoc.helpers.string import (
@@ -110,7 +114,9 @@ the document's PREFIX (if provided or "REQ-" by default).
             sys.exit(1)
 
         document_tree_stats: DocumentTreeStats = (
-            DocumentUIDAnalyzer.analyze_document_tree(traceability_index)
+            DocumentUIDAnalyzer.analyze_document_tree(
+                traceability_index, project_config=project_config
+            )
         )
 
         if project_config.autouuid_include_sections:
@@ -134,8 +140,26 @@ the document's PREFIX (if provided or "REQ-" by default).
             )
 
             for requirement in prefix_requirements.requirements_no_uid:
-                requirement_prefix = requirement.get_prefix()
-                requirement_uid = f"{requirement_prefix}{next_number}"
+                requirement_document: SDocDocument = assert_cast(
+                    requirement.get_document(), SDocDocument
+                )
+                requirement_grammar: DocumentGrammar = assert_cast(
+                    requirement_document.grammar, DocumentGrammar
+                )
+                requirement_grammar_element: GrammarElement = (
+                    requirement_grammar.elements_by_type[requirement.node_type]
+                )
+                requirement_uid = (
+                    project_config.resolve_custom_node_uid(
+                        prefix,
+                        next_number,
+                        node=requirement,
+                        grammar_element=requirement_grammar_element,
+                        document=requirement_document,
+                        traceability_index=traceability_index,
+                    )
+                    or f"{prefix}{next_number}"
+                )
                 requirement.set_field_value(
                     field_name="UID",
                     form_field_index=0,

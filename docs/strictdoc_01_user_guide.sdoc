@@ -4749,6 +4749,126 @@ The nodes with validation issues attached will be displayed as follows:
 [[/SECTION]]
 
 [[SECTION]]
+MID: 5f4f551fe2061ca8933ae95bd07f547e
+TITLE: Custom node prefix
+
+[TEXT]
+MID: 8a2e2a2b3f5445f8a1f3d1f0b8a6d0e1
+STATEMENT: >>>
+By default, a node's UID prefix is derived from the document grammar: either
+the element's ``PREFIX`` property, or the document/section prefix a node is
+nested under. A user can override this behavior for the whole project by
+registering a custom Python function via ``ProjectConfig``'s
+``custom_node_prefix_function`` argument.
+
+The function is called whenever a new node's prefix needs to be determined:
+by ``strictdoc manage new``, by ``strictdoc manage auto-uid``, and by the web
+interface's "Add node" actions. It receives the node that a new sibling/child
+is being created under (or, for ``manage auto-uid``, the existing node that is
+missing a UID), the node's grammar element, the containing document, the
+traceability index, and the project config. The function must return either a
+prefix string, or ``None`` to fall back to the default StrictDoc behavior
+described above.
+
+The function must be registered in the StrictDoc Python config file:
+
+.. code-block:: python
+
+    from typing import Optional, Union
+
+    from strictdoc.api import (
+        GrammarElement,
+        ProjectConfig,
+        SDocDocument,
+        SDocNode,
+        TraceabilityIndex,
+    )
+
+
+    def custom_node_prefix(
+        node: Union[SDocNode, SDocDocument],
+        grammar_element: GrammarElement,
+        document: SDocDocument,
+        traceability_index: TraceabilityIndex,
+        project_config: ProjectConfig,
+    ) -> Optional[str]:
+        if document.reserved_uid == "MY_UID":
+            return "MY_UID_PREFIX-"
+        # Revert to the default behavior.
+        return None
+
+
+    def create_config() -> ProjectConfig:
+        return ProjectConfig(
+            project_title="My Project",
+            custom_node_prefix_function=custom_node_prefix,
+        )
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 2f9c4d6a1b3e4f5c9a7d8e6b0c1a2f3d
+TITLE: Custom node UID
+
+[TEXT]
+MID: 7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e
+STATEMENT: >>>
+By default, a new node's full UID is the concatenation of its resolved
+prefix (see "Custom node prefix" above) and the next available number:
+``f"{prefix}{next_number}"``. A user can override this composition step for
+the whole project by registering a custom Python function via
+``ProjectConfig``'s ``custom_node_uid_function`` argument, for example to
+zero-pad the number or use a different separator.
+
+The function is called at the same points as ``custom_node_prefix_function``:
+by ``strictdoc manage new``, by ``strictdoc manage auto-uid``, and by the web
+interface's "Add node" actions. It receives the already-resolved prefix and
+next available number, together with the same node/grammar element/document/
+traceability index/project config context. The function must return either a
+UID string, or ``None`` to fall back to the default
+``f"{prefix}{next_number}"`` composition.
+
+The function must be registered in the StrictDoc Python config file:
+
+.. code-block:: python
+
+    from typing import Optional, Union
+
+    from strictdoc.api import (
+        GrammarElement,
+        ProjectConfig,
+        SDocDocument,
+        SDocNode,
+        TraceabilityIndex,
+    )
+
+
+    def custom_node_uid(
+        prefix: str,
+        next_number: int,
+        node: Union[SDocNode, SDocDocument],
+        grammar_element: GrammarElement,
+        document: SDocDocument,
+        traceability_index: TraceabilityIndex,
+        project_config: ProjectConfig,
+    ) -> Optional[str]:
+        if document.reserved_uid == "MY_UID":
+            return f"{prefix}{next_number:04d}"
+        # Revert to the default behavior.
+        return None
+
+
+    def create_config() -> ProjectConfig:
+        return ProjectConfig(
+            project_title="My Project",
+            custom_node_uid_function=custom_node_uid,
+        )
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 31d6e96f4688447d9c0934caa37956fb
 UID: SECTION-UG-Performance-considerations
 TITLE: Performance considerations

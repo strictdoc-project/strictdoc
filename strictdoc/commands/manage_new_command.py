@@ -238,13 +238,30 @@ added to that document's root level.
 
         new_uid: Optional[str] = None
         if has_uid_field:
-            prefix: Optional[str] = parent.get_prefix_for_new_node(node_type)
+            prefix: Optional[str] = project_config.resolve_custom_node_prefix(
+                parent, grammar_element, document, traceability_index
+            ) or parent.get_prefix_for_new_node(node_type)
             if prefix is None or len(prefix) == 0:
                 prefix = "REQ-"
             document_tree_stats: DocumentTreeStats = (
-                DocumentUIDAnalyzer.analyze_document_tree(traceability_index)
+                DocumentUIDAnalyzer.analyze_document_tree(
+                    traceability_index, project_config=project_config
+                )
             )
-            new_uid = document_tree_stats.get_next_requirement_uid(prefix)
+            next_number = document_tree_stats.get_next_requirement_uid_number(
+                prefix
+            )
+            new_uid = (
+                project_config.resolve_custom_node_uid(
+                    prefix,
+                    next_number,
+                    node=parent,
+                    grammar_element=grammar_element,
+                    document=document,
+                    traceability_index=traceability_index,
+                )
+                or f"{prefix}{next_number}"
+            )
 
         # Build the fields for the new node.
         # - UID: use generated value (if grammar has a UID field)

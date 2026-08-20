@@ -1,0 +1,10 @@
+{% extends "components/modal/index.jinja" %}
+{%- block modal__context -%}move-node{%- endblock -%}
+{%- block modal_header -%}
+  Move &quot;{{ moved_node.get_display_title(include_toc_number=False) }}&quot;
+{% endblock modal_header %}
+{%- block modal_container %}
+  <sdoc-modal-content>
+    {% include "actions/document/move_node/_project_move_tree.jinja" %}
+  </sdoc-modal-content>
+{% endblock modal_container %}

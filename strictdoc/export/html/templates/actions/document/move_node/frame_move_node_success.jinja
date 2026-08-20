@@ -1,0 +1,15 @@
+{% extends "components/modal/index.jinja" %}
+{%- block modal__context -%}move-node-success{%- endblock -%}
+{%- block modal_container %}
+  <sdoc-modal-message data-testid="move-node-success-message">
+    <p class="move_node_modal_message">✔</p>
+    <p class="move_node_modal_message"><b>Node moved successfully.</b></p>
+  </sdoc-modal-message>
+  <a
+    href="{{ new_location_href }}"
+    data-turbo="false"
+    class="action_button"
+    data-js-move-node-tree-new-location
+    data-testid="move-node-go-to-new-location"
+  >Go to new location</a>
+{% endblock modal_container %}

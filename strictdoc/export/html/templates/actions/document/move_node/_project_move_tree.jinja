@@ -1,0 +1,167 @@
+{#
+  Project-wide node placement tree.
+
+  The nested ul/li structure intentionally matches the document TOC's tree
+  shape. move_node_tree.js owns collapse and placement behavior; this template
+  only describes the project hierarchy and the placements allowed per item.
+#}
+{% macro render_tree_item(item_, item_kind_, title_, child_nodes_, is_incompatible=False) %}
+  {%- set mid_str = item_.reserved_mid|string -%}
+  {%- set is_moved = item_kind_ == "node" and mid_str == (moved_node.reserved_mid|string) -%}
+  {%- set is_in_moved_branch = item_kind_ == "node" and mid_str in subtree_mids -%}
+  {%- set can_contain_children = item_kind_ == "document" or item_.is_composite -%}
+  {%- set is_target = not is_incompatible and not is_in_moved_branch -%}
+  {%- set is_expanded = mid_str in initially_expanded_mids -%}
+  <li
+    class="move_node_tree__item{% if item_kind_ == 'document' %} move_node_tree__item--document{% endif %}{% if is_moved %} move_node_tree__item--moved{% endif %}{% if is_in_moved_branch %} move_node_tree__item--moved_branch{% endif %}{% if is_incompatible %} move_node_tree__item--incompatible{% endif %}"
+    data-js-move-node-tree-item
+    data-js-move-node-tree-node-mid="{{ mid_str }}"
+    data-js-move-node-tree-label="{{ title_ }}"
+    {% if item_kind_ == "node" %}data-js-move-node-tree-node-type="{{ item_.node_type }}"{% endif %}
+    {% if item_kind_ == "document" %}data-js-move-node-tree-document{% endif %}
+    {% if is_moved %}data-js-move-node-tree-moved{% endif %}
+    {% if is_in_moved_branch %}data-js-move-node-tree-moved-branch{% endif %}
+    {% if is_incompatible %}data-js-move-node-tree-incompatible{% endif %}
+    {% if is_incompatible %}
+      title="Grammar mismatch: {{ incompatible_document_mids[mid_str]|join('; ') }}"
+    {% endif %}
+    {% if item_kind_ == "document" %}
+      data-testid="move-node-document"
+    {% else %}
+      data-testid="move-node-row"
+    {% endif %}
+  >
+    <div
+      class="move_node_tree__row"
+      {% if is_target %}
+        data-js-move-node-tree-target
+        data-js-move-node-tree-target-mid="{{ mid_str }}"
+        data-js-move-node-tree-target-placements="{% if item_kind_ == 'document' %}child{% elif can_contain_children %}before child after{% else %}before after{% endif %}"
+      {% endif %}
+    >
+      {% if child_nodes_|length > 0 %}
+        <button
+          type="button"
+          class="move_node_tree__collapse"
+          data-js-move-node-tree-collapse
+          aria-expanded="{{ 'true' if is_expanded else 'false' }}"
+          aria-label="{{ 'Collapse' if is_expanded else 'Expand' }} {{ title_ }}"
+        ></button>
+      {% else %}
+        <span class="move_node_tree__collapse_spacer" aria-hidden="true"></span>
+      {% endif %}
+
+      {% if item_kind_ == "document" %}
+        <span class="move_node_tree__document_icon" aria-hidden="true">
+          {%- include "icons/ico16_document.svg" -%}
+        </span>
+      {% else %}
+        <span data-testid="move-node-type">
+          {% with badge_text = item_.node_type %}
+            {% include "components/badge/index.jinja" %}
+          {% endwith %}
+        </span>
+      {% endif %}
+
+      <span
+        class="move_node_tree__title"
+        data-js-move-node-tree-title
+        data-testid="move-node-title"
+      >{{ title_ }}</span>
+    </div>
+
+    {% if child_nodes_|length > 0 %}
+      <ul
+        class="move_node_tree__children"
+        data-js-move-node-tree-children
+        {% if not is_expanded %}hidden{% endif %}
+      >
+        {% for child_ in child_nodes_ %}
+          {{ render_node(child_) }}
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </li>
+{% endmacro %}
+
+{% macro render_node(node_) %}
+  {{ render_tree_item(
+    node_,
+    "node",
+    view_object.get_move_node_tree_title(node_),
+    view_object.get_move_node_tree_child_nodes(node_)
+  ) }}
+{% endmacro %}
+
+<div
+  class="move_node_tree"
+  data-js-move-node-tree
+  data-testid="move-node-tree"
+  data-js-move-node-tree-moved-node-mid="{{ moved_node.reserved_mid }}"
+  data-js-move-node-tree-context-document-mid="{{ source_document.reserved_mid }}"
+  data-js-move-node-tree-endpoint="/actions/document/move_node_across_documents"
+>
+  <p class="move_node_tree__instructions" id="move-node-tree-instructions">
+    Point to a node to choose before or after. Composite nodes and documents
+    also accept the node inside them.
+  </p>
+  <div
+    class="move_node_tree__status"
+    data-js-move-node-tree-status
+    role="status"
+    aria-live="polite"
+  ></div>
+  <div
+    class="move_node_tree__confirmation"
+    data-js-move-node-tree-confirmation
+    data-testid="move-node-confirmation"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="move-node-confirmation-title"
+    hidden
+  >
+    <div class="move_node_tree__confirmation_dialog">
+      <div
+        class="move_node_tree__confirmation_title"
+        id="move-node-confirmation-title"
+      >
+        Confirm move
+      </div>
+      <sdoc-modal-message
+        class="move_node_modal_confirmation_message"
+        data-js-move-node-tree-confirmation-message
+        data-testid="move-node-confirmation-message"
+      >
+        {% include "actions/document/move_node/_move_node_modal_confirmation_message.jinja" %}
+      </sdoc-modal-message>
+      <div class="move_node_tree__confirmation_actions">
+        <button
+          type="button"
+          class="action_button"
+          data-action-type="confirm_move"
+          data-js-move-node-tree-confirm
+          data-testid="move-node-confirm"
+        >Yes</button>
+        <button
+          type="button"
+          class="action_button"
+          data-action-type="cancel"
+          data-js-move-node-tree-cancel
+          data-testid="move-node-cancel"
+        >Cancel</button>
+      </div>
+    </div>
+  </div>
+  <ul class="move_node_tree__list" aria-describedby="move-node-tree-instructions">
+    {%- for document_ in view_object.get_project_documents() %}
+      {%- set document_mid_str = document_.reserved_mid|string -%}
+      {{ render_tree_item(
+        document_,
+        "document",
+        document_.title,
+        view_object.get_move_node_tree_child_nodes(document_),
+        document_mid_str in incompatible_document_mids
+      ) }}
+    {%- endfor %}
+  </ul>
+</div>

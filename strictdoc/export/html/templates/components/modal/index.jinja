@@ -4,6 +4,11 @@
 <turbo-frame data-js-modal>
   <sdoc-backdrop>
       <sdoc-modal context="{%- block modal__context -%}{%- endblock -%}">
+        <sdoc-modal-header data-testid="modal-header">
+        {%- block modal_header -%}
+          {#- must be present in the DOM, but empty if no content is provided -#}
+        {%- endblock -%}
+        </sdoc-modal-header>
         <sdoc-modal-container>
         {%- block modal_container %}{% endblock -%}
         </sdoc-modal-container>

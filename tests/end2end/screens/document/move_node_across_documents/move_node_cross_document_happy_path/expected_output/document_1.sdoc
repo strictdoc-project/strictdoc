@@ -1,0 +1,25 @@
+[DOCUMENT]
+TITLE: Document One
+
+[REQUIREMENT]
+UID: REQ-002
+TITLE: Requirement with an image
+STATEMENT: >>>
+See the diagram below.
+
+.. image:: diagram.png
+<<<
+
+[[SECTION]]
+TITLE: Branch containing an image
+
+[REQUIREMENT]
+UID: REQ-004
+TITLE: Child requirement with an image
+STATEMENT: >>>
+See the child diagram below.
+
+.. image:: child-diagram.png
+<<<
+
+[[/SECTION]]

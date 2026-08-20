@@ -1,0 +1,35 @@
+[DOCUMENT]
+TITLE: Document One
+
+[REQUIREMENT]
+UID: REQ-001
+TITLE: First requirement
+STATEMENT: The system shall do the first thing.
+
+[REQUIREMENT]
+UID: REQ-002
+TITLE: Requirement with an image
+STATEMENT: >>>
+See the diagram below.
+
+.. image:: diagram.png
+<<<
+
+[REQUIREMENT]
+UID: REQ-003
+TITLE: Third requirement
+STATEMENT: The system shall do a third thing.
+
+[[SECTION]]
+TITLE: Branch containing an image
+
+[REQUIREMENT]
+UID: REQ-004
+TITLE: Child requirement with an image
+STATEMENT: >>>
+See the child diagram below.
+
+.. image:: child-diagram.png
+<<<
+
+[[/SECTION]]

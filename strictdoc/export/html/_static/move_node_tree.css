@@ -1,0 +1,258 @@
+.move_node_tree {
+  --move-node-tree-padding-left: calc(var(--base-rhythm) * 2);
+  --move-node-tree-indicator: rgb(242 100 42);
+
+  color: var(--color-fg-secondary);
+  font-size: var(--font-size-sm);
+  line-height: 1.2;
+}
+
+.move_node_tree__confirmation {
+  position: fixed;
+  z-index: 10;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: calc(var(--base-rhythm) * 4);
+  background: rgb(0 0 0 / 25%);
+}
+
+.move_node_tree__confirmation[hidden] {
+  display: none;
+}
+
+.move_node_tree__confirmation_dialog {
+  width: min(420px, 100%);
+  color: var(--color-fg-main);
+  overflow: hidden;
+  background: var(--color-bg-contrast);
+  border-radius: 8px;
+  box-shadow: var(--base-elevation-modal);
+}
+
+.move_node_tree__confirmation_title {
+  padding: calc(var(--base-rhythm) * 2) calc(var(--base-rhythm) * 4);
+  border-bottom: 1px solid var(--color-border);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.move_node_tree__confirmation_actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--base-rhythm);
+  padding: calc(var(--base-rhythm) * 2) calc(var(--base-rhythm) * 4);
+  border-top: 1px solid var(--color-border);
+}
+
+.move_node_tree__instructions {
+  margin: 0 0 var(--base-rhythm);
+}
+
+.move_node_tree__status {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.move_node_tree__list,
+.move_node_tree__children,
+.move_node_tree__item {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.move_node_tree__list {
+  padding-left: var(--move-node-tree-padding-left);
+  padding-bottom: var(--base-gap);
+}
+
+.move_node_tree__children {
+  padding-left: calc(var(--base-rhythm) * 2);
+}
+
+.move_node_tree__item {
+  position: relative;
+}
+
+.move_node_tree__row {
+  display: flex;
+  align-items: center;
+  min-height: calc(var(--base-rhythm) * 4);
+  padding-right: var(--base-rhythm);
+  position: relative;
+  gap: var(--base-rhythm);
+}
+
+.move_node_tree__row[data-js-move-node-tree-target] {
+  cursor: pointer;
+}
+
+.move_node_tree__row[data-js-move-node-tree-target]:hover {
+  color: var(--color-fg-contrast);
+  background: var(--color-bg-secondary);
+  outline: none;
+}
+
+.move_node_tree__collapse,
+.move_node_tree__collapse_spacer {
+  flex: 0 0 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.move_node_tree__collapse {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid rgb(0 0 0 / 10%);
+  border-radius: 50%;
+  background: var(--color-bg-main);
+  color: rgb(0 0 0 / 50%);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.move_node_tree__collapse::before {
+  content: "+";
+}
+
+.move_node_tree__collapse[aria-expanded="true"]::before {
+  content: "−";
+}
+
+.move_node_tree__collapse:hover,
+.move_node_tree__collapse:focus-visible {
+  color: var(--color-fg-contrast);
+  box-shadow: rgb(0 0 0 / 15%) 0 2px 8px 0;
+}
+
+.move_node_tree__document_icon {
+  display: flex;
+  flex: 0 0 16px;
+}
+
+.move_node_tree__item--document > .move_node_tree__row {
+  font-weight: 700;
+}
+
+.move_node_tree__title {
+  min-width: 0;
+  /* text overflow: */
+  display: block;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.move_node_tree__item--moved {
+  background-color: var(--color-bg-secondary);
+}
+
+.move_node_tree__item--moved_branch {
+  color: var(--color-action);
+}
+
+.move_node_tree__item--incompatible {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.move_node_tree__item[data-js-move-node-tree-placement="before"]
+  > .move_node_tree__row::before,
+.move_node_tree__item[data-js-move-node-tree-placement="after"]::after,
+.move_node_tree__item[data-js-move-node-tree-placement="child"]::after {
+  content: "";
+  position: absolute;
+  z-index: 2;
+  height: 4px;
+  background: var(--move-node-tree-indicator);
+  pointer-events: none;
+}
+
+.move_node_tree__item[data-js-move-node-tree-placement="before"]
+  > .move_node_tree__row::before {
+  top: -2px;
+  left: 0;
+  right: 0;
+}
+
+.move_node_tree__item[data-js-move-node-tree-placement="after"]::after,
+.move_node_tree__item[data-js-move-node-tree-placement="child"]::after {
+  bottom: -2px;
+  left: 0;
+  right: 0;
+}
+
+.move_node_tree__item[data-js-move-node-tree-placement="child"]::after {
+  left: calc(var(--base-rhythm) * 4);
+}
+
+/* modals */
+
+sdoc-modal[context="move-node"] {
+  width: 90vw;
+  height: 90vh;
+  max-width: 700px;
+  max-height: 90vh;
+}
+
+sdoc-modal[context="move-node-no-change"],
+sdoc-modal[context="move-node-success"] {
+  text-align: center;
+  width: 420px;
+}
+
+.action_button--disabled[data-testid="node-move-action-disabled"] {
+  /* A disabled Move action has no href, so pointer events cannot trigger the
+     action. They remain enabled here so the browser can show its title. */
+  pointer-events: auto;
+  cursor: not-allowed;
+}
+
+.move_node_modal_message {
+  text-align: center;
+}
+
+.move_node_modal_confirmation_message {
+  line-height: 1.6;
+}
+
+.move_node_confirmation_target_document {
+  display: flex;
+  align-items: center;
+  /* justify-content: center; */
+  /* min-height: calc(var(--base-rhythm) * 4); */
+  /* position: relative; */
+  gap: calc(.5 * var(--base-rhythm));
+  color: var(--color-fg-accent);
+  font-weight: 700;
+}
+
+.move_node_confirmation_target_node {
+  display: none;
+}
+
+.move_node_confirmation_target_node_title {
+  font-style: italic;
+  /* color: var(--color-fg-accent); */
+}
+
+.move_node_confirmation_message_label,
+.move_node_confirmation_placement_label {
+  white-space: nowrap;
+  color: var(--color-fg-main);
+  font-weight: 700;
+  padding-right: calc(.25 * var(--base-rhythm));
+}

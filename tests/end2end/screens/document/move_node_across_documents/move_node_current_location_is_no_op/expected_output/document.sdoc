@@ -1,0 +1,36 @@
+[DOCUMENT]
+TITLE: No-op placements
+
+[REQUIREMENT]
+UID: REQ-BEFORE
+TITLE: Visible node before text
+STATEMENT: The first visible node.
+
+[TEXT]
+STATEMENT: Hidden text content.
+
+[TEXT]
+STATEMENT: Consecutive text content.
+
+[TEXT]
+STATEMENT: >>>
+.. image:: assets/only-image.png
+<<<
+
+[REQUIREMENT]
+UID: REQ-AFTER
+TITLE: Visible node after text
+STATEMENT: The second visible node.
+
+[[SECTION]]
+TITLE: Composite container
+
+[TEXT]
+STATEMENT: Nested text content.
+
+[REQUIREMENT]
+UID: REQ-CHILD
+TITLE: Last child requirement
+STATEMENT: The last child remains in place.
+
+[[/SECTION]]

@@ -2,7 +2,7 @@
 
 ## Declaration of compliance
 
-MANDATORY FIRST ACTION — NO EXCEPTIONS.
+MANDATORY FIRST ACTION. NO EXCEPTIONS.
 
 Before calling any tool or writing any response content, your very first text
 output MUST be a statement of compliance with AGENTS.md and the SDG.

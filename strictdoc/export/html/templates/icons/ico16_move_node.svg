@@ -1,0 +1,13 @@
+<svg
+  class="svg_icon"
+  viewBox="0 0 16 16"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M2,3 H8 V13 H2 Z"></path>
+  <path d="M9,8 H14"></path>
+  <polyline points="11.5 5.5 14 8 11.5 10.5"></polyline>
+</svg>

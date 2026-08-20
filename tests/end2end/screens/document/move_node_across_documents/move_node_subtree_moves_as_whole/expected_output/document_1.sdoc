@@ -1,0 +1,7 @@
+[DOCUMENT]
+TITLE: Document One
+
+[REQUIREMENT]
+UID: REQ-003
+TITLE: Sibling requirement
+STATEMENT: The system shall do the third thing.

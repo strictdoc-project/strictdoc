@@ -1,0 +1,15 @@
+[DOCUMENT]
+TITLE: Document Two
+
+[REQUIREMENT]
+UID: REQ-101
+TITLE: Other document requirement
+STATEMENT: The system shall do a third thing.
+
+[REQUIREMENT]
+UID: REQ-001
+TITLE: Child requirement
+STATEMENT: The system shall do the child thing.
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-002

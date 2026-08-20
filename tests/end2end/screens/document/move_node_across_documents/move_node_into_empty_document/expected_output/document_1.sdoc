@@ -1,0 +1,22 @@
+[DOCUMENT]
+TITLE: Document One
+
+[[SECTION]]
+TITLE: Empty section
+
+[TEXT]
+STATEMENT: >>>
+This section has a TEXT child.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+TITLE: Empty composite target
+
+[REQUIREMENT]
+UID: REQ-002
+TITLE: Second requirement
+STATEMENT: The system shall do the second thing.
+
+[[/SECTION]]

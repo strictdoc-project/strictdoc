@@ -1,5 +1,8 @@
 from datetime import datetime
 
+import pytest
+
+from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
 from strictdoc.export.html.document_type import DocumentType
@@ -108,6 +111,73 @@ def test_non_document_screen_disables_chunked_rendering():
     )
 
     assert view_object.is_chunked_rendering() is False
+
+
+def test_move_node_tree_title_uses_content_for_a_titleless_node():
+    view_object = create_view_object(node_count=1, threshold=0)
+    node = view_object.document.section_contents[0]
+    assert isinstance(node, SDocNode)
+    node.set_field_value(field_name="TITLE", form_field_index=0, value=None)
+    node.set_field_value(
+        field_name="STATEMENT",
+        form_field_index=0,
+        value="  First line\n  second line  ",
+    )
+
+    assert (
+        view_object.get_move_node_tree_title(node) == "First line second line"
+    )
+
+
+def test_move_node_tree_title_truncates_content_preview():
+    view_object = create_view_object(node_count=1, threshold=0)
+    node = view_object.document.section_contents[0]
+    assert isinstance(node, SDocNode)
+    node.set_field_value(field_name="TITLE", form_field_index=0, value=None)
+    node.set_field_value(
+        field_name="STATEMENT",
+        form_field_index=0,
+        value="A" * 100,
+    )
+
+    title = view_object.get_move_node_tree_title(node)
+
+    assert title == "A" * 79 + "…"
+    assert len(title) == 80
+
+
+@pytest.mark.parametrize(
+    "image_markup",
+    (
+        ".. image:: assets/diagrams/system-context.png",
+        "![System context](assets/diagrams/system-context.png)",
+        '<img src="assets/diagrams/system-context.png">',
+    ),
+)
+def test_move_node_tree_title_uses_filename_for_an_image_only_field(
+    image_markup: str,
+):
+    view_object = create_view_object(node_count=1, threshold=0)
+    node = view_object.document.section_contents[0]
+    assert isinstance(node, SDocNode)
+    node.set_field_value(field_name="TITLE", form_field_index=0, value=None)
+    node.set_field_value(
+        field_name="STATEMENT",
+        form_field_index=0,
+        value=image_markup,
+    )
+
+    assert view_object.get_move_node_tree_title(node) == "system-context.png"
+
+
+def test_move_node_tree_title_uses_uid_when_no_content_field_has_a_value():
+    view_object = create_view_object(node_count=1, threshold=0)
+    node = view_object.document.section_contents[0]
+    assert isinstance(node, SDocNode)
+    node.set_field_value(field_name="TITLE", form_field_index=0, value=None)
+    node.set_field_value(field_name="STATEMENT", form_field_index=0, value=None)
+
+    assert view_object.get_move_node_tree_title(node) == "REQ-000"
 
 
 def test_document_content_chunks_cover_all_nodes_in_order():

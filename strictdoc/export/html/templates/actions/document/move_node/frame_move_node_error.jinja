@@ -1,0 +1,7 @@
+{% extends "components/modal/index.jinja" %}
+{%- block modal__context -%}move-node-error{%- endblock -%}
+{%- block modal_container %}
+  <sdoc-modal-message data-testid="move-node-error-message">
+    {{ error_message }}
+  </sdoc-modal-message>
+{% endblock modal_container %}

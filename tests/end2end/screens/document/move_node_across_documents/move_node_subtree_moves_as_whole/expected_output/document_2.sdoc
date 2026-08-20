@@ -1,0 +1,22 @@
+[DOCUMENT]
+TITLE: Document Two
+
+[REQUIREMENT]
+UID: REQ-101
+TITLE: Other document requirement
+STATEMENT: The system shall do a third thing.
+
+[[SECTION]]
+TITLE: Moved section
+
+[REQUIREMENT]
+UID: REQ-001
+TITLE: Child requirement one
+STATEMENT: The system shall do the first thing.
+
+[REQUIREMENT]
+UID: REQ-002
+TITLE: Child requirement two
+STATEMENT: The system shall do the second thing.
+
+[[/SECTION]]

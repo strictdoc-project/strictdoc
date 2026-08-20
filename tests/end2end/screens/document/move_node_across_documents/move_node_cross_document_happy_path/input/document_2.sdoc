@@ -1,0 +1,7 @@
+[DOCUMENT]
+TITLE: Document Two
+
+[REQUIREMENT]
+UID: REQ-101
+TITLE: Other document requirement
+STATEMENT: The system shall do a third thing.

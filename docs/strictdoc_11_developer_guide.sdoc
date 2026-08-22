@@ -645,11 +645,177 @@ TITLE: Software development
 MID: ee60e2514d664e3db2dc7a1a79e0e84f
 STATEMENT: >>>
 - Use this Dev Guide to perform any software development.
-- Use `invoke lint` for linting.
-- Use `invoke test-*` tasks with ``--focus`` argument when iterating on new or
+- Use ``invoke lint`` for linting.
+- Use ``invoke test-*`` tasks with ``--focus`` argument when iterating on new or
   existing features.
 - For features and bugfixes, generate release notes.
 <<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 6463378e6d714365a7801fa6fd23a2b5
+TITLE: Requirements management
+
+[TEXT]
+MID: 2afa551d70d04e3c88946319a7097ea8
+STATEMENT: >>>
+The StrictDoc requirements are split into three levels: L1, L2, and L3. These
+levels correspond to WHY-WHAT-HOW.
+
+Level 1 (WHY):
+
+* Captures requirements towards "a requirements tool".
+* These requirements can be seen as stakeholder requirements in the sense of
+  general systems engineering.
+* Does not contain any StrictDoc-specific requirements.
+* Does not contain any StrictDoc-specific artifacts, such as references to code,
+  classes, folder structure, Git repositories, etc.
+* The L1 document structure is organized according to broad feature clusters
+  expected from a requirements tool.
+* The L1 content assumes that multiple tools could be implemented based on L1.
+  It shall not be hard-coded to StrictDoc.
+
+Level 2 (WHAT):
+
+* Captures high-level requirements (HLR) towards StrictDoc as a concrete
+  requirements tool.
+* The requirements at this level describe WHAT before design, meaning that they
+  do not touch implementation details.
+* The L2 requirements shall not dictate the underlying design or implementation
+  too much. Specific implementation details are delegated to L3.
+* The L2 document's table of contents is organized according to StrictDoc
+  Features at the top level and Capabilities at the next levels of nesting.
+
+Level 3 (HOW):
+
+* Captures low-level requirements (LLR) towards specific StrictDoc software
+  components and implementation details.
+* The low-level requirements describe the HOW of StrictDoc.
+* The low-level requirements are written during or after design.
+* The low-level requirements are the lowest and final requirements level before
+  the actual implementation.
+* The low-level requirements are still testable "shall" statements.
+* The L3 requirements document's table of contents is organized according to
+  StrictDoc Features. Each Feature is further structured according to the
+  contributing software components, with section titles corresponding to folders
+  and files.
+<<<
+
+[[SECTION]]
+MID: 074db0f544644d818fb78601cfaef691
+TITLE: Features and Capabilities
+
+[TEXT]
+MID: 3d46d9d74b3b434aa141bbd669a1d2eb
+STATEMENT: >>>
+StrictDoc's development uses two concepts, "Feature" and "Capability", to better
+structure requirements and other documentation.
+
+A Feature is a major slice of StrictDoc's functionality. Features are controlled
+in StrictDoc's configuration via the `project_features` property.
+
+A Capability can be seen as a smaller Feature. One Feature can contain multiple
+Capabilities. A Capability can also span multiple Features.
+
+Examples of Features: Document screen, HTML2PDF, Project statistics.
+
+Examples of Capabilities: automatic generation of requirement identifiers,
+customized HTML2PDF template, parsing @relation markers as part of the
+requirement-to-source traceability feature.
+
+.. note:: When structuring L2 documents, if a Feature contains multiple functionally related requirements, this could indicate that these requirements should be maintained as part of a Capability.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 95c05391367c41f2a9ec2f064b6e67d6
+TITLE: Requirements traceability
+
+[TEXT]
+MID: 247d65cb14914dde8fe5e2c670898dfa
+STATEMENT: >>>
+The ideal state of the L1-L2-L3 requirements flowdown is full bidirectional
+traceability between all levels.
+
+The requirements are as follows:
+
+* Each L1 requirement must have at least one L2 requirement that references it
+  as a parent.
+* Each L2 requirement must have at least one L3 requirement that references it
+  as a parent.
+* The levels must not be skipped. L3 must not reference L1 directly, and L1 must
+  not reference L3.
+* Source code and tests can reference both L2 and L3 requirements via @relation
+  markers.
+* As a general soft guideline, L2 requirements are referenced by higher-level
+  implementation code and tests, while L3 requirements are referenced by
+  specific implementation snippets or lower levels of testing, such as unit
+  tests.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 9af25b626ee74fbb8add9d015c332349
+TITLE: EARS syntax
+
+[TEXT]
+MID: aad06acc21844f8f87ae3b8f114c96ef
+STATEMENT: >>>
+EARS (Easy Approach to Requirements Syntax) is a small set of sentence
+templates for writing "shall" requirement statements unambiguously. Each
+template combines a trigger/condition clause with a system response clause,
+for example:
+
+* Ubiquitous: ``The <system> shall <response>.``
+* Event-driven: ``When <trigger>, the <system> shall <response>.``
+* State-driven: ``While <state>, the <system> shall <response>.``
+* Unwanted behavior: ``If <trigger>, then the <system> shall <response>.``
+* Optional feature: ``Where <feature>, the <system> shall <response>.``
+
+EARS shall be used for writing requirement statements at all levels (L1, L2,
+L3). It keeps requirements testable and reduces ambiguity for both human
+developers and AI.
+
+See `the original EARS page <https://alistairmavin.com/ears/>`_ for more
+details.
+
+.. note:: EARS is the default, but exceptions are allowed. In some cases, StrictDoc's requirements writing allows "hybrid" requirements with more than one shall statement per requirement, or shall statements complemented by additional content that explains or expands on the requirement's applicability or scope.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 9e15aae3c55f4cd483d2c0a75a365fff
+TITLE: Ongoing requirements work
+
+[TEXT]
+MID: 633ab2a2f430453b8d337b67de75ea5d
+STATEMENT: >>>
+The StrictDoc requirements documentation is an evolving process. The following
+aspects are continuously reworked and still need improvement:
+
+* The requirements writing shall follow the technical writing guidelines and the EARS syntax described in this developer guide.
+* StrictDoc's development relies on AI-assisted work. Due to the limited
+  development resources of the core team, the development process relies more
+  strongly on L2 than on L3. The first priority is to maintain a strong L2/HLR
+  baseline, while L3/LLR can have gaps in documenting the implementation.
+  Nevertheless, the L3 level is gradually being built up with HOW requirements
+  that govern important implementation details that must be respected by both
+  human developers and AI.
+* Do not be surprised if some legacy L2 requirements match the L3 definition.
+  These requirements shall be gradually relocated from L2 to L3.
+* The traceability links shall be established between all requirements. If a
+  link is missing, it has to be fixed eventually.
+* The conceptual split between Feature and Capability is relatively new and has
+  not yet been applied consistently across the L2 and L3 documents. New
+  requirements development will use this concept for both newly developed
+  requirements and the gradual migration of existing requirements.
+<<<
+
+[[/SECTION]]
 
 [[/SECTION]]
 

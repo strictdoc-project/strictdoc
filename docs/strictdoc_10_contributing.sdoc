@@ -124,11 +124,11 @@ TITLE: TeX / LaTeX / Sphinx experts
 [TEXT]
 MID: 75ed9362d86748269f62f5920514b7c2
 STATEMENT: >>>
-The existing template for generating PDF documents using Sphinx looks like this:
-https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/. The template is
-maintained in a separate repository:
-https://github.com/strictdoc-project/sphinx-latex-reqspec-template and does a
-good job but could be improved in terms of look and structure used.
+An example template for generating PDF documents using Sphinx is maintained in a
+separate repository:
+https://github.com/strictdoc-project/sphinx-latex-reqspec-template. This
+template does a good job but could be improved in terms of look and structure
+used.
 
 If you are an expert and have experience of customizing Sphinx/TeX templates,
 consider providing feedback or contributing patches.

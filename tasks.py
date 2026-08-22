@@ -136,7 +136,7 @@ def list_tasks(context):
 def clean(context):
     # https://unix.stackexchange.com/a/689930/77389
     clean_command = r"""
-        rm -rf output/ docs/sphinx/build/ &&
+        rm -rf output/ &&
         find tests/ -type d \( -name output -o -name Output \) -exec rm -rf {} +
     """
     run_invoke(context, clean_command)
@@ -211,49 +211,10 @@ def docs(context):
         """
             python3 -m strictdoc.cli.main
                 export .
-                    --formats=html
+                    --formats=html,html2pdf
                     --output-dir output/strictdoc_website
                     --project-title "StrictDoc"
         """,
-    )
-
-    run_invoke_with_tox(
-        context,
-        ToxEnvironment.DOCUMENTATION,
-        """
-            python3 -m strictdoc.cli.main
-                export ./
-                    --formats=rst
-                    --output-dir output/sphinx
-                    --project-title "StrictDoc"
-        """,
-    )
-
-    run_invoke_with_tox(
-        context,
-        ToxEnvironment.DOCUMENTATION,
-        """
-            cp -r output/sphinx/rst/docs/* docs/sphinx/source/ &&
-            mkdir -p docs/sphinx/source/_assets/ &&
-            cp -v docs/_assets/* docs/sphinx/source/_assets/
-        """,
-    )
-
-    run_invoke_with_tox(
-        context,
-        ToxEnvironment.DOCUMENTATION,
-        """
-            make --directory docs/sphinx html latexpdf SPHINXOPTS="-W --keep-going"
-        """,
-    )
-
-    run_invoke(
-        context,
-        (
-            """
-                open docs/sphinx/build/latex/strictdoc.pdf
-            """
-        ),
     )
 
 

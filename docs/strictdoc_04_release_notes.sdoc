@@ -121,18 +121,18 @@ MID: c9ceba5f4cc74d04b7f389962b1f127a
 STATEMENT: >>>
 This release contains the following enhancements:
 
-1\) Both the web interface and the static HTML export now render large
-documents in lazily loaded chunks. Documents containing more than
+1\) Both the web interface and the static HTML export now render large documents
+in lazily loaded chunks. Documents containing more than
 ``lazy_document_loading_threshold`` nodes (200 by default, configurable in
-``strictdoc_config.py``, 0 disables chunking) initially load only the first chunk
-of nodes together with the table of contents, and the remaining chunks are
-fetched automatically as the user scrolls. This keeps documents with
-thousands of requirements responsive both in the editing GUI and in the
-static export. Lazily loaded documents preserve the content currently
-visible to the user when placeholders are replaced by rendered chunks of
-different heights, viewport positioning is coordinated with node creation,
-deletion, moving, and editing, and the table of contents stays in sync with
-the user's scroll position instead of racing a lazy chunk load.
+``strictdoc_config.py``, 0 disables chunking) initially load only the first
+chunk of nodes together with the table of contents, and the remaining chunks are
+fetched automatically as the user scrolls. This keeps documents with thousands
+of requirements responsive both in the editing GUI and in the static export.
+Lazily loaded documents preserve the content currently visible to the user when
+placeholders are replaced by rendered chunks of different heights, viewport
+positioning is coordinated with node creation, deletion, moving, and editing,
+and the table of contents stays in sync with the user's scroll position instead
+of racing a lazy chunk load.
 
 2\) The JUnit XML test report reader now maps testcase ``<properties>`` to
 fields on generated ``TEST_RESULT`` nodes.

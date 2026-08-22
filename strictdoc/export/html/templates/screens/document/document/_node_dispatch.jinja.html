@@ -1,6 +1,6 @@
-{%- if node.is_document() %}
+{%- if node.is_document_node() %}
   {% include "components/section/index_extends_node.jinja" %}
-{%- elif node.is_requirement() %}
+{%- elif node.is_content_node() %}
   {# FIXME: Remove this commented out code. #}
   {# {%- if node.is_text_node() %}
     {% include "components/text_node/index_extends_node.jinja" %}

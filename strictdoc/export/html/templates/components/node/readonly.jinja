@@ -10,7 +10,7 @@
       show-node-type-name="{{ node_type_string }}"
     {%- endif %}
     {# FIXME: Is this template always called on SDocNode? Can this check be removed? #}
-    {% if sdoc_entity.is_requirement() -%}
+    {% if sdoc_entity.is_content_node() -%}
       node-view="{{ sdoc_entity.get_requirement_style_mode() }}"
     {% endif -%}
     data-testid="node-{{ sdoc_entity.get_type_string() }}"

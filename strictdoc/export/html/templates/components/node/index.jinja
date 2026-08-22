@@ -23,7 +23,7 @@
     data-editable_node="on"
     show-anchors
     node-role="{{ node_type }}"
-    {% if sdoc_entity.is_requirement() %}
+    {% if sdoc_entity.is_content_node() %}
       node-view="{{ sdoc_entity.get_requirement_style_mode() }}"
     {%- endif -%}
     {%- if node_type_string is not none %}{# and node_type_string != 'TEXT' #}

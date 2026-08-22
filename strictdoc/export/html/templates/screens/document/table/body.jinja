@@ -25,7 +25,7 @@
   {# ============================================================ #}
   {# REQUIREMENT ROW                                              #}
   {# ============================================================ #}
-  {%- if node.is_requirement() %}
+  {%- if node.is_content_node() %}
     {%- set requirement = node %}
     <tr data-row-type="{{ node.node_type }}" data-node-mid="{{ requirement.reserved_mid }}">
 
@@ -202,7 +202,7 @@
   {# ============================================================ #}
   {# INCLUDED DOCUMENT ROW                                        #}
   {# ============================================================ #}
-  {%- elif node.is_document() %}
+  {%- elif node.is_document_node() %}
     {%- set section = node %}
     {%- set ns_span = namespace(count=0, counting=false) %}
     {%- for column in view_object.enumerate_table_columns() %}

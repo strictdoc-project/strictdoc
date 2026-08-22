@@ -10,7 +10,7 @@
     >
     {%- for section, node_context_ in view_object.table_of_contents() -%}
       <li data-nodeid="{{ section.reserved_mid.get_string_value() }}"{% set toc_chunk_frame = view_object.chunk_frame_id_for(section) %}{% if toc_chunk_frame %} data-chunk-frame="{{ toc_chunk_frame }}"{% endif %}>
-        {%- if section.is_document() -%}
+        {%- if section.is_document_node() -%}
           {%- if not section.ng_has_requirements and view_object.is_deeptrace() -%}
             <span class="toc-title-no-link" title="Section has no requirements">
               <span class="section-number">

@@ -8,11 +8,11 @@
   {%- if view_object.search_results|length > 0 -%}
     <div class="content">
     {% for node in view_object.search_results %}
-      {% if node.is_requirement() %}
+      {% if node.is_content_node() %}
         {% with requirement=node, document=node.document, node_controls=True %}
           {%- include "components/node_content/tiny_extends_card.jinja" -%}
         {% endwith %}
-      {% elif node.is_document() %}
+      {% elif node.is_document_node() %}
         {% with section=node, document=node.document, node_controls=True %}
           {%- include "components/section/tiny_extends_card.jinja" -%}
         {% endwith %}

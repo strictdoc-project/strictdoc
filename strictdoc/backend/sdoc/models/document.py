@@ -182,10 +182,10 @@ class SDocDocument(SDocDocumentIF):
     def is_root_included_document(self) -> bool:
         return self.document_is_included()
 
-    def is_requirement(self) -> bool:
+    def is_content_node(self) -> bool:
         return False
 
-    def is_document(self) -> bool:
+    def is_document_node(self) -> bool:
         return True
 
     @property

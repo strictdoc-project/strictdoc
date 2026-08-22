@@ -68,7 +68,7 @@ class ExportQuestionnaires:
                 nodes = []
                 for node, _ in document_iterator.all_content(print_fragments=False):
                     if isinstance(node, SDocNode):
-                        if not node.is_requirement():
+                        if not node.is_content_node():
                             continue
                         nodes.append(node)
 

@@ -4,7 +4,7 @@
 {%- set can_use_separator = prev_node is not none or next_node is not none or can_add_first_node -%}
 {%- set can_add_before_next = next_node is not none and view_object.can_insert_next_to_node(next_node) -%}
 {%- set can_add_after_prev = prev_node is not none and view_object.can_insert_next_to_node(prev_node) -%}
-{%- set can_add_child_of_prev = prev_node is not none and (prev_node.is_document() or prev_node.is_composite) and view_object.can_add_node(prev_node) -%}
+{%- set can_add_child_of_prev = prev_node is not none and (prev_node.is_document_node() or prev_node.is_composite) and view_object.can_add_node(prev_node) -%}
 <tr class="content-view__add_new_row-TR"
     data-testid="table-add-row"
     {% if prev_node is not none %}

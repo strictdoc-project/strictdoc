@@ -450,7 +450,7 @@ class SDocNode(SDocNodeIF):
             RequirementFieldName.RATIONALE, singleline_only=False
         )
 
-    def is_requirement(self) -> bool:
+    def is_content_node(self) -> bool:
         return True
 
     def is_normative_node(self) -> bool:
@@ -459,7 +459,7 @@ class SDocNode(SDocNodeIF):
     def is_text_node(self) -> bool:
         return self.node_type == "TEXT"
 
-    def is_document(self) -> bool:
+    def is_document_node(self) -> bool:
         return False
 
     def get_document(self) -> Optional[SDocDocumentIF]:

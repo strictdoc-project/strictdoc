@@ -15,7 +15,7 @@
 
 {%- if title_presence_changed -%}
   {%- for entry_node, _ in content_entries -%}
-    {%- if entry_node.is_requirement() -%}
+    {%- if entry_node.is_content_node() -%}
       {%- set requirement = entry_node -%}
       <turbo-stream action="replace" target="cell-{{ requirement.reserved_mid }}-LEVEL">
         <template>

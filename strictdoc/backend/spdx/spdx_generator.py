@@ -389,7 +389,7 @@ class SPDXGenerator:
                 if not isinstance(node, SDocNode):
                     continue
 
-                if node.is_requirement():
+                if node.is_content_node():
                     if node.reserved_uid is None:
                         continue
 

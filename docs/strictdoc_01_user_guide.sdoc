@@ -260,8 +260,6 @@ which is written using StrictDoc:
 `strictdoc_01_user_guide.sdoc <https://github.com/strictdoc-project/strictdoc/blob/main/docs/strictdoc_01_user_guide.sdoc>`_.
 
 - `StrictDoc HTML export (this website) <https://strictdoc.readthedocs.io/en/latest/>`_
-- `StrictDoc HTML export using Sphinx <https://strictdoc.readthedocs.io/en/latest/sphinx/>`_
-- `StrictDoc PDF export using Sphinx <https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/>`_
 <<<
 
 [[/SECTION]]
@@ -2906,13 +2904,8 @@ The created RST files can be copied to a project created using Sphinx, see
 
 .. code:: text
 
-    cp -v output/YourDoc.rst docs/sphinx/source/
-    cd docs/sphinx && make html
-
-`StrictDoc's own Sphinx/HTML documentation
-<https://strictdoc.readthedocs.io/en/latest/sphinx>`_ is generated this way, see
-the Invoke task:
-`invoke sphinx <https://github.com/strictdoc-project/strictdoc/blob/5c94aab96da4ca21944774f44b2c88509be9636e/tasks.py#L48>`_.
+    cp -v output/YourDoc.rst path/to/sphinx-project/source/
+    cd path/to/sphinx-project && make html
 <<<
 
 [[/SECTION]]
@@ -2937,13 +2930,13 @@ The created RST files can be copied to a project created using Sphinx, see
 
 .. code:: text
 
-    cp -v output/YourDoc.rst docs/sphinx/source/
-    cd docs/sphinx && make pdf
+    cp -v output/YourDoc.rst path/to/sphinx-project/source/
+    cd path/to/sphinx-project && make latexpdf
 
-`StrictDoc's own Sphinx/PDF documentation
-<https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/>`_ is generated
-this way, see the Invoke task:
-`invoke sphinx <https://github.com/strictdoc-project/strictdoc/blob/5c94aab96da4ca21944774f44b2c88509be9636e/tasks.py#L48>`_.
+Building the PDF requires a LaTeX toolchain (for example, ``xelatex``) to be
+installed. For a self-contained way to generate PDFs directly from StrictDoc
+without Sphinx/LaTeX, see the
+[LINK: SECTION-UG-HTML2PDF-document-generator] section.
 <<<
 
 [[/SECTION]]

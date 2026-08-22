@@ -331,16 +331,11 @@ input format for Sphinx.
 
 A two-stage generation is therefore possible: StrictDoc generates RST
 documentation which then can be generated to HTML, PDF, and other formats using
-Sphinx. If you are reading this documentation at
-https://strictdoc.readthedocs.io/en/latest, you are very close to a
-`StrictDoc-Sphinx example <https://strictdoc.readthedocs.io/en/latest/sphinx/>`_.
+Sphinx.
 
-This documentation is first converted to RST format by StrictDoc, which is then
-processed by Read the Docs using Sphinx to generate the HTML website.
-
-The ``StrictDoc -> RST -> Sphinx -> PDF`` example is also generated using
-readthedocs:
-`StrictDoc <https://strictdoc.readthedocs.io/_/downloads/en/latest/pdf/>`_.
+This documentation itself (the website you may currently be reading at
+https://strictdoc.readthedocs.io) is generated directly by StrictDoc's HTML
+and PDF (HTML2PDF) exports, without going through RST or Sphinx.
 <<<
 
 [[/SECTION]]

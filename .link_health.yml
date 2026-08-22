@@ -18,9 +18,6 @@ exceptions:
   - url: https://www.doxygen.nl/manual/external.html
     code: HTTP_403
   - url: http://example.com/strictdoc
-  # FIXME
-  - url: https://strictdoc.readthedocs.io/en/latest/sphinx
-  - url: https://strictdoc.readthedocs.io/en/latest/sphinx/
   # FIXME: Not sure why these are failing now with GitHub.
   - url: https://github.com/strictdoc-project/strictdoc/blob/main/about/StrictDoc.pdf
   - url: https://github.com/strictdoc-project/strictdoc/blob/main/about/2026_WHAT_WHY_HOW_model.pdf

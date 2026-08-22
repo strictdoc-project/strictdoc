@@ -30,7 +30,6 @@ def create_config() -> ProjectConfig:
         ],
         exclude_doc_paths=[
             "/.*/",
-            "/docs/sphinx/",
             "/strictdoc/",
             "/tests/",
         ],

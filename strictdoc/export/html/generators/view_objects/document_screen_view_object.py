@@ -596,11 +596,16 @@ class DocumentScreenViewObject:
         """
         if chunk_size is None:
             chunk_size = self.document_chunk_size()
-        node_mids = [
-            assert_cast(node_, (SDocNodeIF, SDocDocumentIF)).reserved_mid
+        node_entries = [
+            (
+                assert_cast(node_, (SDocNode, SDocDocument)).reserved_mid,
+                self.render_local_anchor(
+                    assert_cast(node_, (SDocNode, SDocDocument))
+                ),
+            )
             for node_, _ in self.document_content_iterator()
         ]
-        return slice_chunks(node_mids, chunk_size)
+        return slice_chunks(node_entries, chunk_size)
 
     def chunk_frame_id_for(
         self, node: Union[SDocNodeIF, SDocDocumentIF]

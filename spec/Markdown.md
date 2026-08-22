@@ -196,6 +196,71 @@ is an empty string).
 derived and merged from related source code. They rely on empty headings, which
 is uncommon but valid syntax in CommonMark.
 
+### Flat sibling requirements
+
+**MID**: 4f5ce4ceb3724387921b01dc446bb2ac \
+**UID**: MD-35
+
+**Statement**:
+
+A heading whose body contains a `**Type**:` record boundary must declare
+`**Type**: SECTION` in its own meta block. A record boundary is a `**Type**:`
+field at column 0, either the first line of the body or preceded by a blank
+line.
+
+This applies even to a single boundary: the heading text would otherwise
+become the record's `TITLE` (per [LINK: MD-21], [LINK: MD-8]), conflicting
+with a record that declares its own `**Title**:`. Without the marker, the
+parser raises a `StrictDocSemanticError` recommending `**Type**: SECTION`.
+
+With the marker declared, the heading becomes a SECTION (its text becomes the
+SECTION `TITLE`), and each record in the body becomes a child node with its
+own fields, including its own `**Title**:` when present, or no title
+otherwise (per [LINK: MD-29]). A `**Type**: TEXT` boundary is excluded from
+this rule, so the SECTION/TEXT-child convention of [LINK: MD-27] and
+[LINK: MD-28] still applies when no other `**Type**:` record is present.
+
+**Rationale**: Some external generators, such as an Excel-to-Markdown
+importer, emit repeated requirement blocks under one heading instead of
+giving each its own heading.
+
+Without `**Type**: SECTION` on the heading, this is rejected:
+
+```markdown
+## Requirements
+
+**Type**: REQUIREMENT \
+**UID**: REQ-1
+
+Statement 1.
+
+**Type**: REQUIREMENT \
+**UID**: REQ-2
+
+Statement 2.
+```
+
+With `**Type**: SECTION` added, this is accepted:
+
+```markdown
+## Requirements
+
+**Type**: SECTION
+
+**Type**: REQUIREMENT \
+**UID**: REQ-1
+
+Statement 1.
+
+**Type**: REQUIREMENT \
+**UID**: REQ-2
+
+Statement 2.
+```
+
+This parses as a SECTION titled "Requirements" containing two untitled
+REQUIREMENT children, REQ-1 and REQ-2.
+
 ### SECTION node
 
 **MID**: 7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d \

@@ -6,6 +6,12 @@
   - src points to the server endpoint that returns this chunk's content.
   - data-node-mids maps every semantic node, including nodes
     omitted from TOC, to the frame that can load it.
+  - data-anchors mirrors data-node-mids position-for-position with
+    each node's rendered URL fragment instead of its MID.
+    toc_chunk_navigation.js matches a deep-link fragment against
+    this list to resolve an unloaded chunk even for a node with no
+    TOC entry (a node without a TITLE is omitted from the TOC - see
+    SDocDocumentIterator.table_of_contents()).
 
   - node.css uses the placeholder class to reserve approximate
     scroll space until Turbo loads the chunk content.
@@ -20,5 +26,6 @@
   src="/fragments/document/{{ view_object.document.reserved_mid }}/chunk?from_node={{ chunk.first_node_mid }}&amp;count={{ chunk.size }}&amp;chunk={{ chunk.index }}"
   style="--document-chunk-size: {{ chunk.size }};"
   data-node-mids="{{ chunk.node_mids | join(' ') }}"
+  data-anchors="{{ chunk.anchors | join(' ') }}"
   data-testid="document-chunk-placeholder"
 ></turbo-frame>

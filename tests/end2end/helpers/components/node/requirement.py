@@ -215,6 +215,14 @@ class Requirement(Node):  # pylint: disable=invalid-name
             by=By.XPATH,
         )
 
+    def do_click_on_parent_relation_link(self, parent_uid: str) -> None:
+        self.test_case.click_xpath(
+            f"{self.node_xpath}"
+            "//sdoc-node-field[@data-field-label='parent relations']"
+            "//a[contains(@class, 'requirement__link-parent')]"
+            f"[contains(., '{parent_uid}')]"
+        )
+
     # clone
 
     def do_clone_requirement(self) -> Form_EditRequirement:

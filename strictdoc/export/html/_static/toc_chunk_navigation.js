@@ -9,10 +9,16 @@
   // native navigation finds nothing and silently does not scroll.
   //
   // Each TOC <li> is stamped server-side with
-  // data-chunk-frame="document-chunk-N" (see toc.jinja). When the target is
-  // missing we force-load that one frame, then scroll once its content
-  // arrives. Loading a single chunk is enough: the unloaded placeholders
-  // above it reserve their height, so the target's scroll position holds.
+  // data-chunk-frame="document-chunk-N" (see toc.jinja), and each unloaded
+  // chunk placeholder carries its own data-anchors list (see
+  // document_chunk_lazy_placeholder.jinja.html) naming every node's anchor
+  // in that chunk, including nodes without a TITLE that have no TOC entry
+  // at all. When the target is missing we resolve its chunk from that list
+  // (falling back to the TOC for a link that already carries its own
+  // chunk-frame data, e.g. a TOC click) and force-load that one frame, then
+  // scroll once its content arrives. Loading a single chunk is enough: the
+  // unloaded placeholders above it reserve their height, so the target's
+  // scroll position holds.
 
   if (window.__sdocTocChunkNavWired) return;
   window.__sdocTocChunkNavWired = true;
@@ -119,6 +125,25 @@
     return toc.querySelector(`a[anchor="${CSS.escape(fragment)}"]`);
   }
 
+  // A node without a TITLE has no TOC entry at all (see
+  // SDocDocumentIterator.table_of_contents()), so tocLinkForFragment()
+  // cannot resolve it. Every still-unloaded chunk placeholder carries its
+  // own data-anchors list (see document_chunk_lazy_placeholder.jinja.html),
+  // covering every content node in that chunk, TOC-listed or not - this is
+  // the primary resolution path; the TOC lookup remains as a fallback.
+  function chunkFrameForAnchor(fragment) {
+    const placeholders = document.querySelectorAll(
+      `.${CHUNK_PLACEHOLDER_CLASS}[data-anchors]`
+    );
+    for (const placeholder of placeholders) {
+      if (placeholder.dataset.anchors.split(" ").includes(fragment)) {
+        return placeholder.id;
+      }
+    }
+    const tocLink = tocLinkForFragment(fragment);
+    return tocLink ? chunkFrameForLink(tocLink) : null;
+  }
+
   function refreshTargetElement(fragment) {
     // Fragment navigation (a TOC click, hashchange, or the initial page
     // load) may already have run before this chunk had loaded, at which
@@ -208,9 +233,9 @@
       scrollToFragment(fragment);
       return;
     }
-    const tocLink = link || tocLinkForFragment(fragment);
-    if (!tocLink) return;
-    const frameId = chunkFrameForLink(tocLink);
+    const frameId = link
+      ? chunkFrameForLink(link)
+      : chunkFrameForAnchor(fragment);
     if (frameId) {
       window.StrictDoc.contentViewport?.beginExplicitNavigation?.(frameId);
       loadChunkThenScroll(frameId, fragment);

@@ -54,6 +54,7 @@ class SDMarkdownWriter:
                 node=node,
                 heading_level=2,
                 line_width=line_width,
+                parent_supports_flat_children=False,
             )
             if node_block is None or len(node_block) == 0:
                 continue
@@ -130,6 +131,7 @@ class SDMarkdownWriter:
         node: SDocNode,
         heading_level: int,
         line_width: Optional[int] = None,
+        parent_supports_flat_children: bool = False,
     ) -> Optional[str]:
         if node.autogen:
             return None
@@ -139,13 +141,17 @@ class SDMarkdownWriter:
                 node, line_width=line_width
             )
 
-        if node.reserved_title is None:
+        # A titleless node (SDOC-MD-29) has no heading of its own, so it can
+        # only round-trip as a flat sibling record (SDOC-MD-35) written
+        # directly into the parent's body. That convention is only readable
+        # back when the parent is a SECTION (its own **Type**: SECTION marker
+        # is what tells the reader to look for flat-record boundaries inside
+        # its body); a titleless node directly under the document root, or
+        # under a REQUIREMENT, has no such container and would either merge
+        # into unrelated sibling content or be misread on the next parse, so
+        # it is dropped instead, same as before this node type was supported.
+        if node.reserved_title is None and not parent_supports_flat_children:
             return None
-
-        heading_hashes = "#" * max(1, heading_level)
-        heading_text = (
-            f"{heading_hashes} {SDMarkdownWriter._to_lf(node.reserved_title)}"
-        )
 
         body_blocks: List[str] = []
         own_fields_block = SDMarkdownWriter._serialize_node_fields(
@@ -154,16 +160,28 @@ class SDMarkdownWriter:
         if own_fields_block is not None and len(own_fields_block) > 0:
             body_blocks.append(own_fields_block)
 
+        node_supports_flat_children = node.node_type == "SECTION"
         for child_node in node.section_contents:
             if isinstance(child_node, SDocNode):
                 child_block = SDMarkdownWriter._serialize_node(
                     node=child_node,
                     heading_level=heading_level + 1,
                     line_width=line_width,
+                    parent_supports_flat_children=node_supports_flat_children,
                 )
                 if child_block is None or len(child_block) == 0:
                     continue
                 body_blocks.append(child_block)
+
+        if node.reserved_title is None:
+            if len(body_blocks) == 0:
+                return None
+            return "\n\n".join(body_blocks)
+
+        heading_hashes = "#" * max(1, heading_level)
+        heading_text = (
+            f"{heading_hashes} {SDMarkdownWriter._to_lf(node.reserved_title)}"
+        )
 
         if len(body_blocks) == 0:
             return heading_text
@@ -205,10 +223,28 @@ class SDMarkdownWriter:
         section_has_mid = node.node_type == "SECTION" and (
             should_inject_mid or "MID" in node.ordered_fields_lookup
         )
-        if (
-            document_grammar is not None
-            and node.node_type != "TEXT"
-            and (document_grammar.has_custom_elements() or section_has_mid)
+        # A SECTION whose children are titleless flat records (SDOC-MD-35)
+        # must keep its own explicit **Type**: SECTION marker: without it,
+        # a re-read cannot tell the heading apart from a heading that simply
+        # holds prose, and raises the "flat records require Type: SECTION"
+        # validation error introduced for that ambiguity.
+        section_has_flat_children = node.node_type == "SECTION" and any(
+            isinstance(child, SDocNode)
+            and child.node_type != "TEXT"
+            and child.reserved_title is None
+            for child in node.section_contents
+        )
+        # A titleless node (SDOC-MD-29) has no heading to distinguish it from
+        # surrounding content, so its own **Type**: marker is what lets a
+        # re-read find the record boundary (SDOC-MD-35) — emit it
+        # unconditionally, regardless of grammar.
+        if node.node_type != "TEXT" and (
+            node.reserved_title is None
+            or section_has_flat_children
+            or (
+                document_grammar is not None
+                and (document_grammar.has_custom_elements() or section_has_mid)
+            )
         ):
             meta_fields.append(("Type", node.node_type))
 

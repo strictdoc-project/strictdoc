@@ -431,150 +431,269 @@ class SDMarkdownReader:
             assert len(stack) > 0
 
             parent_node = stack[-1][1]
+
             parsed_node = SDMarkdownReader._parse_markdown_node(
                 heading_node.title,
                 heading_node.body,
                 file_path=file_path,
                 has_custom_grammar=has_custom_grammar,
             )
+            created_node = SDMarkdownReader._process_heading_into_parent(
+                parsed_node=parsed_node,
+                title=heading_node.title,
+                heading_body=heading_node.body,
+                heading_line_start=heading_node.line_start,
+                parent_node=parent_node,
+                document=document,
+                document_reference=document_reference,
+                including_document_reference=including_document_reference,
+                file_path=file_path,
+                project_config=project_config,
+                has_custom_grammar=has_custom_grammar,
+            )
+            stack.append((heading_node.level, created_node))
 
-            if parsed_node.valid_for_requirement:
-                if parsed_node.has_duplicates:
+            previous_level = heading_node.level
+
+    @staticmethod
+    def _process_heading_into_parent(
+        *,
+        parsed_node: "ParsedMarkdownNode",
+        title: str,
+        heading_body: str,
+        heading_line_start: int,
+        parent_node: Union[SDocDocument, SDocNode],
+        document: SDocDocument,
+        document_reference: DocumentReference,
+        including_document_reference: DocumentReference,
+        file_path: Optional[str],
+        project_config: Optional[ProjectConfig],
+        has_custom_grammar: bool = False,
+    ) -> SDocNode:
+        """
+        Turn one parsed heading (or flat record) into a REQUIREMENT or
+        SECTION node, append it to parent_node, and return it.
+        """
+        if parsed_node.valid_for_requirement:
+            if parsed_node.has_duplicates:
+                # A `**Type**:` record marker in the body is the signature of
+                # flat sibling requirements (SDOC-MD-35): one heading holding
+                # one or more requirement records without giving each its own
+                # subheading. That combination always requires the heading to
+                # declare `**Type**: SECTION` explicitly, so point the user
+                # there instead of the generic duplicate-field message.
+                if (
+                    len(
+                        SDMarkdownReader._find_flat_record_boundaries(
+                            heading_body
+                        )
+                    )
+                    > 0
+                ):
                     raise StrictDocSemanticError(
                         title=(
-                            "Markdown parsing error: duplicate field names "
-                            "in a valid requirement node are not allowed."
+                            "Markdown parsing error: a **Type**: record "
+                            "under this heading requires the heading itself "
+                            "to declare **Type**: SECTION."
                         ),
-                        hint=None,
-                        example=None,
-                        line=heading_node.line_start,
+                        hint=(
+                            "Add **Type**: SECTION to this heading's meta "
+                            "block to make it an explicit container for the "
+                            "record(s) below."
+                        ),
+                        example="**Type**: SECTION",
+                        line=heading_line_start,
                         col=1,
                         filename=file_path,
                     )
+                raise StrictDocSemanticError(
+                    title=(
+                        "Markdown parsing error: duplicate field names "
+                        "in a valid requirement node are not allowed."
+                    ),
+                    hint=None,
+                    example=None,
+                    line=heading_line_start,
+                    col=1,
+                    filename=file_path,
+                )
 
-                requirement_node = SDMarkdownReader._create_requirement_node(
-                    parent=parent_node,
-                    title=heading_node.title,
-                    fields=parsed_node.fields,
+            requirement_node = SDMarkdownReader._create_requirement_node(
+                parent=parent_node,
+                title=title,
+                fields=parsed_node.fields,
+                document_reference=document_reference,
+                including_document_reference=including_document_reference,
+                file_path=file_path,
+                project_config=project_config,
+                node_type=parsed_node.explicit_node_type or "REQUIREMENT",
+            )
+            parent_node.section_contents.append(requirement_node)
+
+            document.ng_has_requirements = True
+            cursor_node: Optional[SDocNode]
+            if isinstance(parent_node, SDocNode):
+                cursor_node = parent_node
+            else:
+                cursor_node = None
+            while cursor_node is not None:
+                cursor_node.ng_has_requirements = True
+                parent_candidate = cursor_node.parent
+                if isinstance(parent_candidate, SDocNode):
+                    cursor_node = parent_candidate
+                else:
+                    cursor_node = None
+            return requirement_node
+
+        section_node = SDocNode.create_section(
+            parent_node,
+            document,
+            title,
+        )
+        section_node.ng_including_document_reference = (
+            including_document_reference
+        )
+
+        # When processed_body is set the meta block has been stripped;
+        # use it to avoid duplicating **Type**: / **Prefix**: / **MID**:
+        # lines as prose in the TEXT child.  Otherwise fall back to the
+        # raw heading body so ambiguous content is preserved.
+        effective_body = (
+            parsed_node.processed_body
+            if parsed_node.processed_body is not None
+            else heading_body
+        )
+
+        # An explicit `**Type**: SECTION` heading unambiguously marks a
+        # container: flat `**Type**:` records in the remaining body become
+        # children instead of one verbatim TEXT node (SDOC-MD-35). The
+        # `**Type**: TEXT` prefix convention (SDOC-MD-27/MD-28) is excluded
+        # so it keeps producing a single TEXT child as before.
+        section_record_boundaries = (
+            SDMarkdownReader._find_flat_record_boundaries(
+                effective_body, exclude_type_value="TEXT"
+            )
+            if parsed_node.explicit_node_type == "SECTION"
+            else []
+        )
+
+        # parsed_node.fields merges the section's own meta block with
+        # content fields parsed from the *whole* remaining body; when that
+        # body actually holds flat child records, those content fields
+        # belong to the children, not the section, so the section's own
+        # UID/MID/PREFIX must come from just the section's meta block.
+        if len(section_record_boundaries) > 0:
+            section_meta_fields, _, _ = SDMarkdownReader._parse_meta_fields(
+                heading_body.splitlines(keepends=True), file_path=file_path
+            )
+            for field_ in section_meta_fields:
+                field_.name = (
+                    SDMarkdownReader.default_grammar_field_aliases.get(
+                        field_.name, field_.name
+                    )
+                )
+            section_own_fields = [
+                field_
+                for field_ in section_meta_fields
+                if field_.name != "Type"
+            ]
+        else:
+            section_own_fields = parsed_node.fields
+
+        uid_values: List[str] = []
+        mid_value: Optional[str] = None
+        prefix_value: Optional[str] = None
+        for field_ in section_own_fields:
+            if field_.name == "UID":
+                uid_values.append(field_.value)
+            elif field_.name == "MID" and mid_value is None:
+                mid_value = field_.value
+            elif field_.name == "PREFIX" and prefix_value is None:
+                prefix_value = field_.value
+
+        # Preserve UID from the section meta block for LINK resolution.
+        # Must run before the MID block so field order ends up MID, UID, PREFIX, TITLE.
+        # A duplicated UID is skipped; the raw-body fallback below preserves it instead.
+        if len(uid_values) == 1:
+            uid_sdoc_field = SDocNodeField.create_from_string(
+                parent=section_node,
+                field_name="UID",
+                field_value=uid_values[0],
+                multiline=False,
+            )
+            existing = list(section_node.ordered_fields_lookup.items())
+            section_node.ordered_fields_lookup.clear()
+            section_node.ordered_fields_lookup["UID"] = [uid_sdoc_field]
+            section_node.ordered_fields_lookup.update(existing)
+        # Preserve MID from the section meta block (e.g. **Type**: SECTION \ **MID**: ...).
+        # create_section does not accept fields, so we patch it in afterwards.
+        # MID must be inserted before TITLE to match the grammar field order.
+        if mid_value is not None:
+            mid_sdoc_field = SDocNodeField.create_from_string(
+                parent=section_node,
+                field_name="MID",
+                field_value=mid_value,
+                multiline=False,
+            )
+            existing = list(section_node.ordered_fields_lookup.items())
+            section_node.ordered_fields_lookup.clear()
+            section_node.ordered_fields_lookup["MID"] = [mid_sdoc_field]
+            section_node.ordered_fields_lookup.update(existing)
+            section_node.reserved_mid = MID(mid_value)
+            section_node.mid_permanent = True
+        # Preserve Prefix from the section meta block.
+        # The internal PREFIX key is inserted before TITLE (after
+        # MID) to keep the field order: MID, LEVEL, PREFIX, TITLE.
+        if prefix_value is not None:
+            prefix_sdoc_field = SDocNodeField.create_from_string(
+                parent=section_node,
+                field_name="PREFIX",
+                field_value=prefix_value,
+                multiline=False,
+            )
+            title_entry = section_node.ordered_fields_lookup.pop("TITLE", None)
+            section_node.ordered_fields_lookup["PREFIX"] = [prefix_sdoc_field]
+            if title_entry is not None:
+                section_node.ordered_fields_lookup["TITLE"] = title_entry
+        parent_node.section_contents.append(section_node)
+
+        if len(section_record_boundaries) > 0:
+            for record_body in SDMarkdownReader._split_flat_records(
+                effective_body, section_record_boundaries
+            ):
+                record_parsed_node = SDMarkdownReader._parse_markdown_node(
+                    "",
+                    record_body,
+                    file_path=file_path,
+                    has_custom_grammar=has_custom_grammar,
+                )
+                SDMarkdownReader._process_heading_into_parent(
+                    parsed_node=record_parsed_node,
+                    title="",
+                    heading_body=record_body,
+                    heading_line_start=heading_line_start,
+                    parent_node=section_node,
+                    document=document,
                     document_reference=document_reference,
                     including_document_reference=including_document_reference,
                     file_path=file_path,
                     project_config=project_config,
-                    node_type=parsed_node.explicit_node_type or "REQUIREMENT",
+                    has_custom_grammar=has_custom_grammar,
                 )
-                parent_node.section_contents.append(requirement_node)
-                stack.append((heading_node.level, requirement_node))
+        elif len(effective_body.strip()) > 0:
+            text_mid, text_statement = SDMarkdownReader._try_parse_text_meta(
+                effective_body
+            )
+            text_node = SDMarkdownReader._create_text_node(
+                parent=section_node,
+                statement=text_statement,
+                document_reference=document_reference,
+                including_document_reference=including_document_reference,
+                mid=text_mid,
+            )
+            section_node.section_contents.append(text_node)
 
-                document.ng_has_requirements = True
-                cursor_node: Optional[SDocNode]
-                if isinstance(parent_node, SDocNode):
-                    cursor_node = parent_node
-                else:
-                    cursor_node = None
-                while cursor_node is not None:
-                    cursor_node.ng_has_requirements = True
-                    parent_candidate = cursor_node.parent
-                    if isinstance(parent_candidate, SDocNode):
-                        cursor_node = parent_candidate
-                    else:
-                        cursor_node = None
-            else:
-                section_node = SDocNode.create_section(
-                    parent_node,
-                    document,
-                    heading_node.title,
-                )
-                section_node.ng_including_document_reference = (
-                    including_document_reference
-                )
-                uid_values: List[str] = []
-                mid_value: Optional[str] = None
-                prefix_value: Optional[str] = None
-                for field_ in parsed_node.fields:
-                    if field_.name == "UID":
-                        uid_values.append(field_.value)
-                    elif field_.name == "MID" and mid_value is None:
-                        mid_value = field_.value
-                    elif field_.name == "PREFIX" and prefix_value is None:
-                        prefix_value = field_.value
-
-                # Preserve UID from the section meta block for LINK resolution.
-                # Must run before the MID block so field order ends up MID, UID, PREFIX, TITLE.
-                # A duplicated UID is skipped; the raw-body fallback below preserves it instead.
-                if len(uid_values) == 1:
-                    uid_sdoc_field = SDocNodeField.create_from_string(
-                        parent=section_node,
-                        field_name="UID",
-                        field_value=uid_values[0],
-                        multiline=False,
-                    )
-                    existing = list(section_node.ordered_fields_lookup.items())
-                    section_node.ordered_fields_lookup.clear()
-                    section_node.ordered_fields_lookup["UID"] = [uid_sdoc_field]
-                    section_node.ordered_fields_lookup.update(existing)
-                # Preserve MID from the section meta block (e.g. **Type**: SECTION \ **MID**: ...).
-                # create_section does not accept fields, so we patch it in afterwards.
-                # MID must be inserted before TITLE to match the grammar field order.
-                if mid_value is not None:
-                    mid_sdoc_field = SDocNodeField.create_from_string(
-                        parent=section_node,
-                        field_name="MID",
-                        field_value=mid_value,
-                        multiline=False,
-                    )
-                    existing = list(section_node.ordered_fields_lookup.items())
-                    section_node.ordered_fields_lookup.clear()
-                    section_node.ordered_fields_lookup["MID"] = [mid_sdoc_field]
-                    section_node.ordered_fields_lookup.update(existing)
-                    section_node.reserved_mid = MID(mid_value)
-                    section_node.mid_permanent = True
-                # Preserve Prefix from the section meta block.
-                # The internal PREFIX key is inserted before TITLE (after
-                # MID) to keep the field order: MID, LEVEL, PREFIX, TITLE.
-                if prefix_value is not None:
-                    prefix_sdoc_field = SDocNodeField.create_from_string(
-                        parent=section_node,
-                        field_name="PREFIX",
-                        field_value=prefix_value,
-                        multiline=False,
-                    )
-                    title_entry = section_node.ordered_fields_lookup.pop(
-                        "TITLE", None
-                    )
-                    section_node.ordered_fields_lookup["PREFIX"] = [
-                        prefix_sdoc_field
-                    ]
-                    if title_entry is not None:
-                        section_node.ordered_fields_lookup["TITLE"] = (
-                            title_entry
-                        )
-                parent_node.section_contents.append(section_node)
-
-                # When processed_body is set the meta block has been stripped;
-                # use it to avoid duplicating **Type**: / **Prefix**: / **MID**:
-                # lines as prose in the TEXT child.  Otherwise fall back to the
-                # raw heading body so ambiguous content is preserved.
-                effective_body = (
-                    parsed_node.processed_body
-                    if parsed_node.processed_body is not None
-                    else heading_node.body
-                )
-                if len(effective_body.strip()) > 0:
-                    text_mid, text_statement = (
-                        SDMarkdownReader._try_parse_text_meta(effective_body)
-                    )
-                    text_node = SDMarkdownReader._create_text_node(
-                        parent=section_node,
-                        statement=text_statement,
-                        document_reference=document_reference,
-                        including_document_reference=including_document_reference,
-                        mid=text_mid,
-                    )
-                    section_node.section_contents.append(text_node)
-
-                stack.append((heading_node.level, section_node))
-
-            previous_level = heading_node.level
+        return section_node
 
     @staticmethod
     def _fallback_document_title(file_path: Optional[str]) -> str:
@@ -788,7 +907,13 @@ class SDMarkdownReader:
         parsed_field_names = list(
             map(lambda field_: field_.name, parsed_fields)
         )
-        parsed_field_names.append("TITLE")
+        # A heading-derived TITLE is only actually added to the node's fields
+        # when the heading has text (see _create_requirement_node below); an
+        # empty heading must not collide with a legitimate explicit
+        # **Title**: content field (e.g. on an untitled flat sibling record,
+        # SDOC-MD-35).
+        if len(title) > 0:
+            parsed_field_names.append("TITLE")
 
         has_duplicates = len(set(parsed_field_names)) != len(parsed_field_names)
         has_mid_or_uid = (
@@ -1021,6 +1146,95 @@ class SDMarkdownReader:
         return parsed_fields, True
 
     @staticmethod
+    def _compute_fence_interior_lines(body_lines: List[str]) -> Set[int]:
+        """Return indices of lines inside fenced code blocks (opaque content)."""
+        fence_interior: Set[int] = set()
+        _fence_open_re = re.compile(r"^(`{3,}|~{3,})")
+        line_count = len(body_lines)
+        _fi = 0
+        while _fi < line_count:
+            _m = _fence_open_re.match(
+                SDMarkdownReader._line_without_line_ending(body_lines[_fi])
+            )
+            if _m:
+                _fence_char = _m.group(1)[0]
+                _fence_min = len(_m.group(1))
+                _close_re = re.compile(
+                    rf"^{re.escape(_fence_char)}{{{_fence_min},}}\s*$"
+                )
+                _fi += 1
+                while _fi < line_count:
+                    _inner = SDMarkdownReader._line_without_line_ending(
+                        body_lines[_fi]
+                    )
+                    if _close_re.match(_inner):
+                        _fi += 1
+                        break
+                    fence_interior.add(_fi)
+                    _fi += 1
+            else:
+                _fi += 1
+        return fence_interior
+
+    @staticmethod
+    def _find_flat_record_boundaries(
+        body: str, exclude_type_value: Optional[str] = None
+    ) -> List[int]:
+        """
+        Find the start indices of flat sibling requirement records in a heading body.
+
+        A record boundary is a `**Type**:` line at column 0, not inside a
+        fenced code block, that is either the first line of the body or is
+        immediately preceded by a blank line. This is the same marker that
+        already opens a node's meta block, so a body with more than one such
+        marker holds multiple flat records instead of one (SDOC-MD-35).
+
+        exclude_type_value skips boundaries whose Type value equals it
+        (case-sensitive, ignoring a trailing backslash continuation marker);
+        used to keep the `**Type**: TEXT` prefix convention (SDOC-MD-27/
+        MD-28) from being misread as a flat record under an explicit
+        `**Type**: SECTION` heading.
+        """
+        body_lines = body.splitlines(keepends=True)
+        fence_interior = SDMarkdownReader._compute_fence_interior_lines(
+            body_lines
+        )
+        boundaries: List[int] = []
+        for line_index, line in enumerate(body_lines):
+            if line_index in fence_interior:
+                continue
+            if line_index > 0 and not SDMarkdownReader._is_empty_line(
+                body_lines[line_index - 1]
+            ):
+                continue
+            line_text = SDMarkdownReader._line_without_line_ending(line)
+            match = SDMarkdownReader.plain_field_pattern.match(line_text)
+            if match is None or match.group("name") != "Type":
+                continue
+            if exclude_type_value is not None:
+                type_value = match.group("value").strip()
+                if type_value.endswith("\\"):
+                    type_value = type_value[:-1].strip()
+                if type_value == exclude_type_value:
+                    continue
+            boundaries.append(line_index)
+        return boundaries
+
+    @staticmethod
+    def _split_flat_records(body: str, boundaries: List[int]) -> List[str]:
+        """Split a heading body into per-record bodies at the given boundary indices."""
+        body_lines = body.splitlines(keepends=True)
+        chunks: List[str] = []
+        for boundary_index, start in enumerate(boundaries):
+            end = (
+                boundaries[boundary_index + 1]
+                if boundary_index + 1 < len(boundaries)
+                else len(body_lines)
+            )
+            chunks.append("\n" + "".join(body_lines[start:end]))
+        return chunks
+
+    @staticmethod
     def _parse_content_fields(
         body_lines: List[str],
         file_path: Optional[str],
@@ -1045,31 +1259,9 @@ class SDMarkdownReader:
         # Pre-compute line indices that fall *inside* fenced code blocks
         # (between the opening and closing fence markers).  Those lines must
         # not be matched against plain_field_pattern — they are opaque content.
-        fence_interior: Set[int] = set()
-        _fence_open_re = re.compile(r"^(`{3,}|~{3,})")
-        _fi = 0
-        while _fi < line_count:
-            _m = _fence_open_re.match(
-                SDMarkdownReader._line_without_line_ending(body_lines[_fi])
-            )
-            if _m:
-                _fence_char = _m.group(1)[0]
-                _fence_min = len(_m.group(1))
-                _close_re = re.compile(
-                    rf"^{re.escape(_fence_char)}{{{_fence_min},}}\s*$"
-                )
-                _fi += 1
-                while _fi < line_count:
-                    _inner = SDMarkdownReader._line_without_line_ending(
-                        body_lines[_fi]
-                    )
-                    if _close_re.match(_inner):
-                        _fi += 1
-                        break
-                    fence_interior.add(_fi)
-                    _fi += 1
-            else:
-                _fi += 1
+        fence_interior: Set[int] = (
+            SDMarkdownReader._compute_fence_interior_lines(body_lines)
+        )
 
         while line_index < line_count:
             line = body_lines[line_index]

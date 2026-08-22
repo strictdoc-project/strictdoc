@@ -31,11 +31,10 @@ jobs:
       run: |
         pip install -r requirements.bootstrap.txt
 
-    - name: Prepare the check tox environment and Playwright's browser binary
+    - name: Prepare the check uv environment and Playwright's browser binary
       run: |
-        tox -e py310-check --notest
-        ./build/tox/py310-check/bin/python developer/pip_install_strictdoc_deps.py
-        ./build/tox/py310-check/bin/python -m playwright install --with-deps chromium
+        UV_PROJECT_ENVIRONMENT=build/uv/check uv sync --frozen --no-install-project --group check
+        ./build/uv/check/bin/python -m playwright install --with-deps chromium
 
     - name: Run screencast tests
       run: |

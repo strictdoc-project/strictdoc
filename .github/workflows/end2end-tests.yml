@@ -114,13 +114,9 @@ jobs:
       run: |
         pip install -r requirements.bootstrap.txt
 
-    - name: "Windows specific: Install StrictDoc's dependencies"
+    - name: "Windows specific: Install StrictDoc's and Check dependencies (everything for test)"
       run: |
-        python developer/pip_install_strictdoc_deps.py
-
-    - name: "Windows specific: Install Check dependencies (everything for test)"
-      run: |
-        pip install -r requirements.check.txt
+        uv sync --frozen --active --no-install-project --group check
 
     - name: Run Lint tasks
       run: |

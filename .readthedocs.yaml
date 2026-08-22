@@ -14,5 +14,5 @@ build:
     # if the documentation already uses new features.
     - pip install -U --pre git+https://github.com/strictdoc-project/strictdoc.git@main
 
-    # Export documentation to HTML and PDF (html2pdf).
-    - strictdoc export . --formats=html,html2pdf --output $READTHEDOCS_OUTPUT/
+    # Export documentation to HTML.
+    - strictdoc export . --formats=html --output $READTHEDOCS_OUTPUT/

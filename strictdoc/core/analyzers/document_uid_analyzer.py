@@ -1,8 +1,10 @@
 import typing
 from collections import Counter
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.grammar_element import GrammarElement
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.core.analyzers.document_stats import (
     DocumentStats,
@@ -11,6 +13,7 @@ from strictdoc.core.analyzers.document_stats import (
 )
 from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.document_tree import DocumentTree
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.string import (
@@ -23,6 +26,7 @@ class DocumentUIDAnalyzer:
     @staticmethod
     def analyze_document_tree(
         traceability_index: TraceabilityIndex,
+        project_config: Optional[ProjectConfig] = None,
     ) -> DocumentTreeStats:
         global_requirements_per_prefix: Dict[str, SinglePrefixRequirements] = {}
         document_tree_stats: List[DocumentStats] = []
@@ -34,7 +38,11 @@ class DocumentUIDAnalyzer:
 
         for document in document_tree.document_list:
             document_stats: DocumentStats = (
-                DocumentUIDAnalyzer.analyze_document(document)
+                DocumentUIDAnalyzer.analyze_document(
+                    document,
+                    traceability_index=traceability_index,
+                    project_config=project_config,
+                )
             )
             for (
                 requirement_prefix_,
@@ -63,6 +71,8 @@ class DocumentUIDAnalyzer:
     @staticmethod
     def analyze_document(
         document: SDocDocument,
+        traceability_index: Optional[TraceabilityIndex] = None,
+        project_config: Optional[ProjectConfig] = None,
     ) -> DocumentStats:
         this_document_stats = DocumentStats(document)
         document_iterator = SDocDocumentIterator(document)
@@ -80,7 +90,22 @@ class DocumentUIDAnalyzer:
             if node.node_type in ("TEXT", "SECTION"):
                 continue
             requirement: SDocNode = node
-            node_prefix: typing.Optional[str] = requirement.get_prefix()
+            node_prefix: typing.Optional[str] = None
+            if project_config is not None and traceability_index is not None:
+                grammar: DocumentGrammar = assert_cast(
+                    document.grammar, DocumentGrammar
+                )
+                grammar_element: GrammarElement = grammar.elements_by_type[
+                    requirement.node_type
+                ]
+                node_prefix = project_config.resolve_custom_node_prefix(
+                    requirement,
+                    grammar_element,
+                    document,
+                    traceability_index,
+                )
+            if node_prefix is None:
+                node_prefix = requirement.get_prefix()
             if node_prefix is None:
                 continue
 

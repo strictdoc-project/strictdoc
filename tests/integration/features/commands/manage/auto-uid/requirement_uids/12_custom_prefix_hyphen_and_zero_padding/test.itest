@@ -1,0 +1,16 @@
+#
+# GitHub PR #3133 (comment): a user asked how to get UIDs like
+# DOCPREFIX-TEST-0001 instead of DOCPREFIX-TEST0001 for a custom grammar
+# element (TEST).
+#
+# This combines both hooks added in this PR:
+# - custom_node_prefix_function builds the prefix "{document PREFIX}{tag}-"
+#   from the document-level PREFIX (DOCPREFIX-) and the grammar element's
+#   own tag (TEST), instead of relying on a PREFIX property in the grammar.
+# - custom_node_uid_function zero-pads next_number onto that prefix.
+#
+
+RUN: cp %S/input.sdoc %T/
+RUN: cp %S/strictdoc_config.py %T/
+RUN: %strictdoc manage auto-uid %T/
+RUN: %diff %S/input.expected.sdoc %T/input.sdoc

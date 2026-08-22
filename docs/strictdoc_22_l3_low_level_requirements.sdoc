@@ -871,6 +871,71 @@ TITLE: Project config
 MID: 17ee741a300748f2989cd85d0638906c
 TITLE: ProjectConfig
 
+[REQUIREMENT]
+MID: 50d648852d7b4dafa2a3b87779d11f7e
+UID: SDOC-LLR-209
+STATUS: Active
+TITLE: Config rule for custom node prefix
+STATEMENT: >>>
+The ProjectConfig shall provide an argument/property that allows a user to
+define a custom Python function where a custom node prefix can be defined for
+the following combination of inputs: (node, grammar_element, document,
+traceability_index, project_config).
+
+The return value of the function shall be a prefix string.
+
+A user shall be able to optionally revert to the default behavior in the
+function implementation. Example:
+
+.. code-block:: py
+
+    def custom_node_prefix(
+        node,
+        grammar_element,
+        document,
+        traceability_index,
+        project_config
+    ):
+        if document.reserved_uid == "MY_UID":
+            return "MY_UID_PREFIX"
+        # Default prefix.
+        return None
+<<<
+
+[REQUIREMENT]
+MID: 6a1cf6b5efc84fdca6a0ff5cc3f52f0c
+UID: SDOC-LLR-210
+STATUS: Active
+TITLE: Config rule for custom node UID
+STATEMENT: >>>
+The ProjectConfig shall provide an argument/property that allows a user to
+define a custom Python function where a node's full UID can be composed from
+its resolved prefix and next available number, for the following combination
+of inputs: (prefix, next_number, node, grammar_element, document,
+traceability_index, project_config).
+
+The return value of the function shall be a UID string.
+
+A user shall be able to optionally revert to the default behavior
+(``f"{prefix}{next_number}"``) in the function implementation. Example:
+
+.. code-block:: py
+
+    def custom_node_uid(
+        prefix,
+        next_number,
+        node,
+        grammar_element,
+        document,
+        traceability_index,
+        project_config
+    ):
+        if document.reserved_uid == "MY_UID":
+            return f"{prefix}{next_number:04d}"
+        # Default UID.
+        return None
+<<<
+
 [[/SECTION]]
 
 [[SECTION]]

@@ -1,0 +1,31 @@
+[DOCUMENT]
+TITLE: Test Document
+PREFIX: DOCPREFIX-
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+- TAG: TEST
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+
+[TEST]
+STATEMENT: System shall do 1.
+
+[TEST]
+STATEMENT: System shall do 2.

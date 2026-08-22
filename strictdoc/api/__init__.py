@@ -1,6 +1,7 @@
 from strictdoc.backend.excel.export.excel_generator import ExcelGenerator
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.grammar_element import GrammarElement
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     SourceFileTraceabilityInfo,
@@ -34,6 +35,7 @@ __all__ = [
     "DocumentTreeError",
     "ExcelGenerator",
     "GitClient",
+    "GrammarElement",
     "GraphLinkType",
     "HTMLTemplates",
     "LinkRenderer",

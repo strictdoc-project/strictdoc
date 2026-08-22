@@ -1,0 +1,14 @@
+#
+# Reproduces the composable document/grammar prefix algorithm requested in
+# https://github.com/strictdoc-project/strictdoc/issues/3129 via a
+# custom_node_prefix_function: the document-level PREFIX and the grammar
+# element's PREFIX are concatenated (e.g. SDD-REQ-1, SDD-LLR-DEF-1) instead
+# of the grammar element's PREFIX overriding the document's.
+#
+
+RUN: cp %S/input1.sdoc %T/
+RUN: cp %S/input2.sdoc %T/
+RUN: cp %S/strictdoc_config.py %T/
+RUN: %strictdoc manage auto-uid %T/
+RUN: %diff %S/input1.expected.sdoc %T/input1.sdoc
+RUN: %diff %S/input2.expected.sdoc %T/input2.sdoc

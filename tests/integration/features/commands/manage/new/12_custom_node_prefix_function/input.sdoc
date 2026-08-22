@@ -1,0 +1,7 @@
+[DOCUMENT]
+TITLE: Test Document
+UID: MY_UID
+
+[REQUIREMENT]
+UID: REQ-1
+STATEMENT: First requirement.

@@ -70,8 +70,9 @@ def get_nuitka_html_static_data_options() -> str:
 
 
 # To prevent all tasks from building to the same virtual environment.
-# All values correspond to the configuration in the tox.ini config file.
-class ToxEnvironment(str, Enum):
+# Each value is a uv dependency group name declared in pyproject.toml's
+# [dependency-groups].
+class UvEnvironment(str, Enum):
     DEVELOPMENT = "development"
     CHECK = "check"
     DOCUMENTATION = "documentation"
@@ -100,26 +101,52 @@ def run_invoke(
     )
 
 
-def run_invoke_with_tox(
+def run_invoke_with_uv(
     context,
-    environment_type: ToxEnvironment,
+    environment_type: UvEnvironment,
     command: str,
     environment: Optional[Dict] = None,
     pty: bool = False,
 ) -> invoke.runners.Result:
-    assert isinstance(environment_type, ToxEnvironment)
+    assert isinstance(environment_type, UvEnvironment)
     assert isinstance(command, str)
 
-    tox_py_version = f"py{sys.version_info.major}{sys.version_info.minor}"
+    # Each flavor gets its own venv so, e.g., pyinstaller/twine deps never
+    # mix with playwright/pytest deps.
+    venv_dir = os.path.abspath(f"build/uv/{environment_type.value}")
+
+    # VIRTUAL_ENV: keeps it in sync with UV_PROJECT_ENVIRONMENT so uv does
+    # not warn about the two disagreeing whenever this runs from inside an
+    # already-activated venv (e.g. a developer's own .venv, or Nix's
+    # devShell).
+    # --inexact: tasks like release_local pip-install the just-built
+    # strictdoc artifact into this same venv outside of uv's tracking; a
+    # plain `uv sync` would remove it again on the next call.
+    run_invoke(
+        context,
+        f"""
+            uv sync --frozen --inexact --no-install-project
+                --group {environment_type.value}
+        """,
+        environment={
+            "UV_PROJECT_ENVIRONMENT": venv_dir,
+            "VIRTUAL_ENV": venv_dir,
+            **(environment or {}),
+        },
+    )
+
+    venv_bin_dir = os.path.join(
+        venv_dir, "Scripts" if os.name == "nt" else "bin"
+    )
 
     return run_invoke(
         context,
-        f"""
-            tox
-                -e {tox_py_version}-{environment_type.value} --
-                {command}
-        """,
-        environment=environment,
+        command,
+        environment={
+            "PATH": f"{venv_bin_dir}{os.pathsep}{os.environ['PATH']}",
+            "VIRTUAL_ENV": venv_dir,
+            **(environment or {}),
+        },
         pty=pty,
     )
 
@@ -163,9 +190,9 @@ def server(context, input_path=".", config=None, port=None):
     if not should_continue:
         return
 
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.DEVELOPMENT,
+        UvEnvironment.DEVELOPMENT,
         f"""
             python -m strictdoc.cli.main
                 --debug
@@ -196,20 +223,20 @@ def screencast_server(context, focus=None, edit=False):
     focus_argument = f"--focus {focus}" if focus is not None else ""
     edit_argument = "--edit" if edit else ""
 
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.CHECK,
+        UvEnvironment.CHECK,
         f"python tests/screencast/run_server.py {focus_argument} {edit_argument}",
     )
 
 
 @task(aliases=["d"])
 def docs(context):
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.DOCUMENTATION,
+        UvEnvironment.DOCUMENTATION,
         """
-            python3 -m strictdoc.cli.main
+            python -m strictdoc.cli.main
                 export .
                     --formats=html,html2pdf
                     --output-dir output/strictdoc_website
@@ -228,9 +255,9 @@ def test_unit_server(context, focus=None):
 
     path_to_coverage_file = f"{cwd}/build/coverage/unit_server/.coverage"
 
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.CHECK,
+        UvEnvironment.CHECK,
         f"""
             coverage run
             --rcfile=.coveragerc.unit_server
@@ -251,9 +278,9 @@ def test_unit_server_report(context):
 
     path_to_coverage_file = f"{cwd}/build/coverage/unit_server/.coverage"
 
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.CHECK,
+        UvEnvironment.CHECK,
         f"""
             coverage html
                 --rcfile=.coveragerc.unit_server
@@ -345,19 +372,9 @@ def test_end2end(
 
     Path(TEST_REPORTS_DIR).mkdir(parents=True, exist_ok=True)
 
-    # On Windows, GitHub Actions fails with:
-    # response = {'status': 500, 'value':
-    # '{"value":{"error":"unknown error",
-    # "message":"unknown error: cannot find Chrome binary",  # noqa: ERA001
-    # This very likely has to do with PATH isolation that Tox does.
-    # FIXME: If you are a Windows expert, please fix this to run on Tox.
-    if os.name == "nt":
-        run_invoke(context, test_command)
-        return
-
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.CHECK,
+        UvEnvironment.CHECK,
         test_command,
         environment=environment,
     )
@@ -386,7 +403,7 @@ def test_screencast(context, *, focus=None, record_video=False):
         tests/screencast/scenarios
     """
 
-    run_invoke_with_tox(context, ToxEnvironment.CHECK, test_command)
+    run_invoke_with_uv(context, UvEnvironment.CHECK, test_command)
 
 
 @task(aliases=["scov"])
@@ -438,9 +455,9 @@ def test_unit(context, coverage=False, focus=None, path=None, output=False):
         else "pytest"
     )
 
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.CHECK,
+        UvEnvironment.CHECK,
         f"""
             {pytest_command}
             {focus_argument}
@@ -453,9 +470,9 @@ def test_unit(context, coverage=False, focus=None, path=None, output=False):
         """,
     )
     if coverage and not focus and path == "tests/unit":
-        run_invoke_with_tox(
+        run_invoke_with_uv(
             context,
-            ToxEnvironment.CHECK,
+            UvEnvironment.CHECK,
             f"""
                 coverage report
                     --sort=cover
@@ -471,9 +488,9 @@ def test_unit_report(context):
 
     path_to_coverage_file = f"{cwd}/build/coverage/unit/.coverage"
 
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.CHECK,
+        UvEnvironment.CHECK,
         f"""
             coverage html
                 --rcfile=.coveragerc.unit
@@ -494,7 +511,7 @@ def test_integration(
     strictdoc=None,
     html2pdf=False,
     shard=None,
-    environment=ToxEnvironment.CHECK,
+    environment=UvEnvironment.CHECK,
 ):
     """
     @relation(SDOC-SRS-45, scope=function)
@@ -503,7 +520,7 @@ def test_integration(
     cwd = os.getcwd()
 
     if strictdoc is None:
-        strictdoc_exec = "python3 -m strictdoc.cli.main"
+        strictdoc_exec = "python -m strictdoc.cli.main"
     else:
         strictdoc_exec = strictdoc
 
@@ -608,15 +625,7 @@ def test_integration(
         {test_folder}
     """
 
-    # It looks like LIT does not open the RUN: subprocesses in the same
-    # environment from which it itself is run from. This issue has been known by
-    # us for a couple of years by now. Not using Tox on Windows for the time
-    # being.
-    if os.name == "nt":
-        run_invoke(context, itest_command)
-        return
-
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
         environment,
         itest_command,
@@ -626,9 +635,9 @@ def test_integration(
 
 @task
 def coverage_combine(context):
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.CHECK,
+        UvEnvironment.CHECK,
         """
             coverage combine
                 --data-file build/coverage/.coverage.combined
@@ -640,18 +649,18 @@ def coverage_combine(context):
                 build/coverage/unit_server/.coverage
         """,
     )
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.CHECK,
+        UvEnvironment.CHECK,
         """
             coverage html
                 --rcfile .coveragerc.combined
                 --data-file build/coverage/.coverage.combined
         """,
     )
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.CHECK,
+        UvEnvironment.CHECK,
         """
             coverage json
                 --rcfile .coveragerc.combined
@@ -668,9 +677,9 @@ def lint_ruff_format(context):
     @relation(SDOC-SRS-42, scope=function)
     """
 
-    result: invoke.runners.Result = run_invoke_with_tox(
+    result: invoke.runners.Result = run_invoke_with_uv(
         context,
-        ToxEnvironment.CHECK,
+        UvEnvironment.CHECK,
         """
             ruff
                 format
@@ -699,9 +708,9 @@ def lint_ruff(context):
     @relation(SDOC-SRS-42, scope=function)
     """
 
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.CHECK,
+        UvEnvironment.CHECK,
         """
             ruff check . --fix --exit-non-zero-on-fix --cache-dir build/ruff_cache
         """,
@@ -722,9 +731,9 @@ def lint_mypy(context):
     # --disallow-any-decorated
     # - type-abstract. It is ignored on purpose because of assert_cast()
     #   implementation. See https://stackoverflow.com/a/74073453/598057.
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.CHECK,
+        UvEnvironment.CHECK,
         """
             mypy docs/
                  strictdoc/
@@ -762,9 +771,9 @@ def lint_mypy(context):
 @task
 def lint_format_js(context):
     # NOTE: Could not find the '--' equivalent for -w80.
-    result: invoke.runners.Result = run_invoke_with_tox(
+    result: invoke.runners.Result = run_invoke_with_uv(
         context,
-        ToxEnvironment.CHECK,
+        UvEnvironment.CHECK,
         """
             js-beautify
                 --indent-size=2
@@ -803,18 +812,18 @@ def lint_commit(context):  # noqa: ARG001
 def lint_fixit(context, fix=False, auto=False, path="strictdoc/"):
     if fix:
         auto_argument = "--automatic" if auto else ""
-        run_invoke_with_tox(
+        run_invoke_with_uv(
             context,
-            ToxEnvironment.CHECK,
+            UvEnvironment.CHECK,
             f"""
                 fixit fix {path} {auto_argument}
             """,
             pty=True,
         )
     else:
-        run_invoke_with_tox(
+        run_invoke_with_uv(
             context,
-            ToxEnvironment.CHECK,
+            UvEnvironment.CHECK,
             f"""
                 fixit lint --diff {path}
             """,
@@ -868,102 +877,102 @@ def changelog(context, github_token):
 
 @task
 def check_dead_links(context):
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.CHECK,
+        UvEnvironment.CHECK,
         """
-            python3 tools/link_health.py docs/strictdoc_01_user_guide.sdoc
+            python tools/link_health.py docs/strictdoc_01_user_guide.sdoc
         """,
     )
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.CHECK,
+        UvEnvironment.CHECK,
         """
-            python3 tools/link_health.py docs/strictdoc_02_feature_map.sdoc
+            python tools/link_health.py docs/strictdoc_02_feature_map.sdoc
         """,
     )
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.CHECK,
+        UvEnvironment.CHECK,
         """
-            python3 tools/link_health.py docs/strictdoc_03_faq.sdoc
+            python tools/link_health.py docs/strictdoc_03_faq.sdoc
         """,
     )
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.CHECK,
+        UvEnvironment.CHECK,
         """
-            python3 tools/link_health.py docs/strictdoc_04_release_notes.sdoc
+            python tools/link_health.py docs/strictdoc_04_release_notes.sdoc
         """,
     )
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.CHECK,
+        UvEnvironment.CHECK,
         """
-            python3 tools/link_health.py docs/strictdoc_05_troubleshooting.sdoc
+            python tools/link_health.py docs/strictdoc_05_troubleshooting.sdoc
         """,
     )
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.CHECK,
+        UvEnvironment.CHECK,
         """
-            python3 tools/link_health.py docs/strictdoc_10_contributing.sdoc
+            python tools/link_health.py docs/strictdoc_10_contributing.sdoc
         """,
     )
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.CHECK,
+        UvEnvironment.CHECK,
         """
-            python3 tools/link_health.py docs/strictdoc_11_developer_guide.sdoc
+            python tools/link_health.py docs/strictdoc_11_developer_guide.sdoc
         """,
     )
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.CHECK,
+        UvEnvironment.CHECK,
         """
-            python3 tools/link_health.py docs/strictdoc_24_development_plan.sdoc
+            python tools/link_health.py docs/strictdoc_24_development_plan.sdoc
         """,
     )
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.CHECK,
+        UvEnvironment.CHECK,
         """
-            python3 tools/link_health.py docs/strictdoc_20_l1_system_requirements.sdoc
+            python tools/link_health.py docs/strictdoc_20_l1_system_requirements.sdoc
         """,
     )
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.CHECK,
+        UvEnvironment.CHECK,
         """
-            python3 tools/link_health.py docs/strictdoc_21_l2_high_level_requirements.sdoc
+            python tools/link_health.py docs/strictdoc_21_l2_high_level_requirements.sdoc
         """,
     )
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.CHECK,
+        UvEnvironment.CHECK,
         """
-            python3 tools/link_health.py docs/strictdoc_25_design.sdoc
+            python tools/link_health.py docs/strictdoc_25_design.sdoc
         """,
     )
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.CHECK,
+        UvEnvironment.CHECK,
         """
-            python3 tools/link_health.py CONTRIBUTING.md
+            python tools/link_health.py CONTRIBUTING.md
         """,
     )
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.CHECK,
+        UvEnvironment.CHECK,
         """
-            python3 tools/link_health.py NOTICE
+            python tools/link_health.py NOTICE
         """,
     )
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.CHECK,
+        UvEnvironment.CHECK,
         """
-            python3 tools/link_health.py README.md
+            python tools/link_health.py README.md
         """,
     )
 
@@ -973,7 +982,7 @@ def release_local(context):
     run_invoke(
         context,
         """
-            rm -rfv build/
+            rm -rf build/
         """,
     )
     run_invoke(
@@ -982,29 +991,29 @@ def release_local(context):
             pip uninstall strictdoc -y
         """,
     )
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.RELEASE_LOCAL,
+        UvEnvironment.RELEASE_LOCAL,
         """
             python -m build --outdir build/dist
         """,
     )
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.RELEASE_LOCAL,
+        UvEnvironment.RELEASE_LOCAL,
         """
             twine check build/dist/*
         """,
     )
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.RELEASE_LOCAL,
+        UvEnvironment.RELEASE_LOCAL,
         """
             pip install build/dist/*.tar.gz
         """,
     )
     test_integration(
-        context, strictdoc="strictdoc", environment=ToxEnvironment.RELEASE_LOCAL
+        context, strictdoc="strictdoc", environment=UvEnvironment.RELEASE_LOCAL
     )
 
 
@@ -1050,19 +1059,19 @@ def release(context, test_pypi=False, username=None, password=None):
     run_invoke(
         context,
         """
-            rm -rfv build/dist/
+            rm -rf build/dist/
         """,
     )
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.RELEASE,
+        UvEnvironment.RELEASE,
         """
-            python3 -m build --outdir build/dist
+            python -m build --outdir build/dist
         """,
     )
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.RELEASE,
+        UvEnvironment.RELEASE,
         """
             twine check build/dist/*
         """,
@@ -1070,9 +1079,9 @@ def release(context, test_pypi=False, username=None, password=None):
     # The token is in a core developer's .pypirc file.
     # https://test.pypi.org/manage/account/token/
     # https://packaging.python.org/en/latest/specifications/pypirc/#pypirc
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.RELEASE,
+        UvEnvironment.RELEASE,
         f"""
             twine upload build/dist/strictdoc-*.tar.gz build/dist/strictdoc-*.whl
                 {repository_argument_or_none}
@@ -1126,15 +1135,15 @@ def release_pyinstaller(context):
             strictdoc/cli/main.py
     """
 
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.PYINSTALLER,
+        UvEnvironment.PYINSTALLER,
         """
     pyinstaller --version
     """,
     )
 
-    run_invoke_with_tox(context, ToxEnvironment.PYINSTALLER, command)
+    run_invoke_with_uv(context, UvEnvironment.PYINSTALLER, command)
 
 
 @task
@@ -1146,18 +1155,18 @@ def watch(context, sdocs_path="."):
             --output-dir output/
     """
 
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.DEVELOPMENT,
+        UvEnvironment.DEVELOPMENT,
         f"""
             {strictdoc_command}
         """,
     )
 
     paths_to_watch = "."
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.DEVELOPMENT,
+        UvEnvironment.DEVELOPMENT,
         f"""
             watchmedo shell-command
             --patterns="*.py;*.sdoc;*.jinja;*.html;*.css;*.js"
@@ -1172,9 +1181,9 @@ def watch(context, sdocs_path="."):
 
 @task
 def run(context, command):
-    run_invoke_with_tox(
+    run_invoke_with_uv(
         context,
-        ToxEnvironment.DEVELOPMENT,
+        UvEnvironment.DEVELOPMENT,
         f"""
             {command}
         """,

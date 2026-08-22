@@ -62,6 +62,10 @@ dependencies = [
     # Reading project config from strictdoc.toml file.
     "toml",
 
+    # ParamSpec/TypeAlias, used directly by strictdoc/helpers/timing.py,
+    # strictdoc/helpers/form_data.py, and others.
+    "typing-extensions",
+
     # Parsing and rendering RST.
     "docutils >= 0.22.2, == 0.*",
 
@@ -121,10 +125,13 @@ dependencies = [
 # @relation(SDOC-SRS-89, scope=range_end)
 
 [project.optional-dependencies]
+# Not used by tasks.py (which pip-installs these via requirements.bootstrap.txt
+# instead). This extra exists for flake.nix, so that `nix develop` can build
+# a fully Nix-provided invoke+uv without a network round trip; from there,
+# invoke shells out to `uv sync` for every task-specific dependency group.
 development = [
-    # Development tasks
     "invoke>=1.4.1",
-    "tox>=4.4.8",
+    "uv",
 ]
 nuitka = [
     # Nuitka:WARNING: Using very slow fallback for ordered sets, please install
@@ -140,6 +147,79 @@ strictdoc = "strictdoc.cli.main:main"
 Changelog = "https://github.com/strictdoc-project/strictdoc/blob/main/CHANGELOG.md"
 Homepage = "https://strictdoc.readthedocs.io/en/stable/"
 Source = "https://github.com/strictdoc-project/strictdoc"
+
+# All groups below correspond to the per-flavor virtual environments in
+# tasks.py's UvEnvironment (development/check/documentation/release/
+# release-local/pyinstaller), each installed via
+# `uv sync --no-install-project --group <flavor>`. `uv sync` always resolves
+# [project.dependencies] alongside the selected group, so groups only list
+# extras not already covered there.
+[dependency-groups]
+development = []
+check = [
+    # Lint
+    "mypy>=0.910,<1.17",
+    "ruff>=0.9",
+    "fixit",
+
+    # Lint - JS
+    "jsbeautifier",
+
+    # Unit tests
+    "pytest>=6.2.2",
+    # Pytest fixture that provides fake file system for testing code that
+    # accesses file systems.
+    "pyfakefs>=4.5.5",
+    "coverage>=5.4",
+    # httpx is needed for running server-related unit tests.
+    "httpx",
+    # This is needed for converting Gcov coverage files to a human-readable
+    # JSON format.
+    "gcovr>=8.3",
+
+    # Integration tests
+    "lit>=0.11.0.post1",
+    "filecheck>=0.0.20,<1.0.0",
+    "pytidylib>=0.3.2",
+
+    # End2end tests.
+    # A bare "seleniumbase" leads uv's resolver into an ancient 1.x branch
+    # (pulled in by an unrelated combination of pins elsewhere in this
+    # group) whose pyvirtualdisplay dependency fails to build against
+    # modern setuptools; pip resolved a current release here, so pin the
+    # floor to keep uv on the same modern branch.
+    "seleniumbase>=4",
+
+    # Screencast video generation (tests/screencast)
+    "playwright",
+
+    # psutil is needed to reap Uvicorn's zombie processes when running
+    # end2end tests. One day someone finds a better solution.
+    "psutil",
+
+    # Used by the dead links checker
+    "requests>=2.27.1",
+]
+documentation = []
+release = ["build", "twine"]
+release-local = [{ include-group = "release" }, { include-group = "check" }]
+pyinstaller = [
+    "pyinstaller",
+    # FIXME: jaraco.text is needed because without it there is a regression
+    # (started on 2025-11-23):
+    # $ /tmp/strictdoc/strictdoc/strictdoc
+    # Traceback (most recent call last):
+    # File "pyi_rth_pkgres.py", line 177, in <module>
+    # File "pyi_rth_pkgres.py", line 44, in _pyi_rthook
+    # File "pyimod02_importers.py", line 457, in exec_module
+    # File "pkg_resources/__init__.py", line 90, in <module>
+    # ModuleNotFoundError: No module named 'jaraco'
+    # [PYI-21537:ERROR] Failed to execute script 'pyi_rth_pkgres' due to unhandled exception!
+    "jaraco.text",
+]
+
+[tool.uv]
+default-groups = []
 
 [tool.pytest.ini_options]
 addopts = "--import-mode=importlib"

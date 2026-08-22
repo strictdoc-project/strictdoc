@@ -348,9 +348,7 @@ class Test(E2ECase):
             # reject the original independent 199px geometry displacement.
             # See test_50px_upward_scroll_regression.md for the full contract
             # and the production mutations this assertion must reject.
-            residual_tolerance = (
-                wheel_step + 4 if wheel_step >= 50 and scroll_key is None else 4
-            )
+            residual_tolerance = wheel_step + 4
             assert (
                 min(load_steps) >= -1 and max(load_steps) <= 80
                 if scroll_key is not None

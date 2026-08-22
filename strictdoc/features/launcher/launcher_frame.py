@@ -117,7 +117,8 @@ class StrictDocLauncher(tk.Tk):
         self._export_formats = list(EXPORT_FORMATS)
         self.export_format_var = tk.StringVar(value="html2pdf")
 
-        # Optional project title, can be written into strictdoc.toml
+        # Optional project title, can be written into strictdoc_config.py
+        # (or the legacy strictdoc.toml, if that is what the workspace uses)
         # in the selected workspace.
         self.project_title_var = tk.StringVar()
 

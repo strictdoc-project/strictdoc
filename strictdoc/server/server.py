@@ -63,7 +63,7 @@ def run_strictdoc_server(
             if server_config.host is not None
             else project_config.server_host,
             log_level="info",
-            # "server" command port overrides the strictdoc.toml option for now.
+            # "server" command port overrides the strictdoc_config.py option for now.
             # Eventually, I am considering to remove the CLI option for the
             # port, to simplify the maintenance of two configs: the config file
             # and the "export" command's interface.

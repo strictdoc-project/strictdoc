@@ -751,12 +751,12 @@ MID: 8fc72d79bfe940aba2cf041e263b92df
 UID: SDOC-FEAT-9
 TITLE: Project configuration
 STATEMENT: >>>
-The "strictdoc.toml" file is a project-level configuration file used in
+The "strictdoc_config.py" file is a project-level configuration file used in
 StrictDoc to manage various project settings. This configuration file allows
 customization for features such as selected functionalities, document paths,
 source file paths, etc.
 
-Key options in the "strictdoc.toml" file include:
+Key options configurable via "strictdoc_config.py" include:
 
 - Project title: Defines a project title.
 - Feature selection: Selects additional features to activate or deactivate, such
@@ -766,6 +766,10 @@ Key options in the "strictdoc.toml" file include:
 
 This configuration ensures that StrictDoc works according to the specific needs
 of a given project, making it more flexible and adaptable​.
+
+StrictDoc previously used a "strictdoc.toml" file for the same purpose. TOML
+configuration is deprecated and will trigger a warning; see
+SECTION-UG-MIGRATE-CONFIG-2025-Q4 for migration instructions.
 <<<
 DOCUMENTATION: >>>
 - [LINK: SDOC_UG_OPTIONS_PROJECT_LEVEL]
@@ -781,7 +785,7 @@ TITLE: Screenshots
 MID: 100daefc4121415989324de1978d1f59
 STATEMENT: >>>
 .. image:: _assets/Feature_Screenshot_StrictDocTOML.png
-   :alt: StrictDoc config file strictdoc.toml
+   :alt: StrictDoc config file (legacy strictdoc.toml format, superseded by strictdoc_config.py)
    :class: image
    :width: 100%
 <<<

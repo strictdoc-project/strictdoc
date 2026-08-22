@@ -270,7 +270,7 @@ reduces the effort needed to create identical grammars all the time.
 COMMENT: >>>
 S: This feature is easy to implement. The easiest implementation path is to
 include a config parameter, such as ``project_grammar`` in the already-existing
-``strictdoc.toml`` file. At startup, StrictDoc recognizes the parameter and
+``strictdoc_config.py`` file. At startup, StrictDoc recognizes the parameter and
 reads the grammar from a separate file. The project grammar becomes a single
 source of truth for all documents in the project tree but the option to override
 a grammar for a given document is still preserved.

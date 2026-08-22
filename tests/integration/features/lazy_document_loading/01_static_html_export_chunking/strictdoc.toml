@@ -1,5 +1,0 @@
-[project]
-title = "Lazy Document Loading (static export)"
-
-[server]
-lazy_document_loading_threshold = 10

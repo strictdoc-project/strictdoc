@@ -4506,7 +4506,8 @@ disables the chunked rendering completely. Threshold values below ``100`` also
 become the chunk size: the documents are loaded in chunks of ``min(threshold,
 100)`` nodes.
 
-Use the ``[server]`` section of ``strictdoc.toml`` to configure this option.
+Set the ``lazy_document_loading_threshold`` option in ``strictdoc_config.py``
+to configure this option.
 
 .. code:: python
 

@@ -124,7 +124,7 @@ This release contains the following enhancements:
 1\) Both the web interface and the static HTML export now render large
 documents in lazily loaded chunks. Documents containing more than
 ``lazy_document_loading_threshold`` nodes (200 by default, configurable in
-``strictdoc.toml``, 0 disables chunking) initially load only the first chunk
+``strictdoc_config.py``, 0 disables chunking) initially load only the first chunk
 of nodes together with the table of contents, and the remaining chunks are
 fetched automatically as the user scrolls. This keeps documents with
 thousands of requirements responsive both in the editing GUI and in the

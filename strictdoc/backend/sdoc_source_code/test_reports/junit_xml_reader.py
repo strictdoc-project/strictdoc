@@ -267,8 +267,8 @@ class JUnitXMLReader:
                     if rel_path_to_test_suite is None:
                         raise RuntimeError(
                             "The relative path to the test suite must be "
-                            "registered in the strictdoc.toml config under the "
-                            "'test_report_root_dict' option: "
+                            "registered in the strictdoc_config.py config under "
+                            "the 'test_report_root_dict' option: "
                             f"{doc_file.rel_path.relative_path_posix}"
                         )
 

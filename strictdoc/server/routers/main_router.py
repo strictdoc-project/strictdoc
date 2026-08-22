@@ -3061,7 +3061,7 @@ def create_main_router(
 
             error_object.add_error(
                 "project_title",
-                "Renaming project title is not supported with TOML config files. Switch from strictdoc_config.toml to strictdoc_config.py and try again.",
+                "Renaming project title is not supported with TOML config files. Switch from strictdoc.toml to strictdoc_config.py and try again.",
             )
 
             output = env().render_template_as_markup(

@@ -17,7 +17,7 @@ class FormatCommand(BaseCommand):
     DETAILED_HELP = """\
 This command reads all SDoc and Markdown documents in the project tree and
 writes them back formatted according to the project's `document_line_width`
-configuration option (set in strictdoc.toml).
+configuration option (set in strictdoc_config.py).
 
 If `document_line_width` is not configured, the command still rewrites all
 documents to normalise their content (a no-op round-trip).

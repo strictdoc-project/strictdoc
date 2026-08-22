@@ -36,7 +36,7 @@ class Test(E2ECase):
 
             screen_project_index.assert_text(
                 "Renaming project title is not supported with TOML config files. "
-                "Switch from strictdoc_config.toml to strictdoc_config.py "
+                "Switch from strictdoc.toml to strictdoc_config.py "
                 "and try again."
             )
 

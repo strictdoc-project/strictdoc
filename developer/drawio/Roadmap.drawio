@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.2.5 Chrome/138.0.7204.251 Electron/37.6.1 Safari/537.36">
   <diagram name="Roadmap" id="QL4QDE5GQBR7DcBM7GMb">
-    <mxGraphModel dx="4586" dy="4705" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="3300" math="0" shadow="0">
+    <mxGraphModel dx="4265" dy="4504" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="3300" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <object label="Background" id="e4xbaoC47YMUbLc9hft--7">
@@ -537,7 +537,7 @@
         <mxCell id="avZaHCUyBh2S1JCu4Szq-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;div&gt;Markdown:&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Grammar, LINK/ANCHOR, parsing corner cases&lt;/span&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="70" width="220" x="1520" y="1080" as="geometry" />
         </mxCell>
-        <mxCell id="rtCiIeL7m7KNmv-1_1vX-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" value="&lt;div&gt;Stabilization 2026 Q3: Significant performance improvements (focus: POSIX), AI skills for software development and technical writing.&lt;/div&gt;" vertex="1">
+        <mxCell id="rtCiIeL7m7KNmv-1_1vX-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" value="&lt;div&gt;Stabilization 2026 Q3: Major performance improvements (focus: POSIX), AI skills for software development and technical writing, Nix flake, migrate from Tox to uv&lt;/div&gt;" vertex="1">
           <mxGeometry height="70" width="460" x="1690" y="1440" as="geometry" />
         </mxCell>
         <mxCell id="rtCiIeL7m7KNmv-1_1vX-2" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;div&gt;Build documentation with unresolved relations&lt;/div&gt;" vertex="1">
@@ -558,8 +558,8 @@
         <mxCell id="a3R-OEbMNWrBenF-9u9M-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" value="Move node to another document" vertex="1">
           <mxGeometry height="70" width="60" x="1880" y="1080" as="geometry" />
         </mxCell>
-        <mxCell id="a3R-OEbMNWrBenF-9u9M-3" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" value="User-provided node prefix hook" vertex="1">
-          <mxGeometry height="70" width="90" x="1950" y="1080" as="geometry" />
+        <mxCell id="a3R-OEbMNWrBenF-9u9M-3" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" value="User-provided node prefix hook" vertex="1">
+          <mxGeometry height="70" width="40" x="1950" y="1080" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

@@ -2567,14 +2567,14 @@ wheels = [
 
 [[package]]
 name = "pypdf"
-version = "6.5.0"
+version = "6.15.0"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "typing-extensions", marker = "python_full_version < '3.11'" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/4d/9b/db1056a54eda8cd44f9e5128e87e1142cb328295dad92bbec0d39f251641/pypdf-6.5.0.tar.gz", hash = "sha256:9e78950906380ae4f2ce1d9039e9008098ba6366a4d9c7423c4bdbd6e6683404", size = 5277655, upload-time = "2025-12-21T11:07:19.876Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/17/17/ee75a92718ec7212de831e71454d702225aa5e474a805cce169806044453/pypdf-6.15.0.tar.gz", hash = "sha256:d39c4d955a76409284a905e2d65b40076d77ab76129e0faaeeb6612403ecfc79", size = 6993794, upload-time = "2026-08-06T13:06:49.929Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/de/db/f2e7703791a1f32532618b82789ddddb7173b9e22d97e34cc11950d8e330/pypdf-6.5.0-py3-none-any.whl", hash = "sha256:9cef8002aaedeecf648dfd9ff1ce38f20ae8d88e2534fced6630038906440b25", size = 329560, upload-time = "2025-12-21T11:07:18.173Z" },
+    { url = "https://files.pythonhosted.org/packages/af/72/ce3067ac31e214a66388159f8462ddb8c13dd00170f24d555a1f1ae8ee91/pypdf-6.15.0-py3-none-any.whl", hash = "sha256:14e001d6504822cb1ca9c7ed9a69bccb320f59b320730f55af804361abe4d5ee", size = 378123, upload-time = "2026-08-06T13:06:47.709Z" },
 ]
 
 [[package]]
@@ -3445,7 +3445,7 @@ check = [
     { name = "playwright" },
     { name = "psutil" },
     { name = "pyfakefs", specifier = ">=4.5.5" },
-    { name = "pypdf", specifier = "==6.5.0" },
+    { name = "pypdf", specifier = "==6.15.0" },
     { name = "pytest", specifier = ">=6.2.2" },
     { name = "pytidylib", specifier = ">=0.3.2" },
     { name = "requests", specifier = ">=2.27.1" },
@@ -3475,7 +3475,7 @@ release-local = [
     { name = "playwright" },
     { name = "psutil" },
     { name = "pyfakefs", specifier = ">=4.5.5" },
-    { name = "pypdf", specifier = "==6.5.0" },
+    { name = "pypdf", specifier = "==6.15.0" },
     { name = "pytest", specifier = ">=6.2.2" },
     { name = "pytidylib", specifier = ">=0.3.2" },
     { name = "requests", specifier = ">=2.27.1" },

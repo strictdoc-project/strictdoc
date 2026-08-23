@@ -113,7 +113,7 @@ dependencies = [
 
     # HTML2PDF dependencies
     "html2pdf4doc == 0.0.33",
-    "pypdf >= 6.5.0, == 6.*",
+    "pypdf==6.*,>=6.5.0",
 
     # Robot Framework dependencies
     "robotframework >= 4.0.0",
@@ -184,7 +184,7 @@ check = [
     # Pinned exactly (narrower than the project's own ">=6.5.0, ==6.*") to
     # keep the HTML2PDF integration tests validated against a known-good
     # pypdf release; text-extraction behavior has changed across 6.x.
-    "pypdf==6.5.0",
+    "pypdf==6.15.0",
 
     # End2end tests.
     # A bare "seleniumbase" leads uv's resolver into an ancient 1.x branch

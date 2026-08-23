@@ -220,7 +220,9 @@ otherwise (per [LINK: MD-29]). A `**Type**: TEXT` boundary is excluded from
 this rule, so the SECTION/TEXT-child convention of [LINK: MD-27] and
 [LINK: MD-28] still applies when no other `**Type**:` record is present.
 
-**Rationale**: Some external generators, such as an Excel-to-Markdown
+**Rationale**:
+
+Some external generators, such as an Excel-to-Markdown
 importer, emit repeated requirement blocks under one heading instead of
 giving each its own heading.
 

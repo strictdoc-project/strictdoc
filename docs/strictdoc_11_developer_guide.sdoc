@@ -624,6 +624,111 @@ They are applicable to:
 <<<
 
 [[SECTION]]
+MID: f14fc2e61fe043ab965fcffb8ae49dfb
+TITLE: Basic rules
+
+[TEXT]
+MID: 4902476cf7ef47568e3e38c4341cd9cf
+STATEMENT: >>>
+**1. Use sentence case.**
+
+Use ``Sentence case``, not ``Title Case``, for headings, titles, and similar
+text. Capitalize only the first word and any proper nouns.
+
+Example: write ``Managing dependencies with Python``, not ``Managing
+Dependencies With Python``.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 116a9118528547218531062e01822b9d
+TITLE: Concise technical writing
+
+[TEXT]
+MID: a2835e1fc0894db1b6369d937880cd2a
+STATEMENT: >>>
+Keep all technical writing terse and tight.
+
+**1. Keep sentences short.**
+
+Aim for 15–20 words per sentence and treat 25 words as a soft limit. If a
+sentence exceeds 25 words, check whether it can be split without losing clarity
+or technical precision.
+
+**2. Use the minimum wording required for precision and clarity.**
+
+Weak: "In order to be able to perform the validation, the system needs to first
+load the configuration file."
+
+Better: "To validate, the system first loads the configuration file."
+
+**3. Prefer direct statements over indirect or elaborate phrasing.**
+
+Weak: "It should be noted that the parser is not currently capable of handling
+empty sections."
+
+Better: "The parser does not support empty sections."
+
+**4. Remove filler, repetition, redundant qualifiers, and unnecessary
+transitions.**
+
+Weak: "Basically, this means that the function will simply return the same value
+again."
+
+Better: "The function returns the same value."
+
+**5. Keep sentences and paragraphs focused on one point.**
+
+Weak: "The command writes the output to disk, and it also validates the
+configuration, which is useful because invalid configuration can otherwise cause
+failures later."
+
+Better: "The command validates the configuration before writing the output to
+disk. This prevents later failures caused by invalid configuration."
+
+**6. Do not repeat information unless repetition is necessary for
+understanding.**
+
+Weak: "The cache is cleared on startup. This means that every startup clears the
+cache."
+
+Better: "The cache is cleared on startup."
+
+**7. Preserve technical accuracy and essential context; brevity must not make
+the text ambiguous.**
+
+Too terse: "The request fails after 5 seconds."
+
+Better: "The request times out if no response is received within 5 seconds."
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 5f060e0df0ab4eb8b2d09996289822e2
+TITLE: More structure, less prose
+
+[TEXT]
+MID: acd948cee2f94612a30d5d79313acaab
+STATEMENT: >>>
+Keep sections and paragraphs focused and short. Each section should cover one
+coherent topic, and each paragraph should explain one main idea.
+
+Split long paragraphs into smaller paragraphs or sentences when they contain
+multiple ideas. If a section becomes too broad, split it into focused
+subsections.
+
+When presenting an enumeration, use bullet points or a numbered list instead of
+embedding multiple items in a long sentence.
+
+This structure reduces context switching and makes technical documents easier to
+scan, understand, navigate, and maintain.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: e985ff5ffc244e42b2d64ab7c5830717
 TITLE: Use Bottom Line Up Front style
 

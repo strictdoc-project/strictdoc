@@ -185,6 +185,8 @@ such as 2025-Q1, 2025-Q2, etc.
      - Parse Rust code. Preparing the server for concurrent use. WHAT-WHY-HOW tutorial. Markdown support. Static HTML search on server.
    * - 2026-Q2
      - Further Markdown work. Parse C macros. Table screen editing. Rust's cargo-nextest. Drag-and-drop image upload (WIP).
+   * - 2026-Q3
+     - Further Markdown work. Drag-and-drop image upload (WIP). Nix flake, migrate from Tox to uv. Lazy loading of documents. Moving nodes between sections/documents. Performance improvements for large documents.
 <<<
 
 [[/SECTION]]

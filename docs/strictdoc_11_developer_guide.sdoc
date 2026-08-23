@@ -79,11 +79,11 @@ On Linux Ubuntu:
 
     sudo apt install tidy
 
-From the core Python packages, StrictDoc needs Invoke, Tox and TOML:
+From the core Python packages, StrictDoc needs Invoke, uv and TOML:
 
 .. code:: bash
 
-    pip install invoke tox toml
+    pip install invoke uv toml
 <<<
 
 [[SECTION]]
@@ -114,16 +114,6 @@ STATEMENT: >>>
 .. note::
     Use this way of installing StrictDoc only if you want to make changes in StrictDoc's source code.
     Otherwise, install StrictDoc as a normal Pip package by running ``pip install strictdoc``.
-
-.. code-block::
-
-    git clone https://github.com/strictdoc-project/strictdoc.git && cd strictdoc
-    pip install toml
-    python3 developer/pip_install_strictdoc_deps.py
-    python3 strictdoc/cli/main.py
-
-The ``pip_install_strictdoc_deps.py`` installs all dependencies of StrictDoc,
-but not StrictDoc itself.
 <<<
 
 [[SECTION]]
@@ -133,30 +123,88 @@ TITLE: Development within a virtual environment
 [TEXT]
 MID: a3e14b05452b48e2a0d8726fa00a7f00
 STATEMENT: >>>
-An alternative approach for those familiar with development in a virtual
-environment:
+This is the currently recommended approach, for those familiar with
+development in a virtual environment:
 
 .. code:: bash
 
     git clone https://github.com/strictdoc-project/strictdoc.git && cd strictdoc
     python3 -m venv .venv
     . ./.venv/bin/activate
-    pip install -e .
+    pip install -r requirements.bootstrap.txt
+    uv sync --no-install-project
     python3 strictdoc/cli/main.py
 
 .. note::
 
     Windows users, substitute: ``.\.venv\Scripts\activate``
 
-After this, running ``developer/pip_install_strictdoc_deps.py`` should report
-that all packages are already installed.
+This installs Invoke, uv and TOML, plus all the default dependencies of
+StrictDoc. Dev-time dependencies (lint, tests, docs, ...) are installed
+automatically per Invoke task, via ``uv sync --group <flavor>``; see the
+"Invoke for development tasks" section below.
+<<<
 
-This installs all the default dependencies of StrictDoc.
-To also install the dev dependencies specified in ``pyproject.toml``:
+[[SECTION]]
+MID: 66c012d712d64317bd105f0f30b304f8
+TITLE: Automating the virtual environment with direnv
+
+[TEXT]
+MID: f954f57ad45e4a7c9c66ce1ffa857edc
+STATEMENT: >>>
+A user can install `direnv <https://direnv.net/>`_ to avoid activating the
+virtual environment by hand. The repository's ``.envrc`` creates and
+activates ``.venv`` automatically whenever you ``cd`` into the project
+directory, once you allow it to run:
 
 .. code:: bash
 
-    pip install ".[development]"
+    direnv allow
+<<<
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: c8a25b058b6441e0969370cac6577602
+TITLE: Development with Nix (experimental)
+
+[TEXT]
+MID: 26106facb63c4f1581475f297ae763c1
+STATEMENT: >>>
+.. note::
+    This workflow is experimental.
+
+For those who have `Nix <https://nixos.org/download/>`_ installed, StrictDoc
+provides a ``flake.nix``-based dev shell as an alternative to the
+``.envrc`` + ``.venv`` + Invoke workflow described above. The two do not
+share a virtual environment.
+
+The Nix dev shell provides a Python interpreter with the runtime
+dependencies of ``pyproject.toml`` and with Invoke and uv already installed,
+plus the tools that are not Python packages: ``libtidy`` (integration
+tests), Chromium and a matching driver (end2end and screencast tests), and
+``github_changelog_generator``.
+
+To enter an interactive dev shell:
+
+.. code:: bash
+
+    ./bootstrap_nix.sh
+
+To run a single command inside the dev shell without entering it
+interactively:
+
+.. code:: bash
+
+    ./bootstrap_nix.sh <cmd>
+
+Once inside the shell, use Invoke as usual, for example ``invoke check``.
+Invoke still runs every task through uv, which creates its own virtual
+environments under ``build/uv/<flavor>``; with Nix, the runtime dependencies
+of ``pyproject.toml`` come from the Nix shell, so uv only needs to install
+each flavor's extra dependency group.
 <<<
 
 [[/SECTION]]

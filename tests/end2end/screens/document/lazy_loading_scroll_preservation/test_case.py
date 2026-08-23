@@ -861,8 +861,18 @@ class Test(E2ECase):
             form.do_fill_in_field_title("Created Before Last Chunk Node")
             form.do_form_submit()
             self.assert_text("Created Before Last Chunk Node")
-            top_before = screen_document.get_node_containing_text_viewport_top(
-                "Created Before Last Chunk Node"
+            # Wait for the create operation's own restoration to settle
+            # before treating the current position as the reference. Reading
+            # it immediately can race the async setTimeout()+rAF correction
+            # in handleBeforeStreamRender(), producing a transient top_before
+            # that later shifts to the true locked position independently of
+            # chunk 1 loading. Unlike sibling create tests, the target here
+            # is not CONTENT_VIEWPORT_TOP, so wait for the measurement itself
+            # to stop moving rather than for a known coordinate.
+            top_before = (
+                screen_document.get_stable_node_containing_text_viewport_top(
+                    "Created Before Last Chunk Node"
+                )
             )
 
             # Loading the earlier chunk after create must preserve the

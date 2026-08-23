@@ -187,6 +187,37 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
         )
         return top
 
+    def get_stable_node_containing_text_viewport_top(
+        self,
+        text: str,
+        *,
+        stable_duration: float = 0.3,
+        sample_interval: float = 0.05,
+        tolerance: float = 1,
+        timeout: int = 20,
+    ) -> float:
+        # Some production restorations correct a node's position over one or
+        # more async ticks after it first appears (e.g. a setTimeout()+rAF
+        # pair). Reading the position too early captures that transient
+        # value rather than the settled one a later assertion must compare
+        # against. Wait until consecutive samples stop moving instead of
+        # relying on a single read.
+        start_time = datetime.now()
+        last_top = self.get_node_containing_text_viewport_top(text)
+        stable_since = datetime.now()
+
+        while True:
+            self.test_case.sleep(sample_interval)
+            current_top = self.get_node_containing_text_viewport_top(text)
+            now = datetime.now()
+            if abs(current_top - last_top) > tolerance:
+                stable_since = now
+            elif (now - stable_since).total_seconds() >= stable_duration:
+                return current_top
+            last_top = current_top
+            if (now - start_time).total_seconds() >= timeout:
+                return current_top
+
     def assert_anchor_viewport_top_close(
         self,
         anchor: str,

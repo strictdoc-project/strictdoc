@@ -3,19 +3,15 @@ REQUIRES: NIX_AVAILABLE
 
 #
 # Small smoke test for the project's Nix flake (flake.nix): verifies that
-# `nix flake check` passes, that `nix develop` produces a working shell
-# with the expected Python interpreter, and that StrictDoc's own CLI
-# actually runs inside that shell.
+# `nix flake check` passes, that `nix develop` produces a working shell,
+# that StrictDoc's own CLI actually runs inside that shell, and that the
+# flake's default package runs on its own, outside of the dev shell.
 #
 
 RUN: cd "%strictdoc_root" && nix --extra-experimental-features "nix-command flakes" flake check --no-build
 
-RUN: cd "%strictdoc_root" && nix --extra-experimental-features "nix-command flakes" develop --command python3 --version | filecheck %s --check-prefix=CHECK-PYTHON
-
-CHECK-PYTHON: Python 3.13
-
-# A dependency from nixpkgs, and one built by flake.nix because nixpkgs does not
-# carry it.
+# Two dependencies resolved from uv.lock: one shipped as a binary wheel, one
+# that nixpkgs does not carry at all.
 RUN: cd "%strictdoc_root" && nix --extra-experimental-features "nix-command flakes" develop --command python3 -c "import pandas, tree_sitter_c; print('dependencies ok')" | filecheck %s --check-prefix=CHECK-DEPS
 
 CHECK-DEPS: dependencies ok
@@ -24,3 +20,9 @@ CHECK-DEPS: dependencies ok
 RUN: cd "%strictdoc_root" && nix --extra-experimental-features "nix-command flakes" develop --command python3 -m strictdoc.cli.main --help | filecheck %s --check-prefix=CHECK-HELP
 
 CHECK-HELP: usage: strictdoc
+
+# The dev shell installs strictdoc editable, so the checks above pass whether
+# or not the packaged application works. Build it and run its entry point.
+RUN: cd "%strictdoc_root" && nix --extra-experimental-features "nix-command flakes" run . -- --help | filecheck %s --check-prefix=CHECK-APP
+
+CHECK-APP: usage: strictdoc

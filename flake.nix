@@ -9,6 +9,19 @@
       url = "github:pyproject-nix/pyproject.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    uv2nix = {
+      url = "github:pyproject-nix/uv2nix";
+      inputs.pyproject-nix.follows = "pyproject-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    pyproject-build-systems = {
+      url = "github:pyproject-nix/build-system-pkgs";
+      inputs.pyproject-nix.follows = "pyproject-nix";
+      inputs.uv2nix.follows = "uv2nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -16,6 +29,8 @@
       nixpkgs,
       flake-utils,
       pyproject-nix,
+      uv2nix,
+      pyproject-build-systems,
       ...
     }:
     flake-utils.lib.eachDefaultSystem (
@@ -23,124 +38,92 @@
       let
         pkgs = import nixpkgs { inherit system; };
 
-        # This pulls in all of the python dependencies defined by
-        # pyproject.toml, but none of the per-task extras that tasks.py
-        # installs into build/uv/<flavor> via uv. This means we have enough
-        # to run strictdoc, but not the developer tooling.
-        project = pyproject-nix.lib.project.loadPyproject { projectRoot = ./.; };
+        # uv.lock is the single source of truth for every Python dependency.
+        # It records the exact version of each package and the PyPI artifact
+        # that supplies it. uv2nix creates a derivation for each locked
+        # package, two virtual environments use these derivations: The dev
+        # shell environment gets the development dependencies. The package
+        # environment gets only what strictdoc needs to run as a binary.
+        workspace = uv2nix.lib.workspace.loadWorkspace { workspaceRoot = ./.; };
 
-        # Use 3.13 for the environment because the nixpkgs cache contains
-        # cached builds for some of the larger python dependencies like
-        # scipy. When using 3.12, it requires building scipy from source.
-        python = pkgs.python313.override {
-          self = python;
-          packageOverrides = pkgs.lib.composeExtensions treeSitterOverrides versionOverrides;
+        # Prefer wheels (pre-built) over sdist (source dist) packages.
+        overlay = workspace.mkPyprojectOverlay {
+          sourcePreference = "wheel";
         };
 
-        # pyproject.toml pins versions that are not in nixpkgs, so we override
-        # the versions with the following. The uv2nix project (a subproject
-        # of pyproject-nix) could use uv.lock to resolve these automatically
-        # instead, but that is a larger step than this flake takes today.
-        versionOverrides = final: prev: {
-          reqif = prev.reqif.overrideAttrs (_old: rec {
-            version = "0.1.0";
-            # From the repository rather than the sdist, because nixpkgs' own
-            # derivation patches a file under tests/, which the sdist omits.
-            src = pkgs.fetchFromGitHub {
-              owner = "strictdoc-project";
-              repo = "reqif";
-              tag = version;
-              hash = "sha256-aMjq2x9/aC7HRDL2T2v/yvz+TP+AAKSY3e/TmboKq9Q=";
-            };
-          });
-
-          python-datauri = prev.python-datauri.overrideAttrs (_old: rec {
-            version = "2.2.0";
-            src = final.fetchPypi {
-              inherit version;
-              pname = "python_datauri";
-              hash = "sha256-j6WCIpdf7lQc455rC51WU878wkga0mKe/AN41IsT9Ds=";
-            };
-
-            # tests/assets holds fixture files, one of which is EBCDIC-encoded
-            # and named test_*, so pytest tries to collect it as a module and
-            # fails to decode it. In 2.2.0 that directory is not excluded for us.
-            disabledTestPaths = [ "tests/assets" ];
-          });
-        };
-
-        treeSitterOverrides = final: _prev: {
-          # nixpkgs packages most of the tree-sitter grammars for Python, but
-          # not these two. Both are built the same way as their siblings there,
-          # from the grammar's own repository.
-          tree-sitter-c = final.buildPythonPackage rec {
-            pname = "tree-sitter-c";
-            version = "0.24.2";
-            pyproject = true;
-
-            src = pkgs.fetchFromGitHub {
-              owner = "tree-sitter";
-              repo = "tree-sitter-c";
-              tag = "v${version}";
-              hash = "sha256-Juuf57GQI7OAP6O03KtSzyKJAoXtGKjyYJ+sTM1A4mU=";
-            };
-
-            build-system = [ final.setuptools ];
-            doCheck = false; # The grammar carries no Python tests.
-            pythonImportsCheck = [ "tree_sitter_c" ];
-          };
-
-          tree-sitter-cpp = final.buildPythonPackage rec {
-            pname = "tree-sitter-cpp";
-            version = "0.23.4";
-            pyproject = true;
-
-            src = pkgs.fetchFromGitHub {
-              owner = "tree-sitter";
-              repo = "tree-sitter-cpp";
-              tag = "v${version}";
-              hash = "sha256-tP5Tu747V8QMCEBYwOEmMQUm8OjojpJdlRmjcJTbe2k=";
-            };
-
-            build-system = [ final.setuptools ];
-            doCheck = false;
-            pythonImportsCheck = [ "tree_sitter_cpp" ];
-          };
-        };
-
-        # The runtime dependencies plus the "development" extra (invoke, uv).
-        # Everything else tasks.py's per-flavor UvEnvironments need is still
-        # installed by uv itself, from PyPI, into build/uv/<flavor>.
-        pythonEnv = python.withPackages (
-          project.renderers.withPackages {
-            inherit python;
-            extras = [ "development" ];
+        # Use the newest version that pyproject.toml and nixpkgs agree on.
+        python = pkgs.lib.last (
+          pyproject-nix.lib.util.filterPythonInterpreters {
+            inherit (workspace) requires-python;
+            inherit (pkgs) pythonInterpreters;
           }
         );
 
-        # nixpkgs' invoke wrapper puts its own `bin/` first on PATH and drops
-        # `NIX_PYTHONPATH`, so the `invoke ...` that tasks.py spawns runs a bare
-        # invoke with no access to our Python environment.
-        # `python -m invoke` skips that wrapper.
-        invokeWrapper = pkgs.writeShellScriptBin "invoke" ''
-          exec ${pythonEnv}/bin/python3 -m invoke "$@"
-        '';
-
-        # pyproject.toml declares the version dynamic, so the renderer below
-        # cannot supply one. hatchling reads it out of this file. Read it the
-        # same way rather than repeating the number here.
-        version =
-          let
-            match = builtins.match ''.*__version__ = "([^"]+)".*'' (builtins.readFile ./strictdoc/__init__.py);
-          in
-          if match == null then
-            throw "flake.nix: no __version__ found in strictdoc/__init__.py"
-          else
-            builtins.head match;
-
-        strictdoc = python.pkgs.buildPythonPackage (
-          project.renderers.buildPythonPackage { inherit python; } // { inherit version; }
+        # The uv2nix description of the runtime Python environment.
+        pythonSet = (pkgs.callPackage pyproject-nix.build.packages { inherit python; }).overrideScope (
+          pkgs.lib.composeManyExtensions [
+            pyproject-build-systems.overlays.wheel
+            overlay
+          ]
         );
+
+        # The uv2nix description of the runtime + development Python environment.
+        editablePythonSet =
+          let
+            # In the dev shell, strictdoc itself is installed editable.
+            # Point at the working tree rather than at a copy in the store.
+            # the devShell hook will define REPO_ROOT.
+            editableOverlay = workspace.mkEditablePyprojectOverlay {
+              root = "$REPO_ROOT";
+            };
+
+            # An editable build only has to see enough of the tree for hatchling
+            # to work out the package layout and read the project metadata. The
+            # code itself is imported from the working tree at runtime.
+            # Narrowing the source this way keeps an edit under strictdoc/ from
+            # invalidating/rebuilding the dev environment.
+            filteredSourceOverlay = final: prev: {
+              strictdoc = prev.strictdoc.overrideAttrs (old: {
+                src = pkgs.lib.fileset.toSource {
+                  root = ./.;
+                  fileset = pkgs.lib.fileset.unions [
+                    ./pyproject.toml
+                    ./README.md
+                    ./strictdoc/__init__.py
+                  ];
+                };
+
+                # hatchling delegates editable installs to `editables`, and
+                # pyproject.toml has no reason to declare it, we must add it.
+                nativeBuildInputs = old.nativeBuildInputs ++ final.resolveBuildSystem { editables = [ ]; };
+              });
+            };
+          in
+          pythonSet.overrideScope (
+            pkgs.lib.composeManyExtensions [
+              editableOverlay
+              filteredSourceOverlay
+            ]
+          );
+
+        # The runtime dependencies strictdoc, with no development dependencies.
+        strictdocVenv = pythonSet.mkVirtualEnv "strictdoc-env" workspace.deps.default;
+
+        # The same, plus the "development" extra (invoke, uv), and with
+        # strictdoc editable. Everything else tasks.py's per-flavor
+        # UvEnvironments need is still installed by uv itself, from PyPI,
+        # into build/uv/<flavor>.
+        devVenv = editablePythonSet.mkVirtualEnv "strictdoc-dev-env" (
+          workspace.deps.default // { strictdoc = [ "development" ]; }
+        );
+
+        # mkApplication exposes bin/strictdoc and the rest of the package's
+        # own output, but not the interpreter, the activation scripts or the
+        # pyvenv.cfg that come with a virtual environment.
+        strictdoc = (pkgs.callPackages pyproject-nix.build.util { }).mkApplication {
+          venv = strictdocVenv;
+          package = pythonSet.strictdoc;
+        };
       in
       {
         # This shell provides the Python environment the project declares,
@@ -150,8 +133,7 @@
         # (end2end and screencast tests), and github_changelog_generator.
         devShells.default = pkgs.mkShell {
           packages = [
-            invokeWrapper # Must come before pythonEnv, to shadow its `invoke`.
-            pythonEnv
+            devVenv
             pkgs.html-tidy
             pkgs.chromium
             pkgs.chromedriver
@@ -175,15 +157,26 @@
             pkgs.html-tidy
           ];
 
-          # tasks.py runs every task through uv, and uv creates its own
-          # virtualenvs under build/uv/<flavor>. Put this environment's
-          # site-packages on their PYTHONPATH, so that the runtime
-          # dependencies of pyproject.toml come from Nix and uv only installs
-          # each flavor's extra dependency group. Unlike tox, uv-managed
-          # venvs are plain subprocesses that inherit the shell's environment
-          # as-is, so a shell-level PYTHONPATH reaches them with no
-          # per-environment override needed.
-          PYTHONPATH = "${pythonEnv}/${python.sitePackages}";
+          # tasks.py runs every task through uv. uv creates a virtual
+          # environment for each flavor under build/uv/<flavor>. This
+          # PYTHONPATH adds the site-packages of the Nix environment to those
+          # virtual environments, so the runtime dependencies resolve to the
+          # Nix copies. uv also installs the same dependencies into each
+          # flavor environment. Both sets come from uv.lock, so the versions
+          # agree. uv runs each task as a plain subprocess that inherits the
+          # shell environment, so this one variable reaches every flavor.
+          PYTHONPATH = "${devVenv}/${python.sitePackages}";
+
+          # Build those virtualenvs from this interpreter, and never from one
+          # uv downloaded for itself.
+          UV_PYTHON = "${devVenv}/bin/python";
+          UV_PYTHON_DOWNLOADS = "never";
+
+          # Fulfill the need of the editable overlay. This points the editable
+          # path back to the repository the shell is created it.
+          shellHook = ''
+            export REPO_ROOT=$(git rev-parse --show-toplevel)
+          '';
         };
 
         # `nix build` and, through the app below, `nix run <this flake>`.

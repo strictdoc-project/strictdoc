@@ -24,7 +24,8 @@
         pkgs = import nixpkgs { inherit system; };
 
         # This pulls in all of the python dependencies defined by
-        # pyproject.toml, but none from tox.ini. This means we have enough
+        # pyproject.toml, but none of the per-task extras that tasks.py
+        # installs into build/uv/<flavor> via uv. This means we have enough
         # to run strictdoc, but not the developer tooling.
         project = pyproject-nix.lib.project.loadPyproject { projectRoot = ./.; };
 
@@ -37,9 +38,9 @@
         };
 
         # pyproject.toml pins versions that are not in nixpkgs, so we override
-        # the versions with the following. If strictdoc adopts uv, then the
-        # uv2nix project (which is a subproject of pyproject-nix), can use
-        # the uv.lock to automatically resolve these versions.
+        # the versions with the following. The uv2nix project (a subproject
+        # of pyproject-nix) could use uv.lock to resolve these automatically
+        # instead, but that is a larger step than this flake takes today.
         versionOverrides = final: prev: {
           reqif = prev.reqif.overrideAttrs (_old: rec {
             version = "0.1.0";
@@ -107,9 +108,9 @@
           };
         };
 
-        # The runtime dependencies plus the "development" extra.
-        # Everything else the tox environments need is still installed by tox
-        # itself, from PyPI, into build/tox/.
+        # The runtime dependencies plus the "development" extra (invoke, uv).
+        # Everything else tasks.py's per-flavor UvEnvironments need is still
+        # installed by uv itself, from PyPI, into build/uv/<flavor>.
         pythonEnv = python.withPackages (
           project.renderers.withPackages {
             inherit python;
@@ -160,13 +161,13 @@
           # Keep __pycache__ out of the source tree.
           PYTHONPYCACHEPREFIX = "build/pycache";
 
-          # The packages that tox installs from PyPI load shared libraries the
+          # The packages that uv installs from PyPI load shared libraries the
           # way a normal FHS distribution provides them: pytidylib dlopen()s
           # libtidy.so.58 by name, and manylinux wheels link their C extensions
           # against libstdc++/libz. A Nix interpreter does not search any of the
           # usual locations for them, so point the dynamic linker at the
-          # Nix-provided copies. Without this, `import numpy` inside a tox
-          # environment fails with
+          # Nix-provided copies. Without this, `import numpy` inside a
+          # build/uv/<flavor> environment fails with
           # "libstdc++.so.6: cannot open shared object file".
           LD_LIBRARY_PATH = pkgs.lib.makeLibraryPath [
             pkgs.stdenv.cc.cc.lib
@@ -174,12 +175,15 @@
             pkgs.html-tidy
           ];
 
-          # tasks.py runs every task through tox, and tox creates its own
-          # virtualenvs under build/tox. Put this environment's site-packages
-          # on their PYTHONPATH, so that the runtime dependencies of
-          # pyproject.toml come from Nix and tox installs only the development
-          # dependencies of tox.ini.
-          TOX_OVERRIDE = "testenv.set_env+=PYTHONPATH=${pythonEnv}/${python.sitePackages};testenv.pass_env+=LD_LIBRARY_PATH";
+          # tasks.py runs every task through uv, and uv creates its own
+          # virtualenvs under build/uv/<flavor>. Put this environment's
+          # site-packages on their PYTHONPATH, so that the runtime
+          # dependencies of pyproject.toml come from Nix and uv only installs
+          # each flavor's extra dependency group. Unlike tox, uv-managed
+          # venvs are plain subprocesses that inherit the shell's environment
+          # as-is, so a shell-level PYTHONPATH reaches them with no
+          # per-environment override needed.
+          PYTHONPATH = "${pythonEnv}/${python.sitePackages}";
         };
 
         # `nix build` and, through the app below, `nix run <this flake>`.

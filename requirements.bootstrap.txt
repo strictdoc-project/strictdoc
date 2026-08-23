@@ -1,5 +1,3 @@
 invoke
-tox
 toml
-setuptools
-packaging
+uv

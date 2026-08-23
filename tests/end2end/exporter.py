@@ -5,6 +5,7 @@
 import os
 import shutil
 import subprocess
+import sys
 import tempfile
 from contextlib import ExitStack
 from pathlib import Path
@@ -56,8 +57,12 @@ class SDocTestHTMLExporter:
         self.close()
 
     def run(self) -> None:
+        # sys.executable, not a bare "python": a nested subprocess spawn
+        # like this one has been observed to resolve "python" via PATH to
+        # the system interpreter rather than the current venv's on Windows,
+        # even though the pytest process itself started under the venv.
         args = [
-            "python",
+            sys.executable,
             "-m",
             "strictdoc.cli.main",
             "export",

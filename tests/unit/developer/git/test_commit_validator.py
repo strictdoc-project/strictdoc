@@ -3,7 +3,13 @@ import pytest
 from developer.git.commit_validator import validate_commits
 
 
-def test_validate_commit():
+def test_validate_commit(monkeypatch):
+    # WIP is a local-dev-only bypass: validate_commits() disables it whenever
+    # GITHUB_ACTIONS is set (see is_github_ci()). Unset it here so the WIP
+    # cases below exercise that bypass deterministically, regardless of
+    # whether this test itself happens to run inside real CI.
+    monkeypatch.delenv("GITHUB_ACTIONS", raising=False)
+
     good_commits = [
         "docs: update release notes",
         'feat(html2pdf): introduce a new "html2pdf_forced_page_break_nodes" option',

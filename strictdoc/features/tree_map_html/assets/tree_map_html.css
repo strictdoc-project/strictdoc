@@ -1,0 +1,71 @@
+/* @relation(SDOC-SRS-157, scope=file) */
+
+.tree-map-html {
+  display: flex;
+  flex-direction: column;
+  gap: calc(4 * var(--base-rhythm));
+  width: 100%;
+}
+
+.tree-map-html__section {
+  min-width: 0;
+}
+
+.tree-map-html__title {
+  margin: 0 0 calc(2 * var(--base-rhythm));
+  text-align: center;
+}
+
+.tree-map-html__canvas {
+  width: 100%;
+  height: clamp(32rem, 70vh, 48rem);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-contrast);
+}
+
+.tree-map-html__node {
+  display: flex;
+  flex: 1 1 0;
+  flex-direction: column;
+  min-width: 1px;
+  min-height: 1px;
+  overflow: hidden;
+  border: 1px solid rgb(0 0 0 / 30%);
+}
+
+.tree-map-html__canvas > .tree-map-html__node {
+  width: 100%;
+  height: 100%;
+}
+
+.tree-map-html__label {
+  flex: 0 0 auto;
+  overflow: hidden;
+  padding: 2px 4px;
+  color: #111;
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tree-map-html__children {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+}
+
+.tree-map-html__children[data-direction="row"] {
+  flex-direction: row;
+}
+
+.tree-map-html__children[data-direction="column"] {
+  flex-direction: column;
+}
+
+.tree-map-html__node--leaf > .tree-map-html__label {
+  white-space: normal;
+}

@@ -2,6 +2,16 @@
 
 {% extends "base.jinja.html" %}
 
+{% block head_css %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ view_object.render_static_url('tree_map_html.css') }}"/>
+{% endblock head_css %}
+
+{% block head_scripts %}
+  {{ super() }}
+  <script src="{{ view_object.render_static_url('tree_map_html.js') }}" defer></script>
+{% endblock head_scripts %}
+
 {% block title %}
   {{ view_object.project_config.project_title }} - {{ template_type }}
 {% endblock title %}
@@ -19,8 +29,14 @@
 {% endblock header_content %}
 
 {% block main_content %}
-  <div data-testid="tree-map-html-root"></div>
-  <script id="tree-map-html-data" type="application/json">
-    {{- view_object.tree_map_json -}}
-  </script>
+  <div class="main">
+    <div
+      class="tree-map-html"
+      data-testid="tree-map-html-root"
+      id="tree-map-html-root"
+    ></div>
+    <script id="tree-map-html-data" type="application/json">
+      {{- view_object.tree_map_json -}}
+    </script>
+  </div>
 {% endblock main_content %}

@@ -8,10 +8,15 @@ RUN: %strictdoc export %S --output-dir %T | filecheck %s
 CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/tree_map_html.html"
+RUN: %check_exists --file "%T/html/_static/tree_map_html.css"
+RUN: %check_exists --file "%T/html/_static/tree_map_html.js"
 
 RUN: %cat "%T/html/tree_map_html.html" | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: tree_map_html.css
+CHECK-HTML: tree_map_html.js
 CHECK-HTML: data-testid="project-tree-link-tree-map-html"
-CHECK-HTML: <div data-testid="tree-map-html-root"></div>
+CHECK-HTML: <div class="main">
+CHECK-HTML: data-testid="tree-map-html-root"
 CHECK-HTML: <script id="tree-map-html-data" type="application/json">
 CHECK-HTML-SAME: {"tree_maps":[
 CHECK-HTML-SAME: "title":"Document tree map"

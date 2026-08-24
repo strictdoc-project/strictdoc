@@ -109,6 +109,7 @@ class ProjectFeature(str, Enum):
     REQIF = "REQIF"
     DIFF = "DIFF"
     PROJECT_STATISTICS_SCREEN = "PROJECT_STATISTICS_SCREEN"
+    TREE_MAP_HTML_SCREEN = "TREE_MAP_HTML_SCREEN"
     TREE_MAP_SCREEN = "TREE_MAP_SCREEN"
     TRACEABILITY_MATRIX_SCREEN = "TRACEABILITY_MATRIX_SCREEN"
     REQUIREMENT_TO_SOURCE_TRACEABILITY = "REQUIREMENT_TO_SOURCE_TRACEABILITY"
@@ -642,9 +643,16 @@ class ProjectConfig:
         from strictdoc.features.project_statistics.feature import (  # noqa: PLC0415
             ProjectStatisticsFeature,
         )
+        from strictdoc.features.tree_map_html.feature import (  # noqa: PLC0415
+            TreeMapHTMLFeature,
+        )
 
         return {
-            feature.HANDLE: feature for feature in [ProjectStatisticsFeature()]
+            feature.HANDLE: feature
+            for feature in [
+                ProjectStatisticsFeature(),
+                TreeMapHTMLFeature(),
+            ]
         }
 
     def get_features(self) -> List[Feature]:

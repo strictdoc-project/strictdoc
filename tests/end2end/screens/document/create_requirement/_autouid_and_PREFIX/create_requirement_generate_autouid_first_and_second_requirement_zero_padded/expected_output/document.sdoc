@@ -1,0 +1,22 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[REQUIREMENT]
+UID: REQ-0001
+TITLE: Requirement title #1
+STATEMENT: >>>
+Requirement statement #1.
+<<<
+RATIONALE: >>>
+Requirement rationale #1.
+<<<
+
+[REQUIREMENT]
+UID: REQ-0002
+TITLE: Requirement title #2
+STATEMENT: >>>
+Requirement statement #2.
+<<<
+RATIONALE: >>>
+Requirement rationale #2.
+<<<

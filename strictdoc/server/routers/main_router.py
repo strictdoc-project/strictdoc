@@ -584,15 +584,42 @@ def create_main_router(
             if isinstance(reference_node, SDocDocument)
             else reference_node.get_document()
         )
+        assert document is not None
+        assert document.grammar is not None
         document_tree_stats: DocumentTreeStats = (
             DocumentUIDAnalyzer.analyze_document_tree(
                 export_action.traceability_index,
                 project_config=export_action.project_config,
             )
         )
+        grammar_element: GrammarElement = document.grammar.elements_by_type[
+            reference_requirement.node_type
+        ]
         next_uid: str = ""
-        if (node_prefix := reference_node.get_prefix()) is not None:
-            next_uid = document_tree_stats.get_next_requirement_uid(node_prefix)
+        if (
+            node_prefix
+            := export_action.project_config.resolve_custom_node_prefix(
+                reference_node,
+                grammar_element,
+                document,
+                export_action.traceability_index,
+            )
+            or reference_node.get_prefix()
+        ) is not None:
+            next_number = document_tree_stats.get_next_requirement_uid_number(
+                node_prefix
+            )
+            next_uid = (
+                export_action.project_config.resolve_custom_node_uid(
+                    node_prefix,
+                    next_number,
+                    node=reference_node,
+                    grammar_element=grammar_element,
+                    document=document,
+                    traceability_index=export_action.traceability_index,
+                )
+                or f"{node_prefix}{next_number}"
+            )
 
         form_object: RequirementFormObject = (
             RequirementFormObject.clone_from_requirement(
@@ -607,7 +634,6 @@ def create_main_router(
         whereto = NodeCreationOrder.AFTER
         replace_action = "after"
 
-        assert document is not None
         assert document.meta is not None
         link_renderer = LinkRenderer(
             root_path=document.meta.get_root_path_prefix(),

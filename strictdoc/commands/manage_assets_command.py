@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 from typing import Set
 
-from strictdoc.export.rst.directives.wildcard_enhanced_image import (
+from strictdoc.backend.rst.directives.wildcard_enhanced_image import (
     WildcardEnhancedImage,
 )
 

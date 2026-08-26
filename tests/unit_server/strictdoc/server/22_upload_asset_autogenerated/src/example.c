@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 /**
  * UID: REQ-SOURCE-1
  *
@@ -7,6 +5,4 @@
  *
  * STATEMENT: FOO text from example.c
  */
-void example_1(void) {
-    print("hello world\n");
-}
+void example_1(void) {}

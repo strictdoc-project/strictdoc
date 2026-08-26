@@ -8,7 +8,6 @@ from typing import Set
 from strictdoc.backend.rst.directives.wildcard_enhanced_image import (
     WildcardEnhancedImage,
 )
-
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.cli.base_command import BaseCommand, CLIValidationError

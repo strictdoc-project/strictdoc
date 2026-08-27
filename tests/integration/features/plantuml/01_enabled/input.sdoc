@@ -1,0 +1,13 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[TEXT]
+STATEMENT: >>>
+.. raw:: html
+
+    <pre class="plantuml">
+    @startuml
+    Alice -> Bob: Hello
+    @enduml
+    </pre>
+<<<

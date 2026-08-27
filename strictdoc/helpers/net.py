@@ -1,5 +1,6 @@
 import ipaddress
 import re
+from urllib.parse import urlparse
 
 # Regex for a valid hostname (RFC 1034/1035)
 HOSTNAME_REGEX = re.compile(
@@ -18,3 +19,14 @@ def is_valid_host(host: str) -> bool:
     except ValueError:
         # If not an IP, check if it's a valid hostname.
         return bool(HOSTNAME_REGEX.fullmatch(host)) and len(host) <= 253
+
+
+def is_valid_url(url: str) -> bool:
+    """
+    Validate that a string is a well-formed absolute http(s) URL.
+    """
+    try:
+        parsed = urlparse(url)
+    except ValueError:
+        return False
+    return parsed.scheme in ("http", "https") and bool(parsed.netloc)

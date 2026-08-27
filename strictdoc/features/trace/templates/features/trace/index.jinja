@@ -33,6 +33,12 @@
       mermaid.initialize({ startOnLoad: true });
     </script>
   {%- endif -%}
+  {%- if view_object.project_config.is_activated_plantuml() -%}
+    <script src="{{ view_object.render_static_url('plantuml/plantuml.js') }}"></script>
+    <script type="module">
+      window.strictdocRenderPlantUML({{ view_object.project_config.get_plantuml_server_url() | tojson }}).catch(console.error);
+    </script>
+  {%- endif -%}
   {{ super() }}
 {% endblock head_scripts %}
 {% block title %}{{ view_object.document.title }} - {{ view_object.get_page_title() }}{% endblock title %}

@@ -42,8 +42,14 @@ class Test(E2ECase):
 
             screen_document.do_drop_image_to_requirement(
                 "STATEMENT",
-                "./tests/end2end/screens/document/update_node/update_requirement_upload_image_when_MARKDOWN_markup/picture.svg",
+                [
+                    "./tests/end2end/screens/document/update_node/update_requirement_upload_image_when_MARKDOWN_markup/picture.svg",
+                    "./tests/end2end/screens/document/update_node/update_requirement_upload_image_webp/picture.webp",
+                ],
             )
+
+            screen_document.assert_text("picture.svg")
+            screen_document.assert_text("picture.webp")
 
             form_edit_requirement.do_form_submit()
 

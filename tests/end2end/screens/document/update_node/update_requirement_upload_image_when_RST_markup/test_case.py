@@ -40,13 +40,39 @@ class Test(E2ECase):
 
             form_edit_requirement.assert_on_form()
 
+            screen_document.set_editable_caret_after_text(
+                "STATEMENT", "Drop the second file here."
+            )
             screen_document.do_drop_image_to_requirement(
                 "STATEMENT",
-                "./tests/end2end/screens/document/update_node/update_requirement_upload_image_when_RST_markup/picture.svg",
+                "./tests/end2end/screens/document/update_node/update_requirement_upload_image_webp/picture.webp",
             )
 
-            form_edit_requirement.do_form_submit()
+            statement_text = self.get_text(
+                "[data-testid='form-field-STATEMENT']"
+            )
+            rationale_text = self.get_text(
+                "[data-testid='form-field-RATIONALE']"
+            )
+            assert "picture.*" in statement_text
+            assert "picture.svg" not in statement_text
+            assert "picture.svg" in rationale_text
+            assert "picture.*" not in rationale_text
 
-            screen_document.assert_text("picture.svg")
+            screen_document.set_editable_caret_after_text(
+                "RATIONALE", "Insert the unreferenced pair here."
+            )
+            screen_document.do_drop_image_to_requirement(
+                "RATIONALE",
+                "./tests/end2end/screens/document/update_node/update_requirement_upload_image_webp/picture.webp",
+                uploaded_filenames=["unreferenced.webp"],
+            )
+            rationale_text = self.get_text(
+                "[data-testid='form-field-RATIONALE']"
+            )
+            assert "picture.svg" in rationale_text
+            assert "unreferenced.*" in rationale_text
+
+            form_edit_requirement.do_form_submit()
 
         assert test_setup.compare_sandbox_and_expected_output()

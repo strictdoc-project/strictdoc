@@ -49,4 +49,16 @@ class Test(E2ECase):
 
             screen_document.assert_text("picture.svg")
 
+            requirement_without_mid_or_uid = screen_document.get_node(
+                node_order=2
+            )
+            form_without_mid_or_uid = (
+                requirement_without_mid_or_uid.do_open_form_edit_requirement()
+            )
+            screen_document.do_drop_image_to_requirement(
+                "STATEMENT",
+                "./tests/end2end/screens/document/update_node/update_requirement_upload_image_when_RST_markup_mid_disabled/picture.svg",
+            )
+            form_without_mid_or_uid.do_form_submit()
+
         assert test_setup.compare_sandbox_and_expected_output()

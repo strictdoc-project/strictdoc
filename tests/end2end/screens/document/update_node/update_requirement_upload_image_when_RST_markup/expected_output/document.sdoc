@@ -7,8 +7,17 @@ OPTIONS:
 [REQUIREMENT]
 MID: a5c6b14d5ee443149687fb9be69a7ede
 STATEMENT: >>>
-Requirement statement.
+Before image.
 
+.. image:: ./_assets/a5c6b14d5ee443149687fb9be69a7ede/picture.*
+
+Drop the second file here.
+<<<
+RATIONALE: >>>
+Keep this reference unchanged:
 
 .. image:: ./_assets/a5c6b14d5ee443149687fb9be69a7ede/picture.svg
+
+Insert the unreferenced pair here.
+.. image:: ./_assets/a5c6b14d5ee443149687fb9be69a7ede/unreferenced.*
 <<<

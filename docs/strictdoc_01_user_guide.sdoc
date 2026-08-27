@@ -2757,10 +2757,33 @@ This is the example of how images are included using the reST syntax:
        :class: image
     <<<
 
+Sphinx may need different versions of the same image for different output
+formats. For example, HTML can use ``diagram.svg``, while LaTeX/PDF can use
+``diagram.png``. Store both files in the same folder and give them the same
+filename stem. An RST wildcard reference covers both files:
+
+.. code:: strictdoc
+
+    [TEXT]
+    STATEMENT: >>>
+    .. image:: _assets/diagram.*
+    <<<
+
+In a document configured to use RST markup, the Web UI creates this wildcard
+reference when an upload completes a vector and raster pair. If the current
+field already contains a direct reference to one file, the editor replaces
+that URI without moving the image directive.
+
+In documents configured to use HTML or Markdown markup, the Web UI inserts a
+direct reference to each uploaded file. It does not use the RST/Sphinx
+wildcard.
+
 .. note::
 
-    When editing a requirement or a text block in the Web UI, you can also **drag and drop** image files directly into the statement field, or **paste** an image from the clipboard.
-    This will automatically upload the image to the "_assets" folder and insert the required reST image directive.
+    When editing a requirement or text block in the Web UI, you can **drag and
+    drop** image files into a multiline field or **paste** an image from the
+    clipboard. StrictDoc uploads the files to the document's ``_assets``
+    directory and inserts references using the configured document markup.
 <<<
 
 [[/SECTION]]

@@ -1,0 +1,21 @@
+#
+# Verify that PlantUML is available in the HTML export when
+# plantuml_server_url is configured.
+#
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Export completed.
+
+RUN: %check_exists --file "%T/html/_static/plantuml/plantuml.js"
+
+RUN: cat %T/html/01_enabled/input.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML-DOC
+RUN: cat %T/html/01_enabled/input-TABLE.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
+RUN: cat %T/html/01_enabled/input-TRACE.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
+RUN: cat %T/html/01_enabled/input-DEEP-TRACE.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
+CHECK-HTML: window.strictdocRenderPlantUML("https://www.plantuml.com/plantuml")
+
+The document screen defers the initial PlantUML rendering to browser idle
+time via requestIdleCallback/setTimeout instead of calling it eagerly.
+CHECK-HTML-DOC: const plantumlServerUrl = "https://www.plantuml.com/plantuml";
+CHECK-HTML-DOC: const kickPlantUML = () => window.strictdocRenderPlantUML(plantumlServerUrl)
+CHECK-HTML-DOC: requestIdleCallback(kickPlantUML, { timeout: 2000 })

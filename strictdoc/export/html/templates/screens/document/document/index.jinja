@@ -185,6 +185,31 @@
     </script>
   {%- endif -%}
   {%- endif -%}
+  {%- if view_object.project_config.is_activated_plantuml() -%}
+    <script src="{{ view_object.render_static_url('plantuml/plantuml.js') }}"></script>
+    <script type="module">
+      const plantumlServerUrl = {{ view_object.project_config.get_plantuml_server_url() | tojson }};
+      const kickPlantUML = () => window.strictdocRenderPlantUML(plantumlServerUrl).catch(console.error);
+      window.addEventListener('load', () => {
+        ('requestIdleCallback' in window)
+          ? requestIdleCallback(kickPlantUML, { timeout: 2000 })
+          : setTimeout(kickPlantUML, 0);
+      });
+  {%- if view_object.is_running_on_server -%}
+      // Re-render PlantUML diagrams after node updates (i.e. after saving)...
+      document.addEventListener("turbo:before-stream-render", () => {
+        requestAnimationFrame(kickPlantUML);
+      });
+
+      // Lazily loaded document chunks (see frame_document_content.jinja.html)
+      // arrive after the initial idle-time rendering; re-run when one loads.
+      document.addEventListener("turbo:frame-load", (event) => {
+        if (!event.target.id?.startsWith("document-chunk-")) return;
+        requestAnimationFrame(kickPlantUML);
+      });
+  {%- endif -%}
+    </script>
+  {%- endif -%}
   {{ super() }}
 {% endblock head_scripts %}
 {% block title %}{{ view_object.document.title }} - {{ view_object.get_page_title() }}{% endblock title %}

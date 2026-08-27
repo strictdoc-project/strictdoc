@@ -994,6 +994,24 @@ MID: ce512ba0998d4ea1a85cfed432007922
 TITLE: Image Upload
 
 [REQUIREMENT]
+MID: 9413c36f26424fea9c520e4ff78e4089
+UID: SDOC-LLR-218
+STATUS: Active
+TITLE: Supported image formats
+STATEMENT: >>>
+StrictDoc shall support the following image formats:
+
+- SVG (``.svg``, ``image/svg+xml``)
+- PNG (``.png``, ``image/png``)
+- GIF (``.gif``, ``image/gif``)
+- JPG and JPEG (``.jpg`` and ``.jpeg``, ``image/jpeg``)
+- WebP (``.webp``, ``image/webp``)
+- AVIF (``.avif``, ``image/avif``)
+
+SVG is a vector format. PNG, GIF, JPG, JPEG, WebP and AVIF are raster formats.
+<<<
+
+[REQUIREMENT]
 MID: 7768b2575117435e80c3b26515382b23
 UID: SDOC-LLR-214
 STATUS: Active
@@ -1002,7 +1020,9 @@ STATEMENT: >>>
 The Web Editor shall support image upload in multi-line text fields via paste and drag-and-drop:
 
 1. Intercept `drop` and `paste` events and prevent default browser behaviour.
-2. Accept only image MIME types.
+2. Accept the supported image formats defined in [LINK: SDOC-LLR-218]. Validate both the filename extension and MIME type before starting the upload.
+   For every unsupported file, do not create an upload placeholder or send the file to the endpoint. Show a notification that identifies the unsupported file and lists the supported formats.
+   The user shall be able to dismiss the notification with its close control or by clicking outside it.
 3. Upload images asynchronously to the backend ``/actions/document/upload_asset`` endpoint, passing the current requirement MID and the active document MID along.
 4. Indicate upload progress via a temporary placeholder text.
 5. On success, insert an image reference at the original cursor position, following the document's markup:
@@ -1026,7 +1046,7 @@ The StrictDoc web server shall provide an ``/actions/document/upload_asset`` end
 
 The endpoint shall:
 
-1. Validate that the payload is an image, and the node is not read-only (i.e. autogen)
+1. Accept only the supported image formats defined in [LINK: SDOC-LLR-218], and reject unsupported files before creating directories or writing file contents. Reject uploads for read-only nodes (i.e. autogen).
 2. Sanitize the filename by replacing spaces with underscores.
 3. Validate the requirement MIDs formally
 4. Use the provided Document MID to resolve the correct document relative ``_assets`` directory.
@@ -1074,12 +1094,13 @@ TITLE: Support for wildcard image directive generation
 STATEMENT: >>>
 When multiple image files are uploaded in a single operation, the ``/actions/document/upload_asset`` endpoint shall detect pairs of files that share the same filename stem and differ only by file extension.
 
-If such a pair consists of one raster format image and one vector format image, the system shall:
+If such a pair consists of one raster image and one vector image, as classified in [LINK: SDOC-LLR-218], the system shall:
 
 - Store both files in the requirement-specific assets location.
 - Return information that allows the client to generate a single image directive using the wildcard filename ``./_assets/<node_specific_subfolder>/<stem>.*``.
 
 If no such pair is detected, the system shall treat each file independently.
+
 <<<
 RATIONALE: >>>
 Supports the wildcard-enhanced-image feature of StrictDoc/ReST also when uploading images through the server

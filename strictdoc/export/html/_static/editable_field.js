@@ -6,6 +6,17 @@
 (() => {
 
   const SEL_EDITABLE = '[data-js-editable-field]';
+  const SUPPORTED_IMAGE_FORMATS = new Map([
+    ['.svg', 'image/svg+xml'],
+    ['.png', 'image/png'],
+    ['.gif', 'image/gif'],
+    ['.jpg', 'image/jpeg'],
+    ['.jpeg', 'image/jpeg'],
+    ['.webp', 'image/webp'],
+    ['.avif', 'image/avif'],
+  ]);
+  const SUPPORTED_IMAGE_FORMAT_NAMES = 'SVG, PNG, GIF, JPG, JPEG, WebP, AVIF';
+  let removeUnsupportedFormatToast = null;
 
   function filterSingleLine(text) {
     return text.replace(/\s/g, ' ').replace(/\s\s+/g, ' ');
@@ -17,14 +28,72 @@
     return filename.replace(/\.[^/.]+$/, '').replace(/ /g, '_');
   }
 
+  function isSupportedImageFile(file) {
+    const extensionMatch = file.name.toLowerCase().match(/\.[^.]+$/);
+    if (!extensionMatch) return false;
+    return SUPPORTED_IMAGE_FORMATS.get(extensionMatch[0]) === file.type;
+  }
+
+  function showUnsupportedFormatToast(files) {
+    removeUnsupportedFormatToast?.();
+
+    const filenames = files.map((file) => file.name).join(', ');
+    const toast = document.createElement('sdoc-toast');
+    // toast.className = 'toast';
+    toast.dataset.testid = 'unsupported-image-format-message';
+
+    const message = document.createElement('div');
+    message.innerHTML =
+      `<div>Unsupported format: <code class="toast-warn">${filenames}.</code></div>` +
+      `<div>You can use <code class="toast-loud">${SUPPORTED_IMAGE_FORMAT_NAMES}</code>.</div>`;
+
+    const closeButton = document.createElement('button');
+    closeButton.type = 'button';
+    closeButton.className = 'toast-close';
+    closeButton.dataset.testid = 'unsupported-image-format-close';
+    closeButton.setAttribute('aria-label', 'Close');
+    closeButton.textContent = '×';
+
+    toast.append(message, closeButton);
+    document.querySelector('.mars')?.appendChild(toast);
+
+    const onOutsideClick = (event) => {
+      if (!toast.contains(event.target)) removeToast();
+    };
+    const removeToast = () => {
+      toast.remove();
+      document.removeEventListener('click', onOutsideClick);
+      if (removeUnsupportedFormatToast === removeToast) {
+        removeUnsupportedFormatToast = null;
+      }
+    };
+    removeUnsupportedFormatToast = removeToast;
+
+    closeButton.addEventListener('click', (event) => {
+      event.stopPropagation();
+      removeToast();
+    });
+    document.addEventListener('click', onOutsideClick);
+  }
+
+  async function uploadSupportedImages(editable, files) {
+    const supportedFiles = files.filter(isSupportedImageFile);
+    const unsupportedFiles = files.filter((file) => !isSupportedImageFile(file));
+
+    if (unsupportedFiles.length > 0) {
+      showUnsupportedFormatToast(unsupportedFiles);
+    }
+    if (supportedFiles.length > 0) {
+      await handleAssetUpload(editable, supportedFiles);
+    }
+  }
+
   async function handleImagePaste(editable, event) {
     const clipboardItems = (event.clipboardData ||
       event.originalEvent.clipboardData).items;
-    const imageFiles = [];
+    const pastedFiles = [];
 
     for (const clipboardItem of clipboardItems) {
-      if (!clipboardItem.type.startsWith('image/')) continue;
-
       let file = clipboardItem.getAsFile();
       if (!file) continue;
 
@@ -37,13 +106,13 @@
         const newName = `pasted_${randomId}${extension}`;
         file = new File([file], newName, { type: file.type });
       }
-      imageFiles.push(file);
+      pastedFiles.push(file);
     }
 
-    if (imageFiles.length === 0) return false;
+    if (pastedFiles.length === 0) return false;
 
-    // If we found images, handle them as an upload
-    await handleAssetUpload(editable, imageFiles);
+    // If the clipboard contains files, validate and handle them here.
+    await uploadSupportedImages(editable, pastedFiles);
     return true;
   }
 
@@ -260,12 +329,11 @@
     event.preventDefault();
     editable.classList.remove('is-dragging');
 
-    // Only accept images here for now.
-    const imageFiles = Array.from(event.dataTransfer.files)
-      .filter((file) => file.type.startsWith('image/'));
-    if (imageFiles.length === 0) return;
+    // Validate every dropped file before starting an upload.
+    const droppedFiles = Array.from(event.dataTransfer.files);
+    if (droppedFiles.length === 0) return;
 
-    await handleAssetUpload(editable, imageFiles);
+    await uploadSupportedImages(editable, droppedFiles);
   });
 
   // * (2)

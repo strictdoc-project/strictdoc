@@ -9,6 +9,7 @@ class ManageAssetsCommandConfig:
         self,
         *,
         debug: bool,
+        development: bool = False,
         command: str,
         subcommand: str,
         input_path: str,
@@ -16,6 +17,7 @@ class ManageAssetsCommandConfig:
         clean_unused_images: bool,
     ):
         self.debug: bool = debug
+        self.development: bool = development
         self.command: str = command
         self.subcommand: str = subcommand
         self.input_path: str = input_path

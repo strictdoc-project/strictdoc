@@ -1275,7 +1275,11 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
         )
 
     def do_drop_image_to_requirement(
-        self, field_name: str, image_path: str, field_order: int = 1
+        self,
+        field_name: str,
+        image_path: str,
+        field_order: int = 1,
+        wait_for_upload: bool = True,
     ) -> None:
         # Verify the file exists locally
         absolute_image_path = os.path.abspath(image_path)
@@ -1327,6 +1331,9 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
             js_drop_files, target_element
         )
         file_input.send_keys(absolute_image_path)
+
+        if not wait_for_upload:
+            return
 
         # Wait for the UI to update
         # We wait until the placeholder "Uploading..." disappears

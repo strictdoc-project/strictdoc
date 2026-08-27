@@ -265,6 +265,29 @@ def search_node_matches_plain_text_query(
     return False
 
 
+def resolve_uploaded_asset_subfolder(
+    *,
+    mids_enabled: bool,
+    requirement_mid: str,
+    requirement_exists: bool,
+    requirement_mid_permanent: bool,
+    requirement_uid: Optional[str],
+) -> Optional[str]:
+    """
+    @relation(SDOC-LLR-213, scope=function)
+    """
+    if mids_enabled or requirement_mid_permanent:
+        return requirement_mid
+    # We cannot reliably track an asset for a node that does not exist yet.
+    if not requirement_exists:
+        return None
+    # Fall back to the UID, which is available after the node is created.
+    if requirement_uid:
+        return requirement_uid.replace(" ", "_").replace("/", "_")
+    # Store assets directly in _assets if the node has neither MID nor UID.
+    return ""
+
+
 def create_main_router(
     project_config: ProjectConfig,
     *,
@@ -2772,29 +2795,26 @@ def create_main_router(
             if document.config.enable_mid is not True:
                 mids_enabled = False
 
-        asset_subfolder_name = ""
-
-        if mids_enabled or (
-            requirement_node and requirement_node.mid_permanent
-        ):
-            asset_subfolder_name = requirement_mid
-        else:
-            # Fallback to the UID, which we can only know after the node is created.
-            if requirement_node:
-                req_uid = requirement_node.reserved_uid
-                if req_uid and len(req_uid) > 0:
-                    asset_subfolder_name = req_uid.replace(" ", "_").replace(
-                        "/", "_"
-                    )
-                else:
-                    # Fallback to top-level _assets if no UID exists.
-                    asset_subfolder_name = ""
-            else:
-                # We cannot reliably track this asset yet. Fail gracefully.
-                raise HTTPException(
-                    status_code=400,
-                    detail="Please save the requirement first before uploading any images.",
-                )
+        asset_subfolder_name = resolve_uploaded_asset_subfolder(
+            mids_enabled=mids_enabled,
+            requirement_mid=requirement_mid,
+            requirement_exists=requirement_node is not None,
+            requirement_mid_permanent=(
+                requirement_node.mid_permanent
+                if requirement_node is not None
+                else False
+            ),
+            requirement_uid=(
+                requirement_node.reserved_uid
+                if requirement_node is not None
+                else None
+            ),
+        )
+        if asset_subfolder_name is None:
+            raise HTTPException(
+                status_code=400,
+                detail="Please save the requirement first before uploading any images.",
+            )
         # @relation(SDOC-LLR-213, scope=range_end)
 
         # Create a node-specific subfolder based on the requirement_mid for assets of this node, in the _assets

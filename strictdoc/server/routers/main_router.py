@@ -45,9 +45,6 @@ from strictdoc.backend.reqif.p01_sdoc.reqif_to_sdoc_converter import (
 from strictdoc.backend.reqif.p01_sdoc.sdoc_to_reqif_converter import (
     P01_SDocToReqIFObjectConverter,
 )
-from strictdoc.backend.rst.directives.wildcard_enhanced_image import (
-    WildcardEnhancedImage,
-)
 from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -77,6 +74,7 @@ from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.feature import Feature, FeatureContext
 from strictdoc.core.image_formats import (
     SUPPORTED_IMAGE_FORMAT_NAMES,
+    SUPPORTED_IMAGE_FORMATS,
     is_supported_image_format,
 )
 from strictdoc.core.project_config import ProjectConfig
@@ -2735,13 +2733,19 @@ def create_main_router(
 
         @relation(SDOC-LLR-215, scope=function)
         """
-        document: SDocDocument = (
-            export_action.traceability_index.get_node_by_mid(MID(document_mid))
+        document: Optional[SDocDocument] = (
+            export_action.traceability_index.get_node_by_mid_weak(
+                MID(document_mid)
+            )
         )
         if not document or not hasattr(document, "meta"):
-            raise HTTPException(
+            return JSONResponse(
                 status_code=404,
-                detail=f"Active Document with MID {document_mid} not found",
+                content={
+                    "detail": (
+                        f"Active Document with MID {document_mid} not found"
+                    )
+                },
             )
 
         requirement_node = (
@@ -2844,7 +2848,9 @@ def create_main_router(
             )
 
         # Process each uploaded file
-        uploaded_image_uris: dict[str, str | None] = {}
+        uploaded_files_by_stem: dict[str, list[tuple[str, str]]] = defaultdict(
+            list
+        )
 
         for uploaded_file in uploaded_files:
             assert uploaded_file.filename is not None
@@ -2867,13 +2873,11 @@ def create_main_router(
             with open(full_file_save_path, "wb") as buffer:
                 buffer.write(file_contents)
 
-            # If this is an image, we need to resolve the Sphinx wildcard (.*)
+            # Group uploaded filenames by stem before resolving wildcard pairs.
             stem, extension = os.path.splitext(rst_safe_filename)
-            if (
-                extension.lstrip(".").lower()
-                in WildcardEnhancedImage.WILDCARD_EXTENSIONS
-            ):
-                uploaded_image_uris[stem] = None
+            uploaded_files_by_stem[stem].append(
+                (rst_safe_filename, extension.lower())
+            )
 
         # Resolve Sphinx wildcard (.*) paths for the uploaded files.
         # @relation(SDOC-LLR-216, scope=range_start)
@@ -2882,24 +2886,28 @@ def create_main_router(
             full_path = os.path.join(assets_node_specific_subfolder, sibling)
             if not os.path.isfile(full_path):
                 continue
-            stem, ext = os.path.splitext(sibling)
-            if (
-                ext.lstrip(".").lower()
-                in WildcardEnhancedImage.WILDCARD_EXTENSIONS
-            ):
-                existing_image_stems_to_ext_set[stem].add(ext.lower())
-        for stem in uploaded_image_uris.keys():
+            stem, extension = os.path.splitext(sibling)
+            if extension.lower() in SUPPORTED_IMAGE_FORMATS:
+                existing_image_stems_to_ext_set[stem].add(extension.lower())
+
+        uploaded_image_uris: dict[str, str] = {}
+        for stem, uploaded_stem_files in uploaded_files_by_stem.items():
             found_extensions = existing_image_stems_to_ext_set.get(stem, set())
             uri_base = (
                 f"./_assets/{asset_subfolder_name}"
                 if asset_subfolder_name
                 else "./_assets"
             )
-            if len(found_extensions) > 1 and ".svg" in found_extensions:
-                uploaded_image_uris[stem] = f"{uri_base}/{stem}.*"
+            has_wildcard_pair = ".svg" in found_extensions and any(
+                extension != ".svg" for extension in found_extensions
+            )
+            if has_wildcard_pair:
+                wildcard_uri = f"{uri_base}/{stem}.*"
+                for filename, _ in uploaded_stem_files:
+                    uploaded_image_uris[filename] = wildcard_uri
             else:
-                ext = next(iter(found_extensions))
-                uploaded_image_uris[stem] = f"{uri_base}/{stem}{ext}"
+                for filename, _ in uploaded_stem_files:
+                    uploaded_image_uris[filename] = f"{uri_base}/{filename}"
 
         # @relation(SDOC-LLR-216, scope=range_end)
 

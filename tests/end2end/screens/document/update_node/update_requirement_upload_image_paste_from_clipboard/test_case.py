@@ -49,6 +49,17 @@ class Test(E2ECase):
                 "./tests/end2end/screens/document/update_node/update_requirement_upload_image_paste_from_clipboard/picture.svg",
             )
 
+            screen_document.do_paste_image_to_requirement(
+                "STATEMENT",
+                "./tests/end2end/screens/document/update_node/update_requirement_reject_pdf_upload/document.pdf",
+                wait_for_upload=False,
+            )
+            self.assert_text(
+                "Unsupported format: document.pdf.",
+                "[data-testid='unsupported-image-format-message']",
+            )
+            self.assert_text_not_visible("Uploading document")
+
             form_edit_requirement.do_form_submit()
 
             screen_document.assert_text("picture.svg")

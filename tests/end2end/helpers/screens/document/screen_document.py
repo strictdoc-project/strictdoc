@@ -1277,15 +1277,21 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
     def do_drop_image_to_requirement(
         self,
         field_name: str,
-        image_path: str,
+        image_path: str | list[str],
         field_order: int = 1,
         wait_for_upload: bool = True,
+        uploaded_filenames: list[str] | None = None,
     ) -> None:
-        # Verify the file exists locally
-        absolute_image_path = os.path.abspath(image_path)
-        assert os.path.exists(absolute_image_path), (
-            f"Test image not found at {absolute_image_path}"
+        image_paths = (
+            [image_path] if isinstance(image_path, str) else image_path
         )
+        absolute_image_paths = [os.path.abspath(path) for path in image_paths]
+        if uploaded_filenames is not None:
+            assert len(uploaded_filenames) == len(absolute_image_paths)
+        for absolute_image_path in absolute_image_paths:
+            assert os.path.exists(absolute_image_path), (
+                f"Test image not found at {absolute_image_path}"
+            )
 
         # Find the target editable field for the specific requirement
         field_order_str = "last()" if field_order == -1 else str(field_order)
@@ -1298,6 +1304,7 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
         # Selenium cannot drag from the OS, so we need to simulate the DataTransfer object.
         js_drop_files = """
             var target = arguments[0];
+            var uploadedFilenames = arguments[1];
             var offsetX = 0;
             var offsetY = 0;
             var document = target.ownerDocument || document;
@@ -1305,13 +1312,20 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
 
             var input = document.createElement('input');
             input.type = 'file';
+            input.multiple = true;
             input.style.display = 'none';
             input.onchange = function () {
+            var files = Array.from(this.files);
+            if (uploadedFilenames !== null) {
+                files = files.map(function (file, index) {
+                    return new File([file], uploadedFilenames[index], { type: file.type });
+                });
+            }
             var rect = target.getBoundingClientRect();
             var x = rect.left + (offsetX || (rect.width >> 1));
             var y = rect.top + (offsetY || (rect.height >> 1));
 
-            var dataTransfer = { files: this.files, types: ['Files'], dropEffect: 'copy' };
+            var dataTransfer = { files: files, types: ['Files'], dropEffect: 'copy' };
 
             ['dragenter', 'dragover', 'drop'].forEach(function (name) {
                 var evt = document.createEvent('MouseEvent');
@@ -1328,9 +1342,9 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
 
         # Execute the script to create the input, then "upload" the file to it
         file_input = self.test_case.driver.execute_script(
-            js_drop_files, target_element
+            js_drop_files, target_element, uploaded_filenames
         )
-        file_input.send_keys(absolute_image_path)
+        file_input.send_keys("\n".join(absolute_image_paths))
 
         if not wait_for_upload:
             return
@@ -1341,13 +1355,17 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
         start_time = datetime.now()
         while True:
             current_content = target_element.text
-            if ".. image:: ./_assets/" in current_content:
+            upload_finished = "Uploading " not in current_content and (
+                ".. image:: ./_assets/" in current_content
+                or '<img src="./_assets/' in current_content
+                or "![](./_assets/" in current_content
+            )
+            if upload_finished:
                 break
-            if '<img src="./_assets/' in current_content:
-                break
-            if "![](./_assets/" in current_content:
-                break
-            if "Image upload failed" in current_content:
+            if self.test_case.driver.find_elements(
+                By.CSS_SELECTOR,
+                "[data-testid='image-upload-failed-message']",
+            ):
                 break
 
             if (datetime.now() - start_time).total_seconds() > 10:
@@ -1357,8 +1375,119 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
 
             self.test_case.sleep(0.5)
 
+    def set_editable_caret_after_text(
+        self, field_name: str, text: str, field_order: int = 1
+    ) -> None:
+        field_order_str = "last()" if field_order == -1 else str(field_order)
+        xpath_field = (
+            f"(//*[@data-testid='form-field-{field_name}'])[{field_order_str}]"
+        )
+        target_element = self.test_case.find_element(By.XPATH, xpath_field)
+        positioned = self.test_case.driver.execute_script(
+            """
+            var target = arguments[0];
+            var text = arguments[1];
+            var walker = document.createTreeWalker(target, NodeFilter.SHOW_TEXT);
+            while (walker.nextNode()) {
+                var index = walker.currentNode.nodeValue.indexOf(text);
+                if (index === -1) continue;
+                var range = document.createRange();
+                range.setStart(walker.currentNode, index + text.length);
+                range.collapse(true);
+                var selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(range);
+                return true;
+            }
+            return false;
+            """,
+            target_element,
+            text,
+        )
+        assert positioned, f"Could not position caret after {text!r}."
+
+    def hold_asset_upload_responses(self) -> None:
+        self.test_case.driver.execute_script(
+            """
+            window.__assetUploadOriginalFetch = window.fetch.bind(window);
+            window.__assetUploadResponses = [];
+            window.fetch = function (...args) {
+                var responsePromise = window.__assetUploadOriginalFetch(...args);
+                if (!String(args[0]).includes('/actions/document/upload_asset')) {
+                    return responsePromise;
+                }
+                var release;
+                var gate = new Promise(function (resolve) { release = resolve; });
+                window.__assetUploadResponses.push(function () {
+                    release();
+                });
+                return gate.then(function () { return responsePromise; });
+            };
+            """
+        )
+
+    def release_asset_upload_response(self, index: int) -> None:
+        start_time = datetime.now()
+        while True:
+            response_count = self.test_case.driver.execute_script(
+                "return window.__assetUploadResponses.length;"
+            )
+            if response_count > index:
+                break
+            if (datetime.now() - start_time).total_seconds() > 10:
+                raise TimeoutError("Asset upload request was not captured.")
+            self.test_case.sleep(0.1)
+        self.test_case.driver.execute_script(
+            "window.__assetUploadResponses[arguments[0]]();", index
+        )
+
+    def restore_asset_upload_responses(self) -> None:
+        self.test_case.driver.execute_script(
+            """
+            window.fetch = window.__assetUploadOriginalFetch;
+            delete window.__assetUploadOriginalFetch;
+            delete window.__assetUploadResponses;
+            """
+        )
+
+    def do_drop_file_outside_editable(self, file_path: str) -> bool:
+        absolute_file_path = os.path.abspath(file_path)
+        assert os.path.exists(absolute_file_path), (
+            f"Test file not found at {absolute_file_path}"
+        )
+
+        file_input = self.test_case.driver.execute_script(
+            """
+            var input = document.createElement('input');
+            input.type = 'file';
+            input.style.display = 'none';
+            input.onchange = function () {
+                var event = new Event('drop', { bubbles: true, cancelable: true });
+                Object.defineProperty(event, 'dataTransfer', {
+                    value: { files: this.files, types: ['Files'] }
+                });
+                document.body.dispatchEvent(event);
+                window.__dropOutsideEditablePrevented = event.defaultPrevented;
+                document.body.removeChild(input);
+            };
+            document.body.appendChild(input);
+            return input;
+            """
+        )
+        file_input.send_keys(absolute_file_path)
+        self.test_case.sleep(0.1)
+        return bool(
+            self.test_case.driver.execute_script(
+                "return window.__dropOutsideEditablePrevented === true;"
+            )
+        )
+
     def do_paste_image_to_requirement(
-        self, field_name: str, image_path: str, field_order: int = 1
+        self,
+        field_name: str,
+        image_path: str,
+        field_order: int = 1,
+        wait_for_upload: bool = True,
     ) -> None:
         # Verify the file exists locally
         absolute_image_path = os.path.abspath(image_path)
@@ -1416,6 +1545,9 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
             js_paste_files, target_element
         )
         file_input.send_keys(absolute_image_path)
+
+        if not wait_for_upload:
+            return
 
         # Wait for the UI to update
         # We wait until the placeholder "Uploading..." disappears

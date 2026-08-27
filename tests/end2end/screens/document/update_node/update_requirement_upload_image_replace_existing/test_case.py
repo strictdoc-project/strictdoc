@@ -42,11 +42,21 @@ class Test(E2ECase):
 
             screen_document.do_drop_image_to_requirement(
                 "STATEMENT",
-                "./tests/end2end/screens/document/update_node/update_requirement_upload_image_replace_existing/picture.svg",
+                [
+                    "./tests/end2end/screens/document/update_node/update_requirement_upload_image_replace_existing/picture.svg",
+                    "./tests/end2end/screens/document/update_node/update_requirement_upload_image_replace_existing/picture.svg",
+                ],
+                uploaded_filenames=["picture.svg", "second.svg"],
+            )
+
+            self.assert_text(
+                "Previously added images updated: picture.svg, second.svg.",
+                "[data-testid='image-upload-updated-message']",
             )
 
             form_edit_requirement.do_form_submit()
 
             screen_document.assert_text("picture.svg")
+            screen_document.assert_text("second.svg")
 
         assert test_setup.compare_sandbox_and_expected_output()

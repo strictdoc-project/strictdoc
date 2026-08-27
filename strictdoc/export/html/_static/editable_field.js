@@ -16,7 +16,6 @@
     ['.avif', 'image/avif'],
   ]);
   const SUPPORTED_IMAGE_FORMAT_NAMES = 'SVG, PNG, GIF, JPG, JPEG, WebP, AVIF';
-  let removeUnsupportedFormatToast = null;
 
   function filterSingleLine(text) {
     return text.replace(/\s/g, ' ').replace(/\s\s+/g, ' ');
@@ -24,8 +23,44 @@
 
   // @relation(SDOC-LLR-214, scope=range_start)
   function getImageStem(path) {
-    const filename = path.split('/').pop();
-    return filename.replace(/\.[^/.]+$/, '').replace(/ /g, '_');
+    return getImageFilename(path).replace(/\.[^/.]+$/, '');
+  }
+
+  function getImageFilename(path) {
+    return path.split('/').pop().replace(/ /g, '_');
+  }
+
+  function getDirectImageUri(wildcardUri, filename) {
+    if (!wildcardUri.endsWith('.*')) return wildcardUri;
+    const extension = filename.match(/\.[^.]+$/)?.[0] || '';
+    return `${wildcardUri.slice(0, -1)}${extension.slice(1)}`;
+  }
+
+  function replaceDirectImageUris(editable, wildcardUri) {
+    if (!wildcardUri.endsWith('.*')) return false;
+
+    const uriPrefix = wildcardUri.slice(0, -1);
+    const directUris = [...SUPPORTED_IMAGE_FORMATS.keys()].map(
+      (extension) => `${uriPrefix}${extension.slice(1)}`
+    );
+    const textNodes = [];
+    const walker = document.createTreeWalker(
+      editable,
+      NodeFilter.SHOW_TEXT,
+    );
+    while (walker.nextNode()) textNodes.push(walker.currentNode);
+
+    let replaced = false;
+    for (const textNode of textNodes) {
+      let text = textNode.nodeValue;
+      for (const directUri of directUris) {
+        if (!text.includes(directUri)) continue;
+        text = text.replaceAll(directUri, wildcardUri);
+        replaced = true;
+      }
+      textNode.nodeValue = text;
+    }
+    return replaced;
   }
 
   function isSupportedImageFile(file) {
@@ -34,23 +69,22 @@
     return SUPPORTED_IMAGE_FORMATS.get(extensionMatch[0]) === file.type;
   }
 
-  function showUnsupportedFormatToast(files) {
-    removeUnsupportedFormatToast?.();
-
-    const filenames = files.map((file) => file.name).join(', ');
+  function showImageUploadToast(testId, lines, closeTestId = `${testId}-close`) {
     const toast = document.createElement('sdoc-toast');
     // toast.className = 'toast';
-    toast.dataset.testid = 'unsupported-image-format-message';
+    toast.dataset.testid = testId;
 
     const message = document.createElement('div');
-    message.innerHTML =
-      `<div>Unsupported format: <code class="toast-warn">${filenames}.</code></div>` +
-      `<div>You can use <code class="toast-loud">${SUPPORTED_IMAGE_FORMAT_NAMES}</code>.</div>`;
+    for (const line of lines) {
+      const lineElement = document.createElement('div');
+      lineElement.append(line);
+      message.appendChild(lineElement);
+    }
 
     const closeButton = document.createElement('button');
     closeButton.type = 'button';
     closeButton.className = 'toast-close';
-    closeButton.dataset.testid = 'unsupported-image-format-close';
+    closeButton.dataset.testid = closeTestId;
     closeButton.setAttribute('aria-label', 'Close');
     closeButton.textContent = '×';
 
@@ -63,17 +97,64 @@
     const removeToast = () => {
       toast.remove();
       document.removeEventListener('click', onOutsideClick);
-      if (removeUnsupportedFormatToast === removeToast) {
-        removeUnsupportedFormatToast = null;
-      }
     };
-    removeUnsupportedFormatToast = removeToast;
 
     closeButton.addEventListener('click', (event) => {
       event.stopPropagation();
       removeToast();
     });
     document.addEventListener('click', onOutsideClick);
+  }
+
+  function createHighlightedText(prefix, text, className) {
+    const fragment = document.createDocumentFragment();
+    fragment.append(prefix);
+    const highlight = document.createElement('code');
+    highlight.className = className;
+    highlight.textContent = text;
+    fragment.append(highlight);
+    return fragment;
+  }
+
+  function showUnsupportedFormatToast(files) {
+    const filenames = files.map((file) => file.name).join(', ');
+    const label = files.length === 1 ?
+      'Unsupported format: ' :
+      'Unsupported formats: ';
+    showImageUploadToast(
+      'unsupported-image-format-message',
+      [
+        createHighlightedText(label, `${filenames}.`, 'toast-warn'),
+        createHighlightedText(
+          'You can use ',
+          `${SUPPORTED_IMAGE_FORMAT_NAMES}.`,
+          'toast-loud',
+        ),
+      ],
+      'unsupported-image-format-close',
+    );
+  }
+
+  function showUploadFailedToast(files, errorMessage) {
+    const filenames = files.map((file) => file.name).join(', ');
+    showImageUploadToast('image-upload-failed-message', [
+      createHighlightedText(
+        'Image upload failed: ',
+        `${filenames}.`,
+        'toast-warn',
+      ),
+      errorMessage,
+    ]);
+  }
+
+  function showImagesUpdatedToast(files) {
+    const filenames = files.map((file) => file.name).join(', ');
+    const label = files.length === 1 ?
+      'Previously added image updated: ' :
+      'Previously added images updated: ';
+    showImageUploadToast('image-upload-updated-message', [
+      createHighlightedText(label, `${filenames}.`, 'toast-loud'),
+    ]);
   }
 
   async function uploadSupportedImages(editable, files) {
@@ -100,11 +181,13 @@
       // Give generic clipboard filenames a unique name.
       if (file.name === 'image.png' || file.name === 'image.jpg') {
         const extension = file.type === 'image/jpeg' ? '.jpg' : '.png';
-        const randomId = typeof crypto !== 'undefined' && crypto.randomUUID
-          ? crypto.randomUUID().substring(0, 8)
-          : Date.now().toString(36);
+        const randomId = typeof crypto !== 'undefined' && crypto.randomUUID ?
+          crypto.randomUUID().substring(0, 8) :
+          Date.now().toString(36);
         const newName = `pasted_${randomId}${extension}`;
-        file = new File([file], newName, { type: file.type });
+        file = new File([file], newName, {
+          type: file.type
+        });
       }
       pastedFiles.push(file);
     }
@@ -117,10 +200,10 @@
   }
 
   async function handleAssetUpload(editable, files) {
-    const uniqueStems = [...new Set(
-      Array.from(files).map((file) => getImageStem(file.name))
+    const uniqueFilenames = [...new Set(
+      Array.from(files).map((file) => getImageFilename(file.name))
     )];
-    if (uniqueStems.length === 0) return;
+    if (uniqueFilenames.length === 0) return;
 
     const form = editable.closest('form');
     const documentMid = form.querySelector('[name="document_mid"]')?.value;
@@ -135,10 +218,13 @@
 
     // Immediate feedback to inform the user that the upload has started.
     // Create TextNodes instead of plain strings for placeholders.
-    const placeholders = uniqueStems.map((stem) => ({
-      stem,
-      node: document.createTextNode(`\n.. image:: Uploading ${stem}...\n`),
-    }));
+    const placeholders = uniqueFilenames.map((filename) => {
+      const stem = getImageStem(filename);
+      return {
+        filename,
+        node: document.createTextNode(`\n.. image:: Uploading ${stem}...\n`),
+      };
+    });
 
     // Insert the placeholder nodes into the DOM
     const selection = window.getSelection();
@@ -190,20 +276,46 @@
       }
 
       const data = await response.json();
-      const imagesByStem = data.images;
-      const currentText = editable.innerText;
+      const imagesByFilename = data.images;
+      let currentText = editable.innerText;
+      const insertedUris = new Set();
+      const updatedFilenames = new Set();
 
       // For each returned image URI:
       // - replace the placeholder with the markup-specific image reference;
-      // - remove the placeholder instead if the image is already referenced.
-      for (const { stem, node } of placeholders) {
-        const uri = imagesByStem[stem];
+      // - remove the placeholder if the image is already referenced;
+      // - insert a shared wildcard URI only once for a multi-file pair.
+      for (const {
+          filename,
+          node
+        }
+        of placeholders) {
+        const uri = imagesByFilename[filename];
         if (!uri) continue;
 
-        if (currentText.includes(uri)) {
+        if (
+          documentMarkup === 'RST' &&
+          replaceDirectImageUris(editable, uri)
+        ) {
+          node.nodeValue = '';
+          currentText = editable.innerText;
+          continue;
+        }
+
+        const referenceUri = documentMarkup === 'RST' ?
+          uri :
+          getDirectImageUri(uri, filename);
+
+        if (currentText.includes(referenceUri)) {
           // The image is already referenced in the document.
           // The user has re-uploaded, and the backend has overwritten the file,
           // so we just clean up the placeholder.
+          node.nodeValue = '';
+          updatedFilenames.add(filename);
+          continue;
+        }
+
+        if (insertedUris.has(referenceUri)) {
           node.nodeValue = '';
           continue;
         }
@@ -212,26 +324,35 @@
         // suitable to the documentMarkup mode.
         switch (documentMarkup) {
           case 'RST':
-            node.nodeValue = `\n.. image:: ${uri}\n`;
+            node.nodeValue = `\n.. image:: ${referenceUri}\n`;
             break;
           case 'HTML':
-            node.nodeValue = `\n<img src="${uri}" />\n`;
+            node.nodeValue = `\n<img src="${referenceUri}" />\n`;
             break;
           case 'Markdown':
-            node.nodeValue = `\n![](${uri})\n`;
+            node.nodeValue = `\n![](${referenceUri})\n`;
             break;
         }
+        insertedUris.add(referenceUri);
+      }
+      if (updatedFilenames.size > 0) {
+        showImagesUpdatedToast(
+          files.filter((file) =>
+            updatedFilenames.has(getImageFilename(file.name))
+          ),
+        );
       }
     } catch (error) {
       console.error('Upload failed', error);
-      // Update node to show failure
       for (const placeholder of placeholders) {
-        placeholder.node.nodeValue =
-          `\n**[Image upload failed: ${error.message}]**\n`;
+        placeholder.node.nodeValue = '';
       }
+      showUploadFailedToast(files, error.message);
     } finally {
       // Fire a synthetic bubbling 'input' event to sync the hidden field.
-      editable.dispatchEvent(new Event('input', { bubbles: true }));
+      editable.dispatchEvent(new Event('input', {
+        bubbles: true
+      }));
     }
   }
 

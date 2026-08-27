@@ -45,10 +45,16 @@ class Test(E2ECase):
                 "./tests/end2end/screens/document/update_node/update_requirement_upload_image_empty/empty_picture.svg",
             )
 
-            form_edit_requirement.do_form_submit()
-
-            screen_document.assert_text(
-                "[Image upload failed: Image has no content]"
+            self.assert_text(
+                "Image upload failed: empty_picture.svg.",
+                "[data-testid='image-upload-failed-message']",
             )
+            self.assert_text(
+                "Image has no content",
+                "[data-testid='image-upload-failed-message']",
+            )
+            self.assert_text_not_visible("Uploading empty_picture")
+
+            form_edit_requirement.do_form_submit()
 
         assert test_setup.compare_sandbox_and_expected_output()

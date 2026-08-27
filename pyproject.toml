@@ -32,7 +32,7 @@ include = [
 [project]
 name = "strictdoc"
 dynamic = ["version"]
-description = "StrictDoc is open-source software for technical documentation and requirements management."
+description = "StrictDoc is open-source software for technical documentation and requirements management. This package is built from Robotics010/strictdoc, a course-specific fork."
 readme = "README.md"
 license = "Apache-2.0"
 requires-python = ">=3.10"
@@ -144,9 +144,9 @@ nuitka = [
 strictdoc = "strictdoc.cli.main:main"
 
 [project.urls]
-Changelog = "https://github.com/strictdoc-project/strictdoc/blob/main/CHANGELOG.md"
-Homepage = "https://strictdoc.readthedocs.io/en/stable/"
-Source = "https://github.com/strictdoc-project/strictdoc"
+Changelog = "https://github.com/Robotics010/strictdoc/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/Robotics010/strictdoc"
+Source = "https://github.com/Robotics010/strictdoc"
 
 # All groups below correspond to the per-flavor virtual environments in
 # tasks.py's UvEnvironment (development/check/documentation/release/

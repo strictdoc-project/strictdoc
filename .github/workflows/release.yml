@@ -7,6 +7,11 @@ on:
 
 jobs:
   deploy:
+    # Disabled on this fork: this workflow publishes the "strictdoc" package
+    # name to PyPI, which belongs to the upstream strictdoc-project. Leave
+    # this guard in place unless this fork gets its own package identity and
+    # a real release process.
+    if: false
     runs-on: ubuntu-latest
 
     steps:

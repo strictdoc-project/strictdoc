@@ -3,6 +3,14 @@
 StrictDoc is open-source software for technical documentation and requirements
 management.
 
+## About this fork
+
+This repository (`Robotics010/strictdoc`) is a fork of
+[`strictdoc-project/strictdoc`](https://github.com/strictdoc-project/strictdoc),
+adapted as a System Engineering tool for a student robotics course building a
+Eurobot mobile robot. See `AGENTS.md` for how this fork's conventions relate to
+upstream's own developer guide.
+
 ## Documentation
 
 The main StrictDoc documentation is hosted on Read the Docs:
@@ -55,10 +63,14 @@ StrictDoc starts the server on `http://127.0.0.1:5111` by default.
 
 ## Project links
 
-- Documentation: <https://strictdoc.readthedocs.io/en/stable/>
-- Source code: <https://github.com/strictdoc-project/strictdoc>
-- Examples: <https://github.com/strictdoc-project/strictdoc-examples>
-- Templates: <https://github.com/strictdoc-project/strictdoc-templates>
+- Source code (this fork): <https://github.com/Robotics010/strictdoc>
+- Upstream StrictDoc documentation: <https://strictdoc.readthedocs.io/en/stable/>
+- Upstream StrictDoc examples: <https://github.com/strictdoc-project/strictdoc-examples>
+- Upstream StrictDoc templates: <https://github.com/strictdoc-project/strictdoc-templates>
+
+This fork does not host separate documentation; the links above to upstream
+StrictDoc's docs/examples/templates describe the underlying tool, not the
+course-specific setup.
 
 ## License
 

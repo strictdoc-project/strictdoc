@@ -11,7 +11,7 @@
     return text.replace(/\s/g, ' ').replace(/\s\s+/g, ' ');
   }
 
-  // @relation(SDOC-LLR-207, scope=range_start)
+  // @relation(SDOC-LLR-214, scope=range_start)
   function getImageStem(path) {
     const filename = path.split('/').pop();
     return filename.replace(/\.[^/.]+$/, '').replace(/ /g, '_');
@@ -171,7 +171,7 @@
     if (!editable || editable.dataset.fieldType === 'singleline') return null;
     return editable;
   }
-  // @relation(SDOC-LLR-207, scope=range_end)
+  // @relation(SDOC-LLR-214, scope=range_end)
 
   document.addEventListener('paste', async (event) => {
     const editable = event.target.closest?.(SEL_EDITABLE);
@@ -181,10 +181,10 @@
     const isSingle = editable.dataset.fieldType === 'singleline';
     const hidden = editable.nextElementSibling;
 
-    // @relation(SDOC-LLR-207, scope=range_start)
+    // @relation(SDOC-LLR-214, scope=range_start)
     // For multiline, we also handle copy paste of images here.
     if (!isSingle && await handleImagePaste(editable, event)) return;
-    // @relation(SDOC-LLR-207, scope=range_end)
+    // @relation(SDOC-LLR-214, scope=range_end)
 
     const clipboardText = (event.clipboardData || window.clipboardData).getData('text');
     const text = isSingle ? filterSingleLine(clipboardText) : clipboardText;
@@ -217,7 +217,7 @@
     event.preventDefault();
   });
 
-  // @relation(SDOC-LLR-207, scope=range_start)
+  // @relation(SDOC-LLR-214, scope=range_start)
 
   // Image drag-and-drop is handled at two levels.
   // Document-level (1) listeners process images dropped into multiline editable
@@ -287,6 +287,6 @@
     if (findMultilineEditable(event.target)) return;
     event.preventDefault();
   });
-  // @relation(SDOC-LLR-207, scope=range_end)
+  // @relation(SDOC-LLR-214, scope=range_end)
 
 })();

@@ -2706,7 +2706,7 @@ def create_main_router(
         """
         Handle upload of assets (images for now).
 
-        @relation(SDOC-LLR-208, scope=function)
+        @relation(SDOC-LLR-215, scope=function)
         """
         document: SDocDocument = (
             export_action.traceability_index.get_node_by_mid(MID(document_mid))
@@ -2838,7 +2838,7 @@ def create_main_router(
                 uploaded_image_uris[stem] = None
 
         # Resolve Sphinx wildcard (.*) paths for the uploaded files.
-        # @relation(SDOC-LLR-209, scope=range_start)
+        # @relation(SDOC-LLR-216, scope=range_start)
         existing_image_stems_to_ext_set: dict[str, set[str]] = defaultdict(set)
         for sibling in os.listdir(assets_node_specific_subfolder):
             full_path = os.path.join(assets_node_specific_subfolder, sibling)
@@ -2863,7 +2863,7 @@ def create_main_router(
                 ext = next(iter(found_extensions))
                 uploaded_image_uris[stem] = f"{uri_base}/{stem}{ext}"
 
-        # @relation(SDOC-LLR-209, scope=range_end)
+        # @relation(SDOC-LLR-216, scope=range_end)
 
         # We need to re-export the assets to copy the new files to the output folder
         html_generator.export_project_assets(

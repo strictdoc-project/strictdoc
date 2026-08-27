@@ -995,7 +995,7 @@ TITLE: Image Upload
 
 [REQUIREMENT]
 MID: 7768b2575117435e80c3b26515382b23
-UID: SDOC-LLR-207
+UID: SDOC-LLR-214
 STATUS: Active
 TITLE: Image upload
 STATEMENT: >>>
@@ -1019,7 +1019,7 @@ Supports standard editor interactions and removes manual file handling, improvin
 
 [REQUIREMENT]
 MID: 7cdd7a0838fc4212a43b336eba5ccde8
-UID: SDOC-LLR-208
+UID: SDOC-LLR-215
 TITLE: Asset upload endpoint
 STATEMENT: >>>
 The StrictDoc web server shall provide an ``/actions/document/upload_asset`` endpoint that accepts image uploads and stores them in a node-specific subfolder.
@@ -1069,7 +1069,7 @@ Defines a consistent storage model that prevents image filename collisions betwe
 
 [REQUIREMENT]
 MID: 3157ce3de267437c8e083455fc2b1b87
-UID: SDOC-LLR-209
+UID: SDOC-LLR-216
 TITLE: Support for wildcard image directive generation
 STATEMENT: >>>
 When multiple image files are uploaded in a single operation, the ``/actions/document/upload_asset`` endpoint shall detect pairs of files that share the same filename stem and differ only by file extension.
@@ -1087,7 +1087,7 @@ Supports the wildcard-enhanced-image feature of StrictDoc/ReST also when uploadi
 
 [REQUIREMENT]
 MID: 82dd31e22ccf44bd8b6b924ae9591b0c
-UID: SDOC-LLR-210
+UID: SDOC-LLR-217
 TITLE: Orphaned asset cleanup
 STATEMENT: >>>
 StrictDoc shall provide a CLI command ``strictdoc manage assets`` to identify and remove orphaned assets.

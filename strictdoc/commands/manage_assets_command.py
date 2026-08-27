@@ -22,7 +22,7 @@ class ManageAssetsCommand(BaseCommand):
     """
     Identify and remove orphaned assets, and asset folders.
 
-    @relation(SDOC-LLR-210, scope=class)
+    @relation(SDOC-LLR-217, scope=class)
     """
 
     HELP = "Manages project assets (images)."

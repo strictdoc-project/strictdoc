@@ -3,7 +3,7 @@ from strictdoc.api import ProjectConfig
 
 def create_config() -> ProjectConfig:
     config = ProjectConfig(
-        project_title="StrictDoc Documentation",
+        project_title="StrictDoc Documentation (Eurobot Course Fork)",
         dir_for_sdoc_assets="assets",
         dir_for_sdoc_cache="output/_cache",
         project_features=[

@@ -42,7 +42,8 @@ ELEMENTS:
 [TEXT]
 MID: 13fe652f160d4af69e869c28a155437d
 STATEMENT: >>>
-Contributions to StrictDoc are welcome and appreciated.
+This document describes the contribution process for this repository, a
+course-internal fork of StrictDoc used for a student robotics course.
 Presented below is a condensed checklist that summarises the information
 of the development guide, see [LINK: DEVGUIDE_GETTING_STARTED].
 <<<
@@ -78,25 +79,6 @@ MID: 8b40cc35f3524bc7b4e444321c080837
 TITLE: How can I help?
 
 [[SECTION]]
-MID: 8e346888911649f2a3aaf49763aaef24
-TITLE: Spread the word
-
-[TEXT]
-MID: 07462b02027a423a85ab68525b78ac67
-STATEMENT: >>>
-If you like the StrictDoc project and use it in your daily work, there are
-several things you could do besides contributing Pull Requests:
-
-- Star the StrictDoc repository to show your appreciation of the project.
-- Write a blog post or a tutorial about using StrictDoc to achieve some goal.
-- Write an email to s.pankevich@gmail.com and mettta@gmail.com and tell us how
-  you are using StrictDoc and which features you are missing. We somewhat lack
-  enough feedback from our users.
-<<<
-
-[[/SECTION]]
-
-[[SECTION]]
 MID: 2696c7fda6d440f3a290f202bee08fe6
 TITLE: ReqIF users
 
@@ -105,9 +87,8 @@ MID: 9cfbb025525f41c5a195be0e637dffee
 STATEMENT: >>>
 The existing capability of StrictDoc to export/import SDoc to ReqIF is very
 basic. If you have to deal with ReqIF and you experience errors/crashes when
-using StrictDoc against ReqIF files, feel free to contribute the anonymized
-ReqIF files via StrictDoc Issues on GitHub, and we will take care of your
-specific case.
+using StrictDoc against ReqIF files, feel free to open an issue in this
+repository with the anonymized ReqIF file attached.
 
 It is straightforward to create an anonymized version of a ReqIF file. Just
 reduce your file to the section that causes troubles in import or export and

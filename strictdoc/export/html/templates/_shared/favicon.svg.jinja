@@ -7,7 +7,7 @@
   documentation export), StrictDoc resolves the favicon variant once via
   ProjectConfig.get_favicon_variant() (strictdoc/core/project_config.py),
   renders the SVG once, and writes it to _static/favicon.svg via
-  HTMLGenerator.export_assets() (strictdoc/export/html/html_generator.py).
+  HTMLGenerator.export_strictdoc_assets() (strictdoc/export/html/html_generator.py).
   Every later browser request just serves that already-rendered file —
   not read live per HTTP request.
 

@@ -24,10 +24,10 @@ def test_custom_css_is_not_configured_by_default():
     assert project_config.custom_css_path is None
 
 
-# Exercises the real HTMLGenerator.export_assets() and real filesystem
+# Exercises the real HTMLGenerator.export_strictdoc_assets() and real filesystem
 # I/O (tmp_path), asserting on actual bytes written to disk rather than
 # mocked calls.
-def test_export_assets_copies_custom_css(tmp_path):
+def test_export_strictdoc_assets_copies_custom_css(tmp_path):
     css_source = tmp_path / "my_styles.css"
     css_source.write_text("body { background: hotpink; }")
 
@@ -35,8 +35,7 @@ def test_export_assets_copies_custom_css(tmp_path):
     output_root = tmp_path / "output"
     output_root.mkdir()
 
-    HTMLGenerator.export_assets(
-        traceability_index=None,
+    HTMLGenerator.export_strictdoc_assets(
         project_config=project_config,
         html_templates=NormalHTMLTemplates(),
         export_output_html_root=str(output_root),
@@ -47,13 +46,14 @@ def test_export_assets_copies_custom_css(tmp_path):
     assert custom_css_output.read_text() == "body { background: hotpink; }"
 
 
-def test_export_assets_writes_no_custom_css_when_not_configured(tmp_path):
+def test_export_strictdoc_assets_writes_no_custom_css_when_not_configured(
+    tmp_path,
+):
     project_config = _project_config()
     output_root = tmp_path / "output"
     output_root.mkdir()
 
-    HTMLGenerator.export_assets(
-        traceability_index=None,
+    HTMLGenerator.export_strictdoc_assets(
         project_config=project_config,
         html_templates=NormalHTMLTemplates(),
         export_output_html_root=str(output_root),

@@ -13,6 +13,29 @@ Print the compliance statement first. Then proceed.
 If you are reading this and have not yet printed the compliance statement: stop,
 print it now, then continue.
 
+## Fork context
+
+This repository (`Robotics010/strictdoc`) is a fork of `strictdoc-project/strictdoc`,
+repurposed as a System Engineering tool for a student robotics course (a Eurobot
+mobile robot). It is not the upstream open-source project, and work here serves the
+course, not upstream's own user base.
+
+The SDG's engineering, testing, and technical-writing conventions still apply as
+written, and the SDG remains read-only (see "General rule" below). However, the SDG
+describes itself as the guide for "a StrictDoc developer/contributor" and some of its
+sections assume upstream's own context: publishing to PyPI, opening pull requests
+against `strictdoc-project` for outside review, and upstream's own release process.
+Where a SDG section like that conflicts with how this fork actually operates, this
+fork's own files (this section, README.md, NOTICE) take precedence — flag the
+conflict per "General rule" rather than silently importing upstream's assumption.
+
+`docs/strictdoc_24_development_plan.sdoc` and `docs/strictdoc_28_Backlog.sdoc`
+describe `strictdoc-project`'s own multi-year roadmap and backlog (Capella/STPA
+integration, LSP, WYSIWYG editing, multi-user accounts, and so on). They are
+reference-only for this fork. Never treat a `STATUS: Backlog` entry in either
+document as work to pick up here — this fork's priorities come from the user and
+from `developer/tasks/eurobot/`.
+
 ## Source of truth
 
 Follow the StrictDoc Developer Guide (`SDG`) for all tasks in this repository:
@@ -60,6 +83,15 @@ For agent working memory, use `developer/tasks/<task_id>/Context.md`.
 Do not modify files in `developer/tasks/<task_id>/` unless the user explicitly
 requests it. Those files are task artifacts intended for the user;
 `developer/tasks/<task_id>/Context.md` is the only agent-maintained file.
+
+New course-specific task work is filed under
+`developer/tasks/eurobot/<date>_<slug>/`, using the same `task.template.md`
+structure and the same `Context.md` convention described above. The existing
+flat, date-prefixed folders directly under `developer/tasks/` (several carrying
+upstream GitHub issue numbers, e.g.
+`20260621_add_node_on_empty_table_screen_2957`) are inherited upstream task
+history, kept for reference. They are not this fork's queue and are not
+extended going forward.
 
 ## Code review
 

@@ -10,9 +10,11 @@ build:
   tools:
     python: "3.10"
   commands:
-    # Use the latest nightly build of StrictDoc. Otherwise, the build will fail
-    # if the documentation already uses new features.
-    - pip install -U --pre git+https://github.com/strictdoc-project/strictdoc.git@main
+    # Install this fork's own checked-out code. (Upstream's own RTD config
+    # force-installs strictdoc-project/strictdoc@main here instead; doing
+    # that on this fork would build the docs with upstream's code rather
+    # than this fork's.)
+    - pip install -U .
 
     # Export documentation to HTML.
     - strictdoc export . --formats=html --output $READTHEDOCS_OUTPUT/

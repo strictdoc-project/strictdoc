@@ -12,6 +12,7 @@ from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.cli.base_command import BaseCommand, CLIValidationError
 from strictdoc.commands.manage_assets_config import ManageAssetsCommandConfig
+from strictdoc.core.asset_manager import AssetManager
 from strictdoc.core.project_config import ProjectConfig, ProjectConfigLoader
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
@@ -77,8 +78,9 @@ and optionally delete them to keep the repository clean.
             print(exc.to_print_message())  # noqa: T201
             sys.exit(1)
 
+        assert traceability_index.asset_manager is not None
         physical_assets: Set[str] = self._find_physical_assets(
-            self.config.input_path, project_config
+            traceability_index.asset_manager
         )
         referenced_assets: Set[str] = self._find_referenced_assets(
             traceability_index, project_config
@@ -118,21 +120,34 @@ and optionally delete them to keep the repository clean.
             print(f" - {asset_str}")  # noqa: T201
 
         if self.config.clean_unused_images:
-            print("Deleting unused images...")  # noqa: T201
-            for asset_str in unused_assets:
-                asset: Path = Path(asset_str)
-                try:
-                    os.remove(asset)
-                    print(f"Deleted: {asset}")  # noqa: T201
-                    if not any(asset.parent.iterdir()):
-                        asset.parent.rmdir()
-                        print(f"Deleted: {asset.parent}")  # noqa: T201
-                except OSError as e:
-                    print(f"Error deleting {asset}: {e}")  # noqa: T201
-            print("Cleanup complete.")  # noqa: T201
+            self._delete_unused_assets(unused_assets)
         else:
             print("")  # noqa: T201
             print("Run with --clean-unused-images to delete these files.")  # noqa: T201
+
+    def _delete_unused_assets(self, unused_assets: list[str]) -> None:
+        print("Deleting unused images...")  # noqa: T201
+        deleted_assets: list[Path] = []
+        failed_assets: list[tuple[Path, OSError]] = []
+        for asset_str in unused_assets:
+            asset = Path(asset_str)
+            try:
+                os.remove(asset)
+                deleted_assets.append(asset)
+                print(f"Deleted: {asset}")  # noqa: T201
+                if not any(asset.parent.iterdir()):
+                    asset.parent.rmdir()
+                    print(f"Deleted: {asset.parent}")  # noqa: T201
+            except OSError as exception_:
+                failed_assets.append((asset, exception_))
+                print(  # noqa: T201
+                    f"Could not delete {asset}: {exception_}"
+                )
+
+        print(  # noqa: T201
+            f"Cleanup complete: {len(deleted_assets)} deleted, "
+            f"{len(failed_assets)} failed."
+        )
 
     def _find_referenced_assets(
         self,
@@ -146,8 +161,10 @@ and optionally delete them to keep the repository clean.
         # e.g., .. image:: ./_assets/0011223344556677889900aabbccddeeff/picture.svg
         #       <img src="./_assets/0011223344556677889900aabbccddeeff/picture.svg" />
         #       ![](./_assets/0011223344556677889900aabbccddeeff/picture.svg)
+        #       ![](_assets/0011223344556677889900aabbccddeeff/picture.svg)
         asset_regex = re.compile(
-            r"(image::\s+|src=\"|\]\()\.(/_assets/[^\s'\"\)\]>]+)"
+            r"(image::\s+|src=\"|\]\()"
+            r"(?:\./)?(_assets/[^\s'\"\)\]>]+)"
         )
 
         for document in traceability_index.document_tree.document_list:
@@ -160,51 +177,25 @@ and optionally delete them to keep the repository clean.
 
         return referenced_assets
 
-    def _find_physical_assets(
-        self, base_path: str, project_config: ProjectConfig
-    ) -> Set[str]:
-        """Scans the file system for files residing in _assets directories."""
-        physical_assets = set()
-        path_obj = Path(base_path).resolve()
+    def _find_physical_assets(self, asset_manager: AssetManager) -> Set[str]:
+        """Finds image files in asset directories registered for the project."""
+        physical_assets: Set[str] = set()
 
-        # Get the exact output directory from StrictDoc's config
-        output_dir = Path(project_config.output_dir)
-        if not output_dir.is_absolute():
-            output_dir = (path_obj / output_dir).resolve()
-        else:
-            output_dir = output_dir.resolve()
-
-        template_dir = None
-        if project_config.html2pdf_template is not None:
-            template_dir = Path(project_config.html2pdf_template).parent
-            if not template_dir.is_absolute():
-                template_dir = (path_obj / template_dir).resolve()
-            else:
-                template_dir = output_dir.resolve()
-
-        # Scan for _asset directories
-        for asset_file in path_obj.rglob("_assets/**/*"):
-            if asset_file.is_file():
-                resolved_asset = asset_file.resolve()
+        # Scan registered _assets directories
+        for asset_dir_ in asset_manager.iterate():
+            for asset_file_ in Path(asset_dir_.full_path).rglob("*"):
+                if not asset_file_.is_file():
+                    continue
 
                 # skip extensions that are not images
                 if (
-                    asset_file.suffix.lstrip(".").lower()
+                    asset_file_.suffix.lstrip(".").lower()
                     not in WildcardEnhancedImage.WILDCARD_EXTENSIONS
-                ):
-                    continue
-                # Skip if the asset lives anywhere inside the configured output directory
-                if output_dir in resolved_asset.parents:
-                    continue
-                # Skip if the asset lives anywhere inside the configured template
-                if (
-                    template_dir is not None
-                    and template_dir in resolved_asset.parents
                 ):
                     continue
 
                 # Store as posix path for easy regex comparison later
-                physical_assets.add(asset_file.as_posix())
+                physical_assets.add(asset_file_.as_posix())
 
         return physical_assets
 

@@ -9,5 +9,40 @@ RUN: cp -r %S/_assets %T/_assets
 
 RUN: %strictdoc manage assets %T/ | filecheck %s
 
-CHECK:Found 1 unused image(s):
+CHECK:Found 2 unused image(s):
 CHECK:Output/_assets/unused.svg
+
+RUN: %strictdoc manage assets %T/ --clean-unused-images | filecheck %s --check-prefix=CLEAN
+
+CLEAN:Found 2 unused image(s):
+CLEAN:Deleting unused images...
+CLEAN-DAG:Deleted: {{.*}}Output/_assets/unused.svg
+CLEAN-DAG:Deleted: {{.*}}Output/_assets/orphan/unused_nested.svg
+CLEAN-DAG:Deleted: {{.*}}Output/_assets/orphan
+CLEAN:Cleanup complete: 2 deleted, 0 failed.
+
+RUN: test ! -e %T/_assets/unused.svg
+RUN: test ! -e %T/_assets/orphan
+RUN: test -e %T/_assets/picture.svg
+RUN: test -e %T/_assets/keep.txt
+
+RUN: %strictdoc manage assets %T/ --clean-unused-images | filecheck %s --check-prefix=EMPTY
+
+EMPTY:No unused images found. Your project is clean!
+
+RUN: cp -r %S/filtered_scope %T/filtered_scope
+
+RUN: %strictdoc manage assets %T/filtered_scope --clean-unused-images | filecheck %s --check-prefix=FILTERED
+
+FILTERED:Found 1 unused image(s):
+FILTERED:{{.*}}included/_assets/unused.svg
+FILTERED:Deleting unused images...
+FILTERED:Deleted: {{.*}}included/_assets/unused.svg
+FILTERED:Cleanup complete: 1 deleted, 0 failed.
+
+RUN: test ! -e %T/filtered_scope/included/_assets/unused.svg
+RUN: test -e %T/filtered_scope/included/_assets/keep_dot.svg
+RUN: test -e %T/filtered_scope/included/_assets/keep_no_prefix.svg
+RUN: test -e %T/filtered_scope/included/excluded/_assets/excluded.svg
+RUN: test -e %T/filtered_scope/outside/_assets/outside.svg
+RUN: test -e %T/filtered_scope/tests/_assets/test_asset.svg

@@ -1135,6 +1135,13 @@ The command shall:
 - List image files that are not referenced by any requirement.
 - Remove such orphaned files upon user request.
 - When removing files, also remove empty asset folders.
+
+The command shall inspect only asset directories discovered by
+``DocumentFinder`` for the configured project input paths. Asset discovery
+shall respect ``include_doc_paths`` and ``exclude_doc_paths``.
+
+The command shall recognize ``_assets`` references with no path prefix or a
+``./`` prefix.
 <<<
 RATIONALE: >>>
 Prevents accumulation of orphaned assets. This would for instance happen if requirement creation is aborted after already having uploaded images.

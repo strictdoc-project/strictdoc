@@ -49,11 +49,17 @@ class Test(E2ECase):
                 "STATEMENT",
                 "./tests/end2end/screens/document/create_requirement/create_requirement_upload_image_when_mid_disabled/picture.svg",
             )
-            form_edit_requirement.do_form_submit()
 
-            # Here we expect an error message:
-            screen_document.assert_text(
-                "Please save the requirement first before uploading any images."
+            self.assert_text(
+                "Image upload failed: picture.svg.",
+                "[data-testid='image-upload-failed-message']",
             )
+            self.assert_text(
+                "Please save the requirement first before uploading any images.",
+                "[data-testid='image-upload-failed-message']",
+            )
+            self.assert_text_not_visible("Uploading picture")
+
+            form_edit_requirement.do_form_submit()
 
         assert test_setup.compare_sandbox_and_expected_output()

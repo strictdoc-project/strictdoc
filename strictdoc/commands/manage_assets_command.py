@@ -134,14 +134,16 @@ and optionally delete them to keep the repository clean.
             try:
                 os.remove(asset)
                 deleted_assets.append(asset)
-                print(f"Deleted: {asset}")  # noqa: T201
+                print(f"Deleted: {asset.as_posix()}")  # noqa: T201
                 if not any(asset.parent.iterdir()):
                     asset.parent.rmdir()
-                    print(f"Deleted: {asset.parent}")  # noqa: T201
+                    print(  # noqa: T201
+                        f"Deleted: {asset.parent.as_posix()}"
+                    )
             except OSError as exception_:
                 failed_assets.append((asset, exception_))
                 print(  # noqa: T201
-                    f"Could not delete {asset}: {exception_}"
+                    f"Could not delete {asset.as_posix()}: {exception_}"
                 )
 
         print(  # noqa: T201

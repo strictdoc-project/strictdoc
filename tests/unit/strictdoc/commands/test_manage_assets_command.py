@@ -35,5 +35,8 @@ def test_cleanup_continues_after_deletion_error(
     assert failed_asset.exists()
     assert not last_asset.exists()
     output = capsys.readouterr().out
-    assert f"Could not delete {failed_asset}: permission denied" in output
+    assert (
+        f"Could not delete {failed_asset.as_posix()}: permission denied"
+        in output
+    )
     assert "Cleanup complete: 2 deleted, 1 failed." in output

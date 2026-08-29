@@ -4,6 +4,9 @@ from strictdoc import environment as strictdoc_environment
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.html.html_templates import NormalHTMLTemplates
+from tests.unit.helpers.view_object_builder import (
+    create_document_screen_view_object,
+)
 
 
 def _project_config(
@@ -61,3 +64,20 @@ def test_export_assets_writes_no_custom_css_when_not_configured(tmp_path):
 
     static_dir = output_root / project_config.dir_for_sdoc_assets
     assert not (static_dir / project_config.get_custom_css_filename()).exists()
+
+
+# Regression test for custom.css needing to load after every other
+# stylesheet, including ones a screen-specific template adds to head_css
+# via super() (e.g. move_node_tree.css for the document screen). Renders
+# the actual document screen template rather than asserting on template
+# source, so it catches a future head_css/head_custom_css block reordering.
+def test_custom_css_loads_after_screen_specific_stylesheets():
+    view_object = create_document_screen_view_object(
+        custom_css_path="/tmp/some/custom.css",
+    )
+
+    html = str(view_object.render_screen())
+
+    move_node_tree_pos = html.index("move_node_tree.css")
+    custom_css_pos = html.index("custom.css")
+    assert move_node_tree_pos < custom_css_pos

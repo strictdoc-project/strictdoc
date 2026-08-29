@@ -1,0 +1,62 @@
+[DOCUMENT]
+TITLE: Eurobot System Requirements
+
+[GRAMMAR]
+IMPORT_FROM_FILE: @eurobot
+
+[TEXT]
+STATEMENT: >>>
+System (black box) requirements. Each requirement declares a ``COVERS``
+relation to every ``RULE`` it addresses. ``RULE-7.1`` is deliberately left
+uncovered, so the Traceability Matrix shows what an unaddressed rule looks
+like.
+<<<
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Footprint at start
+STATEMENT: >>>
+The robot shall fit, at the start of the match, inside a perimeter of
+1200 mm measured around its footprint.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: RULE-4.1
+  ROLE: COVERS
+
+[REQUIREMENT]
+UID: REQ-2
+TITLE: Height without beacon support
+STATEMENT: >>>
+The robot shall measure at most 350 mm from the table surface to its
+highest point, with the beacon support removed.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: RULE-4.2
+  ROLE: COVERS
+
+[REQUIREMENT]
+UID: REQ-3
+TITLE: Emergency stop cuts actuator power
+STATEMENT: >>>
+Pressing the emergency stop button shall remove power from every motor
+and every actuator within 100 ms, and the robot shall stay unpowered
+until the button is released.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: RULE-5.1
+  ROLE: COVERS
+
+[REQUIREMENT]
+UID: REQ-4
+TITLE: Autonomous match cycle
+STATEMENT: >>>
+After the starter is pulled, the robot shall run its match strategy
+without any operator input and shall stop all motion 100 seconds later.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: RULE-6.1
+  ROLE: COVERS

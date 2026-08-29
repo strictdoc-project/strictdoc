@@ -1,0 +1,68 @@
+[DOCUMENT]
+TITLE: Eurobot Rules
+
+[GRAMMAR]
+IMPORT_FROM_FILE: @eurobot
+
+[TEXT]
+STATEMENT: >>>
+Each node below paraphrases a clause of the Eurobot competition rules.
+None of it is the verbatim rule text. The converter from
+``developer/tasks/eurobot/20260827_eurobot_rules_import`` replaces this
+document with clauses extracted from the official rules PDF.
+<<<
+
+[[SECTION]]
+TITLE: Robot
+
+[RULE]
+UID: RULE-4.1
+TITLE: Robot footprint
+STATEMENT: >>>
+The robot's footprint at the start of the match shall not exceed a
+perimeter of 1200 mm.
+<<<
+
+[RULE]
+UID: RULE-4.2
+TITLE: Robot height
+STATEMENT: >>>
+The robot shall not exceed a height of 350 mm, excluding the beacon
+support.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+TITLE: Safety
+
+[RULE]
+UID: RULE-5.1
+TITLE: Emergency stop
+STATEMENT: >>>
+The robot shall carry a red emergency stop button, reachable without
+touching any other part of the robot, that cuts power to every actuator.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+TITLE: Match
+
+[RULE]
+UID: RULE-6.1
+TITLE: Match duration
+STATEMENT: >>>
+A match lasts 100 seconds. The robot shall operate autonomously for the
+whole match, without any human intervention after the start.
+<<<
+
+[RULE]
+UID: RULE-7.1
+TITLE: Score estimate
+STATEMENT: >>>
+Before the match starts, the team shall announce the score it expects to
+reach. A correct estimate earns bonus points.
+<<<
+
+[[/SECTION]]

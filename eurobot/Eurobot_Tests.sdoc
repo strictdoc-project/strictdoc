@@ -1,0 +1,60 @@
+[DOCUMENT]
+TITLE: Eurobot System Tests
+
+[GRAMMAR]
+IMPORT_FROM_FILE: @eurobot
+
+[TEXT]
+STATEMENT: >>>
+Manually executed system tests. ``STATUS`` records the current result;
+the team updates it by hand after each test session and writes
+``Not Executed`` on a new test case. ``REQ-4`` deliberately has no test
+case, so the Traceability Matrix shows what an unverified requirement
+looks like.
+<<<
+
+[TEST_CASE]
+UID: TC-1
+TITLE: Measure the starting footprint
+STATUS: Passed
+STATEMENT: >>>
+Place the robot on the table in its starting configuration and wrap a
+measuring tape around its footprint. Record the perimeter.
+
+Expected: the perimeter is at most 1200 mm.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-1
+  ROLE: VERIFIES
+
+[TEST_CASE]
+UID: TC-2
+TITLE: Measure the height
+STATUS: Not Executed
+STATEMENT: >>>
+Remove the beacon support. Measure from the table surface to the highest
+point of the robot.
+
+Expected: the height is at most 350 mm.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-2
+  ROLE: VERIFIES
+
+[TEST_CASE]
+UID: TC-3
+TITLE: Emergency stop under load
+STATUS: Failed
+STATEMENT: >>>
+Drive the robot forward at full speed and press the emergency stop
+button. Observe the motors and the actuators.
+
+Expected: all motion stops, no actuator holds power, and the robot stays
+unpowered until the button is released.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-3
+  ROLE: VERIFIES

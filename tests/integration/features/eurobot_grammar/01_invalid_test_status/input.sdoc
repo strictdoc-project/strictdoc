@@ -1,0 +1,14 @@
+[DOCUMENT]
+TITLE: Invalid test case status
+
+[GRAMMAR]
+IMPORT_FROM_FILE: eurobot_grammar.sgra
+
+[TEST_CASE]
+UID: TC-1
+TITLE: A test case with a status outside the declared choices
+STATUS: Done
+STATEMENT: >>>
+Any procedure. The STATUS value above is what this document exists to
+reject.
+<<<

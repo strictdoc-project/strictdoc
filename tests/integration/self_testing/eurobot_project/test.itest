@@ -1,0 +1,50 @@
+#
+# The Eurobot reference project (eurobot/) exported through the real CLI.
+# Checks the three questions the grammar answers, on the screens that
+# answer them:
+#
+# - Traceability Matrix: which rules have no covering requirement, and
+#   which requirements have no covering test. The COVERS and VERIFIES
+#   relation roles each get their own column.
+# - Deep Traceability: the RULE -> REQUIREMENT -> TEST_CASE chain.
+# - Table screen: each test case's STATUS, without opening the node.
+#
+
+RUN: %strictdoc export "%strictdoc_root/eurobot" --output-dir "%T" | filecheck %s --check-prefix CHECK-EXPORT
+CHECK-EXPORT: Export completed.
+
+RUN: %check_exists --file "%T/html/eurobot/Eurobot_Rules.html"
+RUN: %check_exists --file "%T/html/eurobot/Eurobot_Requirements.html"
+RUN: %check_exists --file "%T/html/eurobot/Eurobot_Tests.html"
+RUN: %check_exists --file "%T/html/eurobot/Eurobot_Tests-TABLE.html"
+RUN: %check_exists --file "%T/html/eurobot/Eurobot_Requirements-DEEP-TRACE.html"
+RUN: %check_exists --file "%T/html/traceability_matrix.html"
+
+# The two relation roles are separate matrix columns, and every seed node
+# reaches the matrix.
+RUN: %cat "%T/html/traceability_matrix.html" | filecheck %s --check-prefix CHECK-MATRIX
+CHECK-MATRIX: Parent
+CHECK-MATRIX: COVERS
+CHECK-MATRIX: Parent
+CHECK-MATRIX: VERIFIES
+CHECK-MATRIX: REQ-1
+CHECK-MATRIX: RULE-4.1
+CHECK-MATRIX: TC-1
+CHECK-MATRIX: RULE-7.1
+
+# Deep Traceability walks the full chain for a covered, tested requirement.
+RUN: %cat "%T/html/eurobot/Eurobot_Requirements-DEEP-TRACE.html" | filecheck %s --check-prefix CHECK-DEEP-TRACE
+CHECK-DEEP-TRACE: RULE-4.1
+CHECK-DEEP-TRACE: REQ-1
+CHECK-DEEP-TRACE: TC-1
+
+# The table screen carries STATUS as its own column, with the three
+# distinct values the seed test cases use.
+RUN: %cat "%T/html/eurobot/Eurobot_Tests-TABLE.html" | filecheck %s --check-prefix CHECK-TABLE
+CHECK-TABLE: STATUS
+CHECK-TABLE: TC-1
+CHECK-TABLE: Passed
+CHECK-TABLE: TC-2
+CHECK-TABLE: Not Executed
+CHECK-TABLE: TC-3
+CHECK-TABLE: Failed

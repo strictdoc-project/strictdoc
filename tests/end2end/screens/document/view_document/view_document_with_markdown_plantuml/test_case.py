@@ -33,7 +33,5 @@ class Test(E2ECase):
 
             screen_document.assert_text("abcdef123456")
 
-            self.assert_element("img.plantuml")
-            self.assert_element_absent("pre.plantuml")
-            plantuml_image_src = self.get_attribute("img.plantuml", "src")
-            assert "/svg/" in plantuml_image_src
+            self.assert_element("pre.plantuml")
+            self.assert_element("pre.plantuml svg")

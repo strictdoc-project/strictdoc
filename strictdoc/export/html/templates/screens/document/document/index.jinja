@@ -171,9 +171,13 @@
         requestAnimationFrame(() => mermaid.run());
       }
 
-      // Re-run mermaid after node updates (i.e. after saving)...
+      // Re-run mermaid after node updates (i.e. after saving). The vendored
+      // turbo.min.js applies the stream action one requestAnimationFrame
+      // after this event, so a single rAF here would race it and run
+      // first, finding nothing new to render yet. Waiting two frames runs
+      // rerunMermaid after that action has landed.
       document.addEventListener("turbo:before-stream-render", () => {
-        rerunMermaid();
+        requestAnimationFrame(rerunMermaid);
       });
 
       // Lazily loaded document chunks (see frame_document_content.jinja.html)
@@ -186,19 +190,24 @@
   {%- endif -%}
   {%- endif -%}
   {%- if view_object.project_config.is_activated_plantuml() -%}
+    <script src="{{ view_object.render_static_url('plantuml/viz-global.js') }}"></script>
+    <script src="{{ view_object.render_static_url('plantuml/plantuml-core.js') }}"></script>
     <script src="{{ view_object.render_static_url('plantuml/plantuml.js') }}"></script>
-    <script type="module">
-      const plantumlServerUrl = {{ view_object.project_config.get_plantuml_server_url() | tojson }};
-      const kickPlantUML = () => window.strictdocRenderPlantUML(plantumlServerUrl).catch(console.error);
+    <script>
+      const kickPlantUML = () => window.strictdocRenderPlantUML().catch(console.error);
       window.addEventListener('load', () => {
         ('requestIdleCallback' in window)
           ? requestIdleCallback(kickPlantUML, { timeout: 2000 })
           : setTimeout(kickPlantUML, 0);
       });
   {%- if view_object.is_running_on_server -%}
-      // Re-render PlantUML diagrams after node updates (i.e. after saving)...
+      // Re-render PlantUML diagrams after node updates (i.e. after saving).
+      // The vendored turbo.min.js applies the stream action one
+      // requestAnimationFrame after this event, so a single rAF here would
+      // race it and run first, finding nothing new to render yet. Waiting
+      // two frames runs kickPlantUML after that action has landed.
       document.addEventListener("turbo:before-stream-render", () => {
-        requestAnimationFrame(kickPlantUML);
+        requestAnimationFrame(() => requestAnimationFrame(kickPlantUML));
       });
 
       // Lazily loaded document chunks (see frame_document_content.jinja.html)

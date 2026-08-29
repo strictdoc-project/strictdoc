@@ -1,0 +1,23 @@
+[DOCUMENT]
+TITLE: Diagrams document
+
+[TEXT]
+STATEMENT: >>>
+.. raw:: html
+
+    <pre class="mermaid">
+    graph TD
+    A[Start] --> B[End]
+    </pre>
+<<<
+
+[TEXT]
+STATEMENT: >>>
+.. raw:: html
+
+    <pre class="plantuml">
+    @startuml
+    Alice -> Bob: Hello
+    @enduml
+    </pre>
+<<<

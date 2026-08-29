@@ -112,7 +112,7 @@ dependencies = [
     "watchdog >= 2.1.7",
 
     # HTML2PDF dependencies
-    "html2pdf4doc == 0.0.33",
+    "html2pdf4doc == 0.0.34",
     "pypdf==6.*,>=6.5.0",
 
     # Robot Framework dependencies

@@ -836,7 +836,7 @@ wheels = [
 
 [[package]]
 name = "html2pdf4doc"
-version = "0.0.33"
+version = "0.0.34"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pypdf" },
@@ -844,9 +844,9 @@ dependencies = [
     { name = "selenium" },
     { name = "webdriver-manager" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/30/3a/81a53441195f373dbcb171236a801d2849f4efa42dfff7d36feb48484ae7/html2pdf4doc-0.0.33.tar.gz", hash = "sha256:5eee7f3f1fec69c46dae376f9a57c2c162da2ac37a38be60098be8e883fec759", size = 61301, upload-time = "2026-04-10T06:41:56.212Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/87/3a/2c15ff2000e1c6ceda5ae52a3ed35c4236bed48451347a0fd71ba43cde6e/html2pdf4doc-0.0.34.tar.gz", hash = "sha256:aa2fabbcaecdcae86d847d7ea8c148efd9462704672ebff9edcfce81441e98dd", size = 62080, upload-time = "2026-08-30T11:52:25.378Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/df/95/122d5439bb8d60ee630f0a6fdacd7a273aa66c690e4d7a526875de766736/html2pdf4doc-0.0.33-py3-none-any.whl", hash = "sha256:f2c540cc367c7b441928fc686a128493a552dabf0fe8c3024ac2e247e3bba833", size = 63402, upload-time = "2026-04-10T06:41:54.893Z" },
+    { url = "https://files.pythonhosted.org/packages/02/48/33e192f055f1fd13effdc01f14360faf36034626b17a97ca5f652cd2aa91/html2pdf4doc-0.0.34-py3-none-any.whl", hash = "sha256:f44da9468e1c9da75a0a066bc9120fad1faf827b57c37e29c1f333122d5cb98b", size = 64221, upload-time = "2026-08-30T11:52:23.95Z" },
 ]
 
 [[package]]
@@ -3396,7 +3396,7 @@ requires-dist = [
     { name = "beautifulsoup4", specifier = "==4.*,>=4.12.0" },
     { name = "docutils", specifier = "==0.*,>=0.22.2" },
     { name = "fastapi", specifier = ">=0.83.0" },
-    { name = "html2pdf4doc", specifier = "==0.0.33" },
+    { name = "html2pdf4doc", specifier = "==0.0.34" },
     { name = "html5lib", specifier = ">=1.1" },
     { name = "invoke", marker = "extra == 'development'", specifier = ">=1.4.1" },
     { name = "jinja2", specifier = ">=2.11.2" },

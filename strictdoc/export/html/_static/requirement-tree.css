@@ -8,7 +8,6 @@
   --requirement-tree-downward-line: var(--requirement-tree-line-color) var(--requirement-tree-line-width) solid;
   --requirement-tree-arrow-size: calc(var(--requirement-tree-margin)/4);
   /* var(--color-fg-contrast) */
-  /* var(--color-accent) */
 }
 
 /* requirement-tree */
@@ -265,7 +264,7 @@
 }
 
 .requirement-tree_downward_item a {
-  color: var(--color-accent);
+  color: var(--color-fg-main);
   text-decoration: none;
 }
 

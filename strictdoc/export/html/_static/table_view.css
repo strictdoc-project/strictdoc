@@ -704,11 +704,11 @@ background-image:
 }
 
 [js-table_view_edit-custom_meta-row][data-drop-position="before"] {
-  box-shadow: 0 -2px 0 var(--color-accent);
+  box-shadow: 0 -2px 0 var(--color-fg-main);
 }
 
 [js-table_view_edit-custom_meta-row][data-drop-position="after"] {
-  box-shadow: 0 2px 0 var(--color-accent);
+  box-shadow: 0 2px 0 var(--color-fg-main);
 }
 
 /* add_new_row */

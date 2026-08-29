@@ -215,8 +215,8 @@ class ProjectConfig:
         # Logo path can be set in the project config to customize the launcher's appearance for a specific project.
         launcher_logo_path: Optional[str] = None,
         # Favicon path can be set in the project config to customize the
-        # browser-tab favicon for a project's own (non-dev, non-test) server
-        # or static export. Ignored for the dev/test favicon variants.
+        # browser-tab favicon. Applies in every mode, including the
+        # dev/test server, overriding the built-in favicon there too.
         favicon_path: Optional[str] = None,
         # Custom CSS path can be set in the project config to extend or
         # override StrictDoc's default stylesheets in the HTML export and
@@ -975,10 +975,6 @@ class ProjectConfig:
         )
 
     def get_custom_favicon_path(self) -> Optional[str]:
-        if self.favicon_path is None:
-            return None
-        if self.get_favicon_variant() in ("dev", "test"):
-            return None
         return self.favicon_path
 
     def get_favicon_filename(self) -> str:

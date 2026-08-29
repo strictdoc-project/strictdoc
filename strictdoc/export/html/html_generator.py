@@ -285,10 +285,10 @@ class HTMLGenerator:
                 message="Copying StrictDoc's assets",
             )
 
-        # Write the favicon: a project's own custom file (only for the
-        # "default" variant, see ProjectConfig.get_custom_favicon_path()),
-        # or else render it from the Jinja template so it can encode which
-        # kind of StrictDoc instance (dev/test/docs export) rendered it.
+        # Write the favicon: a project's own custom file if configured
+        # (see ProjectConfig.get_custom_favicon_path()), or else render it
+        # from the Jinja template so it can encode which kind of StrictDoc
+        # instance (dev/test/docs export) rendered it.
         favicon_output_path = os.path.join(
             output_html_static_files, project_config.get_favicon_filename()
         )

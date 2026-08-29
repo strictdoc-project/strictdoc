@@ -4271,6 +4271,8 @@ A project can supply its own favicon file with the ``favicon_path`` option.
 
 The path must be relative to the project root and point to an existing file.
 Any common favicon format is supported (``.svg``, ``.ico``, ``.png``, etc.).
+``favicon_path`` applies in every mode, including StrictDoc's own
+development and test server, overriding the built-in favicon there too.
 <<<
 
 [[/SECTION]]

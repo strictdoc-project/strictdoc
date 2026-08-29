@@ -65,6 +65,18 @@ are rendered entirely in the browser by a vendored copy of the PlantUML
 engine, so diagram text never leaves the machine viewing the document.
 PlantUML is enabled by default, just like Mermaid; no configuration is
 required.
+
+2\) ``favicon_path`` now applies in every mode, including StrictDoc's own
+development and test server, overriding the built-in favicon there too.
+Previously it only took effect in the production HTML export.
+
+3\) Fixed: a project's ``custom_css_path`` stylesheet is now guaranteed to
+load after every screen-specific stylesheet, so its rules reliably override
+them. Previously, a screen that added its own stylesheet after the shared
+``head_css`` block (e.g. the document screen's node-move tree styles) could
+end up loading after ``custom_css_path`` and silently win instead.
+
+4\) Fixed: the default color scheme no longer has a bluish tint.
 <<<
 
 [[/SECTION]]

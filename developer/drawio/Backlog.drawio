@@ -106,7 +106,7 @@
         <mxCell id="TxJVGQlUKStorBnLPnty-1" parent="xBUwhWlFWRuDQ3vYKA49-38" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" value="&lt;a href=&quot;https://github.com/strictdoc-project/strictdoc/issues/1543&quot;&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;UI: Edit document settings&lt;/font&gt;&lt;/a&gt;" vertex="1">
           <mxGeometry height="50" width="280" x="320" y="100" as="geometry" />
         </mxCell>
-        <mxCell id="TxJVGQlUKStorBnLPnty-2" parent="xBUwhWlFWRuDQ3vYKA49-38" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" value="UI: Edit project settings" vertex="1">
+        <mxCell id="TxJVGQlUKStorBnLPnty-2" parent="xBUwhWlFWRuDQ3vYKA49-38" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" value="UI: Edit project settings" vertex="1">
           <mxGeometry height="50" width="280" x="320" y="160" as="geometry" />
         </mxCell>
         <mxCell id="ADvdKtA5epemSe2Z7qJR-2" parent="xBUwhWlFWRuDQ3vYKA49-38" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" value="&lt;a href=&quot;https://github.com/strictdoc-project/strictdoc/issues/1360&quot;&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;UI: Update UID and&amp;nbsp;&lt;/font&gt;&lt;/a&gt;&lt;div&gt;&lt;a href=&quot;https://github.com/strictdoc-project/strictdoc/issues/1360&quot;&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;preserve all relations&lt;/font&gt;&lt;/a&gt;&lt;/div&gt;" vertex="1">
@@ -136,7 +136,7 @@
         <mxCell id="xBUwhWlFWRuDQ3vYKA49-4" parent="xBUwhWlFWRuDQ3vYKA49-41" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" value="AsciiDoc: Read/write natively" vertex="1">
           <mxGeometry height="50" width="280" x="20" y="220" as="geometry" />
         </mxCell>
-        <mxCell id="my6LpwKuQYxvOHTBM5B0-13" parent="xBUwhWlFWRuDQ3vYKA49-41" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" value="Interop with other text-based requirements tools" vertex="1">
+        <mxCell id="my6LpwKuQYxvOHTBM5B0-13" parent="xBUwhWlFWRuDQ3vYKA49-41" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" value="Interop with other text-based requirements tools" vertex="1">
           <mxGeometry height="50" width="280" x="320" y="160" as="geometry" />
         </mxCell>
         <mxCell id="xBUwhWlFWRuDQ3vYKA49-16" parent="xBUwhWlFWRuDQ3vYKA49-41" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" value="RST: Read/write natively" vertex="1">
@@ -223,9 +223,6 @@
         <mxCell id="my6LpwKuQYxvOHTBM5B0-7" parent="xBUwhWlFWRuDQ3vYKA49-62" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" value="&lt;a href=&quot;https://github.com/strictdoc-project/strictdoc/issues?q=is%3Aopen+is%3Aissue+label%3ASecurity+&quot;&gt;&lt;font color=&quot;#000000&quot;&gt;Security fixes&lt;/font&gt;&lt;/a&gt;" vertex="1">
           <mxGeometry height="50" width="280" x="20" y="102" as="geometry" />
         </mxCell>
-        <mxCell id="xBUwhWlFWRuDQ3vYKA49-68" parent="xBUwhWlFWRuDQ3vYKA49-62" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" value="&lt;font color=&quot;#000000&quot;&gt;Approach for testing design items&lt;/font&gt;" vertex="1">
-          <mxGeometry height="50" width="280" x="20" y="42.5" as="geometry" />
-        </mxCell>
         <mxCell id="cHnssvc3abWM5IgfJ5em-2" parent="xBUwhWlFWRuDQ3vYKA49-62" style="text;html=1;strokeColor=#82b366;fillColor=#d5e8d4;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" value="&lt;font color=&quot;#000000&quot;&gt;Automate release workflow&lt;/font&gt;" vertex="1">
           <mxGeometry height="50" width="280" x="20" y="162.5" as="geometry" />
         </mxCell>
@@ -241,8 +238,8 @@
         <mxCell id="WPKMsA5IL_EO0J-wpA1P-11" parent="xBUwhWlFWRuDQ3vYKA49-62" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" value="&lt;font&gt;&lt;font color=&quot;#000000&quot;&gt;Feature toggle, product line elements, variation management &lt;/font&gt;&lt;a style=&quot;&quot; href=&quot;https://github.com/strictdoc-project/strictdoc/issues/2354&quot;&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;#2354&lt;/font&gt;&lt;/a&gt;&lt;/font&gt;" vertex="1">
           <mxGeometry height="50" width="280" x="-320" y="162.5" as="geometry" />
         </mxCell>
-        <mxCell id="fwlbfs4dxZCpc-DxVp4e-1" parent="xBUwhWlFWRuDQ3vYKA49-62" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" value="&lt;font color=&quot;#000000&quot;&gt;StrictDoc Nix flake&lt;/font&gt;" vertex="1">
-          <mxGeometry height="50" width="280" x="20" y="282.5" as="geometry" />
+        <mxCell id="fwlbfs4dxZCpc-DxVp4e-1" parent="xBUwhWlFWRuDQ3vYKA49-62" style="text;html=1;strokeColor=#82b366;fillColor=#d5e8d4;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" value="&lt;font color=&quot;#000000&quot;&gt;StrictDoc Nix flake&lt;/font&gt;" vertex="1">
+          <mxGeometry height="50" width="280" x="20" y="42.5" as="geometry" />
         </mxCell>
         <mxCell id="WxPphbh9xw_WkCNFaVKk-1" parent="my6LpwKuQYxvOHTBM5B0-1" style="swimlane;" value="Other" vertex="1">
           <mxGeometry height="422.5" width="320" x="1360" y="807.5" as="geometry" />

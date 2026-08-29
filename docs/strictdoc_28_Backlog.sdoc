@@ -492,7 +492,7 @@ STATEMENT: >>>
 
 - Filtering of requirements by tags.
 
-- Import/export: PlantUML, Confluence, Tex, Doorstop.
+- Import/export: Confluence, Tex, Doorstop.
 
 - **Partial evaluation of Jinja templates.** Many of the template variables
   could be made to be evaluated once, for example, config object's variables.

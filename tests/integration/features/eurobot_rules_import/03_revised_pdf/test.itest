@@ -1,0 +1,39 @@
+#
+# A revised PDF: one clause changed, one clause is new, one clause is gone.
+# The clause that is gone keeps its node and gets STATUS: Removed, so the
+# requirement covering it still resolves and the project still exports.
+#
+
+RUN: %mkdir "%T/project/_assets/rules/source"
+RUN: %cp "%strictdoc_root/eurobot/eurobot_grammar.sgra" "%T/project/eurobot_grammar.sgra"
+RUN: %cp "%strictdoc_root/eurobot/strictdoc_config.py" "%T/project/strictdoc_config.py"
+RUN: %cp "%S/sources.json" "%T/project/_assets/rules/source/sources.json"
+RUN: %cp "%S/requirements.sdoc" "%T/project/requirements.sdoc"
+RUN: python "%S/../make_fixture_pdf.py" original "%T/project/_assets/rules/source/rules.pdf"
+RUN: python "%strictdoc_root/eurobot/tools/import_rules.py" --project-dir "%T/project"
+
+# The revised PDF replaces the original one under the same file name, the
+# way a new release of the rules would.
+RUN: python "%S/../make_fixture_pdf.py" revised "%T/project/_assets/rules/source/rules.pdf"
+RUN: python "%strictdoc_root/eurobot/tools/import_rules.py" --project-dir "%T/project" | filecheck %s --check-prefix CHECK-IMPORT
+CHECK-IMPORT: Imported 3 active and 1 removed rules
+CHECK-IMPORT: Eurobot_Rules.sdoc updated.
+CHECK-IMPORT: Review the requirements that trace to a removed rule
+
+# The nodes stay in clause order, so the dropped clause keeps its place
+# between the one before it and the one after it.
+RUN: %cat "%T/project/Eurobot_Rules.sdoc" | filecheck %s --check-prefix CHECK-SDOC
+CHECK-SDOC: UID: RULE-FIXTURE-A.1
+CHECK-SDOC: STATUS: Active
+CHECK-SDOC: The first clause now says something else.
+CHECK-SDOC: UID: RULE-FIXTURE-A.2
+CHECK-SDOC: STATUS: Removed
+CHECK-SDOC: The second clause says another thing.
+CHECK-SDOC: UID: RULE-FIXTURE-A.3
+CHECK-SDOC: STATUS: Active
+CHECK-SDOC: The third clause did not exist before.
+
+# A relation pointing at a UID that no longer exists aborts the whole
+# export. That the export still completes is the point of this test.
+RUN: %strictdoc export "%T/project" --output-dir "%T/output" | filecheck %s --check-prefix CHECK-EXPORT
+CHECK-EXPORT: Export completed.

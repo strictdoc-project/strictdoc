@@ -1,0 +1,19 @@
+[DOCUMENT]
+TITLE: Fixture Requirements
+
+[GRAMMAR]
+IMPORT_FROM_FILE: @eurobot
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: A requirement that covers the clause the revision drops
+STATEMENT: >>>
+This requirement exists to prove that the converter never deletes a RULE
+node. Once RULE-FIXTURE-A.2 disappears from the PDF, this relation is what
+would abort the export if the node had been deleted instead of marked
+removed.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: RULE-FIXTURE-A.2
+  ROLE: COVERS

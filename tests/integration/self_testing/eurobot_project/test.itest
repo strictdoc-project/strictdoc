@@ -9,6 +9,9 @@
 # - Deep Traceability: the RULE -> REQUIREMENT -> TEST_CASE chain.
 # - Table screen: each test case's STATUS, without opening the node.
 #
+# The RULE nodes come from the competition rules PDFs, imported by
+# eurobot/tools/import_rules.py.
+#
 
 RUN: %strictdoc export "%strictdoc_root/eurobot" --output-dir "%T" | filecheck %s --check-prefix CHECK-EXPORT
 CHECK-EXPORT: Export completed.
@@ -20,6 +23,10 @@ RUN: %check_exists --file "%T/html/eurobot/Eurobot_Tests-TABLE.html"
 RUN: %check_exists --file "%T/html/eurobot/Eurobot_Requirements-DEEP-TRACE.html"
 RUN: %check_exists --file "%T/html/traceability_matrix.html"
 
+# The images extracted from the rules PDFs travel with the document.
+RUN: %check_exists --file "%T/html/eurobot/_assets/rules/GENERAL/RULE-GENERAL-F.3-1.png"
+RUN: %check_exists --file "%T/html/eurobot/_assets/rules/source/Eurobot_General_Rules_1.2_EN.pdf"
+
 # The two relation roles are separate matrix columns, and every seed node
 # reaches the matrix.
 RUN: %cat "%T/html/traceability_matrix.html" | filecheck %s --check-prefix CHECK-MATRIX
@@ -28,15 +35,21 @@ CHECK-MATRIX: COVERS
 CHECK-MATRIX: Parent
 CHECK-MATRIX: VERIFIES
 CHECK-MATRIX: REQ-1
-CHECK-MATRIX: RULE-4.1
+CHECK-MATRIX: RULE-GENERAL-F.3
 CHECK-MATRIX: TC-1
-CHECK-MATRIX: RULE-7.1
+CHECK-MATRIX: RULE-GENERAL-F.4.b
 
 # Deep Traceability walks the full chain for a covered, tested requirement.
 RUN: %cat "%T/html/eurobot/Eurobot_Requirements-DEEP-TRACE.html" | filecheck %s --check-prefix CHECK-DEEP-TRACE
-CHECK-DEEP-TRACE: RULE-4.1
+CHECK-DEEP-TRACE: RULE-GENERAL-F.3
 CHECK-DEEP-TRACE: REQ-1
 CHECK-DEEP-TRACE: TC-1
+
+# Every imported rule is Active until a revised PDF drops it.
+RUN: %cat "%T/html/eurobot/Eurobot_Rules-TABLE.html" | filecheck %s --check-prefix CHECK-RULES-TABLE
+CHECK-RULES-TABLE: STATUS
+CHECK-RULES-TABLE: RULE-GENERAL-A
+CHECK-RULES-TABLE: Active
 
 # The table screen carries STATUS as its own column, with the three
 # distinct values the seed test cases use.

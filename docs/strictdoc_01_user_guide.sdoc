@@ -3954,6 +3954,21 @@ follows:
         </pre>
     <<<
 
+Example:
+
+.. raw:: html
+
+    <pre class="mermaid">
+    graph TD
+    A[Enter Chart Definition] --> B(Preview)
+    B --> C{decide}
+    C --> D[Keep]
+    C --> E[Edit Definition]
+    E --> B
+    D --> F[Save Image and Code]
+    F --> B
+    </pre>
+
 Mermaid is enabled by default. No configuration is required to use Mermaid
 diagrams.
 <<<
@@ -3982,6 +3997,16 @@ PlantUML diagrams can be created inside of StrictDoc/RST markup as follows:
         </pre>
     <<<
 
+Example:
+
+.. raw:: html
+
+    <pre class="plantuml">
+    @startuml
+    Alice -> Bob: Hello
+    @enduml
+    </pre>
+
 Markdown documents can use a fenced code block tagged ``plantuml`` instead:
 
 .. code:: markdown
@@ -3992,33 +4017,10 @@ Markdown documents can use a fenced code block tagged ``plantuml`` instead:
     @enduml
     ```
 
-Unlike Mermaid, PlantUML diagrams are not rendered in the browser: the
-diagram source is sent to a PlantUML server, which renders it to an SVG
-image. Because of this, PlantUML support is disabled by default and must be
-enabled explicitly by setting the ``plantuml_server_url`` option to a
-PlantUML server, for example the public server at
-``https://www.plantuml.com/plantuml``:
-
-.. code:: python
-
-    from strictdoc.core.project_config import ProjectConfig
-
-
-    def create_config() -> ProjectConfig:
-        config = ProjectConfig(
-            plantuml_server_url="https://www.plantuml.com/plantuml",
-        )
-        return config
-
-If ``plantuml_server_url`` is not set, ``pre.plantuml``/``` ```plantuml ```
-blocks are left as-is and no diagram is rendered.
-
-.. warning::
-
-    When using the public server, the text of every PlantUML diagram is sent
-    to a third party (plantuml.com) for rendering. Projects with
-    confidential diagram content should self-host a PlantUML server and
-    point ``plantuml_server_url`` at it instead.
+Like Mermaid, PlantUML diagrams are rendered entirely in the browser using a
+vendored copy of the PlantUML engine: diagram source never leaves the
+machine viewing the document. PlantUML is enabled by default. No
+configuration is required to use PlantUML diagrams.
 <<<
 
 [[/SECTION]]
@@ -4303,40 +4305,6 @@ server.
 The path must be relative to the project root and point to an existing file.
 The referenced CSS file is applied on top of StrictDoc's own stylesheets, so
 only the rules that need to be changed have to be specified.
-<<<
-
-[[/SECTION]]
-
-[[SECTION]]
-MID: c94bf61401bb4dabb337427f47b6d876
-UID: SECTION-UG-PlantUML-server-URL
-TITLE: PlantUML server URL
-
-[TEXT]
-MID: 9493b1051cdc45bb9887264d5d3f75b0
-STATEMENT: >>>
-PlantUML support is disabled unless a ``plantuml_server_url`` is configured
-(see [LINK: SDOC_UG_OPTIONS_PROJECT_LEVEL]). This can point to the public
-server at ``https://www.plantuml.com/plantuml``, or to a self-hosted
-instance:
-
-.. code:: python
-
-    from strictdoc.core.project_config import ProjectConfig
-
-
-    def create_config() -> ProjectConfig:
-        config = ProjectConfig(
-            plantuml_server_url="https://plantuml.example.com/plantuml",
-        )
-        return config
-
-.. note::
-
-    There is no default ``plantuml_server_url``. Rendering a PlantUML diagram
-    requires sending its source to a PlantUML server, so StrictDoc leaves the
-    feature off until a project explicitly opts in and chooses a server it
-    trusts with that content.
 <<<
 
 [[/SECTION]]

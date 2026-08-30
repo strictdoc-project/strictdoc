@@ -1,0 +1,18 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[[SECTION]]
+TITLE: Section title
+
+[TEXT]
+UID: TEXT-NODE-1
+STATEMENT: >>>
+.. raw:: html
+
+    <pre class="mermaid">
+    graph TD
+    A[Enter Chart Definition] --> B(Preview)
+    </pre>
+<<<
+
+[[/SECTION]]

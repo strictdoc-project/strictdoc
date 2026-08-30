@@ -1,13 +1,19 @@
 [DOCUMENT]
-TITLE: Hello world doc
+TITLE: Document 1
+
+[[SECTION]]
+TITLE: Section title
 
 [TEXT]
+UID: TEXT-NODE-1
 STATEMENT: >>>
 .. raw:: html
 
     <pre class="plantuml">
     @startuml
-    Alice -> Bob: Hello
+    Alice -> Bob: Hello again
     @enduml
     </pre>
 <<<
+
+[[/SECTION]]

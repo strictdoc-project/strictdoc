@@ -60,11 +60,11 @@ This release contains the following enhancements:
 
 1\) StrictDoc now supports PlantUML diagrams. SDoc/RST documents can embed a
 ``<pre class="plantuml">`` block via the ``.. raw:: html`` directive, and
-Markdown documents can use a fenced code block labeled ``plantuml``. Diagram
-text is rendered to an SVG image by a PlantUML server. PlantUML is disabled
-by default; set the new ``plantuml_server_url`` option to enable it, e.g. to
-the public server at ``https://www.plantuml.com/plantuml`` or to a
-self-hosted instance.
+Markdown documents can use a fenced code block labeled ``plantuml``. Diagrams
+are rendered entirely in the browser by a vendored copy of the PlantUML
+engine, so diagram text never leaves the machine viewing the document.
+PlantUML is enabled by default, just like Mermaid; no configuration is
+required.
 <<<
 
 [[/SECTION]]

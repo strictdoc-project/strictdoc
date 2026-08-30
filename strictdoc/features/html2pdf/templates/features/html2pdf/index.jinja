@@ -18,29 +18,50 @@
   {%- endif -%}
   {%- if view_object.project_config.is_activated_mermaid() -%}
     <script src="{{ view_object.render_static_url('mermaid/mermaid.min.js') }}"></script>
-    <script type="module">
-      mermaid.initialize({ startOnLoad: true });
+    <script>
+      mermaid.initialize({ startOnLoad: false });
     </script>
   {%- endif -%}
   {%- if view_object.project_config.is_activated_plantuml() -%}
+    <script src="{{ view_object.render_static_url('plantuml/viz-global.js') }}"></script>
+    <script src="{{ view_object.render_static_url('plantuml/plantuml-core.js') }}"></script>
     <script src="{{ view_object.render_static_url('plantuml/plantuml.js') }}"></script>
-    <script type="module">
-      window.strictdocRenderPlantUML({{ view_object.project_config.get_plantuml_server_url() | tojson }}).catch(console.error);
-    </script>
   {%- endif -%}
   {%- if view_object.project_config.is_activated_html2pdf() -%}
   <script
-  defer
-    {# data-debug-mode='false' #}
-    data-preloader='true'
-    data-preloader-target='[html2pdf-preloader]'
-    data-preloader-background='#F2F5F9'
-    data-forced-page-break-selectors=''
-    data-page-break-after-selectors='.pdf-toc .free_text'
-    data-page-break-before-selectors='H2 .sdoc-html2pdf4doc-break-before'
-    data-no-break-selectors='.html2pdf4doc-no-break sdoc-section-title sdoc-meta sdoc-node-title .pdf-toc-row'
-    data-no-hanging-selectors='.html2pdf4doc-no-hanging sdoc-section-title sdoc-anchor sdoc-meta .admonition-title sdoc-node-title sdoc-node-field-label strong:only-child'
-  src="{{ view_object.render_static_url('html2pdf4doc.min.js') }}"></script>
+    data-init="manual"
+    src="{{ view_object.render_static_url('html2pdf4doc.min.js') }}"
+  ></script>
+  <script>
+    {#-
+      html2pdf4doc's own render() sequence is: await DOMContentLoaded,
+      show the preloader, await window "load", then (via renderReady
+      below) wait for Mermaid/PlantUML before it measures/paginates the
+      page. renderReady runs after "load", by which point the document
+      body (and its "pre.mermaid"/"pre.plantuml" blocks) already exists,
+      so it is safe to kick the diagram renderers off right here.
+    -#}
+    HTML2PDF4DOC.init({
+      preloader: true,
+      preloaderTarget: "[html2pdf-preloader]",
+      preloaderBackground: "#F2F5F9",
+      forcedPageBreakSelectors: "",
+      pageBreakAfterSelectors: ".pdf-toc .free_text",
+      pageBreakBeforeSelectors: "H2 .sdoc-html2pdf4doc-break-before",
+      noBreakSelectors: ".html2pdf4doc-no-break sdoc-section-title sdoc-meta sdoc-node-title .pdf-toc-row",
+      noHangingSelectors: ".html2pdf4doc-no-hanging sdoc-section-title sdoc-anchor sdoc-meta .admonition-title sdoc-node-title sdoc-node-field-label strong:only-child",
+      renderReady: function () {
+        var diagramRenderers = [];
+        {%- if view_object.project_config.is_activated_mermaid() %}
+        diagramRenderers.push(mermaid.run());
+        {%- endif %}
+        {%- if view_object.project_config.is_activated_plantuml() %}
+        diagramRenderers.push(window.strictdocRenderPlantUML());
+        {%- endif %}
+        return Promise.all(diagramRenderers);
+      },
+    });
+  </script>
   {%- endif -%}
 
   {{ super() }}

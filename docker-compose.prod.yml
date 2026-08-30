@@ -1,0 +1,56 @@
+# Production stack for StrictDoc (https://strictdoc.navtopilote.dev). Runs on the
+# OVH VPS behind the shared core/ edge nginx — see
+# vps_infrastructure_2/core/edge/conf.d/strictdoc.conf. Access is gated by
+# Authelia (see vps_infrastructure_2/core/authelia/) at the edge, not by anything
+# in this compose file.
+#
+# Built from this repo's own Dockerfile, unmodified, with the default
+# STRICTDOC_SOURCE=pypi — this fork has no code changes under strictdoc/ itself
+# (only content/config under eurobot/), so installing the released PyPI package
+# is functionally equivalent to building this exact source tree.
+#
+#   docker compose -f docker-compose.prod.yml up -d --build
+#
+# No database: StrictDoc is purely file-based, reading/writing the bind-mounted
+# eurobot/ directory directly.
+name: strictdoc
+
+services:
+  strictdoc_web:
+    build:
+      context: .
+    restart: unless-stopped
+    # entrypoint.sh creates a "strictdoc" user with these ids and gosu's into it,
+    # so files written back through the web UI (e.g. edits) share ownership with
+    # the host checkout instead of ending up root-owned. Must match the real
+    # owner of this checkout (confirmed via `stat` at deploy time), not a guess.
+    environment:
+      HOST_UID: "1000"
+      HOST_GID: "1000"
+    # Only the eurobot/ sub-project is mounted — it's self-contained (own
+    # strictdoc_config.py, grammar, assets) — so the web-facing container never
+    # sees the rest of this fork's source tree. Read-write: editing through the
+    # (Authelia-gated) web UI is an intended feature; see DEPLOY.md's
+    # "Direction of truth" section for the caveat that implies.
+    volumes:
+      - ./eurobot:/data/eurobot
+    # CWD must be the bind-mounted dir itself, not its unmounted parent /data:
+    # `strictdoc server` mkdir's its output/cache dir relative to CWD, and /data
+    # (the image's WORKDIR) is root-owned with nothing mounted there, so running
+    # from /data with input_path "eurobot" fails with "Permission denied: 'output'".
+    working_dir: /data/eurobot
+    command: strictdoc server . --host 0.0.0.0 --port 5111
+    healthcheck:
+      # No dedicated /healthz in StrictDoc; a 200 on / is the real signal.
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:5111/"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+    networks:
+      edge:
+        aliases: ["strictdoc_web"]
+
+networks:
+  edge:
+    external: true

@@ -1,0 +1,41 @@
+#
+# A source whose headings are pictures rather than text, the way a Google
+# Docs export writes them. The table of contents names each clause and the
+# picture marks where it starts, so the structure comes back without anything
+# ever reading the pixels.
+#
+# The fixture places all four pictures with one shared XObject, which also
+# covers the case of a heading and an ordinary figure sharing a name.
+#
+
+RUN: %mkdir "%T/project/_assets/rules/source"
+RUN: %cp "%strictdoc_root/eurobot/eurobot_grammar.sgra" "%T/project/eurobot_grammar.sgra"
+RUN: %cp "%strictdoc_root/eurobot/strictdoc_config.py" "%T/project/strictdoc_config.py"
+RUN: %cp "%S/sources.json" "%T/project/_assets/rules/source/sources.json"
+RUN: python "%S/../make_fixture_pdf.py" toc "%T/project/_assets/rules/source/rules.pdf"
+
+RUN: python "%strictdoc_root/eurobot/tools/import_rules.py" --project-dir "%T/project" | filecheck %s --check-prefix CHECK-IMPORT
+CHECK-IMPORT: Imported 3 active and 0 removed rules, 1 images.
+
+# Every clause the table of contents names becomes a node, with the title the
+# table of contents gives it and the text that follows its picture.
+RUN: %cat "%T/project/Eurobot_Rules.sdoc" | filecheck %s --check-prefix CHECK-SDOC
+CHECK-SDOC: TITLE: A. FIRST CHAPTER
+CHECK-SDOC: UID: RULE-FIXTURE-A
+CHECK-SDOC: TITLE: FIRST CHAPTER
+CHECK-SDOC: STATUS: Active
+CHECK-SDOC: What the first chapter is about.
+CHECK-SDOC: UID: RULE-FIXTURE-A.1
+CHECK-SDOC: TITLE: FIRST CLAUSE
+CHECK-SDOC: The first clause says one thing.
+CHECK-SDOC: .. image:: _assets/rules/FIXTURE/RULE-FIXTURE-A.1-1.png
+CHECK-SDOC: UID: RULE-FIXTURE-A.2
+CHECK-SDOC: TITLE: SECOND CLAUSE
+CHECK-SDOC: The second clause says another thing.
+
+# The pictures standing in for headings are consumed as boundaries. Only the
+# figure inside the first clause is written out.
+RUN: %check_exists --file "%T/project/_assets/rules/FIXTURE/RULE-FIXTURE-A.1-1.png"
+
+RUN: %strictdoc export "%T/project" --output-dir "%T/output" | filecheck %s --check-prefix CHECK-EXPORT
+CHECK-EXPORT: Export completed.

@@ -17,868 +17,752 @@ every requirement tracing to it keeps resolving.
 
 Source documents:
 
-- Eurobot contest general rules, official version 1.2 (``_assets/rules/source/Eurobot_General_Rules_1.2_EN.pdf``)
-- Eurobot 2026 rules, official version 1.0 (``_assets/rules/source/Eurobot2026_Rules_1.0_EN.pdf``)
+- Евробот, правила PRO, версия 1.2 (``_assets/rules/source/Eurobot_PRO_Rules_1.2_RU.pdf``)
+- Евробот, игровые правила 2026 (``_assets/rules/source/Eurobot_Game_Rules_2026_RU.pdf``)
 <<<
 
 [[SECTION]]
-TITLE: Eurobot contest general rules, official version 1.2
+TITLE: Евробот, правила PRO, версия 1.2
 
 [[SECTION]]
-TITLE: A. NOTICE
+TITLE: A. ПРИМЕЧАНИЕ
 
 [RULE]
 UID: RULE-GENERAL-A
-TITLE: NOTICE
+TITLE: ПРИМЕЧАНИЕ
 STATUS: Active
 STATEMENT: >>>
-Changes or clarifications of the rules may be made during the year. We therefore strongly encourage all participants to check our website regularly (www.eurobot.org/) as well as your National Organization Committee (NOC) own website for news. You can also follow discussions, ask questions or get further assistance on our faq (www.eurobot.org/faq/).
+Просим обратить внимание, что версия правил может меняться и уточняться в течение года, просим вас проверять, что версия правил выбранная для ознакомления является актуальной.
 
-Possible changes of the technical specifications will be announced on the Eurobot website, (www.eurobot. org/) or on the website of the National Organization Committee (NOC) in your country.
+Ответы на вопросы от судей, а также решения, принятые в ходе проведения соревнования могут применятся в рамках судейства матчей и допуска роботов
 
-The FAQ responses from a referee are official responses taken into account for match refereeing and homologation stages.
-
-In case of doubt regarding any point of the rules or the approval of robots, the referee committee may also be contacted at referee@eurobot.org.
-
-Please note that the version of this release is noted down at the end of this page. For any inquiry, only an OFFICIAL version should be considered.
-
-Common parameters of the rules can change from one year to another. Accordingly, please read the rules carefully even if the chapters may seem familiar to you.
-
-Have a good reading!
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-A-1.png
 <<<
 
 [[/SECTION]]
 
 [[SECTION]]
-TITLE: B. CONTEST PRESENTATION, OBJECTIVES AND VALUES
+TITLE: B. ИДЕЯ СОРЕВНОВАНИЯ
 
 [RULE]
 UID: RULE-GENERAL-B
-TITLE: CONTEST PRESENTATION, OBJECTIVES AND VALUES
+TITLE: ИДЕЯ СОРЕВНОВАНИЯ
 STATUS: Active
 STATEMENT: >>>
-The Eurobot and Eurobot Junior robotics contest are two international amateur robotics competitions, which take place in Europe, and which are open to all young people in the world gathered within a club, a group of friends or a school setting. The technical challenge for the Eurobot contest consists of building an autonomous robot. The robots of the different teams are required to participate in matches during different meetings organized from January to June.
+Соревнования Евробот – это мероприятия, в которых могут принять участие молодые любители робототехники, объединившись в команды. Участники команд – школьники и студенты – молодые исследователи, которые участвуют в соревнованиях в рамках учебного проекта, как группа друзей или независимый клуб. Чемпионаты преследуют одну и ту же цель: дать возможность молодым людям активно обучаться и на практике применять полученные знания и умения в дружеском соревновании.
 
-The rules for both contest, Eurobot and Eurobot Junior, are based on the same concept. As organisers, we intend to provide a common platform for the Eurobot event. This platform is dedicated to autonomous robots for Eurobot while for Eurobot Junior, the robots are remote controlled. In this way, a Eurobot organiser can easily set up a Eurobot Junior contest and vice versa.
-<<<
+Правила соревнований основаны на одной идее. Организаторы предоставляют платформу для проведения. Эта платформа подразумевает создание автономных и управляемых роботов в зависимости от лиги.
 
-[RULE]
-UID: RULE-GENERAL-B.1
-TITLE: OBJECTIVE
-STATUS: Active
-STATEMENT: >>>
-The shared aim of the Eurobot and Eurobot Junior robotics competitions is to give young people the opportunity to engage in their own learning and put their theoretical and practical knowledge into practice, by taking part in a fun and friendly event.
-<<<
-
-[RULE]
-UID: RULE-GENERAL-B.2
-TITLE: VALUES
-STATUS: Active
-STATEMENT: >>>
-Born in Europe, the Eurobot and Eurobot Junior robotics competitions share as fundamental values the European values of human rights, and respect for human dignity, equality for all and freedom of people and ideas.
-
-The Eurobot and Eurobot Junior robotics competitions seek to act, at their humble level, through sharing and interculturality, to help young people grow, enrich themselves culturally and be protagonists of their own futures.
-
-As an actor in popular education and as a youth movement, the competitions and their volunteers are convinced that bringing people together through scientific, technical and fun projects is a way of expanding our limits in a friendly atmosphere where everyone is and always will be welcome.
-
-The Eurobot and Eurobot Junior meetings are prepared passionately throughout the year by volunteers of all nationalities who believe in the educational values of this experience and are themselves, often, former participants. The Eurobot and Eurobot Junior robotics contest promote the involvement of young people in scientific and technical projects as well as in international projects.
+Организаторы соревнований автономных роботов могут легко проводить соревнования управляемых роботов и наоборот.
 <<<
 
 [[/SECTION]]
 
 [[SECTION]]
-TITLE: C. RULE STRUCTURE
+TITLE: C. СТРУКТУРА ПРАВИЛ
 
 [RULE]
 UID: RULE-GENERAL-C
-TITLE: RULE STRUCTURE
+TITLE: СТРУКТУРА ПРАВИЛ
 STATUS: Active
 STATEMENT: >>>
-The Eurobot and Eurobot Junior robotics contest are subject to a set of rules which are set out in various supplementary documents:
+Соревнования имеют 2 набора правил, представленные в виде 2-х документов:
 
-The general rules of the Eurobot contest, which are specific to each competition and define the general regulatory framework applicable to all official meetings;
+● Общие правила, в которых указаны ограничения и допуске, касательно соревнования в целом; ● Ежегодные правила, которые описывают тематику и задания соревнования в текущем году. ● Правила могут различаться для разных лиг.
 
-The annual rules of the game, which are common to both competitions, Eurobot and Eurobot Junior, and describe the specific rules for each edition.
-
-For any meeting, general conditions of participation may be added by the meetings organizing committee. Those conditions may add additional rules, or clarify the existing rules, to ensure a smooth running of that meeting.
-
-You’re currently reading version Eurobot OFFICIAL 1.2 of general rules. (this version concerns fully autonomous robots)
-
-These regulations define the general operation of the competitions, their procedures, the constraints applicable to the different technical components and the running of the matches.
-
-This document must be supplemented by reading the annual game rules.
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-C-1.png
 <<<
 
 [[/SECTION]]
 
 [[SECTION]]
-TITLE: D. MAIN REGISTRATION REQUIREMENTS
+TITLE: D. ОГРАНИЧЕНИЯ УЧАСТНИКОВ
+
+[RULE]
+UID: RULE-GENERAL-D
+TITLE: ОГРАНИЧЕНИЯ УЧАСТНИКОВ
+STATUS: Active
+STATEMENT: >>>
+Приведенные ниже правила определяют общий порядок проведения соревнований, игровой процесс и ход матчей. Для участия в соревнованиях требуется соблюдение указанных ниже условий. Кроме того, организаторы Евробот могут добавить дополнительные требования к регистрации в отдельном документе.
+<<<
 
 [RULE]
 UID: RULE-GENERAL-D.1
-TITLE: TEAM MEMBERS
+TITLE: УЧАСТНИКИ КОМАНДЫ
 STATUS: Active
 STATEMENT: >>>
-A team is a group of at least 2 young people who have built a robot as well as the associated components for one of the meetings organized as part of one of the Eurobot or Eurobot Junior contests. A young person can only be part of one team within a competition
+Команда – это группа людей (не менее 2-х), создавшая робота (и, возможно, дополнительные системы) для соревнований. Отдельный человек может быть участником лишь одной команды, даже если обе команды принадлежат к одной организации, при этом, обмен опытом всячески приветствуется.
 <<<
 
 [RULE]
 UID: RULE-GENERAL-D.2
-TITLE: PARTICIPANT MEMBERS AND SUPERVISORS
+TITLE: РУКОВОДИТЕЛИ КОМАНД
 STATUS: Active
 STATEMENT: >>>
-A team and its project can be supervised by individuals (teacher, parent, facilitator, etc.). The role of these supervisors is to support, advise and transmit skills. Supervisors are not considered as participating members of the team, but as supervising members.
+В лиге PRO руководителем может быть один из участников команды.
 
-All elements of the robot(s), and associated components, must be imagined, designed and assembled by the participating members of the team.
+Команды должны принять участие в собственном научно-техническом проекте, который заключается в конструировании робота. Они могут использовать коммерческие компоненты при условии их интеграции в свой собственный проект.
 
-During a meeting, the supervising members do not have the right to directly modify the robot.
+В этом случае для роботов могут использоваться готовые шасси или базы роботов, если они были явно модифицированы участником в соответствии с правилами Eurobot и интегрированы в его собственный научно-технический проект.
 
-The participating members of a team must be able to explain how the robot and their project work without the presence of the supervising members.
-
-The organizers of a meeting reserve the right to refuse a team’s participation at any time if one of its robots has visibly been imagined, and/or designed and/or assembled by one of the supervising members and not by the participating members.
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-D.2-1.png
 <<<
 
 [RULE]
 UID: RULE-GENERAL-D.3
-TITLE: AGE LIMITATION OF THE PARTICIPANTS
+TITLE: ОГРАНИЧЕНИЯ ПО ВОЗРАСТУ
 STATUS: Active
 STATEMENT: >>>
-The age limit for participants in the Eurobot competition is 30 years old included during the year of the final meeting. This age limit does not apply to supervisors.
-
-Teams not meeting this age limit will not be able to participate in the Eurobot European final.
+Возрастное ограничение для участия в финале Евробот PRO отсутствует.
 <<<
 
 [RULE]
 UID: RULE-GENERAL-D.4
-TITLE: TEAM REGISTRATION
+TITLE: РЕГИСТРАЦИЯ КОМАНД
 STATUS: Active
 STATEMENT: >>>
-A single organization (club, school, etc.) can supervise and register several teams.
-
-Team registration must be done in accordance with the registration procedures provided by your national organizing committee. The national organizing committee reserves the right to accept or refuse the registration of a team.
+Одна организация может зарегистрировать несколько команд.
 <<<
 
 [RULE]
 UID: RULE-GENERAL-D.5
-TITLE: TEAM NATIONALITY
+TITLE: ПРАВИЛА ПОВЕДЕНИЯ И БЕЗОПАСНОСТЬ
 STATUS: Active
 STATEMENT: >>>
-The nationality of a team is defined by the address of the organization which supports the team (club, school, etc.). A team can be composed of members of different nationalities.
-<<<
-
-[RULE]
-UID: RULE-GENERAL-D.6
-TITLE: SAFETY AND DECENCY
-STATUS: Active
-STATEMENT: >>>
-The Eurobot robotics contests take place with attendance of the general public and families. Consequently, teams must respect the rules of decency and safety (electrical, noise level, etiquette, etc.) applicable in the country of the meeting.
-
-These rules apply equally to participating and supervising team members as well as to supporters of the team and the equipment they bring.
+Соревнования по робототехнике - это общественные и семейные мероприятия. Поэтому мы просим команды соблюдать правила приличия и безопасности (электропитание, уровень шума, манеры поведения и т.д.). Эти правила распространяются как на самих участников, так и на их помощников и оборудование.
 <<<
 
 [[/SECTION]]
 
 [[SECTION]]
-TITLE: E. PROJECT PRESENTATION
+TITLE: E. ПРЕДСТАВЛЕНИЕ ПРОЕКТА
 
 [RULE]
 UID: RULE-GENERAL-E
-TITLE: PROJECT PRESENTATION
+TITLE: ПРЕДСТАВЛЕНИЕ ПРОЕКТА
 STATUS: Active
 STATEMENT: >>>
-The meetings organized as part of the Eurobot and Eurobot Junior competitions are first and foremost an opportunity to play with science. The main objectives of these meetings are to support and promote your work and projects over the year. To achieve this, a poster is required, and the organizers may also ask you to create a technical documentation. The robots must be aesthetically pleasing and, if possible, in keeping with the theme of the rules. Showing creativity and originality will enhance your work as much as having an efficient robot during its matches. The communication of your project and the visual rendering of your robots will be highly valued, both for the visitors who come to meet you and for your own satisfaction at having achieved something aesthetically and functionally accomplished.
+Соревнования Евробот призывают учиться играя. Одной из основных целей организаторов является помощь проектам команд в течение года для успешного выступления на соревнованиях. С этой целью мы просим вас, провести предварительные работы и оформить техническое описание проекта и технический плакат.
 
-TECHNICAL POSTER
+Мы ожидаем увидеть привлекательных, инновационных роботов, которые соответствуют техническим ограничениям и правилам этого издания. Будучи творческим и оригинальным, вы повысите ценность своих усилий, а также производительность вашего робота (-ов) во время матчей. Сделав эту презентацию, вы увеличите коммуникационную ценность своего проекта и визуальную привлекательность ваших роботов, как для публики, приходящей на событие, так и для вашего собственного удовлетворения. Создав что-то эстетическое и функциональное, укрепит вашу рабочую мотивацию на время соревнований и в дальнейшем творчестве.
 
-Each team is required to submit a technical poster to the refereeing committee during the year; the date is specified in the conditions of participation. This poster presents information relating to the design of the robot (drawings, technical information, design details, strategy elements, etc.). It must be at least A1 format (594 x 841 mm) and must be brought with you on the day of the event. The technical poster is intended to promote exchange and communication between teams.
+ТЕХНИЧЕСКИЙ ПЛАКАТ
 
-A special effort should be made to make the poster understandable to a non-technical audience. Ideally the poster should include images and/or diagrams to help explain concepts.
+Каждая команда должна предоставить технический постер своего робота. На этом плакате должна быть представлена информация, относящаяся к конструкции робота (чертежи, технические ссылки, технические характеристики и т.д.). Он должен быть размером не менее А1 (594х841 мм) и в идеале должен быть напечатан. Это направлено на поощрение обмена информацией и коммуникации между командами.
 
-The poster must also include:
+Следует предпринять особые усилия, чтобы сделать содержание плаката доступным для широкой публики. В идеале плакат должен содержать картинки и диаграммы, объясняющие концепцию
 
-the name of the team.
+На плакате должны быть указаны:
 
-the complete names of team members.
+• Имя команды.
 
-the country of the team.
+• Имена участников.
 
-the country flag of the team.
+• Страна команды.
 
-This poster will be placed on the booth of each team during the competition. For the international Finals, an English version is required. The chosen resolution must guarantee the legibility of all texts. The resulting PDF file must not exceed 25 MB. The PDF version of the poster may be sent to the organization prior to the meeting via your National Organizing Committee.
+• Флаг страны команды.
 
-In general, the organization encourages teams to communicate about their projects on the Internet, social media, forums, etc.
+Этот плакат будет вывешен на стенде каждой команды во время соревнований. Для международного финала требуется версия на английском языке. Выбранное разрешение должно гарантировать разборчивость всех текстов. PDF- файл не должен превышать 25 МБ. PDF- версия плаката может быть отправлена в НОК.
+
+Мы рекомендуем командам рассказывать о своих проектах в течение года, к примеру, публикуя информацию в Интернете, на форумах Eurobot, блогах и прочими способами.
+
+Наличие технического плаката даёт дополнительные очки при отборочном этапе в рамках Российского финала.
 <<<
 
 [[/SECTION]]
 
 [[SECTION]]
-TITLE: F. THE ROBOTS
+TITLE: F. РОБОТЫ
+
+[RULE]
+UID: RULE-GENERAL-F
+TITLE: РОБОТЫ
+STATUS: Active
+STATEMENT: >>>
+This heading has no text of its own. Its content is in the clauses below it.
+<<<
 
 [RULE]
 UID: RULE-GENERAL-F.1
-TITLE: FOREWORDS
+TITLE: ОБЩИЕ ПОЛОЖЕНИЯ
 STATUS: Active
 STATEMENT: >>>
-Each team must homologate a main robot and can homologate other additional and optional components. Each of these components has specific dimensional constraints, but it must be possible to distinguish its components from those of other teams from the public.
+Каждая команда должна зарегистрировать основного робота и другие дополнительные и необязательные устройства. Робот и устройства имеют собственные ограничения по размерам, однако важно сделать их различимыми между собой и и устройствами команды соперника для зрителей.
 
-All additional components can only compete with the main robot with which they have been designed and homologated. It cannot be re-homologated with another main robot.
+Все дополнительные устройства могут участвовать исключительно с тем роботом, с которым они были разработаны и допущены. Они не могут быть допущены до участия с другим роботом.
 
-The main robot and additional components must be made up of elements that are connected to each other (so robots cannot leave parts or components on the playing area), with the exception of play elements.
+Основной робот и дополнительные устройства должны состоять из деталей, соединенных между собой. Потери частей устройства или деталей на игровом поле не допускаются (если они не являются игровым элементом).
 
-Each team must design a unique and original set of robots, specific to their team. This set includes:
+Намеренно вызывать тряску или вибрацию стола, фиксация себя к игровому полю или любое другое недопустимое действие приведёт к провалу гомологизации.
 
-an autonomous main robot.
+Каждая команда должна создать свой набор из робота и компонентов:
 
-one or more autonomous SIMA (optional).
+• автономный робот
 
-a remote computing and observation device (optional).
+• один (или более) автономный МАРС (необязательно)
 
-an embedded/ on-board beacons (optional).
+• дистанционное устройство слежения и вычисления (необязательно)
 
-fixed beacons (optional).
+• мобильные маяки (необязательно)
 
-A team can, if it wishes and has the time, design several main robots. But these will have to be homologated individually; and for each match, only one robot can be taken backstage and placed on the table.
+• статические маяки (необязательно)
 
-Be imaginative! For example, as an innovation but also to offer the public and the media an attractive show, your robot can use sounds, display expressions, etc.!
+Команды могут создать несколько роботов, но каждый из них должен быть допущен отдельно. И только один робот может быть взят при подготовке и расположен на игровом поле.
 
-The construction of optional components is not mandatory. The aim is to allow teams with many members to work on a second project. It is recommended for beginning teams to concentrate on building a single functional robot. One well-functioning robot is better than several that don’t move.
+Проявите фантазию! Например, в качестве инновации, а также для того, чтобы предложить публике настоящее шоу, ваш робот может использовать звуки, выражать эмоции и т.д.!
+
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-F.1-1.png
 <<<
 
 [RULE]
 UID: RULE-GENERAL-F.2
-TITLE: USE OF COMMERCIAL COMPONENTS FOR THE ROBOTS
+TITLE: ИСПОЛЬЗОВАНИЕ КОММЕРЧЕСКИХ КОМПОНЕНТОВ
 STATUS: Active
 STATEMENT: >>>
-The teams must get involved in a scientific and technical project of their own and which consists of the design of a robot. They can use commercial components as long as they properly integrated into their project.
+Команды должны принять участие в собственном научно-техническом проекте, который заключается в конструировании робота. Они могут использовать коммерческие компоненты при условии их интеграции в свой собственный проект.
 
-In this context, robots made from a rolling base purchased commercially will be accepted for use by the teams if, and only if, the chassis and systems of this rolling base are significantly modified by the participants to meet the competition constraints and fit in with their own scientific and technical project.
+В этом случае для роботов могут использоваться готовые шасси или базы роботов, если они были явно модифицированы участником в соответствии с правилами Eurobot и интегрированы в его собственный научно-технический проект.
 <<<
 
 [RULE]
 UID: RULE-GENERAL-F.3
-TITLE: DIMENSIONS
+TITLE: РАЗМЕРЫ
 STATUS: Active
 STATEMENT: >>>
-Information: the dimensions of Eurobot robots are identical to those of Eurobot Junior. This means that Eurobot Junior participants will have easier access to Eurobot meetings. The Eurobot Junior robot will only need to be modified to make it autonomous.
-
-The perimeter of a robot is the perimeter of the convex shell of its vertical projection on the ground. It is measured by surrounding it as shown in the illustrations below:
-
-Dimensions of a robot:
-
 .. image:: _assets/rules/GENERAL/RULE-GENERAL-F.3-1.png
+
+Периметр робота - это периметр выпуклой оболочки его вертикальной проекции на поверхность. Измеряется он, как показано на рисунках ниже:
 
 .. image:: _assets/rules/GENERAL/RULE-GENERAL-F.3-2.png
 
-Not deployed Deployed <= 1200mm <= 1400mm
+Периметр робота на момент старта матча не должен превышать 1200 мм. Периметр полностью развернутого робота не должен превышать 1400 мм во время матча. В ходе игры разрешается менять форму выпуклого корпуса, если его периметр всегда соответствует ограничению на максимальный периметр.
 
-The perimeter of a robot must not exceed 1200 mm at the departure time. The perimeter of the fully deployed robot must not exceed 1400 mm during the match. It is allowed to change the convex hull shape during the game, as long as the perimeter of this one always respects the maximum perimeter constraint.
+В любой момент времени во время матча высота каждого робота и манипулируемого объекта не должна превышать 350 мм. Однако допускается, что кнопка аварийной остановки может превышать это ограничение по высоте и достигать 375 мм.
 
-At any time during the match the height of each robot and manipulated object must not exceed 350 mm. However, it can be tolerated that the emergency stop button exceeds this height limit to reach 375 mm.
+Эта высота не включает опорную мачту маяка, любые датчики и электронные схемы, встроенные под опорную мачту маяка.
+<<<
 
-This height excludes the beacon support mast, any sensors and electronic circuits integrated under the beacon support mast.
+[RULE]
+UID: RULE-GENERAL-F.4
+TITLE: БЕЗОПАСНОСТЬ
+STATUS: Active
+STATEMENT: >>>
+This heading has no text of its own. Its content is in the clauses below it.
 <<<
 
 [RULE]
 UID: RULE-GENERAL-F.4.a
-TITLE: GENERAL ASPECTS
+TITLE: ОБЩИЕ ПОЛОЖЕНИЯ
 STATUS: Active
 STATEMENT: >>>
-All systems (robots, beacons and accessories) must comply with all applicable regulations in Europe and in the countries hosting the events.
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-F.4.a-1.png
 
-They must comply with safety regulations and under no circumstances endanger participants, organisers or the public, either during matches or behind the scenes or in the stands. They must not have any protruding or sharp parts that could be dangerous or cause damage.
+В случае участия, оборудование должно соответствовать стандартам безопасности. Кроме вышеуказанного, должны соблюдаться правила техники безопасности, не подвергать опасности участников, организаторов и зрителей. Не должно быть выступов или острых краёв в конструкции, которые могут представлять угрозу.
 
-The use of liquid, corrosive, fuel, pyrotechnic, cryotechnic, radioactive, living beings or zombies is prohibited.
+Использование жидкости, кислоты, горючего, пиротехники, радиоактивных веществ, живых существ или зомби запрещено
 
-In general, any system deemed as dangerous by the referees’ committee will not be homologated, and must be removed, in order to be accepted in the competition.
+Любая система, которая по мнению судей может представлять опасность не будет допущена до участия и должна быть заменена (на безопасную).
 <<<
 
 [RULE]
 UID: RULE-GENERAL-F.4.b
-TITLE: ENERGY SOURCES
+TITLE: ИСТОЧНИКИ ЭНЕРГИИ
 STATUS: Active
 STATEMENT: >>>
-The only sources of stored energy authorized in robots and auxillary systems are chemical batteries, CE-certified commercial batteries, springs and elastics, compressed air, gravitational energy. All other energy sources are prohibited.
+Список допустимых источников энергии в роботе и дополнительных системах: электрические химические батареи, коммерческие батареи, пружины или эластичные материалы, сжатый воздух, гравитационная энергия. Любые другие источники энергии запрещены.
 
-If you have any doubt about unconventional energy sources, ask the referees’ committee as soon as possible, providing the corresponding datasheets.
+Если у вас есть сомнения в отношении необычного источника энергии, лучше заранее посоветуйтесь с судейским комитетом, предоставляя соответствующую техническую документацию..
 
-All robots must comply with standard "low voltage" regulations. As a result, the on-board voltages must not exceed 48 V DC and 48 V peak to peak AC .
+Все роботы должны соответствовать стандартам "низкого напряжения". Это означает, что напряжение на борту не должно превышать 48 В.
 
-Potential differences greater than 48 V may exist, but only within closed commercial devices (eg lasers, LCD backlights, etc.) and only if these devices have not been modified and comply with national and European regulations.
+Разница потенциалов более чем 48 В может присутствовать внутри закрытых коммерческих устройствах(прим. лазеры, LCD подсветка, и т.д.) и только в случае, если эти устройства соответствуют стандартам и не были модифицированы.
 
-Batteries: If the team chooses a battery power supply, remember that only unmodified batteries can be used.
+Аккумуляторы:
 
-Teams must be able to play three games in a row. Note that this includes the time required to set up, during which the robot will be powered and awaiting the start (this can take several minutes for some events).
+Если команда решила использовать аккумуляторы, мы напоминаем, что допускаются только не модифицированные аккумуляторы.
 
-Therefore, we strongly recommend that teams bring several sets of batteries and provide easy access to them in the robot for their replacement. Teams are reminded that it is essential to have a set of spare batteries, fully charged and available at all times.
+Команды должны быть готовы провести три матча подряд. Это также включает время на подготовку, в течение которого робот будет включен и ожидает начала матча.
 
-Note on the use of Lithium-based batteries: Lithium batteries are known for their lack of stability and can easily ignite when certain precautions are not taken. This type of battery is therefore authorized under the following conditions:
+По вышеуказанной причине, мы настоятельно рекомендуем приносить с собой несколько аккумуляторов, а также продумать способ быстрой их смены. Напоминаем командам, что необходимо также иметь запасные аккумуляторы, которые полностью заряжены, на протяжении всего турнира.
 
-Suitable battery charger, which must be submitted for homologation.
+Особое внимание к аккумуляторам на основе Лития:
 
-Batteries permanently kept in certified and unmodified fireproof bags.
+Литиевые батареи известны своей нестабильностью и могут легко воспламениться, если не будут приняты определенные меры предосторожности.
 
-A system for detecting under voltage is highly recommended.
+Использование батарей на основе Лития (например, Li-ion / Li-Po / Li-Fe) разрешается при соблюдении следующих условий:
 
-Exception in the case of the following batteries, authorized without the conditions listed above:
+• Подходящее, выпущенное промышленным способом, зарядное устройство, которое должно быть предоставлено на этапе допуска к соревнованиям.
 
-• Lithium-based batteries including a BMS (Battery Management System) integrated by the manufacturer and solid case (LEGO Mindstorm / laptop / mobile phone / power tools / USB charging battery), not dismantled and used for the intended purpose of the manufacturer.
+• Батареи постоянно хранятся в специальном сертифицированном огнеупорном контейнере (например, огнестойком мешке), как во время соревнований, так и в боксах участников, а также во время транспортировки робота!
 
-• Lithium-Iron batteries (LiFePo4)
+• Настоятельно рекомендуется снабжать робота системой обнаружения разряда батарей
 
-In the case where a team is in possession of an unstable Lithium battery, the team is fully responsible of all potential damage caused by the defective battery. Thus, the team must :
+• Данные ограничения снимаются только в случае:
 
-1. Secure it immediately.
+◦ Батарей LegoTM Mindstorms / ноутбука / мобильного телефона и только до тех пор пока они не вынуты из "родного" устройства и они используются по назначению, которое определил производитель.
 
-2. Inform the organization of the meeting without delay.
+◦ Lithium-Iron батарей (LifePo4)
 
-3. Recycle it, by your own means, before the end of the meeting.
+В случае, если команда имеет нестабильную литиевую батарею, она несет полную ответственность за все возможные повреждения, вызванные неисправной батареей. Таким образом, команда должна:
+
+1. Немедленно обезопасить ее.
+
+2. Незамедлительно проинформировать об этом организаторов.
+
+3. Утилизируйте его своими силами до окончания мероприятия.
 <<<
 
 [RULE]
 UID: RULE-GENERAL-F.4.c
-TITLE: EMERGENCY STOP BUTTON
+TITLE: КНОПКА АВАРИЙНОЙ УСТАНОВКИ
 STATUS: Active
 STATEMENT: >>>
-All robots have to be equipped with a red emergency stop button, as must all other systems with moving parts (motor, actuator, ...) or potentially dangerous components (laser, powerful light, ...). The only exceptions to this rule are beacons embedded on the beacon mast of enemy robots, which are exempt from the emergency stop button, as well as closed and unmodified commercial systems.).
-
-The button may exceed the system’s height by 25 mm and have at least a diameter of 20 mm. It must be placed on the top of the robot or on an easily accessible side for the other systems, in a visible position on a free surface and in a non-hazardous area to be immediately accessible by the referees at any time during the match. The emergency stop button must be operated by a simple and quick movement (for example, by hitting it with the fist).
-
-Pressing this button should cause the system to stop immediately. For robots, failure to shut down the control, display and avoidance systems is tolerated. If the emergency stop button is pressed by the referee = end of the match If the emergency stop button is pressed by the team = forfait If emergency stop button is pressed by the team at the request of the referees = end of match.
-
-In order to avoid any risk of fire, attention should be paid to the diameters of the wires, depending on the intensity of the currents flowing through them. It is also strongly advised to protect the electrical installation with a fuse, wired close to the batteries.
+Все системы, в которых присутствует встроенный источник электричества, должны быть оснащены красной кнопкой аварийной остановки диаметром не менее 20 мм. Она должен быть размещена на верхней части системы, видном месте, свободной поверхности и в зоне без опасных элементов, чтобы судьи могли немедленно получить к нему доступ в любое время во время матча. Кнопка может превышать высоту системы на 25 мм. Кнопка аварийной остановки должна приводиться в действие простым движением вниз (например, ударом по ней кулаком). Единственные исключения из этого правила - маяки, встроенные в мачту противостоящих роботов. Нажатие этой кнопки должно немедленно остановить всю систему. Для роботов допускается продолжение работы систем управления и уклонения. Чтобы избежать любого риска возгорания, следует обратить внимание на диаметры проводов в зависимости от интенсивности протекающих по ним токов. Также настоятельно рекомендуется защищать электроустановку с помощью предохранителя, подключенного к батареям.
 <<<
 
 [RULE]
 UID: RULE-GENERAL-F.4.d
-TITLE: LASERS
+TITLE: ЛАЗЕРЫ
 STATUS: Active
 STATEMENT: >>>
-Only laser systems and classes defined according to the IEC60825 international standards are accepted. Teams using lasers must provide the manufacturer’s document mentioning the class of the device (this information is normally always available on the system itself).
+Принимаются только лазерные системы и классы, определенные в соответствии с международными стандартами IEC 60825. Команды, использующие лазеры, должны предоставить документ производителя с указанием класса устройства (эта информация обычно указана на самом устройстве). На основе этой классификации, класс лазеров:
 
-On the basis of this classification, class lasers:
+• 1 и 1M принимаются без ограничений
 
-1 and 1M are accepted without restriction
+• 2 допускаются только в том случае, если лазерный луч не выходит за пределы игровой зоны, и если он выключен, когда робот не касается игровой зоны.
 
-2 are tolerated only in case the laser beam do not exceed the play area, and if it is switched off when the robot does not touch the play area.
+• 2M, 3R, 3B и 4 строго запрещены.
 
-2M, 3R, 3B and 4 are strictly forbidden.
-
-WARNING: Disassembling or modifying devices using laser sources often results in a change of class. Laser devices must not be altered and only be used in the state of their commercialization (laser device = source + optics + electronics).
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-F.4.d-1.png
 <<<
 
 [RULE]
 UID: RULE-GENERAL-F.4.e
-TITLE: HIGH POWER LIGHT SOURCES
+TITLE: МОЩНЫЕ ИСТОЧНИКИ СВЕТА
 STATUS: Active
 STATEMENT: >>>
-When using a high intensity light source, the light intensity must not be dangerous to the human eye in case of direct contact. Note that some types of LEDs have warnings. Be responsible, as your machines are operating in front of an uninformed public!
+Некоторые мощные светодиодные устройства могут быть опасны для глаз человека. Будьте ответственны при использовании подобных элементов! Помните, что аудитория не проинформирована об особенностях вашей световой системы.
 
-In the case of slightest doubt, the organization reserves the right to request the manufacturer’s specifications to verify the non-dangerous nature of the lighting system used. If it turns out that the system is potentially dangerous, it may be refused approval in the same way as lasers of class 2M and above.
+Судьи вправе потребовать документацию на используемое оборудование для принятия окончательного решения о допуске в отдельных случаях. В случае обнаружение опасности системы, к ней могут применяться правила по использованию Лазеров классов 2М и выше.
 <<<
 
 [RULE]
 UID: RULE-GENERAL-F.4.f
-TITLE: HIGH POWER SOUND SOURCES
+TITLE: МОЩНЫЕ ИСТОЧНИКИ ЗВУКА
 STATUS: Active
 STATEMENT: >>>
-When using a high intensity sound source, the sound intensity must not be exceed 80 dBA at a distance of 1 meter from the robot.
+При использовании высокомощных аудиосистем, громкость звука не должны превышать 80 дБ на расстоянии 1 метра от робота.
 
-This value can be checked during the homologation. If it turns out that the system is potentially dangerous, it may be refused
+Громкость проверяется во время допуска. В случае нарушения система может быть не допущена до соревнования.
 <<<
 
 [RULE]
 UID: RULE-GENERAL-F.4.g
-TITLE: COMPRESSED AIR SYSTEMS
+TITLE: СИСТЕМЫ СЖАТОГО ВОЗДУХА
 STATUS: Active
 STATEMENT: >>>
-Compressed air systems must not exceed 4 bars, except in pre-assembled commercial products, and only if:
+Системы сжатого воздуха не должны превышать 4 бар, за исключением предварительно собранных коммерческих изделий, и только в том случае, если:
 
-1. these devices have not been modified.
+1. Эти устройства не были модифицированы.
 
-2. They are compliant with european safety regulations.
+2. Они соответствуют европейским нормам безопасности.
 
-3. they do not present any danger.
+3. Они безопасны.
 
-The use of pressurised gas cartridges such as CO2 cartridges is prohibited
+Использование газовых баллончиков под давлением, таких как баллончики CO2, запрещено.
 <<<
 
 [RULE]
 UID: RULE-GENERAL-F.5
-TITLE: COMMUNICATION SIGNALS
+TITLE: СРЕДСТВА СВЯЗИ
 STATUS: Active
 STATEMENT: >>>
-To avoid interference between teams, it is recommended to encode the communication signals. We strongly recommend teams using infrared devices, to take into account the strong ambient light used during the encounters. Moreover, this luminosity may vary in time and according to the placement of the playground in the hall.
+Чтобы избежать помех между командами, рекомендуется кодировать сигналы связи. Мы настоятельно рекомендуем командам использовать инфракрасные устройства, чтобы учесть сильный рассеянный свет во время матча. Кроме того, эта яркость может варьироваться во времени и в зависимости от расположения игровой площадки в зале.
 
-No disputes regarding interference issues will be entertained. All systems must be able to accommodate ambient conditions that may change depending on the time and location during the competition.
+Мы также напоминаем командам, что организаторы используют высокочастотные радиоустройства и ни при каких обстоятельствах не могут нести ответственность за неисправности, с которыми сталкиваются роботы.
 
-We also remind teams that the organizing staff uses high-frequency radio devices and under no circumstances can they be held responsible for the malfunctions encountered by the robots.
+ВНИМАНИЕ: за краями игровой зоны могут находиться элементы, которые могут мешать распознаванию цвета или сигналам связи, такие как:
 
-CAUTION: Beyond the edges of the playing area, there may be elements that may interfere with color detection or communications signals such as:
+• декор, освещение и предметы игровой зоны
 
-decor, lights and objects of the playing area people (referees, teams, etc.) electronic systems (microphones, cameras, etc.)
+• люди (судьи, команды и т.д.)
 
-It is strictly forbidden to ask people to go away or move away objects/decors around the playing area.
+• электронные системы (микрофоны, камеры и т.д.)
 
-Wifi networks: At multiple contest locations, the number of active Wifi devices can disturb the robots implementing this technology for communication. To answer this issue, it’s recommended (but not mandatory) to use the 5 GHz frequency rather than the 2.4 GHz one.
+Категорически запрещается просить людей уйти или убирать предметы декора вокруг игровой площадки!
+
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-F.5-1.png
 <<<
 
 [RULE]
 UID: RULE-GENERAL-F.6
-TITLE: OTHER DESIGN CONSTRAINTS
+TITLE: ДРУГИЕ УСТРОЙСТВА
 STATUS: Active
 STATEMENT: >>>
-All systems (robots, beacons, remote computing device and accessories) must be present on the table and are not allowed to communicate with systems outside the table during the matchs.
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-F.6-1.png
 
-Visibility : A rectangular, entire and non-deformable space of 100 x 70 mm per robot must be left free on one of the side faces. The teams will receive stickers printed by the organization (team number, sponsors etc), which they have to place on these open spaces.
+Видимость: На одной из одной сторон каждого робота должна быть оставлена прямоугольная площадка 100мм x 70мм. По возможности, данная область должна быть видна с наивысшей точки игрового поля. Она так же должна быть визуально доступной на протяжении большей части матча. Команды могут получить наклейки, предназначенные для размещения в этой области.
 
-It is also highly recommended (but not mandatory) to close empty spaces inside the robots to facilitate their detection by other robots. A robot must not intentionally confuse the opposing robot, nor use objects or graphics resembling elements of the playing area in order to deceive the opposing robot.
+Очень желательно (но не обязательно) не оставлять пустых областей и сквозных отверстий в роботе, чтобы упростить обнаружения другими роботами.
 
-Starting cord of autonomous robots: At least one present element of the team on the table (except the embedded beacons) need to be equipped with a starting device easily accessible. This device has to be triggered by pulling the end of a cord at least 500 mm long by a team mate. This cord must not stay attached to the element after departure. After the device was triggered, the autonomous robots can start. No other starting system (remote control, manual rocker switch, etc.) will be homologated. List of elements that can be had with the starting device :
+Стартовый шнур автономных роботов: Хотя бы один элемент команды, находящийся на столе (кроме встроенных маяков), должен быть оснащен легкодоступным пусковым устройством. Это устройство должно срабатывать при вытягивании шнура длиной не менее 500 мм. Этот шнур не должен оставаться прикрепленным к элементу после вылета. После срабатывания устройства автономные роботы могут стартовать.
 
-1. The robot
+Никакие другие системы запуска (дистанционное управление, ручной кулисный переключатель и т.д.) не будут допущены.
 
-2. The SIMAs
+Список элементов, который могут быть оснащены пусковым устройством:
 
-3. The fixed beacons
+1. Робот
 
-4. The remote computing device
+2. МАРС
 
-Avoidance system : All teams are required to equip its robot with a system for detecting opposing team’s robots. This system is intended to prevent collisions between robots, during a match. This point will be systematically checked during homologation. The non-avoidance of SIMAs by robots is tolerated, as long as the shock is not voluntary or violent from the robot and this does not cause damage to the SIMAs.
+3. Фиксированные маяки
 
-Embedded/ on-board beacon support system : In order to facilitate robot identification in the field, robots must integrate an embedded beacon support system to receive the beacon of the opposing team. This support system must respect the following points:
+4. Устройство удалённых вычислений
 
-have a convex hullx shape over the entire height between the top of the robot and the beacon support, with a minimal size of a 70 mm diameter circle and with a maximum size of a 100 mm square;
+Система избегания столкновений: Все команды обязаны оснастить своих роботов системой избегания столкновений. Эта система предназначена для предотвращения столкновений между роботами во время матча. Этот пункт будет систематически проверяться во время проверки роботов и получения допуска в соревнованиям.
 
-be solid and opaque (a material able to intercept the light at least in the infrared spectrum; and opaque for the visible spectrum too, except in case of a justification needed);
+Встроенная/бортовая система поддержки маяков локализации: Настоятельно рекомендуется разрабатывать робота(-ов) с системой поддержки маяка, предназначенной для размещения Мобильного Маяка Локализации (ММЛ) команды-соперника. Этот Маяк необходим для работы Системы Предотвращения Столкновений. Данная система поддержки должна следовать следующим требованиям:
 
-have its upper surface flat, horizontal and positioned at a height of 430 ± 5 mm, as horizontal as possible, above the playing area to allow the beacon of the opposing team to be placed in good conditions, it is recommended that this height is made adjustable;
+• Форма должна быть выпуклой и может быть: минимальный размер — цилиндр 70мм диаметром, максимальный размер — 100мм квадрат в проекции;
 
-the top of surface of the platform will be fully covered of Velcro (hook side);
+• Стенки должны быть жесткими и непрозрачными (в видимом спектре и в инфракрасном);
 
-the vertical projection of the on-board beacon support must be located as centrally as possible and within a circle of 20 cm diameter around the center of the robot;
+• Верхняя грань – расположена на высоте 430 мм от уровня Игрового Поля и позволяющая разместить ММЛ;
 
-the embedded beacon support can only accommodate sensor and telecommunication systems.
+• Поверхность Платформы должна быть полностью покрыта липучкой VelcroTM (сторона с жесткими «крючками»);
 
-the beacon support must be as full as possible between the height of 350 mm and the top of the beacon support. For teams using rotating devices, make sure that the portion of support removed has a height of less than 2 cm (except for the minimum size of the convex envelope), and that it is not possible to see through the support by this opening.
+• Платформа Поддержки ММЛ должна располагаться в центре симметрии робота в нераскрытой (стартовой) конфигурации, и, насколько возможно, сохранять центрально-симметричное положение относительно окружности 20см с центром, совпадающим с центром робота, также и при раскрытии механизмов;
 
-the on-board beacon support must be stable, motionless regarding the robot structure and must be able to support a minimum weight of 400 g (the opposing team’s beacon and the aruco tag), without flexing or compressing.
+• В системе поддержки могут располагаться только датчики и электронные схемы, они также не должны выходить за пределы проекции Платформы;.
+
+• Система поддержки должна быть сплошной насколько это возможно в промежутке высоты от высотой 350 мм до 430 мм. Команды, использующие вращающие устройства, должны убедиться, что часть, удаляемая из системы поддержки не превышает 2см (исключение правила минимального размера сплошной оболочки системы поддержки).
+
+• Система должна быть устойчивой, неподвижной относительно структуры и выдерживать вес не менее 400 грамм (маяк команды соперника и aruco тег), без сгибания или сжатия.
+
+Система не обязательна, команда вправе отказаться от предоставления системы поддержки для ММЛ. В этом случае, если у соперника есть ММЛ и он хочет использовать его во время матча или использует поддержку маяка для локализации робота, отказ от предоставления системы поддержки для ММЛ станет причиной дисквалификации (с данного матча).
 <<<
 
 [RULE]
 UID: RULE-GENERAL-F.7
-TITLE: SMALL INDEPENDENT MOBILE ACTUATOR (SIMA)
+TITLE: МОБИЛЬНАЯ АВТОНОМНАЯ РОБОТОТЕХНИЧЕСКАЯ СИСТЕМА (МАРС)
 STATUS: Active
 STATEMENT: >>>
-The small independent mobile actuator (or SIMA) must respect the same building and safety constraints as robots (Emergency stop, avoidance, laser, bag for lipo battery,...). Like robots, a SIMA must be able to play a match wahtever of the color of its team.
+Мобильные автономные робототехнические системы(или МАРС) должны соблюдать те же ограничения в конструкции и безопасность, что и роботы (Кнопка аварийной остановки, система избегания столкновений, мешок для литиевых батарей и проч.). МАРС должны иметь возможность провести матч на любой из сторон игрового поля.
 
-They can be launched at the start of the match by a starter cord of 50 cm, or during the match by the robots themselves. A robot has the right to touch or communicate with a SIMA of its team throughout the duration of the match, but the SIMA must be able to move by itself.
+Они могут быть запущены с помощью стартового шнура длиной в 50 см в начале матча, либо в течение матча роботом. Робот может касаться или общаться с МАРС своей команды в течение матча, но МАРС должен перемещаться самостоятельно.
 
-The homologation of a SIMA is neither obligatory nor sufficient to homologate a team, the main robot being the only one with this obligation. However, homologation of the SIMA is mandatory for it to participate in the match, and if the main robot is not available then the SIMA can participate alone in the matches subject to approval of the team and the SIMA.
+Допуск МАРС не является обязательным и не влияет на возможность участия команды в матче. Допуск основного робота является обязательным условием. Однако, для участия в матче, МАРС обязан быть допущен, и если основной робот не имеет возможности участвовать, МАРС может участвовать без него при согласовании с судьями и командой.
 
-SIMA must respect the following dimensional constraints:
+МАРС имеет следующие ограничения по размеру:
 
-At the match start, the SIMA has a height limit of 150 mm.
-
-At the match start, the SIMA must stand on the table exclusively.
-
-A SIMA must be larger than a 60 mm side cube.
-
-The perimeter of a SIMA must not exceed 600 mm at the departure time.
-
-A SIMA can be deployed within the limit of 700 mm in its perimeter.
-
-A SIMA can be deployed and move within the limit at a height of 350 mm.
-
-A SIMA must have a area of 30 x 30 mm for the stand number sticker.
-
-The weight of each SIMA must not exceed 1.5 kg.
-
-The SIMA cannot be activated by an external element outside of the table (team crew, remote control, ...).
-
-Dimensions of a SIMA:
+● Все МАРС должны помещаться в стартовых зонах и находится строго на поверхности игрового поля. ● МАРС имеет ограничение по высоте на старте – 150 мм. ● МАРС должен быть больше, куб с ребром 60 мм. ● МАРС должен иметь периметр на момент запуска не более 600 мм. ● МАРС может увеличить свой периметр во время матча до 700 мм. ● МАРС может изменять свою высоту и перемещается в пределах 350 мм. ● МАРС должен иметь чистую поверхность, размерами 30 x 30мм для меткис номером. ● Вес МАРС не может превышать 1.5 кг. ● МАРС не могут быть активированы вне игрового поля (участниками команды, пультом управления и т.д.)
 
 .. image:: _assets/rules/GENERAL/RULE-GENERAL-F.7-1.png
 
-.. image:: _assets/rules/GENERAL/RULE-GENERAL-F.7-2.png
+На МАРС не распространяются ограничения:
 
-Not deployed Deployed <= 600mm <= 700mm
+• Наличие мачты под маяк.
 
-As SIMAs have a height restriction, they dont have:
-
-The beacon mast.
-
-Beacon support (and therefore do not carry an ArUco marker).
+• Поддержка маяка(нельзя поставить ArUco маркер).
 <<<
 
 [[/SECTION]]
 
 [[SECTION]]
-TITLE: G. BEACON TRACKING SYSTEM
+TITLE: G. СИСТЕМЫ МАЯКОВОЙ ЛОКАЛИЗАЦИИ
+
+[RULE]
+UID: RULE-GENERAL-G
+TITLE: СИСТЕМЫ МАЯКОВОЙ ЛОКАЛИЗАЦИИ
+STATUS: Active
+STATEMENT: >>>
+This heading has no text of its own. Its content is in the clauses below it.
+<<<
 
 [RULE]
 UID: RULE-GENERAL-G.1
-TITLE: GENERAL POINTS
+TITLE: ОСНОВНЫЕ МОМЕНТЫ
 STATUS: Active
 STATEMENT: >>>
-Teams can develop a complete beacon localisation system; in this extent, there are specific zones on the playing area where these beacons can be fixed. At the opponent’s request and only if justified, the robots could be equipped with a beacon support to fix an opponent’s beacon above (see subsection F .6. ).
+Команды могут разработать полную систему локализации маяков; в этом случае на игровой площадке есть определенные зоны, где эти маяки могут быть установлены. По просьбе противника и только в случае обоснованности роботы могут быть оснащены флагштоком для установки маяка противника выше. (см. подраздел G.5.).
 
-All beacons (fixed beacons, embedded beacons and the remote computing device) must remain in place on their supports throughout the duration of the match. All robot safety instructions equally apply to beacons. The beacons can only accommodate sensor and telecommunication systems.
+Все маяки (стационарные маяки, мобильные маяки и центральное устройство слежения) должны оставаться на своих опорах в течение всего матча. Все инструкции по технике безопасности роботов в равной степени применимы к маякам.
 
-Fixed beacons, the remote computing device, beacons, embedded beacons and their respective supports are described below.
+Фиксированные маяки, центральный маркер, маяки, встроенные маяки и их соответствующие опоры описаны ниже.
 
-.. image:: _assets/rules/GENERAL/RULE-GENERAL-G.1-1.png
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-G.1-1.jpg
 
-Figure 11 - Example of beacons positioning
+Пример расположения маяков
 
-Caption:
+Оглавление:
 
-1. fixed beacons (maximum dimensions W x W x H: 100 x 100 x 1000 mm)
+1. стационарный маяк (максимальные размеры W x W x H: 100 x 100 x 1000 мм)
 
-2. embedded beacon (maximum dimensions L x W x H: 100 x 100 x 80 mm)
+2. мобильный маяк (максимальные размеры: L x W x H: 100 x 100 x 80 мм)
 
-3. beacon support (cf. subsection F .6. )
+3. поддержка маяков
 <<<
 
 [RULE]
 UID: RULE-GENERAL-G.2
-TITLE: EMBEDDED/ ON-BOARD BEACONS
+TITLE: МОБИЛЬНЫЕ МАЯКИ
 STATUS: Active
 STATEMENT: >>>
-A beacon can be placed on the adverse robot, in order to locate it. It must be placed on a dedicated mast, at a height of 430 ± 5 mm above the playing area. The maximum size for an on-board location beacon is a square based parallelepiped of 100 mm side and 80 mm height.
+Маяк может быть установлен на каждом из роботов соперника, чтобы определить их местонахождение. Он должен быть установлен на специальной мачте на высоте 430 +- 5 мм над игровой площадкой.
 
-The upper side of the on-board beacon must be flat and covered with Velcro on the hook side and the underside of the beacons must be covered with velvet Velcro.
+Максимальный размер мобильного маяка представляет собой квадратный параллелепипед со стороной 100 мм и высотой 80 мм.
 
-It is recommended that the color of the beacons be mainly white or very clear, so as to favor their detection on a dark background.
+Верхняя сторона бортового маяка должна быть плоской и покрыта липучкой VelcroTM со стороны крючка, а нижняя сторона маяков должна быть покрыта бархатной стороной VelcroTM.
 
-In the name of fair play, the components used for this beacon must have real utility. Any "useless" or weighted beacon will be refused by the organization.
+Рекомендуется, чтобы цвет маяков был в основном белым или очень четким, чтобы способствовать их обнаружению на темном фоне.
 
-An embedded beacon must not exceed 300 g
+Используемые маяки должны иметь реальный функционал и приносить пользу. Любой "бесполезный" или утяжеленный маяк будет отклонен организаторами.
+
+Вес маяка не должен превышать 300 г
 <<<
 
 [RULE]
 UID: RULE-GENERAL-G.3
-TITLE: FIXED BEACONS
+TITLE: СТАЦИОНАРНЫЕ МАЯКИ
 STATUS: Active
 STATEMENT: >>>
-Each team can place up to three fixed beacons on fixed supports. These fixed supports are allocated to the team upon demand and will be placed around the playing area.
+Каждая команда может разместить до трех стационарных маяков на стационарных опорах. Эти стационарные опоры предоставляются команде по требованию и будут размещены вокруг игровой площадки.
 
-Action-cams not useful for the course of the game are prohibited in fixed beacons.
+Экшн-камеры, не полезные для хода игры, запрещены в фиксированных маяках.
 <<<
 
 [RULE]
 UID: RULE-GENERAL-G.3.a
-TITLE: DIMENSIONS
+TITLE: РАЗМЕРЫ
 STATUS: Active
 STATEMENT: >>>
-The fixed beacons shall be integrally contained in a square rectangular parallelepiped of 100 mm side and 1000 mm height.
-
-A fixed beacon must not exceed 1.5 kg.
+Стационарные маяки должны помещаться в квадратный параллелепипед со стороной 100 мм и высотой 1000 мм. Вес не должен превышать 1.5 к
 <<<
 
 [RULE]
 UID: RULE-GENERAL-G.3.b
-TITLE: BEACON SUPPORT
+TITLE: КРПЕЛЕНИЯ
 STATUS: Active
 STATEMENT: >>>
-The fixed beacon supports are square surfaces of 100 mm sides and placed at the ground level of the table, and at 44 mm from the edge of the playing surface (see layout on the table plan).
-
-They have a 10 mm wide groove from their center to the side oriented towards the outside of the table. The side oriented towards the outside of the table must remain open, the other sides of the support are not necessarily open.
+Опоры для стационарных маяков представляют собой квадратные поверхности со сторонами 100 мм, расположенные на уровне земли стола и на расстоянии 44 мм от края игровой поверхности (см. расположение на плане стола). Они имеют паз шириной 10 мм от центра до стороны, ориентированной на внешнюю сторону стола. Сторона, ориентированная на внешнюю сторону стола, открыта, другие стороны опоры могут быть закрыты.
 <<<
 
 [RULE]
 UID: RULE-GENERAL-G.3.c
-TITLE: FIXATION
+TITLE: ФИКСАЦИЯ
 STATUS: Active
 STATEMENT: >>>
-Given the potential height of the fixed beacons, they must have a solid fixing system.
-
-The groove must be used to secure the fixed beacons using an 8 mm diameter threaded rod and a wing nut.
-
-The screw size is not counted into the dimensional constraints of the fixed beacons. The absence of this fixing system will forbid the approval of the fixed beacons.
-
-In order to allow the manufacture of fixed beacon supports by 3D printing, two models (A and B) are proposed in the appendix J.0.c.. These models are not contractual, the organizations reserve the right to have their own models in accordance with the characteristics defined above.
+Из-за большой высоты, стационарные маяки должны быть жестко зафиксированы. В пазе необходимо закрепить стационарные маяки с помощью резьбового стержня диаметром 8 мм и барашковой гайки. Размер винта не учитывается в габаритных ограничениях стационарных маяков. Отсутствие этой системы крепления будет препятствовать утверждению стационарных маяков.
 <<<
 
 [RULE]
 UID: RULE-GENERAL-G.4
-TITLE: REMOTE COMPUTING AND OBSERVATION DEVICE
+TITLE: ВЫЧИСЛИТЕЛЬНОЕ УСТРОЙСТВО
 STATUS: Active
 STATEMENT: >>>
-In order for the robots to have access to greater computing power and to spot robots in top view, a shared platform located on the central axis of symmetry of the bottom of the terrain (see plan) is placed on the edge of the table (70mm above table floor).
+Чтобы облегчить идентификацию роботов на поле и иметь возхможность проводить тяжелые вычисления, предоставляется возможность разместить устройство отслеживания роботов на общей платформе, расположенной на центральной оси симметрии (см. чертеж), на краю длинной стороны стола (70 мм над полом стола).
 
-The remote computing and observation device must be placed on the part of the platform in the color of the team. It must not rise beyond a horizontal plane situated 1,6 m above the upper surface of the platform, and must not descend below the lower surface of the platform of 22 mm, i.e. an area of 450 mm by 320 mm. On the sides, only an offset of 100 mm at the rear of the platform is authorized. Its mass must be less than 5 kg.
+Вычислительное устройство должно быть размещено на платформе цвета команды. Он не должен возвышаться над горизонтальной плоскостью более, чем на 160 см от поверхности платформы, и не должен опускаться ниже платформы больше чем на 22 мм (толщина плавтформы), т.е. зоны 45 см на 32 см. Смещение разрешено на 10 см только назад. Его масса не должна превышать 5 кг.
 
-It is forbidden to overpass on the opponent’s area.
+Запрещено располагать устройство, даже частично, на территории соперника.
 
-Please note that the remote computing and observation device may be subject to vibrations, due to the movements of the robots.
+Следует отметить, что центральное устройство слежения может подвергаться вибрациям из-за перемещений роботов на части стола, на котором оно расположено. Фиксация: Толщина платформы для крепления устройства составляет 22 мм.
 
-Fixation : The thickness of the fixing platform for the remote computing device is 22 mm.
+Монтажная площадка имеет паз шириной 10 мм от центра опоры маяка до середины стороны. Этот паз необходимо использовать для фиксации центрального устройства слежения с помощью резьбового стержня диаметром 8 мм. и барашковой гайки. Все элементы, входящие в состав центрального устройства слежения, должны быть правильно закреплены между собой, чтобы ни один элемент не выходил за периметр центрального устройства слежения или не упал со стола.
 
-The mounting platform has a 10 mm wide groove from the center of the beacon support to the middle of the side. This groove must be used to secure the remote computing device using at least an 8 mm diameter threaded rod and a wing nut. All the components included in the remote computing device must be correctly fixed together so that no element can come out of the volume or fall from the table.
+Отсутствие этой системы крепления препятствует прохождению допуска системы.
 
-The absence of this fastening system will prevent the approval of the remote computing device.
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-G.4-1.jpg
 
-.. image:: _assets/rules/GENERAL/RULE-GENERAL-G.4-1.png
-
-Figure 13 - How to install a remote computing device
+Установка вычислительного устройства
 <<<
 
 [RULE]
 UID: RULE-GENERAL-G.5
-TITLE: OTHER CONSTRAINT
+TITLE: ДРУГИЕ ПОЛОЖЕНИЯ
 STATUS: Active
 STATEMENT: >>>
-The fixed beacons and the remote computing device can be connected by a wired link. This connection must under no circumstances disturb the match. The installation of the whole system must be carried out before the match, during the preparation time. It should not disturb the opposing team’s preparation.
-
-During the preparation time, a temporary wired link may be pulled in between the robot and one or several beacons. This scenario is accepted only if it doesn’t cause any inconvenience for the opposing team.
-
-The components of the tracking system and remote computing device must not act on game elements (reminder: the robots and the SIMA are not game elements).
+Стационарные маяки и центральное устройство слежения могут быть соединены проводной связью. Это соединение не должно при каких-либо обстоятельствах мешать матчу. Монтаж всей системы должен быть выполнен до начала матч, во время подготовки. Это не должно мешать подготовке команды противника. Во время подготовки может быть протянута временная проводная связь между роботом и одним или несколькими маяками. Так разрешается делать только в том случае, если не причиняются неудобства команде противника. Элементы системы слежения и центральное устройство слежения не должны воздействовать на игровые элементы (напоминание: роботы и МАРС не являются элементами игры).
 <<<
 
 [RULE]
 UID: RULE-GENERAL-G.6
-TITLE: ROBOT IDENTIFICATION
+TITLE: МАРКЕР ИДЕНТИФИКАЦИИ
 STATUS: Active
 STATEMENT: >>>
-During each match, the robots will be assigned a marker (provided by the organizer) placed at the top of the beacon holder, or at the top of the on-board beacon (if present)(Figure 1). This marker has two purposes:
+Во время каждого матча роботам будет назначен маркер (предоставленный организатором), Расположенный на верхней части мачты поддержки маяка или на верхней части бортового маяка (если имеется) (рисунок 9). Этот маркер имеет две цели:
 
-allow the public to identify the team to which a robot belongs;
+• позволить зрителям определить команду, к которой принадлежит робот;
 
-allow a vision system on the calculation system to identify and locate each robot.
+• позволить центральному устройству слежения идентифицировать и локализировать роботов
 
-The marker is a square 10cm wide, 2cm thick (± 2mm) and with a mass less than or equal to 100g. Its upper side is covered with a vinyl with a 7cm ArUco 4x4 tag (centered). A 1cm wide white outline is drawn around the ArUco tag to facilitate its detection. A 0.5cm wide contour in the same colour as the team is drawn at the edge of the upper surface. The team’s color also occupies the edge of the marker.(Figure 1)
+Маркер представляет собой квадрат шириной 10 см, толщиной 2 см (± 2 мм) и массой меньшей или равной 80 г. На верхней стороне расположен виниловым тег ArUco 4x4 (по центру) размером
 
-Team blue robots will receive ArUco 4x4 tags between 1 and 5.
+7 сантиметров. Вокруг тега ArUco нарисован белая полоса шириной 1 см для облегчения его обнаружения. Контур шириной 0,5 см того же цвета, что и команда, нарисован по краю верхней поверхности. Цвет команды также занимает боковая сторона маркера (рисунок 14).
 
-Team yellow robots will receive ArUco 4x4 tags between 6 and 10.
+• Роботы синей команды получают ArUco 4x4 теги между 1 и 5.
 
-All robots will receive distinct markers. It will not be possible to choose them, nor to choose on which robot they will be placed.
+• Роботы желтой команды получают ArUco 4x4 теги между 6 и 10.
 
-ArUco 4x4 tags from 11 to 50 are reserved for the playing area, but not all of them are necessarily used.
+• Все роботы получат различные маркеры. Их невозможно будет ни выбрать, ни выбрать на какого робота они будут размещены.
 
-WARNING: to avoid visual disturbances, the teams are not allowed to use ArUco 4x4 tags from 0 to 50.
+• Теги ArUco 4x4 от 11 до 50 зарезервированы для игровой площадки, но не все из них обязательно будут использованы
 
-ArUco 4x4 tags between 51 and 70 are reserved for team blue .
+ВНИМАНИЕ: командам не разрешается использовать метки ArUco 4x4 от 0 до 50.
 
-ArUco 4x4 tags between 71 and 90 are reserved for team yellow .
+• Теги ArUco 4x4 от 51 до 70 зарезервированы для синей команды.
 
-However, other tag numbers over 90 and other dimensions than 4x4 are allowed.
+• Теги ArUco 4x4 от 71 до 90 зарезервированы для команды желтого цвета.
 
-.. image:: _assets/rules/GENERAL/RULE-GENERAL-G.6-1.png
+Однако допускаются другие теги с номерами свыше 90 и другие размеры, кроме 4x4.
 
-.. image:: _assets/rules/GENERAL/RULE-GENERAL-G.6-2.png
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-G.6-1.jpg
 
-Figure 1: An identification marker and their positioning on an on-board beacon
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-G.6-2.jpg
+
+(a) Маркер идентификации робота (Тэг № 1) (b) Маркер на поддержке мобильного маяка.
+
+Опознавательный знак и его расположение на бортовом маяке
 <<<
 
 [[/SECTION]]
 
 [[SECTION]]
-TITLE: H. MATCHES
+TITLE: H. МАТЧИ
 
 [RULE]
 UID: RULE-GENERAL-H
-TITLE: MATCHES
+TITLE: МАТЧИ
 STATUS: Active
 STATEMENT: >>>
-Only two persons per team are permitted to go backstage and on stage to play the matches.
+Только 2 членам от команды разрешено находиться в зоне подготовки и проведения матчей.
 
-To ensure that the contest runs smoothly, at least one member of the teams must be present on their booth with the robot(s) and ready to go 30 minutes before the start of each series and until that the game is played.
+Для проведения соревнований, мы просим вас находиться в месте размещения команды с роботами за 30 минут до старта и до окончания матча с вашим участием.
 
-In case of a problem, it is tolerated by the organization to ask for a delay to go to the match but this delay can never exceed the end of the current series.
+В случае проблемы, организаторы могут позволить отложить матч на более позднее время, но не выходящее за рамки текущего Раунда.
 <<<
 
 [RULE]
 UID: RULE-GENERAL-H.1
-TITLE: PREPARATION TIME
+TITLE: ВРЕМЯ ПОДГОТОВКИ
 STATUS: Active
 STATEMENT: >>>
-At the start of a match, the elements of the playing area and the playing area itself are installed as indicated in the diagrams in the appendix.
+В начале матча элементы игровой зоны и сама игровая зона устанавливаются в соответствии со схемами, приведенными в приложении.
 
-Upon arrival on the playing area, each team has a maximum of three minutes to proceed with the placement of the robots, the beacons and other equipment. At the end of the preparation time, the robot are not allowed to move until the start of the match.
+По прибытии на игровую площадку у каждой команды есть не более трех минут на то, чтобы приступить к размещению роботов, маяков и другого оборудования. По окончании времени подготовки роботы не имеют права двигаться до начала матча.
 
-A robot which is not ready at the end of this period exposes the team to a forfeit for the match.
+Неготовность робота к концу этого времени грозит команде поражением в матче.
 
-Besides, the other team’s robots will still play their own game on the playing area. The team will have to score points to be declared the winner.
+Кроме того, роботы другой команды все равно будут вести свою игру на игровой площадке. Для признания победителя команде необходимо набрать очки.
 
-When both teams have finished setting up, or when the preparation time is over, the referee asks the participants if they are ready, and they place the starting area tag. From this moment, teams are no longer allowed to touch their robots. It will be tolerated that the emergency stop button is pressed by the teams after the preparation time in order to preserve the batteries and actuators while waiting for the beginning of the match. No dispute can be made on the disposition of the elements of play after the beginning of the match.
+Когда обе команды закончили установку или время подготовки закончилось, судья спрашивает у участников, готовы ли они, и они устанавливают метку стартовой зоны. С этого момента команды не имеют права прикасаться к своим роботам. Допускается нажатие командами кнопки аварийной остановки после окончания времени подготовки, чтобы сохранить аккумуляторы и приводы в ожидании начала матча. Споры о расположении игровых элементов после начала матча не допускаются.
 <<<
 
 [RULE]
 UID: RULE-GENERAL-H.2
-TITLE: THE MATCH
+TITLE: МАТЧ
 STATUS: Active
 STATEMENT: >>>
-At the signal of the referee, each robot is switched on and it has 100 secondes to do these actions.
+По сигналу судьи каждый робот включается, и у него есть 100 секунд на выполнение действий.
 
-No one except the referee can touch the robots and the playing elements unless expressly indicated by the referees. Any intervention of a team’s member during the match will result in a forfeit of the team.
+Никто, кроме судьи, не может прикасаться к роботам и игровым элементам, если на это нет специального указания судьи.
 
-No elements taken out of the playing area can be put back on the table before the end of the match and the validation of the scores. Once the match has started, team members must stand at the back of the table, so as not to interfere with the referees’ work.
+Никакие элементы, вынесенные за пределы игрового поля, не могут быть поставлены обратно на стол до окончания матча и подсчета очков.
+
+Судьи имеют право ограничивать перемещение и расположение участников вокруг поля.
 <<<
 
 [RULE]
 UID: RULE-GENERAL-H.3
-TITLE: END OF MATCH
+TITLE: ОКОНЧАНИЕ МАТЧА
 STATUS: Active
 STATEMENT: >>>
-At the end of the 100 seconds, the robots must stop and turn off all their actuators. It is allowed to keep on any dynamic displays.
+По истечении 100 секунд роботы должны остановиться и выключить все свои актуаторы. При этом разрешается держать включенными любые динамические дисплеи.
 
-No one except the referee can touch the robots and the playing elements unless expressly indicated by the referees. The referees count the points; they give the result of the match, including the points to the teams. If they both agree, they validate the match sheet, can take back their robot(s) and join their booth. If the teams do not agree, they refer calmly to the referees. The robots remain in place until the dispute is resolved. Refereeing decisions are final. In the event of a situation that is difficult to judge, the referees reserve the right to decide whether or not to replay the match.
+Никто, кроме судьи, не может прикасаться к роботам и игровым элементам, если на это нет специального указания судьи. Судьи подсчитывают очки, сообщают результат матча, включая очки, командам. Если команды согласны, они заверяют протокол матча, забирают своих роботов и освобождают полигон. Если команды не согласны, они спокойно обращаются к судьям. Роботы остаются на месте до разрешения спора. Судейские решения являются окончательными. В случае возникновения неоднозначной ситуации судьи оставляют за собой право решать, переигрывать матч или нет.
 
-The referees are allowed to pronounce the end of a game in advance, before the end of the regular time if both teams agree (if the robots are blocked for example).
+Судьям разрешается объявить об окончании игры заранее, до окончания основного времени, если обе команды согласны с этим (например, если роботы заблокированы).
+
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-H.3-1.png
 <<<
 
 [RULE]
 UID: RULE-GENERAL-H.4
-TITLE: THE PENALTIES
+TITLE: ШТРАФЫ
 STATUS: Active
 STATEMENT: >>>
-Several actions during the match may result in penalties. The following actions will result in a warning or a point loss on the final score if a warning has already been issued for the team (the warning rule is only valid during the series):
+Некоторые действия во время матча могут привести к штрафам.
 
-loss of part or element of a robot on the playground: loss of 20 points.
+Список действий во время матча, которые могут привести к предупреждению, либо штрафам (если предупреждение уже было): ◦ Потеря детали или части робота на игровом поле: штраф 20 баллов. ◦ Порча стола или игровых элементов: штраф 30 баллов. ◦ Нерабочая система избегания столкновений: штраф 30 баллов. ◦ Фальстарт: штраф 50 баллов. ◦ Робот или МАРС двигается после окончания матча: штраф 50 баллов. ◦ Превышение времени подготовки: штраф 50 баллов. ◦ Изменение стартовой зоны по окончанию времени подготовки: штраф 50 баллов. ◦ Нечестное и неспортивное поведение: штраф 50 до 100 баллов. ◦ По решению судей: штраф 50 до 100 баллов. ◦ По решению организаторов: штраф 50 до 100 баллов. Следующие действия во время матча, которые могут привести к дисквалификации команды: ◦ робот и МАРС(-ы) не покинули стартовую зону. ◦ снижение баллов противника в защищенной зоне или кража защищённого игрового элемента. ◦ перемещение робота по защищенной области соперника. ◦ Повторное превышение времени подготовки. ◦ Нарушение ограничений по размерам. ◦ Повторный фальстарт. ◦ Намеренный бросок предметом в окружающих. ◦ Намеренная фиксация к столу или его вибрация. ◦ Вмешательство члена команды на игровом поле, игровых элементов или роботов после времени подготовки (кроме нажатия аварийной кнопки). ◦ Вмешательство члена команды на игровом поле, игровых элементов или роботов во время матча. ◦ Команда не способна сыграть до конца раунда. ◦ Согласно решению судей. ◦ Согласно решению организаторов. Некоторые действия могут привести к дисквалификации с турнира. Список действий, которые могут привести к дисквалификации с турнира: ◦ Намеренное отключение системы избегания столкновений. ◦ Конструирование робота, похожего на роботов других команд (прим.: схожие шасси или одинаковые актуаторы). Если в течение года вы увидите команду с дизайном, похожим на ваш, как можно скорее сообщите организаторам. ◦ Намеренное повреждение робота другой команды. ◦ Согласно решению организаторов.
 
-degradation of the table or a game element: loss of 30 points.
+Во время матча может быть применен только один штраф. При применении нескольких штрафов учитывается только наибольший.
 
-non-functional avoidance system: loss of 30 points.
+Так называемые “дополнительные” баллы засчитываются, только при наличии обычных баллов за действие.
 
-false start: loss of 50 points.
+При дисквалификации или отрицательном значении счёт приравнивается к 0.
 
-robot keeps moving when time runs out: loss of 50 points.
+Только судьи имеют право вмешиваться в игровое поле и касаться роботов после времени подготовки и во время матча. В случае возникновения проблемы обратитесь к судье, чтобы избежать дисквалификации.
 
-excessive preparation time: loss of 50 points.
+Видеосудейство запрещено.
 
-robot change its start zone after 3 minute of preparation : loss of 50 points.
+Общее определение нечестной игры: "Если цель состоит в том, чтобы нанести вред без созидания, то это нечестная игра".
 
-unfair or unsportsmanlike conduct: loss of 50 to 100 points.
+Оценка игры остается полностью на усмотрение судьи и не может быть оспорена после матча.
 
-on arbitration decisions: loss of 50 to 100 points.
-
-on decisions of the organization: loss of 50 to 100 points.
-
-The following actions will result in a team forfeit:
-
-no robot and no SIMA exit from its starting area.
-
-removal of point from an opposing protected element or protected area.
-
-entry of the robot into an opposing area with exclusive access.
-
-repeated excessive preparation time.
-
-dimensional limitations not respected.
-
-repeated false start.
-
-intentionally shoot at people in the vicinity.
-
-voluntary fixate, vibrate the table.
-
-intervention of a team member on the table, game elements or robots, after the preparation time (with the exception of the emergency stop button).
-
-intervention of a team member on the table, the game elements or the robots, during the match.
-
-the team is unable to play the game before the end of the series.
-
-following arbitration decisions.
-
-following decisions of the organization committee.
-
-The following actions will result in disqualification of the team from the competition:
-
-voluntary deactivation of robot avoidance systems.
-
-design robots that are noticeably similar to robots from other teams (for example: rolling bases or identical actuators). If during the year you see a team building a robot similar to yours, report it to the organization as soon as possible.
-
-intentional degradation of robot belonging to other teams.
-
-following decisions of the organization committee.
-
-During the same match, only one penalty may be applied. If several penalties can be applied, then the highest will be taken into account.
-
-The so-called “additional” points are only counted if the previous points of the action are validated.
-
-The score of a forfeited team or a negative score will be reduced to 0.
-
-Only the referees are authorized to intervene on the table or the robots after the preparation time and during the match. In case of concern, ask the referee to intervene to avoid the forfeit.
-
-Video refereeing is prohibited.
-
-A general definition of anti-game: "If the goal is to harm without building, then it’s anti-game".
-
-The appreciation of the penalties and the anti-game remains at the referee’s judgement. They cannot be disputed after the match.
-
-RECALL: The penalties are intended to compensate for damage caused by a possible incident during the course of the game. A penalty situation is considered as non-respect of the rules of the game, this type of situation must remain exceptional! In some rare situation, a penalty may result in the team’s forfeit. The referees’ committee will also be attentive to the penalties distributed between several levels of meeting (regional/national/European).
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-H.4-1.png
 <<<
 
 [[/SECTION]]
 
 [[SECTION]]
-TITLE: I. THE CONTESTS
+TITLE: I. СОРЕВНОВАНИЯ
+
+[RULE]
+UID: RULE-GENERAL-I
+TITLE: СОРЕВНОВАНИЯ
+STATUS: Active
+STATEMENT: >>>
+This heading has no text of its own. Its content is in the clauses below it.
+<<<
 
 [RULE]
 UID: RULE-GENERAL-I.1
-TITLE: GENERAL INFORMATION
+TITLE: ОСНОВАНЯ ИНФОРМАЦИЯ
 STATUS: Active
 STATEMENT: >>>
-The Eurobot meetings can be organized on three levels:
+Соревнования Eurobot проходят в 3 этапа:
 
-regional: when they exist (e.g. in France, Eurobot Junior), qualify a number of teams for the national meeting, national: it allows to qualify the teams for the European meeting,
+• региональный: где они могут проводиться
 
-European: this last stage brings together, in the same friendly spirit, teams from different countries in Europe and elsewhere.
+• национальный: в странах, где зарегистрировалось более 3-х команд, необходимо проводить соревнования для отбора в международный Финал
 
-Each meeting has several successive steps:
+• европейский: в состав дружеских соревнований входят команды со всего мира Каждое мероприятие состоит из трех стадий:
 
-The static and dynamic approvals of all the robots;
+• Статическая и динамическая проверка роботов;
 
-A qualification phase, with at least 3 series;
+• Квалификация;
 
-An optional play-off phase;
+• Опциональная стыковочная стадия;
 
-A final phase.
-
-The organizers of each meeting can distribute awards, if they want, to the teams in order to reward an aspect of the participation of the team or its robot.
+• Финал.
 <<<
 
 [RULE]
 UID: RULE-GENERAL-I.2
-TITLE: MEETINGS AND PARTICIPATING COUNTRIES
+TITLE: ПРОВЕРКА
 STATUS: Active
 STATEMENT: >>>
-Eurobot and Eurobot Junior European finals gather teams selected after national qualifications if they were organized. European finals take place in Europe, but all countries can participate. Countries with more than three registered teams, are required to organize a national qualification to select which teams will compete the European finals.
+No text was extracted under this heading. What belongs here is a drawing, a table, or text the source numbers as part of another clause: see page 24 of ``_assets/rules/source/Eurobot_PRO_Rules_1.2_RU.pdf``.
 <<<
 
 [RULE]
-UID: RULE-GENERAL-I.3.a
-TITLE: STATIC APPROVAL
+UID: RULE-GENERAL-I.3
+TITLE: КВАЛИФИКАЦИОННЫЙ ТУР
 STATUS: Active
 STATEMENT: >>>
-Before the start of the matches, robots are subject to the supervision of a referee who checks their compliance with the rules. Robots must be able to easily show all their mechanisms. The ancillary systems (accessories, beacons, calculation device, etc.) will also be subject to static control (size, mass, presence of mandatory elements, etc.).
-<<<
+Квалификационный тур состоит из серии квалификационных (отборочных) раундов. Команды, допущенные до соревнований, могут принять участие в 3-х матчах (иногда в большем количестве матчей, если так решат организаторы). Для определения команд, прошедших в финальный тур, создается рейтинг на основе баллов, набранных во время квалификационных раундов. По завершении квалификационных раундов, в случае равенства набранных баллов у некоторых команд, они будут сравниваться по количеству набранных баллов без учета бонусных баллов. В случае, если команды по-прежнему остаются в равном положении, судьи имеют право организовать дополнительные раунды для таких команд. В этом случае, пары команд, соревнующихся за одно место, будут выбраны случайным образом, а победитель по результатам матчей отправится в финальный тур. В случае нечетного числа команд в группе, будет организован один дополнительный матч для команды, оказавшейся без пары, а соперник для нее будет выбран случайным образом из группы
 
-[RULE]
-UID: RULE-GENERAL-I.3.b
-TITLE: DYNAMIC APPROVAL
-STATUS: Active
-STATEMENT: >>>
-The robots are put in a game situation but without the presence of an opposing team. Within 100 seconds, The robots and the SIMAs must leave the departure zone, and the robot must validate at least one action. Certain specific features provided for in the regulation will also be checked (timer, avoidance of opponents, etc.). If the assembly consisting of the main robot and the SIMA fulfills these conditions, it is declared approved.
-<<<
-
-[RULE]
-UID: RULE-GENERAL-I.3.c
-TITLE: SIGNIFICANT TECHNICAL MODIFICATIONS AFTER THE APPROVAL
-STATUS: Active
-STATEMENT: >>>
-It is essential to inform the referees of any significant modifications (functional, structural, dimensional ...) brought to the robot(s) or any other element after approval. The referees will then check the modifications made and re-approve the robot if they deem it necessary. In the event of a breach, the team may be declared disqualified from the contest.
-<<<
-
-[RULE]
-UID: RULE-GENERAL-I.4
-TITLE: QUALIFICATION PHASE
-STATUS: Active
-STATEMENT: >>>
-During the qualification phase, the registered teams will have the possibility to play at least three games (often more, depending on the local organizers). A ranking is established according to the accumulated points in order to select the qualified teams for the next phase. The tied teams are tied by comparing their scores without taking into account their bonus points. Organizers may also use additional matches. At the end of the qualifying phase, the first teams (according to the matches) are qualified for the next phase.
-
-Number of participating teams Minimum team selected
+Количество команд Команд в финале
 
 N<=16 4
 
@@ -888,236 +772,196 @@ N<=16 4
 <<<
 
 [RULE]
-UID: RULE-GENERAL-I.5
-TITLE: THE PLAY-OFF PHASE
+UID: RULE-GENERAL-I.3.a
+TITLE: СТАТИЧЕСКА ПРОВЕРКА
 STATUS: Active
 STATEMENT: >>>
-An additional play-off phase may set up in the event that a meeting hosts two contests, the first of which qualifies for the second. For example:
+Перед тем, как выступать на Игровом Поле, роботы осматриваются судьей, который проверяет их на соответствие правилам. Роботы должны быть готовы к демонстрации всех своих возможных действий. Так же будет проведена проверка и дополнительных систем (маяков, ву и т.д.)
+<<<
 
-a regional meeting (A) and its national meeting (B) or a national meeting (A) and the European meeting (B)
+[RULE]
+UID: RULE-GENERAL-I.3.b
+TITLE: ДИНАМИЧЕСКАЯ ПРОВЕРКА
+STATUS: Active
+STATEMENT: >>>
+В течение 100 секунд роботы должны выполнить хотя бы одно действие. Роботы ставятся в игровую ситуацию, но без присутствия команды соперника. Также проверяются некоторые специфические особенности, предусмотренные регламентом (таймер, уклонение от соперников и т.д.).
 
-The organizer may carry out the qualifying phase of both matches (A) and (B) either in parallel fashion or in a mixed fashion. In this case, a play-off phase may be organised in order to allow teams from the match (A) to qualify for the match (B), exempting them from having to catch up on all the matches from the qualifying phase of (B) in favour of this play-off phase. The teams participating in this play-off phase are:
+Если сборка, состоящая из основного робота и МАРС, удовлетворяет этим условиям, она объявляется одобренной.
+<<<
 
-the teams of the match (A), in a number corresponding to its qualification quota, and chosen in the order of ranking at the end of the final phase of (A) or through an award during the regional meeting.
+[RULE]
+UID: RULE-GENERAL-I.3.c
+TITLE: ЗНАЧИТЕЛЬНЫЕ ИЗМЕНЕНИЯ В РОБОТЕ
+STATUS: Active
+STATEMENT: >>>
+Необходимо сообщать судьям о любых существенных изменениях (функциональных, конструктивных, размерных...), внесенных в робота (роботов) или любой другой элемент после утверждения. Судьи проверят внесенные изменения и повторно утвердят робота, если сочтут это необходимым. В случае нарушения команда может быть объявлена дисквалифицированной с соревнований.
+<<<
 
-the teams of the match (B), in a number equivalent to the participants in this phase from (A), chosen from among the last teams normally qualified for the final phase of the match (B).
+[RULE]
+UID: RULE-GENERAL-I.4
+TITLE: ПЛЕЙ-ОФФ
+STATUS: Active
+STATEMENT: >>>
+Дополнительная фаза стыковочных матчей может быть организована в том случае, если на мероприятии проводятся два конкурса, первый из которых является квалификацией на второй. Например:
 
-Example for a national meeting qualifying three teams for its European final whose European final phase has 16 teams. The teams participating in the play-off phase are:
+• региональная стадия (A) национальная стадия (B) Организатор может провести отборочный этап обоих матчей (A) и (B) либо параллельно, либо смешанным способом. В этом случае стыковочная фаза может быть организована так, чтобы позволить командам из матчей (A) пройти отбор в матчах (B), освобождая их от необходимости играть все матчи из квалификационной фазы (B) в пользу этих стыковочных матчей. Команды, участвующие в данной фазе:
 
-the first three teams of the national meeting at the end of the final phase of the national meeting;
+• команды из (A), в количестве, соответствующем квоте, выбранные по результатам квалификационной стадии (A) или посредством выбора комитета жюри.
 
-and the teams ranked 16th, 15th and 14th in the qualifying phase of the European meeting.
+• Команды из (B), числом равным командам из (A), прошедшие квалификацию на последних позициях (В) в количестве равном прошедшему числу из (А) На этом стыковочном этапе для каждой участвующей команды будет сыгран один матч. Участвующие команды из (A), прошедшие квалификацию в рейтинге, будут играть в порядке их ранжирования с командами из (B) с самым низким рейтингом. И команда(-ы) из (A), прошедшая квалификацию для этой фазы плей-офф решением жюри, будет играть против команд с самым высоким рейтингом (B) в случайном порядке. Каждая команда, выигравшая стыковочный матч, будет включена в основную сетку финальной фазы (B)..
+<<<
 
-In this play-off phase, one match will be played for each participating team. The participating teams from the match (A) qualified through the ranking will play, in order of their ranking, with the teams from the match (B) with the lowest ranking. And the team(s) of (A) qualified for this play-off phase through an award will play against the top-ranked teams of (B) in a random order.
+[RULE]
+UID: RULE-GENERAL-I.5
+TITLE: ФИНАЛ
+STATUS: Active
+STATEMENT: >>>
+После квалификационных раундов команды будут участвовать в финальном туре.
 
-Each team that wins its play-off match will be included in the main draw of the final phase of the match (B). At the end of the play-off phase, the tree of the final phase of the match (B) presented in Figure 2 may be revised to more accurately represent the level of each team. In the event of a tie, the tie will be decided by comparing the scores without taking into account bonus points.
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-I.5-1.jpg
+
+Схема финала
+
+Матчи финального тура играются «на вылет», организаторы вправе изменить систему проведения финальной стадии. В случае двойной дисквалификации, двойного поражения или ничьей, матч незамедлительно переигрывается; если результат повторной игры по-прежнему двойная дисквалификация, двойное поражение или ничья, победитель определяется в соответствии с очками, заработанными в течение квалификационных раундов. Матчи за первое место играются по системе «лучший из трёх». Команда, подряд выигравшая 2 матча, считается победителем.
+
+В этом случае будьте внимательны: команды должны позаботиться о том, чтобы их Автономным роботам хватило заряда батарей на все матчи до победы одной из команд!
 <<<
 
 [RULE]
 UID: RULE-GENERAL-I.6
-TITLE: THE FINAL PHASE
+TITLE: РЕГИОНАЛЬНЫЕ КВАЛИФИКАЦИОННЫЕ ТУРНИРЫ
 STATUS: Active
 STATEMENT: >>>
-At the end of the previous phase, the qualified teams form the table of the matches of the final phase. Depending to the meeting, only the teams composed of members less than 30 years of age will be able to enter the final stages.
-
-.. image:: _assets/rules/GENERAL/RULE-GENERAL-I.6-1.jpg
-
-Figure 2: Tree of the final phase
-
-The matches of the final phase are with knockout, unless otherwise organized on some meetings. In the event of double forfeit, double defeat or perfect tie, the match is replayed immediately; if this second match is still a case of double forfeit, double defeat or equality, the winner is determined according to the points acquired at the end of the qualifying phase. The final can be played in one winning game, two winning games or two game with score cumulation, depending on the organisation of the event. The teams switch sides after each match.
-
-Be careful to provide enough batteries to play all the matches in the final phase.
-<<<
-
-[RULE]
-UID: RULE-GENERAL-I.7
-TITLE: QUALIFICATION FOR THE NATIONAL MEETING
-STATUS: Active
-STATEMENT: >>>
-When there are regional meetings, the number of teams qualified per regional meeting is proportional to the total number of teams registered at the national level.
-
-The best teams in the ranking established at the end of the qualifying phase of each regional meeting, as well as at least one team chosen by the organizers from the special prizes (e.g. creativity, fair play, presentation, etc.).
-<<<
-
-[RULE]
-UID: RULE-GENERAL-I.8
-TITLE: QUALIFICATION FOR THE EUROPEAN MEETING
-STATUS: Active
-STATEMENT: >>>
-Each country participating in Eurobot organizes a national meeting to determine the qualified teams for the international meeting.
-
-The 3 finalist teams will qualify to take part in the European meeting.
-
-News and more information about Eurobot and Eurobot Junior are available on our website www.eurobot.org
-
-(It also contains links to your local organization)
-
-The whole organization team of Eurobot and Eurobot Junior wishes you a lot of fun and success in the coming months, and looks forward to seeing you soon around our playing areas!
-
-Robotic Regards,
-
-The Eurobot Eurobot Junior organization committee.
+При проведении региональных совещаний количество команд, прошедших квалификацию на одно региональное совещание, пропорционально общему числу команд, зарегистрированных на национальном уровне. Лучшие команды в рейтинге, составленном в конце отборочного этапа каждой региональной встречи, а также по крайней мере одна команда, выбранная организаторами из числа обладателей специальных призов (например, креативность, честная игра, презентация и т.д.).
 <<<
 
 [[/SECTION]]
 
 [[SECTION]]
-TITLE: J. APPENDIX
+TITLE: J. ПРИЛОЖЕНИЕ
 
 [RULE]
 UID: RULE-GENERAL-J
-TITLE: APPENDIX
+TITLE: ПРИЛОЖЕНИЕ
 STATUS: Active
 STATEMENT: >>>
-J.0.a.. GENERAL DRAWINGS 0° 90° -90° 180° 45° 30° 60° 120° 135° 150° -45° -135° π π/2 -π/2 0° 90° -90° 180° 45° 30° 60° 120° 135° 150° -45° -135° π π/2 -π/2 0° 90° -90° 180° 45° 30° 60° 120° 135° 150° -45° -135° π π/2 -π/2 0° 90° -90° 180° 45° 30° 60° 120° 135° 150° -45° -135° π π/2 -π/2 100 200 300 400 500 600 700 800 900 1000 1100 1200 1300 1400 1500 1600 1700 1800 1900 2000 2100 2200 2300 2400 2500 2600 2700 2800 2900 x 100 200 300 400 500 600 700 800 900 1000 1100 1200 1300 1400 1500 1600 1700 1800 1900 2000 2100 2200 2300 2400 2500 2600 2700 2800 2900 1900 1800 1700 1600 1500 1400 1300 1200 1100 1000 900 800 700 600 500 400 300 200 100 1900 1800 1700 1600 1500 1400 1300 1200 1100 1000 900 800 700 600 500 400 300 200 100 0 y yy 1900 1800 1700 1600 1500 1400 1300 1200 1100 1000 900 800 700 600 500 400 300 200 100 100 200 300 400 500 600 700 800 900 1000 1100 1200 1300 1400 1500 1600 1700 1800 1900 2000 2100 2200 2300 2400 2500 2600 2700 2800 2900 123456 D C B A D C B A D C B A 123456 123456 y xx x
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-J-1.png
 
-Figure 3: Top view of the playing area.
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-J-2.png
 
-22
-
-220
-
-220
-
-10
-
-100
-
-R5
-
-200
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-J-3.png
 <<<
 
 [RULE]
 UID: RULE-GENERAL-J.0.b
-TITLE: CALCULATION ZONE SUPPORT 200450 22022010R5100 22 450
+TITLE: ПОДДЕРЖКА ВЫЧИСЛИТЕЛЬНОГО УСТРОЙСТВА
 STATUS: Active
 STATEMENT: >>>
-Figure 4: Remote Computing area support
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-J.0.b-1.png
+
+220 220
+
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-J.0.b-2.png
+
+Поддержка вычислительного устройствап
+
+J.0.c.. Платформа статических маяков
 
 122 22 100
 
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-J.0.b-3.png
+
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-J.0.b-4.png
+
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-J.0.b-5.png
+
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-J.0.b-6.png
+
 122 22 100
 
-22
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-J.0.b-7.png
 
-22
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-J.0.b-8.png
 
-70 70
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-J.0.b-9.png
 
-Ø10
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-J.0.b-10.png
 
-70 70
+Поддержка стационарных маяков
 
-Ø10
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-J.0.b-11.jpg
 
-22 22
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-J.0.b-12.png
 
-22 22
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-J.0.b-13.jpg
 
-45 67
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-J.0.b-14.png
 
-45 67
+Поддержка стационарных маяков
 
-Ground level
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-J.0.b-15.png
 
-22
+Эелемент Материал Комментарий
 
-22 Niveau du sol
+Дерево обклееное винилом Поддержка вычислительного устройства Дерево обклееное винилом Поддержка маяка
 
-R5
+3Д печать обклееная винилом Поддержка маяка
 
-122
+3Д печать или дерево обклеенаые Маркре робота винилом
 
-122
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-J.0.b-16.png
 
-50
+Все размеры указаны в мм. Точность изготовления соответствует нижеприведенной таблицы, если явно не указано обратное.
 
-Ground level
+Dimensions General Tolerances 1. 50 ≤ 20 ± 2. 50 > 20 and ≤ 70 ± 4. 00 > 70 and ≤ 150 ± 5. 00 > 150 ±
 
-J.0.c.. BEACONS SUPPORTS 7022221226745Ø1050R5221224545 100227022Ground levelNiveau du sol
-
-Niveau du sol
-
-Figure 5: Left fixed beacon support (Modèle A) 1222222706745Ø10 454512222 100227022 Ground levelNiveau du sol
-
-45 45
-
-45 45
-
-Figure 6: Right fixed beacon support (Modèle A)
-
-Figure 7: Fixed beacon support (Model B)
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-J.0.b-17.png
 <<<
 
 [RULE]
 UID: RULE-GENERAL-J.1
-TITLE: MATERIAL REFERENCES
+TITLE: МАТЕРИАЛЫ
 STATUS: Active
 STATEMENT: >>>
-Elements
-
-Calculation zone support gripping vinyl
-
-Beacon support - Model A gripping vinyl
-
-See STL files, print settings and tutoBeacon support - Model B monomeric gripping vinyl rial on www.eurobot.org
-
-3D printed in 40% cover by printed Robot identification See STL files, print settings and tutomonomeric gripping vinyl and marker rial on www.eurobot.org Velcro
-
-In order to allow the manufacture of fixed beacon supports by 3D printing, two models are proposed. These models are not contractual, the organizations reserve the right to have their own models in accordance with the characteristics defined in G.3. . It is possible that the tables used by the organization still have the old model of supports.
+No text was extracted under this heading. What belongs here is a drawing, a table, or text the source numbers as part of another clause: see page 32 of ``_assets/rules/source/Eurobot_PRO_Rules_1.2_RU.pdf``.
 <<<
 
 [RULE]
 UID: RULE-GENERAL-J.2
-TITLE: MANUFACTURING TOLERANCES
+TITLE: ТОЧНОСТЬ ИЗГОТОВЛЕНИЯ
 STATUS: Active
 STATEMENT: >>>
-All dimensions are in millimeters (or mm). Manufacturing tolerances shall comply with the following rules, unless otherwise specified directly on the drawings.
-
-Dimensions
-
-≤ 20 1. 50
-
-> 20 and ≤ 70 2. 50
-
-> 70 and ≤ 150 4. 00
-
-> 150 5. 00
-
-No objections regarding differences in dimensions will be taken into account.
-
-The material’s density can change from one country to another. It is highly recommended that the teams try different types of materials since the weight may differ significantly.
+No text was extracted under this heading. What belongs here is a drawing, a table, or text the source numbers as part of another clause: see page 32 of ``_assets/rules/source/Eurobot_PRO_Rules_1.2_RU.pdf``.
 <<<
 
 [RULE]
 UID: RULE-GENERAL-J.3
-TITLE: COLOUR REFERENCES
+TITLE: ЦВЕТА
 STATUS: Active
 STATEMENT: >>>
-Colors
+ЦВЕТ РАЛ CMYK RGB
 
-Traffic red
+Traffic red RAL 3020 Mat 0%, 100%, 100%, 10% 187, 30, 16
 
-Mint green
+Mint green RAL 6029 Mat 100%, 5%, 90%, 30% 0, 111, 61
 
-Traffic Blue
+Traffic Blue RAL 5017 Mat 100%, 60%, 0%, 10% 0, 91, 140
 
-Traffic yellow
+Traffic yellow RAL S 0580-Y50 Mat 0%, 57%, 100%, 0% 249, 127, 16
 
-Signal Violet
+Signal Violet RAL 4008 Mat 50%, 90%, 0%, 5% 132, 76, 130
 
-Telemagenta
+Telemagenta RAL 4010 Mat 15%, 100%, 15%, 10% 188, 64, 119
 
-Mahogany brown
+Mahogany brown RAL 8016 Mat 40%, 80%, 70%, 70% 76, 43, 32
 
-Signal Black
+Signal Black RAL 9017 Mat 50%, 30%, 50%, 100% 42, 41, 42
 
-White
+White RAL 9010 Mat 0%, 0%, 5%, 0% 241, 236, 225
 
-Pebble grey
+Pebble grey RAL 7032 Mat 15%, 10%, 25%, 20% 181, 176, 161
 
-RAL hues can vary from a printed soil mat to another.
+.. image:: _assets/rules/GENERAL/RULE-GENERAL-J.3-1.png
 <<<
 
 [[/SECTION]]
@@ -1125,547 +969,529 @@ RAL hues can vary from a printed soil mat to another.
 [[/SECTION]]
 
 [[SECTION]]
-TITLE: Eurobot 2026 rules, official version 1.0
+TITLE: Евробот, игровые правила 2026
 
 [[SECTION]]
-TITLE: A. NOTICE
+TITLE: A. ПРИМЕЧАНИЕ
 
 [RULE]
 UID: RULE-2026-A
-TITLE: NOTICE
+TITLE: ПРИМЕЧАНИЕ
 STATUS: Active
 STATEMENT: >>>
-The rules have been split up in severals documents. Most parts remain the same for the Eurobot and Eurobot Junior contests, but to avoid confusion, each contest has its own rules as a single document.
+Обратите внимание на версию правил. Также важно помнить, что русская редакция не является исключительно переводным документом – текст правил адаптирован к проведению национальных соревнований в России. Судьи национальных квалификационных соревнований Eurobot Open и Eurobot Junior руководствуются исключительно русским вариантом правил!
 
-Thus the particular cases specific to one of the competitions appears only in the document concerning it.
-
-You will find the Eurobot and the Eurobot Junior rules and other information on the Eurobot website (www.eurobot.org/)
-
-Please note that the version of this release is noted down at the end of this page. For any inquiry, only an OFFICIAL version should be considered.
-
-Changes or clarifications of the rules may be made during the year. We therefore strongly encourage all participants to check our website regularly (www.eurobot.org/) as well as your NOC’s own website for news. You can also follow discussions, ask questions or get further assistance on our faq (www.eurobot.org/faq/).
-
-Any changes to the specifications will, if necessary, be set out in a supplementary document which will be available on the website of your national organising committee and Eurobot (https://www.eurobot.org/).
-
-The FAQ responses from a referee are official responses taken into account for match refereeing and homologation stages.
-
-In case of doubt regarding any point of the rules or the homologation of robots, the referee committee may also be contacted at referee@planete-sciences.org.
-
-Have a good reading!
-
-As is the case every year, a number of parameters in these rules have been modified. As a result, please reread in detail all the parts of these rules, even those that seem familiar to you.
-
-ATTENTION : all images and example in this document are provided as a guide to illustrate the various paragraphs. In no case can they serve as an exhaustive reference.. Only writed rules and the dimensions, colors and materials indicated in the appendix shall be taken into consideration.
+.. image:: _assets/rules/2026/RULE-2026-A-1.png
 <<<
 
 [[/SECTION]]
 
 [[SECTION]]
-TITLE: B. CONTEST PRESENTATION
+TITLE: B. ИДЕЯ СОРЕВНОВАНИЯ
 
 [RULE]
 UID: RULE-2026-B
-TITLE: CONTEST PRESENTATION
+TITLE: ИДЕЯ СОРЕВНОВАНИЯ
 STATUS: Active
 STATEMENT: >>>
-Eurobot and Eurobot Junior are two international amateur robotics competitions for young people organised in clubs, groups of friends or schools. Their common aim is to enable young people to take charge of their own learning and put their knowledge, technical and social skills into practice, by taking part in a fun and friendly event. The technical challenge involves building one or more robots.
+Евробот – это мероприятие, в котором могут принять участие любители робототехники, объединившись в команды. Участники команд исследователи, которые участвуют в соревнованиях в рамках учебного или идейного проекта, как группа друзей или независимый клуб. Евробот преследуют одну и ту же цель: дать возможность людям активно обучаться и на практике применять полученные знания и умения в дружеском соревновании.
 
-Eurobot and Eurobot Junior have for only ambitions those described above. As an actor of the popular education mouvement and as a youth movement, inclusiveness is a strong value for Planète Sciences and its European partners. The organizers do not (and will never) impose a team model; whether you participate to discover robotics, to practice your skills, as part of teaching or for competition, you are (and always will be) welcome.
+Правила соревнований в разных лигах основаны на одной идее. Организаторы предоставляют платформу для проведения соревнований Евробот. Эта платформа подразумевает создание Автономных роботов для Евробот Open и Pro и управляемых роботов для Евробот Junior и Starter. Организаторы соревнований Евробот автономных лиг могут легко проводить соревнования управляемых лиг и наоборот.
 
-The Eurobot and Eurobot Junior meetings are prepared passionately throughout the year by volunteers of all nationalities who believe in the educational values of this experience and are themselves, often, former participants.
-
-The rules for both contest, Eurobot and Eurobot Junior, are based on the same concept. As organisers, we intend to provide a common platform for the Eurobot event. This platform is dedicated to autonomous robots for Eurobot while for Eurobot Junior, the robots are remote controlled. In this way, the Eurobot organiser can easily set up the Eurobot Junior contest and vice versa.
-
-You’re currently reading version Open and Eurobot Open Junior OFFICIAL 1.0 of 2026 rules. Eurobot
-
-This document is supplemented by the general Eurobot and Eurobot Junior rules in version 1 (latest sub-version)
+.. image:: _assets/rules/2026/RULE-2026-B-1.png
 <<<
 
 [[/SECTION]]
 
 [[SECTION]]
-TITLE: C. THEME PRESENTATION
+TITLE: C. ТЕМА СОРЕВНОВАНИЯ
 
 [RULE]
 UID: RULE-2026-C
-TITLE: THEME PRESENTATION
+TITLE: ТЕМА СОРЕВНОВАНИЯ
 STATUS: Active
 STATEMENT: >>>
-Winter is coming, and it’s time for the squirrels to stock up on hazelnuts so they can spend the whole winter in their soft, warm nests. But evil humans already took them all, put them in crates and are about to leave with them. This will make the squirrels starve for the next months! Luckily it’s coffee time for the humans thus the squirrels have only a few seconds to grab the hazelnut crates and hide it from the evil humans. But will they have enough to survive winter?
+Зима близко, и экологи обнаружили аномальную миграцию белок. Река Ореховая затопила лес! Бельчатам пришлось быстро перебраться в новое место обитания и теперь у них совсем нету времени подготовить запасы на зиму! К счастью на помощь зверятам отправился отряд роботов волонтёров. Смогут ли они помочь пушистикам пережить зиму?
 
-Your strategies will be:
+Задания на данный сезон:
 
-Let’s keep the hazelnuts warm.
+● СОХРАНИМ ОРЕХИ ТЁПЛЫМИ!
 
-To find is to keep!
+● НАШЁЛ - ЗНАЧИТ ТВОЙ!
 
-Not too warm, not too cold.
+● НИ ЖАРКО, НИ ХОЛОДНО
 
-Nest, sweet nest.
+● ДОМ, МИЛЫЙ ДОМ
 
-Munch time!
-
-Please note: All actions are independent from one another and no specific sequence is imposed whatsoever. No single action is mandatory. Give careful thoughts to your strategy. It is strongly recommended to design simple and reliable systems with a limited number of actions.
+● ВРЕМЯ ОБЕДА!
 
 .. image:: _assets/rules/2026/RULE-2026-C-1.png
 
-Figure 1: Overview of the playing area
+.. image:: _assets/rules/2026/RULE-2026-C-2.jpg
+
+Р1: Общий вид игрового поля
 <<<
 
 [[/SECTION]]
 
 [[SECTION]]
-TITLE: D. PLAYING AREA
+TITLE: D. ИГРОВОЕ ПОЛЕ
+
+[RULE]
+UID: RULE-2026-D
+TITLE: ИГРОВОЕ ПОЛЕ
+STATUS: Active
+STATEMENT: >>>
+This heading has no text of its own. Its content is in the clauses below it.
+<<<
 
 [RULE]
 UID: RULE-2026-D.1
-TITLE: IMPORTANT INFORMATION
+TITLE: ВАЖНАЯ ИНФОРМАЦИЯ
 STATUS: Active
 STATEMENT: >>>
-The organizers are committed to build the playing area with as much accuracy as possible. Nevertheless, minor tolerances may be observed depending on manufacturing constraints.
+Организаторы соревнований стремятся изготовить Игровую Зону как можно точнее и ближе к эталону.
 
-No complaints regarding dimensional deviations will be taken into account.
+Тем не менее, они вправе внести некоторые изменения, если сочтут их необходимыми. В случае значительных изменений Игрового Поля или Игровых Элементов они будут опубликованы в дополнительном документе на веб-сайте НОК Eurobot России (http://www.eurobot-russia.org или http://eurobotrussia.ru).
 
-Teams are warned that the surface condition may differ from one playing area to another and may also degrade over time.
+Имейте в виду, что качество поверхностей разных игровых полей может отличаться, также оно может ухудшаться в ходе соревнований по естественным причинам.
 
-Graphics displayed in this document represent the Eurobot playing area and not the Eurobot Junior one. Thus figures show elements not useful in this version of the rules such as fixed beacon supports and remote computing device.
+Жалобы, связанные с отклонением размеров не рассматриваются.
+
+Рисунки игрового поля в данном документе приводятся для чемпионата автономных роботов, некоторые их элементы (например, поддержка для маяка или область для внешнего вычислительного устройства) избыточны в случае чемпионата управляемых роботов..
 <<<
 
 [RULE]
 UID: RULE-2026-D.2
-TITLE: PLAYING AREA
+TITLE: ИГРОВОЕ ПОЛЕ
 STATUS: Active
 STATEMENT: >>>
-The playing area is a horizontal rectangular plane of 3000 mm by 2000 mm with 70 mm heigh, 22 mm thick borders on each outer side. Depending on the construction process, it may consist of one or several parts (eg 3 parts of 1000 mm per 2000 mm). Please note that the joints may have imperfections, and it will not be possible to contest these imperfections during the competition.
+Игровое поле представляет собой горизонтальную прямоугольную поверхность размером 3000 мм на 2000 мм, с бортиками высотой 70 мм с каждой стороны. В зависимости от процесса строительства она может состоять из одной или нескольких частей (например, из 3-х секций по 1000 мм на 2000 мм). Обратите внимание, что стыки таких частей могут быть неидеальны и создавать помехи для перемещения роботов. Любые возражения по этому поводу во время соревнований не рассматриваются.
 
-.. image:: _assets/rules/2026/RULE-2026-D.2-1.png
+.. image:: _assets/rules/2026/RULE-2026-D.2-1.jpg
 
-Figure 2: Detailed view of the playing area, audience point of view
+Рис. 2: Подробный вид игрового поля
 
-1. Squirrels nest 5. Collection area
+5. Зоны сбора 1. Гнёзда 6. Кладовые 2. Стартовые зоны МАРС в амбаре 7. Термометр 3. Холодильники 8. Указатель 4. Зоны погрузки
 
-2. SIMA Starting areas in the granary 6. Pantry
+.. image:: _assets/rules/2026/RULE-2026-D.2-2.png
+<<<
 
-3. Fridge 7. Thermometer
-
-4. Loading area 8. Cursor
-
-Full specifications of the playing area and game elements (dimensions, positions at the beginning of the match, colors and other references) are listed in the appendix. In the remainder of this document, horizontal and vertical directions are stated relative to the playing area. Notions of “left”, “right”, “front” and “back” are stated with respect to the spectator’s point of view.
+[RULE]
+UID: RULE-2026-D.3
+TITLE: СТАРТОВЫЕ ЗОНЫ
+STATUS: Active
+STATEMENT: >>>
+This heading has no text of its own. Its content is in the clauses below it.
 <<<
 
 [RULE]
 UID: RULE-2026-D.3.a
-TITLE: DESCRIPTION
+TITLE: ОПИСАНИЕ
 STATUS: Active
 STATEMENT: >>>
-Each team has one starting and finishing area. The "squirrel nests" are the team’s starting and finishing areas. They are the surfaces of 45 cm by 60 cm delimited by a line on the table, which is itself included in this area and of the team’s color; they are placed in the rear corners of the table.
+Каждая команда имеет одну стартовую и финишную зону. Этими зонами являются гнёзда белок. Это прямоугольные зоны, размером 45 см на 60 см, по периметру которого нанесена линия в цвет команды. Линия является частью стартовой зоны. Стартовые зоны расположены в углах и вдоль бортов игрового поля.
 
-.. image:: _assets/rules/2026/RULE-2026-D.3.a-1.png
+.. image:: _assets/rules/2026/RULE-2026-D.3.a-1.jpg
 
-.. image:: _assets/rules/2026/RULE-2026-D.3.a-2.png
+.. image:: _assets/rules/2026/RULE-2026-D.3.a-2.jpg
 
-Figure 3: Detailed view of the blue and yellow teams areas
+(a) Стартовая и финишная зона синей команды (b) Стартовая и финишная зона оранжевой команды
+
+Рис. 3: Зоны желтой и синей команд
 <<<
 
 [RULE]
 UID: RULE-2026-D.3.b
-TITLE: CONSTRAINTS
+TITLE: ОГРАНИЧЕНИЯ
 STATUS: Active
 STATEMENT: >>>
-At the end of the setup time, the vertical projection of the robots must not exceed the limits of their starting area.
+По окончании времени подготовки вертикальная проекция роботов не должна выходить за пределы стартовой зоны.
 
-Make sure your robot can fully enter its starting area. The colored lines and the border of the table next to the area are also included in the starting area.
+Убедитесь, что ваши роботы полностью помещаются в свою стартовую зону. Цветные линии и борт стола, примыкающий к зоне, также входят в стартовые зоны.
 <<<
 
 [RULE]
 UID: RULE-2026-D.4
-TITLE: DESCRIPTION AND LAYOUT OF THE PLAYING ELEMENTS
+TITLE: ОПИСАНИЕ И РАСПОЛОЖЕНИЕ ИГРОВЫХ ЭЛЕМЕНТОВ
 STATUS: Active
 STATEMENT: >>>
-The hazelnut crates: The hazelnut crates are wood pieces of 150 mm x 50 mm x 30 mm. They are painted in the teams’ colors on their two largest, opposite sides (one face blue and one face yellow ). The other four sides are free of color. There are 48 crates and they are placed on one of the "team" sides in the different collection areas and fridges. A vinyl wrap is glued around each hazelnut crate as centrally as possible. This vinyl contains two zones in the team colors, including a 40 mm aruco tag with the values 36 for blue and 47 for yellow.
+Ящики с орехами: Ящики с орехами- это деревянные бруски размерами 150 мм x 50 мм x 30 мм. Их большие стороны окрашены в цвета команд (одна сторона синяя и противоположная - оранжевая). Остальные четыре стороны не окрашены. На поле расположено 48 ящиков с орехами. Они размещены в зонах сбора, погрузки и холодильниках. Вокруг каждого ящика наклеено кольцо из винила по центру бруска. Винил имеет окраску в цвета команд на двух поверхностях и содержит тег Aruco, размером 40 мм со значением 36 для голубой команды и значением 47 для желтой команды
 
-The empty crates: The empty crate are wood pieces of 150 mm x 50 mm x 30 mm. They are completely painted in black. There are 6 of them and they are placed in loading area. A vinyl wrap is glued around each empty crate as centrally as possible. This vinyl includes two 40 mm aruco tags with the value 41.
+Ящики с гнилыми орехами: Ящики с гнилыми орехами - это бруски дерева, размером 150 мм x 50 мм x 30 мм, полностью окрашенные в черный цвет. Всего на поле присутствуют 6 таких ящиков. Они расположены в погрузочной зоне. На ящиках наклеены кольца из винила по центру брусков. Винил окрашен в черный цвет и содержит 2 тега Aruco с номерами 40 и 41.
 
-Thermometers: The thermometers are vinyl stickers stuck to the outside of the front border of the table. They are divided into 11 numbered zones along their width, which are used to count points.
+Термометры: Термометр - это полоска винила, наклеенная спереди игрового поля. Она разделена на 11 зон с нумерацией, с помощью которых подсчитываются очки.
 
-The cursor: The cursor is an element provided by the organization. A team may bring its own cursor as long as it respects the maximum dimensions of the official cursor (100 x 100 x 45 mm), does not have a propulsion system, and the temperature reading is unambiguous.
+Указатель: Указатель - это элемент, предоставляемый организаторами. Команда может привезти свой собственный курсор, если он соответствует ограничениям по размеру (100 мм x 100 мм x 45 мм), не имеет механизмов для перемещения и однозначно указывает температурную зону термометра.
 
-The granary: The granary is an elevated area at 55mm height in the central rear position of the table. Its surface is 450 mm by 1800 mm and is delimited by the side ledges. It includes 4 zones named fridges of 100 mm by 150 mm surrounded by a red line which is itself included in this area, containing 2 crates (1 of each color) and distributed in the granary. Its access is restricted to the SIMA.
+Амбар: Амбар это зона по центру стола, поднятая над его поверхностью на 55 мм. Она имеет стороны 450 мм на 1800 мм и ограничена своими краями. В амбаре расположены 4 зоны холодильников размером 100 мм на 150 мм, ограниченными прерывистой линией красно-оранжевого или красно-синего цвета (по цвету команд), которые включены в зону холодильника. В каждом холодильнике размещены 2 ящика (по 1 каждого цвета). Доступ к ним разрешён только МАРС.
 
-Loading area: The loading areas are located at the front edge and on each side of the granary. They each contain a stock of 7 crates arranged in 2 tiers: 4 hazelnut crates in the team’s color are on the ground and 3 empty crates on top.
+Зона погрузки: Зоны погрузки расположены на переднем краю поля и с каждой из сторон амбара. Каждая из зон содержит 7 ящиков, они расположены в виде 2 ярусов. Снизу расположены 4 ящика с орехами, широкой стороной вниз и 3 ящиками с гнилыми орехами сверху. Доступ к ним разрешён только МАРС.
 
-The pantries: The pantries are areas distributed on the table and surrounded by a green line which is itself included in the area. Its surface is 200 mm by 200 mm.
+Кладовые: Кладовые это зоны, расположенные на поверхности игрового поля, они обведены зеленой линией, которые входят в зону кладовых. Размер кладовых 200 мм на 200 мм.
 
-Collection area: Areas distributed on the table and surrounded by a red line which is itself included in the area. Its surface is 15cm by 20cm. They contain 4 crates, 2 of each color in random order.
+Зона сбора: Зоны сбора - это зоны, расположенные на поверхности игрового поля и обведенные красными линиями, которые входят в них. Они имеют размер 15 см на 20 см и содержат 4 ящика с орехами, по 2 цвета каждой команды, которые расположены в случайном порядке.
 
-The little squirrels: Built by the team, the squirrel is a small independent mobile actuator (SIMA) activated during the match. It will initially be placed in the SIMA starting areas.
+Робобельчата: Построенные командами МАРС. Они запускаются во время матча и должны быть изначально расположены в стартовых зонах МАРС.
 
 .. image:: _assets/rules/2026/RULE-2026-D.4-1.jpg
 
 .. image:: _assets/rules/2026/RULE-2026-D.4-2.jpg
+
+(a) Ящики с орехами (b) Ящики с гнилыми орехами
 <<<
 
 [[/SECTION]]
 
 [[SECTION]]
-TITLE: E. ACTIONS
+TITLE: E. ДЕЙСТВИЯ
+
+[RULE]
+UID: RULE-2026-E
+TITLE: ДЕЙСТВИЯ
+STATUS: Active
+STATEMENT: >>>
+This heading has no text of its own. Its content is in the clauses below it.
+<<<
 
 [RULE]
 UID: RULE-2026-E.1
-TITLE: LET’S KEEP THE HAZELNUTS WARM!
+TITLE: СОХРАНИМ ОРЕХИ!
 STATUS: Active
 STATEMENT: >>>
-The evil humans have collected all the hazelnuts and crated them, which is good for us, but they’re about to leave with them, which is not good at all for us! Mommy squirrel will have to grab the crates left by the humans to hide them wherever possible before they come back.
+Экологи доставили в лес контейнеры с орехами. Робо-белка должна собрать контейнеры для бельчат и довести их до места, откуда пушистики смогут растащить их на запасы
 <<<
 
 [RULE]
 UID: RULE-2026-E.1.a
-TITLE: DESCRIPTION AND LAYOUT OF THE PLAYING ELEMENTS
+TITLE: ОПИСАНИЕ И РАСПОЛОЖЕНИЕ ИГРОВЫХ ЭЛЕМЕНТОВ
 STATUS: Active
 STATEMENT: >>>
-This is the main action of the rules. For this action hazelnut crates are used with the pantries and the squirrel nests (starting area).
+Для этого действия используются ящики с орехами, кладовые и гнезда (стартовые зоны).
 <<<
 
 [RULE]
 UID: RULE-2026-E.1.b
-TITLE: ACTIONS AND CONSTRAINTS
+TITLE: ДЕЙСТВИЯ И ОГРАНИЧЕНИЯ
 STATUS: Active
 STATEMENT: >>>
-Actions:
+Действия:
 
-The goal is to collect as many hazelnut crates as possible and deposit them in a pantry or in the squirrel nest.
+● Задача - собрать как можно больше ящиков с орехами и разместить их в кладовых или гнёздах.
 
-Constraints:
+Ограничения:
 
-A hazelnut crate is considered placed in a zone if all or part of its vertical projection is in this zone and if it is in flat contact with the floor of the table.
+● Ящик с орехами является засчитанным в зоне если вся или часть его вертикальной проекции находится в зоне и сам бруско плоско лежит на игровом поле. ● Ящик с орехами, расположенный в гнезде будет засчитан команде, вне зависимости от цвета большей стороны сверху и не может быть украден другой командой. В гнезде можно разместить не более 6 ящиков с орехами. Лишние ящики зачислены не будут. ● Ящик с орехами, помещенный в кладовые, действителен для команды, если его верхняя сторона окрашена в цвет команды или если она не окрашена в другие цвета. Количество ящиков с орехами, размещенных в этих зонах, не ограничено. Команда противника может украсть ящики с лесными орехами. ● На поле расположены по две кладовые для каждой команды (ближняя к гнезду и рядом с термометром). Эти зоны являются защищенными. Роботам соперника запрещено находиться в этих зонах и любым образом взаимодействовать с ящиками, расположенными в этих зонах. ● Каждая кладовая приносит бонус в конце матча. Чтобы зона принесла команде бонус, у команды должно быть абсолютное большинство ящиков с орехами соответствующего цвета в зоне. В случае ничьей бонус в данной зоне не начисляется. ● Элемент, который по окончании матча все еще находится под контролем робота или
 
-A hazelnut crate placed in the squirrel nest is valid for the team regardless of its color and it cannot be stolen by the opposing team. It is possible to put a maximum of 6 crates in the nest. Excess hazelnut crates will not be counted.
-
-A hazelnut crate placed in the pantries is valid for the team if its upper face is the team’s color or on a free of color face. There is no limit to the number of hazelnut crates placed in these zones. The opposing team may steal the hazelnut crates.
-
-Each pantry brings a bonus at the end of the match. For a zone to bring bonus to a team, the team must have an absolut majority of valid hazelnut crates of its color in the zone. In the event of a tie, there is no bonus on the zone in question.
-
-An element still under control by a robot or a SIMA at the end of the match will not be counted.
-
-An empty crate is not considered for this action.
+СИМА, не будет засчитан.
 <<<
 
 [RULE]
 UID: RULE-2026-E.1.c
-TITLE: POINTS
+TITLE: БАЛЛЫ
 STATUS: Active
 STATEMENT: >>>
-2 points per hazelnut crate in nest.
+2 балла за каждый ящик в гнезде.
 
-3 points per hazelnut crate valid in a pantry.
+3 балла за каждый засчитанный ящик в кладовой.
 
-5 points per zone granting a bonus for the teams
+5 баллов за каждую зону, в которой ящиков больше, чем у команды соперника
 
-.. image:: _assets/rules/2026/RULE-2026-E.1.c-1.png
+.. image:: _assets/rules/2026/RULE-2026-E.1.c-1.jpg
 
-Figure 5: Hazelnut crates in a stock at the start of the match.
+Рис. 5: Составленные ящики с орехами на момент старта матча.
 
-.. image:: _assets/rules/2026/RULE-2026-E.1.c-2.png
+.. image:: _assets/rules/2026/RULE-2026-E.1.c-2.jpg
 
-Figure 6: Various areas of bonus for the blue and yellow teams.
+Рис. 6: Пример зон, засчитанных синей и оранжевой команд.
 <<<
 
 [RULE]
 UID: RULE-2026-E.2
-TITLE: TO FIND IS TO KEEP!
+TITLE: НАШЁЛ - ЗНАЧИТ ТВОЙ!
 STATUS: Active
 STATEMENT: >>>
-The evil humans have already put a few hazelnut crates in their granary, but a brave ninja squirrel has managed to reach the granary. All that’s left is to take the crates out again to have even more reserves for the winter. But we’re still going to leave them the empty crates as a souvenir, they just shouldn’t have picked them up.
+Бельчата очень быстро прибыли в лес и экологи не успели расставить все контейнеры с орехами! Чтобы не беспокоить зверят был сделан автоматический амбар, в котором работают ловкие робо-бельчата. Их задача - раздать оставшиеся запасы орехов из амбара. Однако будьте внимательны - некоторые ящики промокли и их содержимое сгнило!
 <<<
 
 [RULE]
 UID: RULE-2026-E.2.a
-TITLE: DESCRIPTION AND LAYOUT OF THE PLAYING ELEMENTS
+TITLE: ОПИСАНИЕ И РАСПОЛОЖЕНИЕ ИГРОВЫХ ЭЛЕМЕНТОВ
 STATUS: Active
 STATEMENT: >>>
-This action involves one SIMA as well as the granary and loading area.
+Это действие включает в себя МАРС, амбар и погрузочные зоны.
 <<<
 
 [RULE]
 UID: RULE-2026-E.2.b
-TITLE: ACTIONS AND CONSTRAINTS
+TITLE: ДЕЙСТВИЯ И ОГРАНИЧЕНИЯ
 STATUS: Active
 STATEMENT: >>>
-Actions:
+Действия:
 
-The team can release one SIMA in the granary and have it empty the fridges and take the crates out of the granary, but fill the fridges with the empty crates.
+● Команда может разместить один МАРС в амбаре. Задача МАРС - опустошить холодильники и вынести ящики с орехами за пределы амбара. Пустые зоны холодильников надо заполнить ящиками с гнилыми орехами.
 
-The SIMA are small independent mobile actuators (SIMA) designed by the team. For ease of identification, a harmonization of design and colors between the SIMA and the robot is desired.
+● МАРС - мобильная автономная робототехническая система, созданная командой. Для простоты идентификации желательно соответствие цветов основного робота команды и МАРС. Ограничения:
 
-Constraints:
-
-During the preparation only one SIMA will be deposited in the starting area of the SIMA inside the granary and must be contained within the limits of the area of 20 cm by 20 cm. The colored lines, the border of the table (on its 22 mm thickness) and the ledge (on its 15 mm thickness) around the area are also included in the starting area.
-
-The SIMA will have the whole match time to achieve its objectives.
-
-Only the SIMA is allowed to move on the granary. The robot is still allowed to retrieve the game elements by overflowing into the granary. The robot is still not allowed to interact with opposite SIMA.
-
-At the start of the match each fridge has 2 hazelnut crates (1 of each color in random order). The goal is to empty these fridges and put out the hazelnut crates from the granary so that the robots can recover them. A fridge is considered empty if no more vertical projection of hazelnut crates intersects this area at the end of the match.
-
-At the start of the match each loading area containt 3 empty crates. The goal is to fill the fridge with these empty crates. A fridge is considered full if the vertical projection of at least one empty crate intersects this area at the end of the match.
-
-An element still under control by a SIMA or the robot at the end of the match will not be counted.
-
-An empty fridge or full with empty crates brings points to both teams.
+● Во время подготовки только 1 МАРС может быть размещён в стартовой зоне для МАРС, в амбаре и должен помещаться в внутри неё (20 см на 20 см). Цветные линии границы зоны, стенки игрового полигона (22 мм) и выступ (15 мм) вокруг зоны также являются частью стартовой зоны. ● МАРС может действовать в течение всего матча. ● Только 1 МАРС может перемещаться в амбаре. Основной робот не может взаимодействовать с элементами в амбаре, вертикальная проекция которых находится полностью в амбаре, если они не находятся под управлением робота. Основному роботу запрещено взаимодействовать с МАРС противоположной команды. ● На момент старта матча каждый холодильник содержит 2 ящика с орехами (по 1 цвету каждой команды в случайном порядке). Цель - опустошить холодильники и вывести ящики из амбара, чтобы основной робот мог их забрать. Холодильник считается пустым, если нет ящика с орехами, чья вертикальная проекция пересекается с зоной холодильника на момент окончания матча ● На момент старта матча каждая погрузочная зона содержит 3 ящика с гнилыми орехами. Задача - перенести эти ящики с гнилыми орехами в зоны холодильника. Зона холодильника считается заполненной ящиками с гнилыми орехами в том случае, если на поле присутствует хотя бы один ящик с гнилыми орехами, чья вертикальная проекция пересекается с зоной холодильника на момент окончания матча. ● Элементы, которые находятся под контролем МАРС на момент окончания матча не учитываются. ● Пустой холодильник или холодильник, заполненный ящиками с гнилыми орехами приносит баллы команде соответствующей цвету зоны.
 <<<
 
 [RULE]
 UID: RULE-2026-E.2.c
-TITLE: POINTS
+TITLE: БАЛЛЫ
 STATUS: Active
 STATEMENT: >>>
-Points for this action are scored for both teams.
+2 балла за пустой холодильник по окончанию матча
 
-2 points per fridge empty of hazelnut crates at the end of the match
+5 баллов за холодильник, заполненный гнилыми орехами по окончанию матча.
 
-5 points per fridge full of empty crates at the end of the match
+.. image:: _assets/rules/2026/RULE-2026-E.2.c-1.jpg
 
-.. image:: _assets/rules/2026/RULE-2026-E.2.c-1.png
+(b) Ящики с орехами и гнилыми орехами в
 
-.. image:: _assets/rules/2026/RULE-2026-E.2.c-2.png
+.. image:: _assets/rules/2026/RULE-2026-E.2.c-2.jpg
 
-Figure 7: Hazelnut crates position.
+(a) Размещение ящиков на момент начала матча. погрузочной зоне на момент старта матча.
+
+Рис. 7: Размещения орехов.
 <<<
 
 [RULE]
 UID: RULE-2026-E.3
-TITLE: NOT TOO WARM, NOT TOO COLD
+TITLE: НИ ЖАРКО, НИ ХОЛОДНО
 STATUS: Active
 STATEMENT: >>>
-To keep hazelnuts fresh for as long as possible, it’s important to store them in the best possible conditions. You need to adjust the temperature of the pantries as best you can, because yes, our little squirrels can do it (but don’t ask us how...).
+Чтобы орехи оставались свежими как можно дольше, важно хранить их в наилучших условиях. Вам нужно как можно точнее отрегулировать температуру в кладовых, потому что да, наши маленькие белочки умеют это делать (но не спрашивайте нас - как...).
 <<<
 
 [RULE]
 UID: RULE-2026-E.3.a
-TITLE: DESCRIPTION AND LAYOUT OF THE PLAYING ELEMENTS
+TITLE: ОПИСАНИЕ И РАСПОЛОЖЕНИЕ ИГРОВЫХ ЭЛЕМЕНТОВ
 STATUS: Active
 STATEMENT: >>>
-This action involves the thermometers and the cursors.
+Это действие включает в себя термометры и указатели температур.
 <<<
 
 [RULE]
 UID: RULE-2026-E.3.b
-TITLE: ACTIONS AND CONSTRAINTS
+TITLE: ДЕЙСТВИЯ И ОГРАНИЧЕНИЯ
 STATUS: Active
 STATEMENT: >>>
-Actions:
+Действия:
 
-Place the temperature cursor as close to the center of the thermometer of the teams as possible.
+● Разместите указатель температуры как можно ближе к центру термометра команды.
 
-Constraints:
+Ограничения:
 
-At the start of the match, the team must place its thermometer cursor in a 0 zone of the team thermometer, without overflowing into another area.
-
-The robot will have to move the cursor to the center of the thermometer.
-
-If the opposing robot or SIMA moves the team’s cursor significantly, then the team automatically wins the maximum points for the action.
+● На момент старта матча, команды должны расположить указатель температуры на 0-ой зоне термометра, не выходя за ее пределы. ● Робот должен переместить указатель в центр термометра. ● В случае, если робот или МАРС соперника перемещает указатель, то команде автоматически засчитывается максимальный балл за это действие.
 <<<
 
 [RULE]
 UID: RULE-2026-E.3.c
-TITLE: POINTS
+TITLE: БАЛЛЫ
 STATUS: Active
 STATEMENT: >>>
-X points for the area reached by the cursor, the number of points depends on the number indicated in the area in which the cursor points.
+X баллов в зависимости от того, на какой зоне расположен указатель. Количество баллов зависит от числа, написанного на зоне, на которую показывает указатель.
 
-.. image:: _assets/rules/2026/RULE-2026-E.3.c-1.png
+.. image:: _assets/rules/2026/RULE-2026-E.3.c-1.jpg
 
-Figure 8: Thermometer and cursor in starting position.
+Рис. 8: Термометр и указатель в стартовой позиции.
 <<<
 
 [RULE]
 UID: RULE-2026-E.4
-TITLE: NEST, SWEET NEST
+TITLE: ДОМ, МИЛЫЙ ДОМ
 STATUS: Active
 STATEMENT: >>>
-Once the hazelnut harvest is over, it’s time for mommy squirrel to return to the warmth of their nest, away from humans and the coming winter. But be careful, winter will be cold and mommy squirrel is sensitive to the cold!
+Как только сбор орехов закончился, робо-белке пора возвращаться в тепло своего гнездышка, подальше от снега и приближающейся зимы. Но будьте осторожны, зима будет холодной, а робо-белка чувствительна к холоду!
 <<<
 
 [RULE]
 UID: RULE-2026-E.4.a
-TITLE: DESCRIPTION AND LAYOUT OF THE PLAYING ELEMENTS
+TITLE: ОПИСАНИЕ И РАСПОЛОЖЕНИЕ ИГРОВЫХ ЭЛЕМЕНТОВ
 STATUS: Active
 STATEMENT: >>>
-This action involves the robots and the nest (SIMA are excluded from this action).
+Это действие включает в себя роботов и гнездо (МАРС не участвуют).
 <<<
 
 [RULE]
 UID: RULE-2026-E.4.b
-TITLE: ACTIONS AND CONSTRAINTS
+TITLE: ДЕЙСТВИЯ И ОГРАНИЧЕНИЯ
 STATUS: Active
 STATEMENT: >>>
-Actions:
+Действия:
 
-At the end of the match the robots must be stopped in their nest.
+● В конце матча роботы должны остановится в гнезде.
 
-Constraints:
+Ограничения:
 
-To be considered partially in the zone, the main robot must have a part of its vertical projection in the arrival area.
-
-To be considered completely in the zone, the main robot must have all of its vertical projection in the arrival area.
+● Чтобы действие было засчитанным частично, необходимо пересечение полностью или части вертикальной проекции робота с зоной гнезда. ● Чтобы действие было засчитано полностью, необходимо полное нахождение вертикальной проекции робота внутри зоны гнезда.
 <<<
 
 [RULE]
 UID: RULE-2026-E.4.c
-TITLE: POINTS
+TITLE: БАЛЛЫ
 STATUS: Active
 STATEMENT: >>>
-5 points if the team’s main robot is partially in its own valid area.
+5 баллов если робот вертикальной проекцией пересекается с зоной гнезда
 
-5 additional points if the team’s main robot is completely in its own valid area.
+5 дополнительных баллов если вертикальная проекция робота полностью находится в зоне гнезда
 <<<
 
 [RULE]
 UID: RULE-2026-E.5
-TITLE: MUNCH TIME!
+TITLE: ВРЕМЯ ОБЕДА!
 STATUS: Active
 STATEMENT: >>>
-That’s it, the humans are gone! It’s time to enjoy the hazelnut reserves — our hungry little squirrels will munch them without wasting any time.
+Приготовления закончены! Теперь самое время слопать сделанные запасы, чтобы подготовится к сезону холодов!
 <<<
 
 [RULE]
 UID: RULE-2026-E.5.a
-TITLE: DESCRIPTION AND LAYOUT OF THE PLAYING ELEMENTS
+TITLE: ОПИСАНИЕ И РАСПОЛОЖЕНИЕ ИГРОВЫХ ЭЛЕМЕНТОВ
 STATUS: Active
 STATEMENT: >>>
-This action involves the SIMAs and the pantries.
+Это действие включает в себя МАРС и кладовые..
 <<<
 
 [RULE]
 UID: RULE-2026-E.5.b
-TITLE: ACTIONS AND CONSTRAINTS
+TITLE: ДЕЙСТВИЯ И ОГРАНИЧЕНИЯ
 STATUS: Active
 STATEMENT: >>>
-Actions:
+Действия:
 
-The team can release one or more SIMAs and have them reach the pantries.
+● Команде необходимо запустить 1 или более МАРС, которые должны доехать до кладовых.
 
-All SIMAs (including the ninja SIMA) must participate in this action
+● Все МАРС (включая МАРС в амбаре) должны участвовать в этом действии.
 
-Squirrels must eat their hazelnut reserves to survive the winter.
+● МАРС должны съесть запасы орехов для того, чтобы подготовится к зиме
 
-The SIMA are small independent mobile actuators designed by the team. For ease of identification, a harmonization of design and colors between the SIMA and the robot is desired.
+● МАРС - мобильная автономная робототехническая система, созданная командой. Для простоты идентификации желательно соответствие цветов основного робота команды и
 
-Constraints:
+МАРС.
 
-During the preparation the SIMAs (except the ninja SIMA) will be deposited in the starting area on the table (the nest) and all must be contained within the limits of the area. The colored lines and the border of the table (on its 22mm thickness) around the area are also included in the starting area.
+Ограничения:
 
-A team can put up to 6 SIMAs on the table (in addition to the SIMA in the granary), they must all be contained within their starting area and must rely exclusively on the table. If a SIMA moves outside the starting area (and outside of the granary) before the 85th second, it will be removed from the table and will no longer be considered in the match.
-
-The SIMA is validated as being in the zone if all or part of its vertical projection is in a pantry at the end of the match.
-
-The SIMAs must keep an actuator moving and visible to the public after the end of the match; while standing still to be considered eating. This actuator is not taken into account for the SIMA vertical projection. The SIMA don’t have to be in zone to validate this point.
-
-The actions of "going to the zone" and "eating nuts" are independent of each other.
+● Во время подготовки, МАРС (кроме МАРС в амбаре) должны быть расположены в стартовых зонах игрового поля (Гнёздах) и полностью находится внутри пределов зон. Цветные линии и борт игрового поля (22 мм) входят в стартовую зону. ● Команда может разместить до 6 МАРС на игровом поле (МАРС в амбаре не учитывается), они должны помещаться в стартовую зону и находятся исключительно на поверхности игрового поля. Если МАРС покидает стартовую зону или зону амбара до 85 секунды, то она изымается с игрового поля, а баллы за текущее действие не учитываются (т.е. Данный МАРС не выполнил действие). ● МАРС засчитывается в зоне кладовой, если часть её вертикальной проекции пересекается с зоной кладовой. ● Во время матча МАРС должен задействовать актуатор, который будет производить видимые движения после окончания матча. В то же время сам МАРС не должен перемещаться. Выполнение этих двух условие принесёт баллы за поедание орехов. Актуатор не учитывается как часть вертикальной проекции МАРС. МАРС не обязан находится в зоне кладовой, чтобы получить баллы за поедание орехов, однако, чтобы быть засчитанным должен покинуть стартовую зону. ● Действия попадания в кладовую и поедания орехов независимы друг от друга.
 <<<
 
 [RULE]
 UID: RULE-2026-E.5.c
-TITLE: POINTS
+TITLE: БАЛЛЫ
 STATUS: Active
 STATEMENT: >>>
-5 points per pantry occupied by the team
+5 баллов за кладовую, с МАРС внутри
 
-10 points if all SIMA eat the hazelnuts.
+10 баллов если все МАРС поедают орехи
 <<<
 
 [[/SECTION]]
 
 [[SECTION]]
-TITLE: F. POINTS
+TITLE: F. БАЛЛЫ
 
 [RULE]
 UID: RULE-2026-F
-TITLE: POINTS
+TITLE: БАЛЛЫ
 STATUS: Active
 STATEMENT: >>>
-LET’S KEEP THE HAZELNUTS WARM!
+СОХРАНИМ ОРЕХИ ТЕПЛЫМИ!
 
-2 points per hazelnut crate in nest.
+● 2 балла за каждый ящик с орехами, засчитанный в гнезде. ● 3 балла за ящик с орехами, засчитанный в кладовой. ● 5 баллов за кладовую, засчитанную в пользу команды.
 
-3 points per hazelnut crate valid in a pantry.
+НАШЕЛ - ЗНАЧИТ ТВОЙ!
 
-5 points per zone granting a bonus for the teams
+● 2 балла за опустошенный от ящиков с орехами холодильник в конце матча.
 
-TO FIND IS TO KEEP! Points for this action are scored for both teams.
+● 5 баллов за холодильник, заполненный ящиками с гнилыми орехами в конце матча.
 
-2 points per fridge empty of hazelnut crates at the end of the match
+НИ ЖАРКО, НИ ХОЛОДНО.
 
-5 points per fridge full of empty crates at the end of the match
+X баллов в зависимости от того, на какой зоне расположен указатель. Количество баллов зависит от числа, написанного на зоне, на которую показывает указатель.
 
-NOT TOO WARM, NOT TOO COLD.
+ДОМ, МИЛЫЙ ДОМ.
 
-X points for the area reached by the cursor, the number of points depends on the number indicated in the area in which the cursor points.
+5 баллов если робот вертикальной проекцией пересекается с зоной гнезда.
 
-NEST, SWEET NEST.
+5 дополнительных баллов если вертикальная проекция робота полностью находится в зоне гнезда.
 
-5 points if the team’s main robot is partially in its own valid area.
+ВРЕМЯ ОБЕДА!
 
-5 additional points if the team’s main robot is completely in its own valid area.
+5 баллов за кладовую, с МАРС внутри
 
-MUNCH TIME!
-
-5 points per pantry occupied by the team
-
-10 points if all SIMA eat the hazelnuts.
+10 баллов если все МАРС поедают орехи
 <<<
 
 [[/SECTION]]
 
 [[SECTION]]
-TITLE: G. APPENDIX
+TITLE: G. ПРИЛОЖЕНИЕ
 
 [RULE]
 UID: RULE-2026-G
-TITLE: APPENDIX
+TITLE: ПРИЛОЖЕНИЕ
 STATUS: Active
 STATEMENT: >>>
-G.1. GENERAL DRAWINGS 0° 90° -90° 180° 45° 30° 60° 120° 135° 150° -45°-135° π π/2 -π/2 0° 90° -90° 180° 45° 30° 60° 120° 135° 150° -45°-135° π π/2 -π/2 0° 90° -90° 180° 45° 30° 60° 120° 135° 150° -45°-135° π π/2 -π/2 0° 90° -90° 180° 45° 30° 60° 120° 135° 150° -45°-135° π π/2 -π/2 100 200 300 400 500 600 700 800 900 1000 1100 1200 1300 1400 1500 1600 1700 1800 1900 2000 2100 2200 2300 2400 2500 2600 2700 2800 2900 x 100 200 300 400 500 600 700 800 900 1000 1100 1200 1300 1400 1500 1600 1700 1800 1900 2000 2100 2200 2300 2400 2500 2600 2700 2800 2900 1900 1800 1700 1600 1500 1400 1300 1200 1100 1000 900 800 700 600 500 400 300 200 100 1900 1800 1700 1600 1500 1400 1300 1200 1100 1000 900 800 700 600 500 400 300 200 100 0 y y y 1900 1800 1700 1600 1500 1400 1300 1200 1100 1000 900 800 700 600 500 400 300 200 100 100 200 300 400 500 600 700 800 900 1000 1100 1200 1300 1400 1500 1600 1700 1800 1900 2000 2100 2200 2300 2400 2500 2600 2700 2800 2900 1 2 3 4 5 6 D C B A D C B A D C B A 1 2 3 4 5 6 1 2 3 4 5 6 y x x x
+This heading has no text of its own. Its content is in the clauses below it.
+<<<
 
-Figure 9: Top view of the playing area.
+[RULE]
+UID: RULE-2026-G.1
+TITLE: ЧЕРТЕЖИ ОБЩЕГО НАЗНАЧЕНИЯ
+STATUS: Active
+STATEMENT: >>>
+.. image:: _assets/rules/2026/RULE-2026-G.1-1.png
+
+Рис. 9: Игровое поле, вид сверху.
+<<<
+
+[RULE]
+UID: RULE-2026-G.1.a
+TITLE: УКАЗАТЕЛЬ
+STATUS: Active
+STATEMENT: >>>
+.. image:: _assets/rules/2026/RULE-2026-G.1.a-1.jpg
+<<<
+
+[RULE]
+UID: RULE-2026-G.1.b
+TITLE: АМБАР
+STATUS: Active
+STATEMENT: >>>
+.. image:: _assets/rules/2026/RULE-2026-G.1.b-1.jpg
 <<<
 
 [RULE]
 UID: RULE-2026-G.2
-TITLE: MATERIAL REFERENCES
+TITLE: МАТЕРИАЛЫ
 STATUS: Active
 STATEMENT: >>>
-Elements
+Элемент Материал Комментарий
 
-Wooden pieces, 150 mm x 50 mm x 30 mm, painted in the team colors on 2 of these larger opposite sides, the other Giant Jenga piece, rounded edges Hazelnut box side stay clean, with a vinyl on which may vary. are the tags aruco 36 and 47. Their weight is not defined and depends on the organisation.
+Деревянные детали размером 150 мм x 50 мм x 30 мм, окрашенные в цвета команды на 2 больших Ящик с орехами противоположных сторонах, другая сторона остается чистой, с виниловой наклейкой, на которой нанесены бирки aruco 36 и 47. Их вес не определен и зависит от организации. Деревянные элементы размером 150 мм x 50 мм x 30 мм, Ящик с гнилыми орехами окрашенные в черный цвет, с виниловой наклейкой, на которой нанесены бирки aruco 41. Их вес не определен и зависит от организации. печати Указатель Деталь 3D-
 
-Wooden pieces, 150 mm x 50 mm x 30 mm, painted in black, with a vinyl Giant Jenga piece, rounded edges Empty crate on which are the tags aruco 41. Their may vary. weight is not defined and depends on the organisation.
+Выступ Боковой выступ 15 мм
 
-The cursor
-
-Ledge
-
-Game floor by Planète Sciences
-
-The material’s density can change from one country to another. It is highly recommended that the teams try different types of materials since the weight may differ significantly.
+Поверхность игрового Печатный винил поля
 <<<
 
 [RULE]
 UID: RULE-2026-G.3
-TITLE: COLOUR REFERENCES
+TITLE: ЦВЕТА
 STATUS: Active
 STATEMENT: >>>
-Colors
+Цвет RAL CMYK RGB
 
-Team blue
+Команда синие RAL 5017 Mat 100%, 60%, 0%, 10% 0, 91, 140
 
-Team yellow
+Команда оранжевые RAL S 0580-Y50R Mat 0%, 57%, 100%, 0% 249, 127, 16
 
-Empty crate
+Ящик с гнилыми орехами RAL 9017 Mat 50%, 30%, 50%, 100% 42, 41, 42
 
-Borders and non-colored elements
+Борта и неокрашенные RAL 7032 Mat 15%, 10%, 25%, 20% 181, 176, 161 части
 
-RAL hues can vary from a printed soil mat to another.
+.. image:: _assets/rules/2026/RULE-2026-G.3-1.png
 <<<
 
 [[/SECTION]]

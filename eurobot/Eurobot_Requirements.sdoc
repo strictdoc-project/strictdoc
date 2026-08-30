@@ -9,10 +9,14 @@ STATEMENT: >>>
 System (black box) requirements. Each requirement declares a ``COVERS``
 relation to every ``RULE`` it addresses.
 
-These four requirements cover three clauses out of the 86 that
+These four requirements cover three clauses out of the 93 that
 ``Eurobot_Rules.sdoc`` holds, so the Traceability Matrix shows a long list
 of rules nobody has written a requirement for yet. Working that list down
 is the course's own job.
+
+The rules are in Russian and the requirements are in English, because the
+rules are quoted from the competition documents while the requirements are
+the course's own writing.
 <<<
 
 [REQUIREMENT]

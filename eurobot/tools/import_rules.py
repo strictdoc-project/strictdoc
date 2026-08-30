@@ -20,11 +20,12 @@ import json
 import os
 import re
 import sys
+import unicodedata
 import zlib
 from binascii import crc32
 from dataclasses import dataclass, field
 from struct import pack
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 
 from pypdf import PageObject, PdfReader
 from pypdf.generic import DictionaryObject, StreamObject
@@ -43,7 +44,9 @@ SPACE_WIDTH = 250
 # a footnote, a superscript footnote marker, or a figure sub-caption.
 MINIMUM_FONT_SIZE = 9.5
 
-# Page footers sit below 30 pt. No body text comes near that.
+# Page footers sit below 30 pt in the pdfTeX sources. No body text comes near
+# that. The Google Docs sources have no running footer and put content as low
+# as 40.2 pt, so this filter is per layout rather than global.
 MINIMUM_TEXT_Y = 40.0
 
 # Lines within a paragraph are 12 pt apart, paragraphs 26 pt.
@@ -93,6 +96,44 @@ CLOSING_PUNCTUATION = (
 STATUS_ACTIVE = "Active"
 STATUS_REMOVED = "Removed"
 
+#
+# How a source PDF carries its headings.
+#
+# A pdfTeX export writes them as text, so a heading is a line the body loop
+# recognises on its way past. A Google Docs export rasterises every level-1
+# and level-2 heading into a picture, leaving only the third level as text. In
+# that case the table of contents supplies each clause's number and title, and
+# the picture supplies only the position the clause starts at. Nothing ever
+# reads the pixels.
+#
+LAYOUT_HEADINGS_IN_TEXT = "headings-in-text"
+LAYOUT_HEADINGS_IN_TOC = "headings-in-toc"
+
+# Rules and separators are drawn as images a fraction of a point tall, and a
+# technical drawing arrives as one large picture surrounded by dozens of tiny
+# ones holding its dimension callouts. Neither carries meaning on its own, so
+# an image has to clear both a minimum side and a minimum area to be kept.
+MINIMUM_IMAGE_SIZE = 8.0
+MINIMUM_IMAGE_AREA = 2000.0
+
+# A rasterised heading spans the text column and stands one line tall.
+HEADING_IMAGE_MINIMUM_WIDTH = 400.0
+HEADING_IMAGE_MINIMUM_HEIGHT = 24.0
+HEADING_IMAGE_MAXIMUM_HEIGHT = 32.0
+
+# A table-of-contents line: a clause number, a title, then the printed page,
+# with dot leaders in between often enough to allow for them.
+TOC_PATTERN = re.compile(
+    r"^([A-Z])\.\s*(?:(\d+)\.)?\s*\.?\s*(.+?)\s*[.\s]*?(\d+)$"
+)
+
+# A page holding at least this many table-of-contents lines is front matter.
+TOC_LINES_PER_PAGE = 3
+
+# How far the printed page numbers can sit from the PDF's own page indices.
+# The converter tries each offset and keeps the one that lines the two up best.
+PAGE_OFFSET_CANDIDATES = (1, 0, 2, 3)
+
 
 @dataclass
 class SourceDocument:
@@ -101,6 +142,7 @@ class SourceDocument:
     prefix: str
     file_name: str
     title: str
+    layout: str = LAYOUT_HEADINGS_IN_TEXT
 
 
 @dataclass
@@ -132,6 +174,19 @@ class PageItem:
     y_position: float
     text: Optional[str] = None
     image_name: Optional[str] = None
+    image_width: float = 0.0
+    image_height: float = 0.0
+    heading: Optional[Tuple[str, str]] = None
+    used_as_heading: bool = False
+
+
+@dataclass
+class TocEntry:
+    """One table-of-contents line: a clause number, a title, a printed page."""
+
+    number: str
+    title: str
+    printed_page: int
 
 
 @dataclass
@@ -156,14 +211,15 @@ def read_source_manifest(manifest_path: str) -> List[SourceDocument]:
                 prefix=entry_["prefix"],
                 file_name=entry_["file"],
                 title=entry_["title"],
+                layout=entry_.get("layout", LAYOUT_HEADINGS_IN_TEXT),
             )
         )
     return sources
 
 
 def extract_clauses(
+    source: SourceDocument,
     pdf_path: str,
-    prefix: str,
     assets_directory: str,
     document_directory: str,
 ) -> Tuple[List[Clause], List[str]]:
@@ -175,7 +231,36 @@ def extract_clauses(
     """
 
     reader = PdfReader(pdf_path)
-    first_body_page = _find_first_body_page(reader)
+    reads_toc = source.layout == LAYOUT_HEADINGS_IN_TOC
+
+    if reads_toc:
+        # A Google Docs export has no running footer to filter out, and it
+        # sets the third-level headings a point smaller than the body, so
+        # both floors have to come off or those headings disappear.
+        minimum_y = 0.0
+        minimum_font_size = 0.0
+        toc_pages = _find_toc_pages(reader, minimum_font_size)
+        first_body_page = max(toc_pages) + 1 if len(toc_pages) > 0 else 0
+    else:
+        minimum_y = MINIMUM_TEXT_Y
+        minimum_font_size = MINIMUM_FONT_SIZE
+        toc_pages = []
+        first_body_page = _find_first_body_page(reader)
+
+    page_items: Dict[int, List[PageItem]] = {}
+    for page_index_ in range(first_body_page, len(reader.pages)):
+        page_items[page_index_] = _read_page_items(
+            reader.pages[page_index_], minimum_y, minimum_font_size
+        )
+
+    anchors: Dict[int, List[PageItem]] = {}
+    toc_pages_by_number: Dict[str, int] = {}
+    if reads_toc:
+        entries = _read_toc_entries(reader, toc_pages, minimum_font_size)
+        toc_pages_by_number = {
+            entry_.number: entry_.printed_page for entry_ in entries
+        }
+        anchors = _pair_toc_with_headings(entries, page_items)
 
     clauses: List[Clause] = []
     written_images: List[str] = []
@@ -184,27 +269,60 @@ def extract_clauses(
     current: Optional[Clause] = None
     paragraphs: List[List[str]] = []
 
-    for page_index_ in range(first_body_page, len(reader.pages)):
+    for page_index_ in sorted(page_items):
         page_ = reader.pages[page_index_]
-        items = _read_page_items(page_)
+        items = _merge_anchors(
+            page_items[page_index_], anchors.get(page_index_, [])
+        )
         previous_y: Optional[float] = None
 
         for item_ in items:
+            opened = item_.heading
+            if opened is None and item_.text is not None:
+                match = HEADING_PATTERN.match(item_.text)
+                if match is not None and _is_heading_line(item_.text):
+                    letter_, number_, sub_letter_, title_ = match.groups()
+                    opened = (
+                        _format_clause_number(letter_, number_, sub_letter_),
+                        title_,
+                    )
+
+            if opened is not None:
+                if current is not None:
+                    current.statement = _join_paragraphs(paragraphs)
+                    clauses.append(current)
+                paragraphs = []
+                previous_y = None
+
+                clause_number, clause_title = opened
+                if "." not in clause_number:
+                    chapter = clause_number
+                    chapter_title = clause_title
+                current = Clause(
+                    uid=f"RULE-{source.prefix}-{clause_number}",
+                    number=clause_number,
+                    chapter=chapter,
+                    chapter_title=chapter_title,
+                    title=clause_title,
+                    statement="",
+                )
+                continue
+
             if item_.image_name is not None:
                 if current is None:
                     continue
+                already_written = len(
+                    [
+                        image_
+                        for image_ in written_images
+                        if image_.startswith(f"{current.uid}-")
+                    ]
+                )
                 image_file_name = _write_image(
                     page_,
                     item_.image_name,
                     current.uid,
-                    len(
-                        [
-                            image_
-                            for image_ in written_images
-                            if image_.startswith(f"{current.uid}-")
-                        ]
-                    )
-                    + 1,
+                    already_written + 1,
                     assets_directory,
                 )
                 if image_file_name is None:
@@ -219,31 +337,6 @@ def extract_clauses(
                 continue
 
             assert item_.text is not None
-            heading = HEADING_PATTERN.match(item_.text)
-            if heading is not None and _is_heading_line(item_.text):
-                if current is not None:
-                    current.statement = _join_paragraphs(paragraphs)
-                    clauses.append(current)
-                paragraphs = []
-                previous_y = None
-
-                letter_, number_, sub_letter_, title_ = heading.groups()
-                if number_ is None and sub_letter_ is None:
-                    chapter = letter_
-                    chapter_title = title_
-                clause_number = _format_clause_number(
-                    letter_, number_, sub_letter_
-                )
-                current = Clause(
-                    uid=f"RULE-{prefix}-{clause_number}",
-                    number=clause_number,
-                    chapter=chapter,
-                    chapter_title=chapter_title,
-                    title=title_,
-                    statement="",
-                )
-                continue
-
             if current is None:
                 continue
 
@@ -267,8 +360,210 @@ def extract_clauses(
         current.statement = _join_paragraphs(paragraphs)
         clauses.append(current)
 
-    return [clause_ for clause_ in clauses if len(clause_.statement) > 0], (
-        written_images
+    containers = _find_container_numbers(clauses)
+
+    kept: List[Clause] = []
+    for clause_ in clauses:
+        if len(clause_.statement) > 0:
+            kept.append(clause_)
+            continue
+        if not reads_toc:
+            continue
+        # A clause the table of contents names is part of the document's
+        # structure even when nothing readable sits under its heading. That
+        # happens for a heading whose content is entirely in the clauses
+        # below it, and for one whose content is a drawing.
+        clause_.statement = _render_empty_statement(
+            source,
+            clause_.number in containers,
+            toc_pages_by_number.get(clause_.number),
+        )
+        kept.append(clause_)
+    return kept, written_images
+
+
+def _find_container_numbers(clauses: List[Clause]) -> Set[str]:
+    """Return the clause numbers that other clauses sit underneath."""
+
+    numbers = {clause_.number for clause_ in clauses}
+    containers: Set[str] = set()
+    for number_ in numbers:
+        prefix = number_ + "."
+        if any(other_.startswith(prefix) for other_ in numbers):
+            containers.add(number_)
+    return containers
+
+
+def _merge_anchors(
+    items: List[PageItem], page_anchors: List[PageItem]
+) -> List[PageItem]:
+    """Drop the images used as heading anchors and insert the anchors."""
+
+    merged = [item_ for item_ in items if not item_.used_as_heading]
+    merged.extend(page_anchors)
+    merged.sort(key=lambda item_: -item_.y_position)
+    return merged
+
+
+def _find_toc_pages(
+    reader: PdfReader, minimum_font_size: float
+) -> List[int]:
+    """Return the front-matter pages that hold the table of contents."""
+
+    toc_pages: List[int] = []
+    for page_index_ in range(min(6, len(reader.pages))):
+        items = _read_page_items(
+            reader.pages[page_index_], 0.0, minimum_font_size
+        )
+        matches = 0
+        for item_ in items:
+            if item_.text is not None and TOC_PATTERN.match(item_.text):
+                matches += 1
+        if matches >= TOC_LINES_PER_PAGE:
+            toc_pages.append(page_index_)
+    return toc_pages
+
+
+def _read_toc_entries(
+    reader: PdfReader, toc_pages: List[int], minimum_font_size: float
+) -> List[TocEntry]:
+    """Read the table of contents as an ordered list of clauses."""
+
+    entries: List[TocEntry] = []
+    for page_index_ in toc_pages:
+        for item_ in _read_page_items(
+            reader.pages[page_index_], 0.0, minimum_font_size
+        ):
+            if item_.text is None:
+                continue
+            match = TOC_PATTERN.match(item_.text)
+            if match is None:
+                continue
+            letter_, number_, title_, printed_page_ = match.groups()
+            number = letter_
+            if number_ is not None:
+                number += "." + number_
+            entries.append(
+                TocEntry(
+                    number=number,
+                    title=title_.strip(" ."),
+                    printed_page=int(printed_page_),
+                )
+            )
+    return entries
+
+
+def _pair_toc_with_headings(
+    entries: List[TocEntry], page_items: Dict[int, List[PageItem]]
+) -> Dict[int, List[PageItem]]:
+    """
+    Turn table-of-contents entries into positioned heading anchors.
+
+    Each entry names a clause and the page it starts on; each rasterised
+    heading on that page marks where one starts. Pairing them in reading order
+    recovers the structure without reading a single pixel.
+    """
+
+    heading_images: Dict[int, List[PageItem]] = {}
+    for page_index_, items_ in page_items.items():
+        found = [item_ for item_ in items_ if _is_heading_image(item_)]
+        if len(found) > 0:
+            heading_images[page_index_] = sorted(
+                found, key=lambda item_: -item_.y_position
+            )
+
+    offset = _choose_page_offset(entries, heading_images)
+
+    entries_by_page: Dict[int, List[TocEntry]] = {}
+    for entry_ in entries:
+        entries_by_page.setdefault(
+            entry_.printed_page - offset, []
+        ).append(entry_)
+
+    anchors: Dict[int, List[PageItem]] = {}
+    for page_index_, page_entries_ in sorted(entries_by_page.items()):
+        if page_index_ not in page_items:
+            continue
+        images = heading_images.get(page_index_, [])
+        page_anchors: List[PageItem] = []
+        top_of_page = _top_of_page(page_items[page_index_])
+        for position_, entry_ in enumerate(page_entries_):
+            if position_ < len(images):
+                image = images[position_]
+                page_anchors.append(
+                    PageItem(
+                        y_position=image.y_position + image.image_height,
+                        heading=(entry_.number, entry_.title),
+                    )
+                )
+                # Marking the placement, rather than remembering its name,
+                # keeps a second placement of the same XObject elsewhere on
+                # the page as an ordinary figure.
+                image.used_as_heading = True
+                continue
+            # More entries than rasterised headings on this page. The clause
+            # still exists, so anchor it at the top of the page and let the
+            # boundary be coarse rather than lose the node.
+            page_anchors.append(
+                PageItem(
+                    y_position=top_of_page + 1.0 - position_ * 0.001,
+                    heading=(entry_.number, entry_.title),
+                )
+            )
+        anchors[page_index_] = page_anchors
+    return anchors
+
+
+def _choose_page_offset(
+    entries: List[TocEntry], heading_images: Dict[int, List[PageItem]]
+) -> int:
+    """
+    Work out how the printed page numbers map onto the PDF's page indices.
+
+    Trying each candidate and keeping the one whose per-page counts agree most
+    often is self-checking: a wrong offset lines almost nothing up.
+    """
+
+    best_offset = PAGE_OFFSET_CANDIDATES[0]
+    best_score = -1
+    for offset_ in PAGE_OFFSET_CANDIDATES:
+        counts: Dict[int, int] = {}
+        for entry_ in entries:
+            page_index = entry_.printed_page - offset_
+            counts[page_index] = counts.get(page_index, 0) + 1
+        score = sum(
+            1
+            for page_index_, count_ in counts.items()
+            if len(heading_images.get(page_index_, [])) == count_
+        )
+        if score > best_score:
+            best_score = score
+            best_offset = offset_
+    return best_offset
+
+
+def _top_of_page(items: List[PageItem]) -> float:
+    if len(items) == 0:
+        return 0.0
+    return max(item_.y_position for item_ in items)
+
+
+def _render_empty_statement(
+    source: SourceDocument, is_container: bool, printed_page: Optional[int]
+) -> str:
+    """Say why a clause carries no text of its own, and where to look."""
+
+    where = f"page {printed_page} of " if printed_page is not None else ""
+    source_path = f"``_assets/rules/source/{source.file_name}``"
+    if is_container:
+        return (
+            "This heading has no text of its own. Its content is in the "
+            "clauses below it."
+        )
+    return (
+        "No text was extracted under this heading. What belongs here is a "
+        "drawing, a table, or text the source numbers as part of another "
+        f"clause: see {where}{source_path}."
     )
 
 
@@ -440,8 +735,8 @@ def import_rules(project_directory: str) -> ImportResult:
             project_directory, "_assets", "rules", source_.prefix
         )
         source_clauses, written_images = extract_clauses(
+            source_,
             os.path.join(source_directory, source_.file_name),
-            source_.prefix,
             assets_directory,
             project_directory,
         )
@@ -490,6 +785,18 @@ def main() -> int:
         print("Eurobot_Rules.sdoc updated.")  # noqa: T201
     else:
         print("Eurobot_Rules.sdoc unchanged.")  # noqa: T201
+    unreadable_count = len(
+        [
+            clause_
+            for clause_ in result.clauses
+            if clause_.statement.startswith("No text was extracted")
+        ]
+    )
+    if unreadable_count > 0:
+        print(  # noqa: T201
+            f"{unreadable_count} clauses have no extracted text. Check "
+            "them against the source PDF."
+        )
     if removed_count > 0:
         print(  # noqa: T201
             "Review the requirements that trace to a removed rule: search "
@@ -524,15 +831,25 @@ def _find_first_body_page(reader: PdfReader) -> int:
     return 0
 
 
-def _read_page_items(page: PageObject) -> List[PageItem]:
-    """Read one page as visual lines and image placements, top to bottom."""
+def _read_page_items(
+    page: PageObject, minimum_y: float, minimum_font_size: float
+) -> List[PageItem]:
+    """
+    Read one page as visual lines and image placements, top to bottom.
+
+    A position on the page is the product of the graphics matrix and the text
+    matrix, not the text matrix alone. pdfTeX leaves the graphics matrix at
+    identity, which is why reading the text matrix by itself worked for the
+    English sources. Google Docs sets a flipped and scaled graphics matrix, so
+    the same reading puts every line of those documents in the wrong place.
+    """
 
     chunks: List[TextChunk] = []
-    images: List[Tuple[float, str]] = []
+    images: List[Tuple[float, float, float, str]] = []
 
     def visit_text(
         text: str,
-        _matrix: List[float],
+        matrix: List[float],
         text_matrix: List[float],
         _font: Optional[DictionaryObject],
         font_size: Optional[float],
@@ -540,14 +857,17 @@ def _read_page_items(page: PageObject) -> List[PageItem]:
         stripped = text.strip()
         if len(stripped) == 0:
             return
-        if font_size is None or font_size < MINIMUM_FONT_SIZE:
+        if font_size is None:
             return
-        if text_matrix[5] < MINIMUM_TEXT_Y:
+        if abs(font_size * matrix[3]) < minimum_font_size:
+            return
+        y_position = matrix[5] + matrix[3] * text_matrix[5]
+        if y_position < minimum_y:
             return
         chunks.append(
             TextChunk(
-                y_position=text_matrix[5],
-                x_position=text_matrix[4],
+                y_position=y_position,
+                x_position=matrix[4] + matrix[0] * text_matrix[4],
                 text=stripped,
             )
         )
@@ -562,7 +882,12 @@ def _read_page_items(page: PageObject) -> List[PageItem]:
             return
         if len(operands) == 0:
             return
-        images.append((matrix[5], str(operands[0])))
+        width, height = abs(matrix[0]), abs(matrix[3])
+        if width < MINIMUM_IMAGE_SIZE or height < MINIMUM_IMAGE_SIZE:
+            return
+        if width * height < MINIMUM_IMAGE_AREA:
+            return
+        images.append((matrix[5], width, height, str(operands[0])))
 
     page.extract_text(
         space_width=SPACE_WIDTH,
@@ -573,11 +898,32 @@ def _read_page_items(page: PageObject) -> List[PageItem]:
     items: List[PageItem] = []
     for line_y_, line_text_ in _group_lines(chunks):
         items.append(PageItem(y_position=line_y_, text=line_text_))
-    for image_y_, image_name_ in images:
-        items.append(PageItem(y_position=image_y_, image_name=image_name_))
+    for image_y_, image_w_, image_h_, image_name_ in images:
+        items.append(
+            PageItem(
+                y_position=image_y_,
+                image_name=image_name_,
+                image_width=image_w_,
+                image_height=image_h_,
+            )
+        )
 
     items.sort(key=lambda item_: -item_.y_position)
     return items
+
+
+def _is_heading_image(item: PageItem) -> bool:
+    """Decide whether an image placement is a rasterised heading line."""
+
+    if item.image_name is None:
+        return False
+    if item.image_width < HEADING_IMAGE_MINIMUM_WIDTH:
+        return False
+    return (
+        HEADING_IMAGE_MINIMUM_HEIGHT
+        <= item.image_height
+        <= HEADING_IMAGE_MAXIMUM_HEIGHT
+    )
 
 
 def _group_lines(chunks: List[TextChunk]) -> List[Tuple[float, str]]:
@@ -626,7 +972,20 @@ def _join_chunks(chunks: List[str]) -> str:
 
 
 def _normalize_spaces(text: str) -> str:
-    return re.sub(r"\s+", " ", text).strip()
+    r"""
+    Collapse runs of whitespace, and drop invisible formatting characters.
+
+    Google Docs writes a zero-width space between a heading's number and its
+    title. Python's ``\s`` does not match U+200B, so a pattern expecting
+    whitespace there fails on an otherwise ordinary heading.
+    """
+
+    visible = "".join(
+        character_
+        for character_ in text
+        if unicodedata.category(character_) != "Cf"
+    )
+    return re.sub(r"\s+", " ", visible).strip()
 
 
 def _repair_kerning(text: str) -> str:
@@ -755,17 +1114,13 @@ def _write_image(
         file_name = f"{clause_uid}-{image_index}.jpg"
         content = bytes(image_object.get_data())
     elif image_filter == "/FlateDecode":
-        color_space = str(image_object.get("/ColorSpace"))
         bits_per_component = int(
             str(image_object.get("/BitsPerComponent", 0))
         )
         if bits_per_component != 8:
             return None
-        if color_space == "/DeviceRGB":
-            channels = 3
-        elif color_space == "/DeviceGray":
-            channels = 1
-        else:
+        channels = _count_colour_channels(image_object)
+        if channels is None:
             return None
         file_name = f"{clause_uid}-{image_index}.png"
         content = _encode_png(
@@ -783,6 +1138,34 @@ def _write_image(
     with open(file_path, "wb") as image_file_:
         image_file_.write(content)
     return file_name
+
+
+def _count_colour_channels(image_object: StreamObject) -> Optional[int]:
+    """
+    Return how many samples per pixel an image carries, or None if unknown.
+
+    Google Docs tags every image /ICCBased rather than /DeviceRGB, and the
+    profile's /N holds the channel count. Reading only the device names would
+    skip every image in those documents.
+    """
+
+    colour_space: Any = image_object.get("/ColorSpace")
+    if hasattr(colour_space, "get_object"):
+        colour_space = colour_space.get_object()
+    if isinstance(colour_space, list) and len(colour_space) >= 2:
+        if str(colour_space[0]) == "/ICCBased":
+            profile: Any = colour_space[1]
+            if hasattr(profile, "get_object"):
+                profile = profile.get_object()
+            components = profile.get("/N")
+            if components is not None and int(components) in (1, 3):
+                return int(components)
+        return None
+    if str(colour_space) == "/DeviceRGB":
+        return 3
+    if str(colour_space) == "/DeviceGray":
+        return 1
+    return None
 
 
 def _find_image_object(

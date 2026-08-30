@@ -9,8 +9,9 @@
 # - Deep Traceability: the RULE -> REQUIREMENT -> TEST_CASE chain.
 # - Table screen: each test case's STATUS, without opening the node.
 #
-# The RULE nodes come from the competition rules PDFs, imported by
-# eurobot/tools/import_rules.py.
+# The RULE nodes come from the Russian competition rules PDFs, imported by
+# eurobot/tools/import_rules.py. Their titles are therefore in Russian while
+# the requirements and test cases are in English.
 #
 
 RUN: %strictdoc export "%strictdoc_root/eurobot" --output-dir "%T" | filecheck %s --check-prefix CHECK-EXPORT
@@ -25,7 +26,7 @@ RUN: %check_exists --file "%T/html/traceability_matrix.html"
 
 # The images extracted from the rules PDFs travel with the document.
 RUN: %check_exists --file "%T/html/eurobot/_assets/rules/GENERAL/RULE-GENERAL-F.3-1.png"
-RUN: %check_exists --file "%T/html/eurobot/_assets/rules/source/Eurobot_General_Rules_1.2_EN.pdf"
+RUN: %check_exists --file "%T/html/eurobot/_assets/rules/source/Eurobot_PRO_Rules_1.2_RU.pdf"
 
 # The two relation roles are separate matrix columns, and every seed node
 # reaches the matrix.

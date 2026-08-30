@@ -26,8 +26,13 @@ from the input directory.
 `strictdoc_config.py` registers it under the alias `@eurobot` and enables the
 screens the course relies on. `Eurobot_Requirements.sdoc` and
 `Eurobot_Tests.sdoc` hold the seed content. `Eurobot_Rules.sdoc` is generated
-by `tools/import_rules.py` from the official rules PDFs under
-`_assets/rules/source/`.
+by `tools/import_rules.py` from the Russian rules PDFs under
+`_assets/rules/source/`: the PRO rules, which cover entry and the robots, and
+the 2026 game rules.
+
+The rules are in Russian and the requirements and test cases are in English,
+because the rules are quoted from the competition documents while the
+requirements are the course's own writing.
 
 ## Importing the rules
 
@@ -43,6 +48,25 @@ appear under.
 
 Run it again on the same PDFs and it writes nothing: the document stays
 byte-identical, so a re-import leaves no diff for anyone to review.
+
+### Two source layouts
+
+A PDF says how it carries its headings through the `layout` field in
+`sources.json`.
+
+`headings-in-text` suits a PDF built by LaTeX, where a heading is a line of
+text like any other. The converter recognises it on its way down the page.
+
+`headings-in-toc` suits a Google Docs export, which is what the current Russian
+sources are. That renderer turns every chapter and section heading into a
+picture, leaving only the third level (`F.4.a.`) as text, so the words
+`РАЗМЕРЫ` and `БЕЗОПАСНОСТЬ` appear on the contents page and nowhere else in
+the file. The converter reads the structure from the table of contents instead:
+the contents page names each clause and gives its printed page, and the picture
+on that page marks where the clause starts. Nothing reads the pixels, so no
+optical character recognition is involved. Where the count of contents entries
+and pictures on a page disagrees, the clause is anchored at the top of the page
+and its boundary is coarse rather than lost.
 
 ### What happens when the rules change
 
@@ -68,13 +92,19 @@ the Traceability Matrix to see which requirements point at them. A mentor
 decides, per requirement, whether to cancel it or delete it. The converter
 does not make that call.
 
+One warning deserves care. A translation is not a revision: the Russian rules
+renumber parts of the English ones, so `I.2` means one clause in the Russian
+PRO document and another in the English general rules. Swapping the language of
+a source is a job for regenerating the document from scratch, not for the merge
+above.
+
 ### UIDs
 
 A rule's UID is `RULE-<source prefix>-<clause number>`, for example
 `RULE-GENERAL-F.4.c` or `RULE-2026-E.1.b`. The prefix comes from
 `sources.json` and keeps the two rules documents apart: both number their
-chapters from A, so `D.1.` means one thing in the general rules and another
-in the 2026 rules.
+chapters from A, so `D.1.` means one thing in the PRO rules and another
+in the 2026 game rules.
 
 The 2026 season's prefix is the season year on purpose. Next season's rules
 reuse the same chapter letters for different content, so a year prefix makes
@@ -82,19 +112,19 @@ those new clauses new nodes rather than silent rewrites of the old ones.
 
 ### What the extraction does not get right
 
-The rules PDFs come from LaTeX, and a few things survive the round trip
-poorly:
-
-- A URL that the PDF wrapped across two lines keeps the space, so
-  `www.eurobot.org/` reads as `www.eurobot. org/` in the `RULE-GENERAL-A`
-  statement.
-- The appendix tables in the general rules (`J.1` through `J.3`) extract as
-  running text, because a PDF table is a set of positioned strings and
-  nothing marks the column boundaries.
-- Figure sub-captions such as "(a) Team blue starting area" are dropped. The
-  converter keeps text set at 9.5 pt and up, which takes the 10 pt body and
-  leaves out the 8 pt footnotes, the superscript footnote markers, and these
-  9 pt captions.
+- Three clauses carry no extracted text: `I.2`, `J.1` and `J.2` of the PRO
+  rules. Their statement says so and points at the source page. `J.1` and
+  `J.2` are tables of materials and tolerances. `I.2` is a quirk of the
+  source, which numbers that clause `I.2` in the contents and its
+  sub-headings `I.3.a` through `I.3.c` in the body.
+- A paragraph the source rasterised appears in the statement as an image
+  rather than as searchable text. The PRO rules hold about a dozen.
+- Every chapter and section title comes from the table of contents verbatim,
+  including its typos: `I.1` reads `ОСНОВАНЯ ИНФОРМАЦИЯ` in the source.
+- A drawing arrives as one large picture surrounded by dozens of small ones
+  holding its dimension callouts. The converter keeps images above a minimum
+  size and drops the callouts, so a technical drawing is readable but not
+  annotated.
 
 The source PDFs stay in `_assets/rules/source/` and are copied to the HTML
 output, so a reader who doubts a clause can open the original.
@@ -102,9 +132,9 @@ output, so a reader who doubts a clause can open the original.
 ## What the screens answer
 
 Which rules have no covering requirement? Read the Traceability Matrix's
-`Parent [COVERS]` column. Most of the 86 imported rules are empty there,
-including `RULE-GENERAL-F.4.b`, the clause on energy sources. Closing that
-gap is the course's own work.
+`Parent [COVERS]` column. Most of the 93 imported rules are empty there,
+including `RULE-GENERAL-F.4.b`, the clause on energy sources
+(`ИСТОЧНИКИ ЭНЕРГИИ`). Closing that gap is the course's own work.
 
 Which requirements have no covering test? Read the same screen's
 `Parent [VERIFIES]` column. `REQ-4` is empty there, and Deep Traceability
@@ -144,5 +174,5 @@ to `REQUIREMENT`.
 not edit it by hand: the next import overwrites every statement.
 
 The four requirements and three test cases are seed content. They cover
-three of the 86 rules and show the shape the course writes, not the course's
+three of the 93 rules and show the shape the course writes, not the course's
 actual requirement set.

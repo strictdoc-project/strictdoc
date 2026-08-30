@@ -1,0 +1,18 @@
+#
+# Re-running the converter on an unchanged PDF must leave the rules
+# document byte-identical: no new git diff for the team to review, and no
+# reordered nodes.
+#
+
+RUN: %mkdir "%T/project/_assets/rules/source"
+RUN: %cp "%strictdoc_root/eurobot/eurobot_grammar.sgra" "%T/project/eurobot_grammar.sgra"
+RUN: %cp "%S/sources.json" "%T/project/_assets/rules/source/sources.json"
+RUN: python "%S/../make_fixture_pdf.py" original "%T/project/_assets/rules/source/rules.pdf"
+
+RUN: python "%strictdoc_root/eurobot/tools/import_rules.py" --project-dir "%T/project"
+RUN: %cp "%T/project/Eurobot_Rules.sdoc" "%T/first_run.sdoc"
+
+RUN: python "%strictdoc_root/eurobot/tools/import_rules.py" --project-dir "%T/project" | filecheck %s --check-prefix CHECK-SECOND-IMPORT
+CHECK-SECOND-IMPORT: Eurobot_Rules.sdoc unchanged.
+
+RUN: %diff "%T/first_run.sdoc" "%T/project/Eurobot_Rules.sdoc"

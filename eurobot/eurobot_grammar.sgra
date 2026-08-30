@@ -32,6 +32,9 @@ ELEMENTS:
   - TITLE: TITLE
     TYPE: String
     REQUIRED: False
+  - TITLE: STATUS
+    TYPE: SingleChoice(Active, Removed)
+    REQUIRED: True
   - TITLE: STATEMENT
     TYPE: String
     REQUIRED: True

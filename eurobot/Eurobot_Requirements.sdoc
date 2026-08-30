@@ -7,56 +7,69 @@ IMPORT_FROM_FILE: @eurobot
 [TEXT]
 STATEMENT: >>>
 System (black box) requirements. Each requirement declares a ``COVERS``
-relation to every ``RULE`` it addresses. ``RULE-7.1`` is deliberately left
-uncovered, so the Traceability Matrix shows what an unaddressed rule looks
-like.
+relation to every ``RULE`` it addresses.
+
+These four requirements cover three clauses out of the 93 that
+``Eurobot_Rules.sdoc`` holds, so the Traceability Matrix shows a long list
+of rules nobody has written a requirement for yet. Working that list down
+is the course's own job.
+
+The rules are in Russian and the requirements are in English, because the
+rules are quoted from the competition documents while the requirements are
+the course's own writing.
 <<<
 
 [REQUIREMENT]
 UID: REQ-1
-TITLE: Footprint at start
+TITLE: Footprint at the start of a match
 STATEMENT: >>>
-The robot shall fit, at the start of the match, inside a perimeter of
-1200 mm measured around its footprint.
+At the start of a match, the robot shall fit inside a perimeter of at most
+1200 mm, measured around the convex hull of its vertical projection on the
+ground.
 <<<
 RELATIONS:
 - TYPE: Parent
-  VALUE: RULE-4.1
+  VALUE: RULE-GENERAL-F.3
   ROLE: COVERS
 
 [REQUIREMENT]
 UID: REQ-2
-TITLE: Height without beacon support
+TITLE: Height during a match
 STATEMENT: >>>
-The robot shall measure at most 350 mm from the table surface to its
-highest point, with the beacon support removed.
+At any time during a match, the robot shall measure at most 350 mm from the
+table surface to its highest point. The beacon support mast, and the sensors
+and circuits mounted under it, are outside that measurement.
 <<<
 RELATIONS:
 - TYPE: Parent
-  VALUE: RULE-4.2
+  VALUE: RULE-GENERAL-F.3
   ROLE: COVERS
 
 [REQUIREMENT]
 UID: REQ-3
 TITLE: Emergency stop cuts actuator power
 STATEMENT: >>>
-Pressing the emergency stop button shall remove power from every motor
-and every actuator within 100 ms, and the robot shall stay unpowered
-until the button is released.
+Pressing the emergency stop button shall remove power from every motor and
+every actuator within 100 ms, and the robot shall stay unpowered until the
+button is released.
+
+The button shall sit on top of the robot or on a side a referee can reach
+without moving anything else.
 <<<
 RELATIONS:
 - TYPE: Parent
-  VALUE: RULE-5.1
+  VALUE: RULE-GENERAL-F.4.c
   ROLE: COVERS
 
 [REQUIREMENT]
 UID: REQ-4
 TITLE: Autonomous match cycle
 STATEMENT: >>>
-After the starter is pulled, the robot shall run its match strategy
-without any operator input and shall stop all motion 100 seconds later.
+After the referee's start signal, the robot shall run its match strategy for
+100 seconds and shall stop all motion at the end of that time. It shall take
+no input from the team while the match runs.
 <<<
 RELATIONS:
 - TYPE: Parent
-  VALUE: RULE-6.1
+  VALUE: RULE-GENERAL-H.2
   ROLE: COVERS

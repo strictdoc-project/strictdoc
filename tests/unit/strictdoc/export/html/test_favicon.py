@@ -69,10 +69,7 @@ def test_get_favicon_variant_static_export():
 
 
 # Checks get_favicon_filename()/get_favicon_mime_type() branching
-# (custom file vs. rendered SVG, per-variant override rule). Same
-# limitation as above: confirms the branching matches the code, not that
-# restricting custom favicons to the default variant is the correct
-# product requirement.
+# (custom file vs. rendered SVG default).
 def test_favicon_filename_and_mime_type_default_to_the_svg_template():
     project_config = _project_config(
         is_development_mode=False, is_test_env=False
@@ -93,16 +90,16 @@ def test_custom_favicon_is_used_for_the_default_variant():
     assert project_config.get_favicon_mime_type() == "image/png"
 
 
-def test_custom_favicon_is_ignored_for_dev_and_test_variants():
+def test_custom_favicon_overrides_dev_and_test_variants_too():
     for is_development_mode, is_test_env in ((True, False), (False, True)):
         project_config = _project_config(
             is_development_mode=is_development_mode,
             is_test_env=is_test_env,
             favicon_path="/tmp/some/logo.png",
         )
-        assert project_config.get_custom_favicon_path() is None
-        assert project_config.get_favicon_filename() == "favicon.svg"
-        assert project_config.get_favicon_mime_type() == "image/svg+xml"
+        assert project_config.get_custom_favicon_path() == "/tmp/some/logo.png"
+        assert project_config.get_favicon_filename() == "favicon.png"
+        assert project_config.get_favicon_mime_type() == "image/png"
 
 
 def _render_favicon_template(*, variant: str) -> str:
@@ -163,9 +160,7 @@ def test_export_strictdoc_assets_copies_custom_favicon_for_default_variant(
     assert not (static_dir / "favicon.svg").exists()
 
 
-def test_export_strictdoc_assets_ignores_custom_favicon_for_dev_variant(
-    tmp_path,
-):
+def test_export_assets_uses_custom_favicon_for_dev_variant_too(tmp_path):
     favicon_source = tmp_path / "logo.png"
     favicon_source.write_bytes(b"fake-png-bytes")
 
@@ -184,7 +179,5 @@ def test_export_strictdoc_assets_ignores_custom_favicon_for_dev_variant(
     )
 
     static_dir = output_root / project_config.dir_for_sdoc_assets
-    assert (
-        'data-testid="dev-favicon"' in (static_dir / "favicon.svg").read_text()
-    )
-    assert not (static_dir / "favicon.png").exists()
+    assert (static_dir / "favicon.png").read_bytes() == b"fake-png-bytes"
+    assert not (static_dir / "favicon.svg").exists()

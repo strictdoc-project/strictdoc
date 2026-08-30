@@ -33,10 +33,13 @@ def _render_fence(
     info = unescapeAll(token.info).strip() if token.info else ""
     lang_name = info.split(maxsplit=1)[0] if info else ""
 
-    if lang_name.lower() != "mermaid":
-        return _DEFAULT_FENCE_RENDERER(tokens, idx, options, env)
+    if lang_name.lower() == "mermaid":
+        return f'<pre class="mermaid">{escapeHtml(token.content)}</pre>\n'
 
-    return f'<pre class="mermaid">{escapeHtml(token.content)}</pre>\n'
+    if lang_name.lower() == "plantuml":
+        return f'<pre class="plantuml">{escapeHtml(token.content)}</pre>\n'
+
+    return _DEFAULT_FENCE_RENDERER(tokens, idx, options, env)
 
 
 def _math_inline_rule(state: StateInline, silent: bool) -> bool:

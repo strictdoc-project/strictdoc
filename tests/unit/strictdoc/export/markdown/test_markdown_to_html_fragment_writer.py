@@ -55,6 +55,16 @@ def test_05_writes_mermaid_fence_as_mermaid_pre_block():
     )
 
 
+def test_05a_writes_plantuml_fence_as_plantuml_pre_block():
+    markdown_input = "```plantuml\n@startuml\nAlice -> Bob\n@enduml\n```\n"
+
+    html_output = MarkdownToHtmlFragmentWriter().write(markdown_input)
+
+    assert html_output == (
+        '<pre class="plantuml">@startuml\nAlice -&gt; Bob\n@enduml\n</pre>\n'
+    )
+
+
 def test_06_writes_regular_fence_as_code_block():
     markdown_input = "```python\nprint(1)\n```\n"
 

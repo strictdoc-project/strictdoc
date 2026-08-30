@@ -43,7 +43,7 @@ from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.md5 import get_md5
 from strictdoc.helpers.module import import_from_path
-from strictdoc.helpers.net import is_valid_host
+from strictdoc.helpers.net import is_valid_host, is_valid_url
 from strictdoc.helpers.path_filter import validate_mask
 
 if TYPE_CHECKING:
@@ -216,13 +216,17 @@ class ProjectConfig:
         # Logo path can be set in the project config to customize the launcher's appearance for a specific project.
         launcher_logo_path: Optional[str] = None,
         # Favicon path can be set in the project config to customize the
-        # browser-tab favicon for a project's own (non-dev, non-test) server
-        # or static export. Ignored for the dev/test favicon variants.
+        # browser-tab favicon. Applies in every mode, including the
+        # dev/test server, overriding the built-in favicon there too.
         favicon_path: Optional[str] = None,
         # Custom CSS path can be set in the project config to extend or
         # override StrictDoc's default stylesheets in the HTML export and
         # on the server.
         custom_css_path: Optional[str] = None,
+        # PlantUML server URL used to render '.. raw:: html'/Markdown
+        # 'plantuml' diagram blocks. PlantUML is disabled unless this is set,
+        # e.g. to the public server: "https://www.plantuml.com/plantuml".
+        plantuml_server_url: Optional[str] = None,
         user_plugin: Optional[StrictDocPlugin] = None,
         # Optional custom Python function for defining a node's UID prefix.
         custom_node_prefix_function: Optional[CustomNodePrefixFunction] = None,
@@ -517,6 +521,9 @@ class ProjectConfig:
         # Optional custom CSS path, project-relative. Validated and
         # resolved to an absolute path in validate_and_finalize().
         self.custom_css_path: Optional[str] = custom_css_path
+
+        # PlantUML server URL. Validated in validate_and_finalize().
+        self.plantuml_server_url: Optional[str] = plantuml_server_url
 
         self.config_last_update: Optional[datetime.datetime] = (
             _config_last_update
@@ -880,6 +887,16 @@ class ProjectConfig:
             self.custom_css_path = custom_css_path
 
         #
+        # Validate PlantUML server URL.
+        #
+        if self.plantuml_server_url is not None:
+            assert is_valid_url(self.plantuml_server_url), (
+                "config: plantuml_server_url: invalid URL: "
+                f"'{self.plantuml_server_url}'."
+            )
+            self.plantuml_server_url = self.plantuml_server_url.rstrip("/")
+
+        #
         # Validate path to Chrome Driver.
         #
         if (
@@ -959,10 +976,6 @@ class ProjectConfig:
         )
 
     def get_custom_favicon_path(self) -> Optional[str]:
-        if self.favicon_path is None:
-            return None
-        if self.get_favicon_variant() in ("dev", "test"):
-            return None
         return self.favicon_path
 
     def get_favicon_filename(self) -> str:
@@ -1040,6 +1053,13 @@ class ProjectConfig:
         # flag, since Mermaid is now a stable feature that is always included
         # in the static assets.
         return True
+
+    def is_activated_plantuml(self) -> bool:
+        return self.plantuml_server_url is not None
+
+    def get_plantuml_server_url(self) -> str:
+        assert self.plantuml_server_url is not None
+        return self.plantuml_server_url
 
     def get_project_root_path(self) -> str:
         if self.input_paths is not None and len(self.input_paths) > 0:
@@ -1353,6 +1373,7 @@ class ProjectConfigLoader:
         html2pdf_strict: bool = False
         html2pdf_template: Optional[str] = None
         custom_css_path: Optional[str] = None
+        plantuml_server_url: Optional[str] = None
         bundle_document_version = (
             ProjectConfigDefault.DEFAULT_BUNDLE_DOCUMENT_VERSION
         )
@@ -1419,6 +1440,10 @@ class ProjectConfigLoader:
 
             custom_css_path = project_content.get(
                 "custom_css_path", custom_css_path
+            )
+
+            plantuml_server_url = project_content.get(
+                "plantuml_server_url", plantuml_server_url
             )
 
             bundle_document_version = project_content.get(
@@ -1523,6 +1548,7 @@ class ProjectConfigLoader:
             html2pdf_strict=html2pdf_strict,
             html2pdf_template=html2pdf_template,
             custom_css_path=custom_css_path,
+            plantuml_server_url=plantuml_server_url,
             bundle_document_version=bundle_document_version,
             bundle_document_date=bundle_document_date,
             traceability_matrix_relation_columns=traceability_matrix_relation_columns,

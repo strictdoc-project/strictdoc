@@ -35,6 +35,7 @@ HTML_STATIC_DIRS = [
     os.path.join("strictdoc", "features", "mathjax", "assets"),
     os.path.join("strictdoc", "features", "mermaid", "assets"),
     os.path.join("strictdoc", "features", "nestor", "assets"),
+    os.path.join("strictdoc", "features", "plantuml", "assets"),
     os.path.join("strictdoc", "features", "project_index", "assets"),
     os.path.join("strictdoc", "features", "source_coverage", "assets"),
     os.path.join("strictdoc", "features", "source_file_view", "assets"),

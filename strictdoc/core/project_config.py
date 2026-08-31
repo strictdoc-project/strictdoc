@@ -187,6 +187,7 @@ class ProjectConfig:
         html2pdf_strict: bool = False,
         html2pdf_template: Optional[str] = None,
         html2pdf_forced_page_break_nodes: Optional[List[str]] = None,
+        html2pdf_disable_ssl_check: bool = False,
         bundle_document_uid: Optional[str] = None,
         bundle_document_version: Optional[
             str
@@ -206,7 +207,6 @@ class ProjectConfig:
         diff_git_revisions: Optional[str] = None,
         diff_dir_revisions: Optional[Tuple[str, str]] = None,
         chromedriver: Optional[str] = None,
-        html2pdf_disable_ssl_check: bool = False,
         # FIXME: The section_behavior field will be removed by the end of 2025-Q4.
         section_behavior: Optional[
             str
@@ -433,6 +433,11 @@ class ProjectConfig:
         self.html2pdf_forced_page_break_nodes: List[str] = (
             html2pdf_forced_page_break_nodes or []
         )
+        assert isinstance(html2pdf_disable_ssl_check, bool), (
+            "config: html2pdf_disable_ssl_check: "
+            f"must be a True/False value: {html2pdf_disable_ssl_check}."
+        )
+        self.html2pdf_disable_ssl_check: bool = html2pdf_disable_ssl_check
 
         self.bundle_document_uid: Optional[str] = bundle_document_uid
         self.bundle_document_version: Optional[str] = bundle_document_version
@@ -485,11 +490,6 @@ class ProjectConfig:
         self.diff_page = False
 
         self.chromedriver: Optional[str] = chromedriver
-        assert isinstance(html2pdf_disable_ssl_check, bool), (
-            "config: html2pdf_disable_ssl_check: "
-            f"must be a True/False value: {html2pdf_disable_ssl_check}."
-        )
-        self.html2pdf_disable_ssl_check: bool = html2pdf_disable_ssl_check
         self.section_behavior: Optional[str] = section_behavior
 
         self.statistics_generator: Optional[str] = statistics_generator

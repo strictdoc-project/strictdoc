@@ -1,0 +1,14 @@
+[DOCUMENT]
+TITLE: Invalid target revision
+
+[GRAMMAR]
+IMPORT_FROM_FILE: eurobot_grammar.sgra
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: A requirement targeted at a revision nobody declared
+TARGET_REVISION: D1
+STATEMENT: >>>
+Any statement. The TARGET_REVISION value above is what this document exists
+to reject.
+<<<

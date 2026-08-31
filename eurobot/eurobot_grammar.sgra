@@ -49,6 +49,9 @@ ELEMENTS:
   - TITLE: TITLE
     TYPE: String
     REQUIRED: False
+  - TITLE: TARGET_REVISION
+    TYPE: SingleChoice(C1, C2)
+    REQUIRED: True
   - TITLE: STATEMENT
     TYPE: String
     REQUIRED: True

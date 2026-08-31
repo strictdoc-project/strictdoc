@@ -1,0 +1,95 @@
+{% extends "components/modal/form.jinja" %}
+
+{% set form = "project_settings_form" %}
+
+{% set setting_labels = {
+  "project_features": "Project features",
+} %}
+
+{% block modal__context %}project_settings{% endblock modal__context %}
+{% block modal_form__header %}Project features configuration{% endblock modal_form__header %}
+
+{% block modal_form__content %}
+  <form
+    id="{{ form }}"
+    action="/actions/project_settings"
+    method="POST"
+    data-js-project-settings-form
+    data-testid="project-settings-form"
+  >
+    <sdoc-form-grid>
+      {% if error_message is not none %}
+        <sdoc-form-row-main>
+          <sdoc-form-error class="project_settings_error" data-testid="project-settings-error">{{ error_message }}</sdoc-form-error>
+        </sdoc-form-row-main>
+      {% elif inspection.message is not none %}
+        <sdoc-form-row-main>
+          <sdoc-form-error class="project_settings_notice" data-testid="project-settings-notice">{{ inspection.message }}</sdoc-form-error>
+        </sdoc-form-row-main>
+      {% endif %}
+
+      <sdoc-form-row-main>
+        {% for setting_ in inspection.settings if setting_.definition.kind == "features" %}
+          {% if setting_.editable %}
+            <fieldset class="project_settings_fieldset" data-js-project-settings-field data-testid="project-settings-field-{{ setting_.definition.name }}">
+              <span class="project_settings_changed_marker" data-js-project-settings-changed-marker hidden>Changed</span>
+              <label class="project_settings_control_all_features">
+                <input
+                  type="checkbox"
+                  name="{{ setting_.definition.name }}"
+                  value="ALL_FEATURES"
+                  data-js-project-settings-all-features
+                  data-testid="project-settings-control-all-features"
+                  {% if "ALL_FEATURES" in setting_.value %}checked{% endif %}
+                >
+                Enable all features
+              </label>
+              <div class="project_settings_individual_features" data-js-project-settings-individual-features>
+                <sdoc-form-field-group data-field-label="Default" class="column">
+                {% for feature_ in all_features if feature_ != "ALL_FEATURES" and feature_ in default_values[setting_.definition.name] %}
+                  <label>
+                    <input type="checkbox" name="{{ setting_.definition.name }}" value="{{ feature_ }}" data-testid="project-settings-feature-{{ feature_ }}" {% if feature_ in setting_.value %}checked{% endif %}>
+                    {{ feature_ }}
+                  </label>
+                {% endfor %}
+                </sdoc-form-field-group>
+                <sdoc-form-field-group data-field-label="Optional" class="column">
+                {% for feature_ in all_features if feature_ != "ALL_FEATURES" and feature_ not in default_values[setting_.definition.name] %}
+                  <label>
+                    <input type="checkbox" name="{{ setting_.definition.name }}" value="{{ feature_ }}" data-testid="project-settings-feature-{{ feature_ }}" {% if feature_ in setting_.value %}checked{% endif %}>
+                    {{ feature_ }}
+                  </label>
+                {% endfor %}
+                </sdoc-form-field-group>
+              </div>
+            </fieldset>
+          {% else %}
+            <div data-testid="project-settings-readonly-{{ setting_.definition.name }}">
+              <div>Enabled features:</div>
+              <div><b>{{ setting_.value | join(", ") }}</b></div>
+              <p>{{ setting_.message }}</p>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </sdoc-form-row-main>
+    </sdoc-form-grid>
+  </form>
+
+  <div class="project_settings_confirmation" data-js-project-settings-discard-confirmation data-testid="project-settings-discard-confirmation" hidden>
+    <p>Discard the pending settings changes?</p>
+    <div class="project_settings_confirmation_actions">
+      <button type="button" class="action_button" data-action-type="cancel" data-js-project-settings-confirm-discard data-testid="project-settings-confirm-discard">Discard <kbd>ESC</kbd></button>
+      <button type="button" class="action_button" data-action-type="utility" data-js-project-settings-continue-editing data-testid="project-settings-continue-editing">Continue editing</button>
+    </div>
+  </div>
+{% endblock modal_form__content %}
+
+{% block modal_form__footer_cancel %}
+  <button type="button" class="action_button" data-action-type="cancel" title="Close settings" data-js-project-settings-dismiss data-testid="project-settings-dismiss"><span data-js-project-settings-dismiss-label data-testid="project-settings-dismiss-label">Close</span> <kbd>ESC</kbd></button>
+{% endblock modal_form__footer_cancel %}
+
+{% block modal_form__footer_submit %}
+  {% if inspection.writable and inspection.settings | selectattr("editable") | list %}
+    <button form="{{ form }}" type="submit" class="action_button" data-action-type="submit" title="Apply changes" data-js-project-settings-apply data-testid="project-settings-apply" disabled>Apply</button>
+  {% endif %}
+{% endblock modal_form__footer_submit %}

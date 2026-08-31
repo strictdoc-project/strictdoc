@@ -2,6 +2,8 @@
 
 {% if key_value_pair["Section"] is defined %}
   <div class="sdoc-table_key_value-section">{{ key_value_pair["Section"] }}</div>
+{% elif key_value_pair["Append"] is defined %}
+  <div class="sdoc-table_key_value-appendix">{{ key_value_pair["Append"] }}</div>
 {% else %}
   {% if view_object.project_config.is_activated_search() and key_value_pair["Link"] is defined and key_value_pair["Link"] is not none %}
     <a

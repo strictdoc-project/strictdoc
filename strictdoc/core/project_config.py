@@ -206,6 +206,7 @@ class ProjectConfig:
         diff_git_revisions: Optional[str] = None,
         diff_dir_revisions: Optional[Tuple[str, str]] = None,
         chromedriver: Optional[str] = None,
+        html2pdf_disable_ssl_check: bool = False,
         # FIXME: The section_behavior field will be removed by the end of 2025-Q4.
         section_behavior: Optional[
             str
@@ -484,6 +485,11 @@ class ProjectConfig:
         self.diff_page = False
 
         self.chromedriver: Optional[str] = chromedriver
+        assert isinstance(html2pdf_disable_ssl_check, bool), (
+            "config: html2pdf_disable_ssl_check: "
+            f"must be a True/False value: {html2pdf_disable_ssl_check}."
+        )
+        self.html2pdf_disable_ssl_check: bool = html2pdf_disable_ssl_check
         self.section_behavior: Optional[str] = section_behavior
 
         self.statistics_generator: Optional[str] = statistics_generator
@@ -776,6 +782,10 @@ class ProjectConfig:
                 self.diff_page = True
 
         self.chromedriver = export_config.chromedriver
+        # If enabled in project config, keep it enabled unless explicitly
+        # requested via CLI (which can only enable it as well).
+        if export_config.disable_ssl_check:
+            self.html2pdf_disable_ssl_check = True
 
         if (
             export_config.enable_mathjax
@@ -1344,6 +1354,7 @@ class ProjectConfigLoader:
         reqif_enable_mid = False
         reqif_import_markup: Optional[str] = None
         chromedriver: Optional[str] = None
+        html2pdf_disable_ssl_check: bool = False
 
         section_behavior: str = ProjectConfigDefault.DEFAULT_SECTION_BEHAVIOR
         statistics_generator: Optional[str] = None
@@ -1426,6 +1437,10 @@ class ProjectConfigLoader:
 
             chromedriver = project_content.get("chromedriver", chromedriver)
 
+            html2pdf_disable_ssl_check = project_content.get(
+                "html2pdf_disable_ssl_check", html2pdf_disable_ssl_check
+            )
+
             if (
                 test_report_root_dict_ := project_content.get(
                     "test_report_root_dict", None
@@ -1507,6 +1522,7 @@ class ProjectConfigLoader:
             reqif_enable_mid=reqif_enable_mid,
             reqif_import_markup=reqif_import_markup,
             chromedriver=chromedriver,
+            html2pdf_disable_ssl_check=html2pdf_disable_ssl_check,
             section_behavior=section_behavior,
             statistics_generator=statistics_generator,
             document_line_width=document_line_width,

@@ -256,6 +256,15 @@ class ExportCommand(BaseCommand):
             "strictdoc cache.",
         )
         command_parser_export.add_argument(
+            "--disable-ssl-check",
+            action="store_true",
+            default=False,
+            help=(
+                "Disable SSL certificate verification for HTML2PDF's "
+                "HTTP downloads."
+            ),
+        )
+        command_parser_export.add_argument(
             "--config",
             type=str,
             help="Path to the StrictDoc TOML config file.",

@@ -81,6 +81,8 @@ class PDFPrintDriver:
                     project_config.chromedriver,
                 ]
             )
+        if project_config.html2pdf_disable_ssl_check:
+            cmd.append("--disable-ssl-check")
         if project_config.html2pdf_strict:
             cmd.append("--strict")
         for path_to_print_ in paths_to_print:

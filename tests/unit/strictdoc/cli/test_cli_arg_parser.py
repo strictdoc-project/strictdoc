@@ -119,6 +119,22 @@ def test_export_09_config():
     assert args.command == "export"
 
 
+def test_export_10_disable_ssl_check_default_false():
+    parser = cli_args_parser()
+    args = parser.parse_args(["export", "docs"])
+
+    assert args.command == "export"
+    assert args.disable_ssl_check is False
+
+
+def test_export_11_disable_ssl_check_enabled():
+    parser = cli_args_parser()
+    args = parser.parse_args(["export", "docs", "--disable-ssl-check"])
+
+    assert args.command == "export"
+    assert args.disable_ssl_check is True
+
+
 def test_new_01_minimal():
     parser = cli_args_parser()
 

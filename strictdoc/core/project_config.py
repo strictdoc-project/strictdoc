@@ -232,6 +232,7 @@ class ProjectConfig:
         formats: Optional[List["Format"]] = None,
         # Reserved for StrictDoc's internal use.
         _config_last_update: Optional[datetime.datetime] = None,
+        _config_path: Optional[str] = None,
     ) -> None:
         self.environment: SDocRuntimeEnvironment = environment
 
@@ -526,8 +527,11 @@ class ProjectConfig:
         self.config_last_update: Optional[datetime.datetime] = (
             _config_last_update
         )
+        self.config_path: Optional[str] = _config_path
         self.is_running_on_server: bool = False
         self.watch_enabled: bool = False
+        self.server_host_overridden: bool = False
+        self.server_port_overridden: bool = False
 
     @staticmethod
     def default_config() -> "ProjectConfig":
@@ -695,8 +699,10 @@ class ProjectConfig:
         self.watch_enabled = server_config.watch
         if (server_host_ := server_config.host) is not None:
             self.server_host = server_host_
+            self.server_host_overridden = True
         if (server_port_ := server_config.port) is not None:
             self.server_port = server_port_
+            self.server_port_overridden = True
 
         self.input_paths = [server_config.get_full_input_path()]
         if self.source_root_path is None:
@@ -1146,9 +1152,27 @@ class ProjectConfigLoader:
         project_config: ProjectConfig = cls.load_from_path_or_get_default(
             path_to_config=path_to_config
         )
+        project_config.config_path = cls.resolve_config_path(
+            path_to_config=path_to_config
+        )
         project_config.integrate_server_config(server_config)
         project_config.validate_and_finalize()
         return project_config
+
+    @staticmethod
+    def resolve_config_path(*, path_to_config: str) -> str:
+        absolute_path = os.path.abspath(path_to_config)
+        if os.path.isdir(absolute_path):
+            python_config_path = os.path.join(
+                absolute_path, "strictdoc_config.py"
+            )
+            if os.path.isfile(python_config_path):
+                return python_config_path
+            toml_config_path = os.path.join(absolute_path, "strictdoc.toml")
+            if os.path.isfile(toml_config_path):
+                return toml_config_path
+            return python_config_path
+        return absolute_path
 
     @classmethod
     def load_using_convert_config(

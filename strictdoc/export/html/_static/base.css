@@ -32,6 +32,7 @@
   --color-danger: var(--color-red);
   --color-cancel: var(--color-fg-secondary);
   --color-submit: var(--color-action);
+  --color-utility: var(--color-accent);
 
   --color-link: var(--color-fg-secondary);
   --color-action: var(--color-fg-accent);

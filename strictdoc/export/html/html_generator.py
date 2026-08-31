@@ -31,6 +31,9 @@ from strictdoc.features.deep_trace.generator import (
 from strictdoc.features.html2pdf.generator import (
     DocumentHTML2PDFGenerator,
 )
+from strictdoc.features.project_configuration.generator import (
+    ProjectConfigurationHTMLGenerator,
+)
 from strictdoc.features.project_index.generator import (
     DocumentTreeHTMLGenerator,
 )
@@ -218,6 +221,7 @@ class HTMLGenerator:
         # well with the multiprocessing's processed-based parallelization.
         # _pickle.PicklingError: Can't pickle <function sync_do_first at 0x1077bdf80>: it's not the same object as jinja2.filters.sync_do_first.
         self.export_project_tree_screen(traceability_index=traceability_index)
+        self.export_project_configuration_screen()
 
         # Export JavaScript map of the document tree (project map)
         self.export_project_map(traceability_index=traceability_index)
@@ -550,6 +554,18 @@ class HTMLGenerator:
         output = writer.export(
             self.project_config,
             traceability_index=traceability_index,
+            html_templates=self.html_templates,
+        )
+        with open(output_file, "w", encoding="utf8") as file:
+            file.write(output)
+
+    def export_project_configuration_screen(self) -> None:
+        output_file = os.path.join(
+            self.project_config.export_output_html_root,
+            "project_configuration.html",
+        )
+        output = ProjectConfigurationHTMLGenerator.export(
+            self.project_config,
             html_templates=self.html_templates,
         )
         with open(output_file, "w", encoding="utf8") as file:

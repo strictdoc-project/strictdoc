@@ -1,0 +1,91 @@
+sdoc-modal[context="project_settings"] {
+  width: min(760px, calc(100vw - 32px));
+  max-height: calc(100vh - 32px);
+}
+
+[data-js-project-settings-form] sdoc-form-grid {
+  margin: 0;
+  /* padding: 0; */
+}
+
+.project_settings_fieldset {
+  display: flex;
+  gap: var(--base-padding);
+  flex-direction: column;
+  align-items: stretch;
+  padding: 0;
+  border: none;
+  position: relative;
+}
+
+.project_settings_fieldset[data-changed]::before {
+  content: "";
+  position: absolute;
+  inset: -1rem;
+  border: 1px solid var(--color-fg-accent);
+  background: var(--color-bg-accent);
+  border-radius: var(--base-rhythm);
+  pointer-events: none;
+}
+
+.project_settings_changed_marker {
+  color: var(--color-fg-accent);
+  font-weight: 600;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.project_settings_control_all_features {
+  font-weight: 600;
+}
+
+.project_settings_individual_features {
+  display: grid;
+  grid-template-columns: fit-content(50%) minmax(min-content, 1fr);
+  gap: var(--base-rhythm);
+}
+
+.project_settings_individual_features[data-disabled] {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.project_settings_individual_features label {
+  /* DEV: for long feature names */
+  font-stretch: semi-condensed;
+}
+
+.project_settings_confirmation {
+  position: absolute;
+  inset: 0;
+  z-index: 11; /* above buttons with hover effect in modal footer (z-index: 6) */
+  padding: calc(var(--base-rhythm)*3);
+  background: var(--color-bg-main);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.project_settings_confirmation[hidden] {
+  display: none !important;
+}
+
+.project_settings_confirmation_actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.project_settings_spinner {
+  display: flex;
+  justify-content: center;
+}
+
+.project_settings_spinner_icon {
+  width: calc(var(--base-rhythm)*4);
+  height: calc(var(--base-rhythm)*4);
+  animation: ico-spin 0.7s linear infinite;
+  transform-origin: center;
+}

@@ -34,6 +34,8 @@ sdoc-modal {
 
   box-shadow: var(--base-elevation-modal);
 
+  position: relative;
+
   /* scroll if necessary is available in the child container */
   overflow: hidden;
 }
@@ -218,6 +220,14 @@ sdoc-form-row [data-action-type="add_field"]:only-child {
   top: -40%;
 }
 
+sdoc-form-row-main H3 {
+  font-family: var(--code-font-family);
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  /* color: var(--color-placeholder); */
+  text-transform: uppercase;
+}
+
 /*
    fields grid:
    inside sdoc-form-grid
@@ -295,6 +305,20 @@ sdoc-form-field-group {
   padding-bottom: calc(var(--base-rhythm)*1);
 
   position: relative;
+}
+
+sdoc-form-field-group.column {
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: var(--base-rhythm);
+  padding: var(--base-padding);
+}
+
+sdoc-form-field-group.column label {
+  overflow-wrap: anywhere;
+  display: flex;
+  align-items: baseline;
+  gap: var(--base-rhythm);
 }
 
 sdoc-form-field-group::before {
@@ -587,6 +611,21 @@ sdoc-form-error + sdoc-form-error {
 
 sdoc-form-error + sdoc-form-field-group {
   border-color: var(--color-danger);
+}
+
+sdoc-form-error.project_settings_error {
+  border: 1px solid var(--color-danger);
+  border-radius: 4px;
+  padding: var(--base-rhythm);
+  /* background: var(--color-highlight-danger); */
+}
+
+sdoc-form-error.project_settings_notice {
+  border: 1px solid var(--color-action);
+  border-radius: 4px;
+  padding: var(--base-rhythm);
+  background: var(--color-bg-accent);
+  color: var(--color-fg-accent);
 }
 
 sdoc-form-hint {

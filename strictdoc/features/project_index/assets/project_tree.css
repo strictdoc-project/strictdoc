@@ -168,7 +168,7 @@
 /* dashboard */
 
 .dashboard {
-  gap: var(--base-rhythm);
+  gap: var(--base-padding);
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
 }
@@ -210,6 +210,7 @@
   top: calc(-1 * var(--base-rhythm));
   color: var(--color-fg-secondary);
   padding: calc(0.5 * var(--base-rhythm)) 0;
+  font-size: var(--font-size-xsm);
 }
 
 .dashboard-block-title::after {

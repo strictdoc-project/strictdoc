@@ -10,6 +10,7 @@
 /output/
 
 .DS_Store
+*.saved.*
 
 **/.sandbox/**
 __pycache__

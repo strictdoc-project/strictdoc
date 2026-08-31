@@ -1,0 +1,133 @@
+{% macro value_or_none(value_) %}{{ value_ if value_ is not none and value_ != "" else "None" }}{% endmacro %}
+{% macro enabled(value_) %}{{ "On" if value_ else "Off" }}{% endmacro %}
+{% macro list_value(values_) %}{{ values_ | join(", ") if values_ else "None" }}{% endmacro %}
+{% macro features_value(values_) %}{% if "ALL_FEATURES" in values_ %}<b>ALL_FEATURES:</b><br/> {{ list_value(values_ | reject("equalto", "ALL_FEATURES") | list) }}{% else %}{{ list_value(values_) }}{% endif %}{% endmacro %}
+
+<div class="main" data-testid="project-configuration-page">
+  <div class="dashboard">
+    <div class="dashboard-main">
+      <div class="dashboard-block">
+        <div class="dashboard-block-title">Project configuration</div>
+          <div class="sdoc-table_key_value imbedded">
+
+          <div class="sdoc-table_key_value-subgrid" data-testid="project-configuration-main-values">
+            {% for key_value_pair in [
+              {"Key": "Configuration file", "Value": view_object.active_configuration_path()},
+              {"Key": "Project title", "Value": view_object.project_config.project_title},
+              {"Key": "Server host", "Value": view_object.project_config.server_host},
+              {"Key": "Server port", "Value": view_object.project_config.server_port},
+            ] %}
+              {% include "components/table_key_value/index.jinja" %}
+            {% endfor %}
+          </div>
+
+          <div class="sdoc-table_key_value-subgrid" data-testid="project-configuration-editable-values">
+            {% for key_value_pair in [
+              {"Section": "Features"},
+              {"Key": "Project features", "Value": features_value(view_object.project_config.project_features)},
+            ] %}
+              {% include "components/table_key_value/index.jinja" %}
+            {% endfor %}
+            {% if view_object.is_running_on_server %}
+              {% set settings_unavailable_message = view_object.project_settings_unavailable_message() %}
+              <div class="sdoc-table_key_value-appendix">
+                {% if settings_unavailable_message is none %}
+                  <div style="display:flex; justify-content: flex-end;">
+                    <a
+                      class="action_button"
+                      data-action-type="submit"
+                      href="/actions/project_settings"
+                      data-js-project-settings
+                      data-testid="project-configuration-edit"
+                    >Enable / disable features</a>
+                  </div>
+                {% else %}
+                  <p data-testid="project-configuration-edit-unavailable">{{ settings_unavailable_message }}</p>
+                {% endif %}
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="sdoc-table_key_value-subgrid" data-testid="project-configuration-additional-values">
+            {% for key_value_pair in [
+              {"Section": "Configuration"},
+              {"Key": "Lazy document loading threshold", "Value": view_object.project_config.lazy_document_loading_threshold},
+              {"Append": view_object.default_lazy_document_loading_threshold() ~ " by default."},
+              {"Key": "Output directory", "Value": view_object.project_config.output_dir},
+              {"Key": "Grammar aliases", "Value": view_object.project_config.grammars},
+              {"Key": "Custom CSS path", "Value": value_or_none(view_object.project_config.custom_css_path)},
+              {"Key": "Favicon path", "Value": value_or_none(view_object.project_config.favicon_path)},
+              {"Key": "Launcher logo path", "Value": value_or_none(view_object.project_config.launcher_logo_path)},
+              {"Key": "Document line width", "Value": value_or_none(view_object.project_config.document_line_width)},
+              {"Key": "HTML2PDF strict mode", "Value": enabled(view_object.project_config.html2pdf_strict)},
+              {"Key": "HTML2PDF template", "Value": value_or_none(view_object.project_config.html2pdf_template)},
+              {"Key": "HTML2PDF forced page-break nodes", "Value": list_value(view_object.project_config.html2pdf_forced_page_break_nodes)},
+              {"Key": "ReqIF profile", "Value": view_object.project_config.reqif_profile},
+              {"Key": "ReqIF multiline XHTML mode", "Value": enabled(view_object.project_config.reqif_multiline_is_xhtml)},
+              {"Key": "ReqIF MID mode", "Value": enabled(view_object.project_config.reqif_enable_mid)},
+              {"Key": "ReqIF import markup", "Value": value_or_none(view_object.project_config.reqif_import_markup)},
+            ] %}
+              {% include "components/table_key_value/index.jinja" %}
+            {% endfor %}
+          </div>{# // .sdoc-table_key_value #}
+
+        </div>
+
+      </div>{# // .dashboard-block #}
+    </div>{# // .dashboard-main #}
+
+    <div class="dashboard-aside">
+      <div class="dashboard-block" data-testid="project-tree-configuration">
+        <div class="dashboard-block-title">Project tree configuration</div>
+
+        {% if view_object.project_config.input_paths|length %}
+          <b>Input paths:</b>
+          {% for path_ in view_object.project_config.input_paths %}
+            {% set external_, internal_ = view_object.split_path_for_display(path_) %}
+            <code class="dashboard-path" data-js-path-reveal data-testid="project-configuration-input-path">
+              {%- if external_ -%}
+                <span class="dashboard-path-external" data-js-path-reveal-control data-testid="project-configuration-input-path-external" aria-expanded="false" role="button" tabindex="0" title="Click to reveal">…</span><span class="dashboard-path-external-full">{{ external_ }}</span>
+              {%- endif -%}
+              <span class="dashboard-path-internal">{{ internal_ }}</span>
+            </code><br/>
+          {% endfor %}
+        {% endif %}
+
+        {% if view_object.project_config.include_doc_paths|length or view_object.project_config.exclude_doc_paths|length %}
+          <p>Document paths:</p>
+          <ul>
+            {% for path_ in view_object.project_config.include_doc_paths %}
+              <li style="list-style-type: '✔️    '">{{ path_ }}</li>
+            {% endfor %}
+            {% for path_ in view_object.project_config.exclude_doc_paths %}
+              <li style="list-style-type: '⛔    '">{{ path_ }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+
+        {% if view_object.project_config.source_root_path is not none %}
+          {% set external_, internal_ = view_object.split_path_for_display(view_object.project_config.source_root_path) %}
+          <b>Source root path:</b>
+          <code class="dashboard-path" data-js-path-reveal data-testid="project-configuration-source-root-path">
+            {%- if external_ -%}
+              <span class="dashboard-path-external" data-js-path-reveal-control data-testid="project-configuration-source-root-path-external" aria-expanded="false" role="button" tabindex="0" title="Click to reveal">…</span><span class="dashboard-path-external-full">{{ external_ }}</span>
+            {%- endif -%}
+            <span class="dashboard-path-internal">{{ internal_ }}</span>
+          </code>
+        {% endif %}
+
+        {% if view_object.project_config.include_source_paths|length or view_object.project_config.exclude_source_paths|length %}
+          <p>Source paths:</p>
+          <ul>
+            {% for path_ in view_object.project_config.include_source_paths %}
+              <li style="list-style-type: '✔️    '">{{ path_ }}</li>
+            {% endfor %}
+            {% for path_ in view_object.project_config.exclude_source_paths %}
+              <li style="list-style-type: '⛔    '">{{ path_ }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>

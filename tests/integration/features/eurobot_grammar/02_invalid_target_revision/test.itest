@@ -1,0 +1,15 @@
+#
+# REQUIREMENT's TARGET_REVISION is a SingleChoice, so a value outside the
+# declared revisions must fail the export instead of passing silently. This
+# test copies in the real eurobot/eurobot_grammar.sgra rather than
+# duplicating it, so it follows the grammar when the grammar changes.
+#
+
+RUN: mkdir -p "%T/input"
+RUN: cp "%strictdoc_root/eurobot/eurobot_grammar.sgra" "%T/input/"
+RUN: cp "%S/input.sdoc" "%T/input/"
+
+RUN: %expect_exit 1 %strictdoc export "%T/input" --output-dir "%T/output" | filecheck %s --dump-input=fail
+
+CHECK: Semantic error: Requirement field has an invalid SingleChoice value: D1.
+CHECK: Hint: Problematic field: TARGET_REVISION.

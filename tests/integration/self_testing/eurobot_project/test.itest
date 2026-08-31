@@ -19,6 +19,7 @@ CHECK-EXPORT: Export completed.
 
 RUN: %check_exists --file "%T/html/eurobot/Eurobot_Rules.html"
 RUN: %check_exists --file "%T/html/eurobot/Eurobot_Requirements.html"
+RUN: %check_exists --file "%T/html/eurobot/Eurobot_Requirements-TABLE.html"
 RUN: %check_exists --file "%T/html/eurobot/Eurobot_Tests.html"
 RUN: %check_exists --file "%T/html/eurobot/Eurobot_Tests-TABLE.html"
 RUN: %check_exists --file "%T/html/eurobot/Eurobot_Requirements-DEEP-TRACE.html"
@@ -62,3 +63,14 @@ CHECK-TABLE: TC-2
 CHECK-TABLE: Not Executed
 CHECK-TABLE: TC-3
 CHECK-TABLE: Failed
+
+# The requirements table carries TARGET_REVISION as its own column, with
+# the two revisions and the TBD placeholder the seed requirements use.
+RUN: %cat "%T/html/eurobot/Eurobot_Requirements-TABLE.html" | filecheck %s --check-prefix CHECK-REQ-TABLE
+CHECK-REQ-TABLE: TARGET_REVISION
+CHECK-REQ-TABLE: REQ-1
+CHECK-REQ-TABLE: C1
+CHECK-REQ-TABLE: REQ-3
+CHECK-REQ-TABLE: C2
+CHECK-REQ-TABLE: REQ-4
+CHECK-REQ-TABLE: TBD

@@ -22,6 +22,7 @@ the course's own writing.
 [REQUIREMENT]
 UID: REQ-1
 TITLE: Footprint at the start of a match
+TARGET_REVISION: C1
 STATEMENT: >>>
 At the start of a match, the robot shall fit inside a perimeter of at most
 1200 mm, measured around the convex hull of its vertical projection on the
@@ -35,6 +36,7 @@ RELATIONS:
 [REQUIREMENT]
 UID: REQ-2
 TITLE: Height during a match
+TARGET_REVISION: C1
 STATEMENT: >>>
 At any time during a match, the robot shall measure at most 350 mm from the
 table surface to its highest point. The beacon support mast, and the sensors
@@ -48,6 +50,7 @@ RELATIONS:
 [REQUIREMENT]
 UID: REQ-3
 TITLE: Emergency stop cuts actuator power
+TARGET_REVISION: C2
 STATEMENT: >>>
 Pressing the emergency stop button shall remove power from every motor and
 every actuator within 100 ms, and the robot shall stay unpowered until the
@@ -64,6 +67,7 @@ RELATIONS:
 [REQUIREMENT]
 UID: REQ-4
 TITLE: Autonomous match cycle
+TARGET_REVISION: TBD
 STATEMENT: >>>
 After the referee's start signal, the robot shall run its match strategy for
 100 seconds and shall stop all motion at the end of that time. It shall take

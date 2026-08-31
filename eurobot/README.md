@@ -3,8 +3,9 @@
 A runnable StrictDoc project holding the Eurobot course's document grammar:
 `RULE`, `REQUIREMENT`, and `TEST_CASE` elements linked by `Parent` relations.
 This project implements
-`developer/tasks/eurobot/20260827_requirements_and_test_grammar` and
-`developer/tasks/eurobot/20260827_eurobot_rules_import`.
+`developer/tasks/eurobot/20260827_requirements_and_test_grammar`,
+`developer/tasks/eurobot/20260827_eurobot_rules_import`, and
+`developer/tasks/eurobot/20260827_release_versioning`.
 
 It lives inside this fork so that the grammar can be exported and regression
 tested here. Nothing in it reaches outside this folder, so the course's own
@@ -143,6 +144,50 @@ shows the same gap as a chain that stops at the requirement.
 Which tests are not yet passed? Read the Table screen's `STATUS` column.
 `TC-2` is `Not Executed` and `TC-3` is `Failed`.
 
+## Planning a requirement for a revision
+
+`REQUIREMENT` carries `TARGET_REVISION`, the identifier of the revision
+(`C1`, `C2`, ...) a requirement is planned or implemented for, one of the
+course's own revision names (`major.minor`, for example `C1` for the first
+minor of the major revision codenamed Cortana). `REQ-1` and `REQ-2` are
+planned for `C1`, `REQ-3` for `C2`, and `REQ-4` is `TBD`: nobody has
+scheduled it yet.
+
+Growing the choice list, when a new minor starts, is a hand-edit of
+`eurobot_grammar.sgra`'s `TARGET_REVISION: SingleChoice(...)` line, the same
+way `RULE`'s `STATUS` choices were declared. The document grammar editor in
+StrictDoc's web UI cannot do this: its "edit element" screen has no field
+for a `SingleChoice`'s options, and saving through it rewrites every field
+of the element, `TARGET_REVISION` included, as a plain `String`, discarding
+whatever choices it had. Edit the `.sgra` file directly instead.
+
+To find the tests to run for a revision, run a Query Engine search and read
+its result off the Traceability Matrix:
+
+- One revision: `node["TARGET_REVISION"] == "C1"` lists the requirements due
+  by `C1`.
+- Several revisions, for cumulative planning:
+  `(node["TARGET_REVISION"] == "C1" or node["TARGET_REVISION"] == "C2")`.
+  `any(["C1", "C2"]) in node["TARGET_REVISION"]` reads shorter but checks
+  substring containment, not exact equality, on every field except `TAGS`:
+  once minors reach two digits, `any(["C1"]) in ...` would also match a
+  requirement targeted at `C10`. The `==`/`or` chain has no such risk.
+
+Cross-reference the matching requirement UIDs against the Traceability
+Matrix's `Parent [VERIFIES]` column to read off their `TEST_CASE` nodes:
+that list is the revision's test plan.
+
+Recovering a past RC's results is a `git` question, not a `TARGET_REVISION`
+question: `STATUS` holds one current value per `TEST_CASE`, not a history.
+Enable `"DIFF"` in `project_features` and run
+`strictdoc export . --generate-diff-git "C1_RC1..C1_RC2"`, or open
+`/diff?left_revision=C1_RC1&right_revision=C1_RC2` on a running
+`strictdoc server`, to see which `TEST_CASE` statuses and which
+`REQUIREMENT` nodes changed between two tags. Cutting those weekly RC tags,
+and keeping the letter-to-codename glossary, is the downstream Eurobot
+project's own convention: this reference project does not carry git tags of
+its own to demonstrate it against.
+
 ## Conventions the grammar does not enforce
 
 `RULE` UIDs follow the pattern above. `UID` is a plain `String` field, and
@@ -150,8 +195,14 @@ StrictDoc does not check the pattern.
 
 A new `TEST_CASE` starts at `STATUS: Not Executed`, and an imported `RULE`
 at `STATUS: Active`. Grammar fields have no default value, so both `STATUS`
-fields are declared `REQUIRED: True`: a node without a status fails
-validation instead of silently carrying no status at all.
+fields, and `TARGET_REVISION`, are declared `REQUIRED: True`: a node
+without a value fails validation instead of silently carrying none at all.
+
+Any `SingleChoice` field, `TARGET_REVISION` included, always accepts `TBD`
+and `TBC` on top of its declared choices: StrictDoc treats both as
+placeholder values regardless of the choice list. `REQ-4` uses
+`TARGET_REVISION: TBD` for exactly that reason: nobody has scheduled it for
+`C1` or `C2` yet, and `TBD` says so without inventing a revision to hold it.
 
 Relation roles say what a relation means, because relation types cannot. A
 grammar relation is `TYPE: Parent` plus an optional `ROLE`, and it cannot be
@@ -164,9 +215,7 @@ columns.
 Every field before the content field (`STATEMENT`) is single-line meta
 information, and each node's field order must match the grammar's. So a new
 single-line field goes between `TITLE` and `STATEMENT`. That is where `RULE`
-carries `STATUS`, and where
-`developer/tasks/eurobot/20260827_release_versioning` adds `TARGET_REVISION`
-to `REQUIREMENT`.
+carries `STATUS` and `REQUIREMENT` carries `TARGET_REVISION`.
 
 ## Seed content
 

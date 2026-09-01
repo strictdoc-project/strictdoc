@@ -19,6 +19,31 @@
     minLabelWidth: 56,
     targetNodeArea: 1200,
   });
+  const CSS_CLASSES = Object.freeze({
+    ancestor: "tree-map-html__ancestor",
+    ancestors: "tree-map-html__ancestors",
+    back: "tree-map-html__back",
+    canvas: "tree-map-html__canvas",
+    children: "tree-map-html__children",
+    groupNavigation: "tree-map-html__group-navigation",
+    label: "tree-map-html__label",
+    labelAncestor: "tree-map-html__label--ancestor",
+    labelBranch: "tree-map-html__label--branch",
+    labelLeaf: "tree-map-html__label--leaf",
+    labelRoot: "tree-map-html__label--root",
+    nextGroup: "tree-map-html__next-group",
+    node: "tree-map-html__node",
+    nodeBranch: "tree-map-html__node--branch",
+    nodeCurrentLevel: "tree-map-html__node--current-level",
+    nodeFocusedRoot: "tree-map-html__node--focused-root",
+    nodeHeader: "tree-map-html__node-header",
+    nodeLeaf: "tree-map-html__node--leaf",
+    nodeSurface: "tree-map-html__node-surface",
+    previousGroup: "tree-map-html__previous-group",
+    section: "tree-map-html__section",
+    title: "tree-map-html__title",
+    toolbar: "tree-map-html__toolbar",
+  });
   const nodeWeights = new WeakMap();
   const nodeParents = new WeakMap();
   const syntheticGroupNavigation = new WeakMap();
@@ -39,6 +64,15 @@
       parent = nodeParents.get(parent);
     }
     return ancestors;
+  }
+
+  function createLabel(text, modifierClass) {
+    // Labels in nodes and ancestor navigation share their markup. A semantic
+    // modifier lets CSS add the right icon without depending on DOM depth.
+    const labelElement = document.createElement("span");
+    labelElement.classList.add(CSS_CLASSES.label, modifierClass);
+    labelElement.textContent = text;
+    return labelElement;
   }
 
   function getNodeWeight(node) {
@@ -538,17 +572,17 @@
   ) {
     const renderableChildren = getRenderableChildren(node, options);
     const nodeElement = document.createElement("div");
-    nodeElement.className = "tree-map-html__node";
+    nodeElement.className = CSS_CLASSES.node;
     nodeElement.dataset.depth = depth;
     if (depth === 0) {
       // The focused node remains the visible geometry and header around its
       // children, but it is already open and therefore is not interactive.
-      nodeElement.classList.add("tree-map-html__node--focused-root");
+      nodeElement.classList.add(CSS_CLASSES.nodeFocusedRoot);
     }
     // The immediate children of the focused root are the current level. Deeper
     // nodes provide context and use a quieter visual treatment.
     if (depth === 1) {
-      nodeElement.classList.add("tree-map-html__node--current-level");
+      nodeElement.classList.add(CSS_CLASSES.nodeCurrentLevel);
     }
     nodeElement.dataset.childCount = renderableChildren.length;
     nodeElement.dataset.sourceChildCount = node.children.length;
@@ -564,7 +598,7 @@
     // color and content, leaving room for links and actions without changing
     // the absolute positioning contract.
     const surfaceElement = document.createElement("div");
-    surfaceElement.className = "tree-map-html__node-surface";
+    surfaceElement.className = CSS_CLASSES.nodeSurface;
     // An absent color means that presentation belongs to CSS. Inline colors
     // are reserved for values that carry data, such as coverage ratios.
     if (typeof node.color === "string") {
@@ -573,20 +607,23 @@
     nodeElement.append(surfaceElement);
 
     const headerElement = document.createElement("div");
-    headerElement.className = "tree-map-html__node-header";
+    headerElement.className = CSS_CLASSES.nodeHeader;
     surfaceElement.append(headerElement);
     if (
       pixelRectangle.width >= options.minLabelWidth &&
       pixelRectangle.height >= options.nodeHeaderHeight
     ) {
-      const labelElement = document.createElement("span");
-      labelElement.className = "tree-map-html__label";
-      labelElement.textContent = node.label;
-      headerElement.append(labelElement);
+      const labelModifier =
+        depth === 0
+          ? CSS_CLASSES.labelRoot
+          : node.children.length === 0
+            ? CSS_CLASSES.labelLeaf
+            : CSS_CLASSES.labelBranch;
+      headerElement.append(createLabel(node.label, labelModifier));
     }
 
     if (node.children.length === 0) {
-      nodeElement.classList.add("tree-map-html__node--leaf");
+      nodeElement.classList.add(CSS_CLASSES.nodeLeaf);
       return {
         node,
         nodeElement,
@@ -606,7 +643,7 @@
       };
     }
 
-    nodeElement.classList.add("tree-map-html__node--branch");
+    nodeElement.classList.add(CSS_CLASSES.nodeBranch);
     nodeElement.setAttribute("role", "button");
     nodeElement.tabIndex = 0;
     nodeElement.addEventListener("click", (event) => {
@@ -730,7 +767,7 @@
         }
 
         const childrenElement = document.createElement("div");
-        childrenElement.className = "tree-map-html__children";
+        childrenElement.className = CSS_CLASSES.children;
         for (const { childRectangle, childPixelRectangle } of childRecords) {
           const childRecord = createNodeElement(
             childRectangle.node,
@@ -771,33 +808,33 @@
 
   function createTreeMap(treeMap, rootElement, options) {
     const sectionElement = document.createElement("section");
-    sectionElement.className = "tree-map-html__section";
+    sectionElement.className = CSS_CLASSES.section;
 
     const titleElement = document.createElement("h2");
-    titleElement.className = "tree-map-html__title";
+    titleElement.className = CSS_CLASSES.title;
     titleElement.textContent = treeMap.title;
     sectionElement.append(titleElement);
 
     const toolbarElement = document.createElement("div");
-    toolbarElement.className = "tree-map-html__toolbar";
+    toolbarElement.className = CSS_CLASSES.toolbar;
 
     const backButton = document.createElement("button");
-    backButton.className = "tree-map-html__back";
+    backButton.className = CSS_CLASSES.back;
     backButton.type = "button";
     backButton.textContent = "Back";
     toolbarElement.append(backButton);
 
     const groupNavigationElement = document.createElement("div");
-    groupNavigationElement.className = "tree-map-html__group-navigation";
+    groupNavigationElement.className = CSS_CLASSES.groupNavigation;
 
     const previousGroupButton = document.createElement("button");
-    previousGroupButton.className = "tree-map-html__previous-group";
+    previousGroupButton.className = CSS_CLASSES.previousGroup;
     previousGroupButton.type = "button";
     previousGroupButton.textContent = "Previous group";
     groupNavigationElement.append(previousGroupButton);
 
     const nextGroupButton = document.createElement("button");
-    nextGroupButton.className = "tree-map-html__next-group";
+    nextGroupButton.className = CSS_CLASSES.nextGroup;
     nextGroupButton.type = "button";
     nextGroupButton.textContent = "Next group";
     groupNavigationElement.append(nextGroupButton);
@@ -805,12 +842,12 @@
     sectionElement.append(toolbarElement);
 
     const ancestorsElement = document.createElement("nav");
-    ancestorsElement.className = "tree-map-html__ancestors";
+    ancestorsElement.className = CSS_CLASSES.ancestors;
     ancestorsElement.setAttribute("aria-label", "Tree map ancestors");
     sectionElement.append(ancestorsElement);
 
     const canvasElement = document.createElement("div");
-    canvasElement.className = "tree-map-html__canvas";
+    canvasElement.className = CSS_CLASSES.canvas;
     sectionElement.append(canvasElement);
     rootElement.append(sectionElement);
 
@@ -830,13 +867,11 @@
       for (const ancestor of getNodeAncestors(focusedNode)) {
         // create button
         const ancestorButton = document.createElement("button");
-        ancestorButton.className = "tree-map-html__ancestor";
+        ancestorButton.className = CSS_CLASSES.ancestor;
         ancestorButton.type = "button";
-        // create label
-        const labelElement = document.createElement("span");
-        labelElement.className = "tree-map-html__label";
-        labelElement.textContent = ancestor.label;
-        ancestorButton.append(labelElement);
+        ancestorButton.append(
+          createLabel(ancestor.label, CSS_CLASSES.labelAncestor),
+        );
         // place button
         ancestorButton.addEventListener("click", () => navigateTo(ancestor));
         ancestorsElement.append(ancestorButton);

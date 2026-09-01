@@ -19,6 +19,26 @@
     targetNodeArea: 1200,
   });
   const nodeWeights = new WeakMap();
+  const nodeParents = new WeakMap();
+  const syntheticGroupNavigation = new WeakMap();
+  const renderableChildrenCache = new WeakMap();
+
+  function indexNodeParents(node) {
+    for (const child of node.children) {
+      nodeParents.set(child, node);
+      indexNodeParents(child);
+    }
+  }
+
+  function getNodeAncestors(node) {
+    const ancestors = [];
+    let parent = nodeParents.get(node);
+    while (parent !== undefined) {
+      ancestors.unshift(parent);
+      parent = nodeParents.get(parent);
+    }
+    return ancestors;
+  }
 
   function getNodeWeight(node) {
     const cachedWeight = nodeWeights.get(node);
@@ -200,6 +220,15 @@
       return node.children;
     }
 
+    const cachedChildren = renderableChildrenCache.get(node);
+    if (
+      cachedChildren !== undefined &&
+      cachedChildren.maxDirectChildren === options.maxDirectChildren &&
+      cachedChildren.targetGroupSize === options.targetGroupSize
+    ) {
+      return cachedChildren.children;
+    }
+
     // Synthetic group membership depends only on the hard limit. Resizing the
     // canvas cannot move a source node from one group to another.
     const groupSize = calculateSyntheticGroupSize(
@@ -219,6 +248,18 @@
         isSyntheticGroup: true,
       });
     }
+    // Groups are renderer-created navigation nodes. Keep their relation to the
+    // source parent outside the serialized tree and give every group access to
+    // only its synthetic siblings for horizontal navigation.
+    groups.forEach((group, index) => {
+      nodeParents.set(group, node);
+      syntheticGroupNavigation.set(group, { groups, index });
+    });
+    renderableChildrenCache.set(node, {
+      maxDirectChildren: options.maxDirectChildren,
+      targetGroupSize: options.targetGroupSize,
+      children: groups,
+    });
     return groups;
   }
 
@@ -245,6 +286,11 @@
     const nodeElement = document.createElement("div");
     nodeElement.className = "tree-map-html__node";
     nodeElement.dataset.depth = depth;
+    if (depth === 0) {
+      // The focused node remains the visible geometry and header around its
+      // children, but it is already open and therefore is not interactive.
+      nodeElement.classList.add("tree-map-html__node--focused-root");
+    }
     // The immediate children of the focused root are the current level. Deeper
     // nodes provide context and use a quieter visual treatment.
     if (depth === 1) {
@@ -287,6 +333,16 @@
 
     if (node.children.length === 0) {
       nodeElement.classList.add("tree-map-html__node--leaf");
+      return {
+        node,
+        nodeElement,
+        depth,
+        pixelRectangle,
+        renderableChildren,
+      };
+    }
+
+    if (depth === 0) {
       return {
         node,
         nodeElement,
@@ -454,11 +510,27 @@
     backButton.textContent = "Back";
     toolbarElement.append(backButton);
 
-    const locationElement = document.createElement("span");
-    locationElement.className = "tree-map-html__location";
-    locationElement.dataset.testid = "tree-map-html-location";
-    toolbarElement.append(locationElement);
+    const groupNavigationElement = document.createElement("div");
+    groupNavigationElement.className = "tree-map-html__group-navigation";
+
+    const previousGroupButton = document.createElement("button");
+    previousGroupButton.className = "tree-map-html__previous-group";
+    previousGroupButton.type = "button";
+    previousGroupButton.textContent = "Previous group";
+    groupNavigationElement.append(previousGroupButton);
+
+    const nextGroupButton = document.createElement("button");
+    nextGroupButton.className = "tree-map-html__next-group";
+    nextGroupButton.type = "button";
+    nextGroupButton.textContent = "Next group";
+    groupNavigationElement.append(nextGroupButton);
+    toolbarElement.append(groupNavigationElement);
     sectionElement.append(toolbarElement);
+
+    const ancestorsElement = document.createElement("nav");
+    ancestorsElement.className = "tree-map-html__ancestors";
+    ancestorsElement.setAttribute("aria-label", "Tree map ancestors");
+    sectionElement.append(ancestorsElement);
 
     const canvasElement = document.createElement("div");
     canvasElement.className = "tree-map-html__canvas";
@@ -479,37 +551,70 @@
     sectionElement.append(canvasElement);
     rootElement.append(sectionElement);
 
-    const nodePath = [treeMap.root];
+    indexNodeParents(treeMap.root);
+    const visitHistory = [treeMap.root];
+
+    function navigateTo(node) {
+      const focusedNode = visitHistory[visitHistory.length - 1];
+      if (node !== focusedNode) {
+        visitHistory.push(node);
+        renderFocusedNode();
+      }
+    }
+
+    function renderAncestors(focusedNode) {
+      ancestorsElement.replaceChildren();
+      for (const ancestor of getNodeAncestors(focusedNode)) {
+        // create button
+        const ancestorButton = document.createElement("button");
+        ancestorButton.className = "tree-map-html__ancestor";
+        ancestorButton.type = "button";
+        // create label
+        const labelElement = document.createElement("span");
+        labelElement.className = "tree-map-html__label";
+        labelElement.textContent = ancestor.label;
+        ancestorButton.append(labelElement);
+        // place button
+        ancestorButton.addEventListener("click", () => navigateTo(ancestor));
+        ancestorsElement.append(ancestorButton);
+      }
+    }
+
+    function renderGroupNavigation(focusedNode) {
+      const navigation = syntheticGroupNavigation.get(focusedNode);
+      groupNavigationElement.hidden = navigation === undefined;
+      if (navigation === undefined) {
+        return;
+      }
+      previousGroupButton.disabled = navigation.index === 0;
+      nextGroupButton.disabled = navigation.index === navigation.groups.length - 1;
+      previousGroupButton.onclick = () =>
+        navigateTo(navigation.groups[navigation.index - 1]);
+      nextGroupButton.onclick = () =>
+        navigateTo(navigation.groups[navigation.index + 1]);
+    }
 
     function renderFocusedNode() {
-      const focusedNode = nodePath[nodePath.length - 1];
+      const focusedNode = visitHistory[visitHistory.length - 1];
       const canvasRectangle = canvasElement.getBoundingClientRect();
       canvasElement.replaceChildren();
-      locationElement.textContent = nodePath
-        .map((node) => node.label)
-        .join(" / ");
-      backButton.disabled = nodePath.length === 1;
+      backButton.disabled = visitHistory.length === 1;
+      renderAncestors(focusedNode);
+      renderGroupNavigation(focusedNode);
 
-      const zoomIntoNode = (node) => {
-        if (node === focusedNode) {
-          return;
-        }
-        nodePath.push(node);
-        renderFocusedNode();
-      };
       canvasElement.append(
         renderNodeTree(
           focusedNode,
           canvasRectangle,
-          zoomIntoNode,
+          navigateTo,
           options,
         ),
       );
     }
 
     backButton.addEventListener("click", () => {
-      if (nodePath.length > 1) {
-        nodePath.pop();
+      if (visitHistory.length > 1) {
+        visitHistory.pop();
         renderFocusedNode();
       }
     });

@@ -66,6 +66,25 @@ synthetic groups. A synthetic group shall preserve the combined weight of its
 children. It shall remain collapsed in its parent's view and reveal its source
 children after the user enters the group.
 
+The focused node shall remain visible inside the canvas as the non-interactive
+outer node around its children. It shall not have a pointer hover state or
+activate itself. Its immediate children shall remain the active current level.
+
+Above the canvas, the renderer shall show one navigation row for each actual
+ancestor of the focused node. These rows shall represent the source hierarchy,
+not the history of clicks. Each row shall navigate directly to that ancestor.
+The focused node shall stay in the canvas and shall not be duplicated in the
+ancestor rows.
+
+The renderer shall keep click history independently from the source hierarchy.
+The Back action shall return to the previously visited node. This behavior for
+horizontal transitions between synthetic groups remains subject to UX review.
+
+When the focused node is a synthetic group, the renderer shall provide direct
+navigation to the preceding and following synthetic groups created for the
+same source parent. This horizontal navigation shall not apply to ordinary
+source nodes.
+
 ## WHY
 
 StrictDoc needs a tree map rendered with project-owned HTML and CSS.

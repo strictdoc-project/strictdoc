@@ -28,9 +28,27 @@
   flex: 0 0 auto;
 }
 
-.tree-map-html__location {
-  min-width: 0;
+.tree-map-html__group-navigation {
+  display: flex;
+  gap: var(--base-rhythm);
+  margin-left: auto;
+}
+
+.tree-map-html__group-navigation[hidden] {
+  display: none;
+}
+
+.tree-map-html__ancestors {
+  display: flex;
+  flex-direction: column;
+}
+
+.tree-map-html__ancestor {
+  width: 100%;
   overflow: hidden;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-main);
+  text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;
 }

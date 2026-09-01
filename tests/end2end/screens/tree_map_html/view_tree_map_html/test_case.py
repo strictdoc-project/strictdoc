@@ -97,15 +97,48 @@ class Test(E2ECase):
             )
             assert current_level_is_marked
 
-            first_section = ".tree-map-html__section:first-of-type"
-            self.click(first_section + " .tree-map-html__node[data-depth='1']")
-            self.assert_text(
-                "Test document",
-                first_section + " [data-testid='tree-map-html-location']",
+            focused_roots_are_not_interactive = self.execute_script(
+                """
+                const roots = Array.from(
+                  document.querySelectorAll(
+                    ".tree-map-html__canvas > .tree-map-html__node",
+                  ),
+                );
+                return roots.every((root) =>
+                  root.classList.contains(
+                    "tree-map-html__node--focused-root",
+                  ) &&
+                  !root.classList.contains("tree-map-html__node--branch") &&
+                  !root.hasAttribute("tabindex")
+                );
+                """
             )
+            assert focused_roots_are_not_interactive
+
+            first_section = ".tree-map-html__section:first-of-type"
+            self.assert_element_absent(
+                first_section + " .tree-map-html__ancestor"
+            )
+            self.click(first_section + " .tree-map-html__node[data-depth='1']")
+            self.assert_elements(first_section + " .tree-map-html__ancestor", 1)
             back_button = self.find_element(
                 first_section + " .tree-map-html__back"
             )
             assert back_button.is_enabled()
+            self.click(first_section + " .tree-map-html__back")
+            assert not back_button.is_enabled()
+            self.assert_element_absent(
+                first_section + " .tree-map-html__ancestor"
+            )
+
+            # Ancestor navigation adds a visit instead of rewriting history.
+            self.click(first_section + " .tree-map-html__node[data-depth='1']")
+            self.click(first_section + " .tree-map-html__ancestor")
+            self.assert_element_absent(
+                first_section + " .tree-map-html__ancestor"
+            )
+            assert back_button.is_enabled()
+            self.click(first_section + " .tree-map-html__back")
+            self.assert_elements(first_section + " .tree-map-html__ancestor", 1)
             self.click(first_section + " .tree-map-html__back")
             assert not back_button.is_enabled()

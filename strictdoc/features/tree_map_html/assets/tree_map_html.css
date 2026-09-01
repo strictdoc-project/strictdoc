@@ -59,6 +59,16 @@
   cursor: zoom-in;
 }
 
+/* Highlight only the deepest expandable node under the pointer. A plain
+ * :hover selector would also highlight every expandable ancestor. */
+.tree-map-html__node--branch:hover:not(
+    :has(.tree-map-html__node:hover)
+  )
+  > .tree-map-html__node-surface {
+  filter: brightness(1.1);
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.3);
+}
+
 .tree-map-html__node--branch:focus-visible > .tree-map-html__node-surface {
   outline: 2px solid var(--color-action);
   outline-offset: -2px;
@@ -69,10 +79,11 @@
   inset: var(--tree-map-html-node-gap-half);
   overflow: hidden;
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+  transition: filter 100ms ease-out;
 }
 
 .tree-map-html__node--current-level > .tree-map-html__node-surface {
-  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.1);
 }
 
 .tree-map-html__node-header {

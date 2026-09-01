@@ -105,6 +105,12 @@
   border-bottom: none;
 }
 
+.tree-map-html__ancestors:not(
+    :has(.tree-map-html__ancestor)
+  ) {
+    display: none;
+  }
+
 .tree-map-html__ancestor {
   cursor: pointer;
   transition: filter 100ms ease-out;

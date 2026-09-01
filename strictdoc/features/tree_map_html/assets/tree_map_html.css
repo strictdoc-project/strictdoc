@@ -71,6 +71,10 @@
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
 }
 
+.tree-map-html__node--current-level > .tree-map-html__node-surface {
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.2);
+}
+
 .tree-map-html__node-header {
   position: absolute;
   z-index: 1;

@@ -83,6 +83,20 @@ class Test(E2ECase):
             )
             assert branches_are_complete_or_collapsed
 
+            current_level_is_marked = self.execute_script(
+                """
+                const nodes = Array.from(
+                  document.querySelectorAll(".tree-map-html__node"),
+                );
+                return nodes.every((node) =>
+                  node.classList.contains(
+                    "tree-map-html__node--current-level",
+                  ) === (node.dataset.depth === "1")
+                );
+                """
+            )
+            assert current_level_is_marked
+
             first_section = ".tree-map-html__section:first-of-type"
             self.click(first_section + " .tree-map-html__node[data-depth='1']")
             self.assert_text(

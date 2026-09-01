@@ -245,6 +245,11 @@
     const nodeElement = document.createElement("div");
     nodeElement.className = "tree-map-html__node";
     nodeElement.dataset.depth = depth;
+    // The immediate children of the focused root are the current level. Deeper
+    // nodes provide context and use a quieter visual treatment.
+    if (depth === 1) {
+      nodeElement.classList.add("tree-map-html__node--current-level");
+    }
     nodeElement.dataset.childCount = renderableChildren.length;
     nodeElement.dataset.sourceChildCount = node.children.length;
     if (node.isSyntheticGroup === true) {

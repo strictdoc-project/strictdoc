@@ -41,6 +41,10 @@ The child container shall remain transparent. Its inset shall include half of
 the visual gap and the node padding. Gaps between children shall reveal their
 parent's surface instead of a fixed page color.
 
+The renderer shall distinguish the immediate children of the focused root from
+deeper contextual nodes. Current-level nodes shall use a stronger surface
+outline.
+
 Python shall prepare the hierarchy and the StrictDoc-specific data shown in the
 tree maps. The browser renderer shall receive this data as JSON. It shall
 calculate the layout and render the supplied data without containing the

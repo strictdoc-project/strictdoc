@@ -1,6 +1,10 @@
 /* @relation(SDOC-SRS-157, scope=file) */
 
 .tree-map-html {
+  --canvas-bg-color: var(--color-bg-contrast);
+  --canvas-border-width: 1px;
+  --canvas-border: var(--canvas-border-width) solid var(--color-border);
+
   display: flex;
   flex-direction: column;
   gap: calc(4 * var(--base-rhythm));
@@ -41,24 +45,52 @@
 .tree-map-html__ancestors {
   display: flex;
   flex-direction: column;
+  gap: var(--tree-map-html-node-gap-half);
+  padding: var(--tree-map-html-node-gap-half);
+  border: var(--canvas-border);
+  background: var(--canvas-bg-color);
+  /* overlap with canvas: */
+  position: relative;
+  z-index: 2;
+  margin-bottom: calc(-1 * (var(--tree-map-html-node-gap-half) + var(--canvas-border-width)));
+  border-bottom: none;
 }
 
 .tree-map-html__ancestor {
+  cursor: pointer;
+  transition: filter 100ms ease-out;
   width: 100%;
   overflow: hidden;
-  border: 1px solid var(--color-border);
-  background: var(--color-bg-main);
+  border: var(--canvas-border);
+  background: var(--canvas-bg-color);
   text-align: left;
   text-overflow: ellipsis;
   white-space: nowrap;
+  /* aligns the button label with the label in the top tile: */
+  padding: 0 var(--tree-map-html-node-padding);
 }
+
+.tree-map-html__ancestor:hover {
+  filter: brightness(0.8);
+}
+
+.tree-map-html__label--ancestor {
+  opacity: 0.5;
+}
+
+.tree-map-html__ancestor:hover >
+.tree-map-html__label--ancestor {
+  opacity: 1;
+}
+
+/* canvas */
 
 .tree-map-html__canvas {
   width: 100%;
   height: clamp(32rem, 70vh, 48rem);
   overflow: hidden;
-  border: 1px solid var(--color-border);
-  background: var(--color-bg-contrast);
+  border: var(--canvas-border);
+  background: var(--canvas-bg-color);
 }
 
 .tree-map-html__node {
@@ -77,10 +109,11 @@
   cursor: zoom-in;
 }
 
-/* Highlight only the deepest expandable node under the pointer. A plain
- * :hover selector would also highlight every expandable ancestor. */
+/* Highlight the deepest expandable node under the pointer. A leaf does not
+ * block its nearest expandable ancestor, so the leaf keeps its title while
+ * the click target remains visually clear. */
 .tree-map-html__node--branch:hover:not(
-    :has(.tree-map-html__node:hover)
+    :has(.tree-map-html__node--branch:hover)
   )
   > .tree-map-html__node-surface {
   filter: brightness(1.1);
@@ -96,7 +129,7 @@
   position: absolute;
   inset: var(--tree-map-html-node-gap-half);
   overflow: hidden;
-  background-color: var(--color-bg-contrast);
+  background-color: var(--canvas-bg-color);
   box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
   transition: filter 100ms ease-out;
 }
@@ -160,6 +193,9 @@
 }
 
 .tree-map-html__node--leaf .tree-map-html__label {
+  /* white-space: nowrap; */
+  text-overflow: ellipsis;
+  font-weight: normal;
   white-space: normal;
 }
 
@@ -172,4 +208,30 @@
     rgb(255 255 255 / 20%) 6px,
     rgb(255 255 255 / 20%) 12px
   );
+}
+
+/* icons */
+
+.tree-map-html__label--ancestor::before {
+  content: "▴\00a0";
+  font-weight: 900;
+  font-family: monospace;
+}
+
+.tree-map-html__label--root::before {
+  content: "▾\00a0";
+  font-weight: 900;
+  font-family: monospace;
+}
+
+.tree-map-html__label--branch::before {
+  content: "▸\00a0";
+  font-weight: 900;
+  font-family: monospace;
+}
+
+.tree-map-html__label--leaf::before {
+  content: "•\00a0";
+  font-weight: 900;
+  font-family: monospace;
 }

@@ -6,7 +6,7 @@ Build tree map data from StrictDoc documents and traceability information.
 
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import Callable, Dict, List, Set, Tuple, Union
+from typing import Callable, Dict, List, Optional, Set, Tuple, Union
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
@@ -62,8 +62,8 @@ class _SourceNode:
     weight: int
     label: str
     normative_label: str
-    source_color: str
-    test_color: str
+    source_color: Optional[str]
+    test_color: Optional[str]
     is_normative: bool
 
 
@@ -72,7 +72,7 @@ class _TreeMapDefinition:
     title: str
     include_node: Callable[[_SourceNode], bool]
     get_label: Callable[[_SourceNode], str]
-    get_color: Callable[[_SourceNode], str]
+    get_color: Callable[[_SourceNode], Optional[str]]
 
 
 class TreeMapDataGenerator:
@@ -193,8 +193,8 @@ class TreeMapDataGenerator:
                 weight=0,
                 label=project_config.project_title,
                 normative_label=project_config.project_title,
-                source_color="lightgray",
-                test_color="lightgray",
+                source_color=None,
+                test_color=None,
                 is_normative=True,
             )
         ]
@@ -212,8 +212,8 @@ class TreeMapDataGenerator:
             document_normative_title = (
                 f"{document_.reserved_title} ({document_normative_total_size})"
             )
-            source_color = "white"
-            test_color = "white"
+            source_color = None
+            test_color = None
             if document_ in documents_with_requirements:
                 document_coverage = get_node_coverage(document_)
                 if document_coverage.child_nodes > 0:
@@ -262,8 +262,8 @@ class TreeMapDataGenerator:
                         f"{normative_title} ({node_normative_total_size})"
                     )
 
-                source_color = "white"
-                test_color = "white"
+                source_color = None
+                test_color = None
                 if (
                     node_.node_type != "TEXT"
                     and document_ in documents_with_requirements
@@ -342,11 +342,7 @@ class TreeMapDataGenerator:
                 title="Document tree map",
                 include_node=lambda _: True,
                 get_label=lambda source_node_: source_node_.label,
-                get_color=lambda source_node_: (
-                    "lightgray"
-                    if source_node_.parent_identifier == ""
-                    else "white"
-                ),
+                get_color=lambda _: None,
             ),
             _TreeMapDefinition(
                 title="Requirements coverage with source",

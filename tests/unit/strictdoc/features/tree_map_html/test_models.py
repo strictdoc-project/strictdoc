@@ -17,7 +17,7 @@ def test_tree_map_data_serializes_nested_nodes_to_json() -> None:
     root_node = TreeMapNode(
         label="Project",
         weight=1,
-        color="lightgray",
+        color=None,
         children=(requirement_node,),
     )
     tree_map_data = TreeMapData(
@@ -38,7 +38,7 @@ def test_tree_map_data_serializes_nested_nodes_to_json() -> None:
                 "root": {
                     "label": "Project",
                     "weight": 1,
-                    "color": "lightgray",
+                    "color": None,
                     "children": [
                         {
                             "label": "Requirement one: ä",

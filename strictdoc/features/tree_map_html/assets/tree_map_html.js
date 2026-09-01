@@ -265,7 +265,11 @@
     // the absolute positioning contract.
     const surfaceElement = document.createElement("div");
     surfaceElement.className = "tree-map-html__node-surface";
-    surfaceElement.style.backgroundColor = node.color;
+    // An absent color means that presentation belongs to CSS. Inline colors
+    // are reserved for values that carry data, such as coverage ratios.
+    if (typeof node.color === "string") {
+      surfaceElement.style.backgroundColor = node.color;
+    }
     nodeElement.append(surfaceElement);
 
     const headerElement = document.createElement("div");

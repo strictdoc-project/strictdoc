@@ -5,7 +5,7 @@ Data contract between Python tree map definitions and the browser renderer.
 """
 
 from dataclasses import dataclass
-from typing import Tuple
+from typing import Optional, Tuple
 
 import orjson
 
@@ -14,7 +14,7 @@ import orjson
 class TreeMapNode:
     label: str
     weight: int
-    color: str
+    color: Optional[str]
     children: Tuple["TreeMapNode", ...]
 
 

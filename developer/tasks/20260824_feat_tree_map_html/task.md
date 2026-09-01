@@ -131,6 +131,13 @@ The browser shall use a squarified tree map layout calculated from the real
 pixel dimensions of each child area. It shall convert the resulting geometry
 to CSS percentages after the calculation.
 
+Shape scoring shall use a configurable target node aspect ratio instead of
+assuming that square nodes are ideal. The initial target shall be `1.6`, so the
+layout prefers moderately wide text-bearing nodes without forcing one strip
+orientation. A value of `1` shall restore classic square-oriented squarify
+behavior, including the original width-versus-height orientation threshold.
+The constrained fallback shall use the same target.
+
 The generated node markup shall separate the transparent positioning element,
 the styled surface, the header, and the child container. Additional node
 content, such as document links, shall belong to the surface rather than the

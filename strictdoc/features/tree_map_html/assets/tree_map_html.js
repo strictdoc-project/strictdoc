@@ -18,6 +18,9 @@
     minNodeHeight: 32,
     minLabelWidth: 56,
     targetNodeArea: 1200,
+    // 1 restores classic square-oriented squarify behavior. Values above 1
+    // prefer wider rectangles for text without forcing a fixed orientation.
+    targetNodeAspectRatio: 1.6,
   });
   const CSS_CLASSES = Object.freeze({
     ancestor: "tree-map-html__ancestor",
@@ -120,30 +123,64 @@
     return nodeWeight;
   }
 
-  function getWorstAspectRatio(row, shortSide) {
+  function getAspectRatioPenalty(width, height, targetAspectRatio) {
+    const aspectRatio = width / height;
+    return Math.max(
+      aspectRatio / targetAspectRatio,
+      targetAspectRatio / aspectRatio,
+    );
+  }
+
+  function usesVerticalStrip(rectangle, targetAspectRatio) {
+    // A target above 1 delays column-oriented strips until the remaining
+    // rectangle is clearly wide, favoring rows suitable for text labels.
+    return rectangle.width >= rectangle.height * targetAspectRatio;
+  }
+
+  function getWorstAspectRatio(row, rectangle, targetAspectRatio) {
     // Squarify adds an item only while it improves the worst-shaped tile in
-    // the current row. Lower values mean more balanced rectangles.
+    // the current row. The preferred tile is wider than a square because node
+    // labels are horizontal text.
     if (row.length === 0) {
       return Number.POSITIVE_INFINITY;
     }
 
     const rowArea = row.reduce((total, item) => total + item.area, 0);
-    const largestArea = Math.max(...row.map((item) => item.area));
-    const smallestArea = Math.min(...row.map((item) => item.area));
-    const sideSquared = shortSide * shortSide;
-    const areaSquared = rowArea * rowArea;
+    if (usesVerticalStrip(rectangle, targetAspectRatio)) {
+      const rowWidth = rowArea / rectangle.height;
+      return Math.max(
+        ...row.map((item) =>
+          getAspectRatioPenalty(
+            rowWidth,
+            item.area / rowWidth,
+            targetAspectRatio,
+          ),
+        ),
+      );
+    }
+    const rowHeight = rowArea / rectangle.width;
     return Math.max(
-      (sideSquared * largestArea) / areaSquared,
-      areaSquared / (sideSquared * smallestArea),
+      ...row.map((item) =>
+        getAspectRatioPenalty(
+          item.area / rowHeight,
+          rowHeight,
+          targetAspectRatio,
+        ),
+      ),
     );
   }
 
-  function positionRow(row, rectangle, positionedItems) {
-    // Consume a strip from the longest side of the remaining rectangle. Each
+  function positionRow(
+    row,
+    rectangle,
+    positionedItems,
+    targetAspectRatio,
+  ) {
+    // Consume a strip in the orientation selected for text-shaped tiles. Each
     // item keeps its exact proportional area inside that strip.
     const rowArea = row.reduce((total, item) => total + item.area, 0);
 
-    if (rectangle.width >= rectangle.height) {
+    if (usesVerticalStrip(rectangle, targetAspectRatio)) {
       const rowWidth = rowArea / rectangle.height;
       let offsetY = rectangle.y;
       for (const item of row) {
@@ -251,6 +288,7 @@
     pixelRectangle,
     minimumHeight,
     minimumWidth,
+    targetAspectRatio,
   ) {
     // Search row partitions of weight-sorted nodes. Fixed minimum dimensions
     // are assigned first; remaining width and height retain weight ratios.
@@ -319,9 +357,10 @@
             const nodeWidth =
               minimumWidth +
               weightedWidth * (getNodeWeight(node) / rowWeight);
-            const aspectRatio = Math.max(
-              nodeWidth / rowHeight,
-              rowHeight / nodeWidth,
+            const aspectRatio = getAspectRatioPenalty(
+              nodeWidth,
+              rowHeight,
+              targetAspectRatio,
             );
             rowWorstAspectRatio = Math.max(
               rowWorstAspectRatio,
@@ -415,6 +454,7 @@
     pixelRectangle,
     minimumHeight,
     minimumWidth,
+    targetAspectRatio,
   ) {
     // Squarify must see the real aspect ratio. Calculating in a square and
     // stretching the result later produces long strips in narrow containers.
@@ -448,22 +488,21 @@
 
     while (remainingItems.length > 0) {
       const nextItem = remainingItems[0];
-      const shortSide = Math.min(rectangle.width, rectangle.height);
       const candidateRow = [...row, nextItem];
       if (
         row.length === 0 ||
-        getWorstAspectRatio(candidateRow, shortSide) <=
-          getWorstAspectRatio(row, shortSide)
+        getWorstAspectRatio(candidateRow, rectangle, targetAspectRatio) <=
+          getWorstAspectRatio(row, rectangle, targetAspectRatio)
       ) {
         row = candidateRow;
         remainingItems.shift();
       } else {
-        positionRow(row, rectangle, positionedItems);
+        positionRow(row, rectangle, positionedItems, targetAspectRatio);
         row = [];
       }
     }
     if (row.length > 0) {
-      positionRow(row, rectangle, positionedItems);
+      positionRow(row, rectangle, positionedItems, targetAspectRatio);
     }
     // Some valid squarify layouts split short nodes into strips with different
     // widths, so no single strip can donate height locally. In that case use
@@ -478,6 +517,7 @@
           pixelRectangle,
           minimumHeight,
           minimumWidth,
+          targetAspectRatio,
         );
     if (constrainedItems === null) {
       return null;
@@ -766,6 +806,7 @@
           childrenPixelRectangle,
           options.minNodeHeight,
           options.minLabelWidth,
+          options.targetNodeAspectRatio,
         );
         if (childRectangles === null) {
           nodeElement.dataset.truncated = "true";

@@ -27,6 +27,16 @@ class Test(E2ECase):
                 ".tree-map-html__section",
                 3,
             )
+            self.click('[data-testid="tree-map-html-tips-button"]')
+            self.assert_element('[data-testid="tree-map-html-tips-content"]')
+            self.assert_element(
+                '[data-testid="tree-map-html-tips-content"] '
+                ".tree-map-html-tips__key svg"
+            )
+            self.click('[data-testid="form-cancel-action"]')
+            self.assert_element_absent(
+                '[data-testid="tree-map-html-tips-content"]'
+            )
             self.assert_element(".tree-map-html__node[data-depth='2']")
             self.assert_no_js_errors()
 

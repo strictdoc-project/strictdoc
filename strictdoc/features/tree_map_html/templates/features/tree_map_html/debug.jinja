@@ -9,6 +9,7 @@
 
 {% block head_scripts %}
   {{ super() }}
+  <script src="{{ view_object.render_static_url('modal.js') }}"></script>
   <script src="{{ view_object.render_static_url('tree_map_html_debug.js') }}" defer></script>
   <script src="{{ view_object.render_static_url('tree_map_html.js') }}" defer></script>
 {% endblock head_scripts %}
@@ -20,7 +21,10 @@
 {% block viewtype %}tree-map-html-debug{% endblock viewtype %}
 
 {% block header_content %}
-  {%- with header__pagetype=template_type -%}
+  {%- with
+    header__pagetype=template_type,
+    header__last="features/tree_map_html/header__actions.jinja"
+  -%}
     {% include "components/header/index.jinja" %}
   {%- endwith -%}
 {% endblock header_content %}
@@ -30,6 +34,9 @@
     <div class="tree-map-html" id="tree-map-html-root"></div>
     <template id="tree-map-html-back-icon">
       {% include "icons/ico16_backspace.svg" %}
+    </template>
+    <template id="tree-map-html-tips-modal-template">
+      {% include "features/tree_map_html/tips.jinja" %}
     </template>
     <script id="tree-map-html-data" type="application/json">
       {"tree_maps":[]}

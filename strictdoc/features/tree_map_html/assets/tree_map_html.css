@@ -11,6 +11,26 @@
   width: 100%;
 }
 
+.tree-map-html-header-toolbar__tips {
+  text-transform: uppercase;
+}
+
+.tree-map-html-tips__shortcuts {
+  display: flex;
+  flex-direction: column;
+  gap: var(--base-rhythm);
+}
+
+.tree-map-html-tips__key {
+  vertical-align: middle;
+  min-width: 24px;
+  min-height: 24px;
+}
+
+.tree-map-html-tips__key--text {
+  min-width: auto;
+}
+
 .tree-map-html__section {
   min-width: 0;
 }

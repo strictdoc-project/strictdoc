@@ -891,6 +891,7 @@ svg.svg_icon {
   /* Reset the values specified for 'sdoc-autogen svg': */
   max-width: unset;
   padding: unset;
+  vertical-align: middle;
 }
 
 .svg_icon_hover_visible {
@@ -1615,6 +1616,21 @@ a.sdoc-table_key_value-key::after {
   font-size: var(--font-size-xxsm);
   font-weight: 600;
   text-transform: uppercase;
+}
+
+kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: calc(var(--base-rhythm)/2);
+  border: 1px solid;
+  border-radius: calc(var(--base-rhythm)/2);
+  font-size: var(--font-size-xxsm);
+  line-height: 1;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-family: monospace;
 }
 
 .error {

@@ -130,17 +130,20 @@ class Test(E2ECase):
             assert focused_roots_are_not_interactive
 
             first_section = ".tree-map-html__section:first-of-type"
+            back_icon = self.driver.find_element(
+                By.CSS_SELECTOR,
+                first_section + " .tree-map-html__back",
+            )
+            assert not back_icon.is_displayed()
             self.assert_element_absent(
                 first_section + " .tree-map-html__ancestor"
             )
             self.click(first_section + " .tree-map-html__node[data-depth='1']")
             self.assert_elements(first_section + " .tree-map-html__ancestor", 1)
-            back_button = self.find_element(
-                first_section + " .tree-map-html__back"
-            )
-            assert back_button.is_enabled()
+            assert back_icon.is_displayed()
+            assert back_icon.tag_name == "svg"
             self.click(first_section + " .tree-map-html__back")
-            assert not back_button.is_enabled()
+            assert not back_icon.is_displayed()
             self.assert_element_absent(
                 first_section + " .tree-map-html__ancestor"
             )
@@ -151,8 +154,8 @@ class Test(E2ECase):
             self.assert_element_absent(
                 first_section + " .tree-map-html__ancestor"
             )
-            assert back_button.is_enabled()
+            assert back_icon.is_displayed()
             self.click(first_section + " .tree-map-html__back")
             self.assert_elements(first_section + " .tree-map-html__ancestor", 1)
             self.click(first_section + " .tree-map-html__back")
-            assert not back_button.is_enabled()
+            assert not back_icon.is_displayed()

@@ -28,6 +28,9 @@
 {% block main_content %}
   <div class="main">
     <div class="tree-map-html" id="tree-map-html-root"></div>
+    <template id="tree-map-html-back-icon">
+      {% include "icons/ico16_backspace.svg" %}
+    </template>
     <script id="tree-map-html-data" type="application/json">
       {"tree_maps":[]}
     </script>

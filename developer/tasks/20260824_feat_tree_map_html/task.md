@@ -88,6 +88,12 @@ ancestor rows.
 The renderer shall keep click history independently from the source hierarchy.
 The Back action shall return to the previously visited node. This behavior for
 horizontal transitions between synthetic groups remains subject to UX review.
+The toolbar shall show the visited nodes before the current node as a text
+breadcrumb with `•` separators. It shall not repeat the current node and shall
+remain separate from the structural ancestor controls.
+The breadcrumb shall precede a directly interactive Back SVG without button
+markup or button styling. When the breadcrumb is empty, the icon shall be
+hidden while the toolbar retains its minimum height.
 
 When the focused node is a synthetic group, the renderer shall provide direct
 navigation to the preceding and following synthetic groups created for the
@@ -95,10 +101,15 @@ same source parent. This horizontal navigation shall not apply to ordinary
 source nodes.
 
 The previous and next synthetic-group controls shall appear in the focused
-group's header inside the canvas. While the pointer is over a canvas, the left
-and right arrow keys shall provide the same horizontal navigation. The up arrow
-shall navigate to the focused node's actual parent. Outside the canvas, these
-keys shall retain their native behavior.
+group's header inside the canvas. While the pointer is over the tree map's
+complete section, including its toolbar, ancestor navigation, and canvas, the
+left and right arrow keys shall provide the same horizontal navigation. The up
+arrow shall navigate to the focused node's actual parent. Outside the section,
+these keys shall retain their native behavior.
+
+While the pointer is over the section, Backspace shall invoke the history-based
+Back action. The renderer shall not intercept Backspace from an input,
+textarea, or editable element.
 
 ## WHY
 

@@ -32,6 +32,7 @@
     labelBranch: "tree-map-html__label--branch",
     labelLeaf: "tree-map-html__label--leaf",
     labelRoot: "tree-map-html__label--root",
+    historyBreadcrumb: "tree-map-html__history-breadcrumb",
     nextGroup: "tree-map-html__next-group",
     node: "tree-map-html__node",
     nodeBranch: "tree-map-html__node--branch",
@@ -44,6 +45,11 @@
     section: "tree-map-html__section",
     title: "tree-map-html__title",
     toolbar: "tree-map-html__toolbar",
+  });
+  const DOM_IDS = Object.freeze({
+    backIconTemplate: "tree-map-html-back-icon",
+    data: "tree-map-html-data",
+    root: "tree-map-html-root",
   });
   const nodeWeights = new WeakMap();
   const nodeParents = new WeakMap();
@@ -74,6 +80,18 @@
     labelElement.classList.add(CSS_CLASSES.label, modifierClass);
     labelElement.textContent = text;
     return labelElement;
+  }
+
+  function createTemplateIcon(templateId) {
+    const templateElement = document.getElementById(templateId);
+    if (!(templateElement instanceof HTMLTemplateElement)) {
+      throw new Error(`Missing icon template: ${templateId}`);
+    }
+    const iconElement = templateElement.content.querySelector("svg");
+    if (iconElement === null) {
+      throw new Error(`Icon template has no SVG: ${templateId}`);
+    }
+    return iconElement.cloneNode(true);
   }
 
   function applyNodeColor(element, node) {
@@ -537,13 +555,17 @@
       const children = node.children.slice(index, index + groupSize);
       const firstChildNumber = index + 1;
       const lastChildNumber = index + children.length;
-      groups.push({
-        label: `Items ${firstChildNumber}-${lastChildNumber}`,
+      const group = {
         weight: 0,
         color: node.color,
         children,
         isSyntheticGroup: true,
-      });
+        firstItem: firstChildNumber,
+        lastItem: lastChildNumber,
+        totalItems: node.children.length,
+      };
+      group.label = `Items ${group.firstItem}-${group.lastItem}`;
+      groups.push(group);
     }
     // Groups are renderer-created navigation nodes. Keep their relation to the
     // source parent outside the serialized tree and give every group access to
@@ -826,11 +848,18 @@
     const toolbarElement = document.createElement("div");
     toolbarElement.className = CSS_CLASSES.toolbar;
 
-    const backButton = document.createElement("button");
-    backButton.className = CSS_CLASSES.back;
-    backButton.type = "button";
-    backButton.textContent = "Back";
-    toolbarElement.append(backButton);
+    const historyBreadcrumbElement = document.createElement("span");
+    historyBreadcrumbElement.className = CSS_CLASSES.historyBreadcrumb;
+    historyBreadcrumbElement.dataset.testid =
+      "tree-map-html-history-breadcrumb";
+    toolbarElement.append(historyBreadcrumbElement);
+
+    const backIconElement = createTemplateIcon(DOM_IDS.backIconTemplate);
+    backIconElement.classList.add(CSS_CLASSES.back);
+    backIconElement.setAttribute("role", "button");
+    backIconElement.setAttribute("aria-label", "Back");
+    backIconElement.tabIndex = 0;
+    toolbarElement.append(backIconElement);
 
     const groupNavigationElement = document.createElement("div");
     groupNavigationElement.className = CSS_CLASSES.groupNavigation;
@@ -903,6 +932,22 @@
       return true;
     }
 
+    function navigateBack() {
+      if (visitHistory.length === 1) {
+        return false;
+      }
+      visitHistory.pop();
+      renderFocusedNode();
+      return true;
+    }
+
+    function isTextEditingTarget(target) {
+      return (
+        target instanceof HTMLElement &&
+        (target.matches("input, textarea") || target.isContentEditable)
+      );
+    }
+
     function renderAncestors(focusedNode) {
       ancestorsElement.replaceChildren();
       for (const ancestor of getNodeAncestors(focusedNode)) {
@@ -940,7 +985,14 @@
       const focusedNode = getFocusedNode();
       const canvasRectangle = canvasElement.getBoundingClientRect();
       canvasElement.replaceChildren();
-      backButton.disabled = visitHistory.length === 1;
+      historyBreadcrumbElement.textContent = visitHistory
+        .slice(0, -1)
+        .map((node) => node.label)
+        .join(" • ");
+      backIconElement.toggleAttribute(
+        "hidden",
+        historyBreadcrumbElement.textContent.length === 0,
+      );
       renderAncestors(focusedNode);
       const rootRecord = renderNodeTree(
         focusedNode,
@@ -953,9 +1005,10 @@
     }
 
     document.addEventListener("keydown", (event) => {
-      // Arrow navigation is spatial and belongs to the map currently under
-      // the pointer. Other maps and the rest of the page keep native keys.
-      if (!canvasElement.matches(":hover")) {
+      // Keyboard navigation belongs to the complete map section under the
+      // pointer, including its toolbar, ancestors, and canvas. Other maps and
+      // the rest of the page keep native keys.
+      if (!sectionElement.matches(":hover")) {
         return;
       }
       let didNavigate = false;
@@ -965,16 +1018,22 @@
         didNavigate = navigateToSyntheticSibling(1);
       } else if (event.key === "ArrowUp") {
         didNavigate = navigateToParent();
+      } else if (
+        event.key === "Backspace" &&
+        !isTextEditingTarget(event.target)
+      ) {
+        didNavigate = navigateBack();
       }
       if (didNavigate) {
         event.preventDefault();
       }
     });
 
-    backButton.addEventListener("click", () => {
-      if (visitHistory.length > 1) {
-        visitHistory.pop();
-        renderFocusedNode();
+    backIconElement.addEventListener("click", navigateBack);
+    backIconElement.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        navigateBack();
       }
     });
 
@@ -993,8 +1052,8 @@
   }
 
   function renderTreeMaps(renderOptions = {}) {
-    const rootElement = document.getElementById("tree-map-html-root");
-    const dataElement = document.getElementById("tree-map-html-data");
+    const rootElement = document.getElementById(DOM_IDS.root);
+    const dataElement = document.getElementById(DOM_IDS.data);
     if (rootElement === null || dataElement === null) {
       return;
     }

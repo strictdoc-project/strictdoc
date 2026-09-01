@@ -24,12 +24,41 @@
   display: flex;
   align-items: center;
   gap: var(--base-rhythm);
-  min-height: 2rem;
+  min-height: 1rem;
   margin-bottom: var(--base-rhythm);
 }
 
 .tree-map-html__back {
   flex: 0 0 auto;
+  color: var(--color-action);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.tree-map-html__back:hover,
+.tree-map-html__back:focus-visible {
+  color: var(--color-hover);
+}
+
+.tree-map-html__back:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.tree-map-html__back[hidden] {
+  display: none;
+}
+
+.tree-map-html__history-breadcrumb {
+  min-width: 0;
+  overflow: hidden;
+  padding: 2px 4px;
+  color: #111;
+  font-size: var(--font-size-sm);
+  font-weight: 400;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .tree-map-html__group-navigation {

@@ -23,15 +23,118 @@
     return nodeWeight;
   }
 
-  function createNode(node, depth) {
+  function getWorstAspectRatio(row, shortSide) {
+    if (row.length === 0) {
+      return Number.POSITIVE_INFINITY;
+    }
+
+    const rowArea = row.reduce((total, item) => total + item.area, 0);
+    const largestArea = Math.max(...row.map((item) => item.area));
+    const smallestArea = Math.min(...row.map((item) => item.area));
+    const sideSquared = shortSide * shortSide;
+    const areaSquared = rowArea * rowArea;
+    return Math.max(
+      (sideSquared * largestArea) / areaSquared,
+      areaSquared / (sideSquared * smallestArea),
+    );
+  }
+
+  function positionRow(row, rectangle, positionedItems) {
+    const rowArea = row.reduce((total, item) => total + item.area, 0);
+
+    if (rectangle.width >= rectangle.height) {
+      const rowWidth = rowArea / rectangle.height;
+      let offsetY = rectangle.y;
+      for (const item of row) {
+        const itemHeight = item.area / rowWidth;
+        positionedItems.push({
+          node: item.node,
+          x: rectangle.x,
+          y: offsetY,
+          width: rowWidth,
+          height: itemHeight,
+        });
+        offsetY += itemHeight;
+      }
+      rectangle.x += rowWidth;
+      rectangle.width -= rowWidth;
+      return;
+    }
+
+    const rowHeight = rowArea / rectangle.width;
+    let offsetX = rectangle.x;
+    for (const item of row) {
+      const itemWidth = item.area / rowHeight;
+      positionedItems.push({
+        node: item.node,
+        x: offsetX,
+        y: rectangle.y,
+        width: itemWidth,
+        height: rowHeight,
+      });
+      offsetX += itemWidth;
+    }
+    rectangle.y += rowHeight;
+    rectangle.height -= rowHeight;
+  }
+
+  function layoutChildren(children) {
+    const totalWeight = children.reduce(
+      (total, child) => total + getNodeWeight(child),
+      0,
+    );
+    if (totalWeight <= 0) {
+      return [];
+    }
+
+    const remainingItems = children
+      .map((node) => ({
+        node,
+        area: (getNodeWeight(node) / totalWeight) * 10000,
+      }))
+      .sort((left, right) => right.area - left.area);
+    const rectangle = { x: 0, y: 0, width: 100, height: 100 };
+    const positionedItems = [];
+    let row = [];
+
+    while (remainingItems.length > 0) {
+      const nextItem = remainingItems[0];
+      const shortSide = Math.min(rectangle.width, rectangle.height);
+      const candidateRow = [...row, nextItem];
+      if (
+        row.length === 0 ||
+        getWorstAspectRatio(candidateRow, shortSide) <=
+          getWorstAspectRatio(row, shortSide)
+      ) {
+        row = candidateRow;
+        remainingItems.shift();
+      } else {
+        positionRow(row, rectangle, positionedItems);
+        row = [];
+      }
+    }
+    if (row.length > 0) {
+      positionRow(row, rectangle, positionedItems);
+    }
+    return positionedItems;
+  }
+
+  function applyRectangle(nodeElement, rectangle) {
+    nodeElement.style.left = `${rectangle.x}%`;
+    nodeElement.style.top = `${rectangle.y}%`;
+    nodeElement.style.width = `${rectangle.width}%`;
+    nodeElement.style.height = `${rectangle.height}%`;
+  }
+
+  function createNode(node, depth, rectangle) {
     const nodeElement = document.createElement("div");
     nodeElement.className = "tree-map-html__node";
     nodeElement.dataset.depth = depth;
     const nodeWeight = getNodeWeight(node);
     nodeElement.dataset.weight = nodeWeight;
     nodeElement.style.backgroundColor = node.color;
-    nodeElement.style.flexGrow = nodeWeight;
     nodeElement.title = `${node.label} (${node.weight})`;
+    applyRectangle(nodeElement, rectangle);
 
     const labelElement = document.createElement("span");
     labelElement.className = "tree-map-html__label";
@@ -45,9 +148,10 @@
 
     const childrenElement = document.createElement("div");
     childrenElement.className = "tree-map-html__children";
-    childrenElement.dataset.direction = depth % 2 === 0 ? "row" : "column";
-    for (const child of node.children) {
-      childrenElement.append(createNode(child, depth + 1));
+    for (const childRectangle of layoutChildren(node.children)) {
+      childrenElement.append(
+        createNode(childRectangle.node, depth + 1, childRectangle),
+      );
     }
     nodeElement.append(childrenElement);
     return nodeElement;
@@ -64,7 +168,14 @@
 
     const canvasElement = document.createElement("div");
     canvasElement.className = "tree-map-html__canvas";
-    canvasElement.append(createNode(treeMap.root, 0));
+    canvasElement.append(
+      createNode(treeMap.root, 0, {
+        x: 0,
+        y: 0,
+        width: 100,
+        height: 100,
+      }),
+    );
     sectionElement.append(canvasElement);
     return sectionElement;
   }

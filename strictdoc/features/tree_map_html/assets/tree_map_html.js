@@ -26,6 +26,7 @@
     canvas: "tree-map-html__canvas",
     children: "tree-map-html__children",
     groupNavigation: "tree-map-html__group-navigation",
+    groupPosition: "tree-map-html__group-position",
     label: "tree-map-html__label",
     labelAncestor: "tree-map-html__label--ancestor",
     labelBranch: "tree-map-html__label--branch",
@@ -631,6 +632,7 @@
       return {
         node,
         nodeElement,
+        headerElement,
         depth,
         pixelRectangle,
         renderableChildren,
@@ -641,6 +643,7 @@
       return {
         node,
         nodeElement,
+        headerElement,
         depth,
         pixelRectangle,
         renderableChildren,
@@ -665,6 +668,7 @@
     return {
       node,
       nodeElement,
+      headerElement,
       depth,
       pixelRectangle,
       renderableChildren,
@@ -790,7 +794,7 @@
       currentLevel = nextLevel;
     }
 
-    return rootRecord.nodeElement;
+    return rootRecord;
   }
 
   function applyPageGeometryProperties(rootElement, options) {
@@ -834,15 +838,22 @@
     const previousGroupButton = document.createElement("button");
     previousGroupButton.className = CSS_CLASSES.previousGroup;
     previousGroupButton.type = "button";
-    previousGroupButton.textContent = "Previous group";
-    groupNavigationElement.append(previousGroupButton);
+    previousGroupButton.setAttribute("aria-label", "Previous items");
+    previousGroupButton.textContent = "◂";
 
     const nextGroupButton = document.createElement("button");
     nextGroupButton.className = CSS_CLASSES.nextGroup;
     nextGroupButton.type = "button";
-    nextGroupButton.textContent = "Next group";
-    groupNavigationElement.append(nextGroupButton);
-    toolbarElement.append(groupNavigationElement);
+    nextGroupButton.setAttribute("aria-label", "Next items");
+    nextGroupButton.textContent = "▸";
+
+    const groupPositionElement = document.createElement("span");
+    groupPositionElement.className = CSS_CLASSES.groupPosition;
+    groupNavigationElement.append(
+      groupPositionElement,
+      previousGroupButton,
+      nextGroupButton,
+    );
     sectionElement.append(toolbarElement);
 
     const ancestorsElement = document.createElement("nav");
@@ -858,12 +869,38 @@
     indexNodeParents(treeMap.root);
     const visitHistory = [treeMap.root];
 
+    function getFocusedNode() {
+      return visitHistory[visitHistory.length - 1];
+    }
+
     function navigateTo(node) {
-      const focusedNode = visitHistory[visitHistory.length - 1];
+      const focusedNode = getFocusedNode();
       if (node !== focusedNode) {
         visitHistory.push(node);
         renderFocusedNode();
       }
+    }
+
+    function navigateToSyntheticSibling(offset) {
+      const navigation = syntheticGroupNavigation.get(getFocusedNode());
+      if (navigation === undefined) {
+        return false;
+      }
+      const sibling = navigation.groups[navigation.index + offset];
+      if (sibling === undefined) {
+        return false;
+      }
+      navigateTo(sibling);
+      return true;
+    }
+
+    function navigateToParent() {
+      const parent = nodeParents.get(getFocusedNode());
+      if (parent === undefined) {
+        return false;
+      }
+      navigateTo(parent);
+      return true;
     }
 
     function renderAncestors(focusedNode) {
@@ -883,37 +920,56 @@
       }
     }
 
-    function renderGroupNavigation(focusedNode) {
+    function renderGroupNavigation(focusedNode, focusedHeaderElement) {
+      groupNavigationElement.remove();
       const navigation = syntheticGroupNavigation.get(focusedNode);
-      groupNavigationElement.hidden = navigation === undefined;
       if (navigation === undefined) {
         return;
       }
+      groupPositionElement.textContent =
+        `${focusedNode.firstItem}–${focusedNode.lastItem} ` +
+        `of ${focusedNode.totalItems}`;
       previousGroupButton.disabled = navigation.index === 0;
       nextGroupButton.disabled = navigation.index === navigation.groups.length - 1;
-      previousGroupButton.onclick = () =>
-        navigateTo(navigation.groups[navigation.index - 1]);
-      nextGroupButton.onclick = () =>
-        navigateTo(navigation.groups[navigation.index + 1]);
+      previousGroupButton.onclick = () => navigateToSyntheticSibling(-1);
+      nextGroupButton.onclick = () => navigateToSyntheticSibling(1);
+      focusedHeaderElement.append(groupNavigationElement);
     }
 
     function renderFocusedNode() {
-      const focusedNode = visitHistory[visitHistory.length - 1];
+      const focusedNode = getFocusedNode();
       const canvasRectangle = canvasElement.getBoundingClientRect();
       canvasElement.replaceChildren();
       backButton.disabled = visitHistory.length === 1;
       renderAncestors(focusedNode);
-      renderGroupNavigation(focusedNode);
-
-      canvasElement.append(
-        renderNodeTree(
-          focusedNode,
-          canvasRectangle,
-          navigateTo,
-          options,
-        ),
+      const rootRecord = renderNodeTree(
+        focusedNode,
+        canvasRectangle,
+        navigateTo,
+        options,
       );
+      canvasElement.append(rootRecord.nodeElement);
+      renderGroupNavigation(focusedNode, rootRecord.headerElement);
     }
+
+    document.addEventListener("keydown", (event) => {
+      // Arrow navigation is spatial and belongs to the map currently under
+      // the pointer. Other maps and the rest of the page keep native keys.
+      if (!canvasElement.matches(":hover")) {
+        return;
+      }
+      let didNavigate = false;
+      if (event.key === "ArrowLeft") {
+        didNavigate = navigateToSyntheticSibling(-1);
+      } else if (event.key === "ArrowRight") {
+        didNavigate = navigateToSyntheticSibling(1);
+      } else if (event.key === "ArrowUp") {
+        didNavigate = navigateToParent();
+      }
+      if (didNavigate) {
+        event.preventDefault();
+      }
+    });
 
     backButton.addEventListener("click", () => {
       if (visitHistory.length > 1) {

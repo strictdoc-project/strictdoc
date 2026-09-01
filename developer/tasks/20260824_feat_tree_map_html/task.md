@@ -94,6 +94,12 @@ navigation to the preceding and following synthetic groups created for the
 same source parent. This horizontal navigation shall not apply to ordinary
 source nodes.
 
+The previous and next synthetic-group controls shall appear in the focused
+group's header inside the canvas. While the pointer is over a canvas, the left
+and right arrow keys shall provide the same horizontal navigation. The up arrow
+shall navigate to the focused node's actual parent. Outside the canvas, these
+keys shall retain their native behavior.
+
 ## WHY
 
 StrictDoc needs a tree map rendered with project-owned HTML and CSS.

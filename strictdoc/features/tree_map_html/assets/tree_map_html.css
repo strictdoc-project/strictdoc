@@ -34,12 +34,32 @@
 
 .tree-map-html__group-navigation {
   display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  line-height: 0;
   gap: var(--base-rhythm);
+  height: 100%;
   margin-left: auto;
+  font-size: var(--font-size-sm);
 }
 
-.tree-map-html__group-navigation[hidden] {
-  display: none;
+.tree-map-html__group-navigation button {
+  border-radius: calc(var(--base-rhythm) * 0.5);
+  border: 1px solid gray;
+  font-size: var(--font-size-sm);
+  font-family: monospace;
+  line-height: 0;
+  min-height: 0;
+  padding: 0;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tree-map-html__group-position {
+  white-space: nowrap;
 }
 
 .tree-map-html__ancestors {
@@ -145,6 +165,8 @@
 .tree-map-html__node-header {
   position: absolute;
   z-index: 1;
+  display: flex;
+  align-items: stretch;
   top: var(--tree-map-html-node-padding);
   right: var(--tree-map-html-node-padding);
   left: var(--tree-map-html-node-padding);
@@ -155,6 +177,7 @@
 
 .tree-map-html__label {
   display: block;
+  min-width: 0;
   overflow: hidden;
   padding: 2px 4px;
   color: #111;

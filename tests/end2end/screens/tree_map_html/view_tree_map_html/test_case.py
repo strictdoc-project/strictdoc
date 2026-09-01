@@ -44,3 +44,54 @@ class Test(E2ECase):
                 """
             )
             assert rectangles_are_valid
+
+            rendering_limits_are_respected = self.execute_script(
+                """
+                const sections = Array.from(
+                  document.querySelectorAll(".tree-map-html__section"),
+                );
+                return sections.every((section) => {
+                  const nodes = Array.from(
+                    section.querySelectorAll(".tree-map-html__node"),
+                  );
+                  const depths = nodes.map((node) =>
+                    Number(node.dataset.depth)
+                  );
+                  return nodes.length <= 500 && Math.max(...depths) <= 4;
+                });
+                """
+            )
+            assert rendering_limits_are_respected
+
+            branches_are_complete_or_collapsed = self.execute_script(
+                """
+                const branches = Array.from(
+                  document.querySelectorAll(
+                    ".tree-map-html__node--branch",
+                  ),
+                );
+                return branches.every((branch) => {
+                  const childrenContainer = Array.from(branch.children).find(
+                    (element) =>
+                      element.classList.contains("tree-map-html__children"),
+                  );
+                  return childrenContainer === undefined ||
+                    childrenContainer.children.length ===
+                      Number(branch.dataset.childCount);
+                });
+                """
+            )
+            assert branches_are_complete_or_collapsed
+
+            first_section = ".tree-map-html__section:first-of-type"
+            self.click(first_section + " .tree-map-html__node[data-depth='1']")
+            self.assert_text(
+                "Test document",
+                first_section + " [data-testid='tree-map-html-location']",
+            )
+            back_button = self.find_element(
+                first_section + " .tree-map-html__back"
+            )
+            assert back_button.is_enabled()
+            self.click(first_section + " .tree-map-html__back")
+            assert not back_button.is_enabled()

@@ -12,8 +12,27 @@
 }
 
 .tree-map-html__title {
-  margin: 0 0 calc(2 * var(--base-rhythm));
+  margin: 0 0 var(--base-rhythm);
   text-align: center;
+}
+
+.tree-map-html__toolbar {
+  display: flex;
+  align-items: center;
+  gap: var(--base-rhythm);
+  min-height: 2rem;
+  margin-bottom: var(--base-rhythm);
+}
+
+.tree-map-html__back {
+  flex: 0 0 auto;
+}
+
+.tree-map-html__location {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .tree-map-html__canvas {
@@ -36,9 +55,26 @@
   position: relative;
 }
 
-.tree-map-html__label {
-  position: relative;
+.tree-map-html__node--branch {
+  cursor: zoom-in;
+}
+
+.tree-map-html__node--branch:focus-visible {
+  outline: 2px solid var(--color-action);
+  outline-offset: -2px;
+}
+
+.tree-map-html__node-header {
+  position: absolute;
   z-index: 1;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: var(--tree-map-html-node-header-height);
+  overflow: hidden;
+}
+
+.tree-map-html__label {
   display: block;
   overflow: hidden;
   padding: 2px 4px;
@@ -52,9 +88,26 @@
 
 .tree-map-html__children {
   position: absolute;
-  inset: 0;
+  top: var(--tree-map-html-node-header-height);
+  right: 0;
+  bottom: 0;
+  left: 0;
 }
 
-.tree-map-html__node--leaf > .tree-map-html__label {
+.tree-map-html__node--leaf > .tree-map-html__node-header {
+  height: 100%;
+}
+
+.tree-map-html__node--leaf .tree-map-html__label {
   white-space: normal;
+}
+
+.tree-map-html__node[data-synthetic-group="true"] {
+  background-image: repeating-linear-gradient(
+    135deg,
+    transparent,
+    transparent 6px,
+    rgb(255 255 255 / 20%) 6px,
+    rgb(255 255 255 / 20%) 12px
+  );
 }

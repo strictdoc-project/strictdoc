@@ -185,43 +185,176 @@
     return true;
   }
 
-  function layoutHorizontalRows(children, pixelRectangle, minimumHeight) {
-    // This fallback trades strict area proportions for a usable minimum
-    // height. Every child receives one horizontal row; the height remaining
-    // after those minimums is still distributed according to node weights.
-    const minimumRequiredHeight = children.length * minimumHeight;
-    if (minimumRequiredHeight > pixelRectangle.height) {
+  function layoutConstrainedRows(
+    children,
+    pixelRectangle,
+    minimumHeight,
+    minimumWidth,
+  ) {
+    // Search row partitions of weight-sorted nodes. Fixed minimum dimensions
+    // are assigned first; remaining width and height retain weight ratios.
+    const maximumColumns = Math.floor(pixelRectangle.width / minimumWidth);
+    const maximumRows = Math.floor(pixelRectangle.height / minimumHeight);
+    if (maximumColumns === 0 || maximumRows === 0) {
       return null;
     }
 
-    const totalWeight = children.reduce(
-      (total, child) => total + getNodeWeight(child),
-      0,
-    );
-    const weightedHeight = pixelRectangle.height - minimumRequiredHeight;
     const sortedChildren = [...children].sort(
       (left, right) => getNodeWeight(right) - getNodeWeight(left),
     );
+    const totalWeight = sortedChildren.reduce(
+      (total, child) => total + getNodeWeight(child),
+      0,
+    );
+    const minimumRows = Math.ceil(sortedChildren.length / maximumColumns);
+    const maximumCandidateRows = Math.min(
+      sortedChildren.length,
+      maximumRows,
+    );
+    let bestCandidate = null;
+
+    for (
+      let numberOfRows = minimumRows;
+      numberOfRows <= maximumCandidateRows;
+      numberOfRows += 1
+    ) {
+      const weightedHeight =
+        pixelRectangle.height - numberOfRows * minimumHeight;
+      const memoizedPartitions = new Map();
+
+      function findBestPartition(startIndex, remainingRows) {
+        const memoKey = `${startIndex}:${remainingRows}`;
+        if (memoizedPartitions.has(memoKey)) {
+          return memoizedPartitions.get(memoKey);
+        }
+        if (remainingRows === 0) {
+          return startIndex === sortedChildren.length
+            ? { worstAspectRatio: 0, totalAspectRatio: 0, rows: [] }
+            : null;
+        }
+
+        const remainingNodes = sortedChildren.length - startIndex;
+        const maximumRowLength = Math.min(
+          maximumColumns,
+          remainingNodes - (remainingRows - 1),
+        );
+        let bestPartition = null;
+        for (let rowLength = 1; rowLength <= maximumRowLength; rowLength += 1) {
+          const rowNodes = sortedChildren.slice(
+            startIndex,
+            startIndex + rowLength,
+          );
+          const rowWeight = rowNodes.reduce(
+            (total, node) => total + getNodeWeight(node),
+            0,
+          );
+          const rowHeight =
+            minimumHeight + weightedHeight * (rowWeight / totalWeight);
+          const weightedWidth =
+            pixelRectangle.width - rowLength * minimumWidth;
+          let rowWorstAspectRatio = 0;
+          let rowTotalAspectRatio = 0;
+          for (const node of rowNodes) {
+            const nodeWidth =
+              minimumWidth +
+              weightedWidth * (getNodeWeight(node) / rowWeight);
+            const aspectRatio = Math.max(
+              nodeWidth / rowHeight,
+              rowHeight / nodeWidth,
+            );
+            rowWorstAspectRatio = Math.max(
+              rowWorstAspectRatio,
+              aspectRatio,
+            );
+            rowTotalAspectRatio += aspectRatio;
+          }
+
+          const suffix = findBestPartition(
+            startIndex + rowLength,
+            remainingRows - 1,
+          );
+          if (suffix === null) {
+            continue;
+          }
+          const candidate = {
+            worstAspectRatio: Math.max(
+              rowWorstAspectRatio,
+              suffix.worstAspectRatio,
+            ),
+            totalAspectRatio: rowTotalAspectRatio + suffix.totalAspectRatio,
+            rows: [rowNodes, ...suffix.rows],
+          };
+          if (
+            bestPartition === null ||
+            candidate.worstAspectRatio < bestPartition.worstAspectRatio ||
+            (candidate.worstAspectRatio === bestPartition.worstAspectRatio &&
+              candidate.totalAspectRatio < bestPartition.totalAspectRatio)
+          ) {
+            bestPartition = candidate;
+          }
+        }
+        memoizedPartitions.set(memoKey, bestPartition);
+        return bestPartition;
+      }
+
+      const candidate = findBestPartition(0, numberOfRows);
+      if (
+        candidate !== null &&
+        (bestCandidate === null ||
+          candidate.worstAspectRatio < bestCandidate.worstAspectRatio ||
+          (candidate.worstAspectRatio === bestCandidate.worstAspectRatio &&
+            candidate.totalAspectRatio < bestCandidate.totalAspectRatio))
+      ) {
+        bestCandidate = candidate;
+      }
+    }
+    if (bestCandidate === null) {
+      return null;
+    }
+
+    const weightedHeight =
+      pixelRectangle.height - bestCandidate.rows.length * minimumHeight;
+    const positionedItems = [];
     let offsetY = 0;
-    return sortedChildren.map((node, index) => {
-      const height =
-        index === sortedChildren.length - 1
+    bestCandidate.rows.forEach((rowNodes, rowIndex) => {
+      const rowWeight = rowNodes.reduce(
+        (total, node) => total + getNodeWeight(node),
+        0,
+      );
+      const rowHeight =
+        rowIndex === bestCandidate.rows.length - 1
           ? pixelRectangle.height - offsetY
           : minimumHeight +
-            weightedHeight * (getNodeWeight(node) / totalWeight);
-      const item = {
-        node,
-        x: 0,
-        y: offsetY,
-        width: pixelRectangle.width,
-        height,
-      };
-      offsetY += height;
-      return item;
+            weightedHeight * (rowWeight / totalWeight);
+      const weightedWidth =
+        pixelRectangle.width - rowNodes.length * minimumWidth;
+      let offsetX = 0;
+      rowNodes.forEach((node, columnIndex) => {
+        const nodeWidth =
+          columnIndex === rowNodes.length - 1
+            ? pixelRectangle.width - offsetX
+            : minimumWidth +
+              weightedWidth * (getNodeWeight(node) / rowWeight);
+        positionedItems.push({
+          node,
+          x: offsetX,
+          y: offsetY,
+          width: nodeWidth,
+          height: rowHeight,
+        });
+        offsetX += nodeWidth;
+      });
+      offsetY += rowHeight;
     });
+    return positionedItems;
   }
 
-  function layoutChildren(children, pixelRectangle, minimumHeight) {
+  function layoutChildren(
+    children,
+    pixelRectangle,
+    minimumHeight,
+    minimumWidth,
+  ) {
     // Squarify must see the real aspect ratio. Calculating in a square and
     // stretching the result later produces long strips in narrow containers.
     const totalWeight = children.reduce(
@@ -279,7 +412,12 @@
       minimumHeight,
     )
       ? positionedItems
-      : layoutHorizontalRows(children, pixelRectangle, minimumHeight);
+      : layoutConstrainedRows(
+          children,
+          pixelRectangle,
+          minimumHeight,
+          minimumWidth,
+        );
     if (constrainedItems === null) {
       return null;
     }
@@ -560,6 +698,7 @@
           renderableChildren,
           childrenPixelRectangle,
           options.minNodeHeight,
+          options.minLabelWidth,
         );
         if (childRectangles === null) {
           nodeElement.dataset.truncated = "true";

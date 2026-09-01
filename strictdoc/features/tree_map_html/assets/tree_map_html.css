@@ -45,10 +45,10 @@
 
 .tree-map-html__node {
   position: absolute;
+  box-sizing: border-box;
   min-width: 1px;
   min-height: 1px;
   overflow: hidden;
-  border: 1px solid rgb(0 0 0 / 30%);
 }
 
 .tree-map-html__canvas > .tree-map-html__node {
@@ -59,17 +59,25 @@
   cursor: zoom-in;
 }
 
-.tree-map-html__node--branch:focus-visible {
+.tree-map-html__node--branch:focus-visible > .tree-map-html__node-surface {
   outline: 2px solid var(--color-action);
   outline-offset: -2px;
+}
+
+.tree-map-html__node-surface {
+  position: absolute;
+  inset: var(--tree-map-html-node-gap-half);
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
 }
 
 .tree-map-html__node-header {
   position: absolute;
   z-index: 1;
-  top: 0;
-  right: 0;
-  left: 0;
+  top: var(--tree-map-html-node-padding);
+  right: var(--tree-map-html-node-padding);
+  left: var(--tree-map-html-node-padding);
+  box-sizing: border-box;
   height: var(--tree-map-html-node-header-height);
   overflow: hidden;
 }
@@ -88,21 +96,37 @@
 
 .tree-map-html__children {
   position: absolute;
-  top: var(--tree-map-html-node-header-height);
-  right: 0;
-  bottom: 0;
-  left: 0;
+  top: calc(
+    var(--tree-map-html-node-gap-half) +
+      var(--tree-map-html-node-padding) +
+      var(--tree-map-html-node-header-height)
+  );
+  right: calc(
+    var(--tree-map-html-node-gap-half) +
+      var(--tree-map-html-node-padding)
+  );
+  bottom: calc(
+    var(--tree-map-html-node-gap-half) +
+      var(--tree-map-html-node-padding)
+  );
+  left: calc(
+    var(--tree-map-html-node-gap-half) +
+      var(--tree-map-html-node-padding)
+  );
+  box-sizing: border-box;
 }
 
-.tree-map-html__node--leaf > .tree-map-html__node-header {
-  height: 100%;
+.tree-map-html__node--leaf .tree-map-html__node-header {
+  bottom: var(--tree-map-html-node-padding);
+  height: auto;
 }
 
 .tree-map-html__node--leaf .tree-map-html__label {
   white-space: normal;
 }
 
-.tree-map-html__node[data-synthetic-group="true"] {
+.tree-map-html__node[data-synthetic-group="true"]
+  > .tree-map-html__node-surface {
   background-image: repeating-linear-gradient(
     135deg,
     transparent,

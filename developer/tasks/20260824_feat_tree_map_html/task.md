@@ -25,6 +25,22 @@ exclude this row from the rectangle available to the children. Renderer options
 shall control the header height and label visibility. A leaf node shall use a
 leaf-specific style without a child area.
 
+Each node shall reserve configurable padding around its header and child area.
+The renderer shall exclude this padding from the child layout. Visual borders
+shall not change the calculated geometry.
+
+The renderer shall support configurable visual gaps between adjacent nodes.
+These gaps shall not change node weights or rectangle layout.
+
+Each node shall use a transparent outer element for absolute positioning. A
+separate inner surface shall provide the node background and contain its header
+and future node information. The surface shall be inset by half of the visual
+gap. Adjacent outer elements shall touch without CSS margins.
+
+The child container shall remain transparent. Its inset shall include half of
+the visual gap and the node padding. Gaps between children shall reveal their
+parent's surface instead of a fixed page color.
+
 Python shall prepare the hierarchy and the StrictDoc-specific data shown in the
 tree maps. The browser renderer shall receive this data as JSON. It shall
 calculate the layout and render the supplied data without containing the
@@ -66,6 +82,12 @@ The browser shall use a squarified tree map layout calculated from the real
 pixel dimensions of each child area. It shall convert the resulting geometry
 to CSS percentages after the calculation.
 
+The generated node markup shall separate the transparent positioning element,
+the styled surface, the header, and the child container. Additional node
+content, such as document links, shall belong to the surface rather than the
+positioning element.
+
 The browser renderer shall keep layout and level-of-detail settings in one
 options object. The initial settings shall cover header height, depth and DOM
-limits, grouping limits, and visibility thresholds.
+limits, node padding, visual gaps, grouping limits, and visibility thresholds.
+It shall publish CSS-facing settings as custom properties.

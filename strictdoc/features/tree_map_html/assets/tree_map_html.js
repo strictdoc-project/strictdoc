@@ -7,6 +7,8 @@
   // values later without changing the layout functions.
   const DEFAULT_RENDER_OPTIONS = Object.freeze({
     nodeHeaderHeight: 20,
+    nodeGap: 4,
+    nodePadding: 4,
     maxRenderedDepth: 4,
     maxRenderedNodes: 500,
     maxDirectChildren: 128,
@@ -172,13 +174,16 @@
   }
 
   function getChildrenPixelRectangle(pixelRectangle, options) {
-    // Every node owns a fixed header row. Descendants may only use the
-    // remaining content rectangle, so nested headers never cover child tiles.
+    // The transparent positioning box contains an inset visual surface. Child
+    // layout starts after both the surface gap and the content padding.
+    const contentInset = options.nodeGap / 2 + options.nodePadding;
     return {
-      width: pixelRectangle.width,
+      width: Math.max(0, pixelRectangle.width - contentInset * 2),
       height: Math.max(
         0,
-        pixelRectangle.height - options.nodeHeaderHeight,
+        pixelRectangle.height -
+          options.nodeHeaderHeight -
+          contentInset * 2,
       ),
     };
   }
@@ -247,13 +252,20 @@
     }
     const nodeWeight = getNodeWeight(node);
     nodeElement.dataset.weight = nodeWeight;
-    nodeElement.style.backgroundColor = node.color;
     nodeElement.title = `${node.label} (${nodeWeight})`;
     applyRectangle(nodeElement, rectangle);
 
+    // Keep layout geometry on the transparent outer node. The surface owns
+    // color and content, leaving room for links and actions without changing
+    // the absolute positioning contract.
+    const surfaceElement = document.createElement("div");
+    surfaceElement.className = "tree-map-html__node-surface";
+    surfaceElement.style.backgroundColor = node.color;
+    nodeElement.append(surfaceElement);
+
     const headerElement = document.createElement("div");
     headerElement.className = "tree-map-html__node-header";
-    nodeElement.append(headerElement);
+    surfaceElement.append(headerElement);
     if (
       pixelRectangle.width >= options.minLabelWidth &&
       pixelRectangle.height >= options.nodeHeaderHeight
@@ -444,6 +456,16 @@
     canvasElement.style.setProperty(
       "--tree-map-html-node-header-height",
       `${options.nodeHeaderHeight}px`,
+    );
+    // Adjacent transparent positioning boxes touch. Their inset surfaces leave
+    // half a gap on each side without introducing CSS margins.
+    canvasElement.style.setProperty(
+      "--tree-map-html-node-gap-half",
+      `${options.nodeGap / 2}px`,
+    );
+    canvasElement.style.setProperty(
+      "--tree-map-html-node-padding",
+      `${options.nodePadding}px`,
     );
     sectionElement.append(canvasElement);
     rootElement.append(sectionElement);

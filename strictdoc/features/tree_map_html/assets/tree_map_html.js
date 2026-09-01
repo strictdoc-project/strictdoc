@@ -75,6 +75,14 @@
     return labelElement;
   }
 
+  function applyNodeColor(element, node) {
+    // A missing color keeps the page-level CSS default. A data-defined color
+    // follows the node into every representation, including ancestor buttons.
+    if (typeof node.color === "string") {
+      element.style.backgroundColor = node.color;
+    }
+  }
+
   function getNodeWeight(node) {
     const cachedWeight = nodeWeights.get(node);
     if (cachedWeight !== undefined) {
@@ -599,11 +607,7 @@
     // the absolute positioning contract.
     const surfaceElement = document.createElement("div");
     surfaceElement.className = CSS_CLASSES.nodeSurface;
-    // An absent color means that presentation belongs to CSS. Inline colors
-    // are reserved for values that carry data, such as coverage ratios.
-    if (typeof node.color === "string") {
-      surfaceElement.style.backgroundColor = node.color;
-    }
+    applyNodeColor(surfaceElement, node);
     nodeElement.append(surfaceElement);
 
     const headerElement = document.createElement("div");
@@ -869,6 +873,7 @@
         const ancestorButton = document.createElement("button");
         ancestorButton.className = CSS_CLASSES.ancestor;
         ancestorButton.type = "button";
+        applyNodeColor(ancestorButton, ancestor);
         ancestorButton.append(
           createLabel(ancestor.label, CSS_CLASSES.labelAncestor),
         );

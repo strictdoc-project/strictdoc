@@ -45,3 +45,16 @@ def render_tree_map_html_screen(
     )
     with open(output_path, "w", encoding="utf8") as output_file:
         output_file.write(document_content)
+
+    debug_document_content = (
+        html_templates.jinja_environment().render_template_as_markup(
+            "features/tree_map_html/debug.jinja",
+            view_object=view_object,
+        )
+    )
+    debug_output_path = os.path.join(
+        project_config.export_output_html_root,
+        "tree_map_debug.html",
+    )
+    with open(debug_output_path, "w", encoding="utf8") as output_file:
+        output_file.write(debug_document_content)

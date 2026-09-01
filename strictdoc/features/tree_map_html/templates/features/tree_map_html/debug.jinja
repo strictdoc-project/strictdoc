@@ -1,0 +1,35 @@
+{% set template_type = 'Tree map debug' %}
+
+{% extends "base.jinja.html" %}
+
+{% block head_css %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ view_object.render_static_url('tree_map_html.css') }}"/>
+{% endblock head_css %}
+
+{% block head_scripts %}
+  {{ super() }}
+  <script src="{{ view_object.render_static_url('tree_map_html_debug.js') }}" defer></script>
+  <script src="{{ view_object.render_static_url('tree_map_html.js') }}" defer></script>
+{% endblock head_scripts %}
+
+{% block title %}
+  {{ view_object.project_config.project_title }} - {{ template_type }}
+{% endblock title %}
+
+{% block viewtype %}tree-map-html-debug{% endblock viewtype %}
+
+{% block header_content %}
+  {%- with header__pagetype=template_type -%}
+    {% include "components/header/index.jinja" %}
+  {%- endwith -%}
+{% endblock header_content %}
+
+{% block main_content %}
+  <div class="main">
+    <div class="tree-map-html" id="tree-map-html-root"></div>
+    <script id="tree-map-html-data" type="application/json">
+      {"tree_maps":[]}
+    </script>
+  </div>
+{% endblock main_content %}

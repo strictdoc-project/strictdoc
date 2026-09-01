@@ -303,6 +303,9 @@ def create_main_router(
         for feature_ in ProjectConfig._builtin_features_by_handle().values()
         if feature_.supports_server()
     }
+    server_features_by_screen_filename["tree_map_debug.html"] = (
+        server_features_by_screen_filename["tree_map_html.html"]
+    )
 
     html_generator.export_assets(
         traceability_index=export_action.traceability_index,

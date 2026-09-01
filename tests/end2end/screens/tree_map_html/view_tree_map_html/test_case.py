@@ -45,6 +45,20 @@ class Test(E2ECase):
             )
             assert rectangles_are_valid
 
+            rendered_children_respect_minimum_height = self.execute_script(
+                """
+                const children = Array.from(
+                  document.querySelectorAll(
+                    ".tree-map-html__node[data-depth]:not([data-depth='0'])",
+                  ),
+                );
+                return children.every((node) =>
+                  node.getBoundingClientRect().height >= 31.99
+                );
+                """
+            )
+            assert rendered_children_respect_minimum_height
+
             rendering_limits_are_respected = self.execute_script(
                 """
                 const sections = Array.from(

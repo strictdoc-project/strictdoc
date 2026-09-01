@@ -61,6 +61,14 @@ The renderer shall limit visible depth and DOM node count. It shall expand the
 hierarchy by level so that one deep branch cannot hide its peers. A branch
 shall show either all immediate display children or none.
 
+The renderer shall enforce a configurable minimum node height. When a vertical
+stack contains a shorter node and taller siblings have sufficient height, the
+layout shall transfer only the deficit from those siblings without changing
+the stack's outer rectangle. If squarify cannot satisfy the limit locally but
+the complete sibling list fits as horizontal rows, the renderer shall use that
+fallback and distribute height above the minimum by weight. The parent shall
+remain collapsed only when the fallback also cannot fit every child.
+
 When a node has too many direct children, the renderer shall replace them with
 synthetic groups. A synthetic group shall preserve the combined weight of its
 children. It shall remain collapsed in its parent's view and reveal its source

@@ -15,6 +15,7 @@
     targetGroupSize: 100,
     minChildrenArea: 2500,
     minNodeArea: 16,
+    minNodeHeight: 32,
     minLabelWidth: 56,
     targetNodeArea: 1200,
   });
@@ -117,7 +118,110 @@
     rectangle.height -= rowHeight;
   }
 
-  function layoutChildren(children, pixelRectangle) {
+  function enforceMinimumHeight(positionedItems, minimumHeight) {
+    // Squarify may produce a vertical stack containing a very short tile next
+    // to a tall sibling. Borrow only the required height from taller siblings
+    // in that same stack, preserving its total rectangle and avoiding overlap.
+    const stacks = new Map();
+    for (const item of positionedItems) {
+      const stackKey = `${item.x.toFixed(6)}:${item.width.toFixed(6)}`;
+      const stack = stacks.get(stackKey) ?? [];
+      stack.push(item);
+      stacks.set(stackKey, stack);
+    }
+
+    for (const stack of stacks.values()) {
+      stack.sort((left, right) => left.y - right.y);
+      const runs = [];
+      let run = [];
+      for (const item of stack) {
+        const previousItem = run[run.length - 1];
+        if (
+          previousItem !== undefined &&
+          Math.abs(previousItem.y + previousItem.height - item.y) > 0.01
+        ) {
+          runs.push(run);
+          run = [];
+        }
+        run.push(item);
+      }
+      if (run.length > 0) {
+        runs.push(run);
+      }
+
+      for (const contiguousItems of runs) {
+        const deficit = contiguousItems.reduce(
+          (total, item) =>
+            total + Math.max(0, minimumHeight - item.height),
+          0,
+        );
+        if (deficit === 0) {
+          continue;
+        }
+        const availableHeight = contiguousItems.reduce(
+          (total, item) =>
+            total + Math.max(0, item.height - minimumHeight),
+          0,
+        );
+        if (availableHeight < deficit) {
+          return false;
+        }
+
+        // Change the original weight-based geometry as little as possible:
+        // short tiles receive only their deficit, while donors contribute in
+        // proportion to the height they have above the minimum.
+        let offsetY = contiguousItems[0].y;
+        for (const item of contiguousItems) {
+          const donorHeight = Math.max(0, item.height - minimumHeight);
+          item.height =
+            item.height < minimumHeight
+              ? minimumHeight
+              : item.height - deficit * (donorHeight / availableHeight);
+          item.y = offsetY;
+          offsetY += item.height;
+        }
+      }
+    }
+    return true;
+  }
+
+  function layoutHorizontalRows(children, pixelRectangle, minimumHeight) {
+    // This fallback trades strict area proportions for a usable minimum
+    // height. Every child receives one horizontal row; the height remaining
+    // after those minimums is still distributed according to node weights.
+    const minimumRequiredHeight = children.length * minimumHeight;
+    if (minimumRequiredHeight > pixelRectangle.height) {
+      return null;
+    }
+
+    const totalWeight = children.reduce(
+      (total, child) => total + getNodeWeight(child),
+      0,
+    );
+    const weightedHeight = pixelRectangle.height - minimumRequiredHeight;
+    const sortedChildren = [...children].sort(
+      (left, right) => getNodeWeight(right) - getNodeWeight(left),
+    );
+    let offsetY = 0;
+    return sortedChildren.map((node, index) => {
+      const height =
+        index === sortedChildren.length - 1
+          ? pixelRectangle.height - offsetY
+          : minimumHeight +
+            weightedHeight * (getNodeWeight(node) / totalWeight);
+      const item = {
+        node,
+        x: 0,
+        y: offsetY,
+        width: pixelRectangle.width,
+        height,
+      };
+      offsetY += height;
+      return item;
+    });
+  }
+
+  function layoutChildren(children, pixelRectangle, minimumHeight) {
     // Squarify must see the real aspect ratio. Calculating in a square and
     // stretching the result later produces long strips in narrow containers.
     const totalWeight = children.reduce(
@@ -167,9 +271,21 @@
     if (row.length > 0) {
       positionRow(row, rectangle, positionedItems);
     }
+    // Some valid squarify layouts split short nodes into strips with different
+    // widths, so no single strip can donate height locally. In that case use
+    // full-width rows when the complete sibling list physically fits.
+    const constrainedItems = enforceMinimumHeight(
+      positionedItems,
+      minimumHeight,
+    )
+      ? positionedItems
+      : layoutHorizontalRows(children, pixelRectangle, minimumHeight);
+    if (constrainedItems === null) {
+      return null;
+    }
     // CSS percentages keep the computed pixel geometry responsive between
     // ResizeObserver updates.
-    return positionedItems.map((item) => ({
+    return constrainedItems.map((item) => ({
       node: item.node,
       x: (item.x / pixelRectangle.width) * 100,
       y: (item.y / pixelRectangle.height) * 100,
@@ -443,7 +559,12 @@
         const childRectangles = layoutChildren(
           renderableChildren,
           childrenPixelRectangle,
+          options.minNodeHeight,
         );
+        if (childRectangles === null) {
+          nodeElement.dataset.truncated = "true";
+          continue;
+        }
         const childRecords = childRectangles.map((childRectangle) => {
           const childPixelRectangle = getPixelRectangle(
             childrenPixelRectangle,

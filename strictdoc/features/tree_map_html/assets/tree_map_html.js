@@ -752,6 +752,23 @@
     return rootRecord.nodeElement;
   }
 
+  function applyPageGeometryProperties(rootElement, options) {
+    // Gaps, padding, and header height form one geometry system for the page.
+    // Individual node data, such as color, stays on the node surface instead.
+    rootElement.style.setProperty(
+      "--tree-map-html-node-gap-half",
+      `${options.nodeGap / 2}px`,
+    );
+    rootElement.style.setProperty(
+      "--tree-map-html-node-header-height",
+      `${options.nodeHeaderHeight}px`,
+    );
+    rootElement.style.setProperty(
+      "--tree-map-html-node-padding",
+      `${options.nodePadding}px`,
+    );
+  }
+
   function createTreeMap(treeMap, rootElement, options) {
     const sectionElement = document.createElement("section");
     sectionElement.className = "tree-map-html__section";
@@ -794,20 +811,6 @@
 
     const canvasElement = document.createElement("div");
     canvasElement.className = "tree-map-html__canvas";
-    canvasElement.style.setProperty(
-      "--tree-map-html-node-header-height",
-      `${options.nodeHeaderHeight}px`,
-    );
-    // Adjacent transparent positioning boxes touch. Their inset surfaces leave
-    // half a gap on each side without introducing CSS margins.
-    canvasElement.style.setProperty(
-      "--tree-map-html-node-gap-half",
-      `${options.nodeGap / 2}px`,
-    );
-    canvasElement.style.setProperty(
-      "--tree-map-html-node-padding",
-      `${options.nodePadding}px`,
-    );
     sectionElement.append(canvasElement);
     rootElement.append(sectionElement);
 
@@ -904,6 +907,7 @@
       ...DEFAULT_RENDER_OPTIONS,
       ...renderOptions,
     };
+    applyPageGeometryProperties(rootElement, options);
     const treeMapData = JSON.parse(dataElement.textContent);
     for (const treeMap of treeMapData.tree_maps) {
       createTreeMap(treeMap, rootElement, options);

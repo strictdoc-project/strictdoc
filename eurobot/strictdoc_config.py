@@ -15,5 +15,9 @@ def create_config() -> ProjectConfig:
             "@eurobot": "eurobot_grammar.sgra",
         },
         section_behavior="[[SECTION]]",
+        # README.md is a real source file (kept for reference), but it
+        # shouldn't be auto-discovered and rendered as a document/nav entry
+        # alongside the course's actual RULE/REQUIREMENT/TEST_CASE docs.
+        exclude_doc_paths=["/README.md"],
     )
     return config

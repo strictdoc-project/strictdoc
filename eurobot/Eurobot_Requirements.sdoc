@@ -1,32 +1,32 @@
 [DOCUMENT]
-TITLE: Eurobot System Requirements
+TITLE: Системные требования
 
 [GRAMMAR]
 IMPORT_FROM_FILE: @eurobot
 
 [TEXT]
 STATEMENT: >>>
-System (black box) requirements. Each requirement declares a ``COVERS``
-relation to every ``RULE`` it addresses.
+Системные требования («чёрный ящик»). Каждое требование объявляет отношение
+``COVERS`` к каждому правилу (``RULE``), которое оно затрагивает.
 
-These four requirements cover three clauses out of the 93 that
-``Eurobot_Rules.sdoc`` holds, so the Traceability Matrix shows a long list
-of rules nobody has written a requirement for yet. Working that list down
-is the course's own job.
+Эти четыре требования покрывают три пункта из 93, которые содержит
+``Eurobot_Rules.sdoc``, поэтому Матрица трассируемости показывает длинный
+список правил, для которых требование ещё не написано. Сократить этот
+список — задача самого курса.
 
-The rules are in Russian and the requirements are in English, because the
-rules are quoted from the competition documents while the requirements are
-the course's own writing.
+Правила приведены на русском языке, требования — тоже: правила дословно
+цитируются из документов соревнования, а требования — собственный текст
+курса, написанный (и переведённый) на русском, поскольку студенты курса
+говорят по-русски.
 <<<
 
 [REQUIREMENT]
 UID: REQ-1
-TITLE: Footprint at the start of a match
+TITLE: Периметр в начале матча
 TARGET_REVISION: C1
 STATEMENT: >>>
-At the start of a match, the robot shall fit inside a perimeter of at most
-1200 mm, measured around the convex hull of its vertical projection on the
-ground.
+В начале матча робот должен помещаться в периметр не более 1200 мм,
+измеренный по выпуклой оболочке его вертикальной проекции на землю.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -35,12 +35,12 @@ RELATIONS:
 
 [REQUIREMENT]
 UID: REQ-2
-TITLE: Height during a match
+TITLE: Высота во время матча
 TARGET_REVISION: C1
 STATEMENT: >>>
-At any time during a match, the robot shall measure at most 350 mm from the
-table surface to its highest point. The beacon support mast, and the sensors
-and circuits mounted under it, are outside that measurement.
+В любой момент матча высота робота от поверхности стола до его самой
+высокой точки должна быть не более 350 мм. Мачта крепления маяка, а также
+датчики и схемы, установленные под ней, в этот замер не входят.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -49,15 +49,15 @@ RELATIONS:
 
 [REQUIREMENT]
 UID: REQ-3
-TITLE: Emergency stop cuts actuator power
+TITLE: Аварийная остановка обесточивает приводы
 TARGET_REVISION: C2
 STATEMENT: >>>
-Pressing the emergency stop button shall remove power from every motor and
-every actuator within 100 ms, and the robot shall stay unpowered until the
-button is released.
+Нажатие кнопки аварийной остановки должно снимать питание со всех двигателей
+и приводов в течение 100 мс, и робот должен оставаться обесточенным до
+отпускания кнопки.
 
-The button shall sit on top of the robot or on a side a referee can reach
-without moving anything else.
+Кнопка должна располагаться на верхней части робота или на стороне,
+доступной судье без необходимости что-либо передвигать.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -66,14 +66,30 @@ RELATIONS:
 
 [REQUIREMENT]
 UID: REQ-4
-TITLE: Autonomous match cycle
+TITLE: Автономный цикл матча
 TARGET_REVISION: TBD
 STATEMENT: >>>
-After the referee's start signal, the robot shall run its match strategy for
-100 seconds and shall stop all motion at the end of that time. It shall take
-no input from the team while the match runs.
+После стартового сигнала судьи робот должен выполнять свою стратегию матча
+в течение 100 секунд и полностью остановить любое движение по истечении
+этого времени. Во время матча он не должен принимать никаких команд от
+команды.
 <<<
 RELATIONS:
 - TYPE: Parent
   VALUE: RULE-GENERAL-H.2
+  ROLE: COVERS
+
+[REQUIREMENT]
+UID: REQ-5
+TITLE: Движение при извлечении корда
+TARGET_REVISION: TBD
+STATEMENT: >>>
+1) Должен быть в наличии корд (механика, платформа)
+2) Разъём под корд должен быть установлен в робота (механика, платформа)
+3) Робот должен считывать, есть ли в нём корд или нету (электроника, платформа)
+4) При отсутствии корда в роботе, должны подаваться управляющие команды (по, платформа)
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: RULE-GENERAL-I.3.b
   ROLE: COVERS

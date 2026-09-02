@@ -1,27 +1,27 @@
 [DOCUMENT]
-TITLE: Eurobot System Tests
+TITLE: Системные испытания
 
 [GRAMMAR]
 IMPORT_FROM_FILE: @eurobot
 
 [TEXT]
 STATEMENT: >>>
-Manually executed system tests. ``STATUS`` records the current result;
-the team updates it by hand after each test session and writes
-``Not Executed`` on a new test case. ``REQ-4`` deliberately has no test
-case, so the Traceability Matrix shows what an unverified requirement
-looks like.
+Испытания, выполняемые вручную. Поле ``STATUS`` фиксирует текущий результат;
+команда обновляет его вручную после каждой сессии испытаний и указывает
+``Not Executed`` для нового тестового случая. У ``REQ-4`` намеренно нет
+тестового случая, чтобы Матрица трассируемости показывала, как выглядит
+непроверенное требование.
 <<<
 
 [TEST_CASE]
 UID: TC-1
-TITLE: Measure the starting footprint
+TITLE: Измерение периметра при старте
 STATUS: Passed
 STATEMENT: >>>
-Place the robot on the table in its starting configuration and wrap a
-measuring tape around its footprint. Record the perimeter.
+Поставьте робота на стол в стартовой конфигурации и оберните измерительную
+ленту вокруг его периметра. Зафиксируйте значение периметра.
 
-Expected: the perimeter is at most 1200 mm.
+Ожидаемый результат: периметр не более 1200 мм.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -30,13 +30,13 @@ RELATIONS:
 
 [TEST_CASE]
 UID: TC-2
-TITLE: Measure the height
+TITLE: Измерение высоты
 STATUS: Not Executed
 STATEMENT: >>>
-Remove the beacon support. Measure from the table surface to the highest
-point of the robot.
+Снимите мачту крепления маяка. Измерьте расстояние от поверхности стола до
+самой высокой точки робота.
 
-Expected: the height is at most 350 mm.
+Ожидаемый результат: высота не более 350 мм.
 <<<
 RELATIONS:
 - TYPE: Parent
@@ -45,14 +45,14 @@ RELATIONS:
 
 [TEST_CASE]
 UID: TC-3
-TITLE: Emergency stop under load
+TITLE: Аварийная остановка под нагрузкой
 STATUS: Failed
 STATEMENT: >>>
-Drive the robot forward at full speed and press the emergency stop
-button. Observe the motors and the actuators.
+Разгоните робота на полной скорости вперёд и нажмите кнопку аварийной
+остановки. Понаблюдайте за двигателями и приводами.
 
-Expected: all motion stops, no actuator holds power, and the robot stays
-unpowered until the button is released.
+Ожидаемый результат: всё движение прекращается, ни один привод не
+удерживает питание, и робот остаётся обесточенным до отпускания кнопки.
 <<<
 RELATIONS:
 - TYPE: Parent

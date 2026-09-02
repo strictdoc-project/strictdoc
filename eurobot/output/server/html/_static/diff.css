@@ -1,0 +1,531 @@
+/* diff */
+:root {
+  --pre-stripe: 20px;
+  --pre-stripe-color: rgba(0,0,0,0.02);
+  --pre-block-bg-color: rgba(0,0,0,0.01);
+
+  --diff-block-color-left: rgba(255, 55, 55, .05);
+  --diff-word-color-left: rgba(255, 55, 55, .2);
+  --diff-icon-color-left: rgba(255, 55, 55, .75);
+  --diff-document-color-left: rgba(255, 55, 55, 1);
+
+  --diff-block-color-right: rgba(20, 120, 20, .05);
+  --diff-word-color-right: rgba(20, 120, 20, .2);
+  --diff-icon-color-right: rgba(20, 120, 20, .75);
+  --diff-document-color-right: rgba(20, 120, 20, 1);
+}
+
+/*
+ *** diff ***
+ */
+
+.diff {
+  scroll-behavior: smooth;
+  background-color: var(--color-bg-main);
+
+  display: grid;
+  place-items: stretch stretch;
+  place-content: stretch stretch;
+  grid-template-columns:  minmax(0, 1fr) /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
+                          minmax(0, 1fr);
+  grid-template-rows: minmax(0, max-content)
+                      minmax(0, 1fr);
+
+  gap: var(--base-rhythm);
+
+  min-height: 0; /* to prevent from overflowing the parent flex container */
+}
+
+/* controls */
+
+.diff_controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: calc(var(--base-rhythm)/2);
+}
+
+#diff_left_open {
+  color: var(--diff-document-color-left);
+}
+
+#diff_right_open {
+  color: var(--diff-document-color-right);
+}
+
+#diff_left_close,
+#diff_right_close {
+  color: var(--color-link);
+}
+
+#diff_left_open:hover,
+#diff_right_open:hover {
+  color: var(--color-hover);
+}
+
+/* columns */
+.diff_column {
+  overflow: auto;
+  overflow-y: scroll;
+
+  overflow-wrap: break-word;
+
+  border-radius: 4px;
+  border: 1px solid var(--color-border);
+
+  position: relative; /* for position:sticky */
+}
+
+.diff_column[left] {
+  direction:rtl;
+}
+
+.diff_column[right] {
+  direction:ltr;
+}
+
+.diff_inner {
+  direction: initial;
+  padding-bottom: 100%; /* to balance the scrolling freely */
+}
+
+.diff_content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--base-rhythm);
+  padding: var(--base-rhythm);
+}
+
+/* details with summary */
+
+.diff details {
+  width: 100%;
+}
+
+.diff summary {
+  list-style: none;
+  display: flex;
+  gap: var(--base-rhythm);
+  cursor: pointer;
+  color: var(--color-link);
+}
+
+.diff details[modified] > summary {
+  color: var(--color-fg-accent);
+}
+
+.diff details[modified="left"] > summary {
+  color: var(--diff-document-color-left);
+}
+
+.diff details[modified="right"] > summary {
+  color: var(--diff-document-color-right);
+}
+
+.diff summary:hover,
+.diff details[modified] > summary:hover {
+  color: var(--color-hover);
+}
+
+.diff summary::-webkit-details-marker {
+  display: none;
+}
+
+.diff details > summary::before {
+  content:"+";
+}
+
+.diff details[open] > summary::before {
+  content:"–";
+}
+
+/* document / details */
+
+.diff_document {
+  background-color: var(--color-bg-contrast);
+  border: 1px solid transparent;
+  border-radius: 4px;
+  padding: 0 var(--base-rhythm);
+}
+
+.diff_document[modified] {
+  border-color: var(--color-fg-accent);
+}
+
+.diff_document[modified="left"] {
+  border-color: var(--diff-document-color-left, rgba(255, 55, 55, 1));
+}
+
+.diff_document[modified="right"] {
+  border-color: var(--diff-document-color-right, rgba(20, 120, 20, 1));
+}
+
+.diff_document > summary {
+  line-height: 1.2;
+  padding: var(--base-rhythm) 0;
+  font-size: var(--font-size-sm);
+  font-weight: 700;
+  justify-content: space-between; /* '+' to right */
+}
+
+.diff_document[open] > summary {
+  /*
+  When the details are closed up, the summary sometimes covers the bottom border.
+  That's why we only add the background for cases where the card is open
+  and sticking makes sense.
+  */
+  background: var(--color-bg-contrast);
+  position: sticky;
+  top: 0;
+}
+
+.diff_document > summary .document_title {
+  flex-grow: 1;
+}
+
+.diff_document[open] > summary {
+  border-bottom: 1px dotted;
+}
+
+.diff_document > summary::before,
+.diff_document[open] > summary::before {
+  content: none !important;
+}
+
+.diff_document > summary::after {
+  content:"+";
+}
+
+.diff_document[open] > summary::after {
+  content:"–";
+}
+
+/* folder */
+
+.diff_folder {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  column-gap: calc(var(--base-rhythm)/2);
+  font-size: var(--font-size-sm);
+  min-width: 0;
+  line-height: 1.5;
+  padding-top: var(--base-rhythm);
+}
+
+/* node content */
+
+.diff_node {
+  margin: var(--base-rhythm) 0;
+}
+
+.diff_node_fields {
+  display: flex;
+  flex-direction: column;
+  margin: var(--base-rhythm) 0;
+  row-gap: calc(var(--base-rhythm) / 2);
+}
+
+.diff_node > .diff_node_fields {
+  padding-left: calc(var(--base-rhythm)*2);
+}
+
+.diff_node_field {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: calc(var(--base-rhythm) / 2);
+}
+
+.diff_node_field > .badge {
+  line-height: var(--pre-stripe);
+}
+
+/*
+ *** changelog ***
+ */
+
+.changelog {
+  display: flex;
+  flex-direction: column;
+}
+
+.changelog .sdoc-table_key_value {
+  width: auto;
+}
+
+.changelog .diff_column {
+  margin-right: -16px;
+  border-radius: 0;
+  border: none;
+  border-right: 1px solid var(--color-border);
+}
+
+.changelog_summary {
+  padding: calc(2 * var(--base-rhythm));
+}
+
+.changelog_content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--base-rhythm);
+  margin-bottom: calc(4 * var(--base-rhythm));
+}
+
+.changelog_changes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--base-rhythm);
+}
+
+.changelog_change {
+  background-color: var(--color-bg-contrast);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.changelog_change_meta {
+  background-color: var(--color-bg-main);
+  width: 100%;
+  font-size: var(--font-size-xsm);
+  font-weight: 700;
+  display: flex;
+  gap: var(--base-rhythm);
+  padding: var(--base-rhythm);
+}
+
+.changelog_change_type {
+  font-size: var(--font-size-xsm);
+}
+
+.changelog_change_type.removed {
+  color: red;
+}
+
+.changelog_change_type.modified {
+  color: orange;
+}
+
+.changelog_change_type.added {
+  color: green;
+}
+
+.changelog_change_node {
+  width: 100%;
+  padding: var(--base-rhythm);
+}
+
+@media (min-width: 768px) {
+  .changelog_change_node {
+    /* width: calc(50% - var(--base-rhythm)); */
+    width: 50%;
+  }
+}
+
+.changelog_node_null {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: var(--color-placeholder);
+
+  height: 100%;
+  min-height: 32px;
+  background:repeating-linear-gradient(
+    -45deg,
+    rgba(234, 234, 234, 0.1),
+    rgba(234, 234, 234, .1) 10px,
+    rgba(234, 234, 234, .15) 10px,
+    rgba(234, 234, 234, .15) 20px
+  );
+
+}
+
+/*
+ *** MISC ***
+ */
+
+/* badge */
+
+.badge {
+  white-space: nowrap;
+}
+
+.badge::before {
+  content: attr(text);
+  padding: 0 calc(var(--base-rhythm)/2);
+  border: 1px solid;
+  border-radius: calc(var(--base-rhythm)/2);
+  font-size: var(--font-size-xxsm);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* in summary: */
+[modified="left"] > summary .badge::before,
+/* in field: */
+[modified="left"] > .badge::before {
+  color: white;
+  background-color: var(--diff-icon-color-left);
+  border-color: var(--diff-icon-color-left);
+}
+
+/* in summary: */
+[modified="right"] > summary .badge::before,
+/* in field: */
+[modified="right"] > .badge::before {
+  color: white;
+  background-color: var(--diff-icon-color-right);
+  border-color: var(--diff-icon-color-right);
+}
+
+/* pre */
+
+.sdoc_pre_content {
+  flex-grow: 1;
+  white-space: pre-wrap;
+  overflow-x: clip;
+  font-family: monospace;
+  font-size: 0.85em;
+  line-height: var(--pre-stripe);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    var(--pre-stripe-color),
+    var(--pre-stripe-color) var(--pre-stripe),
+    transparent var(--pre-stripe),
+    transparent calc(var(--pre-stripe)*2)
+  );
+  background-color: var(--pre-block-bg-color);
+}
+
+[multiline] .sdoc_pre_content {
+  flex-basis: 100%;
+}
+
+[modified="left"] > .sdoc_pre_content {
+  background-color: var(--diff-block-color-left);
+}
+.lambda_red {background-color: var(--diff-word-color-left);}
+
+[modified="right"] > .sdoc_pre_content {
+  background-color: var(--diff-block-color-right);
+}
+.lambda_green {background-color: var(--diff-word-color-right);}
+
+/* preloaded */
+/*
+  The element has been pre-loaded
+  and a smooth appearance effect is added to it.
+  The element will retain the computed values set by the last keyframe.
+ */
+.preloaded {
+  position: relative;
+  animation: fadeInPreloaded 1s ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeInPreloaded {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* skeleton */
+
+.skeleton_spinner_container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  min-height: 333px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  grid-column: 1/3;
+  grid-row: 2/3;
+  z-index: 11;
+}
+
+@keyframes change-color {
+  from {background-color: rgba(255,255,255,0.8);}
+  to {background-color: rgba(255,255,255,0.3);}
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: .5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.skeleton_spinner {
+  position: relative;
+  text-indent: -9999em;
+  animation: mulShdSpin 1.3s infinite linear;
+  transform: translateZ(0);
+  /* size */
+  font-size: 8px;
+  margin: 36px;
+  /* dot */
+  color: var(--color-fg-accent);
+  width: 1em;
+  height: 1em;
+  border-radius: 50%;
+}
+
+@keyframes mulShdSpin {
+  0%,
+  100% {
+    box-shadow: 0 -3em 0 0.2em,
+    2em -2em 0 0em, 3em 0 0 -1em,
+    2em 2em 0 -1em, 0 3em 0 -1em,
+    -2em 2em 0 -1em, -3em 0 0 -1em,
+    -2em -2em 0 0;
+  }
+  12.5% {
+    box-shadow: 0 -3em 0 0, 2em -2em 0 0.2em,
+    3em 0 0 0, 2em 2em 0 -1em, 0 3em 0 -1em,
+    -2em 2em 0 -1em, -3em 0 0 -1em,
+    -2em -2em 0 -1em;
+  }
+  25% {
+    box-shadow: 0 -3em 0 -0.5em,
+    2em -2em 0 0, 3em 0 0 0.2em,
+    2em 2em 0 0, 0 3em 0 -1em,
+    -2em 2em 0 -1em, -3em 0 0 -1em,
+    -2em -2em 0 -1em;
+  }
+  37.5% {
+    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
+     3em 0em 0 0, 2em 2em 0 0.2em, 0 3em 0 0em,
+     -2em 2em 0 -1em, -3em 0em 0 -1em, -2em -2em 0 -1em;
+  }
+  50% {
+    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
+     3em 0 0 -1em, 2em 2em 0 0em, 0 3em 0 0.2em,
+     -2em 2em 0 0, -3em 0em 0 -1em, -2em -2em 0 -1em;
+  }
+  62.5% {
+    box-shadow: 0 -3em 0 -1em, 2em -2em 0 -1em,
+     3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 0,
+     -2em 2em 0 0.2em, -3em 0 0 0, -2em -2em 0 -1em;
+  }
+  75% {
+    box-shadow: 0em -3em 0 -1em, 2em -2em 0 -1em,
+    3em 0em 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em,
+    -2em 2em 0 0, -3em 0em 0 0.2em, -2em -2em 0 0;
+  }
+  87.5% {
+    box-shadow: 0em -3em 0 0, 2em -2em 0 -1em,
+    3em 0 0 -1em, 2em 2em 0 -1em, 0 3em 0 -1em,
+    -2em 2em 0 0, -3em 0em 0 0, -2em -2em 0 0.2em;
+  }
+}

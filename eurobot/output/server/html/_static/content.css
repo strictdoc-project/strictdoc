@@ -1,0 +1,218 @@
+/* .main */
+
+.main {
+  position: relative;
+  overflow: auto;
+  scroll-behavior: smooth;
+  scrollbar-gutter: stable both-edges;
+  padding: var(--base-gap) /* == calc(var(--base-rhythm)*6) */
+           calc(var(--base-rhythm)*6); /* compensate both-edges scrollbar-gutter */
+
+  height: 100%;
+  background-color: var(--color-bg-main);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  gap: var(--base-rhythm);
+}
+
+/* highlight main layout in special mode (e.g., edit mode) */
+
+.main::after {
+  content: '';
+  position: fixed;
+  z-index: 9999;
+  top: 0;
+  left: var(--base-gap);
+  right: 0;
+  bottom: calc(var(--base-rhythm) * 4);
+  pointer-events: none;
+  transition: box-shadow 0.2s ease;
+  box-shadow: inset 0 0 16px transparent,
+              inset 0 0 0 2px transparent;
+}
+
+/* redefine main layout grid */
+
+[data-viewtype="diff"] .main {
+  padding-bottom: 0;
+}
+
+[data-viewtype="source-file"] .main {
+  padding: 0;
+  scrollbar-gutter: unset;
+}
+
+.main_sticky_header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 11;
+
+  display: flex;
+  flex-direction: column;
+  gap: var(--base-rhythm);
+
+  /* margin-bottom: calc(var(--base-rhythm)*4); */
+  background-color: var(--color-bg-main);
+  border: none;
+}
+
+.main_sticky_header > * {
+  position: relative;
+}
+
+.main_sticky_header::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  top: -60px;
+  left: calc(-1 * var(--base-gap));
+  right: calc(-1 * var(--base-gap));
+  background-color: var(--color-bg-main);
+  z-index: 0;
+}
+
+/* .content */
+
+.content {
+  width: 100%;
+  min-width: calc(var(--card-width) + calc(var(--base-padding)*4));
+}
+
+[data-viewtype="document"] .content {
+  display: block;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+[data-viewtype="traceability"] .content {
+  display: grid;
+  place-items: stretch stretch;
+  grid-template-columns:  minmax(min-content, max-content)
+                          minmax(var(--card-width), calc(2*var(--card-width)))
+                          minmax(min-content, max-content);
+  gap: var(--requirement-tree-margin) 0;
+  width: -moz-fit-content;
+  width: fit-content;
+  /* overflow: hidden; */
+}
+
+[data-viewtype="requirements-coverage"] .content,
+[data-viewtype="deep_traceability"] .content {
+  display: grid;
+  place-items: stretch stretch;
+  grid-template-columns:  minmax(min-content, max-content)
+                          max-content
+                          minmax(min-content, max-content);
+  gap: var(--requirement-tree-margin) 0;
+  width: -moz-fit-content;
+  width: fit-content;
+
+  /* fon node-controls: */
+  /* overflow: hidden; */
+}
+
+[data-viewtype="table"] .content {
+  background-color: var(--color-bg-contrast);
+  display: block;
+  /* aligns the width of the white box of the content and the table: */
+  width: fit-content;
+}
+
+[data-viewtype="table"] sdoc-node .free_text{
+  max-width: 900px;
+}
+
+[data-viewtype="search"] .content {
+  display: grid;
+  place-items: stretch stretch;
+  grid-template-columns: 1fr;
+  gap: var(--tree-gap) 0;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+/* TODO */
+/* used in TR, DTR, requirements_coverage: */
+.content_section {
+  display: contents;
+}
+/* TODO */
+.content_item {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-content: stretch;
+  align-items: stretch;
+}
+
+/* traceability */
+
+.content_item[data-role="parents"] {
+  grid-column: 1 / 2;
+}
+
+.content_item[data-role="current"] {
+  grid-column: 2 / 3;
+}
+
+[data-viewtype="deep_traceability"] .content_item[data-role="current"] {
+  /* central column */
+  width: var(--card-width);
+}
+
+[data-viewtype="requirements-coverage"] .content_item[data-role="current"] {
+  /* central column */
+  width: calc(var(--card-width)*0.75);
+}
+
+.content_item[data-role="children"] {
+  grid-column: 3 / 4;
+}
+
+[data-viewtype="deep_traceability"] .content_item[data-role="current"]::before,
+[data-viewtype="traceability"] .content_item[data-role="current"]::before {
+  /* for vertical line in 'current' column */
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: calc(var(--requirement-tree-margin)*(-1));
+  left: 50%;
+  border-left: 1px dotted #000;
+}
+
+[data-viewtype="deep_traceability"] section:last-child .content_item[data-role="current"]::before,
+[data-viewtype="traceability"] section:last-child .content_item[data-role="current"]::before {
+  /* the last section doesn't need a vertical connector under the middle node */
+  content: none;
+}
+
+/* placeholder */
+
+sdoc-main-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-placeholder);
+  font-weight: 700;
+  font-family: var(--code-font-family);
+  width: 100%;
+  height: 100%;
+}
+
+sdoc-main-legend {
+  display: block;
+  color: var(--color-placeholder);
+  font-weight: 700;
+  font-family: var(--code-font-family);
+  max-width: 1024px;
+  padding: var(--base-gap);
+  font-weight: 500;
+  margin-bottom: auto; /* To align the element at the top of the container that uses 'display:flex' */
+}

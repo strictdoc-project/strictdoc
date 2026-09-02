@@ -1,0 +1,571 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  
+  <meta charset="UTF-8"/>
+  <meta name="keywords" content="strictdoc, documentation, documentation-tool, requirements-management, requirements, documentation-generator, requirement-specifications, requirements-engineering, technical-documentation, requirements-specification"/>
+  <meta name="description" content="strictdoc. Software for technical documentation and requirements management."/>
+  <meta name="strictdoc-export-type" content="webserver">
+  
+  <meta name="strictdoc-document-level" content="0">
+
+  <link rel="shortcut icon" href="_static/favicon.svg" type="image/svg+xml" />
+
+  
+  
+  <link rel="stylesheet" href="_static/base.css"/>
+  <link rel="stylesheet" href="_static/layout.css"/>
+  <link rel="stylesheet" href="_static/content.css"/>
+  <link rel="stylesheet" href="_static/node.css"/>
+  <link rel="stylesheet" href="_static/node_content.css"/>
+  <link rel="stylesheet" href="_static/element.css"/>
+  <link rel="stylesheet" href="_static/form.css"/>
+  <link rel="stylesheet" href="_static/requirement__temporary.css"/>
+  <link rel="stylesheet" href="_static/autogen.css"/>
+  <link rel="stylesheet" href="_static/pygments.css"/>
+  
+  
+  <link rel="stylesheet" href="_static/project_tree.css"/>
+
+
+  
+  
+  <script src="_static/app_core.js"></script>
+
+  <script src="_static/collapsible_tree.js"></script>
+  <script src="_static/stable_uri_forwarder.js" id="stable_uri_forwarder"></script>
+
+  
+  <script src="_static/project_tree.js"></script>
+
+  
+    <meta name="strictdoc-project-hash" content="bf78001a184e21b9d6401d6f3fbeafc5">
+<meta name="strictdoc-search-index-timestamp" content="1788190138.098249">
+<meta name="strictdoc-search-index-path" content="_static/static_html_search_index.js">
+
+
+<script src="_static/app_core.js"></script>
+<script src="_static/static_html_search.js" defer></script>
+  <script type="module">
+    import hotwiredTurbo from "/_static/turbo.min.js";
+  </script>
+  <script src="_static/dropdown_menu.js"></script>
+  <script src="_static/editable_field.js"></script>
+  <script src="_static/modal.js"></script>
+  <script src="_static/action_button_guard.js"></script>
+
+  <title>
+  Eurobot - Project index
+</title>
+
+  
+</head>
+
+<body data-viewtype="document-tree" data-turbo="false">
+
+<div class="mars">
+  
+  
+<sdoc-toast id="connection_status"></sdoc-toast>
+
+<script>
+  var clientId = Date.now();
+  var ws_protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  var ws = new WebSocket(`${ws_protocol}//${window.location.host}/ws/${clientId}`);
+  ws.onmessage = function(event) {
+    if (event.data === "reload") {
+      window.location.reload();
+    } else if (event.data.indexOf("error:") === 0) {
+      document.getElementById("connection_status").innerHTML = `
+        Document build failed. Fix the source files and save again.
+        <pre style="white-space: pre-wrap;">${event.data.slice("error:".length)}</pre>
+      `;
+    }
+  };
+  ws.onopen = function(e) {
+    // Nothing just yet.
+  }
+  ws.onclose = function(e) {
+    document.getElementById("connection_status").innerHTML = `
+      Connection with the server is lost.
+      <a href="#" onclick="location.reload(); return false;">Click to reload</a>
+    `;
+  };
+  window.onbeforeunload = function (e) {
+    // Suprisingly, the last milleseconds of the page lifecycle let the page
+    // still update its HTML which creates a visual artefact when refreshing the
+    // page in the browser continuously.
+    // This event ensures that we disable websockets when the page is about to
+    // be refreshed/left.
+    ws.onclose = null;
+  };
+
+</script>
+  
+</div>
+
+  <div class="layout" id="layout">
+
+    <nav class="layout_nav">
+      
+  <div class="nav">
+
+
+
+  <a
+    data-link="index"
+    class="nav_button"
+    href="index.html"
+    title="Project index"
+    data-testid="project-tree-link-project-index"
+  >
+    <svg
+  class="svg_icon"
+  viewBox="0 0 16 16"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <line x1="9" y1="4" x2="7" y2="4"></line>
+  <line x1="12" y1="9" x2="12" y2="7"></line>
+  <line x1="6" y1="10" x2="10" y2="6"></line>
+  <circle cx="4" cy="12" r="2.25"></circle>
+  <circle cx="12" cy="4" r="2.25"></circle>
+  <circle cx="4" cy="4" r="2.25"></circle>
+  <circle cx="12" cy="12" r="2.25"></circle>
+</svg>
+  </a><a
+    data-link="traceability-matrix"
+    class="nav_button"
+    href="traceability_matrix.html"
+    title="Traceability matrix"
+    data-testid="project-tree-link-requirements-coverage"
+  >
+    <svg
+  class="svg_icon"
+  viewBox="0 0 16 16"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <line x1="2" y1="11" x2="14" y2="11"></line>
+  <line x1="10" y1="8" x2="14" y2="8"></line>
+  <line x1="2" y1="14" x2="14" y2="14"></line>
+  <polyline points="2 6 4.5 8 9.5 2"></polyline>
+</svg>
+  </a><a
+    data-link="search"
+    class="nav_button"
+    href="search"
+    title="Search"
+    data-testid="project-tree-link-search"
+  >
+    <svg
+  class="svg_icon"
+  viewBox="0 0 16 16"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <line x1="14.5" y1="14.5" x2="11" y2="11" stroke-linecap="round"></line>
+  <circle cx="7" cy="7" r="5"></circle>
+</svg>
+  </a></div>
+
+    </nav>
+
+    <aside class="layout_tree">
+      
+    </aside><aside
+        data-position="right"
+        class="layout_toc"
+      >
+        
+
+      </aside><header class="layout_header">
+      <div class="header">
+
+  
+  <div
+    class="header__project_name"
+    id="header-project-name"
+    title="Eurobot"
+  >Eurobot
+  </div>
+
+  <svg
+  class="svg_icon"
+  viewBox="0 0 20 20"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  >
+  <path d="M12.5 4.5l-5 11"></path>
+</svg>
+    <div class="pagetype">Project index</div>
+  <div class="header__placeholder" data-testid="header-placeholder" id="header-placeholder"></div>
+
+  
+<turbo-frame>
+  <div id="search" class="search-box">
+  <div class="search-input">
+      <input type="text" id="userinput" tabindex="2" placeholder="Search" autocorrect="off" spellcheck="false" autocomplete="off" data-testid="static-html-search-input">
+  </div>
+  <div id="search_results" class="search-results">
+    <div id="results_navigation" class="search-results-navigation">
+      <div id="results_count" class="search-results-count"></div>
+      <div class="search-results-navigation-buttons">
+        <span class="search-results-navigation-button" id="start" data-testid="static-html-search-button-start"></span>
+        <span class="search-results-navigation-button" id="previous" data-testid="static-html-search-button-previous"></span>
+        <span class="search-results-navigation-button" id="next" data-testid="static-html-search-button-next"></span>
+        <span class="search-results-navigation-button" id="end" data-testid="static-html-search-button-end"></span>
+      </div>
+    </div>
+    <div id="suggestions" class="search-suggestions"></div>
+  </div>
+</div>
+
+<div
+  id="header-actions"
+  class="header-actions"
+>
+  <div
+    id="header-actions-handler"
+    class="header-actions__kebab action_button"
+    role="button"
+    data-dropdown-handler
+    aria-expanded="false"
+    aria-controls="header-actions-menu"
+    aria-haspopup="true"
+    title="Actions"
+    data-testid="header-action-menu-handler"
+  ><svg class="svg_icon" viewBox="0 0 16 16">
+  <circle cx="2" cy="8" r="1"></circle>
+  <circle cx="8" cy="8" r="1"></circle>
+  <circle cx="14" cy="8" r="1"></circle>
+</svg></div>
+  <menu
+    id="header-actions-menu"
+    class="dropdown_menu"
+    aria-hidden="true"
+    aria-label="Header actions"
+    aria-labelledby="header-actions-handler"
+    role="menu"
+  >
+    <a
+  class="dropdown_menu_item"
+  href="/actions/project_index/new_document"
+  data-turbo="true"
+  title="Add new document"
+  data-testid="tree-add-document-action"
+  role="menuitem"
+><svg
+  class="svg_icon"
+  viewBox="0 0 16 16"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <line x1="8" y1="3" x2="8" y2="13"></line>
+  <line x1="13" y1="8" x2="3" y2="8"></line>
+</svg> Add document</a>
+
+<a
+  class="dropdown_menu_item"
+  href="/actions/project_index/edit_project_title_form"
+  data-turbo="true"
+  title="Edit project title"
+  data-testid="project-edit-title-action"
+  role="menuitem"
+>Edit project title</a>
+  </menu>
+</div></turbo-frame></div>
+    </header>
+
+    <main class="layout_main">
+      
+  <div class="main">
+  <div class="dashboard">
+    <div class="dashboard-main">
+      <turbo-frame id="frame_project_tree">
+  <div class="project_tree" js-collapsible_tree>
+    
+
+      
+        
+          
+            
+
+<details open class="project_tree-folder">
+  <summary>
+    <div class="project_tree-folder-title"><svg
+  class="svg_icon"
+  viewBox="0 0 16 16"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d="M13,12 L13,8 C13,7.5 12.5,7 12,7 L9,7 C8.5,7 8,6.5 8,6 L8,5.5 C8,5 7.5,4.5 7,4.5 C5,4.5 4,4.5 4,4.5 C3.5,4.5 3,5 3,5.5 L3,12 C3,12.5 3.5,13 4,13 L12,13 C12.5,13 13,12.5 13,12 Z"></path>
+</svg>eurobot/<svg
+  class="svg_icon icon_collapse_expand"
+  viewBox="0 0 16 16"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <polyline class="collapsed" points="13 7 8 12 3 7"></polyline>
+  <line class="expanded" x1="4" y1="8" x2="12" y2="8"></line>
+</svg></div>
+  </summary>
+
+  <div class="project_tree-folder-content">
+    
+      
+    
+      
+    
+      
+    
+
+    
+      
+        
+          
+
+<a
+  class="project_tree-file"
+  data-turbo="false"
+  href="eurobot/Eurobot_Requirements.html"
+  
+  data-testid="tree-file-link"
+>
+
+  <div class="project_tree-file-icon"><svg
+  class="svg_icon"
+  viewBox="0 0 16 16"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d=" M13,13 L13,8 C13,7.5 12.6,7 12,7 L9,7 C8.5,7 8,6.5 8,6 L8,3 C8,2.5 7.5,2 7,2 L4,2 C3.5,2 3,2.5 3,3 L3,13 C3,13.5 3.5,14 4,14 L12,14 C12.6,14 13,13.5 13,13 Z M13,9 L13,8 C13,7.5 13,7 12.5,6.5 L8.5,2.5 C8,2 7.5,2 7,2 L6,2"></path>
+</svg></div>
+
+  <div class="project_tree-file-details">
+    <div class="project_tree-file-title">
+      Системные требования
+    </div>
+    <div class="project_tree-file-name">
+      Eurobot_Requirements.sdoc
+    </div></div>
+</a>
+        
+      
+    
+      
+        
+          
+
+<a
+  class="project_tree-file"
+  data-turbo="false"
+  href="eurobot/Eurobot_Rules.html"
+  
+  data-testid="tree-file-link"
+>
+
+  <div class="project_tree-file-icon"><svg
+  class="svg_icon"
+  viewBox="0 0 16 16"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d=" M13,13 L13,8 C13,7.5 12.6,7 12,7 L9,7 C8.5,7 8,6.5 8,6 L8,3 C8,2.5 7.5,2 7,2 L4,2 C3.5,2 3,2.5 3,3 L3,13 C3,13.5 3.5,14 4,14 L12,14 C12.6,14 13,13.5 13,13 Z M13,9 L13,8 C13,7.5 13,7 12.5,6.5 L8.5,2.5 C8,2 7.5,2 7,2 L6,2"></path>
+</svg></div>
+
+  <div class="project_tree-file-details">
+    <div class="project_tree-file-title">
+      Регламент Евробот
+    </div>
+    <div class="project_tree-file-name">
+      Eurobot_Rules.sdoc
+    </div></div>
+</a>
+        
+      
+    
+      
+        
+          
+
+<a
+  class="project_tree-file"
+  data-turbo="false"
+  href="eurobot/Eurobot_Tests.html"
+  
+  data-testid="tree-file-link"
+>
+
+  <div class="project_tree-file-icon"><svg
+  class="svg_icon"
+  viewBox="0 0 16 16"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path d=" M13,13 L13,8 C13,7.5 12.6,7 12,7 L9,7 C8.5,7 8,6.5 8,6 L8,3 C8,2.5 7.5,2 7,2 L4,2 C3.5,2 3,2.5 3,3 L3,13 C3,13.5 3.5,14 4,14 L12,14 C12.6,14 13,13.5 13,13 Z M13,9 L13,8 C13,7.5 13,7 12.5,6.5 L8.5,2.5 C8,2 7.5,2 7,2 L6,2"></path>
+</svg></div>
+
+  <div class="project_tree-file-details">
+    <div class="project_tree-file-title">
+      Системные испытания
+    </div>
+    <div class="project_tree-file-name">
+      Eurobot_Tests.sdoc
+    </div></div>
+</a>
+        
+      
+    
+      
+    
+  </div>
+</details>
+          
+        
+      
+
+    
+  </div>
+</turbo-frame>
+    </div>
+    <div class="dashboard-aside">
+      
+      <div class="dashboard-block" id="project_tree_controls"></div>
+      
+
+      <div class="dashboard-block">
+        
+        
+        <div class="dashboard-block-title">
+          Project tree configuration
+        </div>
+
+        
+          <b>Input paths:</b>
+          
+          
+          <code class="dashboard-path" data-testid="dashboard-input-path"><span class="dashboard-path-external" data-testid="dashboard-input-path-external" tabindex="0" title="Click to reveal">…</span><span class="dashboard-path-external-full">/data</span><span class="dashboard-path-internal">/eurobot</span>
+          </code><br/>
+          
+        
+
+        
+          <p>Document paths:</p>
+          <ul>
+            
+            
+            <li style="list-style-type: '⛔    '">/README.md</li>
+            
+          </ul>
+        
+
+        
+          
+          <b>Source root path:</b>
+            <code class="dashboard-path" data-testid="dashboard-source-root-path"><span class="dashboard-path-external" data-testid="dashboard-source-root-path-external" tabindex="0" title="Click to reveal">…</span><span class="dashboard-path-external-full">/data</span><span class="dashboard-path-internal">/eurobot</span>
+            </code>
+        
+
+        
+
+      </div>
+    </div>
+  </div>
+</div>
+
+    </main>
+
+    <footer class="layout_footer">
+      <div class="footer">
+        Built with
+        <a
+          class="strictdoc__link"
+          href="https://github.com/strictdoc-project/strictdoc"
+          target="_blank"
+        ><svg
+  height="16px"
+  width="16px"
+  viewBox="0 0 100 100"
+  xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .line {
+      fill: none;
+      stroke-width: 6;
+      stroke: currentColor;
+    }
+    .node {
+      fill: currentColor;
+      stroke: none;
+    }
+  </style>
+
+  <path
+    class="line"
+    d="M 76,35 50,20 24,35 76,65 50,80 24,65"/>
+
+  <circle id="sdoc_n_7" class="node" cx="24" cy="65" r="9.0"/>
+  <circle id="sdoc_n_6" class="node" cx="50" cy="80" r="9.0"/>
+  <circle id="sdoc_n_5" class="node" cx="76" cy="65" r="9.0"/>
+  <circle id="sdoc_n_4" class="node" cx="50" cy="50" r="9.0"/>
+  <circle id="sdoc_n_3" class="node" cx="24" cy="35" r="9.0"/>
+  <circle id="sdoc_n_2" class="node" cx="50" cy="20" r="9.0"/>
+  <circle id="sdoc_n_1" class="node" cx="76" cy="35" r="9.0"/>
+</svg>StrictDoc</a>
+        <a
+          class="strictdoc__version"
+          href="https://github.com/strictdoc-project/strictdoc/releases/tag/0.28.3"
+          target="_blank"
+        >
+          <svg height="16" viewBox="0 0 16 16" version="1.1" width="16" >
+            <path fill-rule="evenodd" d="M2.5 7.775V2.75a.25.25 0 01.25-.25h5.025a.25.25 0 01.177.073l6.25 6.25a.25.25 0 010 .354l-5.025 5.025a.25.25 0 01-.354 0l-6.25-6.25a.25.25 0 01-.073-.177zm-1.5 0V2.75C1 1.784 1.784 1 2.75 1h5.025c.464 0 .91.184 1.238.513l6.25 6.25a1.75 1.75 0 010 2.474l-5.026 5.026a1.75 1.75 0 01-2.474 0l-6.25-6.25A1.75 1.75 0 011 7.775zM6 5a1 1 0 100 2 1 1 0 000-2z"/>
+          </svg>
+          0.28.3
+        </a>
+      </div>
+    </footer>
+
+    <aside class="layout_aside">
+      
+    </aside>
+
+  </div>
+  
+  <div id="modal"></div>
+  <div id="confirm"></div>
+  
+
+</body>
+</html>

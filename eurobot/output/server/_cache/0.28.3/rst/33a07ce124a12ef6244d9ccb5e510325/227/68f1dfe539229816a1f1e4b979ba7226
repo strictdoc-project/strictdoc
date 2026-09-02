@@ -1,0 +1,6 @@
+<div class="document">
+<p>Drive the robot forward at full speed and press the emergency stop
+button. Observe the motors and the actuators.</p>
+<p>Expected: all motion stops, no actuator holds power, and the robot stays
+unpowered until the button is released.</p>
+</div>

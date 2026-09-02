@@ -1,0 +1,7 @@
+<div class="document">
+<p>Manually executed system tests. <tt class="docutils literal">STATUS</tt> records the current result;
+the team updates it by hand after each test session and writes
+<tt class="docutils literal">Not Executed</tt> on a new test case. <tt class="docutils literal"><span class="pre">REQ-4</span></tt> deliberately has no test
+case, so the Traceability Matrix shows what an unverified requirement
+looks like.</p>
+</div>

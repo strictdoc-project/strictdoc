@@ -1,0 +1,131 @@
+/* TODO: should be revised and then moved to a permanent location or removed */
+
+
+/* requirement: parent / child / file */
+
+ul.requirement__link {
+  font-size: .85rem;
+  line-height: 1.4;
+  list-style: none;
+  padding: 0;
+}
+
+[data-viewtype="source-file"] ul.requirement__link li {
+  margin-top: 0.5rem;
+}
+
+.requirement__link a,
+.requirement__link li > span {
+  display: inline-block;
+  position: relative;
+  margin-left: 1.5rem;
+  width: calc(100% - 1.5rem);
+  overflow-wrap: break-word;
+}
+
+.requirement__link a::before,
+.requirement__link li > span::before {
+  color: #808080;
+  position: absolute;
+  left: -1.5rem;
+}
+
+.requirement__link a:link,
+.requirement__link a:visited {
+  color: var(--color-fg-contrast);
+  text-decoration: none;
+}
+
+.requirement__link a:hover {
+  /* color: var(--color-fg-accent); */
+  text-decoration: underline;
+}
+
+/* .requirement__link a::before {
+  content: '\2014';
+} */
+
+a.requirement__link-file::before,
+.requirement__link-file::before {
+  content: '</>';
+}
+
+a.requirement__link-parent::before {
+  content: '\2190';
+}
+
+a.requirement__link-child::before {
+  content: '\2192';
+}
+
+.requirement__link-external::before {
+  content: '\21D6';
+}
+
+.requirement__parent-uid,
+.requirement__child-uid {
+  position: relative;
+  font-weight: bold;
+}
+
+/* switch (injected by JS) */
+
+.std-switch {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+
+  user-select: none;
+  cursor: pointer;
+}
+
+.std-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.std-switch_slider {
+
+  position: relative;
+  cursor: pointer;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+
+  display: inline-block;
+  width: 44px;
+  height: 26px;
+  margin-right: 10px;
+
+  border-radius: 22px;
+}
+
+.std-switch_slider::before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+
+  border-radius: 50%;
+}
+
+input:checked + .std-switch_slider {
+  background-color: rgb(100, 222, 50);
+}
+
+input:focus + .std-switch_slider {
+  box-shadow: 0 0 1px rgb(100, 222, 50);
+}
+
+input:checked + .std-switch_slider:before {
+  -webkit-transform: translateX(18px);
+  -ms-transform: translateX(18px);
+  transform: translateX(18px);
+}

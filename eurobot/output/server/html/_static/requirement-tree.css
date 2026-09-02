@@ -1,0 +1,283 @@
+:root {
+  --requirement-tree-line-width: 1px;
+  --requirement-tree-line-color: var(--color-border);
+  --requirement-tree-margin: var(--tree-gap);
+  --requirement-tree-downward-margin: calc(var(--requirement-tree-margin)*.5);
+  --requirement-tree-downward-string-margin: calc(var(--requirement-tree-downward-margin)*0.25);
+  --requirement-tree-line: var(--requirement-tree-line-width) solid;
+  --requirement-tree-downward-line: var(--requirement-tree-line-color) var(--requirement-tree-line-width) solid;
+  --requirement-tree-arrow-size: calc(var(--requirement-tree-margin)/4);
+  /* var(--color-fg-contrast) */
+  /* var(--color-accent) */
+}
+
+/* requirement-tree */
+
+.requirement-tree {
+  position: relative;
+
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: column;
+  align-content: flex-start;
+
+  /* default aka right direction */
+  align-items: flex-start;
+  margin-left: var(--requirement-tree-margin);
+}
+
+.requirement-tree_right.requirement-tree {
+  align-items: flex-start;
+  margin-right: 0;
+  margin-left: var(--requirement-tree-margin);
+}
+
+.requirement-tree_left.requirement-tree {
+  align-items: flex-end;
+  margin-left: 0;
+  margin-right: var(--requirement-tree-margin);
+}
+
+.requirement-tree_branch {
+  position: relative;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  align-content: stretch;
+  margin-bottom: var(--requirement-tree-margin);
+}
+
+.requirement-tree_left .requirement-tree_branch {
+  flex-direction: row-reverse;
+}
+
+.requirement-tree_branch:last-child {
+  margin-bottom: 0;
+}
+
+.requirement-tree_node {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+
+  /* for width restrictions in deep trace */
+  max-width: var(--card-width);
+}
+
+[data-viewtype="requirements-coverage"] .requirement-tree_node {
+  width: calc(var(--card-width)*0.75);
+}
+
+  /* arrows */
+
+.requirement-tree_right.requirement-tree::before {
+  /* arrow from children, show only in right tree */
+  content: '';
+  position: absolute;
+  width: var(--requirement-tree-arrow-size);
+  height: var(--requirement-tree-arrow-size);
+  top: var(--requirement-tree-margin);
+  left: calc(var(--requirement-tree-margin)*(-1) - var(--requirement-tree-line-width)*0.5);
+  box-sizing: border-box;
+  border-top: var(--requirement-tree-line);
+  border-left: var(--requirement-tree-line);
+  transform-origin: top left;
+  transform: rotate(-45deg);
+  z-index: 2;
+}
+
+.requirement-tree_left .requirement-tree_node::before {
+  /* arrow to parents inside tree */
+  content: '';
+  position: absolute;
+  width: var(--requirement-tree-arrow-size);
+  height: var(--requirement-tree-arrow-size);
+  top: var(--requirement-tree-margin);
+  right: calc(var(--requirement-tree-arrow-size)*(-1));
+  box-sizing: border-box;
+  border-top: var(--requirement-tree-line);
+  border-left: var(--requirement-tree-line);
+  transform-origin: top left;
+  transform: rotate(-45deg);
+  z-index: 2;
+}
+
+/* corner connector to node */
+
+.requirement-tree_branch::before {
+  content: '';
+  position: absolute;
+  width: calc(var(--requirement-tree-margin)*0.5);
+  height: var(--requirement-tree-margin);
+  top: 0;
+  box-sizing: border-box;
+  /* default aka right direction */
+  border-bottom: var(--requirement-tree-line);
+  border-left: var(--requirement-tree-line);
+  left: calc(var(--requirement-tree-margin)*(-1)*0.5);
+}
+
+.requirement-tree_right .requirement-tree_branch::before {
+  right: unset;
+  left: calc(var(--requirement-tree-margin)*(-1)*0.5);
+  border: none;
+  border-bottom: var(--requirement-tree-line);
+  border-left: var(--requirement-tree-line);
+}
+
+.requirement-tree_left .requirement-tree_branch::before {
+  left: unset;
+  right: calc(var(--requirement-tree-margin)*(-1)*0.5);
+  border: none;
+  border-bottom: var(--requirement-tree-line);
+  border-right: var(--requirement-tree-line);
+}
+
+/* horizontal line to top node instead corner */
+
+.requirement-tree_branch:first-child::before {
+  width: var(--requirement-tree-margin);
+  border: none;
+  border-bottom: var(--requirement-tree-line);
+  /* default aka right direction */
+  right: unset;
+  left: calc(var(--requirement-tree-margin)*(-1));
+}
+
+.requirement-tree_right .requirement-tree_branch:first-child::before {
+  right: unset;
+  left: calc(var(--requirement-tree-margin)*(-1));
+}
+
+.requirement-tree_left .requirement-tree_branch:first-child::before {
+  left: unset;
+  right: calc(var(--requirement-tree-margin)*(-1));
+}
+
+/* vertical line */
+
+.requirement-tree_branch::after {
+  content: '';
+  position: absolute;
+  width: calc(var(--requirement-tree-margin)*0.5);
+  top: var(--requirement-tree-margin);
+  bottom: calc(var(--requirement-tree-margin)*(-1));
+  box-sizing: border-box;
+  /* default aka right direction */
+  border: none;
+  border-left: var(--requirement-tree-line);
+  left: calc(var(--requirement-tree-margin)*(-1)*0.5);
+}
+
+.requirement-tree_right .requirement-tree_branch::after {
+  border: none;
+  border-left: var(--requirement-tree-line);
+  right: unset;
+  left: calc(var(--requirement-tree-margin)*(-1)*0.5);
+}
+
+.requirement-tree_left .requirement-tree_branch::after {
+  border: none;
+  border-right: var(--requirement-tree-line);
+  left: unset;
+  right: calc(var(--requirement-tree-margin)*(-1)*0.5);
+}
+
+/* vertical line on last node is not showing */
+.requirement-tree_branch:last-child:after {
+  content: none;
+}
+
+/* downward */
+
+.requirement-tree_downward {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-left: var(--requirement-tree-downward-margin);
+  box-sizing: border-box;
+
+  font-size: .75rem;
+  line-height: 1.2;
+}
+
+.requirement-tree_downward_node {
+  position: relative;
+  border-left: var(--requirement-tree-downward-line);
+}
+
+.requirement-tree_downward .requirement-tree_downward_node {
+  padding-top: calc(var(--requirement-tree-downward-margin)*0.5);
+}
+
+.requirement-tree_downward .requirement-tree_downward_node:first-child {
+  padding-top: var(--requirement-tree-downward-margin);
+}
+
+.requirement-tree_downward .requirement-tree_downward_node:last-child {
+  border-color: transparent;
+}
+
+.requirement-tree_downward .requirement-tree_downward_node::before {
+  position: absolute;
+  content: '';
+  width: var(--requirement-tree-downward-margin);
+  border-bottom: var(--requirement-tree-downward-line);
+  box-sizing: border-box;
+  top: 0;
+  left: calc(var(--requirement-tree-line-width)*(-1));
+  bottom: calc(100% - var(--requirement-tree-downward-margin)*0.5 - 0.75rem);
+}
+
+.requirement-tree_downward .requirement-tree_downward_node:last-child::before  {
+  border-left: var(--requirement-tree-downward-line);
+}
+
+.requirement-tree_downward .requirement-tree_downward_node:first-child::before {
+  bottom: calc(100% - var(--requirement-tree-downward-margin)*1 - 0.75rem);
+}
+
+.requirement-tree_downward_node .requirement-tree_downward_item {
+  position: relative;
+  /* margin-left: calc(var(--requirement-tree-downward-margin) + var(--requirement-tree-downward-string-margin)); */
+  margin-left: calc(var(--requirement-tree-downward-margin) - 0.25rem);
+
+  border-radius: 4px;
+  overflow: clip;
+  border: 1px solid var(--requirement-tree-line-color);
+  background-color: var(--color-bg-main);
+
+  overflow-wrap: break-word;
+}
+
+.requirement-tree_downward_item span,
+.requirement-tree_downward_item a {
+  padding: 4px 6px;
+  display: inline-block;
+  width: 100%;
+  overflow-wrap: break-word;
+}
+
+.requirement-tree_downward_item a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.requirement-tree_downward_item a:hover {
+  text-decoration: underline;
+}
+
+/* hover */
+
+/* .requirement-tree_node:hover + .requirement-tree::before,
+.requirement-tree_node:hover + .requirement-tree .requirement-tree::before,
+.requirement-tree_node:hover + .requirement-tree .requirement-tree_branch::before,
+.requirement-tree_node:hover + .requirement-tree .requirement-tree_branch::after {
+  border-width: 2px;
+} */

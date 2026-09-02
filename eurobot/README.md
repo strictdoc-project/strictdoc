@@ -31,9 +31,9 @@ by `tools/import_rules.py` from the Russian rules PDFs under
 `_assets/rules/source/`: the PRO rules, which cover entry and the robots, and
 the 2026 game rules.
 
-The rules are in Russian and the requirements and test cases are in English,
-because the rules are quoted from the competition documents while the
-requirements are the course's own writing.
+All three documents are in Russian: the rules are quoted verbatim from the
+competition documents, and the requirements and test cases are the course's
+own writing, in Russian because the course's students are Russian speakers.
 
 ## Importing the rules
 

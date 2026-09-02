@@ -1,0 +1,5 @@
+<div class="document">
+<p>Place the robot on the table in its starting configuration and wrap a
+measuring tape around its footprint. Record the perimeter.</p>
+<p>Expected: the perimeter is at most 1200 mm.</p>
+</div>

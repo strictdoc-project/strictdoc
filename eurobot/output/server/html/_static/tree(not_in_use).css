@@ -1,0 +1,146 @@
+.std-tree {
+  --tree-font-size:          16px;
+  --tree-line-height:        calc(var(--tree-font-size)*1.25);
+  --tree-level-padding:      calc(var(--tree-font-size)*1.5);
+  --tree-cell-padding:       calc(var(--tree-font-size)*0.5);
+
+  --tree-level-line-width:   1px;
+
+  --tree-color-line:         #808080;
+  --tree-color-fg:           var(--color-fg-main,     #444444);
+  --tree-color-bg:           var(--color-bg-main,     #F2F5F9);
+  --tree-color-row-hover-bg: var(--color-bg-contrast, #FFFFFF);
+  --tree-btn-bg-color:       var(--color-bg-contrast, #FFFFFF);
+
+  --tree-half-sell-height:   calc( var(--tree-line-height)/2 + var(--tree-cell-padding) );
+
+  --tree-ico-size: var(--tree-font-size, 1rem);
+
+  --tree-max-width: 800px;
+}
+
+
+/* tree */
+.std-tree {
+  font-size: var(--tree-font-size, 1rem);
+  line-height: var(--tree-line-height, 1.25);
+  color: var(--tree-color-fg, #444444);
+
+  position: relative;
+  width: -moz-fit-content;
+  width: fit-content;
+  /* margin: 0 auto; */
+}
+
+.std-tree ul {
+  list-style: none;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+.std-tree li {
+  position: relative;
+  padding-left: var(--tree-level-padding);
+}
+
+.std-tree ul ul > li::before {
+  content: '';
+  position: absolute;
+  left: calc(var(--tree-ico-size)*0.5 - var(--tree-level-padding));
+  top: calc(var(--tree-ico-size)*(-0.5));
+  height: 100%;
+  border-left: 1px solid var(--tree-color-line);
+}
+
+.std-tree ul > li:last-child::before {
+  height: calc(var(--tree-ico-size) + var(--tree-cell-padding));
+}
+
+.std-tree_ico {
+  display: inline-flex;
+  align-items: center;
+
+  position: absolute;
+  left: 0;
+  top: calc(var(--tree-cell-padding));
+}
+
+  ul ul .std-tree_ico::before {
+    content: '';
+    position: absolute;
+    left: calc(var(--tree-ico-size)*0.5 - var(--tree-level-padding));
+    right: 100%;
+    border-bottom: 1px solid var(--tree-color-line);
+  }
+
+  .std-tree_ico svg {
+    display: inline-block;
+    width: var(--tree-ico-size);
+    height: var(--tree-ico-size);
+
+    fill: var(--tree-color-line);
+  }
+
+  .std-tree_row {
+    padding-top: var(--tree-cell-padding);
+    padding-bottom: var(--tree-cell-padding);
+    padding-left: var(--tree-cell-padding);
+
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .std-tree_folder {
+    font-weight: bold;
+    display: flex;
+  }
+
+  .std-tree_file {
+    order: 1;
+    flex-grow: 1;
+  }
+
+  .std-tree_file__title {
+    font-size: 1.25em;
+    color: #000;
+    transition: color .2s ease;
+  }
+
+  .std-tree_file-link:hover .std-tree_file__title {
+    color: var(--color-fg-accent);
+  }
+
+  .std-tree_file__name {
+    font-size: 0.85rem;
+    line-height: 1.2;
+    color: var(--color-fg-secondary);
+    margin-top: 0.25rem;
+  }
+
+  .std-tree_desc {
+    position: relative;
+    top: -2px;
+    color: #000;
+  }
+
+  .std-tree_name {
+    font-size: 0.85rem;
+    line-height: 1.2;
+    color: #666;
+  }
+
+  .std-tree_aside {
+    width: -moz-fit-content;
+    width: fit-content;
+    padding-left: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    order: 3;
+  }
+
+  .std-tree_file-link {
+    position: relative;
+    top: -2px;
+  }

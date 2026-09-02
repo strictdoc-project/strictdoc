@@ -1,0 +1,633 @@
+/* form */
+
+sdoc-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: rgba(0,0,0,.5);
+  z-index: 99999;
+}
+
+sdoc-modal {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr); /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
+  grid-template-rows: min-content minmax(0, 1fr) min-content;
+  grid-template-areas:
+    "modal-header"
+    "modal-content"
+    "modal-footer";
+  place-items: stretch stretch;
+  place-content: stretch stretch;
+
+  background-color: var(--color-bg-contrast);
+  border-radius: 8px;
+
+  width: 600px;
+  max-width: 90vw;
+  min-width: 375px;
+  max-height: 90vh;
+
+  box-shadow: var(--base-elevation-modal);
+
+  /* scroll if necessary is available in the child container */
+  overflow: hidden;
+}
+
+sdoc-modal[context="confirm"] {
+  width: 600px;
+}
+
+sdoc-modal[context="form"] {
+  width: 90vw;
+  height: 90vh;
+  max-width: 600px;
+  max-height: 90vh;
+}
+
+sdoc-modal-container {
+  padding: calc(var(--base-rhythm)*4);
+
+  /* scrollable container */
+  height: 100%;
+  overflow: auto;
+  scroll-behavior: smooth;
+  scrollbar-gutter: stable;
+}
+
+sdoc-modal-header {
+  grid-area: modal-header;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+sdoc-modal-header:not(:empty) {
+  /* If not passed, it occupies a row in the grid but has no height */
+  padding-top: calc(var(--base-rhythm)*2);
+  padding-bottom: calc(var(--base-rhythm)*2);
+  padding-left: calc(var(--base-rhythm)*4);
+  padding-right: calc(var(--base-rhythm)*4);
+}
+
+.sdoc-modal-header-back-button {
+  position: relative;
+  left: calc(var(--base-rhythm) * (-1));
+  display: inline-flex;
+  padding-right: var(--base-rhythm);
+}
+
+.sdoc-modal-header-back-button:hover {
+  color: var(--color-action);
+}
+
+sdoc-modal-content {
+  grid-area: modal-content;
+  border-top: var(--base-border);
+  border-bottom: var(--base-border);
+  /* padding-top: calc(var(--base-rhythm)*2); */
+  /* padding-bottom: calc(var(--base-rhythm)*2); */
+  overflow: auto;
+  scroll-behavior: smooth;
+}
+
+sdoc-modal-message {
+  display: block;
+  padding-left: calc(var(--base-rhythm)*4);
+  padding-right: calc(var(--base-rhythm)*4);
+  margin-top: calc(var(--base-rhythm)*2);
+  margin-bottom: calc(var(--base-rhythm)*2);
+}
+
+sdoc-modal-footer {
+  grid-area: modal-footer;
+  display: flex;
+  justify-content: flex-end; /* buttons to right */
+  padding-top: calc(var(--base-rhythm)*2);
+  padding-bottom: calc(var(--base-rhythm)*2);
+  padding-left: calc(var(--base-rhythm)*4);
+  padding-right: calc(var(--base-rhythm)*3); /* buttons to right */
+  column-gap: var(--base-rhythm);
+}
+
+/* sdoc-form  */
+
+sdoc-form {
+  display: block;
+  position: relative;
+  background-color: var(--color-bg-contrast);
+  border-radius: 4px;
+  z-index: 11;
+  border: 1px solid var(--color-fg-accent);
+}
+
+sdoc-form-header {
+  display: block;
+  padding-top: 0;
+  padding-left: calc(var(--base-rhythm)*4);
+  padding-right: calc(var(--base-rhythm)*4);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+sdoc-form-descr {
+  display: block;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: calc(var(--base-rhythm)*4);
+  padding-right: calc(var(--base-rhythm)*4);
+  margin-top: calc(var(--base-rhythm)*2);
+  margin-bottom: calc(var(--base-rhythm)*2);
+}
+
+sdoc-form-footer {
+  display: flex;
+  justify-content: flex-start; /* buttons to left */
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: calc(var(--base-rhythm)*3); /* buttons to left */
+  padding-right: calc(var(--base-rhythm)*4);
+  margin-top: calc(var(--base-rhythm)*2);
+  margin-bottom: calc(var(--base-rhythm)*2);
+  column-gap: var(--base-rhythm);
+}
+
+sdoc-form-field {
+  /*
+    Flex can not be used, it is necessary exactly "display: block" because of
+    the effect on the display of the contenteditable element contained inside.
+    Extra spaces are formed there and it breaks the Selenium end2end tests.
+  */
+  display: block;
+  position: relative;
+  padding-top: 0;
+  padding-bottom: 0;
+  padding-left: calc(var(--base-rhythm)*4);
+  padding-right: calc(var(--base-rhythm)*4);
+  margin-top: calc(var(--base-rhythm)*4);
+  margin-bottom: calc(var(--base-rhythm)*4);
+  min-width: 200px;
+}
+
+sdoc-form-row-main {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+sdoc-form-row-aside {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  justify-content: flex-end;
+  position: relative;
+}
+
+sdoc-form-row-aside [data-action-type="delete"]:hover,
+sdoc-form-row-aside [data-action-type="delete"] {
+  color: var(--color-danger);
+}
+
+sdoc-form-row-aside [data-action-type="action"]:hover,
+sdoc-form-row-aside [data-action-type="action"] {
+  color: var(--color-action);
+}
+
+sdoc-form-row-aside [data-action-type="move_up"]:hover,
+sdoc-form-row-aside [data-action-type="move_up"] {
+  color: var(--color-green);
+}
+
+sdoc-form-row-aside [data-action-type="move_down"]:hover,
+sdoc-form-row-aside [data-action-type="move_down"] {
+  color: var(--color-blue);
+}
+
+sdoc-form-row [data-action-type="add_field"]:only-child {
+  /*
+    It is expected to be a button (.action_button)
+    to add fields like "comment" or "link"
+    to the requirement edit form.
+  */
+  justify-content: flex-start;
+  /* color: rgba(0,0,0,0.5) !important; */
+  border: none;
+  top: -40%;
+}
+
+/*
+   fields grid:
+   inside sdoc-form-grid
+*/
+
+sdoc-form-grid {
+  display: grid;
+  place-items: stretch stretch;
+  place-content: stretch stretch;
+  grid-template-columns:  minmax(0, min-content)
+                          minmax(0, 1fr) /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
+                          minmax(0, min-content);
+  gap:
+          calc(var(--base-rhythm)*4)
+          var(--base-rhythm);
+
+  padding:
+          calc(var(--base-rhythm)*4)
+          calc(var(--base-rhythm)*3); /* (4-1) related to column gap */
+
+  overflow-x: clip; /* Prevents overflow issues affecting:
+                       - field_action::before (highlight visibility on delete) and
+                       - autocompletable (dropdown visibility) */
+
+  /* content container has no padding-block */
+  margin-top: calc(var(--base-rhythm)*2);
+  margin-bottom: calc(var(--base-rhythm)*2);
+}
+
+sdoc-form-grid
+  sdoc-form-field {
+    padding: 0;
+    margin: 0;
+  }
+
+sdoc-form-grid
+  sdoc-form-row {
+    display: contents;
+  }
+
+sdoc-form-grid
+  sdoc-form-row-aside:first-of-type {
+    grid-column: 1 / 2; /* left */
+  }
+
+sdoc-form-grid
+  sdoc-form-row-main {
+    grid-column: 2 / 3; /* center */
+  }
+
+sdoc-form-grid
+  sdoc-form-row-aside:last-of-type {
+    grid-column: 3 / 4; /* right */
+  }
+
+/* sdoc-form-field-group */
+
+sdoc-form-field-group {
+  /* display: grid;
+  place-items: stretch stretch;
+  place-content: stretch stretch; */
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+
+  justify-content: space-between;
+
+  padding: var(--base-rhythm);
+  border: var(--base-border);
+  border-radius: var(--base-rhythm);
+
+  gap: calc(var(--base-rhythm)*3); /* label (2) + 1 */
+  padding-top: calc(var(--base-rhythm)*3); /* related to column gap */
+  padding-bottom: calc(var(--base-rhythm)*1);
+
+  position: relative;
+}
+
+sdoc-form-field-group::before {
+  /* TODO move to other label */
+  content: attr(data-field-label);
+  position: absolute;
+  font-family: var(--code-font-family);
+  font-size: var(--font-size-xsm);
+  font-weight: 500;
+  color: var(--color-placeholder);
+  text-transform: uppercase;
+  top: calc(var(--base-rhythm)*(-1.25));
+  right: var(--base-rhythm);
+  padding: 0 var(--base-rhythm);
+  background: var(--color-bg-contrast);
+  transition: color .2s ease;
+}
+
+sdoc-form-field-group:focus-within::before {
+  color: var(--color-fg-accent);
+}
+
+/**
+ * sdoc-contenteditable
+ */
+
+sdoc-contenteditable,
+sdoc-autocompletable {
+  display: block;
+  position: relative;
+}
+
+sdoc-contenteditable[contenteditable="false"],
+sdoc-autocompletable[contenteditable="false"] {
+  color: var(--color-fg-secondary);
+}
+
+.autocomplete-items {
+  /* reset default ul */
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+  /* autocomplete wrapper */
+  position: absolute;
+  border: 1px solid var(--color-action);
+  background-color: var(--color-bg-contrast);
+  color: var(--color-fg-contrast);
+  top: 100%;
+  left: 0;
+  right: 0;
+  width: 33vw;
+  max-height: 60vh;
+  overflow-y: auto;
+  z-index: 999;
+}
+
+.autocomplete-active {
+  /*when navigating through the items using the arrow keys:*/
+  background-color: var(--color-highlight) !important;
+}
+
+.autocompletable-result-item {
+  position:relative;
+  display:block;
+  padding:.25rem 0.25rem;
+  margin-bottom:-1px;
+  border:1px solid rgba(0,0,0,.125)
+}
+
+.autocompletable-result-item_no-results {
+  color: var(--color-fg-secondary);
+  font-style: italic;
+  cursor: default;
+}
+
+.autocompletable-result-item_selected {
+  color: var(--color-fg-secondary);
+  cursor: default;
+}
+
+.monospace {
+  font-family: var(--code-font-family);
+}
+
+.form__requirement_title {
+  font-size: 1.125em;
+  font-weight: 700;
+}
+
+/* field name // before */
+
+/* todo: Join sdoc-contenteditable with sdoc-form-field */
+
+sdoc-form-field label,
+sdoc-contenteditable::before,
+sdoc-autocompletable::before {
+  /* for contenteditable */
+  content: attr(data-field-label);
+  /* for all */
+  position: absolute;
+  font-family: var(--code-font-family);
+  font-size: var(--font-size-xsm);
+  font-weight: 500;
+  color: var(--color-placeholder);
+  text-transform: uppercase;
+  top: calc(var(--base-rhythm)*(-2.25));
+  transition: color .2s ease;
+
+  white-space: nowrap;
+}
+
+sdoc-form-field:focus-within label,
+sdoc-contenteditable:focus::before,
+sdoc-autocompletable:focus::before {
+  color: var(--color-fg-accent);
+}
+
+/* sdoc-form-field select */
+sdoc-form-field select {
+  /* A reset of styles, including removing the default dropdown arrow */
+  /* appearance: none; */
+  background-color: transparent;
+  /* border: none; */
+  border: 1px solid var(--color-placeholder);
+  border-radius: 6px;
+
+  padding: 0 1em 0 .5em;
+  margin: 0;
+  width: 100%;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: inherit;
+  line-height: inherit;
+  /* Stack above custom arrow */
+  z-index: 1;
+  /* Remove focus outline, will add on alternate element */
+  outline: none;
+}
+
+sdoc-form-field select:focus {
+  border: 1px solid var(--color-fg-accent);
+}
+
+/* Remove dropdown arrow in IE10 & IE11
+   @link https://www.filamentgroup.com/lab/select-css.html
+*/
+sdoc-form-field select::-ms-expand {
+  display: none;
+}
+
+/* placeholder // after */
+
+[placeholder]:empty::after {
+  content: attr(placeholder);
+  pointer-events: none;
+  color: var(--color-placeholder);
+  /* For Firefox: */
+  display: block;
+}
+
+[placeholder]:empty:focus::after {
+  color: rgba(242, 100, 42,.2);
+}
+
+sdoc-contenteditable[data-field-suffix]:not(:empty)::after,
+sdoc-autocompletable[data-field-suffix]:not(:empty)::after {
+  content: attr(data-field-suffix);
+  color: var(--color-fg-accent);
+  margin-left: 4px;
+}
+
+/* data-field-suffix */
+
+[contenteditable=true] {
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  outline: none;
+  /* Without this hack ( display: inline-block )
+     Chrome generates duplicated new lines when Enter pressed.
+     Add style "display:inline-block;" to contenteditable,
+     it will not generate div, p, span automatic in chrome */
+  /* https://stackoverflow.com/a/24689390/598057 */
+  /* Also, the parent element should not be allowed to have a flex display.
+     In order to isolate the 'contenteditable,
+     the structure "sdoc-form-row-main > sdoc-form-field > contenteditable"
+     is implemented.
+  */
+  display: inline-block;
+  /* This is to prevent the field from shifting when the second line appears while typing: */
+  vertical-align: top;
+  width: 100%;
+}
+
+[contenteditable=true][data-field-type="multiline"] {
+  font-family: var(--code-font-family);
+}
+
+
+
+form[data-js-scroll-into-view] {
+  /* fix on 1px border and smth unruly */
+    scroll-snap-margin-top: calc(var(--base-padding) + 1px);
+    scroll-margin-top:      calc(var(--base-padding) + 1px);
+}
+
+/* input */
+
+sdoc-form input[type="text"] {
+  padding: var(--base-rhythm);
+  font-size: var(--font-size);
+  border: 1px solid var(--color-border);
+  border-radius: 3px;
+  outline: transparent;
+  width: 100%;
+  transition: border-color calc(var(--transition, 0.2) * 1s) ease;
+}
+
+sdoc-form input[type="text"]:focus {
+  border-color: var(--color-action);
+  color: var(--color-action);
+}
+
+/* diff */
+
+sdoc-form[diff] {
+  grid-column: 1 / -1;
+
+  margin: 0;
+  background-color: transparent;
+  border: none;
+}
+
+sdoc-form[diff] form {
+  display: flex;
+  gap: var(--base-rhythm);
+  position: relative;
+  padding: var(--base-rhythm);
+  background-color: var(--color-bg-contrast);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+}
+
+/* search */
+
+sdoc-form[search] {
+  display: block;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+}
+
+sdoc-form[search] form {
+  display: flex;
+  gap: var(--base-rhythm);
+  position: relative;
+  padding: var(--base-rhythm);
+  background-color: var(--color-bg-contrast);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+}
+
+sdoc-form[search][success] {
+  border-bottom: 1px solid var(--color-border);
+}
+
+sdoc-form-error {
+  display: block;
+  color: var(--color-danger);
+  font-size: 12px;
+  font-weight: normal;
+  text-transform: none;
+  /*
+    set 'order' to be displayed after any other items,
+    in the context of <sdoc-form-row-main> using flex:
+  */
+  order: 11;
+  /*
+    FOR:
+    components/grammar_form_element/index.jinja
+    "Relations_Row"
+    id="document__editable_grammar_relations"
+  */
+  grid-column: 2 / -1;
+}
+
+sdoc-form-error + sdoc-form-error {
+  margin-top: var(--base-rhythm);
+}
+
+sdoc-form-error + sdoc-form-field-group {
+  border-color: var(--color-danger);
+}
+
+sdoc-form-hint {
+  display: block;
+  color: var(--color-fg-secondary);
+  font-size: var(--font-size-sm);
+  margin-top: var(--base-padding);
+}
+
+sdoc-form-field-group[errors]::before, /* Grammar -> label for group of fields */
+sdoc-contenteditable[errors]::before, /* inside contenteditable errors block does not affected */
+sdoc-autocompletable[errors]::before,
+sdoc-form-error + sdoc-form-field > label, /* Grammar -> relation field ; File filed */
+sdoc-form-error + sdoc-form-field > sdoc-contenteditable::before,
+sdoc-form-error + sdoc-form-field > sdoc-autocompletable::before {
+  color: var(--color-danger);
+}
+
+.sdoc-form-error,
+.sdoc-form-success,
+.sdoc-form-reset {
+  display: block;
+  padding: var(--base-rhythm) calc(var(--base-rhythm)*2);
+  position: relative;
+}
+
+.sdoc-form-error {
+  color: var(--color-danger);
+}
+
+.sdoc-form-success {
+  color: var(--color-action);
+}
+
+.sdoc-form-reset {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+}
+
+.sdoc-form-error,
+.sdoc-form-success {
+  padding-right: 120px; /* == sdoc-form-reset width */
+}

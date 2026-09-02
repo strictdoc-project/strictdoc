@@ -52,6 +52,9 @@ class DocumentTreeStats:
         default_factory=lambda: defaultdict(int)
     )
 
+    # Conversion check.
+    requirements_failed_conversion_check: int = 0
+
     def sort_requirements_status_breakdown(self) -> None:
         self.requirements_status_breakdown = dict(
             sorted(

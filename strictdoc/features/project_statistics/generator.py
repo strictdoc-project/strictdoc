@@ -7,6 +7,9 @@ from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     SourceFileTraceabilityInfo,
 )
+from strictdoc.core.analyzers.requirement_integrity_analyzer import (
+    CANNOT_CONVERT_MESSAGE,
+)
 from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
@@ -61,6 +64,17 @@ class ProgressStatisticsGenerator:
                     ):
                         requirement: SDocNode = assert_cast(node, SDocNode)
                         document_tree_stats.total_requirements += 1
+
+                        conversion_issues = (
+                            traceability_index.validation_index.get_issues(
+                                requirement, field="STATEMENT"
+                            )
+                        )
+                        if (
+                            conversion_issues is not None
+                            and CANNOT_CONVERT_MESSAGE in conversion_issues
+                        ):
+                            document_tree_stats.requirements_failed_conversion_check += 1
 
                         if requirement.reserved_uid is None:
                             document_tree_stats.requirements_no_uid += 1
@@ -221,6 +235,14 @@ class ProgressStatisticsGenerator:
                 name="Requirements with no RATIONALE",
                 value=str(document_tree_stats.requirements_no_rationale),
                 link='search?q=(node.is_requirement() and node["RATIONALE"] == None)',
+            )
+        )
+        section.metrics.append(
+            Metric(
+                name="Requirements failed conversion check",
+                value=str(
+                    document_tree_stats.requirements_failed_conversion_check
+                ),
             )
         )
 

@@ -13,6 +13,7 @@ def create_config() -> ProjectConfig:
             "DEEP_TRACEABILITY_SCREEN",
             "TRACEABILITY_MATRIX_SCREEN",
             "SEARCH",
+            "PROJECT_STATISTICS_SCREEN",
             EurobotTestDashboardFeature(),
         ],
         grammars={

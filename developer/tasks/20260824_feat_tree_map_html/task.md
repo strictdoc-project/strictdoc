@@ -111,6 +111,23 @@ While the pointer is over the section, Backspace shall invoke the history-based
 Back action. The renderer shall not intercept Backspace from an input,
 textarea, or editable element.
 
+Every real tree node except the project root shall provide two actions. The
+first action shall navigate to the node in Document view. The second action
+shall open the full-node preview modal. Synthetic groups shall not provide
+either action because they do not represent source nodes.
+
+The actions shall reuse the DEEP-TRACE destinations and icons:
+`ico16_go_to_doc.svg` for Document view and `ico16_maximize.svg` for the modal.
+They shall appear as directly interactive SVG elements without the
+DEEP-TRACE button wrapper. The SVG elements shall be visible only while the
+pointer is over their node. A branch shall place them at the upper-right edge
+of its header, where they limit the space available to the title. A leaf shall
+place them at its lower-right edge.
+
+While Shift is held over a real node, the node shall show a compact information
+panel with its title, MID, and UID. Modifier-click actions and additional
+keyboard shortcuts for node links and previews are not part of this stage.
+
 ## WHY
 
 StrictDoc needs a tree map rendered with project-owned HTML and CSS.
@@ -142,6 +159,12 @@ The generated node markup shall separate the transparent positioning element,
 the styled surface, the header, and the child container. Additional node
 content, such as document links, shall belong to the surface rather than the
 positioning element.
+
+The serialized real-node data shall include the title, MID, UID, and Document
+view URL required by the node actions and information panel. The project root
+and browser-created synthetic groups shall not receive node-action URLs. The
+preview action shall use the same full-node server endpoint and modal flow as
+DEEP-TRACE.
 
 The browser renderer shall keep layout and level-of-detail settings in one
 options object. The initial settings shall cover header height, depth and DOM

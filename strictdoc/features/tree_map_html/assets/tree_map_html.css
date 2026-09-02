@@ -11,25 +11,7 @@
   width: 100%;
 }
 
-.tree-map-html-header-toolbar__tips {
-  text-transform: uppercase;
-}
-
-.tree-map-html-tips__shortcuts {
-  display: flex;
-  flex-direction: column;
-  gap: var(--base-rhythm);
-}
-
-.tree-map-html-tips__key {
-  vertical-align: middle;
-  min-width: 24px;
-  min-height: 24px;
-}
-
-.tree-map-html-tips__key--text {
-  min-width: auto;
-}
+/* section */
 
 .tree-map-html__section {
   --tree-map-html-preview-control-width: 13rem;
@@ -44,6 +26,8 @@
   text-align: center;
 }
 
+/* toolbar: contains preview-control and breadcrumbs */
+
 .tree-map-html__toolbar {
   position: relative;
   display: flex;
@@ -52,6 +36,8 @@
   min-height: 1rem;
   margin-bottom: var(--base-rhythm);
 }
+
+/* control for folder content preview */
 
 .tree-map-html__preview-control {
   position: absolute;
@@ -110,6 +96,8 @@
   outline-offset: 2px;
 }
 
+/* history breadcrumb */
+
 .tree-map-html__back {
   flex: 0 0 auto;
   color: var(--color-action);
@@ -162,6 +150,8 @@
   color: var(--color-action);
 }
 
+/* sibling-navigation */
+
 .tree-map-html__sibling-navigation {
   display: flex;
   flex: 1 1 auto;
@@ -173,13 +163,11 @@
   font-size: var(--font-size-sm);
 
   display: grid;
-  grid-template-columns:  minmax(0, 1fr)
-                          min-content
-                          minmax(0, 2fr)
-                          min-content
-                          minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr);
   gap: var(--base-rhythm);
 }
+
+/* sibling-navigation in project-root */
 
 .tree-map-html__sibling-navigation--project-root {
   display: flex;
@@ -196,17 +184,42 @@
   flex: 1 1 auto;
 }
 
+/* sibling-navigation in normal node */
+
+.tree-map-html__sibling-current {
+  /* main node */
+  font-weight: 600;
+  text-align: center;
+}
+
 .tree-map-html__sibling-navigation button {
-  font-size: var(--font-size-sm);
-  font-family: monospace;
-  line-height: 0;
+  /*
+  .tree-map-html__previous-sibling,
+  .tree-map-html__next-sibling
+  */
+  -webkit-box-align: center;
+  -webkit-box-pack: center;
+  border: 1px solid transparent;
+  background: transparent;
+  backface-visibility: hidden;
+  user-select: none;
+  cursor: pointer;
+  appearance: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
   min-height: 0;
   padding: 0;
-  width: 16px;
-  height: 16px;
+  font-size:var(--font-size-xsm);
   border-radius: calc(0.5 * var(--base-rhythm));
-  background: transparent;
-  border: 1px solid;
+
+  color: var(--color-action);
+}
+
+.tree-map-html__sibling-navigation button:hover {
+  color: var(--color-hover);
 }
 
 .tree-map-html__sibling-navigation button:disabled {
@@ -216,21 +229,29 @@
   pointer-events: none;
 }
 
-.tree-map-html__sibling-label {
-  flex: 1 1 0;
-  min-width: 0;
-  overflow: hidden;
-  padding: 2px 4px;
-  color: #111;
-  font-weight: 400;
-  line-height: 1.2;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.tree-map-html__sibling-navigation
+  button.tree-map-html__previous-sibling {
+  justify-content: flex-start;
 }
 
-.tree-map-html__sibling-current {
-  font-weight: 600;
-  text-align: center;
+.tree-map-html__sibling-navigation
+  button.tree-map-html__next-sibling {
+  justify-content: flex-end;
+}
+
+.tree-map-html__sibling-symbol {
+  font-family: monospace;
+  flex: 0 0 auto;
+  padding: 0 calc(0.5 * var(--base-rhythm));
+}
+
+.tree-map-html__sibling-label {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 400;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .tree-map-html__sibling-label--previous {
@@ -240,6 +261,8 @@
 .tree-map-html__sibling-label--next {
   text-align: left;
 }
+
+/* ancestors */
 
 .tree-map-html__ancestors {
   display: flex;
@@ -490,7 +513,8 @@
 }
 
 .tree-map-html__node--leaf .tree-map-html__node-header {
-  bottom: var(--tree-map-html-node-padding);
+  /* aligns the heading to the center of the block: */
+  /* bottom: var(--tree-map-html-node-padding); */
   height: auto;
 }
 
@@ -536,4 +560,23 @@
   /* content: "•\00a0"; */
   font-weight: 900;
   font-family: monospace;
+}
+
+/* TIPS in modal */
+
+tree-map-html-tips__shortcuts {
+  /* ul */
+  display: flex;
+  flex-direction: column;
+  gap: var(--base-rhythm);
+}
+
+.tree-map-html-tips__key {
+  vertical-align: middle;
+  min-width: 24px;
+  min-height: 24px;
+}
+
+.tree-map-html-tips__key--text {
+  min-width: auto;
 }

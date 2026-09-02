@@ -38,6 +38,7 @@
     siblingNavigation: "tree-map-html__sibling-navigation",
     siblingNavigationProjectRoot:
       "tree-map-html__sibling-navigation--project-root",
+    siblingSymbol: "tree-map-html__sibling-symbol",
     infoPanel: "tree-map-html__info-panel",
     infoTable: "tree-map-html__info-table",
     label: "tree-map-html__label",
@@ -1041,44 +1042,60 @@
     backIconElement.tabIndex = 0;
     toolbarElement.append(backIconElement);
 
+    // ** sibling Navigation **
+
     const siblingNavigationElement = document.createElement("div");
     siblingNavigationElement.className = CSS_CLASSES.siblingNavigation;
 
-    const previousSiblingLabel = document.createElement("span");
-    previousSiblingLabel.classList.add(
-      CSS_CLASSES.siblingLabel,
-      CSS_CLASSES.siblingLabelPrevious,
-    );
-
-    const previousSiblingButton = document.createElement("button");
-    previousSiblingButton.className = CSS_CLASSES.previousSibling;
-    previousSiblingButton.type = "button";
-    previousSiblingButton.textContent = "◂";
-
+    // sibling Navigation: current Label
     const currentSiblingLabel = createLabel("", CSS_CLASSES.labelRoot);
     currentSiblingLabel.classList.add(
       CSS_CLASSES.siblingLabel,
       CSS_CLASSES.siblingCurrent,
     );
 
-    const nextSiblingButton = document.createElement("button");
-    nextSiblingButton.className = CSS_CLASSES.nextSibling;
-    nextSiblingButton.type = "button";
-    nextSiblingButton.textContent = "▸";
+    // sibling Navigation: previous Button
+    const previousSiblingLabel = document.createElement("span");
+    previousSiblingLabel.classList.add(
+      CSS_CLASSES.siblingLabel,
+      CSS_CLASSES.siblingLabelPrevious,
+    );
+    const previousSiblingButton = document.createElement("button");
+    previousSiblingButton.className = CSS_CLASSES.previousSibling;
+    previousSiblingButton.type = "button";
+    const previousSiblingSymbol = document.createElement("span");
+    previousSiblingSymbol.className = CSS_CLASSES.siblingSymbol;
+    previousSiblingSymbol.textContent = "❮";
+    previousSiblingButton.append(
+      previousSiblingSymbol,
+      previousSiblingLabel,
+    );
 
+  // sibling Navigation: next Button
     const nextSiblingLabel = document.createElement("span");
     nextSiblingLabel.classList.add(
       CSS_CLASSES.siblingLabel,
       CSS_CLASSES.siblingLabelNext,
     );
+    const nextSiblingButton = document.createElement("button");
+    nextSiblingButton.className = CSS_CLASSES.nextSibling;
+    nextSiblingButton.type = "button";
+    const nextSiblingSymbol = document.createElement("span");
+    nextSiblingSymbol.className = CSS_CLASSES.siblingSymbol;
+    nextSiblingSymbol.textContent = "❯";
+    nextSiblingButton.append(
+      nextSiblingLabel,
+      nextSiblingSymbol,
+    );
+
     siblingNavigationElement.append(
-      previousSiblingLabel,
       previousSiblingButton,
       currentSiblingLabel,
       nextSiblingButton,
-      nextSiblingLabel,
     );
     sectionElement.append(toolbarElement);
+
+    // ***
 
     const ancestorsElement = document.createElement("nav");
     ancestorsElement.className = CSS_CLASSES.ancestors;

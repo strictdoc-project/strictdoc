@@ -105,17 +105,20 @@ layout may place the nodes in a different visual order because layout remains
 weight-based. Synthetic groups shall use the order of the groups created for
 the same source parent.
 
-The focused node's header inside the canvas shall contain these elements in
-order: the preceding sibling's label when it exists, the previous button, the
-current label, the next button, and the following sibling's label when it
-exists. The current label shall use bold text. Every label shall stay on one
-line, use an ellipsis when it does not fit, and expose its complete text in a
-`title` attribute. A button without a sibling in its direction shall be
-disabled.
+The focused node's header inside the canvas shall contain three columns: the
+previous button, the current label, and the next button. The previous button
+shall contain the preceding sibling's label followed by a left-pointing
+symbol. The next button shall contain a right-pointing symbol followed by the
+following sibling's label. The side columns shall have equal widths, and the
+center column shall be twice as wide. The buttons shall fill their columns.
+
+The current label shall use bold text. Every label shall stay on one line, use
+an ellipsis when it does not fit, and expose its complete text in a `title`
+attribute. A button without a sibling in its direction shall be disabled.
 
 When the focused node is the project root, its header shall omit both sibling
 labels and both navigation buttons. The project label shall use the complete
-header width and remain centered without the five-column grid. This exception
+header width and remain centered without the three-column grid. This exception
 shall not apply to other nodes that happen to have no siblings.
 
 Ordinary nodes and synthetic groups shall use the same header markup. A

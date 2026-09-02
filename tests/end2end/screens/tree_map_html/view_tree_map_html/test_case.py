@@ -250,6 +250,9 @@ class Test(E2ECase):
                 By.CSS_SELECTOR,
                 first_section + " .tree-map-html__sibling-label--next",
             )
+            assert "tree-map-html__next-sibling" in (
+                next_label.find_element(By.XPATH, "..").get_attribute("class")
+            )
             assert "Second test document" in next_label.text
             assert "Second test document" in next_label.get_attribute("title")
             self.click(first_section + " .tree-map-html__next-sibling")

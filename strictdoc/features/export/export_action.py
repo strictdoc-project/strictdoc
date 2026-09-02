@@ -3,6 +3,9 @@ from typing import Optional
 
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.core.analyzers.requirement_integrity_analyzer import (
+    RequirementIntegrityAnalyzer,
+)
 from strictdoc.core.feature import FeatureContext
 from strictdoc.core.format import ExportContext
 from strictdoc.core.project_config import ProjectConfig
@@ -36,6 +39,7 @@ class ExportAction:
         except DocumentTreeError as exc:
             print(exc.to_print_message())  # noqa: T201
             sys.exit(1)
+        RequirementIntegrityAnalyzer.analyze_document_tree(traceability_index)
         self.traceability_index = traceability_index
         return traceability_index
 

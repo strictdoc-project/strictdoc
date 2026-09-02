@@ -67,6 +67,9 @@ from strictdoc.backend.sdoc_source_code.models.source_file_info import (
 )
 from strictdoc.core.analyzers.document_stats import DocumentTreeStats
 from strictdoc.core.analyzers.document_uid_analyzer import DocumentUIDAnalyzer
+from strictdoc.core.analyzers.requirement_integrity_analyzer import (
+    RequirementIntegrityAnalyzer,
+)
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.feature import Feature, FeatureContext
@@ -5237,12 +5240,14 @@ def create_main_router(
     def rebuild_index_after_file_change() -> Optional[str]:
         try:
             with lock_manager.acquire_global_write():
-                export_action.traceability_index = (
-                    TraceabilityIndexBuilder.create(
-                        project_config=project_config,
-                        parallelizer=parallelizer,
-                    )
+                rebuilt_traceability_index = TraceabilityIndexBuilder.create(
+                    project_config=project_config,
+                    parallelizer=parallelizer,
                 )
+                RequirementIntegrityAnalyzer.analyze_document_tree(
+                    rebuilt_traceability_index
+                )
+                export_action.traceability_index = rebuilt_traceability_index
             return None
         except DocumentTreeError as document_tree_error:
             return document_tree_error.to_print_message()

@@ -58,6 +58,17 @@ ELEMENTS:
   RELATIONS:
   - TYPE: Parent
     ROLE: COVERS
+- TAG: INTERFACE_PARAMETER
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
 - TAG: TEST_CASE
   FIELDS:
   - TITLE: MID

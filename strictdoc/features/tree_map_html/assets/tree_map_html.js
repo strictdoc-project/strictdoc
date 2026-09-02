@@ -31,8 +31,13 @@
     back: "tree-map-html__back",
     canvas: "tree-map-html__canvas",
     children: "tree-map-html__children",
-    groupNavigation: "tree-map-html__group-navigation",
-    groupPosition: "tree-map-html__group-position",
+    siblingCurrent: "tree-map-html__sibling-current",
+    siblingLabel: "tree-map-html__sibling-label",
+    siblingLabelNext: "tree-map-html__sibling-label--next",
+    siblingLabelPrevious: "tree-map-html__sibling-label--previous",
+    siblingNavigation: "tree-map-html__sibling-navigation",
+    siblingNavigationProjectRoot:
+      "tree-map-html__sibling-navigation--project-root",
     infoPanel: "tree-map-html__info-panel",
     infoTable: "tree-map-html__info-table",
     label: "tree-map-html__label",
@@ -48,7 +53,7 @@
       "tree-map-html__history-breadcrumb-item--latest",
     historyBreadcrumbSeparator:
       "tree-map-html__history-breadcrumb-separator",
-    nextGroup: "tree-map-html__next-group",
+    nextSibling: "tree-map-html__next-sibling",
     node: "tree-map-html__node",
     nodeBranch: "tree-map-html__node--branch",
     nodeCurrentLevel: "tree-map-html__node--current-level",
@@ -60,7 +65,7 @@
     nodeActions: "tree-map-html__node-actions",
     nodeGoToDocument: "tree-map-html__node-action--go-to-document",
     nodePreview: "tree-map-html__node-action--preview",
-    previousGroup: "tree-map-html__previous-group",
+    previousSibling: "tree-map-html__previous-sibling",
     previewControl: "tree-map-html__preview-control",
     previewInput: "tree-map-html__preview-input",
     previewSlider: "tree-map-html__preview-slider",
@@ -761,6 +766,7 @@
     headerElement.className = CSS_CLASSES.nodeHeader;
     surfaceElement.append(headerElement);
     if (
+      depth !== 0 &&
       pixelRectangle.width >= options.minLabelWidth &&
       pixelRectangle.height >= options.nodeHeaderHeight
     ) {
@@ -1035,27 +1041,42 @@
     backIconElement.tabIndex = 0;
     toolbarElement.append(backIconElement);
 
-    const groupNavigationElement = document.createElement("div");
-    groupNavigationElement.className = CSS_CLASSES.groupNavigation;
+    const siblingNavigationElement = document.createElement("div");
+    siblingNavigationElement.className = CSS_CLASSES.siblingNavigation;
 
-    const previousGroupButton = document.createElement("button");
-    previousGroupButton.className = CSS_CLASSES.previousGroup;
-    previousGroupButton.type = "button";
-    previousGroupButton.setAttribute("aria-label", "Previous items");
-    previousGroupButton.textContent = "◂";
+    const previousSiblingLabel = document.createElement("span");
+    previousSiblingLabel.classList.add(
+      CSS_CLASSES.siblingLabel,
+      CSS_CLASSES.siblingLabelPrevious,
+    );
 
-    const nextGroupButton = document.createElement("button");
-    nextGroupButton.className = CSS_CLASSES.nextGroup;
-    nextGroupButton.type = "button";
-    nextGroupButton.setAttribute("aria-label", "Next items");
-    nextGroupButton.textContent = "▸";
+    const previousSiblingButton = document.createElement("button");
+    previousSiblingButton.className = CSS_CLASSES.previousSibling;
+    previousSiblingButton.type = "button";
+    previousSiblingButton.textContent = "◂";
 
-    const groupPositionElement = document.createElement("span");
-    groupPositionElement.className = CSS_CLASSES.groupPosition;
-    groupNavigationElement.append(
-      groupPositionElement,
-      previousGroupButton,
-      nextGroupButton,
+    const currentSiblingLabel = createLabel("", CSS_CLASSES.labelRoot);
+    currentSiblingLabel.classList.add(
+      CSS_CLASSES.siblingLabel,
+      CSS_CLASSES.siblingCurrent,
+    );
+
+    const nextSiblingButton = document.createElement("button");
+    nextSiblingButton.className = CSS_CLASSES.nextSibling;
+    nextSiblingButton.type = "button";
+    nextSiblingButton.textContent = "▸";
+
+    const nextSiblingLabel = document.createElement("span");
+    nextSiblingLabel.classList.add(
+      CSS_CLASSES.siblingLabel,
+      CSS_CLASSES.siblingLabelNext,
+    );
+    siblingNavigationElement.append(
+      previousSiblingLabel,
+      previousSiblingButton,
+      currentSiblingLabel,
+      nextSiblingButton,
+      nextSiblingLabel,
     );
     sectionElement.append(toolbarElement);
 
@@ -1094,16 +1115,34 @@
       }
     }
 
-    function navigateToSyntheticSibling(offset) {
-      const navigation = syntheticGroupNavigation.get(getFocusedNode());
-      if (navigation === undefined) {
-        return false;
+    function getSiblingNavigation(node) {
+      const syntheticNavigation = syntheticGroupNavigation.get(node);
+      if (syntheticNavigation !== undefined) {
+        return {
+          siblings: syntheticNavigation.groups,
+          index: syntheticNavigation.index,
+        };
       }
-      const sibling = navigation.groups[navigation.index + offset];
+      const parent = nodeParents.get(node);
+      if (parent === undefined) {
+        return { siblings: [node], index: 0 };
+      }
+      return {
+        siblings: parent.children,
+        index: parent.children.indexOf(node),
+      };
+    }
+
+    function navigateToSibling(offset) {
+      const navigation = getSiblingNavigation(getFocusedNode());
+      const sibling = navigation.siblings[navigation.index + offset];
       if (sibling === undefined) {
         return false;
       }
-      navigateTo(sibling);
+      // Sibling browsing stays within one history step. Back returns to the
+      // node from which the user entered this level, not every sibling seen.
+      visitHistory[visitHistory.length - 1] = sibling;
+      renderFocusedNode();
       return true;
     }
 
@@ -1172,20 +1211,55 @@
       }
     }
 
-    function renderGroupNavigation(focusedNode, focusedHeaderElement) {
-      groupNavigationElement.remove();
-      const navigation = syntheticGroupNavigation.get(focusedNode);
-      if (navigation === undefined) {
+    function getNavigationLabel(node, isCurrent) {
+      if (node.isSyntheticGroup === true && isCurrent) {
+        return `${node.firstItem}–${node.lastItem} of ${node.totalItems}`;
+      }
+      return node.label;
+    }
+
+    function setSiblingLabel(labelElement, node, isCurrent = false) {
+      if (node === undefined) {
+        labelElement.textContent = "";
+        labelElement.removeAttribute("title");
         return;
       }
-      groupPositionElement.textContent =
-        `${focusedNode.firstItem}–${focusedNode.lastItem} ` +
-        `of ${focusedNode.totalItems}`;
-      previousGroupButton.disabled = navigation.index === 0;
-      nextGroupButton.disabled = navigation.index === navigation.groups.length - 1;
-      previousGroupButton.onclick = () => navigateToSyntheticSibling(-1);
-      nextGroupButton.onclick = () => navigateToSyntheticSibling(1);
-      focusedHeaderElement.append(groupNavigationElement);
+      const label = getNavigationLabel(node, isCurrent);
+      labelElement.textContent = label;
+      labelElement.title = label;
+    }
+
+    function renderSiblingNavigation(focusedNode, focusedHeaderElement) {
+      siblingNavigationElement.remove();
+      const navigation = getSiblingNavigation(focusedNode);
+      siblingNavigationElement.classList.toggle(
+        CSS_CLASSES.siblingNavigationProjectRoot,
+        focusedNode === treeMap.root,
+      );
+      const previousSibling = navigation.siblings[navigation.index - 1];
+      const nextSibling = navigation.siblings[navigation.index + 1];
+
+      setSiblingLabel(previousSiblingLabel, previousSibling);
+      setSiblingLabel(currentSiblingLabel, focusedNode, true);
+      setSiblingLabel(nextSiblingLabel, nextSibling);
+
+      previousSiblingButton.disabled = previousSibling === undefined;
+      previousSiblingButton.setAttribute(
+        "aria-label",
+        previousSibling === undefined
+          ? "No previous item"
+          : `Previous: ${getNavigationLabel(previousSibling, false)}`,
+      );
+      nextSiblingButton.disabled = nextSibling === undefined;
+      nextSiblingButton.setAttribute(
+        "aria-label",
+        nextSibling === undefined
+          ? "No next item"
+          : `Next: ${getNavigationLabel(nextSibling, false)}`,
+      );
+      previousSiblingButton.onclick = () => navigateToSibling(-1);
+      nextSiblingButton.onclick = () => navigateToSibling(1);
+      focusedHeaderElement.prepend(siblingNavigationElement);
     }
 
     function renderHistoryBreadcrumb() {
@@ -1252,7 +1326,7 @@
         mapOptions,
       );
       canvasElement.append(rootRecord.nodeElement);
-      renderGroupNavigation(focusedNode, rootRecord.headerElement);
+      renderSiblingNavigation(focusedNode, rootRecord.headerElement);
     }
 
     document.addEventListener("keydown", (event) => {
@@ -1271,9 +1345,9 @@
       }
       let didNavigate = false;
       if (event.key === "ArrowLeft") {
-        didNavigate = navigateToSyntheticSibling(-1);
+        didNavigate = navigateToSibling(-1);
       } else if (event.key === "ArrowRight") {
-        didNavigate = navigateToSyntheticSibling(1);
+        didNavigate = navigateToSibling(1);
       } else if (event.key === "ArrowUp") {
         didNavigate = navigateToParent();
       } else if (

@@ -86,8 +86,11 @@ The focused node shall stay in the canvas and shall not be duplicated in the
 ancestor rows.
 
 The renderer shall keep click history independently from the source hierarchy.
-The Back action shall return to the previously visited node. This behavior for
-horizontal transitions between synthetic groups remains subject to UX review.
+The Back action shall return to the previously visited node. A horizontal
+transition to an ordinary sibling or synthetic group shall replace the current
+history entry instead of adding another one. After browsing any number of
+siblings, Back shall return to the node from which the user entered that
+level.
 The toolbar shall show the visited nodes before the current node as a text
 breadcrumb with `•` separators. It shall not repeat the current node and shall
 remain separate from the structural ancestor controls.
@@ -95,17 +98,35 @@ The breadcrumb shall precede a directly interactive Back SVG without button
 markup or button styling. When the breadcrumb is empty, the icon shall be
 hidden while the toolbar retains its minimum height.
 
-When the focused node is a synthetic group, the renderer shall provide direct
-navigation to the preceding and following synthetic groups created for the
-same source parent. This horizontal navigation shall not apply to ordinary
-source nodes.
+When the focused node has siblings, the renderer shall provide direct
+navigation to the preceding and following nodes in its parent's `children`
+array. This array shall preserve source document traversal order. Rectangle
+layout may place the nodes in a different visual order because layout remains
+weight-based. Synthetic groups shall use the order of the groups created for
+the same source parent.
 
-The previous and next synthetic-group controls shall appear in the focused
-group's header inside the canvas. While the pointer is over the tree map's
-complete section, including its toolbar, ancestor navigation, and canvas, the
-left and right arrow keys shall provide the same horizontal navigation. The up
-arrow shall navigate to the focused node's actual parent. Outside the section,
-these keys shall retain their native behavior.
+The focused node's header inside the canvas shall contain these elements in
+order: the preceding sibling's label when it exists, the previous button, the
+current label, the next button, and the following sibling's label when it
+exists. The current label shall use bold text. Every label shall stay on one
+line, use an ellipsis when it does not fit, and expose its complete text in a
+`title` attribute. A button without a sibling in its direction shall be
+disabled.
+
+When the focused node is the project root, its header shall omit both sibling
+labels and both navigation buttons. The project label shall use the complete
+header width and remain centered without the five-column grid. This exception
+shall not apply to other nodes that happen to have no siblings.
+
+Ordinary nodes and synthetic groups shall use the same header markup. A
+focused synthetic group shall show its item range and total, such as
+`1–96 of 666`; adjacent group labels shall show their own item ranges.
+
+While the pointer is over the tree map's complete section, including its
+toolbar, ancestor navigation, and canvas, the left and right arrow keys shall
+use the same sibling navigation. The up arrow shall navigate to the focused
+node's actual parent. Outside the section, these keys shall retain their native
+behavior.
 
 While the pointer is over the section, Backspace shall invoke the history-based
 Back action. The renderer shall not intercept Backspace from an input,

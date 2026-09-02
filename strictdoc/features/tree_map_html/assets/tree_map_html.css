@@ -162,20 +162,41 @@
   color: var(--color-action);
 }
 
-.tree-map-html__group-navigation {
+.tree-map-html__sibling-navigation {
   display: flex;
-  flex: 0 0 auto;
+  flex: 1 1 auto;
+  min-width: 0;
   align-items: center;
   line-height: 0;
-  gap: var(--base-rhythm);
+  gap: calc(var(--base-rhythm) * 0.5);
   height: 100%;
-  margin-left: auto;
   font-size: var(--font-size-sm);
+
+  display: grid;
+  grid-template-columns:  minmax(0, 1fr)
+                          min-content
+                          minmax(0, 2fr)
+                          min-content
+                          minmax(0, 1fr);
+  gap: var(--base-rhythm);
 }
 
-.tree-map-html__group-navigation button {
-  border-radius: calc(var(--base-rhythm) * 0.5);
-  border: 1px solid gray;
+.tree-map-html__sibling-navigation--project-root {
+  display: flex;
+  justify-content: center;
+}
+
+.tree-map-html__sibling-navigation--project-root >
+:not(.tree-map-html__sibling-current) {
+  display: none;
+}
+
+.tree-map-html__sibling-navigation--project-root >
+.tree-map-html__sibling-current {
+  flex: 1 1 auto;
+}
+
+.tree-map-html__sibling-navigation button {
   font-size: var(--font-size-sm);
   font-family: monospace;
   line-height: 0;
@@ -183,13 +204,41 @@
   padding: 0;
   width: 16px;
   height: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border-radius: calc(0.5 * var(--base-rhythm));
+  background: transparent;
+  border: 1px solid;
 }
 
-.tree-map-html__group-position {
+.tree-map-html__sibling-navigation button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  filter: grayscale(100%);
+  pointer-events: none;
+}
+
+.tree-map-html__sibling-label {
+  flex: 1 1 0;
+  min-width: 0;
+  overflow: hidden;
+  padding: 2px 4px;
+  color: #111;
+  font-weight: 400;
+  line-height: 1.2;
+  text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.tree-map-html__sibling-current {
+  font-weight: 600;
+  text-align: center;
+}
+
+.tree-map-html__sibling-label--previous {
+  text-align: right;
+}
+
+.tree-map-html__sibling-label--next {
+  text-align: left;
 }
 
 .tree-map-html__ancestors {
@@ -302,6 +351,7 @@
   position: absolute;
   z-index: 1;
   display: flex;
+  gap: calc(.5 * var(--base-rhythm));
   align-items: stretch;
   top: var(--tree-map-html-node-padding);
   right: var(--tree-map-html-node-padding);

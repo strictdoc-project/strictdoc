@@ -30,6 +30,18 @@ class Test(E2ECase):
                 3,
             )
             first_section = ".tree-map-html__section:first-of-type"
+            self.assert_element(
+                first_section
+                + " .tree-map-html__sibling-navigation--project-root"
+            )
+            assert not self.driver.find_element(
+                By.CSS_SELECTOR,
+                first_section + " .tree-map-html__previous-sibling",
+            ).is_displayed()
+            assert not self.driver.find_element(
+                By.CSS_SELECTOR,
+                first_section + " .tree-map-html__next-sibling",
+            ).is_displayed()
             self.assert_element_absent(".tree-map-html__node[data-depth='2']")
             self.click(first_section + " .tree-map-html__preview-control")
             self.assert_element(".tree-map-html__node[data-depth='2']")
@@ -209,3 +221,48 @@ class Test(E2ECase):
             self.assert_elements(first_section + " .tree-map-html__ancestor", 1)
             self.click(first_section + " .tree-map-html__back")
             assert not back_icon.is_displayed()
+
+            # Sibling navigation follows the source tree order even when the
+            # rectangle layout places nodes according to their weights.
+            document_nodes = self.driver.find_elements(
+                By.CSS_SELECTOR,
+                first_section + " .tree-map-html__node[data-depth='1']",
+            )
+            first_document = next(
+                node
+                for node in document_nodes
+                if node.text.startswith("Test document")
+            )
+            first_document.click()
+            self.assert_text(
+                "Test document",
+                first_section + " .tree-map-html__sibling-current",
+            )
+            current_label = self.driver.find_element(
+                By.CSS_SELECTOR,
+                first_section + " .tree-map-html__sibling-current",
+            )
+            assert "Test document" in current_label.get_attribute("title")
+            assert current_label.value_of_css_property("text-overflow") == (
+                "ellipsis"
+            )
+            next_label = self.driver.find_element(
+                By.CSS_SELECTOR,
+                first_section + " .tree-map-html__sibling-label--next",
+            )
+            assert "Second test document" in next_label.text
+            assert "Second test document" in next_label.get_attribute("title")
+            self.click(first_section + " .tree-map-html__next-sibling")
+            self.assert_text(
+                "Second test document",
+                first_section + " .tree-map-html__sibling-current",
+            )
+            self.assert_text(
+                "Test document",
+                first_section + " .tree-map-html__sibling-label--previous",
+            )
+            self.click(first_section + " .tree-map-html__back")
+            assert not back_icon.is_displayed()
+            self.assert_element_absent(
+                first_section + " .tree-map-html__ancestor"
+            )

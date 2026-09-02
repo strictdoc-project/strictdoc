@@ -1,0 +1,76 @@
+<div class="main">
+
+<style>
+  .eurobot_test_dashboard-scope_control {
+    margin-bottom: 1.5rem;
+  }
+  .eurobot_test_dashboard-gap {
+    margin-bottom: 1.5rem;
+  }
+  .eurobot_test_dashboard-gap h3 {
+    margin-bottom: 0.25rem;
+  }
+  .eurobot_test_dashboard-gap ul {
+    margin: 0;
+    padding-left: 1.25rem;
+  }
+  .eurobot_test_dashboard-gap_empty {
+    color: #567;
+  }
+</style>
+
+<div class="eurobot_test_dashboard">
+
+  <div class="eurobot_test_dashboard-scope_control">
+    <label for="eurobot_test_dashboard_scope">Revision scope:</label>
+    <select
+      id="eurobot_test_dashboard_scope"
+      onchange="eurobotTestDashboardShowScope(this.value)"
+    >
+      {% for scope_ in view_object.scopes %}
+        <option value="{{ scope_.key }}">{{ scope_.label }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  {% for scope_ in view_object.scopes %}
+    <div
+      class="eurobot_test_dashboard-scope"
+      id="eurobot_test_dashboard_scope_{{ scope_.key }}"
+      {% if not loop.first %}hidden{% endif %}
+    >
+      {% for gap_ in scope_.gaps %}
+        <div class="eurobot_test_dashboard-gap">
+          <h3>{{ gap_.name }} ({{ gap_.items | length }})</h3>
+          {% if gap_.items | length > 0 %}
+            <ul>
+              {% for item_ in gap_.items %}
+                <li>
+                  <a href="{{ item_.url }}">{{ item_.uid }}</a>
+                  {%- if item_.title %} — {{ item_.title }}{% endif -%}
+                  {%- if item_.status is not none %} (STATUS: {{ item_.status }}){% endif -%}
+                </li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <p class="eurobot_test_dashboard-gap_empty">No gaps.</p>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  {% endfor %}
+
+</div>{# / .eurobot_test_dashboard #}
+
+</div>{# / .main #}
+
+<script>
+  function eurobotTestDashboardShowScope(scopeKey) {
+    var sections = document.querySelectorAll(".eurobot_test_dashboard-scope");
+    for (var i = 0; i < sections.length; i++) {
+      sections[i].hidden = (
+        sections[i].id !== "eurobot_test_dashboard_scope_" + scopeKey
+      );
+    }
+  }
+</script>

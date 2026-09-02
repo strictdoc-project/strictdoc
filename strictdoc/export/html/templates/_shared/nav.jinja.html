@@ -25,6 +25,19 @@
   </a>
 {%- endif -%}
 
+{%- set eurobot_test_dashboard_feature = view_object.project_config.get_feature("EUROBOT_TEST_DASHBOARD") -%}
+{%- if eurobot_test_dashboard_feature is not none -%}
+  <a
+    data-link="eurobot_test_dashboard"
+    class="nav_button"
+    href="{{ view_object.render_url('eurobot_test_dashboard.html') }}"
+    title="Test execution dashboard"
+    data-testid="project-tree-link-eurobot-test-dashboard"
+  >
+    {% include eurobot_test_dashboard_feature.screen_icon() %}
+  </a>
+{%- endif -%}
+
 {%- if view_object.project_config.is_activated_requirements_coverage() -%}
   <a
     data-link="traceability-matrix"

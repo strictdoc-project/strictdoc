@@ -1,0 +1,53 @@
+[DOCUMENT]
+TITLE: Dashboard fixture
+
+[GRAMMAR]
+IMPORT_FROM_FILE: eurobot_grammar.sgra
+
+[RULE]
+UID: RULE-1
+TITLE: Rule one
+STATUS: Active
+STATEMENT: >>>
+Rule one statement.
+<<<
+
+[RULE]
+UID: RULE-2
+TITLE: Rule two, left with no covering requirement
+STATUS: Active
+STATEMENT: >>>
+Rule two statement.
+<<<
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Requirement one, fully covered and verified
+TARGET_REVISION: C1
+STATEMENT: >>>
+Requirement one statement.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: RULE-1
+  ROLE: COVERS
+
+[REQUIREMENT]
+UID: REQ-2
+TITLE: Requirement two, covers no rule and has no test
+TARGET_REVISION: C2
+STATEMENT: >>>
+Requirement two statement.
+<<<
+
+[TEST_CASE]
+UID: TC-1
+TITLE: Test one
+STATUS: Passed
+STATEMENT: >>>
+Test one statement.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-1
+  ROLE: VERIFIES

@@ -465,25 +465,25 @@
 /* icons */
 
 .tree-map-html__label--ancestor::before {
-  content: "▴\00a0";
+  /* content: "▴\00a0"; */
   font-weight: 900;
   font-family: monospace;
 }
 
 .tree-map-html__label--root::before {
-  content: "▾\00a0";
+  /* content: "▾\00a0"; */
   font-weight: 900;
   font-family: monospace;
 }
 
 .tree-map-html__label--branch::before {
-  content: "▸\00a0";
+  /* content: "▸\00a0"; */
   font-weight: 900;
   font-family: monospace;
 }
 
 .tree-map-html__label--leaf::before {
-  content: "•\00a0";
+  /* content: "•\00a0"; */
   font-weight: 900;
   font-family: monospace;
 }

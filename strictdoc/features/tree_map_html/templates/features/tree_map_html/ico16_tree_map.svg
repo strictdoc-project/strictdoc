@@ -1,0 +1,22 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  class="svg_icon"
+  viewBox="0 0 16 16"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="butt"
+  stroke-linejoin="round"
+>
+  <rect
+    width="14"
+    height="14"
+    x="1"
+    y="1"
+    rx="2"
+    ry="2" />
+  <path d="M 9.25,1.75 V 14.25"/>
+  <path d="M 8.5,9.25 H 1.75"/>
+  <path d="m 5.25,10 v 4.25" />
+  <path d="m 10,6.25 h 4.25"/>
+</svg>

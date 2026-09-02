@@ -718,7 +718,8 @@ sdoc-node[show-anchors] sdoc-anchor:hover .anchor_back_links_number {
 [data-viewtype="diff"] [data-link="diff"],
 [data-viewtype="requirements-coverage"] [data-link="requirements_coverage"],
 [data-viewtype="traceability-matrix"] [data-link="traceability-matrix"],
-[data-viewtype="coverage-tree"] [data-link="source_coverage"] {
+[data-viewtype="coverage-tree"] [data-link="source_coverage"],
+[data-viewtype="tree-map-html"] [data-link="tree-map-html"] {
   color: var(--color-bg-contrast);
   border-color: var(--color-bg-contrast);
   cursor: default;

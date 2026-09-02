@@ -31,4 +31,4 @@ class TreeMapHTMLFeature(Feature):
         )
 
     def screen_icon(self) -> str:
-        return "icons/ico16_requirement.svg"
+        return "features/tree_map_html/ico16_tree_map.svg"

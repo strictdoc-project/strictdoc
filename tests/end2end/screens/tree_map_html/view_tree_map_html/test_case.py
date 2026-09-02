@@ -27,6 +27,10 @@ class Test(E2ECase):
                 ".tree-map-html__section",
                 3,
             )
+            first_section = ".tree-map-html__section:first-of-type"
+            self.assert_element_absent(".tree-map-html__node[data-depth='2']")
+            self.click(first_section + " .tree-map-html__preview-control")
+            self.assert_element(".tree-map-html__node[data-depth='2']")
             self.click('[data-testid="tree-map-html-tips-button"]')
             self.assert_element('[data-testid="tree-map-html-tips-content"]')
             self.assert_element(
@@ -37,7 +41,6 @@ class Test(E2ECase):
             self.assert_element_absent(
                 '[data-testid="tree-map-html-tips-content"]'
             )
-            self.assert_element(".tree-map-html__node[data-depth='2']")
             self.assert_no_js_errors()
 
             rectangles_are_valid = self.execute_script(
@@ -139,7 +142,6 @@ class Test(E2ECase):
             )
             assert focused_roots_are_not_interactive
 
-            first_section = ".tree-map-html__section:first-of-type"
             back_icon = self.driver.find_element(
                 By.CSS_SELECTOR,
                 first_section + " .tree-map-html__back",

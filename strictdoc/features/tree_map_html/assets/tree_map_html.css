@@ -32,20 +32,82 @@
 }
 
 .tree-map-html__section {
+  --tree-map-html-preview-control-width: 13rem;
+
+  position: relative;
   min-width: 0;
 }
 
 .tree-map-html__title {
   margin: 0 0 var(--base-rhythm);
+  padding-inline: var(--tree-map-html-preview-control-width);
   text-align: center;
 }
 
 .tree-map-html__toolbar {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--base-rhythm);
   min-height: 1rem;
   margin-bottom: var(--base-rhythm);
+}
+
+.tree-map-html__preview-control {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + var(--base-rhythm));
+  display: inline-flex;
+  align-items: center;
+  gap: var(--base-rhythm);
+  width: var(--tree-map-html-preview-control-width);
+  color: var(--color-fg-main);
+  font-size: var(--font-size-sm);
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+}
+
+.tree-map-html__preview-input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.tree-map-html__preview-slider {
+  position: relative;
+  flex: 0 0 auto;
+  width: 28px;
+  height: 16px;
+  border-radius: 8px;
+  background: var(--color-border);
+  transition: background-color 100ms ease-out;
+}
+
+.tree-map-html__preview-slider::after {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-bg-main);
+  content: "";
+  transition: transform 100ms ease-out;
+}
+
+.tree-map-html__preview-input:checked + .tree-map-html__preview-slider {
+  background: var(--color-action);
+}
+
+.tree-map-html__preview-input:checked + .tree-map-html__preview-slider::after {
+  transform: translateX(12px);
+}
+
+.tree-map-html__preview-input:focus-visible + .tree-map-html__preview-slider {
+  outline: 2px solid var(--color-action);
+  outline-offset: 2px;
 }
 
 .tree-map-html__back {

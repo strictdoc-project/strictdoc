@@ -9,6 +9,9 @@
     nodeHeaderHeight: 20,
     nodeGap: 4,
     nodePadding: 4,
+    // The focused node always shows its direct children. Disable this option
+    // to render those child folders as closed tiles without nested previews.
+    showCollapsedFolderContent: false,
     maxRenderedDepth: 4,
     maxRenderedNodes: 500,
     maxDirectChildren: 128,
@@ -45,6 +48,9 @@
     nodeLeaf: "tree-map-html__node--leaf",
     nodeSurface: "tree-map-html__node-surface",
     previousGroup: "tree-map-html__previous-group",
+    previewControl: "tree-map-html__preview-control",
+    previewInput: "tree-map-html__preview-input",
+    previewSlider: "tree-map-html__preview-slider",
     section: "tree-map-html__section",
     title: "tree-map-html__title",
     toolbar: "tree-map-html__toolbar",
@@ -780,6 +786,12 @@
           pixelRectangle,
           renderableChildren,
         } = record;
+        // Depth zero is the open folder represented by the canvas. Every
+        // deeper branch is a closed folder until the user navigates into it.
+        if (!options.showCollapsedFolderContent && depth > 0) {
+          nodeElement.dataset.collapsed = "true";
+          continue;
+        }
         // A group is a navigation tile in its parent's overview. Expanding it
         // there would make equal groups compete for the shared DOM budget.
         if (node.isSyntheticGroup === true && node !== focusedNode) {
@@ -881,6 +893,9 @@
   }
 
   function createTreeMap(treeMap, rootElement, options) {
+    // Every canvas owns its display options. Changing one map must not change
+    // sibling maps created from the shared renderer defaults.
+    const mapOptions = { ...options };
     const sectionElement = document.createElement("section");
     sectionElement.className = CSS_CLASSES.section;
 
@@ -891,6 +906,23 @@
 
     const toolbarElement = document.createElement("div");
     toolbarElement.className = CSS_CLASSES.toolbar;
+
+    const previewControlElement = document.createElement("label");
+    previewControlElement.className = CSS_CLASSES.previewControl;
+    const previewInputElement = document.createElement("input");
+    previewInputElement.className = CSS_CLASSES.previewInput;
+    previewInputElement.type = "checkbox";
+    previewInputElement.checked = mapOptions.showCollapsedFolderContent;
+    previewInputElement.dataset.testid =
+      "tree-map-html-preview-folder-contents";
+    const previewSliderElement = document.createElement("span");
+    previewSliderElement.className = CSS_CLASSES.previewSlider;
+    previewControlElement.append(
+      previewInputElement,
+      previewSliderElement,
+      "Preview folder contents",
+    );
+    toolbarElement.append(previewControlElement);
 
     const historyBreadcrumbElement = document.createElement("span");
     historyBreadcrumbElement.className = CSS_CLASSES.historyBreadcrumb;
@@ -1042,7 +1074,7 @@
         focusedNode,
         canvasRectangle,
         navigateTo,
-        options,
+        mapOptions,
       );
       canvasElement.append(rootRecord.nodeElement);
       renderGroupNavigation(focusedNode, rootRecord.headerElement);
@@ -1079,6 +1111,11 @@
         event.preventDefault();
         navigateBack();
       }
+    });
+
+    previewInputElement.addEventListener("change", () => {
+      mapOptions.showCollapsedFolderContent = previewInputElement.checked;
+      renderFocusedNode();
     });
 
     let canvasWidth = 0;

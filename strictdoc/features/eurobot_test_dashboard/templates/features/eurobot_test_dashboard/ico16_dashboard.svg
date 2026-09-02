@@ -1,0 +1,14 @@
+<svg
+  class="svg_icon"
+  viewBox="0 0 16 16"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <rect x="1.5" y="1.5" width="5.5" height="5.5" rx="1" />
+  <rect x="9" y="1.5" width="5.5" height="8.5" rx="1" />
+  <rect x="1.5" y="9.5" width="5.5" height="5" rx="1" />
+  <rect x="9" y="12.5" width="5.5" height="2" rx="1" />
+</svg>

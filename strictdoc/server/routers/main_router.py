@@ -288,21 +288,31 @@ def create_main_router(
 
     html_generator = HTMLGenerator(project_config, html_templates)
 
-    # Server screens contributed by built-in Features (e.g.
-    # ProjectStatisticsFeature), keyed by the screen_filename() each one
-    # owns. Built from *all* built-in Features regardless of activation
-    # (not just project_config.get_features(), which only resolves
-    # activated ones) so that a request for a known-but-not-activated
-    # screen can be told apart from an unknown path: the former must
-    # still return 412, the latter 404. Dispatched from within
-    # generate_document() below, so every Feature-contributed screen
-    # still goes through the same shared caching/locking machinery as
-    # every other document.
+    # Server screens contributed by Features, keyed by the
+    # screen_filename() each one owns. Seeded from *all* built-in Features
+    # regardless of activation (not just project_config.get_features(),
+    # which only resolves activated ones) so that a request for a
+    # known-but-not-activated built-in screen can be told apart from an
+    # unknown path: the former must still return 412, the latter 404. Then
+    # extended with this project's own activated Features (built-in or a
+    # custom Feature instance registered directly in project_features, e.g.
+    # eurobot's EurobotTestDashboardFeature): a custom instance is not in
+    # the built-in registry, so without this it would export fine but never
+    # route on the live server. Dispatched from within generate_document()
+    # below, so every Feature-contributed screen still goes through the
+    # same shared caching/locking machinery as every other document.
     server_features_by_screen_filename: Dict[str, Feature] = {
         feature_.screen_filename(): feature_
         for feature_ in ProjectConfig._builtin_features_by_handle().values()
         if feature_.supports_server()
     }
+    server_features_by_screen_filename.update(
+        {
+            feature_.screen_filename(): feature_
+            for feature_ in project_config.get_features()
+            if feature_.supports_server()
+        }
+    )
 
     html_generator.export_assets(
         traceability_index=export_action.traceability_index,

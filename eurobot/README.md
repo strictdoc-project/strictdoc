@@ -4,8 +4,9 @@ A runnable StrictDoc project holding the Eurobot course's document grammar:
 `RULE`, `REQUIREMENT`, and `TEST_CASE` elements linked by `Parent` relations.
 This project implements
 `developer/tasks/eurobot/20260827_requirements_and_test_grammar`,
-`developer/tasks/eurobot/20260827_eurobot_rules_import`, and
-`developer/tasks/eurobot/20260827_release_versioning`.
+`developer/tasks/eurobot/20260827_eurobot_rules_import`,
+`developer/tasks/eurobot/20260827_release_versioning`, and
+`developer/tasks/eurobot/20260827_test_dashboard`.
 
 It lives inside this fork so that the grammar can be exported and regression
 tested here. Nothing in it reaches outside this folder, so the course's own
@@ -143,6 +144,29 @@ shows the same gap as a chain that stops at the requirement.
 
 Which tests are not yet passed? Read the Table screen's `STATUS` column.
 `TC-2` is `Not Executed` and `TC-3` is `Failed`.
+
+## Test dashboard
+
+The three questions above are also answered together, pre-filtered by
+revision, on the "Test dashboard" screen (`EurobotTestDashboardFeature`,
+`eurobot_test_dashboard.html`, reachable both from `strictdoc export` and
+from the nav bar of a running `strictdoc server`). It lists four gaps, each
+with the full set of affected UIDs, titles, and click-through links straight
+to the node — not just a count:
+
+1. `RULE` nodes no `REQUIREMENT` covers.
+2. `REQUIREMENT` nodes covering no `RULE`.
+3. `REQUIREMENT` nodes no `TEST_CASE` verifies.
+4. `TEST_CASE` nodes whose `STATUS` is not `Passed`.
+
+A revision-scope dropdown (`All revisions`, `<revision> only`, or
+`Up to and including <revision>`) recomputes gaps 1–4 against
+`TARGET_REVISION`, resolved by the field's declared choice order rather than
+string comparison, so `C10` never sorts before `C2`. A `RULE` or `TEST_CASE`
+has no `TARGET_REVISION` of its own, so it is only "in scope" transitively,
+through the `REQUIREMENT`(s) it connects to. Every scope's gap lists are
+precomputed up front and the dropdown toggles between them client-side, so
+the static export works exactly like the live server.
 
 ## Planning a requirement for a revision
 

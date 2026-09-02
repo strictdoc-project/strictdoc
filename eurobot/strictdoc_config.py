@@ -1,4 +1,7 @@
 from strictdoc.api import ProjectConfig
+from strictdoc.features.eurobot_test_dashboard.feature import (
+    EurobotTestDashboardFeature,
+)
 
 
 def create_config() -> ProjectConfig:
@@ -10,6 +13,7 @@ def create_config() -> ProjectConfig:
             "DEEP_TRACEABILITY_SCREEN",
             "TRACEABILITY_MATRIX_SCREEN",
             "SEARCH",
+            EurobotTestDashboardFeature(),
         ],
         grammars={
             "@eurobot": "eurobot_grammar.sgra",

@@ -1,0 +1,40 @@
+#
+# When EUROBOT_TEST_DASHBOARD is activated, strictdoc export produces
+# eurobot_test_dashboard.html, listing each of the four coverage gaps with
+# its count plus the UID/title of every affected node, each UID a clickable
+# link straight to that node. This test copies in the real
+# eurobot/eurobot_grammar.sgra rather than duplicating it, so it follows the
+# grammar when the grammar changes.
+#
+# @relation(SDOC-SRS-97, scope=file)
+#
+
+RUN: mkdir -p "%T/input"
+RUN: cp "%strictdoc_root/eurobot/eurobot_grammar.sgra" "%T/input/"
+RUN: cp "%S/input.sdoc" "%T/input/"
+RUN: cp "%S/strictdoc_config.py" "%T/input/"
+
+RUN: %strictdoc export "%T/input" --output-dir "%T/output" | filecheck %s
+CHECK: Export completed.
+
+RUN: %check_exists --file "%T/output/html/eurobot_test_dashboard.html"
+
+RUN: %cat "%T/output/html/eurobot_test_dashboard.html" | filecheck %s --check-prefix CHECK-HTML --dump-input=fail
+
+# Gap 1: RULE-2 has no covering requirement; RULE-1 does (REQ-1) so it must
+# not appear. The href is the exact node-jump link a mentor clicks through.
+CHECK-HTML: Rules with no covering requirement (1)
+CHECK-HTML: <a href="../input/input.html#RULE-2">RULE-2</a>
+
+# Gap 2: REQ-2 covers no rule; REQ-1 covers RULE-1 so it must not appear.
+CHECK-HTML: Requirements covering no rule (1)
+CHECK-HTML: <a href="../input/input.html#REQ-2">REQ-2</a>
+
+# Gap 3: REQ-2 also has no verifying test; REQ-1 has TC-1 so it must not
+# appear.
+CHECK-HTML: Requirements with no covering test (1)
+CHECK-HTML: <a href="../input/input.html#REQ-2">REQ-2</a>
+
+# Gap 4: TC-1 is Passed, so no test case is left unpassed.
+CHECK-HTML: Tests not yet passed (0)
+CHECK-HTML: No gaps.

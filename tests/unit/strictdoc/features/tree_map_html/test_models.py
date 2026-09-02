@@ -13,6 +13,11 @@ def test_tree_map_data_serializes_nested_nodes_to_json() -> None:
         weight=1,
         color="#aaffaa",
         children=(),
+        title="Requirement one",
+        mid="MID-1",
+        uid="REQ-1",
+        document_url="input.html#REQ-1",
+        preview_url="/actions/show_full_node?reference_mid=MID-1",
     )
     root_node = TreeMapNode(
         label="Project",
@@ -39,11 +44,23 @@ def test_tree_map_data_serializes_nested_nodes_to_json() -> None:
                     "label": "Project",
                     "weight": 1,
                     "color": None,
+                    "title": None,
+                    "mid": None,
+                    "uid": None,
+                    "document_url": None,
+                    "preview_url": None,
                     "children": [
                         {
                             "label": "Requirement one: ä",
                             "weight": 1,
                             "color": "#aaffaa",
+                            "title": "Requirement one",
+                            "mid": "MID-1",
+                            "uid": "REQ-1",
+                            "document_url": "input.html#REQ-1",
+                            "preview_url": (
+                                "/actions/show_full_node?reference_mid=MID-1"
+                            ),
                             "children": [],
                         }
                     ],

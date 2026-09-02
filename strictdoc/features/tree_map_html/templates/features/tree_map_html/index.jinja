@@ -9,6 +9,11 @@
 
 {% block head_scripts %}
   {{ super() }}
+  {%- if view_object.project_config.is_running_on_server -%}
+  <script type="module">
+    import hotwiredTurbo from "./{{ view_object.render_static_url('turbo.min.js') }}";
+  </script>
+  {%- endif -%}
   <script src="{{ view_object.render_static_url('modal.js') }}"></script>
   <script src="{{ view_object.render_static_url('tree_map_html.js') }}" defer></script>
 {% endblock head_scripts %}
@@ -41,6 +46,12 @@
     ></div>
     <template id="tree-map-html-back-icon">
       {% include "icons/ico16_backspace.svg" %}
+    </template>
+    <template id="tree-map-html-go-to-document-icon">
+      {% include "icons/ico16_go_to_doc.svg" %}
+    </template>
+    <template id="tree-map-html-preview-icon">
+      {% include "icons/ico16_maximize.svg" %}
     </template>
     <template id="tree-map-html-tips-modal-template">
       {% include "features/tree_map_html/tips.jinja" %}

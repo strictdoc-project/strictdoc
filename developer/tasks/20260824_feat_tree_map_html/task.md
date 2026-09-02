@@ -111,10 +111,11 @@ While the pointer is over the section, Backspace shall invoke the history-based
 Back action. The renderer shall not intercept Backspace from an input,
 textarea, or editable element.
 
-Every real tree node except the project root shall provide two actions. The
-first action shall navigate to the node in Document view. The second action
-shall open the full-node preview modal. Synthetic groups shall not provide
-either action because they do not represent source nodes.
+Every SDoc node shall provide two actions. The first action shall navigate to
+the node in Document view. The second action shall open the full-node preview
+modal. A document tile shall provide the Document view action only because the
+existing full-node endpoint accepts SDoc nodes. The project root and synthetic
+groups shall not provide either action.
 
 The actions shall reuse the DEEP-TRACE destinations and icons:
 `ico16_go_to_doc.svg` for Document view and `ico16_maximize.svg` for the modal.
@@ -161,7 +162,8 @@ content, such as document links, shall belong to the surface rather than the
 positioning element.
 
 The serialized real-node data shall include the title, MID, UID, and Document
-view URL required by the node actions and information panel. The project root
+view URL required by the node actions and information panel. SDoc nodes shall
+also receive a preview URL when the screen runs on the server. The project root
 and browser-created synthetic groups shall not receive node-action URLs. The
 preview action shall use the same full-node server endpoint and modal flow as
 DEEP-TRACE.

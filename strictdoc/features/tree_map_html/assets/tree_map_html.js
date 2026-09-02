@@ -33,6 +33,8 @@
     children: "tree-map-html__children",
     groupNavigation: "tree-map-html__group-navigation",
     groupPosition: "tree-map-html__group-position",
+    infoPanel: "tree-map-html__info-panel",
+    infoTable: "tree-map-html__info-table",
     label: "tree-map-html__label",
     labelAncestor: "tree-map-html__label--ancestor",
     labelBranch: "tree-map-html__label--branch",
@@ -54,6 +56,10 @@
     nodeHeader: "tree-map-html__node-header",
     nodeLeaf: "tree-map-html__node--leaf",
     nodeSurface: "tree-map-html__node-surface",
+    nodeAction: "tree-map-html__node-action",
+    nodeActions: "tree-map-html__node-actions",
+    nodeGoToDocument: "tree-map-html__node-action--go-to-document",
+    nodePreview: "tree-map-html__node-action--preview",
     previousGroup: "tree-map-html__previous-group",
     previewControl: "tree-map-html__preview-control",
     previewInput: "tree-map-html__preview-input",
@@ -67,6 +73,8 @@
     data: "tree-map-html-data",
     modal: "modal",
     root: "tree-map-html-root",
+    goToDocumentIconTemplate: "tree-map-html-go-to-document-icon",
+    previewIconTemplate: "tree-map-html-preview-icon",
     tipsButton: "tree-map-html-tips-button",
     tipsModalTemplate: "tree-map-html-tips-modal-template",
   });
@@ -111,6 +119,58 @@
       throw new Error(`Icon template has no SVG: ${templateId}`);
     }
     return iconElement.cloneNode(true);
+  }
+
+  function createNodeAction(node, kind) {
+    const isDocumentAction = kind === "document";
+    const url = isDocumentAction ? node.document_url : node.preview_url;
+    if (typeof url !== "string") {
+      return null;
+    }
+    const actionElement = document.createElement("a");
+    actionElement.classList.add(
+      CSS_CLASSES.nodeAction,
+      isDocumentAction
+        ? CSS_CLASSES.nodeGoToDocument
+        : CSS_CLASSES.nodePreview,
+    );
+    actionElement.href = url;
+    actionElement.title = isDocumentAction
+      ? "Find it in the document view"
+      : "Show in full in modal";
+    actionElement.setAttribute("aria-label", actionElement.title);
+    if (!isDocumentAction) {
+      actionElement.dataset.turbo = "true";
+      actionElement.dataset.turboAction = "replace";
+    }
+    actionElement.append(
+      createTemplateIcon(
+        isDocumentAction
+          ? DOM_IDS.goToDocumentIconTemplate
+          : DOM_IDS.previewIconTemplate,
+      ),
+    );
+    return actionElement;
+  }
+
+  function createNodeActions(node) {
+    const actionsElement = document.createElement("span");
+    actionsElement.className = CSS_CLASSES.nodeActions;
+    for (const kind of ["document", "preview"]) {
+      const actionElement = createNodeAction(node, kind);
+      if (actionElement !== null) {
+        if (kind === "preview") {
+          // DEEP-TRACE scopes the full-node action through a Turbo frame. The
+          // frame has no visual box but lets Turbo process the stream response.
+          const turboFrameElement = document.createElement("turbo-frame");
+          turboFrameElement.append(actionElement);
+          actionsElement.append(turboFrameElement);
+        } else {
+          actionsElement.append(actionElement);
+        }
+      }
+    }
+    return actionsElement.childElementCount > 0 ? actionsElement : null;
   }
 
   function applyNodeColor(element, node) {
@@ -673,12 +733,20 @@
     }
     nodeElement.dataset.childCount = renderableChildren.length;
     nodeElement.dataset.sourceChildCount = node.children.length;
+    if (typeof node.mid === "string") {
+      nodeElement.dataset.nodeMid = node.mid;
+    }
+    if (typeof node.title === "string") {
+      nodeElement.dataset.nodeTitle = node.title;
+    }
+    if (typeof node.uid === "string") {
+      nodeElement.dataset.nodeUid = node.uid;
+    }
     if (node.isSyntheticGroup === true) {
       nodeElement.dataset.syntheticGroup = "true";
     }
     const nodeWeight = getNodeWeight(node);
     nodeElement.dataset.weight = nodeWeight;
-    nodeElement.title = `${node.label} (${nodeWeight})`;
     applyRectangle(nodeElement, rectangle);
 
     // Keep layout geometry on the transparent outer node. The surface owns
@@ -703,6 +771,15 @@
             ? CSS_CLASSES.labelLeaf
             : CSS_CLASSES.labelBranch;
       headerElement.append(createLabel(node.label, labelModifier));
+    }
+
+    const actionsElement = createNodeActions(node);
+    if (actionsElement !== null) {
+      if (node.children.length === 0) {
+        surfaceElement.append(actionsElement);
+      } else {
+        headerElement.append(actionsElement);
+      }
     }
 
     if (node.children.length === 0) {
@@ -732,10 +809,24 @@
     nodeElement.setAttribute("role", "button");
     nodeElement.tabIndex = 0;
     nodeElement.addEventListener("click", (event) => {
+      // Action links must keep bubbling to Turbo and the browser. Exclude them
+      // here instead of stopping their event at the link.
+      if (
+        event.target instanceof Element &&
+        event.target.closest(`.${CSS_CLASSES.nodeAction}`) !== null
+      ) {
+        return;
+      }
       event.stopPropagation();
       zoomIntoNode(node);
     });
     nodeElement.addEventListener("keydown", (event) => {
+      if (
+        event.target instanceof Element &&
+        event.target.closest(`.${CSS_CLASSES.nodeAction}`) !== null
+      ) {
+        return;
+      }
       if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
         event.stopPropagation();
@@ -976,6 +1067,16 @@
     const canvasElement = document.createElement("div");
     canvasElement.className = CSS_CLASSES.canvas;
     sectionElement.append(canvasElement);
+
+    const infoPanelElement = document.createElement("div");
+    infoPanelElement.className = CSS_CLASSES.infoPanel;
+    infoPanelElement.hidden = true;
+    const infoTableElement = document.createElement("dl");
+    infoTableElement.className = CSS_CLASSES.infoTable;
+    infoPanelElement.append(infoTableElement);
+    sectionElement.append(infoPanelElement);
+    let pointedNodeElement = null;
+    let lastPointerEvent = null;
     rootElement.append(sectionElement);
 
     indexNodeParents(treeMap.root);
@@ -1029,6 +1130,29 @@
         target instanceof HTMLElement &&
         (target.matches("input, textarea") || target.isContentEditable)
       );
+    }
+
+    function renderInfoPanel(nodeElement, pointerEvent) {
+      const rows = [
+        ["Title", nodeElement.dataset.nodeTitle],
+        ["MID", nodeElement.dataset.nodeMid],
+        ["UID", nodeElement.dataset.nodeUid],
+      ];
+      infoTableElement.replaceChildren();
+      for (const [name, value] of rows) {
+        if (value === undefined) {
+          continue;
+        }
+        const termElement = document.createElement("dt");
+        termElement.textContent = name;
+        const valueElement = document.createElement("dd");
+        valueElement.textContent = value;
+        infoTableElement.append(termElement, valueElement);
+      }
+      infoPanelElement.style.left =
+        `${Math.min(pointerEvent.clientX + 12, window.innerWidth - 272)}px`;
+      infoPanelElement.style.top =
+        `${Math.min(pointerEvent.clientY + 12, window.innerHeight - 120)}px`;
     }
 
     function renderAncestors(focusedNode) {
@@ -1138,6 +1262,13 @@
       if (!sectionElement.matches(":hover")) {
         return;
       }
+      if (event.key === "Shift") {
+        if (pointedNodeElement !== null && lastPointerEvent !== null) {
+          renderInfoPanel(pointedNodeElement, lastPointerEvent);
+          infoPanelElement.hidden = false;
+        }
+        return;
+      }
       let didNavigate = false;
       if (event.key === "ArrowLeft") {
         didNavigate = navigateToSyntheticSibling(-1);
@@ -1154,6 +1285,36 @@
       if (didNavigate) {
         event.preventDefault();
       }
+    });
+
+    sectionElement.addEventListener("pointermove", (event) => {
+      lastPointerEvent = event;
+      pointedNodeElement =
+        event.target instanceof Element
+          ? event.target.closest(`.${CSS_CLASSES.node}`)
+          : null;
+      if (
+        pointedNodeElement === null ||
+        pointedNodeElement.dataset.nodeMid === undefined
+      ) {
+        infoPanelElement.hidden = true;
+        return;
+      }
+      renderInfoPanel(pointedNodeElement, event);
+      infoPanelElement.hidden = !event.shiftKey;
+    });
+    sectionElement.addEventListener("pointerleave", () => {
+      pointedNodeElement = null;
+      lastPointerEvent = null;
+      infoPanelElement.hidden = true;
+    });
+    document.addEventListener("keyup", (event) => {
+      if (event.key === "Shift") {
+        infoPanelElement.hidden = true;
+      }
+    });
+    window.addEventListener("blur", () => {
+      infoPanelElement.hidden = true;
     });
 
     backIconElement.addEventListener("click", navigateBack);

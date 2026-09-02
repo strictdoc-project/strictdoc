@@ -16,6 +16,11 @@ class TreeMapNode:
     weight: int
     color: Optional[str]
     children: Tuple["TreeMapNode", ...]
+    title: Optional[str] = None
+    mid: Optional[str] = None
+    uid: Optional[str] = None
+    document_url: Optional[str] = None
+    preview_url: Optional[str] = None
 
 
 @dataclass(frozen=True)

@@ -13,6 +13,8 @@ from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.core.document_iterator import SDocDocumentIterator
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
+from strictdoc.export.html.document_type import DocumentType
+from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.features.tree_map_html.models import (
     TreeMap,
     TreeMapData,
@@ -65,6 +67,11 @@ class _SourceNode:
     source_color: Optional[str]
     test_color: Optional[str]
     is_normative: bool
+    title: Optional[str]
+    mid: Optional[str]
+    uid: Optional[str]
+    document_url: Optional[str]
+    preview_url: Optional[str]
 
 
 @dataclass(frozen=True)
@@ -82,9 +89,13 @@ class TreeMapDataGenerator:
         project_config: ProjectConfig,
         traceability_index: TraceabilityIndex,
     ) -> TreeMapData:
+        link_renderer = LinkRenderer(
+            root_path="", static_path=project_config.dir_for_sdoc_assets
+        )
         source_nodes = TreeMapDataGenerator._build_source_nodes(
             project_config=project_config,
             traceability_index=traceability_index,
+            link_renderer=link_renderer,
         )
         definitions = TreeMapDataGenerator._default_definitions()
         tree_maps = tuple(
@@ -102,7 +113,22 @@ class TreeMapDataGenerator:
         *,
         project_config: ProjectConfig,
         traceability_index: TraceabilityIndex,
+        link_renderer: LinkRenderer,
     ) -> Tuple[_SourceNode, ...]:
+        def get_document_view_url(
+            node_: Union[SDocDocument, SDocNode],
+            document_: SDocDocument,
+        ) -> str:
+            # The tree map has no current document, so its links are always
+            # full document URLs. Building them from the known source document
+            # also works while unit-test models lack including-document links.
+            assert document_.meta is not None
+            document_url = document_.meta.get_html_link(
+                DocumentType.DOCUMENT, 0
+            )
+            local_anchor = link_renderer.render_local_anchor(node_)
+            return f"{document_url}#{local_anchor}"
+
         coverage_by_node: Dict[
             Union[SDocDocument, SDocNode], _NodeCoverage
         ] = {}
@@ -196,6 +222,11 @@ class TreeMapDataGenerator:
                 source_color=None,
                 test_color=None,
                 is_normative=True,
+                title=None,
+                mid=None,
+                uid=None,
+                document_url=None,
+                preview_url=None,
             )
         ]
 
@@ -234,6 +265,15 @@ class TreeMapDataGenerator:
                     source_color=source_color,
                     test_color=test_color,
                     is_normative=document_ in documents_with_requirements,
+                    title=document_.reserved_title,
+                    mid=str(document_.reserved_mid),
+                    uid=(
+                        str(document_.reserved_uid)
+                        if document_.reserved_uid is not None
+                        else None
+                    ),
+                    document_url=get_document_view_url(document_, document_),
+                    preview_url=None,
                 )
             )
 
@@ -252,6 +292,7 @@ class TreeMapDataGenerator:
                     if node_.reserved_title is not None
                     else "[TEXT] node"
                 )
+                node_info_title = node_title
                 normative_title = node_title
                 if (
                     node_.section_contents is not None
@@ -291,6 +332,20 @@ class TreeMapDataGenerator:
                             node_.node_type == "SECTION"
                             and node_.ng_has_requirements
                         ),
+                        title=node_info_title,
+                        mid=str(node_.reserved_mid),
+                        uid=(
+                            str(node_.reserved_uid)
+                            if node_.reserved_uid is not None
+                            else None
+                        ),
+                        document_url=get_document_view_url(node_, document_),
+                        preview_url=(
+                            "/actions/show_full_node?reference_mid="
+                            f"{node_.reserved_mid}"
+                            if project_config.is_running_on_server
+                            else None
+                        ),
                     )
                 )
 
@@ -321,6 +376,11 @@ class TreeMapDataGenerator:
                 label=definition.get_label(source_node_),
                 weight=source_node_.weight,
                 color=definition.get_color(source_node_),
+                title=source_node_.title,
+                mid=source_node_.mid,
+                uid=source_node_.uid,
+                document_url=source_node_.document_url,
+                preview_url=source_node_.preview_url,
                 children=tuple(
                     build_node(child_node_)
                     for child_node_ in children_by_parent[

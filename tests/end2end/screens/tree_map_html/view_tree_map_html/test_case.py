@@ -4,7 +4,9 @@
 
 import os
 
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.server import SDocTestServer
@@ -31,6 +33,42 @@ class Test(E2ECase):
             self.assert_element_absent(".tree-map-html__node[data-depth='2']")
             self.click(first_section + " .tree-map-html__preview-control")
             self.assert_element(".tree-map-html__node[data-depth='2']")
+
+            requirement_selector = (
+                first_section + " .tree-map-html__node[data-depth='2']"
+            )
+            requirement_element = self.driver.find_element(
+                By.CSS_SELECTOR, requirement_selector
+            )
+            requirement_actions = requirement_element.find_elements(
+                By.CSS_SELECTOR, ".tree-map-html__node-action"
+            )
+            assert len(requirement_actions) == 2
+            assert (
+                requirement_element.find_element(
+                    By.CSS_SELECTOR,
+                    ".tree-map-html__node-action--go-to-document",
+                )
+                .get_attribute("href")
+                .endswith("input.html#REQ-1")
+            )
+
+            ActionChains(self.driver).key_down(Keys.SHIFT).move_to_element(
+                requirement_element
+            ).perform()
+            self.assert_element(".tree-map-html__info-panel:not([hidden])")
+            self.assert_text("Requirement 1", ".tree-map-html__info-panel")
+            self.assert_text("REQ-1", ".tree-map-html__info-panel")
+            ActionChains(self.driver).key_up(Keys.SHIFT).perform()
+
+            self.hover(requirement_selector)
+            assert self.execute_script("return window.Turbo !== undefined")
+            self.click(
+                requirement_selector + " .tree-map-html__node-action--preview"
+            )
+            self.assert_element("#modal [data-js-modal]")
+            self.click('#modal [data-testid="form-cancel-action"]')
+
             self.click('[data-testid="tree-map-html-tips-button"]')
             self.assert_element('[data-testid="tree-map-html-tips-content"]')
             self.assert_element(

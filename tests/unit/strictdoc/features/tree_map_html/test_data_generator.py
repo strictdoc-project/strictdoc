@@ -44,10 +44,20 @@ def test_generates_the_three_default_tree_maps() -> None:
     document_node = document_tree_map.root.children[0]
     assert document_node.label == "Test Document (2)"
     assert document_node.color is None
+    assert document_node.mid is not None
+    assert document_node.document_url is not None
+    assert document_node.preview_url is None
     assert all(node_.color is None for node_ in document_node.children)
     assert tuple(node_.label for node_ in document_node.children) == (
         "Requirement title",
         "Requirement title",
+    )
+    assert tuple(node_.uid for node_ in document_node.children) == (
+        "REQ-001",
+        "REQ-002",
+    )
+    assert all(
+        node_.document_url is not None for node_ in document_node.children
     )
 
     source_coverage_tree_map = tree_map_data.tree_maps[1]

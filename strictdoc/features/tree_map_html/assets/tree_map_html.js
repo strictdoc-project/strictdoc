@@ -39,6 +39,13 @@
     labelLeaf: "tree-map-html__label--leaf",
     labelRoot: "tree-map-html__label--root",
     historyBreadcrumb: "tree-map-html__history-breadcrumb",
+    historyBreadcrumbEllipsis:
+      "tree-map-html__history-breadcrumb-ellipsis",
+    historyBreadcrumbItem: "tree-map-html__history-breadcrumb-item",
+    historyBreadcrumbLatest:
+      "tree-map-html__history-breadcrumb-item--latest",
+    historyBreadcrumbSeparator:
+      "tree-map-html__history-breadcrumb-separator",
     nextGroup: "tree-map-html__next-group",
     node: "tree-map-html__node",
     nodeBranch: "tree-map-html__node--branch",
@@ -1057,18 +1064,62 @@
       focusedHeaderElement.append(groupNavigationElement);
     }
 
+    function renderHistoryBreadcrumb() {
+      const historyLabels = visitHistory
+        .slice(0, -1)
+        .map((node) => node.label);
+      backIconElement.toggleAttribute("hidden", historyLabels.length === 0);
+
+      function renderVisibleItems(firstVisibleIndex) {
+        historyBreadcrumbElement.replaceChildren();
+        if (firstVisibleIndex > 0) {
+          const ellipsisElement = document.createElement("span");
+          ellipsisElement.className = CSS_CLASSES.historyBreadcrumbEllipsis;
+          ellipsisElement.textContent = "…";
+          historyBreadcrumbElement.append(ellipsisElement);
+        }
+        for (
+          let index = firstVisibleIndex;
+          index < historyLabels.length;
+          index += 1
+        ) {
+          if (index > firstVisibleIndex || firstVisibleIndex > 0) {
+            const separatorElement = document.createElement("span");
+            separatorElement.className =
+              CSS_CLASSES.historyBreadcrumbSeparator;
+            separatorElement.textContent = "•";
+            historyBreadcrumbElement.append(separatorElement);
+          }
+          const itemElement = document.createElement("span");
+          itemElement.className = CSS_CLASSES.historyBreadcrumbItem;
+          itemElement.textContent = historyLabels[index];
+          historyBreadcrumbElement.append(itemElement);
+        }
+      }
+
+      // Start with the complete history, then remove the oldest entries until
+      // the remaining tail fits. The latest entry stays visible and may use a
+      // conventional right-side ellipsis when its own label is too long.
+      let firstVisibleIndex = 0;
+      renderVisibleItems(firstVisibleIndex);
+      while (
+        historyBreadcrumbElement.scrollWidth >
+          historyBreadcrumbElement.clientWidth &&
+        firstVisibleIndex < historyLabels.length - 1
+      ) {
+        firstVisibleIndex += 1;
+        renderVisibleItems(firstVisibleIndex);
+      }
+      historyBreadcrumbElement.lastElementChild?.classList.add(
+        CSS_CLASSES.historyBreadcrumbLatest,
+      );
+    }
+
     function renderFocusedNode() {
       const focusedNode = getFocusedNode();
       const canvasRectangle = canvasElement.getBoundingClientRect();
       canvasElement.replaceChildren();
-      historyBreadcrumbElement.textContent = visitHistory
-        .slice(0, -1)
-        .map((node) => node.label)
-        .join(" • ");
-      backIconElement.toggleAttribute(
-        "hidden",
-        historyBreadcrumbElement.textContent.length === 0,
-      );
+      renderHistoryBreadcrumb();
       renderAncestors(focusedNode);
       const rootRecord = renderNodeTree(
         focusedNode,

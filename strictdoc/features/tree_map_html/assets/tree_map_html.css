@@ -132,6 +132,12 @@
 }
 
 .tree-map-html__history-breadcrumb {
+  display: flex;
+  flex-grow: 0;
+  flex-shrink: 1;
+  flex-basis: auto;
+  align-items: center;
+  gap: 0.4em;
   min-width: 0;
   overflow: hidden;
   padding: 2px 4px;
@@ -139,8 +145,21 @@
   font-size: var(--font-size-sm);
   font-weight: 400;
   line-height: 1.2;
-  text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.tree-map-html__history-breadcrumb-item,
+.tree-map-html__history-breadcrumb-ellipsis,
+.tree-map-html__history-breadcrumb-separator {
+  flex: 0 0 auto;
+}
+
+.tree-map-html__history-breadcrumb-item--latest {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--color-action);
 }
 
 .tree-map-html__group-navigation {

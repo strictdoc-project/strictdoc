@@ -16,6 +16,11 @@ Each tree map shall show the document hierarchy as nested HTML elements styled
 with CSS. A node's area shall represent its weight. Its color shall represent
 the value calculated for the selected tree map.
 
+The serialized weight shall be the actual size calculated for the document or
+node. The data generator shall not clamp small weights to a minimum value.
+Rendering constraints shall use the renderer's minimum node dimensions and
+visibility thresholds without changing the weight.
+
 The browser shall use the available rectangle's actual aspect ratio when it
 calculates the layout. It shall recalculate the layout when the viewport size
 changes.

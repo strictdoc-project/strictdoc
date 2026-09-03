@@ -259,7 +259,7 @@ class TreeMapDataGenerator:
                 _SourceNode(
                     identifier=document_.reserved_mid,
                     parent_identifier=project_config.project_title,
-                    weight=max(document_total_size, 10),
+                    weight=document_total_size,
                     label=document_title,
                     normative_label=document_normative_title,
                     source_color=source_color,
@@ -322,7 +322,7 @@ class TreeMapDataGenerator:
                     _SourceNode(
                         identifier=node_.reserved_mid,
                         parent_identifier=node_.parent.reserved_mid,
-                        weight=max(node_total_size, 10),
+                        weight=node_total_size,
                         label=node_title,
                         normative_label=normative_title,
                         source_color=source_color,

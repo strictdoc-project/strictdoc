@@ -136,7 +136,7 @@
   min-width: 0;
   overflow: hidden;
   padding: 2px 4px;
-  color: #111;
+  color: var(--color-fg-contrast);
   font-size: var(--font-size-sm);
   font-weight: 400;
   line-height: 1.2;
@@ -198,8 +198,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  font-weight: 600;
+  gap: calc(var(--base-rhythm) * 0.5);
   text-align: center;
 }
 
@@ -405,8 +404,8 @@
   display: block;
   min-width: 0;
   overflow: hidden;
-  padding: 2px 4px;
-  color: #111;
+  padding: calc(.25 * var(--base-rhythm)) calc(.5 * var(--base-rhythm));
+  color: var(--color-fg-contrast);
   font-size: var(--font-size-sm);
   font-weight: 600;
   line-height: 1.2;

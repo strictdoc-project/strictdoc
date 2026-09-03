@@ -800,26 +800,31 @@
       surfaceElement.append(actionsElement);
     }
 
+    nodeElement.addEventListener("pointerdown", (event) => {
+      if (event.shiftKey) {
+        event.preventDefault();
+      }
+    });
     nodeElement.addEventListener("click", (event) => {
-      if (!event.altKey) {
+      if (!event.shiftKey) {
         return;
       }
       // Modifier-click belongs to the tile, including its visible action.
-      // Always suppress the browser's Alt behavior, even when the requested
-      // preview is unavailable.
+      // Always suppress the browser's modifier behavior, even when the
+      // requested action is unavailable.
       event.preventDefault();
       event.stopImmediatePropagation();
-      if (event.shiftKey) {
+      if (event.altKey) {
         if (typeof node.document_url === "string") {
           window.location.assign(node.document_url);
         }
         return;
       }
-      const previewActionElement = nodeElement.querySelector(
-        `.${CSS_CLASSES.nodePreview}`,
+      const primaryActionElement = nodeElement.querySelector(
+        `.${CSS_CLASSES.nodeAction}`,
       );
-      if (previewActionElement instanceof HTMLAnchorElement) {
-        previewActionElement.click();
+      if (primaryActionElement instanceof HTMLAnchorElement) {
+        primaryActionElement.click();
       }
     });
 
@@ -1521,7 +1526,7 @@
     document.addEventListener(
       "click",
       (event) => {
-        if (!event.altKey) {
+        if (!event.shiftKey) {
           return;
         }
         const nodeElement =
@@ -1531,9 +1536,9 @@
         if (nodeElement !== null) {
           return;
         }
-        // Tree map reserves both Alt+Click combinations for node actions.
-        // Suppress them elsewhere on this screen so an Alt key left pressed
-        // after using the map cannot trigger a link download or button action.
+        // Tree map reserves both Shift+Click combinations for node actions.
+        // Suppress them elsewhere on this screen so a modifier left pressed
+        // after using the map cannot trigger a link or button action.
         event.preventDefault();
         event.stopImmediatePropagation();
       },

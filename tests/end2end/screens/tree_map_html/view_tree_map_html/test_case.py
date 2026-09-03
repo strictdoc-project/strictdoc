@@ -73,16 +73,16 @@ class Test(E2ECase):
 
             self.hover(requirement_selector)
             assert self.execute_script("return window.Turbo !== undefined")
-            ActionChains(self.driver).key_down(Keys.ALT).click(
+            ActionChains(self.driver).key_down(Keys.SHIFT).click(
                 requirement_element
-            ).key_up(Keys.ALT).perform()
+            ).key_up(Keys.SHIFT).perform()
             self.assert_element("#modal [data-js-modal]")
             cancel_action = self.driver.find_element(
                 By.CSS_SELECTOR, '[data-testid="form-cancel-action"]'
             )
-            ActionChains(self.driver).key_down(Keys.ALT).click(
+            ActionChains(self.driver).key_down(Keys.SHIFT).click(
                 cancel_action
-            ).key_up(Keys.ALT).perform()
+            ).key_up(Keys.SHIFT).perform()
             self.assert_element("#modal [data-js-modal]")
             ActionChains(self.driver).key_down(Keys.SHIFT).key_down(
                 Keys.ALT

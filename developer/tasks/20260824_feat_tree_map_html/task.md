@@ -159,19 +159,18 @@ lower-right edge.
 While Shift is held over a real node, the node shall show a compact information
 panel with its title, MID, and UID.
 
-Alt+Click shall invoke the primary action, and Shift+Alt+Click shall invoke the
-secondary action. The primary action shall always be the modal preview. If the
-clicked item has no preview URL, Alt+Click shall do nothing while still
-suppressing the browser's native Alt+Click behavior. The secondary action shall
+Shift+Click shall invoke the tile's primary action, and Shift+Alt+Click shall
+invoke its secondary action. The primary action shall open the modal for an
+SDoc node and the Document view for a document tile. In static output, it shall
+use the SDoc node's fallback Document view action. The secondary action shall
 always navigate to the item's Document view URL. This URL includes the node
 anchor for an SDoc node and has no anchor for a document tile.
 
-The tree map screen shall suppress Alt+Click and Shift+Alt+Click outside tree
+The tree map screen shall suppress Shift+Click and Shift+Alt+Click outside tree
 map tiles. This includes controls rendered in the shared modal outlet. The
 screen reserves both combinations for tile actions, so a modifier left pressed
-after using the map shall not trigger a browser download, link navigation, or
-button action elsewhere on the screen. Clicks without Alt shall keep their
-normal behavior.
+after using the map shall not trigger link navigation or a button action
+elsewhere on the screen. Clicks without Shift shall keep their normal behavior.
 
 End-to-end tests shall locate stable controls and observable results through
 `data-testid` attributes where standard Selenium interaction is sufficient.

@@ -140,23 +140,44 @@ While the pointer is over the section, Backspace shall invoke the history-based
 Back action. The renderer shall not intercept Backspace from an input,
 textarea, or editable element.
 
-Every SDoc node shall provide two actions. The first action shall navigate to
-the node in Document view. The second action shall open the full-node preview
-modal. A document tile shall provide the Document view action only because the
-existing full-node endpoint accepts SDoc nodes. The project root and synthetic
-groups shall not provide either action.
+Each tile shall show at most one primary action. A document tile shall navigate
+to its Document view without an anchor. An SDoc node shall open the full-node
+preview modal. In static output, where the modal endpoint is unavailable, the
+same tile shall instead show its anchored Document view action. The SDoc node's
+anchored Document view URL shall remain in serialized server data for secondary
+interaction even though the server screen does not show a separate action for
+it. The project root and synthetic groups shall not provide an action.
 
 The actions shall reuse the DEEP-TRACE destinations and icons:
 `ico16_go_to_doc.svg` for Document view and `ico16_maximize.svg` for the modal.
-They shall appear as directly interactive SVG elements without the
-DEEP-TRACE button wrapper. The SVG elements shall be visible only while the
-pointer is over their node. A branch shall place them at the upper-right edge
-of its header, where they limit the space available to the title. A leaf shall
-place them at its lower-right edge.
+Each control shall appear as a directly interactive SVG element without the
+DEEP-TRACE button wrapper. It shall be visible only while the pointer is over
+its node. A branch shall place it at the upper-right edge of its header, where
+it limits the space available to the title. A leaf shall place it at its
+lower-right edge.
 
 While Shift is held over a real node, the node shall show a compact information
-panel with its title, MID, and UID. Modifier-click actions and additional
-keyboard shortcuts for node links and previews are not part of this stage.
+panel with its title, MID, and UID.
+
+Alt+Click shall invoke the primary action, and Shift+Alt+Click shall invoke the
+secondary action. The primary action shall always be the modal preview. If the
+clicked item has no preview URL, Alt+Click shall do nothing while still
+suppressing the browser's native Alt+Click behavior. The secondary action shall
+always navigate to the item's Document view URL. This URL includes the node
+anchor for an SDoc node and has no anchor for a document tile.
+
+The tree map screen shall suppress Alt+Click and Shift+Alt+Click outside tree
+map tiles. This includes controls rendered in the shared modal outlet. The
+screen reserves both combinations for tile actions, so a modifier left pressed
+after using the map shall not trigger a browser download, link navigation, or
+button action elsewhere on the screen. Clicks without Alt shall keep their
+normal behavior.
+
+End-to-end tests shall locate stable controls and observable results through
+`data-testid` attributes where standard Selenium interaction is sufficient.
+CSS classes and internal DOM nesting shall not form the behavioral test
+contract. The existing tree map test shall migrate to this convention after
+the screen behavior and controls settle.
 
 ## WHY
 

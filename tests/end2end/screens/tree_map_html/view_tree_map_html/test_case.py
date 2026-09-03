@@ -55,14 +55,12 @@ class Test(E2ECase):
             requirement_actions = requirement_element.find_elements(
                 By.CSS_SELECTOR, ".tree-map-html__node-action"
             )
-            assert len(requirement_actions) == 2
-            assert (
-                requirement_element.find_element(
-                    By.CSS_SELECTOR,
-                    ".tree-map-html__node-action--go-to-document",
-                )
-                .get_attribute("href")
-                .endswith("input.html#REQ-1")
+            assert len(requirement_actions) == 1
+            assert "tree-map-html__node-action--preview" in (
+                requirement_actions[0].get_attribute("class")
+            )
+            assert "/actions/show_full_node?reference_mid=" in (
+                requirement_actions[0].get_attribute("href")
             )
 
             ActionChains(self.driver).key_down(Keys.SHIFT).move_to_element(
@@ -75,9 +73,22 @@ class Test(E2ECase):
 
             self.hover(requirement_selector)
             assert self.execute_script("return window.Turbo !== undefined")
-            self.click(
-                requirement_selector + " .tree-map-html__node-action--preview"
+            ActionChains(self.driver).key_down(Keys.ALT).click(
+                requirement_element
+            ).key_up(Keys.ALT).perform()
+            self.assert_element("#modal [data-js-modal]")
+            cancel_action = self.driver.find_element(
+                By.CSS_SELECTOR, '[data-testid="form-cancel-action"]'
             )
+            ActionChains(self.driver).key_down(Keys.ALT).click(
+                cancel_action
+            ).key_up(Keys.ALT).perform()
+            self.assert_element("#modal [data-js-modal]")
+            ActionChains(self.driver).key_down(Keys.SHIFT).key_down(
+                Keys.ALT
+            ).click(cancel_action).key_up(Keys.ALT).key_up(
+                Keys.SHIFT
+            ).perform()
             self.assert_element("#modal [data-js-modal]")
             self.click('#modal [data-testid="form-cancel-action"]')
 

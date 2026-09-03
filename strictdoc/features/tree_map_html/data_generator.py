@@ -129,6 +129,10 @@ class TreeMapDataGenerator:
             local_anchor = link_renderer.render_local_anchor(node_)
             return f"{document_url}#{local_anchor}"
 
+        def get_document_url(document_: SDocDocument) -> str:
+            assert document_.meta is not None
+            return document_.meta.get_html_link(DocumentType.DOCUMENT, 0)
+
         coverage_by_node: Dict[
             Union[SDocDocument, SDocNode], _NodeCoverage
         ] = {}
@@ -272,7 +276,7 @@ class TreeMapDataGenerator:
                         if document_.reserved_uid is not None
                         else None
                     ),
-                    document_url=get_document_view_url(document_, document_),
+                    document_url=get_document_url(document_),
                     preview_url=None,
                 )
             )

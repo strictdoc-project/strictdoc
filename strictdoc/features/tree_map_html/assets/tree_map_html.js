@@ -163,21 +163,24 @@
   function createNodeActions(node) {
     const actionsElement = document.createElement("span");
     actionsElement.className = CSS_CLASSES.nodeActions;
-    for (const kind of ["document", "preview"]) {
-      const actionElement = createNodeAction(node, kind);
-      if (actionElement !== null) {
-        if (kind === "preview") {
-          // DEEP-TRACE scopes the full-node action through a Turbo frame. The
-          // frame has no visual box but lets Turbo process the stream response.
-          const turboFrameElement = document.createElement("turbo-frame");
-          turboFrameElement.append(actionElement);
-          actionsElement.append(turboFrameElement);
-        } else {
-          actionsElement.append(actionElement);
-        }
-      }
+    // Prefer the server-only modal. Static output has no preview URL, so the
+    // same node falls back to its Document view URL with the anchor intact.
+    const primaryAction =
+      typeof node.preview_url === "string" ? "preview" : "document";
+    const actionElement = createNodeAction(node, primaryAction);
+    if (actionElement === null) {
+      return null;
     }
-    return actionsElement.childElementCount > 0 ? actionsElement : null;
+    if (primaryAction === "preview") {
+      // DEEP-TRACE scopes the full-node action through a Turbo frame. The
+      // frame has no visual box but lets Turbo process the stream response.
+      const turboFrameElement = document.createElement("turbo-frame");
+      turboFrameElement.append(actionElement);
+      actionsElement.append(turboFrameElement);
+    } else {
+      actionsElement.append(actionElement);
+    }
+    return actionsElement;
   }
 
   function applyNodeColor(element, node) {
@@ -792,6 +795,29 @@
       }
       // headerElement.append(actionsElement);
     }
+
+    nodeElement.addEventListener("click", (event) => {
+      if (!event.altKey) {
+        return;
+      }
+      // Modifier-click belongs to the tile, including its visible action.
+      // Always suppress the browser's Alt behavior, even when the requested
+      // preview is unavailable.
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      if (event.shiftKey) {
+        if (typeof node.document_url === "string") {
+          window.location.assign(node.document_url);
+        }
+        return;
+      }
+      const previewActionElement = nodeElement.querySelector(
+        `.${CSS_CLASSES.nodePreview}`,
+      );
+      if (previewActionElement instanceof HTMLAnchorElement) {
+        previewActionElement.click();
+      }
+    });
 
     if (node.children.length === 0) {
       nodeElement.classList.add(CSS_CLASSES.nodeLeaf);
@@ -1483,6 +1509,34 @@
     }
   }
 
+  function initializeModifierClickGuard() {
+    const rootElement = document.getElementById(DOM_IDS.root);
+    if (rootElement === null) {
+      return;
+    }
+    document.addEventListener(
+      "click",
+      (event) => {
+        if (!event.altKey) {
+          return;
+        }
+        const nodeElement =
+          event.target instanceof Element
+            ? event.target.closest(`.${CSS_CLASSES.node}`)
+            : null;
+        if (nodeElement !== null) {
+          return;
+        }
+        // Tree map reserves both Alt+Click combinations for node actions.
+        // Suppress them elsewhere on this screen so an Alt key left pressed
+        // after using the map cannot trigger a link download or button action.
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      },
+      true,
+    );
+  }
+
   function initializeTipsModal() {
     // The page header owns one help button and one inert template. Copying the
     // template into StrictDoc's modal outlet follows the table-screen pattern.
@@ -1502,5 +1556,6 @@
   }
 
   initializeTipsModal();
+  initializeModifierClickGuard();
   renderTreeMaps();
 })();

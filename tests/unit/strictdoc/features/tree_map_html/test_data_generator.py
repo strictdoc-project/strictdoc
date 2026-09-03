@@ -46,6 +46,7 @@ def test_generates_the_three_default_tree_maps() -> None:
     assert document_node.color is None
     assert document_node.mid is not None
     assert document_node.document_url is not None
+    assert "#" not in document_node.document_url
     assert document_node.preview_url is None
     assert all(node_.color is None for node_ in document_node.children)
     assert tuple(node_.label for node_ in document_node.children) == (
@@ -58,6 +59,11 @@ def test_generates_the_three_default_tree_maps() -> None:
     )
     assert all(
         node_.document_url is not None for node_ in document_node.children
+    )
+    assert all(
+        "#" in node_.document_url
+        for node_ in document_node.children
+        if node_.document_url is not None
     )
 
     source_coverage_tree_map = tree_map_data.tree_maps[1]
@@ -78,6 +84,41 @@ def test_generates_the_three_default_tree_maps() -> None:
         "#ffaaaa",
         "#ffaaaa",
     )
+
+
+def test_node_action_urls_differ_between_static_and_server_output() -> None:
+    document_builder = DocumentBuilder()
+    document_builder.add_requirement("REQ-001")
+    document = document_builder.build()
+    document_tree = DocumentTree(
+        file_tree=[],
+        document_list=[document],
+        map_docs_by_paths={},
+        map_docs_by_rel_paths={},
+        map_grammars_by_filenames={},
+    )
+    traceability_index = TraceabilityIndexBuilder.create_from_document_tree(
+        document_tree,
+        project_config=document_builder.project_config,
+    )
+
+    static_data = TreeMapDataGenerator.generate(
+        project_config=document_builder.project_config,
+        traceability_index=traceability_index,
+    )
+    static_node = static_data.tree_maps[0].root.children[0].children[0]
+    assert static_node.preview_url is None
+    assert static_node.document_url is not None
+    assert "#" in static_node.document_url
+
+    document_builder.project_config.is_running_on_server = True
+    server_data = TreeMapDataGenerator.generate(
+        project_config=document_builder.project_config,
+        traceability_index=traceability_index,
+    )
+    server_node = server_data.tree_maps[0].root.children[0].children[0]
+    assert server_node.preview_url is not None
+    assert server_node.document_url == static_node.document_url
 
 
 def test_distinguishes_source_and_test_coverage() -> None:

@@ -73,6 +73,7 @@
     section: "tree-map-html__section",
     title: "tree-map-html__title",
     toolbar: "tree-map-html__toolbar",
+    footer: "tree-map-html__footer",
   });
   const DOM_IDS = Object.freeze({
     backIconTemplate: "tree-map-html-back-icon",
@@ -1012,23 +1013,6 @@
     const toolbarElement = document.createElement("div");
     toolbarElement.className = CSS_CLASSES.toolbar;
 
-    const previewControlElement = document.createElement("label");
-    previewControlElement.className = CSS_CLASSES.previewControl;
-    const previewInputElement = document.createElement("input");
-    previewInputElement.className = CSS_CLASSES.previewInput;
-    previewInputElement.type = "checkbox";
-    previewInputElement.checked = mapOptions.showCollapsedFolderContent;
-    previewInputElement.dataset.testid =
-      "tree-map-html-preview-folder-contents";
-    const previewSliderElement = document.createElement("span");
-    previewSliderElement.className = CSS_CLASSES.previewSlider;
-    previewControlElement.append(
-      previewInputElement,
-      previewSliderElement,
-      "Preview folder contents",
-    );
-    toolbarElement.append(previewControlElement);
-
     const historyBreadcrumbElement = document.createElement("span");
     historyBreadcrumbElement.className = CSS_CLASSES.historyBreadcrumb;
     historyBreadcrumbElement.dataset.testid =
@@ -1113,6 +1097,27 @@
     infoTableElement.className = CSS_CLASSES.infoTable;
     infoPanelElement.append(infoTableElement);
     sectionElement.append(infoPanelElement);
+
+    const footerElement = document.createElement("footer");
+    footerElement.className = CSS_CLASSES.footer;
+    const previewControlElement = document.createElement("label");
+    previewControlElement.className = CSS_CLASSES.previewControl;
+    const previewInputElement = document.createElement("input");
+    previewInputElement.className = CSS_CLASSES.previewInput;
+    previewInputElement.type = "checkbox";
+    previewInputElement.checked = mapOptions.showCollapsedFolderContent;
+    previewInputElement.dataset.testid =
+      "tree-map-html-preview-folder-contents";
+    const previewSliderElement = document.createElement("span");
+    previewSliderElement.className = CSS_CLASSES.previewSlider;
+    previewControlElement.append(
+      "Preview folder contents",
+      previewInputElement,
+      previewSliderElement,
+    );
+    footerElement.append(previewControlElement);
+    sectionElement.append(footerElement);
+
     let pointedNodeElement = null;
     let lastPointerEvent = null;
     rootElement.append(sectionElement);
@@ -1214,18 +1219,21 @@
     function renderAncestors(focusedNode) {
       ancestorsElement.replaceChildren();
       for (const ancestor of getNodeAncestors(focusedNode)) {
-        // create button
-        const ancestorButton = document.createElement("button");
-        ancestorButton.className = CSS_CLASSES.ancestor;
-        ancestorButton.type = "button";
-        applyNodeColor(ancestorButton, ancestor);
-        ancestorButton.append(
-          createLabel(ancestor.label, CSS_CLASSES.labelAncestor),
-        );
-        // place button
-        ancestorButton.addEventListener("click", () => navigateTo(ancestor));
+        const ancestorButton = createAncestorButton(ancestor);
         ancestorsElement.append(ancestorButton);
       }
+    }
+
+    function createAncestorButton(ancestor) {
+      const ancestorButton = document.createElement("button");
+      ancestorButton.className = CSS_CLASSES.ancestor;
+      ancestorButton.type = "button";
+      ancestorButton.append(
+        createLabel(ancestor.label, CSS_CLASSES.labelAncestor),
+      );
+      applyNodeColor(ancestorButton, ancestor);
+      ancestorButton.addEventListener("click", () => navigateTo(ancestor));
+      return ancestorButton;
     }
 
     function getNavigationLabel(node, isCurrent) {

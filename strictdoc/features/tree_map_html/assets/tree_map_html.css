@@ -7,22 +7,19 @@
 
   display: flex;
   flex-direction: column;
-  gap: calc(4 * var(--base-rhythm));
+  gap: calc(8 * var(--base-rhythm));
   width: 100%;
 }
 
 /* section */
 
 .tree-map-html__section {
-  --tree-map-html-preview-control-width: 13rem;
-
   position: relative;
   min-width: 0;
 }
 
 .tree-map-html__title {
   margin: 0 0 var(--base-rhythm);
-  padding-inline: var(--tree-map-html-preview-control-width);
   text-align: center;
 }
 
@@ -37,16 +34,26 @@
   margin-bottom: var(--base-rhythm);
 }
 
-/* control for folder content preview */
+/* control for folder content preview in the section footer */
+
+.tree-map-html__footer {
+  display: flex;
+  border: var(--canvas-border);
+  background: var(--canvas-bg-color);
+  padding: var(--base-rhythm);;
+  justify-content: flex-end;
+  align-items: center;
+  position: relative;
+  border-top: none;
+  margin-top: -2px;
+  z-index: 2;
+}
 
 .tree-map-html__preview-control {
-  position: absolute;
-  right: 0;
-  bottom: calc(100% + var(--base-rhythm));
   display: inline-flex;
   align-items: center;
+  justify-content: flex-end;
   gap: var(--base-rhythm);
-  width: var(--tree-map-html-preview-control-width);
   color: var(--color-fg-main);
   font-size: var(--font-size-sm);
   line-height: 1;
@@ -540,12 +547,15 @@
 
 .tree-map-html__label--ancestor::before {
   /* content: "▴\00a0"; */
+  content: "↰\00a0";
   font-weight: 900;
   font-family: monospace;
 }
 
 .tree-map-html__label--root::before {
   /* content: "▾\00a0"; */
+  content: "🔗";
+  margin-right: 8px;
   font-weight: 900;
   font-family: monospace;
 }

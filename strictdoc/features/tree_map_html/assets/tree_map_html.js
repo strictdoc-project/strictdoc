@@ -782,7 +782,7 @@
     }
 
     const actionsElement = createNodeActions(node);
-    if (actionsElement !== null) {
+    if (actionsElement !== null && depth !== 0) {
       if (node.children.length === 0) {
         surfaceElement.append(actionsElement);
       } else {
@@ -799,6 +799,7 @@
         depth,
         pixelRectangle,
         renderableChildren,
+        actionsElement,
       };
     }
 
@@ -810,6 +811,7 @@
         depth,
         pixelRectangle,
         renderableChildren,
+        actionsElement,
       };
     }
 
@@ -849,6 +851,7 @@
       depth,
       pixelRectangle,
       renderableChildren,
+      actionsElement,
     };
   }
 
@@ -1032,11 +1035,10 @@
     siblingNavigationElement.className = CSS_CLASSES.siblingNavigation;
 
     // sibling Navigation: current Label
+    const currentSiblingElement = document.createElement("div");
+    currentSiblingElement.className = CSS_CLASSES.siblingCurrent;
     const currentSiblingLabel = createLabel("", CSS_CLASSES.labelRoot);
-    currentSiblingLabel.classList.add(
-      CSS_CLASSES.siblingLabel,
-      CSS_CLASSES.siblingCurrent,
-    );
+    currentSiblingElement.append(currentSiblingLabel);
 
     // sibling Navigation: previous Button
     const previousSiblingLabel = document.createElement("span");
@@ -1074,7 +1076,7 @@
 
     siblingNavigationElement.append(
       previousSiblingButton,
-      currentSiblingLabel,
+      currentSiblingElement,
       nextSiblingButton,
     );
     sectionElement.append(toolbarElement);
@@ -1254,7 +1256,11 @@
       labelElement.title = label;
     }
 
-    function renderSiblingNavigation(focusedNode, focusedHeaderElement) {
+    function renderSiblingNavigation(
+      focusedNode,
+      focusedHeaderElement,
+      focusedActionsElement,
+    ) {
       siblingNavigationElement.remove();
       const navigation = getSiblingNavigation(focusedNode);
       siblingNavigationElement.classList.toggle(
@@ -1267,6 +1273,10 @@
       setSiblingLabel(previousSiblingLabel, previousSibling);
       setSiblingLabel(currentSiblingLabel, focusedNode, true);
       setSiblingLabel(nextSiblingLabel, nextSibling);
+      currentSiblingElement.replaceChildren(currentSiblingLabel);
+      if (focusedActionsElement !== null) {
+        currentSiblingElement.append(focusedActionsElement);
+      }
 
       previousSiblingButton.disabled = previousSibling === undefined;
       previousSiblingButton.setAttribute(
@@ -1351,7 +1361,11 @@
         mapOptions,
       );
       canvasElement.append(rootRecord.nodeElement);
-      renderSiblingNavigation(focusedNode, rootRecord.headerElement);
+      renderSiblingNavigation(
+        focusedNode,
+        rootRecord.headerElement,
+        rootRecord.actionsElement,
+      );
     }
 
     document.addEventListener("keydown", (event) => {

@@ -171,7 +171,7 @@
 
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1fr);
-  gap: var(--base-rhythm);
+  gap: calc(var(--base-rhythm) * 2);
 }
 
 /* sibling-navigation in project-root */
@@ -195,8 +195,17 @@
 
 .tree-map-html__sibling-current {
   /* main node */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   font-weight: 600;
   text-align: center;
+}
+
+.tree-map-html__sibling-current > .tree-map-html__label--root {
+  min-width: 0;
+  flex: 0 1 auto;
 }
 
 .tree-map-html__sibling-navigation button {
@@ -429,11 +438,7 @@
 }
 
 .tree-map-html__node:hover:not(:has(.tree-map-html__node:hover)) >
-.tree-map-html__node-surface >
-.tree-map-html__node-header >
-.tree-map-html__node-actions,
-.tree-map-html__node:hover:not(:has(.tree-map-html__node:hover)) >
-.tree-map-html__node-surface >
+.tree-map-html__node-surface
 .tree-map-html__node-actions,
 .tree-map-html__node:focus-within >
 .tree-map-html__node-surface
@@ -554,7 +559,7 @@
 
 .tree-map-html__label--root::before {
   /* content: "▾\00a0"; */
-  content: "🔗";
+  /* content: "🔗"; */
   margin-right: 8px;
   font-weight: 900;
   font-family: monospace;

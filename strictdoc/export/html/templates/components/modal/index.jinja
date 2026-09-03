@@ -12,9 +12,12 @@
         <sdoc-modal-container>
         {%- block modal_container %}{% endblock -%}
         </sdoc-modal-container>
-        {%- with cancel_name="Close" -%}
-          {% include "components/button/cancel.jinja" %}
-        {%- endwith -%}
+        <sdoc-modal-footer>
+          {%- with cancel_name="Close" -%}
+            {% include "components/button/cancel.jinja" %}
+          {%- endwith -%}
+          {%- block modal_footer_actions -%}{%- endblock -%}
+        </sdoc-modal-footer>
       </sdoc-modal>
   </sdoc-backdrop>
 </turbo-frame>

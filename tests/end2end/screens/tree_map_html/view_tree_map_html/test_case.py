@@ -240,7 +240,9 @@ class Test(E2ECase):
             )
             current_label = self.driver.find_element(
                 By.CSS_SELECTOR,
-                first_section + " .tree-map-html__sibling-current",
+                first_section
+                + " .tree-map-html__sibling-current"
+                + " .tree-map-html__label--root",
             )
             assert "Test document" in current_label.get_attribute("title")
             assert current_label.value_of_css_property("text-overflow") == (

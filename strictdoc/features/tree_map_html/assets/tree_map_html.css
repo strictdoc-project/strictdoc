@@ -28,13 +28,18 @@
   display: block;
   min-width: 0;
   overflow: hidden;
-  padding: calc(.25 * var(--base-rhythm)) calc(.5 * var(--base-rhythm));
+  padding: calc(.25 * var(--base-rhythm)) calc(.75 * var(--base-rhythm));
   color: var(--color-fg-contrast);
   font-size: var(--font-size-sm);
-  font-weight: 600;
+  font-weight: 400;
   line-height: 1.2;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.tree-map-html__label--root,
+.tree-map-html__label--current-level {
+  font-weight: 600;
 }
 
 /* symbol */
@@ -65,11 +70,10 @@
   display: contents;
 }
 
-.tree-map-html__node--leaf >
 .tree-map-html__node-surface >
 .tree-map-html__node-actions {
-  /* TODO: remove if not in use */
-  /* actions for Leaf node, right-bottom corner */
+  /* actions for Node, right-bottom corner */
+  /* FIXME: absolute OR flex to bottom */
   position: absolute;
   right: var(--tree-map-html-node-padding);
   bottom: var(--tree-map-html-node-padding);
@@ -440,6 +444,39 @@
   cursor: zoom-in;
 }
 
+/* surface */
+
+.tree-map-html__node--branch:focus-visible
+  > .tree-map-html__node-surface {
+  outline: 2px solid var(--color-action);
+  outline-offset: -2px;
+}
+
+.tree-map-html__node-surface {
+  position: absolute;
+  inset: var(--tree-map-html-node-gap-half);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  overflow: hidden;
+  background-color: var(--canvas-bg-color);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+  transition: filter 100ms ease-out;
+}
+
+.tree-map-html__node--focused-root
+  > .tree-map-html__node-surface {
+  background-color: var(--color-bg-main);
+}
+
+.tree-map-html__node--current-level
+  > .tree-map-html__node-surface {
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.1);
+}
+
 /* Highlight the deepest expandable node under the pointer. A leaf does not
  * block its nearest expandable ancestor, so the leaf keeps its title while
  * the click target remains visually clear. */
@@ -448,57 +485,36 @@
   )
   > .tree-map-html__node-surface {
   filter: brightness(1.1);
-  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.5);
 }
 
-.tree-map-html__node--branch:focus-visible > .tree-map-html__node-surface {
-  outline: 2px solid var(--color-action);
-  outline-offset: -2px;
-}
-
-.tree-map-html__node-surface {
-  position: absolute;
-  inset: var(--tree-map-html-node-gap-half);
-  overflow: hidden;
-  background-color: var(--canvas-bg-color);
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
-  transition: filter 100ms ease-out;
-}
-
-.tree-map-html__canvas > .tree-map-html__node > .tree-map-html__node-surface {
-  background-color: var(--color-bg-main);
-}
-
-.tree-map-html__node--current-level > .tree-map-html__node-surface {
-  box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.1);
-}
+/* node-header */
 
 .tree-map-html__node-header {
-  position: absolute;
-  z-index: 1;
   display: flex;
   gap: calc(.5 * var(--base-rhythm));
   align-items: stretch;
+  box-sizing: border-box;
+  height: var(--tree-map-html-node-header-height);
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+
+  text-align: center;
+}
+
+.tree-map-html__node--focused-root
+  > .tree-map-html__node-surface
+  > .tree-map-html__node-header,
+.tree-map-html__node:has(> .tree-map-html__children)
+  > .tree-map-html__node-surface
+  > .tree-map-html__node-header {
+  position: absolute;
   top: var(--tree-map-html-node-padding);
   right: var(--tree-map-html-node-padding);
   left: var(--tree-map-html-node-padding);
-  box-sizing: border-box;
-  height: var(--tree-map-html-node-header-height);
-  overflow: hidden;
+  z-index: 1;
 }
-
-.tree-map-html__node:not(:has(.tree-map-html__children))
-  .tree-map-html__node-surface {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.tree-map-html__node:not(:has(.tree-map-html__children))
-  .tree-map-html__node-surface
-    .tree-map-html__node-header {
-      position: static;
-    }
 
 /* info */
 
@@ -565,7 +581,14 @@
   /* white-space: nowrap; */
   text-overflow: ellipsis;
   font-weight: normal;
-  white-space: normal;
+  /* white-space: normal; */
+}
+
+.tree-map-html__node--leaf > .tree-map-html__node-surface {
+  /* background-color: var(--color-bg-main); */
+  background-image: radial-gradient(circle, rgba(0, 0, 0, 0.1) 1px, transparent 1px), radial-gradient(circle, rgba(0, 0, 0, 0.1) 1px, transparent 1px);
+  background-size: 10px 10px;
+  background-position: 0 0, 5px 5px;
 }
 
 .tree-map-html__node[data-synthetic-group="true"]
@@ -577,6 +600,23 @@
     rgb(255 255 255 / 20%) 6px,
     rgb(255 255 255 / 20%) 12px
   );
+}
+
+/*
+  .tree-map-html__node--focused-root.tree-map-html__node--leaf
+  is focused Leaf - it has no content, this view can be accessed
+  by moving horizontally from the section next to it
+ */
+.tree-map-html__node--focused-root.tree-map-html__node--leaf::after {
+  /* content: attr(data-node-title); */
+  content: 'This node has no child nodes.';
+  color: var(--color-fg-secondary);
+  position: absolute;
+  z-index: 2;
+  inset: var(--tree-map-html-node-header-height);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /* icons */

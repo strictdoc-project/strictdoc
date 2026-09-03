@@ -46,6 +46,7 @@
     labelBranch: "tree-map-html__label--branch",
     labelLeaf: "tree-map-html__label--leaf",
     labelRoot: "tree-map-html__label--root",
+    labelCurrentLevel: "tree-map-html__label--current-level",
     historyBreadcrumb: "tree-map-html__history-breadcrumb",
     historyBreadcrumbEllipsis:
       "tree-map-html__history-breadcrumb-ellipsis",
@@ -778,22 +779,25 @@
       const labelModifier =
         depth === 0
           ? CSS_CLASSES.labelRoot
-          : node.children.length === 0
-            ? CSS_CLASSES.labelLeaf
-            : CSS_CLASSES.labelBranch;
+          : depth === 1
+            ? CSS_CLASSES.labelCurrentLevel
+            : node.children.length === 0
+              ? CSS_CLASSES.labelLeaf
+              : CSS_CLASSES.labelBranch;
       headerElement.append(createLabel(node.label, labelModifier));
     }
 
     const actionsElement = createNodeActions(node);
     if (actionsElement !== null && depth !== 0) {
-      if (node.children.length === 0) {
-      // Leaf node:
-        surfaceElement.append(actionsElement);
-      } else {
-      // Folder (section) node:
-        headerElement.append(actionsElement);
-      }
-      // headerElement.append(actionsElement);
+      // FIXME
+      // if (node.children.length === 0) {
+      // // Leaf node:
+      //   surfaceElement.append(actionsElement);
+      // } else {
+      // // Folder (section) node:
+      //   headerElement.append(actionsElement);
+      // }
+      surfaceElement.append(actionsElement);
     }
 
     nodeElement.addEventListener("click", (event) => {

@@ -66,9 +66,11 @@ class Test(E2ECase):
             ActionChains(self.driver).key_down(Keys.SHIFT).move_to_element(
                 requirement_element
             ).perform()
-            self.assert_element(".tree-map-html__info-panel:not([hidden])")
-            self.assert_text("Requirement 1", ".tree-map-html__info-panel")
-            self.assert_text("REQ-1", ".tree-map-html__info-panel")
+            info_panel = '[data-testid="tree-map-html-info-panel"]'
+            self.assert_element(info_panel + ":not([hidden])")
+            self.assert_text("Requirement 1", info_panel)
+            self.assert_text("REQ-1", info_panel)
+            self.assert_text("Shift+Click", info_panel)
             ActionChains(self.driver).key_up(Keys.SHIFT).perform()
 
             self.hover(requirement_selector)

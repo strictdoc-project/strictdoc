@@ -72,6 +72,7 @@
     previewInput: "tree-map-html__preview-input",
     previewSlider: "tree-map-html__preview-slider",
     section: "tree-map-html__section",
+    sectionShiftActive: "tree-map-html__section--shift-active",
     title: "tree-map-html__title",
     toolbar: "tree-map-html__toolbar",
     footer: "tree-map-html__footer",
@@ -788,6 +789,9 @@
     }
 
     const actionsElement = createNodeActions(node);
+    if (actionsElement !== null) {
+      nodeElement.dataset.hasPrimaryAction = "true";
+    }
     if (actionsElement !== null && depth !== 0) {
       // FIXME
       // if (node.children.length === 0) {
@@ -1132,10 +1136,14 @@
 
     const infoPanelElement = document.createElement("div");
     infoPanelElement.className = CSS_CLASSES.infoPanel;
+    infoPanelElement.dataset.testid = "tree-map-html-info-panel";
     infoPanelElement.hidden = true;
+    const infoEmptyElement = document.createElement("div");
+    infoEmptyElement.textContent = "No data";
+    infoEmptyElement.hidden = true;
     const infoTableElement = document.createElement("dl");
     infoTableElement.className = CSS_CLASSES.infoTable;
-    infoPanelElement.append(infoTableElement);
+    infoPanelElement.append(infoEmptyElement, infoTableElement);
     sectionElement.append(infoPanelElement);
 
     const footerElement = document.createElement("footer");
@@ -1238,7 +1246,11 @@
         ["Title", nodeElement.dataset.nodeTitle],
         ["MID", nodeElement.dataset.nodeMid],
         ["UID", nodeElement.dataset.nodeUid],
-      ];
+      ].filter(([, value]) => value !== undefined);
+      infoEmptyElement.hidden = rows.length !== 0;
+      if (nodeElement.dataset.hasPrimaryAction === "true") {
+        rows.push(["Shift+Click", "Open link"]);
+      }
       infoTableElement.replaceChildren();
       for (const [name, value] of rows) {
         if (value === undefined) {
@@ -1419,6 +1431,7 @@
         return;
       }
       if (event.key === "Shift") {
+        sectionElement.classList.add(CSS_CLASSES.sectionShiftActive);
         if (pointedNodeElement !== null && lastPointerEvent !== null) {
           renderInfoPanel(pointedNodeElement, lastPointerEvent);
           infoPanelElement.hidden = false;
@@ -1444,15 +1457,16 @@
     });
 
     sectionElement.addEventListener("pointermove", (event) => {
+      sectionElement.classList.toggle(
+        CSS_CLASSES.sectionShiftActive,
+        event.shiftKey,
+      );
       lastPointerEvent = event;
       pointedNodeElement =
         event.target instanceof Element
           ? event.target.closest(`.${CSS_CLASSES.node}`)
           : null;
-      if (
-        pointedNodeElement === null ||
-        pointedNodeElement.dataset.nodeMid === undefined
-      ) {
+      if (pointedNodeElement === null) {
         infoPanelElement.hidden = true;
         return;
       }
@@ -1460,16 +1474,19 @@
       infoPanelElement.hidden = !event.shiftKey;
     });
     sectionElement.addEventListener("pointerleave", () => {
+      sectionElement.classList.remove(CSS_CLASSES.sectionShiftActive);
       pointedNodeElement = null;
       lastPointerEvent = null;
       infoPanelElement.hidden = true;
     });
     document.addEventListener("keyup", (event) => {
       if (event.key === "Shift") {
+        sectionElement.classList.remove(CSS_CLASSES.sectionShiftActive);
         infoPanelElement.hidden = true;
       }
     });
     window.addEventListener("blur", () => {
+      sectionElement.classList.remove(CSS_CLASSES.sectionShiftActive);
       infoPanelElement.hidden = true;
     });
 

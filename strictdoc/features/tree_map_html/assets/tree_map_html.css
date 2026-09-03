@@ -532,6 +532,10 @@
   pointer-events: none;
 }
 
+.tree-map-html__section--shift-active .tree-map-html__node {
+  cursor: help;
+}
+
 .tree-map-html__info-table {
   display: grid;
   grid-template-columns: max-content minmax(0, 1fr);

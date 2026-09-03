@@ -412,10 +412,18 @@ def create_main_router(
             jinja_environment=env(),
             git_client=html_generator.git_client,
         )
+        # The modal can open from screens at different directory depths.
+        goto_href = (
+            "/"
+            + requirement_document.meta.get_html_link(DocumentType.DOCUMENT, 0)
+            + "#"
+            + link_renderer.render_local_anchor(node)
+        )
         output = env().render_template_as_markup(
             "actions/node/show_full_node/stream_show_full_node.jinja",
             view_object=view_object,
             requirement=node,
+            goto_href=goto_href,
         )
         return HTMLResponse(
             content=output,

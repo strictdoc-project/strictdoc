@@ -68,6 +68,8 @@ class Test(E2ECase):
                 "Requirement rationale."
             )
 
-            modal.do_close_modal()
+            self.click('[data-testid="modal-go-to-document-action"]')
+            screen_document.assert_on_screen_document()
+            assert self.get_current_url().endswith("/document.html#REC_UID")
 
         assert test_setup.compare_sandbox_and_expected_output()

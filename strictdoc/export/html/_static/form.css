@@ -56,7 +56,7 @@ sdoc-modal-container {
   height: 100%;
   overflow: auto;
   scroll-behavior: smooth;
-  scrollbar-gutter: stable;
+  scrollbar-gutter: stable both-edges;
 }
 
 sdoc-modal-header {

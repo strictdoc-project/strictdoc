@@ -23,6 +23,92 @@
   text-align: center;
 }
 
+.tree-map-html__label {
+  flex: 1 1 auto;
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  padding: calc(.25 * var(--base-rhythm)) calc(.5 * var(--base-rhythm));
+  color: var(--color-fg-contrast);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* symbol */
+
+.tree-map-html__label-symbol {
+  color: inherit;
+  font-family: monospace;
+  flex: 0 0 auto;
+  width: calc(2 * var(--base-rhythm));
+  height: calc(2 * var(--base-rhythm));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tree-map-html__node-actions {
+  z-index: 2;
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 2px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 100ms ease-out;
+}
+
+.tree-map-html__node-actions turbo-frame {
+  display: contents;
+}
+
+.tree-map-html__node--leaf >
+.tree-map-html__node-surface >
+.tree-map-html__node-actions {
+  /* TODO: remove if not in use */
+  /* actions for Leaf node, right-bottom corner */
+  position: absolute;
+  right: var(--tree-map-html-node-padding);
+  bottom: var(--tree-map-html-node-padding);
+}
+
+.tree-map-html__node:hover:not(:has(.tree-map-html__node:hover)) >
+.tree-map-html__node-surface
+.tree-map-html__node-actions,
+.tree-map-html__node:focus-within >
+.tree-map-html__node-surface
+.tree-map-html__node-actions {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.tree-map-html__node-action {
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  color: var(--color-action);
+  line-height: 0;
+  cursor: pointer;
+}
+
+.tree-map-html__node-action:hover,
+.tree-map-html__node-action:focus-visible {
+  color: var(--color-hover);
+}
+
+.tree-map-html__node-action:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.tree-map-html__node-action svg {
+  width: 16px;
+  height: 16px;
+}
+
 /* toolbar: contains preview-control and breadcrumbs */
 
 .tree-map-html__toolbar {
@@ -254,12 +340,6 @@
   justify-content: flex-end;
 }
 
-.tree-map-html__sibling-symbol {
-  font-family: monospace;
-  flex: 0 0 auto;
-  padding: 0 calc(0.5 * var(--base-rhythm));
-}
-
 .tree-map-html__sibling-label {
   flex: 0 1 auto;
   min-width: 0;
@@ -311,19 +391,27 @@
   white-space: nowrap;
   /* aligns the button label with the label in the top tile: */
   padding: 0 var(--tree-map-html-node-padding);
+  display: flex;
+  align-items: center;
+  color: var(--color-fg-secondary);
 }
 
 .tree-map-html__ancestor:hover {
   filter: brightness(0.8);
+  color: var(--color-fg-contrast);
 }
 
 .tree-map-html__label--ancestor {
-  opacity: 0.5;
+  font-weight: 500;
+  transition: all 300ms ease-out;
+  color: inherit;
+  /* to align with position in active title: */
+  padding-right: calc(2 * var(--base-rhythm));
 }
 
 .tree-map-html__ancestor:hover >
-.tree-map-html__label--ancestor {
-  opacity: 1;
+  .tree-map-html__label--ancestor {
+  text-align: center;
 }
 
 /* canvas */
@@ -399,76 +487,7 @@
   overflow: hidden;
 }
 
-.tree-map-html__label {
-  flex: 1 1 auto;
-  display: block;
-  min-width: 0;
-  overflow: hidden;
-  padding: calc(.25 * var(--base-rhythm)) calc(.5 * var(--base-rhythm));
-  color: var(--color-fg-contrast);
-  font-size: var(--font-size-sm);
-  font-weight: 600;
-  line-height: 1.2;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.tree-map-html__node-actions {
-  z-index: 2;
-  display: flex;
-  flex: 0 0 auto;
-  align-items: center;
-  gap: 2px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 100ms ease-out;
-}
-
-.tree-map-html__node-actions turbo-frame {
-  display: contents;
-}
-
-.tree-map-html__node--leaf >
-.tree-map-html__node-surface >
-.tree-map-html__node-actions {
-  position: absolute;
-  right: var(--tree-map-html-node-padding);
-  bottom: var(--tree-map-html-node-padding);
-}
-
-.tree-map-html__node:hover:not(:has(.tree-map-html__node:hover)) >
-.tree-map-html__node-surface
-.tree-map-html__node-actions,
-.tree-map-html__node:focus-within >
-.tree-map-html__node-surface
-.tree-map-html__node-actions {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.tree-map-html__node-action {
-  display: inline-flex;
-  width: 16px;
-  height: 16px;
-  color: var(--color-action);
-  line-height: 0;
-  cursor: pointer;
-}
-
-.tree-map-html__node-action:hover,
-.tree-map-html__node-action:focus-visible {
-  color: var(--color-hover);
-}
-
-.tree-map-html__node-action:focus {
-  outline: none;
-  box-shadow: none;
-}
-
-.tree-map-html__node-action svg {
-  width: 16px;
-  height: 16px;
-}
+/* info */
 
 .tree-map-html__info-panel {
   position: fixed;
@@ -551,7 +570,6 @@
 
 .tree-map-html__label--ancestor::before {
   /* content: "▴\00a0"; */
-  content: "↰\00a0";
   font-weight: 900;
   font-family: monospace;
 }

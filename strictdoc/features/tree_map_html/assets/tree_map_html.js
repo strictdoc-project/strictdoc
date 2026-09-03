@@ -38,7 +38,7 @@
     siblingNavigation: "tree-map-html__sibling-navigation",
     siblingNavigationProjectRoot:
       "tree-map-html__sibling-navigation--project-root",
-    siblingSymbol: "tree-map-html__sibling-symbol",
+    labelSymbol: "tree-map-html__label-symbol",
     infoPanel: "tree-map-html__info-panel",
     infoTable: "tree-map-html__info-table",
     label: "tree-map-html__label",
@@ -783,11 +783,14 @@
 
     const actionsElement = createNodeActions(node);
     if (actionsElement !== null && depth !== 0) {
-      if (node.children.length === 0) {
-        surfaceElement.append(actionsElement);
-      } else {
-        headerElement.append(actionsElement);
-      }
+      // if (node.children.length === 0) {
+      // // Leaf node:
+      //   surfaceElement.append(actionsElement);
+      // } else {
+      // // Folder (section) node:
+      //   headerElement.append(actionsElement);
+      // }
+      headerElement.append(actionsElement);
     }
 
     if (node.children.length === 0) {
@@ -1050,7 +1053,7 @@
     previousSiblingButton.className = CSS_CLASSES.previousSibling;
     previousSiblingButton.type = "button";
     const previousSiblingSymbol = document.createElement("span");
-    previousSiblingSymbol.className = CSS_CLASSES.siblingSymbol;
+    previousSiblingSymbol.className = CSS_CLASSES.labelSymbol;
     previousSiblingSymbol.textContent = "❮";
     previousSiblingButton.append(
       previousSiblingSymbol,
@@ -1067,7 +1070,7 @@
     nextSiblingButton.className = CSS_CLASSES.nextSibling;
     nextSiblingButton.type = "button";
     const nextSiblingSymbol = document.createElement("span");
-    nextSiblingSymbol.className = CSS_CLASSES.siblingSymbol;
+    nextSiblingSymbol.className = CSS_CLASSES.labelSymbol;
     nextSiblingSymbol.textContent = "❯";
     nextSiblingButton.append(
       nextSiblingLabel,
@@ -1230,8 +1233,13 @@
       const ancestorButton = document.createElement("button");
       ancestorButton.className = CSS_CLASSES.ancestor;
       ancestorButton.type = "button";
+      const ancestorSymbol = document.createElement("span");
+      ancestorSymbol.className = CSS_CLASSES.labelSymbol;
+      ancestorSymbol.textContent = "↰";
+      const ancestorLabel = createLabel(ancestor.label, CSS_CLASSES.labelAncestor);
       ancestorButton.append(
-        createLabel(ancestor.label, CSS_CLASSES.labelAncestor),
+        ancestorSymbol,
+        ancestorLabel,
       );
       applyNodeColor(ancestorButton, ancestor);
       ancestorButton.addEventListener("click", () => navigateTo(ancestor));

@@ -783,14 +783,14 @@
 
     const actionsElement = createNodeActions(node);
     if (actionsElement !== null && depth !== 0) {
-      // if (node.children.length === 0) {
-      // // Leaf node:
-      //   surfaceElement.append(actionsElement);
-      // } else {
-      // // Folder (section) node:
-      //   headerElement.append(actionsElement);
-      // }
-      headerElement.append(actionsElement);
+      if (node.children.length === 0) {
+      // Leaf node:
+        surfaceElement.append(actionsElement);
+      } else {
+      // Folder (section) node:
+        headerElement.append(actionsElement);
+      }
+      // headerElement.append(actionsElement);
     }
 
     if (node.children.length === 0) {

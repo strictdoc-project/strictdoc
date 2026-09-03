@@ -487,6 +487,19 @@
   overflow: hidden;
 }
 
+.tree-map-html__node:not(:has(.tree-map-html__children))
+  .tree-map-html__node-surface {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tree-map-html__node:not(:has(.tree-map-html__children))
+  .tree-map-html__node-surface
+    .tree-map-html__node-header {
+      position: static;
+    }
+
 /* info */
 
 .tree-map-html__info-panel {

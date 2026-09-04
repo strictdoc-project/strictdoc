@@ -10,9 +10,11 @@ CHECK: Export completed.
 RUN: %check_exists --file "%T/html/tree_map.html"
 RUN: %check_exists --file "%T/html/_static/tree_map.css"
 RUN: %check_exists --file "%T/html/_static/tree_map.js"
+RUN: %check_exists --file "%T/html/_static/tree_map_debug.js"
 
 RUN: %cat "%T/html/tree_map.html" | filecheck %s --check-prefix CHECK-HTML
 CHECK-HTML: tree_map.css
+CHECK-HTML: tree_map_debug.js
 CHECK-HTML: tree_map.js
 CHECK-HTML: data-testid="project-tree-link-tree-map"
 CHECK-HTML: <svg

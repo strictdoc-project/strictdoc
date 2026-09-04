@@ -31,7 +31,8 @@
   flex: 1 1 auto;
   display: block;
   min-width: 0;
-  padding: calc(.25 * var(--base-rhythm)) calc(.75 * var(--base-rhythm));
+  padding: calc(.5 * var(--tree-map-html-label-vertical-padding))
+    calc(.75 * var(--base-rhythm));
   color: var(--color-fg-contrast);
   font-size: var(--font-size-sm);
   font-weight: 400;
@@ -46,7 +47,7 @@
 .tree-map-html__label--branch,
 .tree-map-html__label--leaf {
   font-size: var(--font-size-xxsm);
-  line-height: calc(1.5 * var(--base-rhythm));
+  line-height: var(--tree-map-html-label-line-height);
 }
 
 .tree-map-html__node:not(:has(> .tree-map-html__children))
@@ -66,6 +67,10 @@
 .tree-map-html__label--root,
 .tree-map-html__label--current-level {
   font-weight: 600;
+}
+
+.tree-map-html__label--current-level {
+  line-height: var(--tree-map-html-current-level-label-line-height);
 }
 
 .tree-map-html__label--root {

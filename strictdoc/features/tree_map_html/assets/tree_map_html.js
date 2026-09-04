@@ -21,6 +21,7 @@
     minNodeWidth: 24,
     minLabelWidth: 56,
     labelLineHeight: 12,
+    currentLevelLabelLineHeight: 16,
     labelVerticalPadding: 4,
     targetNodeArea: 1200,
     // 1 restores classic square-oriented squarify behavior. Values above 1
@@ -136,14 +137,23 @@
     return iconElement.cloneNode(true);
   }
 
-  function calculateLabelLineClamp(surfaceHeight, options) {
-    // One line needs its line height plus vertical padding. Each additional
-    // line adds exactly one line height: 16px, 28px, 40px, and so on.
+  function calculateLabelLineClamp(
+    surfaceHeight,
+    labelModifier,
+    options,
+  ) {
+    // Current-level labels use a 16px line; compact branch and leaf labels use
+    // 12px. Subtract the shared 4px vertical padding once, then count how many
+    // complete lines fit in the remaining surface height.
+    const lineHeight =
+      labelModifier === CSS_CLASSES.labelCurrentLevel
+        ? options.currentLevelLabelLineHeight
+        : options.labelLineHeight;
     return Math.max(
       1,
       Math.floor(
         (surfaceHeight - options.labelVerticalPadding) /
-          options.labelLineHeight,
+          lineHeight,
       ),
     );
   }
@@ -814,7 +824,7 @@
       );
       labelElement.style.setProperty(
         "--tree-map-html-label-lines",
-        calculateLabelLineClamp(surfaceHeight, options),
+        calculateLabelLineClamp(surfaceHeight, labelModifier, options),
       );
       headerElement.append(labelElement);
     }
@@ -1073,6 +1083,18 @@
     rootElement.style.setProperty(
       "--tree-map-html-node-padding",
       `${options.nodePadding}px`,
+    );
+    rootElement.style.setProperty(
+      "--tree-map-html-label-line-height",
+      `${options.labelLineHeight}px`,
+    );
+    rootElement.style.setProperty(
+      "--tree-map-html-current-level-label-line-height",
+      `${options.currentLevelLabelLineHeight}px`,
+    );
+    rootElement.style.setProperty(
+      "--tree-map-html-label-vertical-padding",
+      `${options.labelVerticalPadding}px`,
     );
   }
 

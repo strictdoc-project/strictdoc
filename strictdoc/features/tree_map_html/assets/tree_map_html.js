@@ -20,6 +20,8 @@
     minNodeHeight: 32,
     minNodeWidth: 24,
     minLabelWidth: 56,
+    labelLineHeight: 12,
+    labelVerticalPadding: 4,
     targetNodeArea: 1200,
     // 1 restores classic square-oriented squarify behavior. Values above 1
     // prefer wider rectangles for text without forcing a fixed orientation.
@@ -132,6 +134,18 @@
       throw new Error(`Icon template has no SVG: ${templateId}`);
     }
     return iconElement.cloneNode(true);
+  }
+
+  function calculateLabelLineClamp(surfaceHeight, options) {
+    // One line needs its line height plus vertical padding. Each additional
+    // line adds exactly one line height: 16px, 28px, 40px, and so on.
+    return Math.max(
+      1,
+      Math.floor(
+        (surfaceHeight - options.labelVerticalPadding) /
+          options.labelLineHeight,
+      ),
+    );
   }
 
   function createNodeAction(node, kind) {
@@ -793,7 +807,16 @@
             : node.children.length === 0
               ? CSS_CLASSES.labelLeaf
               : CSS_CLASSES.labelBranch;
-      headerElement.append(createLabel(node.label, labelModifier));
+      const labelElement = createLabel(node.label, labelModifier);
+      const surfaceHeight = Math.max(
+        0,
+        pixelRectangle.height - options.nodeGap,
+      );
+      labelElement.style.setProperty(
+        "--tree-map-html-label-lines",
+        calculateLabelLineClamp(surfaceHeight, options),
+      );
+      headerElement.append(labelElement);
     }
 
     const actionsElement = createNodeActions(node);

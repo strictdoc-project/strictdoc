@@ -52,19 +52,15 @@
 .tree-map-html__node:not(:has(> .tree-map-html__children))
   > .tree-map-html__node-surface
   > .tree-map-html__node-header
-  > .tree-map-html__label--current-level,
-.tree-map-html__label--branch,
-.tree-map-html__label--leaf {
+  > :is(
+    .tree-map-html__label--current-level,
+    .tree-map-html__label--branch,
+    .tree-map-html__label--leaf
+  ) {
   white-space: initial;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-}
-
-.tree-map-html__label--leaf {
-  /* text-overflow: ellipsis;
-  font-weight: normal; */
-  color: red;
+  -webkit-line-clamp: var(--tree-map-html-label-lines);
 }
 
 .tree-map-html__label--root,

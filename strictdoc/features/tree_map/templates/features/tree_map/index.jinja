@@ -13,6 +13,7 @@
 
 {% block head_scripts %}
   {{ super() }}
+  <script src="{{ view_object.render_static_url('modal.js') }}"></script>
   <script defer>
     {{view_object.plotly_js_extension}}
   </script>

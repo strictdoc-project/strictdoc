@@ -88,4 +88,14 @@
     M
   </a>
 {%- endif -%}
+
+  <a
+    data-link="project_configuration"
+    class="nav_button nav_bottom_group"
+    href="{{ view_object.render_url('project_configuration.html') }}"
+    title="Project configuration"
+    data-testid="project-configuration-link"
+  >
+    {% include "icons/ico16_gear.svg" %}
+  </a>
 </div>

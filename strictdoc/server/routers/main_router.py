@@ -70,7 +70,11 @@ from strictdoc.core.analyzers.document_uid_analyzer import DocumentUIDAnalyzer
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.feature import Feature, FeatureContext
-from strictdoc.core.project_config import ProjectConfig
+from strictdoc.core.project_config import (
+    ProjectConfig,
+    ProjectConfigLoader,
+    ProjectFeature,
+)
 from strictdoc.core.query_engine.query_object import Query, QueryObject
 from strictdoc.core.query_engine.query_reader import QueryReader
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
@@ -178,6 +182,10 @@ from strictdoc.server.helpers.hierarchical_rw_lock_manager import (
 )
 from strictdoc.server.helpers.http import request_is_for_non_modified_file
 from strictdoc.server.helpers.turbo import render_turbo_stream
+from strictdoc.server.project_settings import (
+    ProjectSettingsManager,
+    SettingValue,
+)
 
 HTTP_STATUS_BAD_REQUEST = 400
 HTTP_STATUS_NOT_FOUND = 404
@@ -351,6 +359,83 @@ def create_main_router(
     def env() -> JinjaEnvironment:
         return html_templates.jinja_environment()
 
+    def reload_project_after_settings_change() -> Optional[str]:
+        nonlocal html_generator
+        nonlocal html_templates
+        nonlocal is_small_project
+        nonlocal sdoc_writer
+
+        config_path = project_config.config_path
+        assert config_path is not None
+        try:
+            candidate_config = ProjectConfigLoader.load_from_python(
+                config_py_path=config_path
+            )
+            candidate_config.config_path = config_path
+            candidate_config.input_paths = project_config.input_paths
+            candidate_config.source_root_path = project_config.source_root_path
+            candidate_config.output_dir = project_config.output_dir
+            candidate_config.export_output_html_root = (
+                project_config.export_output_html_root
+            )
+            candidate_config.export_formats = project_config.export_formats
+            candidate_config.export_included_documents = (
+                project_config.export_included_documents
+            )
+            candidate_config.generate_bundle_document = (
+                project_config.generate_bundle_document
+            )
+            candidate_config.is_running_on_server = True
+            candidate_config.watch_enabled = project_config.watch_enabled
+            candidate_config.server_host = project_config.server_host
+            candidate_config.server_port = project_config.server_port
+            candidate_config.server_host_overridden = (
+                project_config.server_host_overridden
+            )
+            candidate_config.server_port_overridden = (
+                project_config.server_port_overridden
+            )
+            candidate_config.validate_and_finalize()
+
+            candidate_traceability_index = TraceabilityIndexBuilder.create(
+                project_config=candidate_config,
+                parallelizer=parallelizer,
+            )
+            candidate_is_small_project = (
+                candidate_traceability_index.is_small_project()
+            )
+            candidate_html_templates = HTMLTemplates.create(
+                project_config=candidate_config,
+                enable_caching=not candidate_is_small_project,
+                strictdoc_last_update=(
+                    candidate_traceability_index.strictdoc_last_update
+                ),
+            )
+            candidate_html_generator = HTMLGenerator(
+                candidate_config, candidate_html_templates
+            )
+            candidate_html_generator.export_assets(
+                traceability_index=candidate_traceability_index,
+                project_config=candidate_config,
+                html_templates=candidate_html_templates,
+                export_output_html_root=(
+                    candidate_config.export_output_html_root
+                ),
+            )
+        except Exception as exception_:  # noqa: BLE001
+            return str(exception_)
+
+        project_config.__dict__.clear()
+        project_config.__dict__.update(candidate_config.__dict__)
+        export_action.project_config = project_config
+        export_action.traceability_index = candidate_traceability_index
+        is_small_project = candidate_is_small_project
+        html_templates = candidate_html_templates
+        html_generator = candidate_html_generator
+        html_generator.project_config = project_config
+        sdoc_writer = SDWriter(project_config)
+        return None
+
     @app.exception_handler(404)
     async def not_found_handler(request: Request, exc: Exception) -> Response:  # noqa: ARG001
         return _error_response(HTTP_STATUS_NOT_FOUND)
@@ -380,6 +465,76 @@ def create_main_router(
     @router.get("/")
     def get_root(request: Request) -> Response:
         return get_incoming_request(request, "index.html")
+
+    @read_router.get("/actions/project_settings", response_class=Response)
+    def get_project_settings() -> Response:
+        settings_manager = ProjectSettingsManager(project_config)
+        output = env().render_template_as_markup(
+            "actions/project_settings/modal.jinja",
+            inspection=settings_manager.inspect(),
+            all_features=ProjectFeature.all(),
+            default_values=settings_manager.default_values(),
+            project_config=project_config,
+            error_message=None,
+        )
+        return HTMLResponse(content=output, status_code=200)
+
+    @write_router.post("/actions/project_settings", response_class=Response)
+    async def save_project_settings(request: Request) -> Response:
+        form_data = await parse_form_data(request)
+        settings_manager = ProjectSettingsManager(project_config)
+        inspection = settings_manager.inspect()
+        editable_definitions = {
+            state_.definition.name: state_.definition
+            for state_ in inspection.settings
+            if state_.editable
+        }
+        values: Dict[str, SettingValue] = {}
+        try:
+            for name_, definition_ in editable_definitions.items():
+                if definition_.kind == "features":
+                    values[name_] = list(form_data.getlist(name_))
+            save_result = settings_manager.save(values)
+        except (OSError, TypeError, ValueError) as exception_:
+            inspection = settings_manager.stage_inspection(
+                inspection,
+                values,
+            )
+            output = env().render_template_as_markup(
+                "actions/project_settings/modal.jinja",
+                inspection=inspection,
+                all_features=ProjectFeature.all(),
+                default_values=settings_manager.default_values(),
+                project_config=project_config,
+                error_message=str(exception_),
+            )
+            return HTMLResponse(content=output, status_code=200)
+
+        if not save_result.changed:
+            return Response(status_code=204)
+
+        def reload_and_notify() -> None:
+            reload_error = reload_project_after_settings_change()
+            message = (
+                "project-settings:reload"
+                if reload_error is None
+                else "project-settings:error:Settings were saved, but "
+                f"StrictDoc could not reload the project: {reload_error}"
+            )
+            event_loop = getattr(app.state, "event_loop", None)
+            if event_loop is not None:
+                asyncio.run_coroutine_threadsafe(
+                    manager.broadcast(message), event_loop
+                )
+
+        output = env().render_template_as_markup(
+            "actions/project_settings/reloading.jinja"
+        )
+        return HTMLResponse(
+            content=output,
+            status_code=200,
+            background=BackgroundTask(reload_and_notify),
+        )
 
     @read_router.get("/actions/show_full_node", response_class=Response)
     def node__show_full(reference_mid: str) -> Response:
@@ -5021,6 +5176,11 @@ def create_main_router(
                     html_generator.export_project_tree_screen(
                         traceability_index=export_action.traceability_index,
                     )
+                elif (
+                    document_relative_path.relative_path
+                    == "project_configuration.html"
+                ):
+                    html_generator.export_project_configuration_screen()
                 elif (
                     document_relative_path.relative_path
                     == "traceability_matrix.html"

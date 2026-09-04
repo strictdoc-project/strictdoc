@@ -9,6 +9,7 @@
 
 {% block head_scripts %}
   {{ super() }}
+  <script src="{{ view_object.render_static_url('modal.js') }}"></script>
   <script src="{{ view_object.render_static_url('resizable_bar.js') }}"></script>
   <script src="{{ view_object.render_static_url('pan_with_space.js') }}"></script>
   <script src="{{ view_object.render_static_url('traceability_matrix_screen.js') }}"></script>

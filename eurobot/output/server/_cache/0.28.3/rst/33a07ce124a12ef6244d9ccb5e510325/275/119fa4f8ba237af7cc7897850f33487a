@@ -1,7 +1,0 @@
-<div class="document">
-<p>Pressing the emergency stop button shall remove power from every motor and
-every actuator within 100 ms, and the robot shall stay unpowered until the
-button is released.</p>
-<p>The button shall sit on top of the robot or on a side a referee can reach
-without moving anything else.</p>
-</div>

@@ -1,5 +1,0 @@
-<div class="document">
-<p>Remove the beacon support. Measure from the table surface to the highest
-point of the robot.</p>
-<p>Expected: the height is at most 350 mm.</p>
-</div>

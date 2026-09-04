@@ -33,17 +33,24 @@ RUN python3 -m venv /opt/venv
 # Ensure the virtual environment is used by modifying the PATH.
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Install StrictDoc. Set default StrictDoc installation from PyPI but allow
-# overriding it with an environment variable.
-ARG STRICTDOC_SOURCE="pypi"
+# This checkout (`Robotics010/strictdoc`) is itself a fork with course-specific
+# code under strictdoc/ (e.g. features/eurobot_test_dashboard,
+# features/project_statistics) that has never been published to PyPI or merged
+# upstream, so "local" is the only source that actually matches what's in this
+# repo. "pypi"/a git ref are kept for anyone building this Dockerfile against a
+# vanilla StrictDoc checkout instead.
+COPY . /strictdoc-src
+
+ARG STRICTDOC_SOURCE="local"
 ENV STRICTDOC_SOURCE=${STRICTDOC_SOURCE}
 
-RUN if [ "$STRICTDOC_SOURCE" = "pypi" ]; then \
-      pip install --no-cache-dir --upgrade pip && \
+RUN pip install --no-cache-dir --upgrade pip; \
+    if [ "$STRICTDOC_SOURCE" = "pypi" ]; then \
       pip install --no-cache-dir strictdoc; \
+    elif [ "$STRICTDOC_SOURCE" = "local" ]; then \
+      pip install --no-cache-dir /strictdoc-src; \
     else \
-      pip install --no-cache-dir --upgrade pip && \
-      pip install --no-cache-dir git+https://github.com/strictdoc-project/strictdoc.git@${STRICTDOC_SOURCE}; \
+      pip install --no-cache-dir git+https://github.com/Robotics010/strictdoc.git@${STRICTDOC_SOURCE}; \
     fi; \
     chmod -R 777 /opt/venv;
 

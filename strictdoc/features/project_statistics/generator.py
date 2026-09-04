@@ -70,9 +70,9 @@ class ProgressStatisticsGenerator:
                                 requirement, field="STATEMENT"
                             )
                         )
-                        if (
-                            conversion_issues is not None
-                            and CANNOT_CONVERT_MESSAGE in conversion_issues
+                        if conversion_issues is not None and any(
+                            issue.startswith(CANNOT_CONVERT_MESSAGE)
+                            for issue in conversion_issues
                         ):
                             document_tree_stats.requirements_failed_conversion_check += 1
 

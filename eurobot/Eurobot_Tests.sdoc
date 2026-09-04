@@ -2,7 +2,7 @@
 TITLE: Системные испытания
 
 [GRAMMAR]
-IMPORT_FROM_FILE: @eurobot
+IMPORT_FROM_FILE: @eurobot_tests
 
 [TEXT]
 STATEMENT: >>>

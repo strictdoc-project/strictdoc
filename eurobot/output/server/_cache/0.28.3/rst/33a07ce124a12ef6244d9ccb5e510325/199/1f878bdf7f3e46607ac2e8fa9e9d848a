@@ -1,5 +1,0 @@
-<div class="document">
-<p>After the referee's start signal, the robot shall run its match strategy for
-100 seconds and shall stop all motion at the end of that time. It shall take
-no input from the team while the match runs.</p>
-</div>

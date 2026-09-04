@@ -9,6 +9,9 @@
 /Output/
 /output/
 
+# Generated eurobot doc-project output (cache + built HTML)
+/eurobot/output/
+
 .DS_Store
 
 **/.sandbox/**

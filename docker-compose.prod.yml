@@ -5,9 +5,14 @@
 # in this compose file.
 #
 # Built from this repo's own Dockerfile, unmodified, with the default
-# STRICTDOC_SOURCE=pypi — this fork has no code changes under strictdoc/ itself
-# (only content/config under eurobot/), so installing the released PyPI package
-# is functionally equivalent to building this exact source tree.
+# STRICTDOC_SOURCE=local — this fork DOES carry code changes under strictdoc/
+# itself now (e.g. features/eurobot_test_dashboard, features/project_statistics),
+# which only exist in this checkout, not on PyPI or upstream's git repo, so the
+# image must be built from the local source, not the released PyPI package.
+# (Historically this said STRICTDOC_SOURCE=pypi was fine because only
+# eurobot/ content had diverged; that stopped being true once
+# eurobot_test_dashboard landed, which silently broke any fresh container
+# start until this comment and the Dockerfile default were fixed.)
 #
 #   docker compose -f docker-compose.prod.yml up -d --build
 #

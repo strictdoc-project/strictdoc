@@ -361,6 +361,19 @@ def create_main_router(
         else:
             sdoc_writer.write_to_file(document)
 
+        # Re-run the requirement integrity checks against the same
+        # (already-updated-in-place) traceability index, so a warning shows
+        # up right after this save — not just at the next full rebuild
+        # (server start, `strictdoc export`, or an external file change:
+        # the inhibit above deliberately keeps this write from triggering
+        # that path). reset() first: analyze_document_tree() only adds
+        # issues, and this index is long-lived and mutated per edit, not
+        # rebuilt from scratch like the other two call sites.
+        export_action.traceability_index.validation_index.reset()
+        RequirementIntegrityAnalyzer.analyze_document_tree(
+            export_action.traceability_index
+        )
+
     def env() -> JinjaEnvironment:
         return html_templates.jinja_environment()
 

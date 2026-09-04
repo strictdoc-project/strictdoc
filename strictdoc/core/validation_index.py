@@ -12,6 +12,14 @@ class ValidationIndex:
             Union[SDocNodeIF, SDocDocumentIF], Dict[Optional[str], List[str]]
         ] = {}
 
+    def reset(self) -> None:
+        """
+        Clear every issue, so a fresh analyzer pass over the same
+        (long-lived, mutated-in-place) index doesn't duplicate issues on
+        unchanged nodes or leave a now-fixed node's stale issue behind.
+        """
+        self.node_issues.clear()
+
     def add_issue(
         self,
         node: Union[SDocNodeIF, SDocDocumentIF],
@@ -46,5 +54,5 @@ class ValidationIndex:
             return None
         issues = node_issues[field]
         if isinstance(node, SDocDocumentIF) and not node.document_is_included():
-            return [f"Document has {len(issues)} issues."]
+            return [f"В документе найдено проблем: {len(issues)}."]
         return issues

@@ -1,0 +1,7 @@
+# Keeps the `COPY . /strictdoc-src` build context lean. None of this is
+# needed to `pip install` the strictdoc package itself.
+.git
+.github
+**/__pycache__
+**/*.pyc
+eurobot/output

@@ -17,8 +17,8 @@
     maxDirectChildren: 128,
     targetGroupSize: 100,
     minChildrenArea: 2500,
-    minNodeArea: 16,
     minNodeHeight: 32,
+    minNodeWidth: 24,
     minLabelWidth: 56,
     targetNodeArea: 1200,
     // 1 restores classic square-oriented squarify behavior. Values above 1
@@ -599,10 +599,14 @@
     // Some valid squarify layouts split short nodes into strips with different
     // widths, so no single strip can donate height locally. In that case use
     // full-width rows when the complete sibling list physically fits.
-    const constrainedItems = enforceMinimumHeight(
+    const heightAdjusted = enforceMinimumHeight(
       positionedItems,
       minimumHeight,
-    )
+    );
+    const squarifiedItemsFit =
+      heightAdjusted &&
+      positionedItems.every((item) => item.width >= minimumWidth);
+    const constrainedItems = squarifiedItemsFit
       ? positionedItems
       : layoutConstrainedRows(
           children,
@@ -977,7 +981,7 @@
           renderableChildren,
           childrenPixelRectangle,
           options.minNodeHeight,
-          options.minLabelWidth,
+          options.minNodeWidth,
           options.targetNodeAspectRatio,
         );
         if (childRectangles === null) {
@@ -996,8 +1000,8 @@
         });
         const childrenFit = childRecords.every(
           ({ childPixelRectangle }) =>
-            childPixelRectangle.width * childPixelRectangle.height >=
-            options.minNodeArea,
+            childPixelRectangle.width >= options.minNodeWidth &&
+            childPixelRectangle.height >= options.minNodeHeight,
         );
         // Never render a partial sibling list. A collapsed parent still
         // represents the complete weight and remains available for zoom.

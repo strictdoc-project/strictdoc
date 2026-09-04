@@ -72,11 +72,11 @@
 
 .tree-map-html__node-surface >
 .tree-map-html__node-actions {
-  /* actions for Node, right-bottom corner */
+  /* actions for Node, right-top corner */
   /* FIXME: absolute OR flex to bottom */
   position: absolute;
   right: var(--tree-map-html-node-padding);
-  bottom: var(--tree-map-html-node-padding);
+  top: var(--tree-map-html-node-padding);
 }
 
 .tree-map-html__node:hover:not(:has(.tree-map-html__node:hover)) >

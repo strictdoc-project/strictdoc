@@ -50,14 +50,7 @@
   line-height: var(--tree-map-html-label-line-height);
 }
 
-.tree-map-html__node:not(:has(> .tree-map-html__children))
-  > .tree-map-html__node-surface
-  > .tree-map-html__node-header
-  > :is(
-    .tree-map-html__label--current-level,
-    .tree-map-html__label--branch
-  ),
-.tree-map-html__label--leaf {
+.tree-map-html__label--multiline {
   white-space: initial;
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -545,12 +538,7 @@
   text-align: center;
 }
 
-.tree-map-html__node--focused-root
-  > .tree-map-html__node-surface
-  > .tree-map-html__node-header,
-.tree-map-html__node:has(> .tree-map-html__children)
-  > .tree-map-html__node-surface
-  > .tree-map-html__node-header {
+.tree-map-html__node-header--fixed {
   position: absolute;
   top: var(--tree-map-html-node-padding);
   right: var(--tree-map-html-node-padding);

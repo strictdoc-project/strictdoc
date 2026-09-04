@@ -51,6 +51,7 @@
     labelAncestor: "tree-map-html__label--ancestor",
     labelBranch: "tree-map-html__label--branch",
     labelLeaf: "tree-map-html__label--leaf",
+    labelMultiline: "tree-map-html__label--multiline",
     labelRoot: "tree-map-html__label--root",
     labelCurrentLevel: "tree-map-html__label--current-level",
     historyBreadcrumb: "tree-map-html__history-breadcrumb",
@@ -67,6 +68,7 @@
     nodeCurrentLevel: "tree-map-html__node--current-level",
     nodeFocusedRoot: "tree-map-html__node--focused-root",
     nodeHeader: "tree-map-html__node-header",
+    nodeHeaderFixed: "tree-map-html__node-header--fixed",
     nodeLeaf: "tree-map-html__node--leaf",
     nodeSurface: "tree-map-html__node-surface",
     nodeAction: "tree-map-html__node-action",
@@ -803,7 +805,11 @@
 
     const headerElement = document.createElement("div");
     headerElement.className = CSS_CLASSES.nodeHeader;
+    if (depth === 0) {
+      headerElement.classList.add(CSS_CLASSES.nodeHeaderFixed);
+    }
     surfaceElement.append(headerElement);
+    let labelElement = null;
     if (
       depth !== 0 &&
       pixelRectangle.width >= options.minLabelWidth &&
@@ -817,7 +823,10 @@
             : node.children.length === 0
               ? CSS_CLASSES.labelLeaf
               : CSS_CLASSES.labelBranch;
-      const labelElement = createLabel(node.label, labelModifier);
+      labelElement = createLabel(node.label, labelModifier);
+      // A label starts multiline because its node has no rendered children
+      // yet. Expansion below removes this class when it adds the child layer.
+      labelElement.classList.add(CSS_CLASSES.labelMultiline);
       const surfaceHeight = Math.max(
         0,
         pixelRectangle.height - options.nodeGap,
@@ -885,6 +894,7 @@
         pixelRectangle,
         renderableChildren,
         actionsElement,
+        labelElement,
       };
     }
 
@@ -897,6 +907,7 @@
         pixelRectangle,
         renderableChildren,
         actionsElement,
+        labelElement,
       };
     }
 
@@ -937,6 +948,7 @@
       pixelRectangle,
       renderableChildren,
       actionsElement,
+      labelElement,
     };
   }
 
@@ -976,6 +988,8 @@
         const {
           node,
           nodeElement,
+          headerElement,
+          labelElement,
           depth,
           pixelRectangle,
           renderableChildren,
@@ -1061,6 +1075,8 @@
           nextLevel.push(childRecord);
           renderedNodeCount += 1;
         }
+        headerElement.classList.add(CSS_CLASSES.nodeHeaderFixed);
+        labelElement?.classList.remove(CSS_CLASSES.labelMultiline);
         nodeElement.append(childrenElement);
       }
       currentLevel = nextLevel;

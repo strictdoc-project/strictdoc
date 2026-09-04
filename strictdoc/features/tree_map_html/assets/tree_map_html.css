@@ -18,28 +18,66 @@
   min-width: 0;
 }
 
+/* title */
+
 .tree-map-html__title {
   margin: 0 0 var(--base-rhythm);
   text-align: center;
 }
 
+/* label */
+
 .tree-map-html__label {
   flex: 1 1 auto;
   display: block;
   min-width: 0;
-  overflow: hidden;
   padding: calc(.25 * var(--base-rhythm)) calc(.75 * var(--base-rhythm));
   color: var(--color-fg-contrast);
   font-size: var(--font-size-sm);
   font-weight: 400;
-  line-height: 1.2;
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.tree-map-html__label--branch {
+  white-space: initial;
+  /* No fractional pixel values here! exact value fixes clamp artifacts: */
+  line-height: 16px;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.tree-map-html__label--leaf {
+  /* white-space: nowrap; */
+  text-overflow: ellipsis;
+  font-weight: normal;
+  /* white-space: normal; */
+  color: red;
 }
 
 .tree-map-html__label--root,
 .tree-map-html__label--current-level {
   font-weight: 600;
+}
+
+.tree-map-html__label--root {
+  /* It should not stretch  */
+  flex: 0 1 auto;
+}
+
+.tree-map-html__label--ancestor {
+  font-weight: 500;
+  transition: all 300ms ease-out;
+  color: inherit;
+  /* to align with position in active title: */
+  padding-right: calc(2 * var(--base-rhythm));
+}
+
+.tree-map-html__ancestor:hover >
+  .tree-map-html__label--ancestor {
+  text-align: center;
 }
 
 /* symbol */
@@ -303,10 +341,7 @@
   text-align: center;
 }
 
-.tree-map-html__sibling-current > .tree-map-html__label--root {
-  min-width: 0;
-  flex: 0 1 auto;
-}
+
 
 .tree-map-html__sibling-navigation button {
   /*
@@ -414,19 +449,6 @@
 .tree-map-html__ancestor:hover {
   filter: brightness(0.8);
   color: var(--color-fg-contrast);
-}
-
-.tree-map-html__label--ancestor {
-  font-weight: 500;
-  transition: all 300ms ease-out;
-  color: inherit;
-  /* to align with position in active title: */
-  padding-right: calc(2 * var(--base-rhythm));
-}
-
-.tree-map-html__ancestor:hover >
-  .tree-map-html__label--ancestor {
-  text-align: center;
 }
 
 /* canvas */
@@ -613,12 +635,7 @@
   height: auto;
 }
 
-.tree-map-html__node--leaf .tree-map-html__label {
-  /* white-space: nowrap; */
-  text-overflow: ellipsis;
-  font-weight: normal;
-  /* white-space: normal; */
-}
+
 
 .tree-map-html__node--leaf > .tree-map-html__node-surface {
   /* background-color: var(--color-bg-main); */
@@ -653,34 +670,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-/* icons */
-
-.tree-map-html__label--ancestor::before {
-  /* content: "▴\00a0"; */
-  font-weight: 900;
-  font-family: monospace;
-}
-
-.tree-map-html__label--root::before {
-  /* content: "▾\00a0"; */
-  /* content: "🔗"; */
-  margin-right: 8px;
-  font-weight: 900;
-  font-family: monospace;
-}
-
-.tree-map-html__label--branch::before {
-  /* content: "▸\00a0"; */
-  font-weight: 900;
-  font-family: monospace;
-}
-
-.tree-map-html__label--leaf::before {
-  /* content: "•\00a0"; */
-  font-weight: 900;
-  font-family: monospace;
 }
 
 /* TIPS in modal */

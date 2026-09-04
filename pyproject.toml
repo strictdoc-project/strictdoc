@@ -182,7 +182,7 @@ check = [
     # force execute_external=True; the lit.cfg.py now relies on lit's
     # internal shell (execute_external=False), which requires lit>=23.
     # FIXME: Migrate the test suite to support the internal shell calls.
-    "lit==18.1.8",
+    "lit==23.1.0",
     "filecheck>=0.0.20,<1.0.0",
     "pytidylib>=0.3.2",
     # Pinned exactly (narrower than the project's own ">=6.5.0, ==6.*") to

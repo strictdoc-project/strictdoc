@@ -24,9 +24,18 @@ from the input directory.
 
 ## Files
 
-`eurobot_grammar.sgra` holds the grammar, shared by all three documents.
-`strictdoc_config.py` registers it under the alias `@eurobot` and enables the
-screens the course relies on. `Eurobot_Requirements.sdoc` and
+Each document imports its own grammar file, so its "Add node" menu only
+offers the element types that make sense for it: `eurobot_rules_grammar.sgra`
+(`RULE`, plus the structural `SECTION`/`TEXT`) for `Eurobot_Rules.sdoc`,
+`eurobot_requirements_grammar.sgra` (`REQUIREMENT`, `INTERFACE_PARAMETER`,
+`SECTION`, `TEXT`) for `Eurobot_Requirements.sdoc`, and
+`eurobot_tests_grammar.sgra` (`TEST_CASE`, `SECTION`, `TEXT`) for
+`Eurobot_Tests.sdoc`. `strictdoc_config.py` registers each under its own
+alias (`@eurobot_rules`, `@eurobot_requirements`, `@eurobot_tests`).
+`eurobot_grammar.sgra` still holds all five element types combined, kept
+registered under `@eurobot` only because the test suite's fixtures (which
+mix element types in one document) import it directly — no document in this
+project uses that alias itself anymore. `Eurobot_Requirements.sdoc` and
 `Eurobot_Tests.sdoc` hold the seed content. `Eurobot_Rules.sdoc` is generated
 by `tools/import_rules.py` from the Russian rules PDFs under
 `_assets/rules/source/`: the PRO rules, which cover entry and the robots, and
@@ -178,8 +187,9 @@ planned for `C1`, `REQ-3` for `C2`, and `REQ-4` is `TBD`: nobody has
 scheduled it yet.
 
 Growing the choice list, when a new minor starts, is a hand-edit of
-`eurobot_grammar.sgra`'s `TARGET_REVISION: SingleChoice(...)` line, the same
-way `RULE`'s `STATUS` choices were declared. The document grammar editor in
+`eurobot_requirements_grammar.sgra`'s `TARGET_REVISION: SingleChoice(...)`
+line, the same way `RULE`'s `STATUS` choices are declared in
+`eurobot_rules_grammar.sgra`. The document grammar editor in
 StrictDoc's web UI cannot do this: its "edit element" screen has no field
 for a `SingleChoice`'s options, and saving through it rewrites every field
 of the element, `TARGET_REVISION` included, as a plain `String`, discarding

@@ -104,6 +104,12 @@ dependencies = [
 
     # Web server dependencies
     "fastapi >= 0.83.0",
+    # Was only a transitive dependency of fastapi until
+    # requirement_integrity_analyzer.py started using it directly (strict
+    # TypeAdapter validation of a requirement's condition/action literals
+    # against the INTERFACE_PARAMETER type they're used with) — declared
+    # explicitly now that core code, not just the web server, relies on it.
+    "pydantic >= 2.0",
     # FastAPI: To receive uploaded files and/or form data, first install python-multipart.
     "python-multipart",
     "uvicorn[standard] >= 0.14.0",

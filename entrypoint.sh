@@ -18,9 +18,14 @@ echo "strictdoc/docker: ensuring strictdoc user with UID=$HOST_UID and GID=$HOST
 # Check if a user with this UID already exists (e.g., "ubuntu")
 EXISTING_USER=$(getent passwd "$HOST_UID" | cut -d: -f1)
 
-if [ -n "$EXISTING_USER" ]; then
+if [ -n "$EXISTING_USER" ] && [ "$EXISTING_USER" != "strictdoc" ]; then
     echo "error: strictdoc/docker: detected a wrong user: '$EXISTING_USER'. Ensure that any default users are removed from the Dockerfile. This entrypoint script is supposed to create a new user 'strictdoc'."
     exit 1
+elif [ -n "$EXISTING_USER" ]; then
+    # A container restarted in place (not recreated) keeps its writable layer,
+    # so the 'strictdoc' user this script created on a previous boot is still
+    # there. That's expected, not a conflict - reuse it instead of erroring.
+    echo "strictdoc/docker: user 'strictdoc' with UID=$HOST_UID already exists (container restarted in place), reusing it."
 else
     # Ensure the group exists.
     EXISTING_GROUP=$(getent group "$HOST_GID" | cut -d: -f1)

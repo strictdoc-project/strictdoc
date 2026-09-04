@@ -1,0 +1,51 @@
+{#
+  Russian labels and placeholders for the eurobot course's node-creation/edit
+  form (frame_requirement_form.jinja, via row_with_text_field.jinja and
+  row_uid_with_reset/frame.jinja). The course's students are not assumed to
+  read English (see AGENTS.md's "Technical writing" section), and the plain
+  field names/"Enter ... here..." placeholders were confusing: a blank
+  optional "MID" field looked like something the student had to fill in, and
+  neither TITLE nor STATEMENT hinted at what INTERFACE_PARAMETER expects
+  there (a technical variable name, and a "Тип: <тип>" line — as opposed to
+  REQUIREMENT, where the same two fields hold a free-form title and the
+  ЕСЛИ/КОГДА/IF pseudo-code statement).
+
+  Falls back to the original field_name for any field this table doesn't
+  recognize, so grammars/tags outside REQUIREMENT and INTERFACE_PARAMETER
+  (SECTION, TEXT, TEST_CASE, ...) render exactly as before.
+
+  element_type is an explicit macro parameter, not read from the calling
+  template's context: row_uid_with_reset/stream.jinja (the /reset_uid
+  response) renders row_uid_with_reset/frame.jinja without ever setting an
+  element_type variable, and a Jinja macro only sees its own parameters plus
+  the defining module's globals, never the caller's local `{% set %}`
+  variables. Every call site below must pass its own element_type (or
+  literal none, where the field is never element_type-dependent).
+#}
+
+{% macro field_label_ru(field_name) -%}
+{%- if field_name == "MID" -%}MID (техническая метка)
+{%- elif field_name == "UID" -%}Номер (UID)
+{%- elif field_name == "TITLE" -%}Название (TITLE)
+{%- elif field_name == "STATEMENT" -%}Текст (STATEMENT)
+{%- else -%}{{ field_name }}
+{%- endif -%}
+{%- endmacro %}
+
+{% macro field_placeholder_ru(field_name, element_type=none) -%}
+{%- if field_name == "MID" -%}
+необязательно: служебная метка узла, нужна StrictDoc для отслеживания правок — можно оставить пустым, она подставится сама
+{%- elif field_name == "UID" -%}
+номер уже предложен ниже — можно оставить как есть или вписать свой
+{%- elif field_name == "TITLE" and element_type == "INTERFACE_PARAMETER" -%}
+техническое имя переменной, ровно как оно пишется в условии/действии требования, например: input.started_cord
+{%- elif field_name == "TITLE" -%}
+краткое название требования, например: Периметр в начале матча
+{%- elif field_name == "STATEMENT" and element_type == "INTERFACE_PARAMETER" -%}
+укажите тип значения строкой «Тип: <тип>», например: Тип: bool
+{%- elif field_name == "STATEMENT" -%}
+например: ЕСЛИ (motor_Speed > 10) ТО робот должен уменьшить motor_Speed на 5
+{%- else -%}
+Введите значение поля «{{ field_name }}»
+{%- endif -%}
+{%- endmacro %}

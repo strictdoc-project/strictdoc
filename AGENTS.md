@@ -55,6 +55,13 @@ messages, PR descriptions, docs, code comments, task files, or similar),
 apply `developer/skills/humanizer/SKILL.md`. This applies regardless of
 which skill, if any, is used for the task.
 
+Translate any user-facing text you write into Russian, since the students
+using this tool are not assumed to read English: error/warning messages,
+UI labels, and similar strings that end up displayed to a student in the
+app. This does not apply to code, identifiers, code comments, commit
+messages, or logs meant for developers — those stay in English per the
+rest of this section.
+
 ## Skills
 
 Reusable instructions for writing tasks (release notes, commit/PR text,

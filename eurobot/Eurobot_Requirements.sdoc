@@ -2,7 +2,7 @@
 TITLE: Системные требования
 
 [GRAMMAR]
-IMPORT_FROM_FILE: @eurobot
+IMPORT_FROM_FILE: @eurobot_requirements
 
 [TEXT]
 STATEMENT: >>>
@@ -19,6 +19,88 @@ STATEMENT: >>>
 курса, написанный (и переведённый) на русском, поскольку студенты курса
 говорят по-русски.
 <<<
+
+[[SECTION]]
+TITLE: Входы
+
+[INTERFACE_PARAMETER]
+TITLE: input.started_cord
+STATEMENT: >>>
+Описание: Стартовый корд
+
+Тип: bool
+
+Значения:
+
+* false значит вставлен
+* true значит извлечен
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+TITLE: Выходы
+
+[INTERFACE_PARAMETER]
+TITLE: cmd.velocity.x
+STATEMENT: >>>
+Описание: Команда движения робота
+
+Тип: float
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+TITLE: Конфигурационные параметры
+
+[INTERFACE_PARAMETER]
+TITLE: cfg.ref_velocity
+STATEMENT: >>>
+Тип: float
+
+Значение: 70
+
+Единицы измерения: проценты
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+TITLE: Функциональные требования
+
+[REQUIREMENT]
+UID: REQ-6
+TITLE: Движение при извлечении корда
+TARGET_REVISION: TBD
+STATEMENT: >>>
+ЕСЛИ стартовый корд выдернут (input.started_cord==true)
+
+ТО робот должен начать движение вперед (cmd.velocity.x = cfg.ref_velocity)
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: RULE-GENERAL-I.3.b
+  ROLE: COVERS
+
+[REQUIREMENT]
+UID: REQ-3
+TITLE: Аварийная остановка обесточивает приводы
+TARGET_REVISION: C2
+STATEMENT: >>>
+Нажатие кнопки аварийной остановки должно снимать питание со всех двигателей
+и приводов в течение 100 мс, и робот должен оставаться обесточенным до
+отпускания кнопки.
+
+Кнопка должна располагаться на верхней части робота или на стороне,
+доступной судье без необходимости что-либо передвигать.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: RULE-GENERAL-F.4.c
+  ROLE: COVERS
+
+[[/SECTION]]
 
 [REQUIREMENT]
 UID: REQ-1
@@ -48,23 +130,6 @@ RELATIONS:
   ROLE: COVERS
 
 [REQUIREMENT]
-UID: REQ-3
-TITLE: Аварийная остановка обесточивает приводы
-TARGET_REVISION: C2
-STATEMENT: >>>
-Нажатие кнопки аварийной остановки должно снимать питание со всех двигателей
-и приводов в течение 100 мс, и робот должен оставаться обесточенным до
-отпускания кнопки.
-
-Кнопка должна располагаться на верхней части робота или на стороне,
-доступной судье без необходимости что-либо передвигать.
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: RULE-GENERAL-F.4.c
-  ROLE: COVERS
-
-[REQUIREMENT]
 UID: REQ-4
 TITLE: Автономный цикл матча
 TARGET_REVISION: TBD
@@ -77,19 +142,4 @@ STATEMENT: >>>
 RELATIONS:
 - TYPE: Parent
   VALUE: RULE-GENERAL-H.2
-  ROLE: COVERS
-
-[REQUIREMENT]
-UID: REQ-5
-TITLE: Движение при извлечении корда
-TARGET_REVISION: TBD
-STATEMENT: >>>
-1) Должен быть в наличии корд (механика, платформа)
-2) Разъём под корд должен быть установлен в робота (механика, платформа)
-3) Робот должен считывать, есть ли в нём корд или нету (электроника, платформа)
-4) При отсутствии корда в роботе, должны подаваться управляющие команды (по, платформа)
-<<<
-RELATIONS:
-- TYPE: Parent
-  VALUE: RULE-GENERAL-I.3.b
   ROLE: COVERS

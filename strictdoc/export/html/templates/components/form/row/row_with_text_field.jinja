@@ -1,4 +1,5 @@
 {%- extends "components/form/row/index.jinja" %}
+{% import "components/form/row/_field_hints_ru.jinja" as field_hints_ru %}
 
 {% assert text_field_row_context is defined, "row_with_text: row_context must be defined." %}
 {% assert text_field_row_context.errors is defined, "row_with_text: errors must be defined." %}
@@ -29,10 +30,14 @@
   {%- endif -%}
 
   {%- set placeholder_name = text_field_row_context.field.field_name %}
+  {# element_type is set by frame_requirement_form.jinja but not by every
+     caller of this shared row template (e.g. frame_section_form.jinja) —
+     read it defensively, see _field_hints_ru.jinja. #}
+  {%- set element_type_ = element_type if element_type is defined else none %}
 
-  {%- set field_name = text_field_row_context.field.field_name %}
+  {%- set field_label_ = field_hints_ru.field_label_ru(text_field_row_context.field.field_name) %}
   {%- if not text_field_row_context.field_editable %}
-    {%- set field_name = field_name ~ " (READ-ONLY)" %}
+    {%- set field_label_ = field_label_ ~ " (READ-ONLY)" %}
   {%- endif %}
 
   {%- with
@@ -40,8 +45,8 @@
     field_class_name = none,
     field_editable = text_field_row_context.field_editable,
     field_input_name = text_field_row_context.field.get_input_field_name(),
-    field_label = field_name,
-    field_placeholder = "Enter "~placeholder_name~" here...",
+    field_label = field_label_,
+    field_placeholder = field_hints_ru.field_placeholder_ru(placeholder_name, element_type_),
     field_type = text_field_row_context.field_type,
     field_value = text_field_row_context.field.field_value,
     testid_postfix = text_field_row_context.field.field_name
@@ -79,7 +84,7 @@
     <a
       class="field_action"
       href="#"
-      title="Restore UID"
+      title="Восстановить прежний номер (UID)"
       data-action-type="restore"
       data-js-restore-field-action
       data-restore-value="{{ text_field_row_context.existing_requirement_uid }}"

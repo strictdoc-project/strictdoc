@@ -6,6 +6,7 @@
 
 RUN: %mkdir "%T/project/_assets/rules/source"
 RUN: %cp "%strictdoc_root/eurobot/eurobot_grammar.sgra" "%T/project/eurobot_grammar.sgra"
+RUN: %cp "%strictdoc_root/eurobot/eurobot_rules_grammar.sgra" "%T/project/eurobot_rules_grammar.sgra"
 RUN: %cp "%strictdoc_root/eurobot/strictdoc_config.py" "%T/project/strictdoc_config.py"
 RUN: %cp "%S/sources.json" "%T/project/_assets/rules/source/sources.json"
 RUN: python "%S/../make_fixture_pdf.py" original "%T/project/_assets/rules/source/rules.pdf"

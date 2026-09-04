@@ -610,7 +610,7 @@ def render_document(
         "TITLE: Eurobot Rules",
         "",
         "[GRAMMAR]",
-        "IMPORT_FROM_FILE: @eurobot",
+        "IMPORT_FROM_FILE: @eurobot_rules",
         "",
         "[TEXT]",
         "STATEMENT: >>>",

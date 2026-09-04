@@ -67,6 +67,9 @@ from strictdoc.backend.sdoc_source_code.models.source_file_info import (
 )
 from strictdoc.core.analyzers.document_stats import DocumentTreeStats
 from strictdoc.core.analyzers.document_uid_analyzer import DocumentUIDAnalyzer
+from strictdoc.core.analyzers.requirement_integrity_analyzer import (
+    RequirementIntegrityAnalyzer,
+)
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.feature import Feature, FeatureContext
@@ -357,6 +360,19 @@ def create_main_router(
             )
         else:
             sdoc_writer.write_to_file(document)
+
+        # Re-run the requirement integrity checks against the same
+        # (already-updated-in-place) traceability index, so a warning shows
+        # up right after this save — not just at the next full rebuild
+        # (server start, `strictdoc export`, or an external file change:
+        # the inhibit above deliberately keeps this write from triggering
+        # that path). reset() first: analyze_document_tree() only adds
+        # issues, and this index is long-lived and mutated per edit, not
+        # rebuilt from scratch like the other two call sites.
+        export_action.traceability_index.validation_index.reset()
+        RequirementIntegrityAnalyzer.analyze_document_tree(
+            export_action.traceability_index
+        )
 
     def env() -> JinjaEnvironment:
         return html_templates.jinja_environment()
@@ -5237,12 +5253,14 @@ def create_main_router(
     def rebuild_index_after_file_change() -> Optional[str]:
         try:
             with lock_manager.acquire_global_write():
-                export_action.traceability_index = (
-                    TraceabilityIndexBuilder.create(
-                        project_config=project_config,
-                        parallelizer=parallelizer,
-                    )
+                rebuilt_traceability_index = TraceabilityIndexBuilder.create(
+                    project_config=project_config,
+                    parallelizer=parallelizer,
                 )
+                RequirementIntegrityAnalyzer.analyze_document_tree(
+                    rebuilt_traceability_index
+                )
+                export_action.traceability_index = rebuilt_traceability_index
             return None
         except DocumentTreeError as document_tree_error:
             return document_tree_error.to_print_message()

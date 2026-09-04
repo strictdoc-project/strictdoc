@@ -70,7 +70,7 @@ class Test(E2ECase):
             self.assert_element(info_panel + ":not([hidden])")
             self.assert_text("Requirement 1", info_panel)
             self.assert_text("REQ-1", info_panel)
-            self.assert_text("Shift+Click", info_panel)
+            self.assert_text("to view node.", info_panel)
             ActionChains(self.driver).key_up(Keys.SHIFT).perform()
 
             self.hover(requirement_selector)

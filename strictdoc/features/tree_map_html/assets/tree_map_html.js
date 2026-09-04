@@ -25,6 +25,8 @@
     // prefer wider rectangles for text without forcing a fixed orientation.
     targetNodeAspectRatio: 1.6,
   });
+  const INFO_PANEL_POINTER_OFFSET = 12;
+  const INFO_PANEL_VIEWPORT_PADDING = 8;
   const CSS_CLASSES = Object.freeze({
     ancestor: "tree-map-html__ancestor",
     ancestors: "tree-map-html__ancestors",
@@ -41,6 +43,7 @@
     labelSymbol: "tree-map-html__label-symbol",
     infoPanel: "tree-map-html__info-panel",
     infoTable: "tree-map-html__info-table",
+    infoPanelTip: "tree-map-html__info-panel-tip",
     label: "tree-map-html__label",
     labelAncestor: "tree-map-html__label--ancestor",
     labelBranch: "tree-map-html__label--branch",
@@ -76,6 +79,7 @@
     title: "tree-map-html__title",
     toolbar: "tree-map-html__toolbar",
     footer: "tree-map-html__footer",
+    footerTip: "tree-map-html__footer-tip",
   });
   const DOM_IDS = Object.freeze({
     backIconTemplate: "tree-map-html-back-icon",
@@ -791,6 +795,8 @@
     const actionsElement = createNodeActions(node);
     if (actionsElement !== null) {
       nodeElement.dataset.hasPrimaryAction = "true";
+      nodeElement.dataset.primaryAction =
+        typeof node.preview_url === "string" ? "preview" : "document";
     }
     if (actionsElement !== null && depth !== 0) {
       // FIXME
@@ -1146,6 +1152,10 @@
     infoPanelElement.append(infoEmptyElement, infoTableElement);
     sectionElement.append(infoPanelElement);
 
+    const footerTip = document.createElement("span");
+    footerTip.className = CSS_CLASSES.footerTip;
+    footerTip.innerHTML = `<span> Use <kbd>SHIFT</kbd> to get more info.</span>`;
+
     const footerElement = document.createElement("footer");
     footerElement.className = CSS_CLASSES.footer;
     const previewControlElement = document.createElement("label");
@@ -1163,11 +1173,13 @@
       previewInputElement,
       previewSliderElement,
     );
-    footerElement.append(previewControlElement);
+    footerElement.append(footerTip, previewControlElement);
     sectionElement.append(footerElement);
 
     let pointedNodeElement = null;
     let lastPointerEvent = null;
+    let infoPanelContentNodeElement = null;
+    let infoPanelSize = null;
     rootElement.append(sectionElement);
 
     indexNodeParents(treeMap.root);
@@ -1242,30 +1254,65 @@
     }
 
     function renderInfoPanel(nodeElement, pointerEvent) {
-      const rows = [
-        ["Title", nodeElement.dataset.nodeTitle],
-        ["MID", nodeElement.dataset.nodeMid],
-        ["UID", nodeElement.dataset.nodeUid],
-      ].filter(([, value]) => value !== undefined);
-      infoEmptyElement.hidden = rows.length !== 0;
-      if (nodeElement.dataset.hasPrimaryAction === "true") {
-        rows.push(["Shift+Click", "Open link"]);
-      }
-      infoTableElement.replaceChildren();
-      for (const [name, value] of rows) {
-        if (value === undefined) {
-          continue;
+      if (
+        nodeElement !== infoPanelContentNodeElement ||
+        infoPanelSize === null
+      ) {
+        const rows = [
+          ["Title", nodeElement.dataset.nodeTitle],
+          ["MID", nodeElement.dataset.nodeMid],
+          ["UID", nodeElement.dataset.nodeUid],
+        ].filter(([, value]) => value !== undefined);
+        infoEmptyElement.hidden = rows.length !== 0;
+        const tipLine = document.createElement("div");
+        tipLine.className = CSS_CLASSES.infoPanelTip;
+        tipLine.innerHTML =
+          nodeElement.dataset.primaryAction === "preview"
+            ? `<kbd>SHIFT</kbd>+<kbd>CLICK</kbd> to view node.`
+            : `<kbd>SHIFT</kbd>+<kbd>CLICK</kbd> to open document.`;
+
+        infoTableElement.replaceChildren();
+        for (const [name, value] of rows) {
+          const termElement = document.createElement("dt");
+          termElement.textContent = name;
+          const valueElement = document.createElement("dd");
+          valueElement.textContent = value;
+          infoTableElement.append(termElement, valueElement);
         }
-        const termElement = document.createElement("dt");
-        termElement.textContent = name;
-        const valueElement = document.createElement("dd");
-        valueElement.textContent = value;
-        infoTableElement.append(termElement, valueElement);
+        infoPanelElement.replaceChildren(infoEmptyElement, infoTableElement);
+        if (nodeElement.dataset.hasPrimaryAction === "true") {
+          infoPanelElement.append(tipLine);
+        }
+        // Hidden elements have no measurable box. Reveal the panel only when
+        // its content changes, then reuse the measured size while it moves.
+        const wasHidden = infoPanelElement.hidden;
+        infoPanelElement.hidden = false;
+        const panelRectangle = infoPanelElement.getBoundingClientRect();
+        infoPanelSize = {
+          width: panelRectangle.width,
+          height: panelRectangle.height,
+        };
+        infoPanelElement.hidden = wasHidden;
+        infoPanelContentNodeElement = nodeElement;
       }
-      infoPanelElement.style.left =
-        `${Math.min(pointerEvent.clientX + 12, window.innerWidth - 272)}px`;
-      infoPanelElement.style.top =
-        `${Math.min(pointerEvent.clientY + 12, window.innerHeight - 120)}px`;
+      infoPanelElement.style.left = `${Math.max(
+        INFO_PANEL_VIEWPORT_PADDING,
+        Math.min(
+          pointerEvent.clientX + INFO_PANEL_POINTER_OFFSET,
+          window.innerWidth -
+            infoPanelSize.width -
+            INFO_PANEL_VIEWPORT_PADDING,
+        ),
+      )}px`;
+      infoPanelElement.style.top = `${Math.max(
+        INFO_PANEL_VIEWPORT_PADDING,
+        Math.min(
+          pointerEvent.clientY + INFO_PANEL_POINTER_OFFSET,
+          window.innerHeight -
+            infoPanelSize.height -
+            INFO_PANEL_VIEWPORT_PADDING,
+        ),
+      )}px`;
     }
 
     function renderAncestors(focusedNode) {
@@ -1488,6 +1535,9 @@
     window.addEventListener("blur", () => {
       sectionElement.classList.remove(CSS_CLASSES.sectionShiftActive);
       infoPanelElement.hidden = true;
+    });
+    window.addEventListener("resize", () => {
+      infoPanelSize = null;
     });
 
     backIconElement.addEventListener("click", navigateBack);

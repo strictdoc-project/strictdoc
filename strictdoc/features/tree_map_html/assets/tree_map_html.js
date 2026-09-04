@@ -1272,7 +1272,7 @@
         tipLine.className = CSS_CLASSES.infoPanelTip;
         tipLine.innerHTML =
           nodeElement.dataset.primaryAction === "preview"
-            ? `<kbd>SHIFT</kbd>+<kbd>CLICK</kbd> to view node.`
+            ? `<kbd>SHIFT</kbd>+<kbd>CLICK</kbd> to view node in modal.`
             : `<kbd>SHIFT</kbd>+<kbd>CLICK</kbd> to open document.`;
 
         infoTableElement.replaceChildren();

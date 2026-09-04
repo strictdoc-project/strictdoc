@@ -9,10 +9,10 @@ from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.html_templates import JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
-from strictdoc.features.tree_map.plotly_js import PLOTLY_JS_EXTENSION
+from strictdoc.features.tree_map_plotly.plotly_js import PLOTLY_JS_EXTENSION
 
 
-class TreeMapViewObject:
+class TreeMapPlotlyViewObject:
     def __init__(
         self,
         *,
@@ -36,7 +36,7 @@ class TreeMapViewObject:
 
     def render_screen(self, jinja_environment: JinjaEnvironment) -> Markup:
         return jinja_environment.render_template_as_markup(
-            "features/tree_map/index.jinja", view_object=self
+            "features/tree_map_plotly/index.jinja", view_object=self
         )
 
     def render_static_url(self, url: str) -> str:

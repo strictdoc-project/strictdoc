@@ -24,8 +24,10 @@ from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
-from strictdoc.features.tree_map.helpers import get_color
-from strictdoc.features.tree_map.view_object import TreeMapViewObject
+from strictdoc.features.tree_map_plotly.helpers import get_color
+from strictdoc.features.tree_map_plotly.view_object import (
+    TreeMapPlotlyViewObject,
+)
 from strictdoc.helpers.timing import timing_decorator
 
 
@@ -100,7 +102,7 @@ class PlotlyDataFrameColumn:
 TREE_MAP_UNIFORMTEXT = {"minsize": 10, "mode": "hide"}
 
 
-class TreeMapGenerator:
+class TreeMapPlotlyGenerator:
     @staticmethod
     @timing_decorator("Export tree map visualizations")
     def export(
@@ -579,7 +581,7 @@ contains "tests/".
 
         body = "".join(part_.get_html() for part_ in parts)
 
-        view_object = TreeMapViewObject(
+        view_object = TreeMapPlotlyViewObject(
             traceability_index=traceability_index,
             project_config=project_config,
             body=body,
@@ -588,7 +590,7 @@ contains "tests/".
 
         output_html = os.path.join(
             project_config.export_output_html_root,
-            "tree_map.html",
+            "tree_map_plotly.html",
         )
 
         with open(output_html, "w", encoding="utf-8") as file_:

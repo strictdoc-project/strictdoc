@@ -2,14 +2,14 @@ from selenium.webdriver.common.by import By
 from seleniumbase import BaseCase
 
 
-class Screen_TreeMap:
+class Screen_TreeMapPlotly:
     def __init__(self, test_case: BaseCase) -> None:
         assert isinstance(test_case, BaseCase)
         self.test_case: BaseCase = test_case
 
     def assert_on_screen(self) -> None:
         self.test_case.assert_element(
-            '//body[@data-viewtype="tree-map"]',
+            '//body[@data-viewtype="tree-map-plotly"]',
             by=By.XPATH,
         )
         self.test_case.wait_for_ready_state_complete()

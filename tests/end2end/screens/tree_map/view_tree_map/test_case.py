@@ -20,7 +20,13 @@ class Test(E2ECase):
         with SDocTestServer(
             input_path=path_to_this_test_file_folder
         ) as test_server:
-            self.open(test_server.get_host_and_port() + "/tree_map.html")
+            screen_url = test_server.get_host_and_port() + "/tree_map.html"
+            self.open(screen_url)
+            self.assert_element_absent(
+                '[data-testid="tree-map-selector-option-renderer-debug"]'
+            )
+
+            self.open(screen_url + "?debug=1")
 
             self.assert_element(
                 '//body[@data-viewtype="tree-map"]',
@@ -59,7 +65,7 @@ class Test(E2ECase):
             # Each map restores its own display and navigation state.
             self.click('[data-testid="tree-map-selector-handler"]')
             self.click(
-                '[data-testid="tree-map-selector-option-requirements-source"]'
+                '[data-testid="tree-map-selector-option-renderer-debug"]'
             )
             assert not self.driver.find_element(
                 By.CSS_SELECTOR, preview_control
@@ -79,7 +85,7 @@ class Test(E2ECase):
 
             self.click('[data-testid="tree-map-selector-handler"]')
             self.click(
-                '[data-testid="tree-map-selector-option-requirements-source"]'
+                '[data-testid="tree-map-selector-option-renderer-debug"]'
             )
             self.assert_text(
                 alternate_focused_label,

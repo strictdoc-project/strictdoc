@@ -55,9 +55,9 @@
   > .tree-map-html__node-header
   > :is(
     .tree-map-html__label--current-level,
-    .tree-map-html__label--branch,
-    .tree-map-html__label--leaf
-  ) {
+    .tree-map-html__label--branch
+  ),
+.tree-map-html__label--leaf {
   white-space: initial;
   display: -webkit-box;
   -webkit-box-orient: vertical;

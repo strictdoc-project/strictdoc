@@ -42,7 +42,8 @@ def test_generates_the_three_default_tree_maps() -> None:
     assert document_tree_map.root.color is None
     assert len(document_tree_map.root.children) == 1
     document_node = document_tree_map.root.children[0]
-    assert document_node.label == "Test Document (2)"
+    assert document_node.label == "Test Document"
+    assert document_node.count == 2
     assert document_node.color is None
     assert document_node.mid is not None
     assert document_node.document_url is not None
@@ -69,7 +70,8 @@ def test_generates_the_three_default_tree_maps() -> None:
     source_coverage_tree_map = tree_map_data.tree_maps[1]
     assert source_coverage_tree_map.root.color is None
     source_document_node = source_coverage_tree_map.root.children[0]
-    assert source_document_node.label == "Test Document (2)"
+    assert source_document_node.label == "Test Document"
+    assert source_document_node.count == 2
     assert source_document_node.color == "#ffaaaa"
     assert tuple(node_.color for node_ in source_document_node.children) == (
         "#ffaaaa",

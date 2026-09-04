@@ -63,7 +63,9 @@ class _SourceNode:
     parent_identifier: str
     weight: int
     label: str
+    count: Optional[int]
     normative_label: str
+    normative_count: Optional[int]
     source_color: Optional[str]
     test_color: Optional[str]
     is_normative: bool
@@ -79,6 +81,7 @@ class _TreeMapDefinition:
     title: str
     include_node: Callable[[_SourceNode], bool]
     get_label: Callable[[_SourceNode], str]
+    get_count: Callable[[_SourceNode], Optional[int]]
     get_color: Callable[[_SourceNode], Optional[str]]
 
 
@@ -222,7 +225,9 @@ class TreeMapDataGenerator:
                 parent_identifier="",
                 weight=0,
                 label=project_config.project_title,
+                count=None,
                 normative_label=project_config.project_title,
+                normative_count=None,
                 source_color=None,
                 test_color=None,
                 is_normative=True,
@@ -241,12 +246,7 @@ class TreeMapDataGenerator:
             document_total_size, document_normative_total_size, _ = (
                 document_.get_total_size()
             )
-            document_title = (
-                f"{document_.reserved_title} ({document_total_size})"
-            )
-            document_normative_title = (
-                f"{document_.reserved_title} ({document_normative_total_size})"
-            )
+            document_title = document_.reserved_title
             source_color = None
             test_color = None
             if document_ in documents_with_requirements:
@@ -265,7 +265,9 @@ class TreeMapDataGenerator:
                     parent_identifier=project_config.project_title,
                     weight=document_total_size,
                     label=document_title,
-                    normative_label=document_normative_title,
+                    count=document_total_size,
+                    normative_label=document_title,
+                    normative_count=document_normative_total_size,
                     source_color=source_color,
                     test_color=test_color,
                     is_normative=document_ in documents_with_requirements,
@@ -298,14 +300,14 @@ class TreeMapDataGenerator:
                 )
                 node_info_title = node_title
                 normative_title = node_title
+                node_count = None
+                normative_count = None
                 if (
                     node_.section_contents is not None
                     and len(node_.section_contents) > 0
                 ):
-                    node_title = f"{node_title} ({node_total_size})"
-                    normative_title = (
-                        f"{normative_title} ({node_normative_total_size})"
-                    )
+                    node_count = node_total_size
+                    normative_count = node_normative_total_size
 
                 source_color = None
                 test_color = None
@@ -328,7 +330,9 @@ class TreeMapDataGenerator:
                         parent_identifier=node_.parent.reserved_mid,
                         weight=node_total_size,
                         label=node_title,
+                        count=node_count,
                         normative_label=normative_title,
+                        normative_count=normative_count,
                         source_color=source_color,
                         test_color=test_color,
                         is_normative=node_.is_normative_node()
@@ -378,6 +382,7 @@ class TreeMapDataGenerator:
         def build_node(source_node_: _SourceNode) -> TreeMapNode:
             return TreeMapNode(
                 label=definition.get_label(source_node_),
+                count=definition.get_count(source_node_),
                 weight=source_node_.weight,
                 color=definition.get_color(source_node_),
                 title=source_node_.title,
@@ -406,18 +411,21 @@ class TreeMapDataGenerator:
                 title="Document tree map",
                 include_node=lambda _: True,
                 get_label=lambda source_node_: source_node_.label,
+                get_count=lambda source_node_: source_node_.count,
                 get_color=lambda _: None,
             ),
             _TreeMapDefinition(
                 title="Requirements coverage with source",
                 include_node=lambda source_node_: source_node_.is_normative,
                 get_label=lambda source_node_: source_node_.normative_label,
+                get_count=lambda source_node_: source_node_.normative_count,
                 get_color=lambda source_node_: source_node_.source_color,
             ),
             _TreeMapDefinition(
                 title="Requirements coverage with test",
                 include_node=lambda source_node_: source_node_.is_normative,
                 get_label=lambda source_node_: source_node_.normative_label,
+                get_count=lambda source_node_: source_node_.normative_count,
                 get_color=lambda source_node_: source_node_.test_color,
             ),
         )

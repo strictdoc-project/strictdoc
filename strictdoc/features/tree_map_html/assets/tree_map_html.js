@@ -53,6 +53,7 @@
     labelLeaf: "tree-map-html__label--leaf",
     labelMultiline: "tree-map-html__label--multiline",
     labelRoot: "tree-map-html__label--root",
+    labelText: "tree-map-html__label-text",
     labelCurrentLevel: "tree-map-html__label--current-level",
     historyBreadcrumb: "tree-map-html__history-breadcrumb",
     historyBreadcrumbEllipsis:
@@ -118,13 +119,32 @@
     return ancestors;
   }
 
-  function createLabel(text, modifierClass) {
+  function createLabel(text, modifierClass, count = null) {
     // Labels in nodes and ancestor navigation share their markup. A semantic
     // modifier lets CSS add the right icon without depending on DOM depth.
     const labelElement = document.createElement("span");
     labelElement.classList.add(CSS_CLASSES.label, modifierClass);
-    labelElement.textContent = text;
+    const textElement = document.createElement("span");
+    textElement.className = CSS_CLASSES.labelText;
+    labelElement.append(textElement);
+    updateLabel(labelElement, text, count);
     return labelElement;
+  }
+
+  function updateLabel(labelElement, text, count = null) {
+    const textElement = labelElement.querySelector(
+      `:scope > .${CSS_CLASSES.labelText}`,
+    );
+    if (textElement === null) {
+      throw new Error("Tree map label has no text element.");
+    }
+    textElement.textContent = text;
+    labelElement.title = text;
+    if (Number.isInteger(count)) {
+      labelElement.dataset.count = count;
+    } else {
+      delete labelElement.dataset.count;
+    }
   }
 
   function createTemplateIcon(templateId) {
@@ -810,11 +830,7 @@
     }
     surfaceElement.append(headerElement);
     let labelElement = null;
-    if (
-      depth !== 0 &&
-      pixelRectangle.width >= options.minLabelWidth &&
-      pixelRectangle.height >= options.nodeHeaderHeight
-    ) {
+    if (depth !== 0) {
       const labelModifier =
         depth === 0
           ? CSS_CLASSES.labelRoot
@@ -823,7 +839,7 @@
             : node.children.length === 0
               ? CSS_CLASSES.labelLeaf
               : CSS_CLASSES.labelBranch;
-      labelElement = createLabel(node.label, labelModifier);
+      labelElement = createLabel(node.label, labelModifier, node.count);
       // A label starts multiline because its node has no rendered children
       // yet. Expansion below removes this class when it adds the child layer.
       labelElement.classList.add(CSS_CLASSES.labelMultiline);
@@ -834,6 +850,10 @@
       labelElement.style.setProperty(
         "--tree-map-html-label-lines",
         calculateLabelLineClamp(surfaceHeight, labelModifier, options),
+      );
+      labelElement.firstElementChild.hidden = !(
+        pixelRectangle.width >= options.minLabelWidth &&
+        pixelRectangle.height >= options.nodeHeaderHeight
       );
       headerElement.append(labelElement);
     }
@@ -1395,7 +1415,11 @@
       const ancestorSymbol = document.createElement("span");
       ancestorSymbol.className = CSS_CLASSES.labelSymbol;
       ancestorSymbol.textContent = "↰";
-      const ancestorLabel = createLabel(ancestor.label, CSS_CLASSES.labelAncestor);
+      const ancestorLabel = createLabel(
+        ancestor.label,
+        CSS_CLASSES.labelAncestor,
+        ancestor.count,
+      );
       ancestorButton.append(
         ancestorSymbol,
         ancestorLabel,
@@ -1414,13 +1438,27 @@
 
     function setSiblingLabel(labelElement, node, isCurrent = false) {
       if (node === undefined) {
-        labelElement.textContent = "";
+        if (labelElement.classList.contains(CSS_CLASSES.label)) {
+          updateLabel(labelElement, "");
+        } else {
+          labelElement.textContent = "";
+          delete labelElement.dataset.count;
+        }
         labelElement.removeAttribute("title");
         return;
       }
       const label = getNavigationLabel(node, isCurrent);
-      labelElement.textContent = label;
-      labelElement.title = label;
+      if (labelElement.classList.contains(CSS_CLASSES.label)) {
+        updateLabel(labelElement, label, node.count);
+      } else {
+        labelElement.textContent = label;
+        labelElement.title = label;
+        if (Number.isInteger(node.count)) {
+          labelElement.dataset.count = node.count;
+        } else {
+          delete labelElement.dataset.count;
+        }
+      }
     }
 
     function renderSiblingNavigation(

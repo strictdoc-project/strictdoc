@@ -13,6 +13,7 @@ import orjson
 @dataclass(frozen=True)
 class TreeMapNode:
     label: str
+    count: Optional[int]
     weight: int
     color: Optional[str]
     children: Tuple["TreeMapNode", ...]

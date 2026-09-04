@@ -50,13 +50,6 @@
   line-height: var(--tree-map-html-label-line-height);
 }
 
-.tree-map-html__label--multiline {
-  white-space: initial;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: var(--tree-map-html-label-lines);
-}
-
 .tree-map-html__label--root,
 .tree-map-html__label--current-level {
   font-weight: 600;
@@ -69,6 +62,46 @@
 .tree-map-html__label--root {
   /* It should not stretch  */
   flex: 0 1 auto;
+}
+
+.tree-map-html__label::before {
+  content: attr(data-count);
+  color: var(--color-fg-secondary);
+  font-size: xx-small;
+  font-weight: 600;
+  margin-right: 2px;
+  /* font-family: monospace; */
+  vertical-align: super;
+  line-height: 0;
+}
+
+.tree-map-html__node--branch:hover:not(
+    :has(.tree-map-html__node--branch:hover)
+  )
+  > .tree-map-html__node-surface
+    .tree-map-html__label::before {
+/* Highlight the deepest expandable node under the pointer.*/
+  color: var(--color-fg-accent);
+}
+
+.tree-map-html__label--multiline {
+  white-space: initial;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--tree-map-html-label-lines);
+}
+
+.tree-map-html__label--multiline:has(.tree-map-html__label-text[hidden]) {
+  /* In a tile without text, display the number without cropping it */
+  -webkit-line-clamp: unset;
+  text-overflow: unset;
+}
+
+.tree-map-html__node-surface:has(.tree-map-html__label-text[hidden]) {
+  /* Push the number into the bottom-left corner of the tile
+     that doesn't have any header text. */
+  justify-content: flex-end;
+  align-items: flex-start;
 }
 
 .tree-map-html__label--ancestor {

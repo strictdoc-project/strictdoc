@@ -21,6 +21,6 @@ CHECK-HTML: data-testid="tree-map-html-root"
 CHECK-HTML: <script id="tree-map-html-data" type="application/json">
 CHECK-HTML-SAME: {"tree_maps":[
 CHECK-HTML-SAME: "title":"Document tree map"
-CHECK-HTML-SAME: "label":"Test document (1)"
+CHECK-HTML-SAME: "label":"Test document","count":1
 CHECK-HTML-SAME: "title":"Requirements coverage with source"
 CHECK-HTML-SAME: "title":"Requirements coverage with test"

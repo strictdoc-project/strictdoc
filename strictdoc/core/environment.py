@@ -20,6 +20,7 @@ HTML_TEMPLATE_DIRS = [
     os.path.join("strictdoc", "features", "source_file_view", "templates"),
     os.path.join("strictdoc", "features", "traceability_matrix", "templates"),
     os.path.join("strictdoc", "features", "tree_map_plotly", "templates"),
+    os.path.join("strictdoc", "features", "tree_map", "templates"),
     os.path.join("strictdoc", "features", "trace", "templates"),
 ]
 BINARY_HTML_TEMPLATES_DIR = os.path.join("templates", "html")
@@ -40,6 +41,7 @@ HTML_STATIC_DIRS = [
     os.path.join("strictdoc", "features", "source_coverage", "assets"),
     os.path.join("strictdoc", "features", "source_file_view", "assets"),
     os.path.join("strictdoc", "features", "traceability_matrix", "assets"),
+    os.path.join("strictdoc", "features", "tree_map", "assets"),
 ]
 BINARY_HTML_STATIC_DIR = "_static"
 

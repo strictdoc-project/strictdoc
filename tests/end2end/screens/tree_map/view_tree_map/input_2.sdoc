@@ -1,0 +1,7 @@
+[DOCUMENT]
+TITLE: Second test document
+
+[REQUIREMENT]
+UID: REQ-SECOND
+TITLE: Second document requirement
+STATEMENT: The system shall provide a requirement in the second document.

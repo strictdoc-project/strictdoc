@@ -1,0 +1,66 @@
+{% set template_type = 'Tree map' %}
+
+{% extends "base.jinja.html" %}
+
+{% block head_css %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ view_object.render_static_url('tree_map.css') }}"/>
+{% endblock head_css %}
+
+{% block head_scripts %}
+  {{ super() }}
+  <script src="{{ view_object.render_static_url('app_core.js') }}"></script>
+  <script src="{{ view_object.render_static_url('dropdown_menu.js') }}"></script>
+  {%- if view_object.project_config.is_running_on_server -%}
+  <script type="module">
+    import hotwiredTurbo from "./{{ view_object.render_static_url('turbo.min.js') }}";
+  </script>
+  {%- endif -%}
+  <script src="{{ view_object.render_static_url('modal.js') }}"></script>
+  <script src="{{ view_object.render_static_url('tree_map.js') }}" defer></script>
+{% endblock head_scripts %}
+
+{% block title %}
+  {{ view_object.project_config.project_title }} - {{ template_type }}
+{% endblock title %}
+
+{% block viewtype %}tree-map{% endblock viewtype %}
+
+{% block layout_nav %}
+  {% include "_shared/nav.jinja.html" %}
+{% endblock layout_nav %}
+
+{% block header_content %}
+  {%- set header_items = ["features/tree_map/viewtype.jinja"] -%}
+  {%- with
+    header__items=header_items,
+    header__last="features/tree_map/header__actions.jinja"
+  -%}
+    {% include "components/header/index.jinja" %}
+  {%- endwith -%}
+{% endblock header_content %}
+
+{% block main_content %}
+  <div class="main">
+    <div
+      class="tree-map"
+      data-testid="tree-map-root"
+      id="tree-map-root"
+    ></div>
+    <template id="tree-map-back-icon">
+      {% include "icons/ico16_backspace.svg" %}
+    </template>
+    <template id="tree-map-go-to-document-icon">
+      {% include "icons/ico16_go_to_doc_r.svg" %}
+    </template>
+    <template id="tree-map-preview-icon">
+      {% include "icons/ico16_maximize.svg" %}
+    </template>
+    <template id="tree-map-tips-modal-template">
+      {% include "features/tree_map/tips.jinja" %}
+    </template>
+    <script id="tree-map-data" type="application/json">
+      {{- view_object.tree_map_json -}}
+    </script>
+  </div>
+{% endblock main_content %}

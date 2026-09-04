@@ -88,4 +88,19 @@
     M
   </a>
 {%- endif -%}
+
+{%- set tree_map_feature = view_object.project_config.get_feature(
+  "TREE_MAP_SCREEN"
+) -%}
+{%- if tree_map_feature is not none -%}
+  <a
+    data-link="tree-map"
+    class="nav_button"
+    href="{{ view_object.render_url('tree_map.html') }}"
+    title="Tree map"
+    data-testid="project-tree-link-tree-map"
+  >
+    {% include tree_map_feature.screen_icon() %}
+  </a>
+{%- endif -%}
 </div>

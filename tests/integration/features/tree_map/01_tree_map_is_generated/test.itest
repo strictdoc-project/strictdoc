@@ -1,0 +1,28 @@
+#
+# The tree_map feature generates its screen and serialized tree map data.
+#
+# @relation(SDOC-SRS-157, scope=file)
+#
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s
+CHECK: Export completed.
+
+RUN: %check_exists --file "%T/html/tree_map.html"
+RUN: %check_exists --file "%T/html/_static/tree_map.css"
+RUN: %check_exists --file "%T/html/_static/tree_map.js"
+
+RUN: %cat "%T/html/tree_map.html" | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: tree_map.css
+CHECK-HTML: tree_map.js
+CHECK-HTML: data-testid="project-tree-link-tree-map"
+CHECK-HTML: <svg
+CHECK-HTML: data-testid="tree-map-selector"
+CHECK-HTML: <div class="main">
+CHECK-HTML: data-testid="tree-map-root"
+CHECK-HTML: <script id="tree-map-data" type="application/json">
+CHECK-HTML-SAME: {"tree_maps":[
+CHECK-HTML-SAME: "identifier":"document-tree"
+CHECK-HTML-SAME: "title":"Document tree map"
+CHECK-HTML-SAME: "label":"Test document","count":1
+CHECK-HTML-SAME: "title":"Requirements coverage with source"
+CHECK-HTML-SAME: "title":"Requirements coverage with test"

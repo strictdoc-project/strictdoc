@@ -77,13 +77,13 @@
   </a>
 {%- endif -%}
 
-{%- if view_object.project_config.is_activated_tree_map() -%}
+{%- if view_object.project_config.is_activated_tree_map_plotly() -%}
   <a
-    data-link="tree_map"
+    data-link="tree_map_plotly"
     class="nav_button"
-    href="{{ view_object.render_url('tree_map.html') }}"
-    title="Tree map"
-    data-testid="project-tree-link-tree-map"
+    href="{{ view_object.render_url('tree_map_plotly.html') }}"
+    title="Tree map Plotly"
+    data-testid="project-tree-link-tree-map-plotly"
   >
     M
   </a>

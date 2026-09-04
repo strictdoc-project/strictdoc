@@ -25,7 +25,9 @@ from tests.end2end.helpers.screens.source_coverage.screen_source_coverage import
 from tests.end2end.helpers.screens.traceability_matrix.screen_requirements_coverage import (
     Screen_RequirementsCoverage,
 )
-from tests.end2end.helpers.screens.tree_map.tree_map import Screen_TreeMap
+from tests.end2end.helpers.screens.tree_map_plotly.tree_map_plotly import (
+    Screen_TreeMapPlotly,
+)
 
 # Windows CI can be very slow when initializing the browser and loading
 # generated static assets, so this must be longer than the usual 10s.
@@ -238,13 +240,13 @@ class Screen_ProjectIndex(Screen):  # pylint: disable=invalid-name
         )
         return Screen_Document(self.test_case)
 
-    def do_click_on_tree_map_screen_link(
+    def do_click_on_tree_map_plotly_screen_link(
         self,
-    ) -> Screen_TreeMap:
+    ) -> Screen_TreeMapPlotly:
         self.test_case.click_xpath(
-            '//a[@data-testid="project-tree-link-tree-map"]',
+            '//a[@data-testid="project-tree-link-tree-map-plotly"]',
         )
-        return Screen_TreeMap(self.test_case)
+        return Screen_TreeMapPlotly(self.test_case)
 
     #
     # Static HTML search.

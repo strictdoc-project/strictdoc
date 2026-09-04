@@ -1,5 +1,5 @@
 {% extends "base.jinja.html" %}
-{% set template_type = "Tree map" %}
+{% set template_type = "Tree map Plotly" %}
 
 {% block head_css %}
   {{ super() }}
@@ -22,7 +22,7 @@
   {{ view_object.project_config.project_title }} - {{ template_type }}
 {% endblock title %}
 
-{% block viewtype %}tree-map{% endblock viewtype %}
+{% block viewtype %}tree-map-plotly{% endblock viewtype %}
 
 {% block layout_nav %}
   {% include "_shared/nav.jinja.html" %}

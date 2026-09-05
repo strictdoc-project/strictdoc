@@ -107,6 +107,7 @@ class Test(E2ECase):
 
             screen_table.do_click_col_sort_btn_without_scrolling("Title")
             screen_table.wait_for_col_sort_state("Title", "asc")
+            screen_table.wait_for_next_repaint()
             screen_table.assert_col_sort_state("Title", "asc")
             screen_table.assert_cell_is_inline_editing(
                 active_node_mid,

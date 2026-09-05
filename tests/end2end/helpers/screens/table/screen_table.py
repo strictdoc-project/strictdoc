@@ -62,6 +62,24 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
             f"Column {col_name!r} sort state: expected {state!r}, got {actual!r}"
         )
 
+    def wait_for_next_repaint(self, timeout: float = 3) -> None:
+        # table_view_edit.js preserves the viewport position of the active
+        # cell/row or open add-node menu across a sorting/rows-filter change
+        # via afterNextRepaint(): a double requestAnimationFrame scheduled
+        # after data-sort (or row visibility) is already updated synchronously.
+        # A caller that only waits for that DOM attribute (e.g.
+        # wait_for_col_sort_state) or sleeps a fixed short duration can resolve
+        # before those two frames have painted, so reading a viewport position
+        # right after would race the restore. Call this first to line up with
+        # the same repaint boundary the app code waits for.
+        self.test_case.execute_async_script(
+            """
+            const done = arguments[arguments.length - 1];
+            requestAnimationFrame(() => requestAnimationFrame(done));
+            """,
+            timeout=timeout,
+        )
+
     def wait_for_col_sort_state(
         self, col_name: str, state, timeout: float = 5
     ) -> None:
@@ -432,7 +450,7 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
             add_node + f"//*[@data-testid='table-add-node-unblock-{blocker}']",
             by=By.XPATH,
         )
-        self.test_case.sleep(0.1)
+        self.wait_for_next_repaint()
 
     def do_close_add_node_menu_by_escape(self) -> None:
         self.test_case.send_keys("body", Keys.ESCAPE)
@@ -732,7 +750,7 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
         # the sdoc-autocompletable form into the cell div.
         self.test_case.click(self._cell_sel(node_mid, field_name))
         field_xpath = f"(//*[@data-testid='form-field-{field_name}'])"
-        self.test_case.wait_for_element(field_xpath, by=By.XPATH, timeout=3)
+        self.test_case.wait_for_element(field_xpath, by=By.XPATH, timeout=10)
         element = self.test_case.find_element(field_xpath, by=By.XPATH)
         hidden_input = element.find_element(
             By.XPATH, "following-sibling::input[@type='hidden']"
@@ -740,16 +758,26 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
         results_ul = hidden_input.find_element(
             By.XPATH, "following-sibling::ul[1]"
         )
-        self.test_case.type(field_xpath, field_value, by=By.XPATH)
-        WebDriverWait(self.test_case.driver, 3).until(
-            lambda _: results_ul.is_displayed()
+        # Don't click element to focus it: a real click event also fires the
+        # sdoc-autocompletable "click" listener, which starts its own
+        # show-all-options fetch racing the debounced fetch for field_value
+        # typed below — whichever response lands last wins, silently
+        # discarding an ArrowDown selection made against the other one.
+        # send_keys() focuses the field without dispatching that click.
+        element.send_keys(field_value)
+        WebDriverWait(self.test_case.driver, 6).until(
+            lambda _: results_ul.is_displayed(),
+            message=f"Autocomplete dropdown for {field_name!r} did not "
+            "become visible",
         )
         len_before = len(element.text.lower().strip())
         ActionChains(self.test_case.driver).send_keys(Keys.ARROW_DOWN).pause(
             0.1
         ).send_keys(Keys.RETURN).perform()
-        WebDriverWait(self.test_case.driver, 3).until(
-            lambda _: len(element.text.lower().strip()) > len_before
+        WebDriverWait(self.test_case.driver, 6).until(
+            lambda _: len(element.text.lower().strip()) > len_before,
+            message=f"Field {field_name!r} text did not update after "
+            "selecting an autocomplete option",
         )
 
     def do_cell_autocomplete_again(
@@ -765,15 +793,19 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
             By.XPATH, "following-sibling::ul[1]"
         )
         element.send_keys(f",{field_value}")
-        WebDriverWait(self.test_case.driver, 3).until(
-            lambda _: results_ul.is_displayed()
+        WebDriverWait(self.test_case.driver, 6).until(
+            lambda _: results_ul.is_displayed(),
+            message=f"Autocomplete dropdown for {field_name!r} did not "
+            "become visible",
         )
         len_before = len(element.text.lower().strip())
         ActionChains(self.test_case.driver).send_keys(Keys.ARROW_DOWN).pause(
             0.1
         ).send_keys(Keys.RETURN).perform()
-        WebDriverWait(self.test_case.driver, 3).until(
-            lambda _: len(element.text.lower().strip()) > len_before
+        WebDriverWait(self.test_case.driver, 6).until(
+            lambda _: len(element.text.lower().strip()) > len_before,
+            message=f"Field {field_name!r} text did not update after "
+            "selecting an autocomplete option",
         )
 
     def do_submit_cell_autocomplete(self) -> None:

@@ -5432,13 +5432,13 @@ Example:
 
 [[SECTION]]
 MID: 875c097b4da348938ed71de4b8e8e73b
-TITLE: Document tree map screen
+TITLE: Document tree map Plotly screen
 
 [TEXT]
 MID: 36067f1c73c545fea0b2408b32ee8a9a
 STATEMENT: >>>
-The Document Tree Map screen, or simply Tree Map, provides a visualization of
-the document tree and of requirements coverage by source files and tests.
+The Document Tree Map Plotly screen provides a Plotly visualization of the
+document tree and of requirements coverage by source files and tests.
 
 The feature can be activated as follows:
 
@@ -5451,7 +5451,7 @@ The feature can be activated as follows:
         config = ProjectConfig(
             project_title="My project",
             project_features=[
-                "TREE_MAP_SCREEN"
+                "TREE_MAP_PLOTLY_SCREEN"
             ],
         )
         return config

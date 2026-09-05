@@ -1,0 +1,7 @@
+[DOCUMENT]
+TITLE: Test document
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Test requirement
+STATEMENT: The system shall provide a requirement.

@@ -109,6 +109,7 @@ class ProjectFeature(str, Enum):
     REQIF = "REQIF"
     DIFF = "DIFF"
     PROJECT_STATISTICS_SCREEN = "PROJECT_STATISTICS_SCREEN"
+    TREE_MAP_PLOTLY_SCREEN = "TREE_MAP_PLOTLY_SCREEN"
     TREE_MAP_SCREEN = "TREE_MAP_SCREEN"
     TRACEABILITY_MATRIX_SCREEN = "TRACEABILITY_MATRIX_SCREEN"
     REQUIREMENT_TO_SOURCE_TRACEABILITY = "REQUIREMENT_TO_SOURCE_TRACEABILITY"
@@ -642,9 +643,16 @@ class ProjectConfig:
         from strictdoc.features.project_statistics.feature import (  # noqa: PLC0415
             ProjectStatisticsFeature,
         )
+        from strictdoc.features.tree_map.feature import (  # noqa: PLC0415
+            TreeMapFeature,
+        )
 
         return {
-            feature.HANDLE: feature for feature in [ProjectStatisticsFeature()]
+            feature.HANDLE: feature
+            for feature in [
+                ProjectStatisticsFeature(),
+                TreeMapFeature(),
+            ]
         }
 
     def get_features(self) -> List[Feature]:
@@ -1016,8 +1024,8 @@ class ProjectConfig:
             ProjectFeature.TRACEABILITY_MATRIX_SCREEN in self.project_features
         )
 
-    def is_activated_tree_map(self) -> bool:
-        return ProjectFeature.TREE_MAP_SCREEN in self.project_features
+    def is_activated_tree_map_plotly(self) -> bool:
+        return ProjectFeature.TREE_MAP_PLOTLY_SCREEN in self.project_features
 
     def is_activated_search(self) -> bool:
         return (

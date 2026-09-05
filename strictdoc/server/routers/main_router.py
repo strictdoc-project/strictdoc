@@ -412,10 +412,18 @@ def create_main_router(
             jinja_environment=env(),
             git_client=html_generator.git_client,
         )
+        # The modal can open from screens at different directory depths.
+        goto_href = (
+            "/"
+            + requirement_document.meta.get_html_link(DocumentType.DOCUMENT, 0)
+            + "#"
+            + link_renderer.render_local_anchor(node)
+        )
         output = env().render_template_as_markup(
             "actions/node/show_full_node/stream_show_full_node.jinja",
             view_object=view_object,
             requirement=node,
+            goto_href=goto_href,
         )
         return HTMLResponse(
             content=output,
@@ -5033,13 +5041,16 @@ def create_main_router(
                     html_generator.export_requirements_coverage_screen(
                         traceability_index=export_action.traceability_index,
                     )
-                elif document_relative_path.relative_path == "tree_map.html":
-                    if not project_config.is_activated_tree_map():
+                elif (
+                    document_relative_path.relative_path
+                    == "tree_map_plotly.html"
+                ):
+                    if not project_config.is_activated_tree_map_plotly():
                         return Response(
-                            content="The Tree Map feature is not activated in the project config.",
+                            content="The Tree Map Plotly feature is not activated in the project config.",
                             status_code=HTTP_STATUS_PRECONDITION_FAILED,
                         )
-                    html_generator.export_tree_map_screen(
+                    html_generator.export_tree_map_plotly_screen(
                         traceability_index=export_action.traceability_index,
                     )
                 elif (

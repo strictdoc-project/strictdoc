@@ -49,7 +49,9 @@ from strictdoc.features.trace.generator import (
 from strictdoc.features.traceability_matrix.generator import (
     TraceabilityMatrixHTMLGenerator,
 )
-from strictdoc.features.tree_map.generator import TreeMapGenerator
+from strictdoc.features.tree_map_plotly.generator import (
+    TreeMapPlotlyGenerator,
+)
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.file_system import sync_dir
@@ -222,8 +224,8 @@ class HTMLGenerator:
         # Export JavaScript map of the document tree (project map)
         self.export_project_map(traceability_index=traceability_index)
 
-        if self.project_config.is_activated_tree_map():
-            self.export_tree_map_screen(traceability_index)
+        if self.project_config.is_activated_tree_map_plotly():
+            self.export_tree_map_plotly_screen(traceability_index)
 
         # Project statistics is exported by the ExportAction class via the
         # Feature abstraction (see the ProjectStatisticsFeature class), not
@@ -864,11 +866,11 @@ class HTMLGenerator:
             output_html_source_coverage
         )
 
-    def export_tree_map_screen(
+    def export_tree_map_plotly_screen(
         self,
         traceability_index: TraceabilityIndex,
     ) -> None:
-        TreeMapGenerator.export(
+        TreeMapPlotlyGenerator.export(
             project_config=self.project_config,
             traceability_index=traceability_index,
             html_templates=self.html_templates,

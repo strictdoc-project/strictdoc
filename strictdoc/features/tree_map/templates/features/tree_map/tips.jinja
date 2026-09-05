@@ -1,0 +1,64 @@
+<turbo-frame
+  data-js-modal
+  data-testid="tree-map-tips-modal"
+>
+  <sdoc-backdrop>
+    <sdoc-modal>
+      <sdoc-modal-container data-testid="tree-map-tips-content">
+        <h3>Tree map tips</h3>
+
+        <p>
+          Use the selector in the page header to switch maps.
+        </p>
+        <p>
+          Hold <kbd>Shift</kbd> while pointing at a tile to see its title, MID, and UID.
+        </p>
+        <p>
+          <kbd>Shift</kbd>+<kbd>Click</kbd> opens a node preview. For a document tile, it opens the document in a new tab.
+        </p>
+        <p>
+          <kbd>Shift</kbd>+<kbd>Alt</kbd>+<kbd>Click</kbd> opens the corresponding Document view in a new tab.
+        </p>
+        <p>Move the pointer over the tree map area to use these shortcuts:</p>
+        <ul class="tree-map-tips__shortcuts">
+          <li>
+            <kbd class="tree-map-tips__key">{% include "icons/ico16_backspace.svg" %}</kbd>
+            "Backspace" returns to the previous view recorded in the breadcrumb.
+          </li>
+          <li>
+            <kbd class="tree-map-tips__key">⏶</kbd>
+            open the parent folder.
+          </li>
+          <li>
+            <kbd class="tree-map-tips__key">⏴</kbd>
+            <kbd class="tree-map-tips__key">⏵</kbd>
+            move between neighboring items.
+          </li>
+        </ul>
+
+        <p>When a control or folder has keyboard focus:</p>
+        <ul class="tree-map-tips__shortcuts">
+          <li>
+            <kbd class="tree-map-tips__key tree-map-tips__key--text">Enter</kbd>
+            or
+            <kbd class="tree-map-tips__key tree-map-tips__key--text">Space</kbd>
+            activates it.
+          </li>
+          <li>
+            <kbd class="tree-map-tips__key tree-map-tips__key--text">Tab</kbd>
+            moves to the next control.
+          </li>
+          <li>
+            <kbd class="tree-map-tips__key tree-map-tips__key--text">Shift</kbd>
+            +
+            <kbd class="tree-map-tips__key tree-map-tips__key--text">Tab</kbd>
+            moves to the previous one.
+          </li>
+        </ul>
+      </sdoc-modal-container>
+      {%- with cancel_name="Close" -%}
+        {% include "components/button/cancel.jinja" %}
+      {%- endwith -%}
+    </sdoc-modal>
+  </sdoc-backdrop>
+</turbo-frame>

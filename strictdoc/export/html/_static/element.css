@@ -718,7 +718,8 @@ sdoc-node[show-anchors] sdoc-anchor:hover .anchor_back_links_number {
 [data-viewtype="diff"] [data-link="diff"],
 [data-viewtype="requirements-coverage"] [data-link="requirements_coverage"],
 [data-viewtype="traceability-matrix"] [data-link="traceability-matrix"],
-[data-viewtype="coverage-tree"] [data-link="source_coverage"] {
+[data-viewtype="coverage-tree"] [data-link="source_coverage"],
+[data-viewtype="tree-map"] [data-link="tree-map"] {
   color: var(--color-bg-contrast);
   border-color: var(--color-bg-contrast);
   cursor: default;
@@ -891,6 +892,7 @@ svg.svg_icon {
   /* Reset the values specified for 'sdoc-autogen svg': */
   max-width: unset;
   padding: unset;
+  vertical-align: middle;
 }
 
 .svg_icon_hover_visible {
@@ -1615,6 +1617,21 @@ a.sdoc-table_key_value-key::after {
   font-size: var(--font-size-xxsm);
   font-weight: 600;
   text-transform: uppercase;
+}
+
+kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  padding: calc(var(--base-rhythm)/2);
+  border: 1px solid;
+  border-radius: calc(var(--base-rhythm)/2);
+  font-size: var(--font-size-xxsm);
+  line-height: 1;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-family: monospace;
 }
 
 .error {

@@ -1670,6 +1670,28 @@
         rootRecord.headerElement,
         rootRecord.actionsElement,
       );
+      syncPointedNodeToLastPointerEvent();
+    }
+
+    function syncPointedNodeToLastPointerEvent() {
+      // Rebuilding the canvas detaches whatever node was under the pointer.
+      // A click that navigates does not re-fire pointermove, so resolve the
+      // node at the last known pointer position against the new DOM instead
+      // of leaving stale references to the removed element.
+      if (lastPointerEvent === null) {
+        return;
+      }
+      const elementAtPoint = document.elementFromPoint(
+        lastPointerEvent.clientX,
+        lastPointerEvent.clientY,
+      );
+      pointedNodeElement =
+        elementAtPoint instanceof Element
+          ? elementAtPoint.closest(`.${CSS_CLASSES.node}`)
+          : null;
+      if (pointedNodeElement === null) {
+        infoPanelElement.hidden = true;
+      }
     }
 
     document.addEventListener("keydown", (event) => {

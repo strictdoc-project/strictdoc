@@ -60,14 +60,6 @@
     <template id="tree-map-tips-modal-template">
       {% include "features/tree_map/tips.jinja" %}
     </template>
-    <script>
-      document.addEventListener("DOMContentLoaded", function() {
-        document.querySelector('[data-testid="tree-map-tips-button"]').addEventListener("click", function() {
-          var template = document.getElementById("tree-map-tips-modal-template");
-          document.getElementById("modal").innerHTML = template.innerHTML;
-        });
-      });
-    </script>
     <script id="tree-map-data" type="application/json">
       {{- view_object.tree_map_json -}}
     </script>

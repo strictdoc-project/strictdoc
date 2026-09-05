@@ -43,6 +43,24 @@ class Test(E2ECase):
             back_action = '[data-testid="tree-map-back"]'
             ancestor = '[data-testid="tree-map-ancestor"]'
 
+            # Selecting another map replaces its description block together
+            # with the canvas. The test does not depend on the displayed text.
+            self.assert_element(
+                '[data-testid="tree-map-description-document-tree"]'
+            )
+            self.click('[data-testid="tree-map-selector-handler"]')
+            self.click(
+                '[data-testid="tree-map-selector-option-requirements-source"]'
+            )
+            self.assert_element(
+                '[data-testid="tree-map-description-requirements-source"]'
+            )
+            self.assert_element_absent(
+                '[data-testid="tree-map-description-document-tree"]'
+            )
+            self.click('[data-testid="tree-map-selector-handler"]')
+            self.click('[data-testid="tree-map-selector-option-document-tree"]')
+
             # The project root has no siblings. Enabling folder previews reveals
             # nested nodes and records the selected map and setting in the URL.
             assert (

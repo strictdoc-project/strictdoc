@@ -41,6 +41,8 @@
     back: "tree-map__back",
     canvas: "tree-map__canvas",
     children: "tree-map__children",
+    description: "tree-map__description",
+    descriptionText: "tree-map__description-text",
     siblingCurrent: "tree-map__sibling-current",
     siblingLabel: "tree-map__sibling-label",
     siblingLabelNext: "tree-map__sibling-label--next",
@@ -60,6 +62,9 @@
     labelRoot: "tree-map__label--root",
     labelText: "tree-map__label-text",
     labelCurrentLevel: "tree-map__label--current-level",
+    legend: "tree-map__legend",
+    legendItem: "tree-map__legend-item",
+    legendSwatch: "tree-map__legend-swatch",
     historyBreadcrumb: "tree-map__history-breadcrumb",
     historyBreadcrumbEllipsis:
       "tree-map__history-breadcrumb-ellipsis",
@@ -166,6 +171,34 @@
     } else {
       delete labelElement.dataset.count;
     }
+  }
+
+  function createMapDescription(treeMap) {
+    const descriptionElement = document.createElement("div");
+    descriptionElement.className = CSS_CLASSES.description;
+    descriptionElement.dataset.testid =
+      `tree-map-description-${treeMap.identifier}`;
+
+    const descriptionTextElement = document.createElement("p");
+    descriptionTextElement.className = CSS_CLASSES.descriptionText;
+    descriptionTextElement.textContent = treeMap.description;
+    descriptionElement.append(descriptionTextElement);
+
+    if (treeMap.legend.length > 0) {
+      const legendElement = document.createElement("ul");
+      legendElement.className = CSS_CLASSES.legend;
+      for (const legendItem of treeMap.legend) {
+        const itemElement = document.createElement("li");
+        itemElement.className = CSS_CLASSES.legendItem;
+        const swatchElement = document.createElement("span");
+        swatchElement.className = CSS_CLASSES.legendSwatch;
+        swatchElement.style.backgroundColor = legendItem.color;
+        itemElement.append(swatchElement, legendItem.text);
+        legendElement.append(itemElement);
+      }
+      descriptionElement.append(legendElement);
+    }
+    return descriptionElement;
   }
 
   function createTemplateIcon(templateId) {
@@ -1263,6 +1296,7 @@
       nextSiblingButton,
     );
     sectionElement.append(toolbarElement);
+    sectionElement.append(createMapDescription(treeMap));
 
     // ***
 

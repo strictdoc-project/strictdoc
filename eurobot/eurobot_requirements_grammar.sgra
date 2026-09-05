@@ -24,7 +24,7 @@ ELEMENTS:
     TYPE: String
     REQUIRED: False
   - TITLE: TARGET_REVISION
-    TYPE: SingleChoice(C1, C2)
+    TYPE: SingleChoice(C1.1, C1.2, C1.3, C1.4, C1.5, C1.6, C1.7)
     REQUIRED: True
   - TITLE: STATEMENT
     TYPE: String

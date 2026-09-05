@@ -1,0 +1,12 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[GRAMMAR]
+IMPORT_FROM_FILE: grammar.sgra
+
+[REQUIREMENT]
+TITLE: Requirement title
+STATEMENT: >>>
+Requirement statement.
+<<<
+CUSTOM_FIELD: C1

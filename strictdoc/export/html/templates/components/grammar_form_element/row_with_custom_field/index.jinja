@@ -29,9 +29,10 @@
 
 {%- set _name_errors = form_object.get_errors(form_object.field.get_input_field_name()) %}
 {%- set _human_name_errors = form_object.get_errors(form_object.field.get_input_field_human_title()) %}
+{%- set _options_errors = form_object.get_errors(form_object.field.get_input_field_options()) %}
 <sdoc-form-field-group
   data-field-label="Custom field"
-  {% if _name_errors|length or _human_name_errors|length -%}
+  {% if _name_errors|length or _human_name_errors|length or _options_errors|length -%}
     errors="true"
   {%- endif -%}
 >
@@ -60,6 +61,51 @@
   %}
     {%- include "components/form/field/contenteditable/index.jinja" %}
   {%- endwith -%}
+
+  <sdoc-form-field field-type="select">
+    <label for="field_type_{{ form_object.field.field_mid }}">Field type</label>
+      <select
+        class="sdoc-form-select"
+        name="{{ form_object.field.get_input_field_type() }}"
+        id="field_type_{{ form_object.field.field_mid }}"
+        mid="{{ form_object.field.field_mid }}"
+        data-testid="select-field-type"
+      >
+        <option
+          value="String"
+          {{ "selected" if form_object.field.field_type == "String" else "" }}
+        >String</option>
+        <option
+          value="SingleChoice"
+          {{ "selected" if form_object.field.field_type == "SingleChoice" else "" }}
+        >SingleChoice</option>
+        <option
+          value="MultipleChoice"
+          {{ "selected" if form_object.field.field_type == "MultipleChoice" else "" }}
+        >MultipleChoice</option>
+        <option
+          value="Tag"
+          {{ "selected" if form_object.field.field_type == "Tag" else "" }}
+        >Tag</option>
+      </select>
+  </sdoc-form-field>
+
+  {%- with
+    field_class_name = "monospace",
+    field_editable = true,
+    field_required = false,
+    field_input_name = form_object.field.get_input_field_options(),
+    field_label = "Options (comma-separated, e.g. C1, C2)",
+    field_placeholder = "Enter comma-separated options here...",
+    field_type = "singleline",
+    field_value = form_object.field.get_input_field_options_value(),
+    mid = form_object.field.field_mid,
+    testid_postfix = "custom_field_options",
+    errors = _options_errors
+  %}
+    {%- include "components/form/field/contenteditable/index.jinja" %}
+  {%- endwith -%}
+
   {%- set human_title_value = form_object.field.field_human_title if form_object.field.field_human_title else "" -%}
   {%- with
     field_class_name = "monospace",

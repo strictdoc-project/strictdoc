@@ -15,12 +15,16 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElement,
     GrammarElementField,
+    GrammarElementFieldMultipleChoice,
+    GrammarElementFieldSingleChoice,
     GrammarElementFieldString,
+    GrammarElementFieldTag,
     GrammarElementFieldType,
     GrammarElementRelationChild,
     GrammarElementRelationFile,
     GrammarElementRelationParent,
     GrammarElementRelationType,
+    RequirementFieldType,
 )
 from strictdoc.backend.sdoc.models.model import RequirementFieldName
 from strictdoc.core.project_config import ProjectConfig
@@ -49,6 +53,14 @@ def is_reserved_field(field_name: str) -> bool:
     )
 
 
+def _parse_options(field: "GrammarFormField") -> List[str]:
+    return [
+        option_.strip()
+        for option_ in field.field_options.split(",")
+        if option_.strip()
+    ]
+
+
 @auto_described
 class GrammarFormField:
     def __init__(
@@ -58,24 +70,35 @@ class GrammarFormField:
         field_human_title: Optional[str],
         field_required: bool,
         reserved: bool,
+        field_type: str = RequirementFieldType.STRING,
+        field_options: str = "",
     ):
         self.field_mid: str = field_mid
         self.field_name: str = field_name
         self.field_human_title: Optional[str] = field_human_title
         self.field_required: bool = field_required
         self.reserved: bool = reserved
+        self.field_type: str = field_type
+        self.field_options: str = field_options
 
     @staticmethod
     def create_from_grammar_field(
         *, grammar_field: GrammarElementField
     ) -> "GrammarFormField":
         reserved = is_reserved_field(grammar_field.title)
+        field_options = ""
+        if isinstance(grammar_field, GrammarElementFieldSingleChoice):
+            field_options = ", ".join(grammar_field.get_unprocessed_options())
+        elif isinstance(grammar_field, GrammarElementFieldMultipleChoice):
+            field_options = ", ".join(grammar_field.options)
         return GrammarFormField(
             field_mid=grammar_field.mid,
             field_name=grammar_field.title,
             field_human_title=grammar_field.human_title,
             field_required=grammar_field.required,
             reserved=reserved,
+            field_type=grammar_field.gef_type,
+            field_options=field_options,
         )
 
     def get_input_field_name(self) -> str:
@@ -89,6 +112,21 @@ class GrammarFormField:
 
     def get_input_field_required_value(self) -> str:
         return "true" if self.field_required else "false"
+
+    def get_input_field_type(self) -> str:
+        return f"document_grammar_field[{self.field_mid}][field_type]"
+
+    def get_input_field_options(self) -> str:
+        return f"document_grammar_field[{self.field_mid}][field_options]"
+
+    def get_input_field_options_value(self) -> str:
+        return self.field_options
+
+    def is_choice_type(self) -> bool:
+        return self.field_type in (
+            RequirementFieldType.SINGLE_CHOICE,
+            RequirementFieldType.MULTIPLE_CHOICE,
+        )
 
 
 @auto_described
@@ -184,6 +222,10 @@ class GrammarElementFormObject(ErrorObject):
                     field_human_title = None
             field_required_string = field_dict.get("field_required")
             field_required = field_required_string == "true"
+            field_type = field_dict.get(
+                "field_type", RequirementFieldType.STRING
+            )
+            field_options = field_dict.get("field_options", "") or ""
 
             form_object_field = GrammarFormField(
                 field_mid=field_mid,
@@ -191,6 +233,8 @@ class GrammarElementFormObject(ErrorObject):
                 field_human_title=field_human_title,
                 field_required=field_required,
                 reserved=is_reserved_field(field_name),
+                field_type=field_type,
+                field_options=field_options,
             )
             form_object_fields.append(form_object_field)
 
@@ -309,6 +353,15 @@ class GrammarElementFormObject(ErrorObject):
             else:
                 fields_so_far.add(field.field_name)
 
+            if field.is_choice_type() and len(_parse_options(field)) == 0:
+                self.add_error(
+                    field.get_input_field_options(),
+                    (
+                        "A SingleChoice/MultipleChoice field must declare "
+                        "at least one option."
+                    ),
+                )
+
         if len(self.relations) == 0 and self.element_name not in (
             "TEXT",
             "SECTION",
@@ -366,12 +419,38 @@ class GrammarElementFormObject(ErrorObject):
     ) -> GrammarElement:
         grammar_fields: List[GrammarElementFieldType] = []
         for field in self.fields:
-            grammar_field = GrammarElementFieldString(
-                parent=None,
-                title=field.field_name,
-                human_title=field.field_human_title,
-                required="True" if field.field_required else "False",
-            )
+            grammar_field: GrammarElementFieldType
+            required = "True" if field.field_required else "False"
+            if field.field_type == RequirementFieldType.SINGLE_CHOICE:
+                grammar_field = GrammarElementFieldSingleChoice(
+                    parent=None,
+                    title=field.field_name,
+                    human_title=field.field_human_title,
+                    options=_parse_options(field),
+                    required=required,
+                )
+            elif field.field_type == RequirementFieldType.MULTIPLE_CHOICE:
+                grammar_field = GrammarElementFieldMultipleChoice(
+                    parent=None,
+                    title=field.field_name,
+                    human_title=field.field_human_title,
+                    options=_parse_options(field),
+                    required=required,
+                )
+            elif field.field_type == RequirementFieldType.TAG:
+                grammar_field = GrammarElementFieldTag(
+                    parent=None,
+                    title=field.field_name,
+                    human_title=field.field_human_title,
+                    required=required,
+                )
+            else:
+                grammar_field = GrammarElementFieldString(
+                    parent=None,
+                    title=field.field_name,
+                    human_title=field.field_human_title,
+                    required=required,
+                )
             grammar_fields.append(grammar_field)
         relation_fields: List[GrammarElementRelationType] = []
 

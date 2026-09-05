@@ -5,7 +5,6 @@
 import datetime
 import glob
 import os
-import posixpath
 import sys
 from typing import Any, Dict, Iterator, List, Optional, Set, Union
 
@@ -48,6 +47,9 @@ from strictdoc.core.file_system.source_files_finder import (
 )
 from strictdoc.core.file_system.source_tree import SourceFile, SourceTree
 from strictdoc.core.file_traceability_index import FileTraceabilityIndex
+from strictdoc.core.grammar_file_resolver import (
+    resolve_grammar_file_relative_path,
+)
 from strictdoc.core.graph.many_to_many_set import ManyToManySet
 from strictdoc.core.graph.one_to_one_dictionary import OneToOneDictionary
 from strictdoc.core.graph_database import GraphDatabase
@@ -419,14 +421,9 @@ class TraceabilityIndexBuilder:
             # First, resolve all grammars that are imported from grammar files.
             #
             if document.grammar.import_from_file is not None:
-                grammar_path = document.grammar.import_from_file
-                if grammar_path.startswith("@"):
-                    grammar_path = project_config.grammars[grammar_path]
-                else:
-                    grammar_path = posixpath.join(
-                        document.meta.input_doc_dir_rel_path.relative_path_posix,
-                        grammar_path,
-                    )
+                grammar_path = resolve_grammar_file_relative_path(
+                    document, project_config
+                )
                 document_grammar: Optional[DocumentGrammar] = (
                     document_tree.get_grammar_by_filename(grammar_path)
                 )

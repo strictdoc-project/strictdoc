@@ -56,7 +56,9 @@ class UpdateGrammarCommand:
                 )
 
         new_grammar = DocumentGrammar(
-            parent=document, elements=updated_grammar_elements
+            parent=document,
+            elements=updated_grammar_elements,
+            import_from_file=form_object.imported_grammar_file,
         )
         document.grammar = new_grammar
 

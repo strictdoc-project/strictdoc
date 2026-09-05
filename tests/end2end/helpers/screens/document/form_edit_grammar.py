@@ -99,6 +99,21 @@ class Form_EditGrammar(Form):  # pylint: disable=invalid-name
 
         self.test_case.select_option_by_value(xpath, relation_type)
 
+    def do_select_grammar_field_type(self, mid: MID, field_type: str) -> None:
+        assert isinstance(mid, MID)
+        assert isinstance(field_type, str)
+
+        xpath = f"(//*[@mid='{mid}' and @data-testid='select-field-type'])"
+
+        self.test_case.select_option_by_value(xpath, field_type)
+
+    def do_fill_in_grammar_field_options_mid(
+        self, mid: MID, field_value: str
+    ) -> None:
+        assert isinstance(mid, MID)
+        assert isinstance(field_value, str)
+        super().do_fill_in_mid(mid, "form-field-custom_field_options", field_value)
+
     def do_fill_in_grammar_relation_role(self, mid, field_value):
         assert isinstance(mid, MID)
         assert isinstance(field_value, str)

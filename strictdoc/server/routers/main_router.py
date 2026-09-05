@@ -73,6 +73,10 @@ from strictdoc.core.analyzers.requirement_integrity_analyzer import (
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.feature import Feature, FeatureContext
+from strictdoc.core.grammar_file_resolver import (
+    resolve_grammar_file_full_path,
+    resolve_grammar_file_relative_path,
+)
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.query_engine.query_object import Query, QueryObject
 from strictdoc.core.query_engine.query_reader import QueryReader
@@ -373,6 +377,42 @@ def create_main_router(
         RequirementIntegrityAnalyzer.analyze_document_tree(
             export_action.traceability_index
         )
+
+    def write_grammar_change_to_file(document: SDocDocument) -> None:
+        """
+        Persists a change made through the "Edit grammar" / "Edit Grammar
+        Element" screens specifically. A grammar's *structure* (elements,
+        fields, relations) lives wherever [GRAMMAR] says it does: inline in
+        the .sdoc, or in a separate .sgra file when IMPORT_FROM_FILE is set.
+        Node *content* (STATEMENT, TITLE, field values) always lives in the
+        .sdoc regardless, which is why every other save endpoint keeps
+        calling write_document_to_file() unconditionally — this function is
+        only for the two grammar-structure-editing endpoints.
+
+        Deliberately does not inhibit the .sgra file's watcher the way
+        write_document_to_file() inhibits the .sdoc it writes: more than one
+        document can import the same .sgra file (see
+        strictdoc/core/grammar_file_resolver.py's docstring context), and
+        the existing watcher's full-project rebuild is what correctly
+        refreshes all of them, not just this one. The tab that made this
+        edit will itself get one extra, harmless full-page refresh shortly
+        after this request's own immediate response, as a result.
+        """
+
+        assert document.grammar is not None
+        if document.grammar.import_from_file is not None:
+            grammar_file_path = resolve_grammar_file_full_path(
+                document, project_config
+            )
+            sdoc_writer.write_grammar_to_file(
+                document.grammar, grammar_file_path
+            )
+            export_action.traceability_index.validation_index.reset()
+            RequirementIntegrityAnalyzer.analyze_document_tree(
+                export_action.traceability_index
+            )
+        else:
+            write_document_to_file(document)
 
     def env() -> JinjaEnvironment:
         return html_templates.jinja_environment()
@@ -3982,6 +4022,15 @@ def create_main_router(
             project_config=project_config,
             jinja_environment=env(),
         )
+        # create_from_request() has no way to know this from the posted
+        # form (it's never user-editable) — the document already on hand is
+        # the authoritative source for it.
+        assert document.grammar is not None
+        form_object.imported_grammar_file = document.grammar.import_from_file
+        if document.grammar.import_from_file is not None:
+            form_object.resolved_grammar_file_path = (
+                resolve_grammar_file_relative_path(document, project_config)
+            )
         if not form_object.validate():
             return HTMLResponse(
                 content=form_object.render(),
@@ -3998,8 +4047,9 @@ def create_main_router(
         )
         update_grammar_action.perform()
 
-        # Re-generate the document's SDOC.
-        write_document_to_file(document)
+        # Re-generate the document's SDOC, or the imported .sgra file if
+        # that's where this grammar's elements actually live.
+        write_grammar_change_to_file(document)
 
         # Re-generate the document.
         html_generator.export_single_document(
@@ -4143,8 +4193,9 @@ def create_main_router(
         )
         update_grammar_action.perform()
 
-        # Re-generate the document's SDOC.
-        write_document_to_file(document)
+        # Re-generate the document's SDOC, or the imported .sgra file if
+        # that's where this element's fields actually live.
+        write_grammar_change_to_file(document)
 
         # Re-generate the document.
         html_generator.export_single_document(

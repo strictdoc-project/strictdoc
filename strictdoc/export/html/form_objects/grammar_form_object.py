@@ -12,6 +12,9 @@ from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
 )
 from strictdoc.backend.sdoc.models.grammar_element import GrammarElement
+from strictdoc.core.grammar_file_resolver import (
+    resolve_grammar_file_relative_path,
+)
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.export.html.form_objects.rows.row_with_grammar_element_form_object import (
     RowWithGrammarElementFormObject,
@@ -77,6 +80,7 @@ class GrammarFormObject(ErrorObject):
         project_config: ProjectConfig,
         jinja_environment: JinjaEnvironment,
         imported_grammar_file: Optional[str],
+        resolved_grammar_file_path: Optional[str] = None,
     ):
         assert isinstance(document_mid, str), document_mid
         super().__init__()
@@ -85,6 +89,17 @@ class GrammarFormObject(ErrorObject):
         self.project_config: ProjectConfig = project_config
         self.jinja_environment: JinjaEnvironment = jinja_environment
         self.imported_grammar_file: Optional[str] = imported_grammar_file
+        # The literal IMPORT_FROM_FILE value (an alias like "@my_grammar" or
+        # a bare filename) isn't necessarily the actual file name a reader
+        # recognizes — resolved_grammar_file_path is, for display purposes
+        # (e.g. "eurobot_requirements_grammar.sgra" for an
+        # "@eurobot_requirements" alias). Falls back to
+        # imported_grammar_file itself if unset.
+        self.resolved_grammar_file_path: Optional[str] = (
+            resolved_grammar_file_path
+            if resolved_grammar_file_path is not None
+            else imported_grammar_file
+        )
 
     @staticmethod
     def create_from_request(
@@ -157,12 +172,19 @@ class GrammarFormObject(ErrorObject):
             )
             grammar_element_form_fields.append(grammar_form_field)
 
+        resolved_grammar_file_path: Optional[str] = None
+        if grammar.import_from_file is not None:
+            resolved_grammar_file_path = resolve_grammar_file_relative_path(
+                document, project_config
+            )
+
         return GrammarFormObject(
             document_mid=document.reserved_mid,
             fields=grammar_element_form_fields,
             project_config=project_config,
             jinja_environment=jinja_environment,
             imported_grammar_file=grammar.import_from_file,
+            resolved_grammar_file_path=resolved_grammar_file_path,
         )
 
     def validate(self) -> bool:

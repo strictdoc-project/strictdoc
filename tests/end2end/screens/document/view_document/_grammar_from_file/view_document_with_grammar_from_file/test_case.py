@@ -36,7 +36,10 @@ class Test(E2ECase):
 
             screen_document.assert_text("abcdef123456")
 
+            # Grammars imported via IMPORT_FROM_FILE are now editable, same
+            # as inline ones — the placeholder that used to block this
+            # screen is gone.
             form_edit_grammar: Form_EditGrammarElements = (
                 screen_document.do_open_modal_form_edit_grammar()
             )
-            form_edit_grammar.assert_file_grammars_are_not_supported()
+            form_edit_grammar.assert_on_grammar()

@@ -6,7 +6,6 @@ Edit document grammar
 {% endblock modal_form__header %}
 
 {% block modal_form__content %}
-{% if form_object.imported_grammar_file is none %}
   <form
     id="{{ form }}"  {# defined in the parent template #}
     method="POST"
@@ -14,6 +13,16 @@ Edit document grammar
     action="/actions/document/save_grammar"
     >
     <input type="hidden" id="document_mid" name="document_mid" value="{{ form_object.document_mid }}"/>
+
+    {% if form_object.imported_grammar_file is not none %}
+      <div
+        data-testid="grammar-from-file-notice"
+        style="margin-bottom: 1rem; padding: 0.5rem 0.75rem; border: 1px solid var(--color-border, #ccc); border-radius: 4px; font-size: 0.9em;"
+      >
+        This grammar is imported from <code>{{ form_object.resolved_grammar_file_path }}</code>.
+        Saving here writes directly to that file, not to this document.
+      </div>
+    {% endif %}
 
     <sdoc-form-grid>
       <div style="display: contents;" id="document__editable_grammar_elements">
@@ -36,17 +45,4 @@ Edit document grammar
     </sdoc-form-footer>
 
   </form>
-{% else %}
-
-  <sdoc-main-placeholder data-testid="grammar-from-file-editing-blocker-placeholder">
-    <div style="max-width: 300px;">
-      This document uses a&nbsp;grammar which is&nbsp;imported from a&nbsp;separate grammar file:
-      <code>{{ form_object.imported_grammar_file }}</code>.
-      <br/><br/>
-      Editing imported grammar files is&nbsp;not implemented yet.
-    </div>
-  </sdoc-main-placeholder>
-
-{% endif %}
 {% endblock modal_form__content %}
-

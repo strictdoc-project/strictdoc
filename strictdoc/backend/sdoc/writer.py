@@ -243,59 +243,7 @@ class SDWriter:
                     f"IMPORT_FROM_FILE: {document_grammar.import_from_file}\n"
                 )
             else:
-                output += "ELEMENTS:\n"
-                for element in document_grammar.elements:
-                    output += "- TAG: "
-                    output += element.tag
-                    output += "\n"
-
-                    if (
-                        element.property_is_composite is not None
-                        or element.property_prefix is not None
-                        or element.property_view_style is not None
-                    ):
-                        output += "  PROPERTIES:\n"
-                        if element.property_is_composite is not None:
-                            output += "    IS_COMPOSITE: "
-                            output += (
-                                "True"
-                                if element.property_is_composite
-                                else "False"
-                            )
-                            output += "\n"
-                        if element.property_prefix is not None:
-                            output += "    PREFIX: "
-                            output += element.property_prefix
-                            output += "\n"
-                        if element.property_view_style is not None:
-                            output += "    VIEW_STYLE: "
-                            output += element.property_view_style
-                            output += "\n"
-
-                    output += "  FIELDS:\n"
-                    for grammar_field in element.fields:
-                        output += SDWriter._print_grammar_field_type(
-                            grammar_field
-                        )
-
-                    relations: List[GrammarElementRelationType] = (
-                        element.relations
-                    )
-
-                    if len(relations) > 0:
-                        output += "  RELATIONS:\n"
-
-                        for element_relation in relations:
-                            output += (
-                                f"  - TYPE: {element_relation.relation_type}\n"
-                            )
-                            if element_relation.relation_role is not None:
-                                output += f"    ROLE: {element_relation.relation_role}\n"
-                            if (
-                                element_relation.reverse_relation_role
-                                is not None
-                            ):
-                                output += f"    REVERSE_ROLE: {element_relation.reverse_relation_role}\n"
+                output += SDWriter.write_grammar_elements(document_grammar)
 
         output += "\n"
 
@@ -467,6 +415,86 @@ class SDWriter:
         output += SDWriter._print_requirement_relations(section_content)
 
         return output
+
+    @staticmethod
+    def write_grammar_elements(document_grammar: DocumentGrammar) -> str:
+        """
+        Serializes a grammar's ELEMENTS: list (TAG/PROPERTIES/FIELDS/
+        RELATIONS per element), the same text this produces inline for a
+        document's own [GRAMMAR] block. Shared with write_grammar_file_content()
+        below, which is what a standalone .sgra file (an IMPORT_FROM_FILE
+        target) needs.
+        """
+
+        output = "ELEMENTS:\n"
+        for element in document_grammar.elements:
+            output += "- TAG: "
+            output += element.tag
+            output += "\n"
+
+            if (
+                element.property_is_composite is not None
+                or element.property_prefix is not None
+                or element.property_view_style is not None
+            ):
+                output += "  PROPERTIES:\n"
+                if element.property_is_composite is not None:
+                    output += "    IS_COMPOSITE: "
+                    output += (
+                        "True" if element.property_is_composite else "False"
+                    )
+                    output += "\n"
+                if element.property_prefix is not None:
+                    output += "    PREFIX: "
+                    output += element.property_prefix
+                    output += "\n"
+                if element.property_view_style is not None:
+                    output += "    VIEW_STYLE: "
+                    output += element.property_view_style
+                    output += "\n"
+
+            output += "  FIELDS:\n"
+            for grammar_field in element.fields:
+                output += SDWriter._print_grammar_field_type(grammar_field)
+
+            relations: List[GrammarElementRelationType] = element.relations
+
+            if len(relations) > 0:
+                output += "  RELATIONS:\n"
+
+                for element_relation in relations:
+                    output += f"  - TYPE: {element_relation.relation_type}\n"
+                    if element_relation.relation_role is not None:
+                        output += (
+                            f"    ROLE: {element_relation.relation_role}\n"
+                        )
+                    if element_relation.reverse_relation_role is not None:
+                        output += (
+                            "    REVERSE_ROLE: "
+                            f"{element_relation.reverse_relation_role}\n"
+                        )
+        return output
+
+    @staticmethod
+    def write_grammar_file_content(document_grammar: DocumentGrammar) -> str:
+        """
+        The full content of a standalone .sgra file: just a [GRAMMAR] block
+        with an ELEMENTS: list, no [DOCUMENT] header or anything else — this
+        is the shape every .sgra file in this repo already has.
+        """
+
+        return "[GRAMMAR]\n" + SDWriter.write_grammar_elements(
+            document_grammar
+        )
+
+    def write_grammar_to_file(
+        self, document_grammar: DocumentGrammar, file_path: str
+    ) -> None:
+        content = SDWriter.write_grammar_file_content(document_grammar)
+
+        Path(os.path.dirname(file_path)).mkdir(parents=True, exist_ok=True)
+        with open(file_path, "w", encoding="utf8") as output_file:
+            output_file.write(content)
 
     @staticmethod
     def _print_grammar_field_type(

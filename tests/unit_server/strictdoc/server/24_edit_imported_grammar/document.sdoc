@@ -1,0 +1,13 @@
+[DOCUMENT]
+TITLE: Sample document
+OPTIONS:
+  ENABLE_MID: True
+
+[GRAMMAR]
+IMPORT_FROM_FILE: grammar.sgra
+
+[REQUIREMENT]
+MID: req-1-mid
+UID: REQ-1
+STATEMENT: Statement one.
+TARGET_REVISION: C1

@@ -1,0 +1,18 @@
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TARGET_REVISION
+    TYPE: SingleChoice(C1, C2)
+    REQUIRED: True
+  RELATIONS:
+  - TYPE: Parent

@@ -105,8 +105,6 @@
     previewIconTemplate: "tree-map-preview-icon",
     selectorLabel: "tree-map-selector-label",
     selectorMenu: "tree-map-selector-menu",
-    tipsButton: "tree-map-tips-button",
-    tipsModalTemplate: "tree-map-tips-modal-template",
   });
   const nodeWeights = new WeakMap();
   const nodeParents = new WeakMap();
@@ -1954,25 +1952,6 @@
     );
   }
 
-  function initializeTipsModal() {
-    // The page header owns one help button and one inert template. Copying the
-    // template into StrictDoc's modal outlet follows the table-screen pattern.
-    const buttonElement = document.getElementById(DOM_IDS.tipsButton);
-    const modalElement = document.getElementById(DOM_IDS.modal);
-    const templateElement = document.getElementById(DOM_IDS.tipsModalTemplate);
-    if (
-      buttonElement === null ||
-      modalElement === null ||
-      !(templateElement instanceof HTMLTemplateElement)
-    ) {
-      return;
-    }
-    buttonElement.addEventListener("click", () => {
-      modalElement.replaceChildren(templateElement.content.cloneNode(true));
-    });
-  }
-
-  initializeTipsModal();
   initializeModifierClickGuard();
   renderTreeMaps();
 })();

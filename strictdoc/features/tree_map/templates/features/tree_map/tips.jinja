@@ -1,7 +1,6 @@
-<turbo-frame data-js-modal>
-  <sdoc-backdrop>
-    <sdoc-modal>
-      <sdoc-modal-container data-testid="tree-map-tips-content">
+{% extends "components/modal/index.jinja" %}
+{%- block modal_container %}
+      <div data-testid="tree-map-tips-content">
         <h3>Tree map tips</h3>
 
         <p>
@@ -52,10 +51,5 @@
             moves to the previous one.
           </li>
         </ul>
-      </sdoc-modal-container>
-      {%- with cancel_name="Close" -%}
-        {% include "components/button/cancel.jinja" %}
-      {%- endwith -%}
-    </sdoc-modal>
-  </sdoc-backdrop>
-</turbo-frame>
+      </div>
+{%- endblock modal_container %}

@@ -9,6 +9,7 @@ from strictdoc.features.tree_map.models import (
 
 def test_tree_map_data_serializes_nested_nodes_to_json() -> None:
     requirement_node = TreeMapNode(
+        identifier="MID-1",
         label="Requirement one: ä",
         count=42,
         weight=1,
@@ -21,6 +22,7 @@ def test_tree_map_data_serializes_nested_nodes_to_json() -> None:
         preview_url="/actions/show_full_node?reference_mid=MID-1",
     )
     root_node = TreeMapNode(
+        identifier="project",
         label="Project",
         count=None,
         weight=1,
@@ -45,6 +47,7 @@ def test_tree_map_data_serializes_nested_nodes_to_json() -> None:
                 "identifier": "document-tree",
                 "title": "Document tree map",
                 "root": {
+                    "identifier": "project",
                     "label": "Project",
                     "count": None,
                     "weight": 1,
@@ -56,6 +59,7 @@ def test_tree_map_data_serializes_nested_nodes_to_json() -> None:
                     "preview_url": None,
                     "children": [
                         {
+                            "identifier": "MID-1",
                             "label": "Requirement one: ä",
                             "count": 42,
                             "weight": 1,

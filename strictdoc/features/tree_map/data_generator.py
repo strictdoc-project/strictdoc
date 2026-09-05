@@ -21,6 +21,8 @@ from strictdoc.features.tree_map.models import (
     TreeMapNode,
 )
 
+PROJECT_ROOT_IDENTIFIER = "project-root"
+
 
 def _get_coverage_color(ratio: float) -> str:
     assert 0 <= ratio <= 1
@@ -105,7 +107,7 @@ class TreeMapDataGenerator:
         tree_maps = tuple(
             TreeMapDataGenerator._build_tree_map(
                 source_nodes=source_nodes,
-                root_identifier=project_config.project_title,
+                root_identifier=PROJECT_ROOT_IDENTIFIER,
                 definition=definition_,
             )
             for definition_ in definitions
@@ -222,7 +224,7 @@ class TreeMapDataGenerator:
 
         source_nodes: List[_SourceNode] = [
             _SourceNode(
-                identifier=project_config.project_title,
+                identifier=PROJECT_ROOT_IDENTIFIER,
                 parent_identifier="",
                 weight=0,
                 label=project_config.project_title,
@@ -263,7 +265,7 @@ class TreeMapDataGenerator:
             source_nodes.append(
                 _SourceNode(
                     identifier=document_.reserved_mid,
-                    parent_identifier=project_config.project_title,
+                    parent_identifier=PROJECT_ROOT_IDENTIFIER,
                     weight=document_total_size,
                     label=document_title,
                     count=document_total_size,
@@ -382,6 +384,7 @@ class TreeMapDataGenerator:
 
         def build_node(source_node_: _SourceNode) -> TreeMapNode:
             return TreeMapNode(
+                identifier=str(source_node_.identifier),
                 label=definition.get_label(source_node_),
                 count=definition.get_count(source_node_),
                 weight=source_node_.weight,

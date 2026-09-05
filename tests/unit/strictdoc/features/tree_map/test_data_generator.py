@@ -45,10 +45,12 @@ def test_generates_the_three_default_tree_maps() -> None:
     )
 
     document_tree_map = tree_map_data.tree_maps[0]
+    assert document_tree_map.root.identifier == "project-root"
     assert document_tree_map.root.label == "Untitled Project"
     assert document_tree_map.root.color is None
     assert len(document_tree_map.root.children) == 1
     document_node = document_tree_map.root.children[0]
+    assert document_node.identifier == str(document.reserved_mid)
     assert document_node.label == "Test Document"
     assert document_node.count == 2
     assert document_node.color is None
@@ -64,6 +66,9 @@ def test_generates_the_three_default_tree_maps() -> None:
     assert tuple(node_.uid for node_ in document_node.children) == (
         "REQ-001",
         "REQ-002",
+    )
+    assert all(
+        node_.identifier == node_.mid for node_ in document_node.children
     )
     assert all(
         node_.document_url is not None for node_ in document_node.children

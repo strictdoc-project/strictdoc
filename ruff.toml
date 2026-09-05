@@ -131,6 +131,9 @@ ignore = [
     # Too many statements
     "PLR0915",
 
+    # Too many positional arguments
+    "PLR0917",
+
     # FIXME: Enable: Use `sys.exit()` instead of `exit`
     "PLR1722",
 

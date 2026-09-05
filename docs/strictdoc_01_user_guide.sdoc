@@ -2759,9 +2759,46 @@ This is the example of how images are included using the reST syntax:
 
 .. note::
 
-    Currently, it is not possible to upload images via the web user interface.
-    Therefore, you must manually place the image into the ``_assets`` folder using either the command-line or a file browser.
+    When editing a requirement or text block in the Web UI, you can **drag and
+    drop** image files into a multiline field or **paste** an image from the
+    clipboard. StrictDoc uploads the files to the document's ``_assets``
+    directory and inserts references using the configured document markup.
 <<<
+
+[[SECTION]]
+MID: 821447ebb4404103a8214f5d838842ff
+TITLE: Wildcard image paths for RST/Sphinx export
+
+[TEXT]
+MID: 1aea9a21a4ea4dd791a749465992058d
+STATEMENT: >>>
+StrictDoc extends the RST ``image`` directive with wildcard-based paths for
+documents exported to RST/Sphinx:
+
+.. code:: strictdoc
+
+    [TEXT]
+    STATEMENT: >>>
+    .. image:: _assets/diagram.*
+    <<<
+
+A wildcard path allows Sphinx to select the image format for each output
+format. For example, Sphinx can use ``diagram.svg`` for HTML output and
+``diagram.png`` for LaTeX/PDF output.
+
+Store both files in the same directory with the same filename stem. Replace
+the file extension in the ``image`` directive with ``*``, as shown above.
+
+In documents configured to use RST markup, the Web UI creates the wildcard
+path when an upload completes a vector and raster pair. If the field already
+contains a direct reference to one file, the editor replaces that path without
+moving the image directive.
+
+In documents configured to use HTML or Markdown markup, the Web UI inserts a
+direct reference to each uploaded file. It does not use wildcard image paths.
+<<<
+
+[[/SECTION]]
 
 [[/SECTION]]
 
@@ -5890,8 +5927,6 @@ future:
 
 - A dedicated screen where a user can commit and push changes to GitHub/GitLab
   or other Git servers.
-- Adding images via drag-and-drop or an upload button to the multiline fields
-  like such requirements and text nodes ``STATEMENT``.
 - Adding/editing sections with ``LEVEL: None``.
 - Deleting a document.
 - Deleting a section recursively with a correct cleanup of all traceability

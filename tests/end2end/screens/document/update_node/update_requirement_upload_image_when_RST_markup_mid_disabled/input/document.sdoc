@@ -1,0 +1,13 @@
+[DOCUMENT]
+TITLE: Document 1
+
+[REQUIREMENT]
+UID: REQ-1
+STATEMENT: >>>
+Requirement statement.
+<<<
+
+[REQUIREMENT]
+STATEMENT: >>>
+Requirement without a permanent MID or UID.
+<<<

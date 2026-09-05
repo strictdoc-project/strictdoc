@@ -1,0 +1,14 @@
+[DOCUMENT]
+MID: 6f87ca83ec8e29c178398e37d756ea40
+TITLE: SubLevel Document
+OPTIONS:
+  ENABLE_MID: True
+
+[REQUIREMENT]
+MID: 49687fb9be69a7edea5c6b14d5ee4431
+STATEMENT: >>>
+Requirement statement.
+
+
+.. image:: ./_assets/49687fb9be69a7edea5c6b14d5ee4431/picture.svg
+<<<

@@ -174,7 +174,7 @@ class Test(E2ECase):
             ActionChains(self.driver).key_down(Keys.SHIFT).click(
                 requirement_element
             ).key_up(Keys.SHIFT).perform()
-            modal_outlet = '[data-testid="modal-outlet"]'
+            modal_outlet = "#modal"
             modal_cancel = modal_outlet + ' [data-testid="form-cancel-action"]'
             self.assert_element(modal_cancel)
             cancel_action = self.driver.find_element(

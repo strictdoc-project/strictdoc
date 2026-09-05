@@ -1783,6 +1783,8 @@
         const focusedNode = nodesByIdentifier.get(urlState.nodeIdentifier) ??
           treeMap.root;
         const parentNode = nodeParents.get(focusedNode);
+        // A URL only records the focused node, not the full ancestor chain,
+        // so restored history starts one level up rather than at the root.
         visitHistory.splice(
           0,
           visitHistory.length,

@@ -67,6 +67,35 @@ STATEMENT: >>>
 [[/SECTION]]
 
 [[SECTION]]
+TITLE: Отладочные выходы
+
+[INTERFACE_PARAMETER]
+TITLE: dbg.pose.position.x
+STATEMENT: >>>
+Описание: Текущая позиция робота по оси X
+
+Тип: float
+<<<
+
+[INTERFACE_PARAMETER]
+TITLE: dbg.pose.position.y
+STATEMENT: >>>
+Описание: Текущая позиция робота по оси Y
+
+Тип: float
+<<<
+
+[INTERFACE_PARAMETER]
+TITLE: dbg.pose.orientation.yaw
+STATEMENT: >>>
+Описание: Текущая ориентация робота вокруг оси Z
+
+Тип: float
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 TITLE: Функциональные требования
 
 [REQUIREMENT]

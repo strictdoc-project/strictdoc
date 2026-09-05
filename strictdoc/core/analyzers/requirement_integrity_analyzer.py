@@ -46,7 +46,26 @@ combinator; check_contradicting_requirements only compares single-clause
 conditions (a compound condition's pairwise overlap is out of this
 heuristic's scope, same as its own admitted operator-overlap gap).
 
-See developer/tasks/eurobot/20260827_requirement_integrity_checks/task.md.
+The same construction is also applied to every TEST_CASE node, in the
+shape:
+
+    ЕСЛИ (condition) ТО УСПЕХ
+    ЕСЛИ (condition) ТО УСПЕХ ИНАЧЕ ПРОВАЛ
+
+check_test_case_undefined_interfaces and check_test_case_value_types mirror
+check_undefined_interfaces/check_value_types above, run against the same
+project-wide interfaces table (a TEST_CASE in Eurobot_Tests.sdoc may
+reference an INTERFACE_PARAMETER declared in Eurobot_Requirements.sdoc — a
+project can span several documents). A TEST_CASE has no action clause of
+its own — its outcome vocabulary is the fixed УСПЕХ/ПРОВАЛ pair — so there
+is no TEST_CASE equivalent of check_contradicting_requirements.
+check_test_case_outcome_defined has no REQUIREMENT equivalent either: it
+flags a TEST_CASE whose STATEMENT names ТО УСПЕХ without a matching ИНАЧЕ
+ПРОВАЛ branch, or vice versa, since a test case that never says what a
+failing run looks like is not actually checkable in practice.
+
+See developer/tasks/eurobot/20260827_requirement_integrity_checks/task.md
+and developer/tasks/eurobot/20260905_test_case_integrity_checks/task.md.
 """
 
 import ast
@@ -88,6 +107,17 @@ KEYWORD_PAIRS: List[Tuple[str, str, str]] = [
     ("IF", "THEN", "system shall"),
 ]
 
+# TEST_CASE-only: the condition/then half of KEYWORD_PAIRS, without an
+# action-intro keyword — a TEST_CASE's outcome is the fixed УСПЕХ/ПРОВАЛ
+# vocabulary matched by SUCCESS_RE/FAILURE_RE below, not an arbitrary
+# "робот должен ..."/"system shall ..." action clause.
+CONDITION_THEN_PAIRS: List[Tuple[str, str]] = [
+    (condition_kw, then_kw) for condition_kw, then_kw, _ in KEYWORD_PAIRS
+]
+
+SUCCESS_RE = re.compile(r"\bУСПЕХ\b", re.IGNORECASE)
+FAILURE_RE = re.compile(r"\bПРОВАЛ\b", re.IGNORECASE)
+
 OR_SPLIT_RE = re.compile(r"\s*\b(?:ИЛИ|OR)\b\s*", re.IGNORECASE)
 AND_SPLIT_RE = re.compile(r"\s*\b(?:И|AND)\b\s*", re.IGNORECASE)
 
@@ -105,6 +135,19 @@ VARIABLE_RE = r"[^\s()=!<>+-]+"
 CONDITION_CLAUSE_RE = re.compile(
     rf"^(?P<variable>{VARIABLE_RE})\s*"
     r"(?P<operator>==|!=|<=|>=|<|>)\s*"
+    r"(?P<value>\S+)$"
+)
+
+# TEST_CASE-only: Eurobot_Tests.sdoc's real condition clauses use a bare
+# "=" for equality (e.g. "input.started_cord=true", see REQ-7), unlike a
+# REQUIREMENT's STATEMENT, which always uses "==" (see REQ-6). This is a
+# separate regex, not a change to CONDITION_CLAUSE_RE itself, so
+# REQUIREMENT parsing does not start accepting a bare "=" too. A clause
+# matched with "=" is normalized to "==" before it reaches a generated
+# snippet — see _extract_test_case().
+TEST_CASE_CONDITION_CLAUSE_RE = re.compile(
+    rf"^(?P<variable>{VARIABLE_RE})\s*"
+    r"(?P<operator>==|!=|<=|>=|<|>|=)\s*"
     r"(?P<value>\S+)$"
 )
 
@@ -210,6 +253,25 @@ class RequirementEffect:
         return names
 
 
+@dataclass
+class TestCaseEffect:
+    uid: str
+    node: SDocNode
+    condition_clauses: List[Clause]
+    condition_combinator: Optional[str]  # "and" / "or" / None (single clause)
+    # Whether "ТО"/"ТОГДА"/"THEN" is followed, anywhere in the rest of the
+    # STATEMENT, by "УСПЕХ" / "ПРОВАЛ" respectively. No action clause here,
+    # unlike RequirementEffect — a test case's outcome is this fixed
+    # two-word vocabulary, not an arbitrary assignment.
+    has_success: bool
+    has_failure: bool
+
+    def variables(self) -> List[str]:
+        # dedupe while keeping first-seen order, same rationale as
+        # check_undefined_interfaces' use of dict.fromkeys() below.
+        return list(dict.fromkeys(clause[0] for clause in self.condition_clauses))
+
+
 def _extract_interface(node: SDocNode) -> Union[InterfaceDecl, str]:
     """Returns the parsed interface, or a Russian reason it could not be."""
     title = node.reserved_title
@@ -245,6 +307,17 @@ NO_CONDITION_REASON = (
     "ТОГДА ...» или «IF (condition) THEN ...» — условие должно стоять в "
     "круглых скобках сразу после ключевого слова (перед скобками можно "
     "добавить пояснение словами), например «ЕСЛИ (motor_Speed > 10) ТО ...»"
+)
+
+# TEST_CASE-only: the condition is found (NO_CONDITION_REASON doesn't
+# apply), but neither outcome word appears anywhere after "ТО"/"ТОГДА"/
+# "THEN" — nothing here to build a TestCaseEffect from at all, since even
+# has_success/has_failure would both be False.
+NO_OUTCOME_REASON = (
+    "условие распознано, но после «ТО» не найдено ни «УСПЕХ», ни «ПРОВАЛ» "
+    "— ожидался результат вида «ТО УСПЕХ» и, при необходимости, «ИНАЧЕ "
+    "ПРОВАЛ», например «ЕСЛИ (input.started_cord=true) ТО УСПЕХ ИНАЧЕ "
+    "ПРОВАЛ»"
 )
 
 
@@ -302,6 +375,7 @@ def _split_statement(statement: str) -> Union[Tuple[str, str], str]:
 
 def _parse_condition(
     condition_text: str,
+    clause_pattern: Pattern[str] = CONDITION_CLAUSE_RE,
 ) -> Optional[Tuple[List[Clause], Optional[str]]]:
     or_parts = OR_SPLIT_RE.split(condition_text)
     combinator: Optional[str]
@@ -316,7 +390,7 @@ def _parse_condition(
 
     clauses: List[Clause] = []
     for part in parts:
-        match = CONDITION_CLAUSE_RE.match(part.strip())
+        match = clause_pattern.match(part.strip())
         if match is None:
             return None
         clauses.append(
@@ -460,6 +534,117 @@ def _extract_requirement(node: SDocNode) -> Union[RequirementEffect, str]:
         condition_clauses=condition_clauses,
         condition_combinator=condition_combinator,
         action=action,
+    )
+
+
+def _split_test_case_statement(
+    statement: str,
+) -> Union[Tuple[str, bool, bool], str]:
+    """
+    Returns (condition_text, has_success, has_failure) on success, or a
+    Russian reason the STATEMENT does not match the checkable
+    "ЕСЛИ (condition) ТО УСПЕХ [ИНАЧЕ ПРОВАЛ]" shape at all.
+
+    This is a parallel construction to _split_statement() above — same
+    condition-extraction regex, tried with the same condition/then keyword
+    pairs (CONDITION_THEN_PAIRS) — but it looks for TEST_CASE's fixed
+    УСПЕХ/ПРОВАЛ outcome vocabulary after the then-keyword instead of
+    _split_statement()'s "робот должен <action>" half. Kept separate
+    rather than reused, so REQUIREMENT's own text and NO_CONDITION_REASON's
+    exact wording are never at risk of an accidental behavior change from
+    this addition.
+    """
+    for condition_kw, then_kw in CONDITION_THEN_PAIRS:
+        condition_match = re.search(
+            rf"{condition_kw}[^(]*?\((?P<condition>.+?)\)\s*{then_kw}",
+            statement,
+            re.IGNORECASE | re.DOTALL,
+        )
+        if condition_match is None:
+            continue
+
+        remainder = statement[condition_match.end() :]
+        has_success = bool(SUCCESS_RE.search(remainder))
+        has_failure = bool(FAILURE_RE.search(remainder))
+        if not has_success and not has_failure:
+            return NO_OUTCOME_REASON
+
+        return condition_match.group("condition").strip(), has_success, has_failure
+
+    return NO_CONDITION_REASON
+
+
+def _build_test_case_snippet(
+    condition_clauses: List[Clause],
+    condition_combinator: Optional[str],
+) -> str:
+    """Same construction as _build_snippet() above, minus the action line —
+    a TEST_CASE outcome has no assignment to generate."""
+    variable_names = sorted({clause[0] for clause in condition_clauses})
+    stub_lines = [f"{name} = None" for name in variable_names]
+
+    python_combinator = " or " if condition_combinator == "or" else " and "
+    condition_expr = python_combinator.join(
+        f"{variable} {operator} {value}"
+        for variable, operator, value in condition_clauses
+    )
+
+    lines = [*stub_lines, f"if {condition_expr}:", "    pass"]
+    return "\n".join(lines) + "\n"
+
+
+def _extract_test_case(node: SDocNode) -> Union[TestCaseEffect, str]:
+    """Returns the parsed test case, or a Russian reason it could not be."""
+    statement = node.reserved_statement
+    uid = node.reserved_uid
+    if statement is None or uid is None:
+        return "у узла должны быть заполнены поля UID и STATEMENT"
+
+    split = _split_test_case_statement(statement)
+    if isinstance(split, str):
+        return split
+    condition_text, has_success, has_failure = split
+
+    parsed_condition = _parse_condition(
+        condition_text, clause_pattern=TEST_CASE_CONDITION_CLAUSE_RE
+    )
+    if parsed_condition is None:
+        return (
+            f"условие «{condition_text}» не удалось разобрать — каждая "
+            "часть должна иметь вид «переменная оператор значение» "
+            "(например, input.started_cord=true), а части соединяются "
+            "словами И/ИЛИ"
+        )
+    condition_clauses, condition_combinator = parsed_condition
+    # TEST_CASE_CONDITION_CLAUSE_RE additionally accepts a bare "=" (see
+    # its own comment above) — normalize it to "==" before it reaches a
+    # generated "if ...:" line, where a bare "=" would be a Python
+    # assignment, not a comparison, and tree_sitter would (correctly)
+    # reject it as a syntax error.
+    condition_clauses = [
+        (variable, "==" if operator == "=" else operator, value)
+        for variable, operator, value in condition_clauses
+    ]
+
+    for variable, _, _ in condition_clauses:
+        reason = _invalid_identifier_reason(variable)
+        if reason is not None:
+            return reason
+
+    snippet = _build_test_case_snippet(condition_clauses, condition_combinator)
+    if not _tree_sitter_confirms(snippet):
+        return (
+            "получившееся выражение не прошло синтаксическую проверку — "
+            "проверьте имена переменных и значения в условии"
+        )
+
+    return TestCaseEffect(
+        uid=uid,
+        node=node,
+        condition_clauses=condition_clauses,
+        condition_combinator=condition_combinator,
+        has_success=has_success,
+        has_failure=has_failure,
     )
 
 
@@ -683,6 +868,78 @@ def check_contradicting_requirements(
             )
 
 
+def check_test_case_undefined_interfaces(
+    effects: List[TestCaseEffect],
+    interfaces: Dict[str, InterfaceDecl],
+    validation_index: ValidationIndex,
+) -> None:
+    for effect in effects:
+        for variable in effect.variables():
+            if variable not in interfaces:
+                validation_index.add_issue(
+                    effect.node,
+                    f"Неопределённый интерфейс: тестовый случай «{effect.uid}» "
+                    f"ссылается на необъявленную переменную «{variable}».",
+                    field="STATEMENT",
+                )
+
+
+def check_test_case_value_types(
+    effects: List[TestCaseEffect],
+    interfaces: Dict[str, InterfaceDecl],
+    validation_index: ValidationIndex,
+) -> None:
+    for effect in effects:
+        for variable, _, value in effect.condition_clauses:
+            interface = interfaces.get(variable)
+            if interface is None:
+                continue  # check_test_case_undefined_interfaces already covers this
+            literal = _parse_literal(value)
+            if literal is None:
+                continue  # not a literal (e.g. compared to another variable)
+            try:
+                TypeAdapter(interface.value_type).validate_python(
+                    literal, strict=True
+                )
+            except ValidationError:
+                validation_index.add_issue(
+                    effect.node,
+                    f"Несовпадение типа: в тестовом случае «{effect.uid}» "
+                    f"значение «{value}» переменной «{variable}» не "
+                    f"подходит под тип «{interface.type_name}», объявленный "
+                    "у интерфейса.",
+                    field="STATEMENT",
+                )
+
+
+def check_test_case_outcome_defined(
+    effects: List[TestCaseEffect],
+    validation_index: ValidationIndex,
+) -> None:
+    """
+    New, TEST_CASE-only check with no REQUIREMENT analog: a test case must
+    define both a success and a failure outcome, or a student reading it
+    cannot tell what a passing/failing run actually looks like.
+    """
+    for effect in effects:
+        if not effect.has_success:
+            validation_index.add_issue(
+                effect.node,
+                f"Не определён результат: у тестового случая «{effect.uid}» "
+                "нет ветки «ТО УСПЕХ» — непонятно, что считать успешным "
+                "прохождением проверки.",
+                field="STATEMENT",
+            )
+        if not effect.has_failure:
+            validation_index.add_issue(
+                effect.node,
+                f"Не определён результат: у тестового случая «{effect.uid}» "
+                "нет ветки «ИНАЧЕ ПРОВАЛ» — непонятно, что считать провалом "
+                "проверки.",
+                field="STATEMENT",
+            )
+
+
 class RequirementIntegrityAnalyzer:
     @staticmethod
     def analyze_document_tree(traceability_index: TraceabilityIndex) -> None:
@@ -692,6 +949,7 @@ class RequirementIntegrityAnalyzer:
 
         interfaces: Dict[str, InterfaceDecl] = {}
         effects: List[RequirementEffect] = []
+        test_case_effects: List[TestCaseEffect] = []
 
         for document in document_tree.document_list:
             document_iterator = SDocDocumentIterator(document)
@@ -721,6 +979,23 @@ class RequirementIntegrityAnalyzer:
                         continue
                     effects.append(effect)
 
+                elif node.node_type == "TEST_CASE":
+                    test_case_effect = _extract_test_case(node)
+                    if isinstance(test_case_effect, str):
+                        validation_index.add_issue(
+                            node,
+                            _cannot_convert_message(test_case_effect),
+                            field="STATEMENT",
+                        )
+                        continue
+                    test_case_effects.append(test_case_effect)
+
         check_undefined_interfaces(effects, interfaces, validation_index)
         check_value_types(effects, interfaces, validation_index)
         check_contradicting_requirements(effects, validation_index)
+
+        check_test_case_undefined_interfaces(
+            test_case_effects, interfaces, validation_index
+        )
+        check_test_case_value_types(test_case_effects, interfaces, validation_index)
+        check_test_case_outcome_defined(test_case_effects, validation_index)

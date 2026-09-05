@@ -22,9 +22,9 @@ from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
 from tests.unit.helpers.fake_document_meta import create_fake_document_meta
 
-# A trimmed stand-in for eurobot/eurobot_grammar.sgra's REQUIREMENT and
-# INTERFACE_PARAMETER elements, inlined so these tests have no dependency on
-# the eurobot/ reference project's own grammar file.
+# A trimmed stand-in for eurobot/eurobot_grammar.sgra's REQUIREMENT,
+# INTERFACE_PARAMETER, and TEST_CASE elements, inlined so these tests have
+# no dependency on the eurobot/ reference project's own grammar file.
 TEST_GRAMMAR = """
 [GRAMMAR]
 ELEMENTS:
@@ -37,6 +37,17 @@ ELEMENTS:
     TYPE: String
     REQUIRED: True
 - TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+- TAG: TEST_CASE
   FIELDS:
   - TITLE: UID
     TYPE: String
@@ -635,3 +646,200 @@ STATEMENT: КОГДА (motor_Speed > 5 И battery_Level < 2) ТОГДА робо
     issues = _issues(traceability_index, "REQ-AND")
     assert CANNOT_CONVERT_MESSAGE not in issues
     assert any("battery_Level" in issue for issue in issues)
+
+
+# --- TEST_CASE checks ------------------------------------------------------
+#
+# See developer/tasks/eurobot/20260905_test_case_integrity_checks/task.md
+# and requirement_integrity_analyzer.py's TestCaseEffect/_extract_test_case/
+# check_test_case_*.
+
+
+def test_well_formed_test_case_with_declared_interface_passes_everything():
+    traceability_index = _build_traceability_index(
+        INTERFACE_STARTED_CORD_BOOL
+        + """
+[TEST_CASE]
+UID: TC-OK
+STATEMENT: ЕСЛИ (started_cord==true) ТО УСПЕХ ИНАЧЕ ПРОВАЛ
+"""
+    )
+
+    RequirementIntegrityAnalyzer.analyze_document_tree(traceability_index)
+
+    assert _issues(traceability_index, "TC-OK") == []
+
+
+def test_test_case_bare_equals_operator_is_accepted():
+    # Eurobot_Tests.sdoc's real style: a bare "=" for equality, unlike a
+    # REQUIREMENT's "==" — regression-proofs TEST_CASE_CONDITION_CLAUSE_RE
+    # and its normalization to "==" before the generated snippet.
+    traceability_index = _build_traceability_index(
+        INTERFACE_STARTED_CORD_BOOL
+        + """
+[TEST_CASE]
+UID: TC-BARE-EQUALS
+STATEMENT: ЕСЛИ (started_cord=true) ТО УСПЕХ ИНАЧЕ ПРОВАЛ
+"""
+    )
+
+    RequirementIntegrityAnalyzer.analyze_document_tree(traceability_index)
+
+    assert _issues(traceability_index, "TC-BARE-EQUALS") == []
+
+
+def test_test_case_undefined_interface_fails_only_that_check():
+    traceability_index = _build_traceability_index(
+        """
+[TEST_CASE]
+UID: TC-UNDEFINED
+STATEMENT: ЕСЛИ (battery_Level < 20) ТО УСПЕХ ИНАЧЕ ПРОВАЛ
+"""
+    )
+
+    RequirementIntegrityAnalyzer.analyze_document_tree(traceability_index)
+
+    issues = _issues(traceability_index, "TC-UNDEFINED")
+    assert len(issues) == 1
+    assert "battery_Level" in issues[0]
+    assert CANNOT_CONVERT_MESSAGE not in issues[0]
+
+
+def test_test_case_bool_interface_rejects_a_numeric_value():
+    traceability_index = _build_traceability_index(
+        INTERFACE_STARTED_CORD_BOOL
+        + """
+[TEST_CASE]
+UID: TC-BOOL-NUM
+STATEMENT: ЕСЛИ (started_cord==1) ТО УСПЕХ ИНАЧЕ ПРОВАЛ
+"""
+    )
+
+    RequirementIntegrityAnalyzer.analyze_document_tree(traceability_index)
+
+    issues = _issues(traceability_index, "TC-BOOL-NUM")
+    assert len(issues) == 1
+    assert "Несовпадение типа" in issues[0]
+    assert "bool" in issues[0]
+
+
+def test_test_case_missing_inache_proval_branch_is_flagged():
+    traceability_index = _build_traceability_index(
+        INTERFACE_STARTED_CORD_BOOL
+        + """
+[TEST_CASE]
+UID: TC-NO-FAILURE
+STATEMENT: ЕСЛИ (started_cord==true) ТО УСПЕХ
+"""
+    )
+
+    RequirementIntegrityAnalyzer.analyze_document_tree(traceability_index)
+
+    issues = _issues(traceability_index, "TC-NO-FAILURE")
+    assert len(issues) == 1
+    assert "ИНАЧЕ ПРОВАЛ" in issues[0]
+    assert CANNOT_CONVERT_MESSAGE not in issues[0]
+
+
+def test_test_case_missing_to_uspekh_branch_is_flagged():
+    traceability_index = _build_traceability_index(
+        INTERFACE_STARTED_CORD_BOOL
+        + """
+[TEST_CASE]
+UID: TC-NO-SUCCESS
+STATEMENT: ЕСЛИ (started_cord==true) ТО что-то происходит ИНАЧЕ ПРОВАЛ
+"""
+    )
+
+    RequirementIntegrityAnalyzer.analyze_document_tree(traceability_index)
+
+    issues = _issues(traceability_index, "TC-NO-SUCCESS")
+    assert len(issues) == 1
+    assert "ТО УСПЕХ" in issues[0]
+    assert CANNOT_CONVERT_MESSAGE not in issues[0]
+
+
+def test_test_case_with_neither_outcome_gets_could_not_convert():
+    traceability_index = _build_traceability_index(
+        INTERFACE_STARTED_CORD_BOOL
+        + """
+[TEST_CASE]
+UID: TC-NO-OUTCOME
+STATEMENT: ЕСЛИ (started_cord==true) ТО что-то произойдёт
+"""
+    )
+
+    RequirementIntegrityAnalyzer.analyze_document_tree(traceability_index)
+
+    issues = _issues(traceability_index, "TC-NO-OUTCOME")
+    assert len(issues) == 1
+    assert issues[0].startswith(CANNOT_CONVERT_MESSAGE)
+
+
+def test_test_case_free_prose_gets_single_could_not_convert_issue():
+    # Mirrors the real TC-1's style in eurobot/Eurobot_Tests.sdoc — no
+    # ЕСЛИ/ТО shape at all, so this must not be forced into one.
+    traceability_index = _build_traceability_index(
+        """
+[TEST_CASE]
+UID: TC-PROSE
+STATEMENT: Ожидаемый результат: периметр не более 1200 мм.
+"""
+    )
+
+    RequirementIntegrityAnalyzer.analyze_document_tree(traceability_index)
+
+    issues = _issues(traceability_index, "TC-PROSE")
+    assert len(issues) == 1
+    assert issues[0].startswith(CANNOT_CONVERT_MESSAGE)
+
+
+def test_test_case_compound_condition_checks_the_undefined_clauses_variable():
+    # Mirrors the real, rewritten REQ-7: one declared variable
+    # (dbg.pose.position.y), one left undeclared on purpose
+    # (dbg.pose.position.z) as a live example of this check firing.
+    traceability_index = _build_traceability_index(
+        """
+[INTERFACE_PARAMETER]
+TITLE: dbg.pose.position.y
+STATEMENT: Тип: float
+
+[TEST_CASE]
+UID: TC-COMPOUND
+STATEMENT: ЕСЛИ (dbg.pose.position.z > 0.125 И dbg.pose.position.y > 0.125) ТО УСПЕХ ИНАЧЕ ПРОВАЛ
+"""
+    )
+
+    RequirementIntegrityAnalyzer.analyze_document_tree(traceability_index)
+
+    issues = _issues(traceability_index, "TC-COMPOUND")
+    assert len(issues) == 1
+    assert "dbg.pose.position.z" in issues[0]
+    assert "dbg.pose.position.y" not in issues[0]
+
+
+def test_requirement_and_test_case_issues_do_not_cross_contaminate():
+    traceability_index = _build_traceability_index(
+        """
+[REQUIREMENT]
+UID: REQ-OWN-UNDEFINED
+STATEMENT: ЕСЛИ (req_only_Variable > 10) ТО робот должен уменьшить req_only_Variable на 5
+
+[TEST_CASE]
+UID: TC-OWN-UNDEFINED
+STATEMENT: ЕСЛИ (test_only_Variable==true) ТО УСПЕХ ИНАЧЕ ПРОВАЛ
+"""
+    )
+
+    RequirementIntegrityAnalyzer.analyze_document_tree(traceability_index)
+
+    requirement_issues = _issues(traceability_index, "REQ-OWN-UNDEFINED")
+    test_case_issues = _issues(traceability_index, "TC-OWN-UNDEFINED")
+
+    assert len(requirement_issues) == 1
+    assert "req_only_Variable" in requirement_issues[0]
+    assert "test_only_Variable" not in requirement_issues[0]
+
+    assert len(test_case_issues) == 1
+    assert "test_only_Variable" in test_case_issues[0]
+    assert "req_only_Variable" not in test_case_issues[0]

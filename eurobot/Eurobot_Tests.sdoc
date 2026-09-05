@@ -13,6 +13,55 @@ STATEMENT: >>>
 непроверенное требование.
 <<<
 
+[[SECTION]]
+TITLE: Готовность модулей
+
+[[SECTION]]
+TITLE: Механики
+
+[[/SECTION]]
+
+[[SECTION]]
+TITLE: Электроники
+
+[[/SECTION]]
+
+[[SECTION]]
+TITLE: Программного обеспечения
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[SECTION]]
+TITLE: Системные испытания
+
+[[SECTION]]
+TITLE: Допуск к соревнованиям
+
+[TEST_CASE]
+UID: REQ-7
+TITLE: Динамическая проверка 1 - старт
+STATUS: Not Executed
+STATEMENT: >>>
+1. Установить робота на старт (dbg.pose.position.x=0 И dbg.pose.position.y=0)
+
+2. Выдернуть стартовый корд (input.started_cord=true)
+
+ЕСЛИ робот выехал из зоны старта (dbg.pose.position.x > 0.125 И dbg.pose.position.y > 0.125)
+
+ТО УСПЕХ
+ИНАЧЕ ПРОВАЛ
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-6
+  ROLE: VERIFIES
+
+[[/SECTION]]
+
+[[/SECTION]]
+
 [TEST_CASE]
 UID: TC-1
 TITLE: Измерение периметра при старте

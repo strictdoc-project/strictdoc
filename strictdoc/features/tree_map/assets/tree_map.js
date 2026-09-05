@@ -1694,7 +1694,7 @@
       }
     }
 
-    document.addEventListener("keydown", (event) => {
+    function handleKeydown(event) {
       // Keyboard navigation belongs to the complete map section under the
       // pointer, including its toolbar, ancestors, and canvas. Other maps and
       // the rest of the page keep native keys.
@@ -1725,7 +1725,23 @@
       if (didNavigate) {
         event.preventDefault();
       }
-    });
+    }
+
+    function handleKeyup(event) {
+      if (event.key === "Shift") {
+        sectionElement.classList.remove(CSS_CLASSES.sectionShiftActive);
+        infoPanelElement.hidden = true;
+      }
+    }
+
+    function handleWindowBlur() {
+      sectionElement.classList.remove(CSS_CLASSES.sectionShiftActive);
+      infoPanelElement.hidden = true;
+    }
+
+    function handleWindowResize() {
+      infoPanelSize = null;
+    }
 
     sectionElement.addEventListener("pointermove", (event) => {
       sectionElement.classList.toggle(
@@ -1749,19 +1765,6 @@
       pointedNodeElement = null;
       lastPointerEvent = null;
       infoPanelElement.hidden = true;
-    });
-    document.addEventListener("keyup", (event) => {
-      if (event.key === "Shift") {
-        sectionElement.classList.remove(CSS_CLASSES.sectionShiftActive);
-        infoPanelElement.hidden = true;
-      }
-    });
-    window.addEventListener("blur", () => {
-      sectionElement.classList.remove(CSS_CLASSES.sectionShiftActive);
-      infoPanelElement.hidden = true;
-    });
-    window.addEventListener("resize", () => {
-      infoPanelSize = null;
     });
 
     backIconElement.addEventListener("click", navigateBack);
@@ -1825,6 +1828,10 @@
         canvasHeight = canvasRectangle.height;
         renderFocusedNode();
       },
+      handleKeydown,
+      handleKeyup,
+      handleWindowBlur,
+      handleWindowResize,
     };
   }
 
@@ -1945,6 +1952,22 @@
       }
       controller.restoreUrlState(urlState);
       selectTreeMap(controller.identifier, false);
+    });
+
+    // Only the active map's section is ever attached to the page, so one
+    // listener per event, dispatched to the active controller, replaces what
+    // would otherwise be a duplicate listener per map.
+    document.addEventListener("keydown", (event) => {
+      controllers.get(activeIdentifier)?.handleKeydown(event);
+    });
+    document.addEventListener("keyup", (event) => {
+      controllers.get(activeIdentifier)?.handleKeyup(event);
+    });
+    window.addEventListener("blur", () => {
+      controllers.get(activeIdentifier)?.handleWindowBlur();
+    });
+    window.addEventListener("resize", () => {
+      controllers.get(activeIdentifier)?.handleWindowResize();
     });
   }
 

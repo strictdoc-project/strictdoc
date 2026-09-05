@@ -3,6 +3,7 @@ import json
 from strictdoc.features.tree_map.models import (
     TreeMap,
     TreeMapData,
+    TreeMapLegendItem,
     TreeMapNode,
 )
 
@@ -34,6 +35,8 @@ def test_tree_map_data_serializes_nested_nodes_to_json() -> None:
             TreeMap(
                 identifier="document-tree",
                 title="Document tree map",
+                description="Map description.",
+                legend=(TreeMapLegendItem(color="#aaffaa", text="Covered"),),
                 root=root_node,
             ),
         )
@@ -46,6 +49,8 @@ def test_tree_map_data_serializes_nested_nodes_to_json() -> None:
             {
                 "identifier": "document-tree",
                 "title": "Document tree map",
+                "description": "Map description.",
+                "legend": [{"color": "#aaffaa", "text": "Covered"}],
                 "root": {
                     "identifier": "project",
                     "label": "Project",

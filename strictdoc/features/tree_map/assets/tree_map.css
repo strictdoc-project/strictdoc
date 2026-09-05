@@ -195,6 +195,37 @@
   margin-bottom: var(--base-rhythm);
 }
 
+.tree-map__description {
+  margin-bottom: calc(var(--base-rhythm) * 2);
+  color: var(--color-fg-main);
+}
+
+.tree-map__description-text {
+  margin: 0;
+}
+
+.tree-map__legend {
+  display: flex;
+  flex-direction: column;
+  gap: calc(var(--base-rhythm) / 2);
+  margin: var(--base-rhythm) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tree-map__legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--base-rhythm);
+}
+
+.tree-map__legend-swatch {
+  flex: 0 0 auto;
+  width: 1rem;
+  height: 1rem;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
 /* control for folder content preview in the section footer */
 
 .tree-map__footer {

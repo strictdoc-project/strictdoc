@@ -26,9 +26,17 @@ class TreeMapNode:
 
 
 @dataclass(frozen=True)
+class TreeMapLegendItem:
+    color: str
+    text: str
+
+
+@dataclass(frozen=True)
 class TreeMap:
     identifier: str
     title: str
+    description: str
+    legend: Tuple[TreeMapLegendItem, ...]
     root: TreeMapNode
 
 

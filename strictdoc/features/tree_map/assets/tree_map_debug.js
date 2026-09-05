@@ -94,6 +94,8 @@
     return {
       identifier: "renderer-debug",
       title: "Renderer debug tree",
+      description: "Synthetic data for renderer debugging.",
+      legend: [],
       root: {
         identifier: "debug-root",
         label: "Debug root",

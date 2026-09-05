@@ -18,6 +18,7 @@ from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.features.tree_map.models import (
     TreeMap,
     TreeMapData,
+    TreeMapLegendItem,
     TreeMapNode,
 )
 
@@ -82,6 +83,8 @@ class _SourceNode:
 class _TreeMapDefinition:
     identifier: str
     title: str
+    description: str
+    legend: Tuple[TreeMapLegendItem, ...]
     include_node: Callable[[_SourceNode], bool]
     get_label: Callable[[_SourceNode], str]
     get_count: Callable[[_SourceNode], Optional[int]]
@@ -406,6 +409,8 @@ class TreeMapDataGenerator:
         return TreeMap(
             identifier=definition.identifier,
             title=definition.title,
+            description=definition.description,
+            legend=definition.legend,
             root=build_node(root_source_node),
         )
 
@@ -415,6 +420,13 @@ class TreeMapDataGenerator:
             _TreeMapDefinition(
                 identifier="document-tree",
                 title="Document tree map",
+                description=(
+                    "This is a general representation of a document tree. "
+                    "All nodes are included, both normative (e.g., "
+                    "REQUIREMENT) and non-normative (e.g., TEXT). The numbers "
+                    "indicate how many nodes each section or node contains."
+                ),
+                legend=(),
                 include_node=lambda _: True,
                 get_label=lambda source_node_: source_node_.label,
                 get_count=lambda source_node_: source_node_.count,
@@ -423,6 +435,35 @@ class TreeMapDataGenerator:
             _TreeMapDefinition(
                 identifier="requirements-source",
                 title="Requirements coverage with source",
+                description=(
+                    "This graph shows which requirements are covered by at "
+                    "least one source file. A requirement is also considered "
+                    "covered if it has child requirements that are themselves "
+                    "covered by source files."
+                ),
+                legend=(
+                    TreeMapLegendItem(
+                        color="#AAFFAA",
+                        text=(
+                            "Requirement/section is fully covered by one or "
+                            "more source files."
+                        ),
+                    ),
+                    TreeMapLegendItem(
+                        color="#FFFFAA",
+                        text=(
+                            "Section is partially covered by one or more "
+                            "source files."
+                        ),
+                    ),
+                    TreeMapLegendItem(
+                        color="#FFAAAA",
+                        text=(
+                            "Requirement/section is not covered by any source "
+                            "files."
+                        ),
+                    ),
+                ),
                 include_node=lambda source_node_: source_node_.is_normative,
                 get_label=lambda source_node_: source_node_.normative_label,
                 get_count=lambda source_node_: source_node_.normative_count,
@@ -431,6 +472,34 @@ class TreeMapDataGenerator:
             _TreeMapDefinition(
                 identifier="requirements-test",
                 title="Requirements coverage with test",
+                description=(
+                    "This graph shows which requirements are covered by at "
+                    "least one test. A requirement is also considered covered "
+                    "if it has child requirements that are themselves covered "
+                    "by tests. A source file is considered a test file if its "
+                    'path contains "tests/".'
+                ),
+                legend=(
+                    TreeMapLegendItem(
+                        color="#AAFFAA",
+                        text=(
+                            "Requirement/section is fully covered by one or "
+                            "more tests."
+                        ),
+                    ),
+                    TreeMapLegendItem(
+                        color="#FFFFAA",
+                        text=(
+                            "Section is partially covered by one or more tests."
+                        ),
+                    ),
+                    TreeMapLegendItem(
+                        color="#FFAAAA",
+                        text=(
+                            "Requirement/section is not covered by any tests."
+                        ),
+                    ),
+                ),
                 include_node=lambda source_node_: source_node_.is_normative,
                 get_label=lambda source_node_: source_node_.normative_label,
                 get_count=lambda source_node_: source_node_.normative_count,

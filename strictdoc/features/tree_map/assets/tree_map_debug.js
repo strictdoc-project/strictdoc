@@ -8,8 +8,9 @@
     return;
   }
 
-  function createLeaf(label, weight, color) {
+  function createLeaf(identifier, label, weight, color) {
     return {
+      identifier,
       label,
       weight,
       color,
@@ -19,12 +20,18 @@
 
   function createDeepBranch(depth, maximumDepth) {
     const children = [
-      createLeaf(`Depth ${depth} leaf`, 10, "#b8d8f0"),
+      createLeaf(
+        `debug-depth-${depth}-leaf`,
+        `Depth ${depth} leaf`,
+        10,
+        "#b8d8f0",
+      ),
     ];
     if (depth < maximumDepth) {
       children.push(createDeepBranch(depth + 1, maximumDepth));
     }
     return {
+      identifier: `debug-deep-${depth}`,
       label: `Deep branch level ${depth}`,
       weight: 0,
       color: "#8fbfe0",
@@ -34,33 +41,51 @@
 
   function createWideBranch(size) {
     return {
+      identifier: `debug-wide-${size}`,
       label: `Wide branch: ${size} leaves`,
       weight: 0,
       color: "#a8ddb5",
       children: Array.from({ length: size }, (_, index) =>
-        createLeaf(`Wide leaf ${index + 1}`, 10, "#c7e9c0"),
+        createLeaf(
+          `debug-wide-${size}-leaf-${index + 1}`,
+          `Wide leaf ${index + 1}`,
+          10,
+          "#c7e9c0",
+        ),
       ),
     };
   }
 
   function createUnevenBranch(weights) {
     return {
+      identifier: "debug-uneven",
       label: "Uneven weights",
       weight: 0,
       color: "#fdae6b",
-      children: weights.map((weight) =>
-        createLeaf(`Weight ${weight}`, weight, "#fdd0a2"),
+      children: weights.map((weight, index) =>
+        createLeaf(
+          `debug-uneven-${index + 1}`,
+          `Weight ${weight}`,
+          weight,
+          "#fdd0a2",
+        ),
       ),
     };
   }
 
   function createNodeBudgetBranch(size) {
     return {
+      identifier: `debug-budget-${size}`,
       label: `Node budget: ${size} leaves`,
       weight: 0,
       color: "#dadaeb",
       children: Array.from({ length: size }, (_, index) =>
-        createLeaf(`Budget leaf ${index + 1}`, 1, "#bcbddc"),
+        createLeaf(
+          `debug-budget-${size}-leaf-${index + 1}`,
+          `Budget leaf ${index + 1}`,
+          1,
+          "#bcbddc",
+        ),
       ),
     };
   }
@@ -70,6 +95,7 @@
       identifier: "renderer-debug",
       title: "Renderer debug tree",
       root: {
+        identifier: "debug-root",
         label: "Debug root",
         weight: 0,
         color: "#d8d8d8",

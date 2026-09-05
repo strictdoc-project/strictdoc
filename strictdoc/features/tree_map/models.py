@@ -12,6 +12,7 @@ import orjson
 
 @dataclass(frozen=True)
 class TreeMapNode:
+    identifier: str
     label: str
     count: Optional[int]
     weight: int

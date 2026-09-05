@@ -3,6 +3,7 @@
 """
 
 import os
+from urllib.parse import parse_qs, urlparse
 
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
@@ -21,6 +22,7 @@ class Test(E2ECase):
             input_path=path_to_this_test_file_folder
         ) as test_server:
             screen_url = test_server.get_host_and_port() + "/tree_map.html"
+            # Synthetic renderer data is available only in explicit debug mode.
             self.open(screen_url)
             self.assert_element_absent(
                 '[data-testid="tree-map-selector-option-renderer-debug"]'
@@ -41,6 +43,8 @@ class Test(E2ECase):
             back_action = '[data-testid="tree-map-back"]'
             ancestor = '[data-testid="tree-map-ancestor"]'
 
+            # The project root has no siblings. Enabling folder previews reveals
+            # nested nodes and records the selected map and setting in the URL.
             assert (
                 self.driver.find_element(
                     By.CSS_SELECTOR, previous_sibling
@@ -61,8 +65,12 @@ class Test(E2ECase):
             assert self.driver.find_element(
                 By.CSS_SELECTOR, preview_control
             ).is_selected()
+            url_parameters = parse_qs(urlparse(self.get_current_url()).query)
+            assert url_parameters["map"] == ["document-tree"]
+            assert url_parameters["preview"] == ["1"]
 
-            # Each map restores its own display and navigation state.
+            # Each map keeps separate preview and navigation state. Entering a
+            # debug branch also records the active map and focused node in the URL.
             self.click('[data-testid="tree-map-selector-handler"]')
             self.click(
                 '[data-testid="tree-map-selector-option-renderer-debug"]'
@@ -76,6 +84,9 @@ class Test(E2ECase):
             alternate_focused_label = self.get_text(
                 '[data-testid="tree-map-focused-node"]'
             )
+            url_parameters = parse_qs(urlparse(self.get_current_url()).query)
+            assert url_parameters["map"] == ["renderer-debug"]
+            assert "node" in url_parameters
 
             self.click('[data-testid="tree-map-selector-handler"]')
             self.click('[data-testid="tree-map-selector-option-document-tree"]')
@@ -94,6 +105,7 @@ class Test(E2ECase):
             self.click('[data-testid="tree-map-selector-handler"]')
             self.click('[data-testid="tree-map-selector-option-document-tree"]')
 
+            # A document action opens the document in a new browser tab.
             document_element = self.driver.find_element(
                 By.CSS_SELECTOR,
                 node_selector + '[data-node-title="Test document"]',
@@ -129,6 +141,7 @@ class Test(E2ECase):
             )
             assert len(requirement_actions) == 1
 
+            # Holding Shift over a requirement shows its available node data.
             ActionChains(self.driver).key_down(Keys.SHIFT).move_to_element(
                 requirement_element
             ).perform()
@@ -138,6 +151,8 @@ class Test(E2ECase):
             self.assert_text("REQ-1", info_panel)
             ActionChains(self.driver).key_up(Keys.SHIFT).perform()
 
+            # Shift+Click opens the node preview. The same modifiers must not
+            # trigger unrelated controls while the modal is open.
             ActionChains(self.driver).key_down(Keys.SHIFT).click(
                 requirement_element
             ).key_up(Keys.SHIFT).perform()
@@ -155,6 +170,7 @@ class Test(E2ECase):
             self.assert_element("#modal [data-js-modal]")
             self.click('#modal [data-testid="form-cancel-action"]')
 
+            # The Help control opens and closes the Tree Map help content.
             self.click('[data-testid="tree-map-tips-button"]')
             self.assert_element('[data-testid="tree-map-tips-content"]')
             self.click('[data-testid="form-cancel-action"]')
@@ -174,6 +190,7 @@ class Test(E2ECase):
             )
             assert rendered_nodes_have_valid_rectangles
 
+            # Entering a branch exposes its parent and Back returns to the root.
             back_element = self.driver.find_element(
                 By.CSS_SELECTOR, back_action
             )
@@ -211,6 +228,32 @@ class Test(E2ECase):
                 "Second test document",
                 '[data-testid="tree-map-focused-node"]',
             )
+            # Reloading a shareable URL restores the focused sibling and preview
+            # setting. Back then returns to the restored node's parent.
+            focused_url = self.get_current_url()
+            focused_node_identifier = parse_qs(urlparse(focused_url).query)[
+                "node"
+            ]
+            self.driver.refresh()
+            self.assert_text(
+                "Second test document",
+                '[data-testid="tree-map-focused-node"]',
+            )
+            assert self.driver.find_element(
+                By.CSS_SELECTOR, preview_control
+            ).is_selected()
+            assert parse_qs(urlparse(self.get_current_url()).query)["node"] == (
+                focused_node_identifier
+            )
             self.click(back_action)
-            assert not back_element.is_displayed()
+            assert not self.driver.find_element(
+                By.CSS_SELECTOR, back_action
+            ).is_displayed()
             self.assert_element_absent(ancestor)
+
+            # Unknown map and node identifiers fall back to the first map's root.
+            self.open(screen_url + "?map=missing&node=missing")
+            self.assert_elements('[data-testid="tree-map-section"]', 1)
+            self.assert_element(
+                node_selector + '[data-node-kind="focused-root"]'
+            )

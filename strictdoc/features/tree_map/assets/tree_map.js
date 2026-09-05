@@ -30,6 +30,11 @@
   });
   const INFO_PANEL_POINTER_OFFSET = 12;
   const INFO_PANEL_VIEWPORT_PADDING = 8;
+  const URL_PARAMETERS = Object.freeze({
+    map: "map",
+    node: "node",
+    preview: "preview",
+  });
   const CSS_CLASSES = Object.freeze({
     ancestor: "tree-map__ancestor",
     ancestors: "tree-map__ancestors",
@@ -107,6 +112,21 @@
     for (const child of node.children) {
       nodeParents.set(child, node);
       indexNodeParents(child);
+    }
+  }
+
+  function indexNodesByIdentifier(node, options, nodesByIdentifier) {
+    if (nodesByIdentifier.has(node.identifier)) {
+      throw new Error(`Duplicate tree map node identifier: ${node.identifier}`);
+    }
+    nodesByIdentifier.set(node.identifier, node);
+    for (const child of node.children) {
+      indexNodesByIdentifier(child, options, nodesByIdentifier);
+    }
+    for (const child of getRenderableChildren(node, options)) {
+      if (child.isSyntheticGroup === true) {
+        nodesByIdentifier.set(child.identifier, child);
+      }
     }
   }
 
@@ -754,6 +774,8 @@
       const firstChildNumber = index + 1;
       const lastChildNumber = index + children.length;
       const group = {
+        identifier:
+          `${node.identifier}:items:${firstChildNumber}-${lastChildNumber}`,
         weight: 0,
         color: node.color,
         children,
@@ -803,6 +825,7 @@
     const nodeElement = document.createElement("div");
     nodeElement.className = CSS_CLASSES.node;
     nodeElement.dataset.testid = "tree-map-node";
+    nodeElement.dataset.nodeIdentifier = node.identifier;
     nodeElement.dataset.depth = depth;
     if (depth === 0) {
       // The focused node remains the visible geometry and header around its
@@ -1161,7 +1184,7 @@
     );
   }
 
-  function createTreeMap(treeMap, options) {
+  function createTreeMap(treeMap, options, onStateChange) {
     // Every map owns its navigation and display state. Switching maps only
     // detaches its section, so returning to it restores the previous view.
     const mapOptions = { ...options };
@@ -1296,11 +1319,22 @@
     let lastPointerEvent = null;
     let infoPanelContentNodeElement = null;
     let infoPanelSize = null;
+    const nodesByIdentifier = new Map();
     indexNodeParents(treeMap.root);
+    indexNodesByIdentifier(treeMap.root, mapOptions, nodesByIdentifier);
     const visitHistory = [treeMap.root];
 
     function getFocusedNode() {
       return visitHistory[visitHistory.length - 1];
+    }
+
+    function notifyStateChange() {
+      const focusedNode = getFocusedNode();
+      onStateChange({
+        nodeIdentifier:
+          focusedNode === treeMap.root ? null : focusedNode.identifier,
+        preview: mapOptions.showCollapsedFolderContent,
+      });
     }
 
     function navigateTo(node) {
@@ -1308,6 +1342,7 @@
       if (node !== focusedNode) {
         visitHistory.push(node);
         renderFocusedNode();
+        notifyStateChange();
       }
     }
 
@@ -1339,6 +1374,7 @@
       // node from which the user entered this level, not every sibling seen.
       visitHistory[visitHistory.length - 1] = sibling;
       renderFocusedNode();
+      notifyStateChange();
       return true;
     }
 
@@ -1357,6 +1393,7 @@
       }
       visitHistory.pop();
       renderFocusedNode();
+      notifyStateChange();
       return true;
     }
 
@@ -1684,6 +1721,7 @@
     previewInputElement.addEventListener("change", () => {
       mapOptions.showCollapsedFolderContent = previewInputElement.checked;
       renderFocusedNode();
+      notifyStateChange();
     });
 
     let canvasWidth = 0;
@@ -1701,6 +1739,28 @@
       identifier: treeMap.identifier,
       title: treeMap.title,
       sectionElement,
+      getUrlState() {
+        const focusedNode = getFocusedNode();
+        return {
+          nodeIdentifier:
+            focusedNode === treeMap.root ? null : focusedNode.identifier,
+          preview: mapOptions.showCollapsedFolderContent,
+        };
+      },
+      restoreUrlState(urlState) {
+        const focusedNode = nodesByIdentifier.get(urlState.nodeIdentifier) ??
+          treeMap.root;
+        const parentNode = nodeParents.get(focusedNode);
+        visitHistory.splice(
+          0,
+          visitHistory.length,
+          ...(parentNode === undefined
+            ? [treeMap.root]
+            : [parentNode, focusedNode]),
+        );
+        mapOptions.showCollapsedFolderContent = urlState.preview;
+        previewInputElement.checked = urlState.preview;
+      },
       render() {
         // Record the attached canvas size before rendering. The observer then
         // ignores its initial notification instead of rebuilding the same DOM.
@@ -1710,6 +1770,31 @@
         renderFocusedNode();
       },
     };
+  }
+
+  function readUrlState() {
+    const parameters = new URLSearchParams(window.location.search);
+    return {
+      mapIdentifier: parameters.get(URL_PARAMETERS.map),
+      nodeIdentifier: parameters.get(URL_PARAMETERS.node),
+      preview: parameters.get(URL_PARAMETERS.preview) === "1",
+    };
+  }
+
+  function writeUrlState(mapIdentifier, mapState) {
+    const url = new URL(window.location.href);
+    url.searchParams.set(URL_PARAMETERS.map, mapIdentifier);
+    if (mapState.nodeIdentifier === null) {
+      url.searchParams.delete(URL_PARAMETERS.node);
+    } else {
+      url.searchParams.set(URL_PARAMETERS.node, mapState.nodeIdentifier);
+    }
+    if (mapState.preview) {
+      url.searchParams.set(URL_PARAMETERS.preview, "1");
+    } else {
+      url.searchParams.delete(URL_PARAMETERS.preview);
+    }
+    window.history.replaceState(window.history.state, "", url);
   }
 
   function renderTreeMaps(renderOptions = {}) {
@@ -1738,12 +1823,14 @@
     const treeMapData = JSON.parse(dataElement.textContent);
     const controllers = new Map();
     const selectorItems = new Map();
+    let activeIdentifier = null;
 
-    function selectTreeMap(identifier) {
+    function selectTreeMap(identifier, updateUrl = true) {
       const controller = controllers.get(identifier);
       if (controller === undefined) {
         return;
       }
+      activeIdentifier = identifier;
       rootElement.replaceChildren(controller.sectionElement);
       selectorLabelElement.textContent = controller.title;
       for (const [itemIdentifier, itemElement] of selectorItems) {
@@ -1752,13 +1839,20 @@
         itemElement.toggleAttribute("aria-current", isActive);
       }
       controller.render();
+      if (updateUrl) {
+        writeUrlState(identifier, controller.getUrlState());
+      }
     }
 
     for (const treeMap of treeMapData.tree_maps) {
       if (controllers.has(treeMap.identifier)) {
         throw new Error(`Duplicate tree map identifier: ${treeMap.identifier}`);
       }
-      const controller = createTreeMap(treeMap, options);
+      const controller = createTreeMap(treeMap, options, (mapState) => {
+        if (activeIdentifier === treeMap.identifier) {
+          writeUrlState(treeMap.identifier, mapState);
+        }
+      });
       controllers.set(controller.identifier, controller);
 
       const itemElement = document.createElement("a");
@@ -1779,8 +1873,23 @@
 
     const firstController = controllers.values().next().value;
     if (firstController !== undefined) {
-      selectTreeMap(firstController.identifier);
+      const urlState = readUrlState();
+      const initialController =
+        controllers.get(urlState.mapIdentifier) ?? firstController;
+      initialController.restoreUrlState(urlState);
+      selectTreeMap(initialController.identifier);
     }
+
+    window.addEventListener("popstate", () => {
+      const urlState = readUrlState();
+      const controller =
+        controllers.get(urlState.mapIdentifier) ?? firstController;
+      if (controller === undefined) {
+        return;
+      }
+      controller.restoreUrlState(urlState);
+      selectTreeMap(controller.identifier, false);
+    });
   }
 
   function initializeModifierClickGuard() {

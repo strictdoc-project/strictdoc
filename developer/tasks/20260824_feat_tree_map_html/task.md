@@ -16,6 +16,14 @@ page header shall switch between the available maps without reloading the
 page. Each map shall keep its own focused node, visit history, and
 `Preview folder contents` setting while the user switches between maps.
 
+The URL shall identify the selected map through `map`, the focused node
+through `node`, and the enabled folder preview through `preview=1`. The screen
+shall update these query parameters with `replaceState` so navigation does not
+add browser-history entries. Reloading or sharing the URL shall restore the
+selected map, focused node, and preview setting. Back from a restored node
+shall open that node's parent. Unknown map and node identifiers shall fall back
+to the first map and its project root.
+
 The list of maps shall include a synthetic data source for renderer debugging.
 It shall be available only when the screen URL contains `debug=1`. It shall use
 the same canvas and controls as the real maps. It shall not have a dedicated
@@ -71,6 +79,10 @@ The JSON contract shall keep a node's label and count as separate values. The
 renderer shall expose the count through the label element's `data-count`
 attribute. The label element shall remain in the DOM when its text does not
 fit; only its nested text element shall be hidden.
+
+Each serialized node shall have a stable identifier. Browser-created synthetic
+groups shall derive deterministic identifiers from their parent and item
+range.
 
 The screen shall support projects with large numbers of documents and
 requirements. Their tree maps shall remain usable for visualization and
@@ -243,9 +255,3 @@ that map's state before rendering it.
 
 - Add project-defined tree map data providers through
   `strictdoc_config.py`.
-- Reflect the selected map and its navigation state in the URL so that a link
-  can restore the same view. Keep stable map and node identifiers in the
-  current implementation, keep navigation state outside the DOM, and apply
-  restored state through the same rendering entry point used by interactive
-  navigation. The URL format and browser-history behavior shall be designed in
-  that follow-up work.

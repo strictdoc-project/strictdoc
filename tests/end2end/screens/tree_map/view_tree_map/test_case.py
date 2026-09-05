@@ -174,24 +174,29 @@ class Test(E2ECase):
             ActionChains(self.driver).key_down(Keys.SHIFT).click(
                 requirement_element
             ).key_up(Keys.SHIFT).perform()
-            self.assert_element("#modal [data-js-modal]")
+            full_node_modal = '[data-testid="full-node-modal"]'
+            self.assert_element(full_node_modal)
             cancel_action = self.driver.find_element(
-                By.CSS_SELECTOR, '[data-testid="form-cancel-action"]'
+                By.CSS_SELECTOR,
+                full_node_modal + ' [data-testid="form-cancel-action"]',
             )
             ActionChains(self.driver).key_down(Keys.SHIFT).click(
                 cancel_action
             ).key_up(Keys.SHIFT).perform()
-            self.assert_element("#modal [data-js-modal]")
+            self.assert_element(full_node_modal)
             ActionChains(self.driver).key_down(Keys.SHIFT).key_down(
                 Keys.ALT
             ).click(cancel_action).key_up(Keys.ALT).key_up(Keys.SHIFT).perform()
-            self.assert_element("#modal [data-js-modal]")
-            self.click('#modal [data-testid="form-cancel-action"]')
+            self.assert_element(full_node_modal)
+            self.click(full_node_modal + ' [data-testid="form-cancel-action"]')
 
             # The Help control opens and closes the Tree Map help content.
             self.click('[data-testid="tree-map-tips-button"]')
             self.assert_element('[data-testid="tree-map-tips-content"]')
-            self.click('[data-testid="form-cancel-action"]')
+            self.click(
+                '[data-testid="tree-map-tips-modal"] '
+                '[data-testid="form-cancel-action"]'
+            )
             self.assert_element_absent('[data-testid="tree-map-tips-content"]')
             self.assert_no_js_errors()
 

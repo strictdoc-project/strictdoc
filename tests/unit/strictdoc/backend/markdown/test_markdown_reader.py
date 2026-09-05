@@ -3,8 +3,14 @@ import pytest
 from strictdoc.backend.markdown.reader import SDMarkdownReader
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.models.anchor import Anchor
+from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.models.grammar_element import (
+    GrammarElement,
+    GrammarElementFieldString,
+)
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode
+from strictdoc.backend.sdoc.validations.sdoc_validator import SDocValidator
 
 
 def test_001_markdown_reader_requires_h1_heading_first():
@@ -930,3 +936,70 @@ def test_031_markdown_reader_rejects_forward_jump_beyond_h6():
     with pytest.raises(StrictDocSemanticError) as exc_info:
         reader.read(markdown_content, file_path=None)
     assert "forward jumps" in str(exc_info.value.title)
+
+
+def test_036_markdown_reader_unregistered_field_error_reports_correct_location():
+    # Regression test: a semantic error raised against a Markdown-derived
+    # node used to always report "Location: file:None:None" because
+    # SDMarkdownReader never populated SDocNode.ng_line_start/ng_col_start
+    # (unlike the SDoc/textX backend, which sets them via ParserFromTextX).
+    markdown_content = """\
+# Document title
+
+Some intro text.
+
+## Section with a stray UID
+
+**Type**: SECTION \\
+**UID**: SECTION-1
+
+Section body text.
+"""
+    section_heading_line = 5
+
+    reader = SDMarkdownReader()
+    document = reader.read(markdown_content, file_path="test.md")
+
+    section_node = document.section_contents[1]
+    assert isinstance(section_node, SDocNode)
+    assert section_node.node_type == "SECTION"
+    assert "UID" in section_node.ordered_fields_lookup
+
+    # A custom grammar (as in the reported bug) whose SECTION element only
+    # declares MID and TITLE, i.e., it does not register UID.
+    custom_section_element = GrammarElement(
+        parent=None,
+        tag="SECTION",
+        property_is_composite="True",
+        property_prefix="",
+        property_view_style="",
+        fields=[
+            GrammarElementFieldString(
+                parent=None, title="MID", human_title=None, required="False"
+            ),
+            GrammarElementFieldString(
+                parent=None, title="TITLE", human_title=None, required="True"
+            ),
+        ],
+        relations=[],
+    )
+    custom_grammar = DocumentGrammar(
+        parent=None, elements=[custom_section_element], import_from_file=None
+    )
+
+    with pytest.raises(StrictDocSemanticError) as exc_info:
+        SDocValidator.validate_node(
+            section_node,
+            custom_grammar,
+            path_to_sdoc_file="test.md",
+        )
+
+    error = exc_info.value
+    assert "UID" in error.title
+    assert error.file_path == "test.md"
+    assert error.line == section_heading_line
+    assert error.col is not None
+    assert (
+        f"Location: test.md:{section_heading_line}:{error.col}"
+        in error.to_print_message()
+    )

@@ -374,6 +374,7 @@ class SDMarkdownReader:
                 statement=root_text,
                 document_reference=document_reference,
                 including_document_reference=including_document_reference,
+                line_start=root_heading.line_start,
             )
             document.section_contents.append(root_text_node)
 
@@ -527,6 +528,7 @@ class SDMarkdownReader:
                 file_path=file_path,
                 project_config=project_config,
                 node_type=parsed_node.explicit_node_type or "REQUIREMENT",
+                line_start=heading_line_start,
             )
             parent_node.section_contents.append(requirement_node)
 
@@ -550,6 +552,8 @@ class SDMarkdownReader:
             document,
             title,
         )
+        section_node.ng_line_start = heading_line_start
+        section_node.ng_col_start = 1
         section_node.ng_including_document_reference = (
             including_document_reference
         )
@@ -690,6 +694,7 @@ class SDMarkdownReader:
                 document_reference=document_reference,
                 including_document_reference=including_document_reference,
                 mid=text_mid,
+                line_start=heading_line_start,
             )
             section_node.section_contents.append(text_node)
 
@@ -1443,6 +1448,7 @@ class SDMarkdownReader:
         file_path: Optional[str] = None,
         project_config: Optional[ProjectConfig] = None,
         node_type: str = "REQUIREMENT",
+        line_start: Optional[int] = None,
     ) -> SDocNode:
         """Build a SDocNode from parsed fields, attaching relations and document references."""
         parsed_meta_fields: List[ParsedField] = []
@@ -1491,6 +1497,8 @@ class SDMarkdownReader:
             fields=requirement_fields,
             relations=[],
         )
+        requirement.ng_line_start = line_start
+        requirement.ng_col_start = 1
         SDMarkdownReader._wire_node_field_parents(requirement)
         if relations_field is not None:
             requirement.relations = SDMarkdownReader._build_references(
@@ -1550,6 +1558,7 @@ class SDMarkdownReader:
         document_reference: DocumentReference,
         including_document_reference: DocumentReference,
         mid: Optional[str] = None,
+        line_start: Optional[int] = None,
     ) -> SDocNode:
         """Build a TEXT SDocNode wrapping raw Markdown prose."""
         fields = []
@@ -1576,6 +1585,8 @@ class SDMarkdownReader:
             fields=fields,
             relations=[],
         )
+        text_node.ng_line_start = line_start
+        text_node.ng_col_start = 1
         SDMarkdownReader._wire_node_field_parents(text_node)
         text_node.ng_document_reference = document_reference
         text_node.ng_including_document_reference = including_document_reference

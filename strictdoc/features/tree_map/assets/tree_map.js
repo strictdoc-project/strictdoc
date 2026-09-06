@@ -1632,17 +1632,34 @@
         }
       }
 
-      // Start with the complete history, then remove the oldest entries until
-      // the remaining tail fits. The latest entry stays visible and may use a
-      // conventional right-side ellipsis when its own label is too long.
+      function fitsAt(firstVisibleIndex) {
+        renderVisibleItems(firstVisibleIndex);
+        return (
+          historyBreadcrumbElement.scrollWidth <=
+          historyBreadcrumbElement.clientWidth
+        );
+      }
+
+      // Find the fewest oldest entries to drop so the remaining tail fits.
+      // Dropping more entries can only free up space (flex layout gives any
+      // freed width to the latest entry, which shrinks with its own
+      // ellipsis), so fit is monotonic in firstVisibleIndex and a binary
+      // search reaches the same result as a linear scan with far fewer
+      // DOM rebuild + forced-reflow cycles.
       let firstVisibleIndex = 0;
-      renderVisibleItems(firstVisibleIndex);
-      while (
-        historyBreadcrumbElement.scrollWidth >
-          historyBreadcrumbElement.clientWidth &&
-        firstVisibleIndex < historyLabels.length - 1
-      ) {
-        firstVisibleIndex += 1;
+      const initiallyFits = fitsAt(0);
+      if (!initiallyFits && historyLabels.length > 1) {
+        let low = 0;
+        let high = historyLabels.length - 1;
+        while (low < high) {
+          const mid = Math.floor((low + high) / 2);
+          if (fitsAt(mid)) {
+            high = mid;
+          } else {
+            low = mid + 1;
+          }
+        }
+        firstVisibleIndex = low;
         renderVisibleItems(firstVisibleIndex);
       }
       historyBreadcrumbElement.lastElementChild?.classList.add(

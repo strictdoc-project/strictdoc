@@ -1781,12 +1781,22 @@
 
     let canvasWidth = 0;
     let canvasHeight = 0;
+    let resizeRenderFrameId = null;
     const resizeObserver = new ResizeObserver((entries) => {
+      // Coalesce same-frame notifications into one render per animation
+      // frame, so tiles stay in their actual layout throughout a drag-resize
+      // instead of only snapping into place once it stops.
       const { width, height } = entries[0].contentRect;
-      if (width !== canvasWidth || height !== canvasHeight) {
-        canvasWidth = width;
-        canvasHeight = height;
-        renderFocusedNode();
+      if (width === canvasWidth && height === canvasHeight) {
+        return;
+      }
+      canvasWidth = width;
+      canvasHeight = height;
+      if (resizeRenderFrameId === null) {
+        resizeRenderFrameId = requestAnimationFrame(() => {
+          resizeRenderFrameId = null;
+          renderFocusedNode();
+        });
       }
     });
     resizeObserver.observe(canvasElement);

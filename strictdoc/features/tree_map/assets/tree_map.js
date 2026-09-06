@@ -99,7 +99,6 @@
   const DOM_IDS = Object.freeze({
     backIconTemplate: "tree-map-back-icon",
     data: "tree-map-data",
-    modal: "modal",
     root: "tree-map-root",
     goToDocumentIconTemplate: "tree-map-go-to-document-icon",
     previewIconTemplate: "tree-map-preview-icon",
@@ -151,7 +150,7 @@
     const textElement = document.createElement("span");
     textElement.className = CSS_CLASSES.labelText;
     labelElement.append(textElement);
-    updateLabel(labelElement, text, count);
+    setLabelContent(labelElement, textElement, text, count);
     return labelElement;
   }
 
@@ -162,6 +161,10 @@
     if (textElement === null) {
       throw new Error("Tree map label has no text element.");
     }
+    setLabelContent(labelElement, textElement, text, count);
+  }
+
+  function setLabelContent(labelElement, textElement, text, count) {
     textElement.textContent = text;
     labelElement.title = text;
     if (Number.isInteger(count)) {
@@ -199,14 +202,20 @@
     return descriptionElement;
   }
 
+  const templateIconCache = new Map();
+
   function createTemplateIcon(templateId) {
-    const templateElement = document.getElementById(templateId);
-    if (!(templateElement instanceof HTMLTemplateElement)) {
-      throw new Error(`Missing icon template: ${templateId}`);
-    }
-    const iconElement = templateElement.content.querySelector("svg");
-    if (iconElement === null) {
-      throw new Error(`Icon template has no SVG: ${templateId}`);
+    let iconElement = templateIconCache.get(templateId);
+    if (iconElement === undefined) {
+      const templateElement = document.getElementById(templateId);
+      if (!(templateElement instanceof HTMLTemplateElement)) {
+        throw new Error(`Missing icon template: ${templateId}`);
+      }
+      iconElement = templateElement.content.querySelector("svg");
+      if (iconElement === null) {
+        throw new Error(`Icon template has no SVG: ${templateId}`);
+      }
+      templateIconCache.set(templateId, iconElement);
     }
     return iconElement.cloneNode(true);
   }
@@ -986,60 +995,37 @@
     if (node.children.length === 0) {
       nodeElement.classList.add(CSS_CLASSES.nodeLeaf);
       nodeElement.dataset.nodeKind = "leaf";
-      return {
-        node,
-        nodeElement,
-        headerElement,
-        depth,
-        pixelRectangle,
-        renderableChildren,
-        actionsElement,
-        labelElement,
-      };
-    }
-
-    if (depth === 0) {
-      return {
-        node,
-        nodeElement,
-        headerElement,
-        depth,
-        pixelRectangle,
-        renderableChildren,
-        actionsElement,
-        labelElement,
-      };
-    }
-
-    nodeElement.classList.add(CSS_CLASSES.nodeBranch);
-    nodeElement.dataset.nodeKind = "branch";
-    nodeElement.setAttribute("role", "button");
-    nodeElement.tabIndex = 0;
-    nodeElement.addEventListener("click", (event) => {
-      // Action links must keep bubbling to Turbo and the browser. Exclude them
-      // here instead of stopping their event at the link.
-      if (
-        event.target instanceof Element &&
-        event.target.closest(`.${CSS_CLASSES.nodeAction}`) !== null
-      ) {
-        return;
-      }
-      event.stopPropagation();
-      zoomIntoNode(node);
-    });
-    nodeElement.addEventListener("keydown", (event) => {
-      if (
-        event.target instanceof Element &&
-        event.target.closest(`.${CSS_CLASSES.nodeAction}`) !== null
-      ) {
-        return;
-      }
-      if (event.key === "Enter" || event.key === " ") {
-        event.preventDefault();
+    } else if (depth !== 0) {
+      nodeElement.classList.add(CSS_CLASSES.nodeBranch);
+      nodeElement.dataset.nodeKind = "branch";
+      nodeElement.setAttribute("role", "button");
+      nodeElement.tabIndex = 0;
+      nodeElement.addEventListener("click", (event) => {
+        // Action links must keep bubbling to Turbo and the browser. Exclude
+        // them here instead of stopping their event at the link.
+        if (
+          event.target instanceof Element &&
+          event.target.closest(`.${CSS_CLASSES.nodeAction}`) !== null
+        ) {
+          return;
+        }
         event.stopPropagation();
         zoomIntoNode(node);
-      }
-    });
+      });
+      nodeElement.addEventListener("keydown", (event) => {
+        if (
+          event.target instanceof Element &&
+          event.target.closest(`.${CSS_CLASSES.nodeAction}`) !== null
+        ) {
+          return;
+        }
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          event.stopPropagation();
+          zoomIntoNode(node);
+        }
+      });
+    }
 
     return {
       node,

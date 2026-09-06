@@ -351,6 +351,19 @@
     return rectangle.width >= rectangle.height * targetAspectRatio;
   }
 
+  function getStripWidthOrHeight(row, rectangle, targetAspectRatio) {
+    // A strip's width (vertical orientation) or height (horizontal
+    // orientation) depends only on the row's total area and the side of the
+    // remaining rectangle it consumes. Both the aspect-ratio check and the
+    // actual positioning need this same value for the same row.
+    const rowArea = row.reduce((total, item) => total + item.area, 0);
+    const isVertical = usesVerticalStrip(rectangle, targetAspectRatio);
+    return {
+      isVertical,
+      size: isVertical ? rowArea / rectangle.height : rowArea / rectangle.width,
+    };
+  }
+
   function getWorstAspectRatio(row, rectangle, targetAspectRatio) {
     // Squarify adds an item only while it improves the worst-shaped tile in
     // the current row. The preferred tile is wider than a square because node
@@ -359,27 +372,24 @@
       return Number.POSITIVE_INFINITY;
     }
 
-    const rowArea = row.reduce((total, item) => total + item.area, 0);
-    if (usesVerticalStrip(rectangle, targetAspectRatio)) {
-      const rowWidth = rowArea / rectangle.height;
-      return Math.max(
-        ...row.map((item) =>
-          getAspectRatioPenalty(
-            rowWidth,
-            item.area / rowWidth,
-            targetAspectRatio,
-          ),
-        ),
-      );
-    }
-    const rowHeight = rowArea / rectangle.width;
+    const { isVertical, size: rowWidthOrHeight } = getStripWidthOrHeight(
+      row,
+      rectangle,
+      targetAspectRatio,
+    );
     return Math.max(
       ...row.map((item) =>
-        getAspectRatioPenalty(
-          item.area / rowHeight,
-          rowHeight,
-          targetAspectRatio,
-        ),
+        isVertical
+          ? getAspectRatioPenalty(
+              rowWidthOrHeight,
+              item.area / rowWidthOrHeight,
+              targetAspectRatio,
+            )
+          : getAspectRatioPenalty(
+              item.area / rowWidthOrHeight,
+              rowWidthOrHeight,
+              targetAspectRatio,
+            ),
       ),
     );
   }
@@ -392,42 +402,44 @@
   ) {
     // Consume a strip in the orientation selected for text-shaped tiles. Each
     // item keeps its exact proportional area inside that strip.
-    const rowArea = row.reduce((total, item) => total + item.area, 0);
+    const { isVertical, size: rowWidthOrHeight } = getStripWidthOrHeight(
+      row,
+      rectangle,
+      targetAspectRatio,
+    );
 
-    if (usesVerticalStrip(rectangle, targetAspectRatio)) {
-      const rowWidth = rowArea / rectangle.height;
+    if (isVertical) {
       let offsetY = rectangle.y;
       for (const item of row) {
-        const itemHeight = item.area / rowWidth;
+        const itemHeight = item.area / rowWidthOrHeight;
         positionedItems.push({
           node: item.node,
           x: rectangle.x,
           y: offsetY,
-          width: rowWidth,
+          width: rowWidthOrHeight,
           height: itemHeight,
         });
         offsetY += itemHeight;
       }
-      rectangle.x += rowWidth;
-      rectangle.width -= rowWidth;
+      rectangle.x += rowWidthOrHeight;
+      rectangle.width -= rowWidthOrHeight;
       return;
     }
 
-    const rowHeight = rowArea / rectangle.width;
     let offsetX = rectangle.x;
     for (const item of row) {
-      const itemWidth = item.area / rowHeight;
+      const itemWidth = item.area / rowWidthOrHeight;
       positionedItems.push({
         node: item.node,
         x: offsetX,
         y: rectangle.y,
         width: itemWidth,
-        height: rowHeight,
+        height: rowWidthOrHeight,
       });
       offsetX += itemWidth;
     }
-    rectangle.y += rowHeight;
-    rectangle.height -= rowHeight;
+    rectangle.y += rowWidthOrHeight;
+    rectangle.height -= rowWidthOrHeight;
   }
 
   function enforceMinimumHeight(positionedItems, minimumHeight) {

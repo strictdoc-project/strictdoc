@@ -5,6 +5,7 @@
 import os
 from urllib.parse import parse_qs, urlparse
 
+from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -124,19 +125,30 @@ class Test(E2ECase):
             self.click('[data-testid="tree-map-selector-option-document-tree"]')
 
             # A document action opens the document in a new browser tab.
-            document_element = self.driver.find_element(
-                By.CSS_SELECTOR,
-                node_selector + '[data-node-title="Test document"]',
-            )
             original_window = self.driver.current_window_handle
             window_handles = set(self.driver.window_handles)
-            ActionChains(self.driver).move_to_element(
-                document_element
-            ).perform()
-            document_action = document_element.find_element(
-                By.CSS_SELECTOR,
-                '[data-testid="tree-map-node-action"][data-action="document"]',
-            )
+            # A map switch can be followed by an async re-render (e.g. the
+            # canvas's own ResizeObserver), which replaces the node tiles
+            # located below. Retry the lookup if that race is hit.
+            document_action = None
+            for _ in range(5):
+                try:
+                    document_element = self.driver.find_element(
+                        By.CSS_SELECTOR,
+                        node_selector + '[data-node-title="Test document"]',
+                    )
+                    ActionChains(self.driver).move_to_element(
+                        document_element
+                    ).perform()
+                    document_action = document_element.find_element(
+                        By.CSS_SELECTOR,
+                        '[data-testid="tree-map-node-action"]'
+                        '[data-action="document"]',
+                    )
+                    break
+                except StaleElementReferenceException:
+                    continue
+            assert document_action is not None
             document_action.send_keys(Keys.ENTER)
             WebDriverWait(self.driver, 5).until(
                 lambda driver: (

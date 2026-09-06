@@ -110,6 +110,42 @@
   const syntheticGroupNavigation = new WeakMap();
   const renderableChildrenCache = new WeakMap();
 
+  // Shared shorthand for the className/dataset/attrs/text/children pattern
+  // repeated throughout node and UI construction below. Anything an element
+  // needs beyond this (event listeners, property assignments like `href` or
+  // `title`) is set on the returned element by the caller, same as before.
+  function createElement(tag, options = {}, children = []) {
+    const element = document.createElement(tag);
+    const { className, testid, dataset, attrs, text } = options;
+    if (className !== undefined) {
+      if (Array.isArray(className)) {
+        element.classList.add(...className.filter(Boolean));
+      } else {
+        element.className = className;
+      }
+    }
+    if (testid !== undefined) {
+      element.dataset.testid = testid;
+    }
+    if (dataset !== undefined) {
+      for (const [key, value] of Object.entries(dataset)) {
+        if (value !== undefined) {
+          element.dataset[key] = value;
+        }
+      }
+    }
+    if (attrs !== undefined) {
+      for (const [key, value] of Object.entries(attrs)) {
+        element.setAttribute(key, value);
+      }
+    }
+    if (text !== undefined) {
+      element.textContent = text;
+    }
+    element.append(...children);
+    return element;
+  }
+
   function indexNodeParents(node) {
     for (const child of node.children) {
       nodeParents.set(child, node);
@@ -145,11 +181,14 @@
   function createLabel(text, modifierClass, count = null) {
     // Labels in nodes and ancestor navigation share their markup. A semantic
     // modifier lets CSS add the right icon without depending on DOM depth.
-    const labelElement = document.createElement("span");
-    labelElement.classList.add(CSS_CLASSES.label, modifierClass);
-    const textElement = document.createElement("span");
-    textElement.className = CSS_CLASSES.labelText;
-    labelElement.append(textElement);
+    const textElement = createElement("span", {
+      className: CSS_CLASSES.labelText,
+    });
+    const labelElement = createElement(
+      "span",
+      { className: [CSS_CLASSES.label, modifierClass] },
+      [textElement],
+    );
     setLabelContent(labelElement, textElement, text, count);
     return labelElement;
   }
@@ -175,28 +214,35 @@
   }
 
   function createMapDescription(treeMap) {
-    const descriptionElement = document.createElement("div");
-    descriptionElement.className = CSS_CLASSES.description;
-    descriptionElement.dataset.testid =
-      `tree-map-description-${treeMap.identifier}`;
-
-    const descriptionTextElement = document.createElement("p");
-    descriptionTextElement.className = CSS_CLASSES.descriptionText;
-    descriptionTextElement.textContent = treeMap.description;
-    descriptionElement.append(descriptionTextElement);
+    const descriptionTextElement = createElement("p", {
+      className: CSS_CLASSES.descriptionText,
+      text: treeMap.description,
+    });
+    const descriptionElement = createElement(
+      "div",
+      {
+        className: CSS_CLASSES.description,
+        testid: `tree-map-description-${treeMap.identifier}`,
+      },
+      [descriptionTextElement],
+    );
 
     if (treeMap.legend.length > 0) {
-      const legendElement = document.createElement("ul");
-      legendElement.className = CSS_CLASSES.legend;
-      for (const legendItem of treeMap.legend) {
-        const itemElement = document.createElement("li");
-        itemElement.className = CSS_CLASSES.legendItem;
-        const swatchElement = document.createElement("span");
-        swatchElement.className = CSS_CLASSES.legendSwatch;
-        swatchElement.style.backgroundColor = legendItem.color;
-        itemElement.append(swatchElement, legendItem.text);
-        legendElement.append(itemElement);
-      }
+      const legendElement = createElement(
+        "ul",
+        { className: CSS_CLASSES.legend },
+        treeMap.legend.map((legendItem) => {
+          const swatchElement = createElement("span", {
+            className: CSS_CLASSES.legendSwatch,
+          });
+          swatchElement.style.backgroundColor = legendItem.color;
+          return createElement(
+            "li",
+            { className: CSS_CLASSES.legendItem },
+            [swatchElement, legendItem.text],
+          );
+        }),
+      );
       descriptionElement.append(legendElement);
     }
     return descriptionElement;
@@ -255,42 +301,47 @@
     if (typeof url !== "string") {
       return null;
     }
-    const actionElement = document.createElement("a");
-    actionElement.dataset.testid = "tree-map-node-action";
-    actionElement.dataset.action = isDocumentAction
-      ? "document"
-      : "preview";
-    actionElement.classList.add(
-      CSS_CLASSES.nodeAction,
-      isDocumentAction
-        ? CSS_CLASSES.nodeGoToDocument
-        : CSS_CLASSES.nodePreview,
-    );
-    actionElement.href = url;
-    actionElement.title = isDocumentAction
+    const title = isDocumentAction
       ? "Find it in the document view"
       : "Show in full in modal";
-    actionElement.setAttribute("aria-label", actionElement.title);
-    if (!isDocumentAction) {
-      actionElement.dataset.turbo = "true";
-      actionElement.dataset.turboAction = "replace";
-    } else {
+    const actionElement = createElement(
+      "a",
+      {
+        className: [
+          CSS_CLASSES.nodeAction,
+          isDocumentAction
+            ? CSS_CLASSES.nodeGoToDocument
+            : CSS_CLASSES.nodePreview,
+        ],
+        testid: "tree-map-node-action",
+        dataset: {
+          action: isDocumentAction ? "document" : "preview",
+          turbo: isDocumentAction ? undefined : "true",
+          turboAction: isDocumentAction ? undefined : "replace",
+        },
+        attrs: { "aria-label": title },
+      },
+      [
+        createTemplateIcon(
+          isDocumentAction
+            ? DOM_IDS.goToDocumentIconTemplate
+            : DOM_IDS.previewIconTemplate,
+        ),
+      ],
+    );
+    actionElement.href = url;
+    actionElement.title = title;
+    if (isDocumentAction) {
       actionElement.target = "_blank";
       actionElement.rel = "noopener";
     }
-    actionElement.append(
-      createTemplateIcon(
-        isDocumentAction
-          ? DOM_IDS.goToDocumentIconTemplate
-          : DOM_IDS.previewIconTemplate,
-      ),
-    );
     return actionElement;
   }
 
   function createNodeActions(node) {
-    const actionsElement = document.createElement("span");
-    actionsElement.className = CSS_CLASSES.nodeActions;
+    const actionsElement = createElement("span", {
+      className: CSS_CLASSES.nodeActions,
+    });
     // Prefer the server-only modal. Static output has no preview URL, so the
     // same node falls back to its Document view URL with the anchor intact.
     const primaryAction =
@@ -302,8 +353,9 @@
     if (primaryAction === "preview") {
       // DEEP-TRACE scopes the full-node action through a Turbo frame. The
       // frame has no visual box but lets Turbo process the stream response.
-      const turboFrameElement = document.createElement("turbo-frame");
-      turboFrameElement.append(actionElement);
+      const turboFrameElement = createElement("turbo-frame", {}, [
+        actionElement,
+      ]);
       actionsElement.append(turboFrameElement);
     } else {
       actionsElement.append(actionElement);
@@ -1217,17 +1269,19 @@
     // Every map owns its navigation and display state. Switching maps only
     // detaches its section, so returning to it restores the previous view.
     const mapOptions = { ...options };
-    const sectionElement = document.createElement("section");
-    sectionElement.className = CSS_CLASSES.section;
-    sectionElement.dataset.testid = "tree-map-section";
+    const sectionElement = createElement("section", {
+      className: CSS_CLASSES.section,
+      testid: "tree-map-section",
+    });
 
-    const toolbarElement = document.createElement("div");
-    toolbarElement.className = CSS_CLASSES.toolbar;
+    const toolbarElement = createElement("div", {
+      className: CSS_CLASSES.toolbar,
+    });
 
-    const historyBreadcrumbElement = document.createElement("span");
-    historyBreadcrumbElement.className = CSS_CLASSES.historyBreadcrumb;
-    historyBreadcrumbElement.dataset.testid =
-      "tree-map-history-breadcrumb";
+    const historyBreadcrumbElement = createElement("span", {
+      className: CSS_CLASSES.historyBreadcrumb,
+      testid: "tree-map-history-breadcrumb",
+    });
     toolbarElement.append(historyBreadcrumbElement);
 
     const backIconElement = createTemplateIcon(DOM_IDS.backIconTemplate);
@@ -1240,51 +1294,59 @@
 
     // ** sibling Navigation **
 
-    const siblingNavigationElement = document.createElement("div");
-    siblingNavigationElement.className = CSS_CLASSES.siblingNavigation;
+    const siblingNavigationElement = createElement("div", {
+      className: CSS_CLASSES.siblingNavigation,
+    });
 
     // sibling Navigation: current Label
-    const currentSiblingElement = document.createElement("div");
-    currentSiblingElement.className = CSS_CLASSES.siblingCurrent;
-    currentSiblingElement.dataset.testid = "tree-map-focused-node";
     const currentSiblingLabel = createLabel("", CSS_CLASSES.labelRoot);
-    currentSiblingElement.append(currentSiblingLabel);
+    const currentSiblingElement = createElement(
+      "div",
+      {
+        className: CSS_CLASSES.siblingCurrent,
+        testid: "tree-map-focused-node",
+      },
+      [currentSiblingLabel],
+    );
 
     // sibling Navigation: previous Button
-    const previousSiblingLabel = document.createElement("span");
-    previousSiblingLabel.classList.add(
-      CSS_CLASSES.siblingLabel,
-      CSS_CLASSES.siblingLabelPrevious,
+    const previousSiblingLabel = createElement("span", {
+      className: [
+        CSS_CLASSES.siblingLabel,
+        CSS_CLASSES.siblingLabelPrevious,
+      ],
+    });
+    const previousSiblingSymbol = createElement("span", {
+      className: CSS_CLASSES.labelSymbol,
+      text: "❮",
+    });
+    const previousSiblingButton = createElement(
+      "button",
+      {
+        className: CSS_CLASSES.previousSibling,
+        testid: "tree-map-previous-sibling",
+      },
+      [previousSiblingSymbol, previousSiblingLabel],
     );
-    const previousSiblingButton = document.createElement("button");
-    previousSiblingButton.className = CSS_CLASSES.previousSibling;
-    previousSiblingButton.dataset.testid = "tree-map-previous-sibling";
     previousSiblingButton.type = "button";
-    const previousSiblingSymbol = document.createElement("span");
-    previousSiblingSymbol.className = CSS_CLASSES.labelSymbol;
-    previousSiblingSymbol.textContent = "❮";
-    previousSiblingButton.append(
-      previousSiblingSymbol,
-      previousSiblingLabel,
-    );
 
-  // sibling Navigation: next Button
-    const nextSiblingLabel = document.createElement("span");
-    nextSiblingLabel.classList.add(
-      CSS_CLASSES.siblingLabel,
-      CSS_CLASSES.siblingLabelNext,
+    // sibling Navigation: next Button
+    const nextSiblingLabel = createElement("span", {
+      className: [CSS_CLASSES.siblingLabel, CSS_CLASSES.siblingLabelNext],
+    });
+    const nextSiblingSymbol = createElement("span", {
+      className: CSS_CLASSES.labelSymbol,
+      text: "❯",
+    });
+    const nextSiblingButton = createElement(
+      "button",
+      {
+        className: CSS_CLASSES.nextSibling,
+        testid: "tree-map-next-sibling",
+      },
+      [nextSiblingLabel, nextSiblingSymbol],
     );
-    const nextSiblingButton = document.createElement("button");
-    nextSiblingButton.className = CSS_CLASSES.nextSibling;
-    nextSiblingButton.dataset.testid = "tree-map-next-sibling";
     nextSiblingButton.type = "button";
-    const nextSiblingSymbol = document.createElement("span");
-    nextSiblingSymbol.className = CSS_CLASSES.labelSymbol;
-    nextSiblingSymbol.textContent = "❯";
-    nextSiblingButton.append(
-      nextSiblingLabel,
-      nextSiblingSymbol,
-    );
 
     siblingNavigationElement.append(
       previousSiblingButton,
@@ -1296,53 +1358,62 @@
 
     // ***
 
-    const ancestorsElement = document.createElement("nav");
-    ancestorsElement.className = CSS_CLASSES.ancestors;
-    ancestorsElement.dataset.testid = "tree-map-ancestors";
-    ancestorsElement.setAttribute("aria-label", "Tree map ancestors");
+    const ancestorsElement = createElement("nav", {
+      className: CSS_CLASSES.ancestors,
+      testid: "tree-map-ancestors",
+      attrs: { "aria-label": "Tree map ancestors" },
+    });
     sectionElement.append(ancestorsElement);
 
-    const canvasElement = document.createElement("div");
-    canvasElement.className = CSS_CLASSES.canvas;
-    canvasElement.dataset.testid = "tree-map-canvas";
+    const canvasElement = createElement("div", {
+      className: CSS_CLASSES.canvas,
+      testid: "tree-map-canvas",
+    });
     sectionElement.append(canvasElement);
 
-    const infoPanelElement = document.createElement("div");
-    infoPanelElement.className = CSS_CLASSES.infoPanel;
-    infoPanelElement.dataset.testid = "tree-map-info-panel";
-    infoPanelElement.hidden = true;
-    const infoEmptyElement = document.createElement("div");
-    infoEmptyElement.textContent = "No data";
+    const infoEmptyElement = createElement("div", { text: "No data" });
     infoEmptyElement.hidden = true;
-    const infoTableElement = document.createElement("dl");
-    infoTableElement.className = CSS_CLASSES.infoTable;
-    infoPanelElement.append(infoEmptyElement, infoTableElement);
+    const infoTableElement = createElement("dl", {
+      className: CSS_CLASSES.infoTable,
+    });
+    const infoPanelElement = createElement(
+      "div",
+      {
+        className: CSS_CLASSES.infoPanel,
+        testid: "tree-map-info-panel",
+      },
+      [infoEmptyElement, infoTableElement],
+    );
+    infoPanelElement.hidden = true;
     sectionElement.append(infoPanelElement);
 
-    const footerTip = document.createElement("span");
-    footerTip.className = CSS_CLASSES.footerTip;
+    const footerTip = createElement("span", {
+      className: CSS_CLASSES.footerTip,
+    });
     footerTip.innerHTML = `<span> Use <kbd>SHIFT</kbd> to get more info.</span>`;
 
-    const footerElement = document.createElement("footer");
-    footerElement.className = CSS_CLASSES.footer;
-    const previewControlElement = document.createElement("label");
-    previewControlElement.className = CSS_CLASSES.previewControl;
-    previewControlElement.dataset.testid =
-      "tree-map-preview-folder-contents-control";
-    const previewInputElement = document.createElement("input");
-    previewInputElement.className = CSS_CLASSES.previewInput;
+    const previewInputElement = createElement("input", {
+      className: CSS_CLASSES.previewInput,
+      testid: "tree-map-preview-folder-contents",
+    });
     previewInputElement.type = "checkbox";
     previewInputElement.checked = mapOptions.showCollapsedFolderContent;
-    previewInputElement.dataset.testid =
-      "tree-map-preview-folder-contents";
-    const previewSliderElement = document.createElement("span");
-    previewSliderElement.className = CSS_CLASSES.previewSlider;
-    previewControlElement.append(
-      "Preview folder contents",
-      previewInputElement,
-      previewSliderElement,
+    const previewSliderElement = createElement("span", {
+      className: CSS_CLASSES.previewSlider,
+    });
+    const previewControlElement = createElement(
+      "label",
+      {
+        className: CSS_CLASSES.previewControl,
+        testid: "tree-map-preview-folder-contents-control",
+      },
+      ["Preview folder contents", previewInputElement, previewSliderElement],
     );
-    footerElement.append(footerTip, previewControlElement);
+    const footerElement = createElement(
+      "footer",
+      { className: CSS_CLASSES.footer },
+      [footerTip, previewControlElement],
+    );
     sectionElement.append(footerElement);
 
     let pointedNodeElement = null;
@@ -1803,7 +1874,8 @@
       // Coalesce same-frame notifications into one render per animation
       // frame, so tiles stay in their actual layout throughout a drag-resize
       // instead of only snapping into place once it stops.
-      const { width, height } = entries[0].contentRect;
+      const { inlineSize: width, blockSize: height } =
+        entries[0].borderBoxSize[0];
       if (width === canvasWidth && height === canvasHeight) {
         return;
       }
@@ -1816,7 +1888,10 @@
         });
       }
     });
-    resizeObserver.observe(canvasElement);
+    // Observe the border box explicitly and compare against it below (see
+    // render()), so this guard stays correct regardless of the canvas's
+    // current border or padding.
+    resizeObserver.observe(canvasElement, { box: "border-box" });
     return {
       identifier: treeMap.identifier,
       title: treeMap.title,
@@ -1846,8 +1921,9 @@
         previewInputElement.checked = urlState.preview;
       },
       render() {
-        // Record the attached canvas size before rendering. The observer then
-        // ignores its initial notification instead of rebuilding the same DOM.
+        // Record the canvas's border-box size before rendering, matching
+        // what the observer below reports, so it correctly skips a
+        // same-size notification instead of rebuilding the same DOM again.
         const canvasRectangle = canvasElement.getBoundingClientRect();
         canvasWidth = canvasRectangle.width;
         canvasHeight = canvasRectangle.height;

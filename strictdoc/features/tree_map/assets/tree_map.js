@@ -1291,8 +1291,8 @@
       currentSiblingElement,
       nextSiblingButton,
     );
-    sectionElement.append(toolbarElement);
     sectionElement.append(createMapDescription(treeMap));
+    sectionElement.append(toolbarElement);
 
     // ***
 

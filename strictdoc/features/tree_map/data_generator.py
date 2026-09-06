@@ -6,7 +6,7 @@ Build tree map data from StrictDoc documents and traceability information.
 
 from collections import defaultdict
 from dataclasses import dataclass
-from typing import Callable, Dict, List, Optional, Set, Tuple, Union
+from typing import Callable, Dict, List, Optional, Tuple, Union
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
@@ -209,22 +209,6 @@ class TreeMapDataGenerator:
                 node_coverage.add_child_coverage(child_coverage)
             return node_coverage
 
-        documents_with_requirements: Set[SDocDocument] = set()
-        for document_ in traceability_index.document_tree.document_list:
-            if document_.document_is_included():
-                continue
-
-            coverage_by_node[document_] = get_node_coverage(document_)
-            document_iterator = SDocDocumentIterator(document_)
-            for node_, _ in document_iterator.all_content(
-                print_fragments=False
-            ):
-                if not isinstance(node_, SDocNode):
-                    continue
-                if node_.is_normative_node():
-                    documents_with_requirements.add(document_)
-                coverage_by_node[node_] = get_node_coverage(node_)
-
         source_nodes: List[_SourceNode] = [
             _SourceNode(
                 identifier=PROJECT_ROOT_IDENTIFIER,
@@ -253,9 +237,88 @@ class TreeMapDataGenerator:
                 document_.get_total_size()
             )
             document_title = document_.reserved_title
+
+            # Node coverage below is looked up unconditionally, without
+            # checking document_has_requirements first: when a document has
+            # no requirement, is_normative_node() is false throughout, so
+            # every node's coverage is zero and its color stays None either
+            # way.
+            document_has_requirements = False
+            document_node_entries: List[_SourceNode] = []
+            document_iterator = SDocDocumentIterator(document_)
+            for node_, _ in document_iterator.all_content(
+                print_fragments=False
+            ):
+                if not isinstance(node_, SDocNode):
+                    continue
+                if node_.is_normative_node():
+                    document_has_requirements = True
+
+                node_total_size, node_normative_total_size, _ = (
+                    node_.get_total_size()
+                )
+                node_title = (
+                    node_.reserved_title
+                    if node_.reserved_title is not None
+                    else "[TEXT] node"
+                )
+                node_count = None
+                normative_count = None
+                if (
+                    node_.section_contents is not None
+                    and len(node_.section_contents) > 0
+                ):
+                    node_count = node_total_size
+                    normative_count = node_normative_total_size
+
+                source_color = None
+                test_color = None
+                if node_.node_type != "TEXT":
+                    node_coverage = get_node_coverage(node_)
+                    if node_coverage.child_nodes > 0:
+                        source_color = _get_coverage_color(
+                            node_coverage.source_coverage_ratio()
+                        )
+                        test_color = _get_coverage_color(
+                            node_coverage.test_coverage_ratio()
+                        )
+
+                document_node_entries.append(
+                    _SourceNode(
+                        identifier=node_.reserved_mid,
+                        parent_identifier=node_.parent.reserved_mid,
+                        weight=node_total_size,
+                        label=node_title,
+                        count=node_count,
+                        normative_label=node_title,
+                        normative_count=normative_count,
+                        source_color=source_color,
+                        test_color=test_color,
+                        is_normative=node_.is_normative_node()
+                        or (
+                            node_.node_type == "SECTION"
+                            and node_.ng_has_requirements
+                        ),
+                        title=node_title,
+                        mid=str(node_.reserved_mid),
+                        uid=(
+                            str(node_.reserved_uid)
+                            if node_.reserved_uid is not None
+                            else None
+                        ),
+                        document_url=get_document_view_url(node_, document_),
+                        preview_url=(
+                            "/actions/show_full_node?reference_mid="
+                            f"{node_.reserved_mid}"
+                            if project_config.is_running_on_server
+                            else None
+                        ),
+                    )
+                )
+
             source_color = None
             test_color = None
-            if document_ in documents_with_requirements:
+            if document_has_requirements:
                 document_coverage = get_node_coverage(document_)
                 if document_coverage.child_nodes > 0:
                     source_color = _get_coverage_color(
@@ -276,7 +339,7 @@ class TreeMapDataGenerator:
                     normative_count=document_normative_total_size,
                     source_color=source_color,
                     test_color=test_color,
-                    is_normative=document_ in documents_with_requirements,
+                    is_normative=document_has_requirements,
                     title=document_.reserved_title,
                     mid=str(document_.reserved_mid),
                     uid=(
@@ -288,80 +351,7 @@ class TreeMapDataGenerator:
                     preview_url=None,
                 )
             )
-
-            document_iterator = SDocDocumentIterator(document_)
-            for node_, _ in document_iterator.all_content(
-                print_fragments=False
-            ):
-                if not isinstance(node_, SDocNode):
-                    continue
-
-                node_total_size, node_normative_total_size, _ = (
-                    node_.get_total_size()
-                )
-                node_title = (
-                    node_.reserved_title
-                    if node_.reserved_title is not None
-                    else "[TEXT] node"
-                )
-                node_info_title = node_title
-                normative_title = node_title
-                node_count = None
-                normative_count = None
-                if (
-                    node_.section_contents is not None
-                    and len(node_.section_contents) > 0
-                ):
-                    node_count = node_total_size
-                    normative_count = node_normative_total_size
-
-                source_color = None
-                test_color = None
-                if (
-                    node_.node_type != "TEXT"
-                    and document_ in documents_with_requirements
-                ):
-                    node_coverage = get_node_coverage(node_)
-                    if node_coverage.child_nodes > 0:
-                        source_color = _get_coverage_color(
-                            node_coverage.source_coverage_ratio()
-                        )
-                        test_color = _get_coverage_color(
-                            node_coverage.test_coverage_ratio()
-                        )
-
-                source_nodes.append(
-                    _SourceNode(
-                        identifier=node_.reserved_mid,
-                        parent_identifier=node_.parent.reserved_mid,
-                        weight=node_total_size,
-                        label=node_title,
-                        count=node_count,
-                        normative_label=normative_title,
-                        normative_count=normative_count,
-                        source_color=source_color,
-                        test_color=test_color,
-                        is_normative=node_.is_normative_node()
-                        or (
-                            node_.node_type == "SECTION"
-                            and node_.ng_has_requirements
-                        ),
-                        title=node_info_title,
-                        mid=str(node_.reserved_mid),
-                        uid=(
-                            str(node_.reserved_uid)
-                            if node_.reserved_uid is not None
-                            else None
-                        ),
-                        document_url=get_document_view_url(node_, document_),
-                        preview_url=(
-                            "/actions/show_full_node?reference_mid="
-                            f"{node_.reserved_mid}"
-                            if project_config.is_running_on_server
-                            else None
-                        ),
-                    )
-                )
+            source_nodes.extend(document_node_entries)
 
         return tuple(source_nodes)
 

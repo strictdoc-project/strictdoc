@@ -2,6 +2,7 @@
 
 {% block head_css %}
   {{ super() }}
+  <link rel="stylesheet" href="{{ view_object.render_static_url('media_zoom.css') }}"/>
   {%- if view_object.is_running_on_server %}
   <link rel="stylesheet" href="{{ view_object.render_static_url('move_node_tree.css') }}"/>
   {%- endif %}
@@ -10,6 +11,8 @@
 {% block head_scripts %}
   {# Load StrictDoc core before local feature scripts. #}
   <script src="{{ view_object.render_static_url('app_core.js') }}"></script>
+
+  <script src="{{ view_object.render_static_url('media_zoom.js') }}"></script>
 
   <script src="{{ view_object.render_static_url('dropdown_menu.js') }}"></script>
 

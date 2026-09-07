@@ -69,6 +69,7 @@ class Test(E2ECase):
                 "Saved by blur",
             )
             screen_table.do_save_inline_cell_by_outside_click()
+            self.assert_text("Saved by blur", selector=second_row)
             screen_table.wait_for_metadata_row_labels(
                 ["FIRST:", "SECOND:", "REVISION:"]
             )

@@ -445,12 +445,13 @@
     // Saves original HTML, marks cell as editing, and fetches the inline form.
     function initInlineCellState(cell) {
         const state = getCellState(cell);
-        state.originalHTML = cell.innerHTML;
+        const originalHTML = cell.innerHTML;
+        state.originalHTML = originalHTML;
         state.originalFormData = undefined;
         const requestId = ++state.editRequestId;
         cell.removeAttribute('data-validation-error');
         updateMode(cell, 'editing');
-        fetchTurboStream(cell.dataset.url, cell, requestId);
+        fetchTurboStream(cell.dataset.url, cell, requestId, originalHTML);
     }
 
     // True while `requestId` still identifies the cell's current edit session,
@@ -459,6 +460,19 @@
         return (
             getCellState(cell).editRequestId === requestId
             && (activeInlineCell === cell || activeAutocompleteCell === cell)
+        );
+    }
+
+    // True when `requestId` is still the cell's most recent edit session (no
+    // later initInlineCellState() call replaced it) but the cell is no longer
+    // active — i.e. it was cancelled or closed with nothing reopening it since.
+    // Distinct from simply "not current": a reopen bumps editRequestId, so a
+    // stale response from the earlier request must not clobber the new one.
+    function isEditRequestStaleAndUncontested(cell, requestId) {
+        return (
+            getCellState(cell).editRequestId === requestId
+            && activeInlineCell !== cell
+            && activeAutocompleteCell !== cell
         );
     }
 
@@ -643,7 +657,12 @@
         observer.observe(cell, { childList: true, subtree: true });
     }
 
-    async function fetchTurboStream(url, cell = null, requestId = null) {
+    async function fetchTurboStream(
+        url,
+        cell = null,
+        requestId = null,
+        originalHTML = undefined
+    ) {
         try {
             const response = await fetch(url, {
                 headers: { 'Accept': TURBO_ACCEPT },
@@ -664,6 +683,23 @@
                 // nothing has changed.
                 if (cell) {
                     captureOriginalFormDataWhenReady(cell);
+                    // Turbo defers each <turbo-stream>'s actual DOM mutation by
+                    // one requestAnimationFrame (see StreamElement.render() in
+                    // turbo.min.js) after the check above already passed. The
+                    // cell can still be cancelled inside that single frame
+                    // (e.g. by Escape), and Turbo applies the now-stale form
+                    // right after anyway, silently reopening a cell the user
+                    // already closed. requestAnimationFrame() here queues our
+                    // check behind Turbo's own (registered first, above, when
+                    // renderTurboStream() ran), so it runs in the same frame
+                    // right after Turbo's stale mutation lands, and undoes it.
+                    if (requestId !== null && originalHTML !== undefined) {
+                        requestAnimationFrame(() => {
+                            if (isEditRequestStaleAndUncontested(cell, requestId)) {
+                                cell.innerHTML = originalHTML;
+                            }
+                        });
+                    }
                 }
             }
         } catch (err) {

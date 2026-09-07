@@ -87,61 +87,12 @@
   padding: calc(var(--base-rhythm)/4) calc(var(--base-rhythm)/2);
 }
 
-/* "preview folder content" control */
+/* "preview folder content" control uses the shared .switch component
+   (components/switch/index.jinja, styled in element.css); this control
+   only needs to sit at the end of the footer */
 
 .tree-map__preview-control {
   margin-left: auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: var(--base-rhythm);
-  color: var(--color-fg-main);
-  font-size: var(--font-size-sm);
-  line-height: 1;
-  cursor: pointer;
-  user-select: none;
-}
-
-.tree-map__preview-input {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-}
-
-.tree-map__preview-slider {
-  position: relative;
-  flex: 0 0 auto;
-  width: 28px;
-  height: 16px;
-  border-radius: 8px;
-  background: var(--color-border);
-  transition: background-color 100ms ease-out;
-}
-
-.tree-map__preview-slider::after {
-  position: absolute;
-  top: 2px;
-  left: 2px;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--color-bg-main);
-  content: "";
-  transition: transform 100ms ease-out;
-}
-
-.tree-map__preview-input:checked + .tree-map__preview-slider {
-  background: var(--color-action);
-}
-
-.tree-map__preview-input:checked + .tree-map__preview-slider::after {
-  transform: translateX(12px);
-}
-
-.tree-map__preview-input:focus-visible + .tree-map__preview-slider {
-  outline: 2px solid var(--color-action);
-  outline-offset: 2px;
 }
 
 /* history breadcrumb */

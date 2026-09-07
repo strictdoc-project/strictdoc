@@ -46,124 +46,17 @@ class SimpleTabs {
   }
 }
 
-class Switch {
-  constructor({
-    callback,
-    labelText,
-    checked,
-    componentClass,
-    colorOn,
-    colorOff,
-    size,
-    stroke,
-    units,
-    alignRight,
-  }) {
-    this.colorOn = colorOn || 'rgb(100, 200, 50)';
-    this.colorOff = colorOff || 'rgb(200, 200, 200)';
-    this.labelText = labelText || '';
-    this.checked = checked || false; // todo: replace true/false with strings
+function createSwitch({ labelText, checked, callback }) {
+  const template = document.getElementById('template-switch');
+  const label = template.content.cloneNode(true).querySelector('label');
+  const input = label.querySelector('input[type=checkbox]');
+  const text = label.querySelector('.switch__label-text');
 
-    this.componentClass = componentClass || 'std-switch-scc';
-    this.size = size || 0.75;
-    this.stroke = stroke || 0.25;
-    this.units = units || 'rem';
-    this.alignRight = alignRight || true;
+  text.textContent = labelText;
+  input.checked = checked;
+  input.addEventListener('change', () => callback(input.checked));
 
-    this.callback = callback;
-  }
-
-  create() {
-    const block = document.createElement('div');
-    block.classList.add(this.componentClass);
-    const label = document.createElement('label');
-    label.classList.add(`${this.componentClass}__label`);
-    const input = document.createElement('input');
-    input.classList.add(`${this.componentClass}__input`);
-    input.type = 'checkbox';
-    input.checked = this.checked;
-    const slider = document.createElement('span');
-    slider.classList.add(`${this.componentClass}__slider`);
-    const text = document.createElement('span');
-    text.innerHTML = this.labelText;
-
-    input.addEventListener('change', () => this.callback(input.checked));
-
-    label.append(input, slider, text);
-    block.append(label);
-    this.insertStyle();
-
-    return block;
-  }
-
-  insertStyle() {
-
-    const css = `
-    .${this.componentClass} {
-      display: inline-block;
-      line-height: 0;
-    }
-    .${this.componentClass}__label {
-      display: inline-flex;
-      gap: ${this.size * 0.5}${this.units};
-      font-size: ${this.size * 1.5}${this.units}; /* 0.75rem; */
-      line-height: ${this.size}${this.units};
-      align-items: center;
-      justify-content: flex-start;
-      user-select: none;
-      cursor: pointer;
-      flex-direction: ${this.alignRight ? "row-reverse" : "row"};
-      text-align: ${this.alignRight ? "right" : "left"};
-    }
-    .${this.componentClass}__input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-      position: absolute;
-    }
-    .${this.componentClass}__slider {
-      position: relative;
-      cursor: pointer;
-      background-color: ${this.colorOff};
-      -webkit-transition: .4s;
-      transition: .4s;
-      display: inline-block;
-      width: ${this.size * 2 + this.stroke * 2}${this.units};
-      height: ${this.size + this.stroke * 2}${this.units};
-      border-radius: ${this.size * 0.5 + this.stroke}${this.units};
-    }
-    .${this.componentClass}__slider::before  {
-      position: absolute;
-      content: "";
-      height: ${this.size}${this.units};
-      width: ${this.size}${this.units};
-      left: ${this.stroke}${this.units};
-      bottom: ${this.stroke}${this.units};
-      background-color: white;
-      -webkit-transition: .4s;
-      transition: .4s;
-      border-radius: 50%;
-    }
-    input:checked + .${this.componentClass}__slider {
-      background-color: ${this.colorOn};
-    }
-    input:focus + .${this.componentClass}__slider {
-      box-shadow: 0 0 1px ${this.colorOn};
-    }
-    input:checked + .${this.componentClass}__slider::before {
-      -webkit-transform: translateX(${this.size}${this.units});
-      -ms-transform: translateX(${this.size}${this.units});
-      transform: translateX(${this.size}${this.units});
-    }
-    `;
-
-    const head = document.querySelector('head');
-    const style = document.createElement('style');
-    style.append(document.createTextNode(css));
-    style.setAttribute("data-slider-styles", '');
-    head.append(style);
-  }
-
+  return label;
 }
 
 class Dom {
@@ -622,16 +515,12 @@ window.addEventListener("load", function () {
   dom.prepare();
   dom.useLocationHash();
 
-  const switcher = new Switch(
-    {
-      labelText: 'Show coverage',
-      size: 0.5,
-      stroke: 0.2,
-      checked: false,
-      callback: (checked) => dom.toggleCoverageVisibility(checked),
-    }
-  );
-  document.getElementById('sourceCodeCoverageSwitch').append(switcher.create());
+  const switcher = createSwitch({
+    labelText: 'Show coverage',
+    checked: false,
+    callback: (checked) => dom.toggleCoverageVisibility(checked),
+  });
+  document.getElementById('sourceCodeCoverageSwitch').append(switcher);
 
   const tabsContainer = document.querySelector("sdoc-tabs");
   if (tabsContainer) {

@@ -87,9 +87,6 @@
     nodeGoToDocument: "tree-map__node-action--go-to-document",
     nodePreview: "tree-map__node-action--preview",
     previousSibling: "tree-map__previous-sibling",
-    previewControl: "tree-map__preview-control",
-    previewInput: "tree-map__preview-input",
-    previewSlider: "tree-map__preview-slider",
     section: "tree-map__section",
     sectionShiftActive: "tree-map__section--shift-active",
     toolbar: "tree-map__toolbar",
@@ -104,6 +101,7 @@
     previewIconTemplate: "tree-map-preview-icon",
     selectorLabel: "tree-map-selector-label",
     selectorMenu: "tree-map-selector-menu",
+    switchTemplate: "template-switch",
   });
   const nodeWeights = new WeakMap();
   const nodeParents = new WeakMap();
@@ -1392,23 +1390,20 @@
     });
     footerTip.innerHTML = `<span> Use <kbd>SHIFT</kbd> to get more info.</span>`;
 
-    const previewInputElement = createElement("input", {
-      className: CSS_CLASSES.previewInput,
-      testid: "tree-map-preview-folder-contents",
-    });
-    previewInputElement.type = "checkbox";
-    previewInputElement.checked = mapOptions.showCollapsedFolderContent;
-    const previewSliderElement = createElement("span", {
-      className: CSS_CLASSES.previewSlider,
-    });
-    const previewControlElement = createElement(
-      "label",
-      {
-        className: CSS_CLASSES.previewControl,
-        testid: "tree-map-preview-folder-contents-control",
-      },
-      ["Preview folder contents", previewInputElement, previewSliderElement],
+    const switchTemplate = document.getElementById(DOM_IDS.switchTemplate);
+    const previewControlElement = switchTemplate.content
+      .cloneNode(true)
+      .querySelector("label");
+    previewControlElement.classList.add("tree-map__preview-control");
+    previewControlElement.dataset.testid =
+      "tree-map-preview-folder-contents-control";
+    previewControlElement.querySelector(".switch__label-text").textContent =
+      "Preview folder contents";
+    const previewInputElement = previewControlElement.querySelector(
+      "input[type=checkbox]",
     );
+    previewInputElement.dataset.testid = "tree-map-preview-folder-contents";
+    previewInputElement.checked = mapOptions.showCollapsedFolderContent;
     const footerElement = createElement(
       "footer",
       { className: CSS_CLASSES.footer },

@@ -7,6 +7,7 @@
       {% if view_object.should_display_fragments_toggle() %}
       <div class="dashboard-block" id="project_tree_controls">{# must to be empty #}</div>
       {% endif %}
+      {%- include "components/switch/index.jinja" -%}
 
       <div class="dashboard-block">
         {# {{ view_object.project_config.project_title }} #}

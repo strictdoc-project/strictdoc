@@ -5043,18 +5043,6 @@ def create_main_router(
                     )
                 elif (
                     document_relative_path.relative_path
-                    == "tree_map_plotly.html"
-                ):
-                    if not project_config.is_activated_tree_map_plotly():
-                        return Response(
-                            content="The Tree Map Plotly feature is not activated in the project config.",
-                            status_code=HTTP_STATUS_PRECONDITION_FAILED,
-                        )
-                    html_generator.export_tree_map_plotly_screen(
-                        traceability_index=export_action.traceability_index,
-                    )
-                elif (
-                    document_relative_path.relative_path
                     == "source_coverage.html"
                 ):
                     if not project_config.is_activated_requirements_to_source_traceability():

@@ -4,3 +4,8 @@
   {%- set node = requirement -%}
   {% include "components/node_content/index_extends_readonly.jinja" %}
 {% endblock modal_container %}
+{%- block modal_footer_actions %}
+  {%- with href=goto_href -%}
+    {% include "components/button/goto.jinja" %}
+  {%- endwith -%}
+{% endblock modal_footer_actions %}

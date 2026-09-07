@@ -5437,8 +5437,14 @@ TITLE: Document tree map screen
 [TEXT]
 MID: 36067f1c73c545fea0b2408b32ee8a9a
 STATEMENT: >>>
-The Document Tree Map screen, or simply Tree Map, provides a visualization of
-the document tree and of requirements coverage by source files and tests.
+The Document Tree Map screen, or simply Tree Map, provides an interactive
+visualization of the document tree and of requirements coverage by source
+files and tests.
+
+The screen renders three maps: the complete document tree, requirements
+coverage by source files, and requirements coverage by tests. A node's area
+represents its weight, and its color represents the coverage value for the
+selected map. Hold Shift over a node to see its title, MID, and UID.
 
 The feature can be activated as follows:
 

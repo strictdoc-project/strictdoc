@@ -117,6 +117,22 @@ class TraceabilityIndex:
             <= 10
         )
 
+    def is_up_to_date(self) -> bool:
+        """
+        True when no document in the tree needs regeneration, per the
+        persisted file dependency cache. Whole-project screens (e.g. a
+        Feature aggregating every document) can skip their own
+        regeneration when this is True, the same way per-document HTML
+        export already does.
+        """
+        for document_ in self.document_tree.document_list:
+            assert document_.meta is not None
+            if self.file_dependency_manager.must_generate(
+                document_.meta.output_document_full_path
+            ):
+                return False
+        return True
+
     def can_edit_document(self, document: SDocDocument) -> bool:
         assert isinstance(document, SDocDocument), document
         return not document.autogen

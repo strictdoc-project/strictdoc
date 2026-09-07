@@ -642,9 +642,16 @@ class ProjectConfig:
         from strictdoc.features.project_statistics.feature import (  # noqa: PLC0415
             ProjectStatisticsFeature,
         )
+        from strictdoc.features.tree_map.feature import (  # noqa: PLC0415
+            TreeMapFeature,
+        )
 
         return {
-            feature.HANDLE: feature for feature in [ProjectStatisticsFeature()]
+            feature.HANDLE: feature
+            for feature in [
+                ProjectStatisticsFeature(),
+                TreeMapFeature(),
+            ]
         }
 
     def get_features(self) -> List[Feature]:
@@ -1015,9 +1022,6 @@ class ProjectConfig:
         return (
             ProjectFeature.TRACEABILITY_MATRIX_SCREEN in self.project_features
         )
-
-    def is_activated_tree_map(self) -> bool:
-        return ProjectFeature.TREE_MAP_SCREEN in self.project_features
 
     def is_activated_search(self) -> bool:
         return (

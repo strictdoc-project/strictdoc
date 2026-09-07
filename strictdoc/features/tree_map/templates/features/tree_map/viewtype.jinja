@@ -1,0 +1,27 @@
+<div
+  class="viewtype tree-map-viewtype"
+  data-testid="tree-map-selector"
+>
+  <div
+    class="viewtype__handler"
+    data-dropdown-handler
+    data-testid="tree-map-selector-handler"
+    aria-expanded="false"
+    aria-controls="tree-map-selector-menu"
+  >
+    <span
+      id="tree-map-selector-label"
+      data-testid="tree-map-selector-label"
+    >Tree map</span>
+    {% include "icons/ico16_expand.svg" %}
+  </div>
+  <menu
+    class="dropdown_menu"
+    id="tree-map-selector-menu"
+    data-testid="tree-map-selector-menu"
+    aria-hidden="true"
+    aria-labelledby="tree-map-selector-label"
+  >
+    <li class="dropdown_menu_header">TREE MAPS</li>
+  </menu>
+</div>

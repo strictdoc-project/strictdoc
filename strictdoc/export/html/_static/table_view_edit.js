@@ -79,6 +79,29 @@
         return new URLSearchParams(new FormData(form))
     }
 
+    // Form data for a cell's save request: the field's own form, with
+    // active_form_key/active_field_name overridden from the cell's own
+    // hidden inputs when present. A shared custom-metadata form can hold
+    // several passive-open rows with identically-named hidden inputs, so a
+    // plain form read could pick up another row's value instead of this
+    // cell's; this is what actually determines which row's target is saved.
+    function buildCellSaveFormData(cell, form) {
+        const formData = createFormData(form);
+        const activeFormKey = cell.querySelector(
+            'input[name="active_form_key"]'
+        )?.value;
+        if (activeFormKey !== undefined) {
+            formData.set('active_form_key', activeFormKey);
+        }
+        const activeFieldName = cell.querySelector(
+            'input[name="active_field_name"]'
+        )?.value;
+        if (activeFieldName !== undefined) {
+            formData.set('active_field_name', activeFieldName);
+        }
+        return formData;
+    }
+
     function getCellState(cell) {
         let state = cellStates.get(cell);
         if (!state) {
@@ -89,6 +112,10 @@
                 originalFormData: undefined,
                 // Shared by duplicate save triggers for this cell.
                 savePromise: null,
+                // Serialized form data as of the in-flight save's dispatch,
+                // so a save queued behind it can tell a real duplicate
+                // trigger from a correction typed before the response landed.
+                dispatchedFormData: undefined,
                 // Delayed blur save used by autocomplete dropdown interaction.
                 autocompleteBlurTimer: null,
                 // Bumped on every initInlineCellState() call for this cell so a
@@ -466,8 +493,33 @@
         const state = getCellState(cell);
         if (state.savePromise) {
             // Blur, outside-click, and keyboard handlers may request the same
-            // logical save. Reuse the in-flight request for this cell only.
-            return state.savePromise;
+            // logical save while one is already in flight for this cell.
+            // Wait for it, then decide whether this call still needs to do
+            // anything: Turbo defers applying a successful response by at
+            // least one animation frame, so the field being unedited here is
+            // not proof the in-flight request already covered it — compare
+            // against the data that request actually dispatched instead.
+            await state.savePromise;
+            const dispatchedData = state.dispatchedFormData;
+            const form = getFieldForm(cell);
+            const currentData = form
+                ? buildCellSaveFormData(cell, form).toString()
+                : undefined;
+            if (
+                currentData !== undefined &&
+                dispatchedData !== undefined &&
+                currentData === dispatchedData
+            ) {
+                // Same data the in-flight request already sent — a genuine
+                // duplicate trigger for one logical save. Nothing changed
+                // since, so there's nothing new to submit.
+                return;
+            }
+            // The field was edited again since the in-flight request was
+            // dispatched (e.g. a validation error corrected before the
+            // server responded). That correction must still reach the
+            // server — run this save for real against the current data.
+            return runCellSave(cell, saveOperation);
         }
 
         state.savePromise = saveOperation();
@@ -868,22 +920,11 @@
         // Clear only errors belonging to the field being submitted.
         clearFieldErrors(cell);
 
-        const formData = createFormData(form);
-        const activeFormKey = cell.querySelector(
-            'input[name="active_form_key"]'
-        )?.value;
-        if (activeFormKey !== undefined) {
-            // A shared custom-metadata form may contain several passive-open
-            // rows, each with its own active_form_key input. The cell being
-            // saved must determine which row receives the validation stream.
-            formData.set('active_form_key', activeFormKey);
-        }
-        const activeFieldName = cell.querySelector(
-            'input[name="active_field_name"]'
-        )?.value;
-        if (activeFieldName !== undefined) {
-            formData.set('active_field_name', activeFieldName);
-        }
+        const formData = buildCellSaveFormData(cell, form);
+        // Recorded so a save queued behind this one (see runCellSave) can
+        // tell a real duplicate trigger from a correction typed before this
+        // request's response landed.
+        state.dispatchedFormData = formData.toString();
 
         try {
             const { response, html } = await postTurboStream(form.action, formData);

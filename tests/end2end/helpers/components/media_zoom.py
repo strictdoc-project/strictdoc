@@ -59,6 +59,23 @@ class MediaZoom:  # pylint: disable=invalid-name
             "sdoc-media-zoom", 0, 0, center=True
         )
 
+    def dispatch_click(self, element: WebElement) -> None:
+        """
+        Fires a plain, script-dispatched "click" on the element, as
+        opposed to WebElement.click()'s real, trusted click. A trusted
+        click's own mousedown clears any existing selection as a browser
+        default action before the click handler under test ever runs,
+        which would erase a selection set up via the Range API in the
+        same test right before calling this. A dispatched, untrusted
+        click carries no such default action, so a selection set up just
+        before this call is still there when the click listener runs.
+        """
+        self.test_case.execute_script(
+            "arguments[0].dispatchEvent("
+            "new MouseEvent('click', {bubbles: true, cancelable: true}));",
+            element,
+        )
+
     def do_wheel_zoom_in(self) -> None:
         self.test_case.execute_script(
             """

@@ -9,6 +9,13 @@ svg {
   flex-shrink: 0;
 }
 
+/* .plantuml and other SVG text elements: */
+svg text,
+/* mermaid text labels: */
+svg[id*="mermaid"] span {
+  cursor: text;
+}
+
 /* typography */
 
 h1 { font-size: 2em; }

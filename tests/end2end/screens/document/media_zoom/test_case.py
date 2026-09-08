@@ -76,6 +76,48 @@ class Test(E2ECase):
 
             media_zoom.do_close_with_escape()
 
+            # Selecting text inside a diagram (e.g. dragging over a Mermaid
+            # label) must not open the overlay: a click that ends a text-
+            # selection drag still fires as an ordinary "click", which the
+            # open-on-click handler would otherwise treat as a request to
+            # open. Set up the selection directly via the Range API rather
+            # than simulating a mouse drag -- the code under test only
+            # ever looks at window.getSelection(), so this exercises the
+            # same check without depending on the browser's own drag/text-
+            # selection mechanics, which differ enough between browsers to
+            # make a simulated drag an unreliable way to set this up.
+            #
+            # The click itself must be dispatched via JS
+            # (media_zoom.dispatch_click), not WebElement.click(): a real,
+            # trusted click's own mousedown would clear the selection just
+            # set up here as a browser default action, before the click
+            # handler under test ever saw it.
+            self.execute_script(
+                """
+                const range = document.createRange();
+                range.selectNodeContents(arguments[0]);
+                const selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(range);
+                """,
+                mermaid,
+            )
+            assert (
+                self.execute_script("return window.getSelection().toString();")
+                != ""
+            )
+            media_zoom.dispatch_click(mermaid)
+            media_zoom.assert_not_open()
+
+            # Clearing the selection and clicking the same element again
+            # must open the overlay normally -- proves the guard above
+            # only blocks an actual selection, not every click on this
+            # element.
+            self.execute_script("window.getSelection().removeAllRanges();")
+            media_zoom.dispatch_click(mermaid)
+            media_zoom.assert_open()
+            media_zoom.do_close_with_escape()
+
             # Mermaid: cloning must keep the source SVG's id, or Mermaid's
             # id-scoped generated <style> ("#mermaid-<n> .node rect {...}")
             # stops matching the clone's shapes, leaving them unstyled.

@@ -212,6 +212,13 @@
   document.addEventListener('click', (event) => {
     const source = event.target.closest?.(SEL_ZOOMABLE);
     if (!source) return;
+    // A click that ends a text-selection drag (mousedown, move, mouseup)
+    // still fires as an ordinary "click" -- a non-empty selection at this
+    // point means the user was selecting a diagram label, not asking to
+    // open the viewer. A plain click (no drag) always leaves the
+    // selection empty, since it collapses/clears whatever was selected
+    // before, so this only ever blocks the actual selection case.
+    if (window.getSelection()?.toString().length > 0) return;
     openOverlay(source);
   });
 

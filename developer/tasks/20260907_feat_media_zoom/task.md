@@ -8,7 +8,9 @@ a `zoom-in` cursor on hover.
 Clicking a media element shall open a full-viewport overlay with a clone of
 that media. The overlay shall be a dedicated full-viewport viewer, not the
 existing constrained modal component. It shall open with the media fit to
-the viewport, without enlarging it past its natural pixel size.
+the viewport, without enlarging it past its natural pixel size. Selecting
+text inside a diagram (e.g. a Mermaid/PlantUML label) shall not open the
+overlay.
 
 Inside the overlay:
 
@@ -71,4 +73,8 @@ Mermaid/PlantUML scripts.
   keys, styled with the same tokens as the rest of the UI chrome
   (`--color-bg-ui`, `--color-fg-secondary-invert`); `pointer-events: none`
   keeps it from blocking a backdrop click meant to close the overlay.
+- A click that ends a text-selection drag still fires as an ordinary
+  `click`; the open-on-click handler checks `window.getSelection()` first
+  and skips opening the overlay when it is non-empty, since a plain click
+  (no drag) always leaves the selection empty.
 - e2e coverage: `tests/end2end/screens/document/media_zoom/`.

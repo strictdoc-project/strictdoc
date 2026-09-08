@@ -8,6 +8,7 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.ui import WebDriverWait
 
 from strictdoc.helpers.mid import MID
+from tests.end2end.conftest import test_environment
 from tests.end2end.e2e_case import E2ECase
 
 
@@ -233,9 +234,9 @@ class Form:  # pylint: disable=invalid-name
         self.test_case.type(field_xpath, f"{field_value}", by=By.XPATH)
 
         # We wait until the results <ul> is displayed.
-        WebDriverWait(self.test_case.driver, 3).until(
-            lambda _: results_ul.is_displayed()
-        )
+        WebDriverWait(
+            self.test_case.driver, test_environment.wait_timeout_seconds
+        ).until(lambda _: results_ul.is_displayed())
 
         # We send Arrow-Down and Enter select the first match.
         # The stimulus.js controller uses a debounce of 10ms, we are
@@ -248,7 +249,10 @@ class Form:  # pylint: disable=invalid-name
 
         # Now wait for the length of the field to increase, this means
         # the autocomplete did happen.
-        WebDriverWait(self.test_case.driver, timeout=3).until(
+        WebDriverWait(
+            self.test_case.driver,
+            timeout=test_environment.wait_timeout_seconds,
+        ).until(
             lambda _: (
                 len(element.text.lower().strip()) > len_before_autocomplete
             )
@@ -273,9 +277,9 @@ class Form:  # pylint: disable=invalid-name
         self.test_case.type(field_xpath, f"{field_value}", by=By.XPATH)
 
         # We wait until the results <ul> is displayed.
-        WebDriverWait(self.test_case.driver, 3).until(
-            lambda _: results_ul.is_displayed()
-        )
+        WebDriverWait(
+            self.test_case.driver, test_environment.wait_timeout_seconds
+        ).until(lambda _: results_ul.is_displayed())
 
         no_results_item = results_ul.find_element(
             By.XPATH,
@@ -313,9 +317,9 @@ class Form:  # pylint: disable=invalid-name
         text_before = element.text
         element.click()
 
-        WebDriverWait(self.test_case.driver, 3).until(
-            lambda _: results_ul.is_displayed()
-        )
+        WebDriverWait(
+            self.test_case.driver, test_environment.wait_timeout_seconds
+        ).until(lambda _: results_ul.is_displayed())
 
         self.test_case.assert_element_not_present(
             f"{field_xpath}/following-sibling::input[@type='hidden']"
@@ -353,9 +357,9 @@ class Form:  # pylint: disable=invalid-name
         element.send_keys(f",{field_value}")
 
         # We wait until the results <ul> is displayed.
-        WebDriverWait(self.test_case.driver, 3).until(
-            lambda _: results_ul.is_displayed()
-        )
+        WebDriverWait(
+            self.test_case.driver, test_environment.wait_timeout_seconds
+        ).until(lambda _: results_ul.is_displayed())
 
         # We send Arrow-Down and Enter select the first match.
         # autocompletable_field.js uses a debounce of 50ms, we are
@@ -368,7 +372,10 @@ class Form:  # pylint: disable=invalid-name
 
         # Now wait for the length of the field to increase, this means
         # the autocomplete did happen.
-        WebDriverWait(self.test_case.driver, timeout=3).until(
+        WebDriverWait(
+            self.test_case.driver,
+            timeout=test_environment.wait_timeout_seconds,
+        ).until(
             lambda _: (
                 len(element.text.lower().strip()) > len_before_autocomplete
             )
@@ -398,9 +405,9 @@ class Form:  # pylint: disable=invalid-name
         # leaves the raw typed prefix in the field (e.g. "REQ-"), which is
         # still a substring of the expected value and previously made this
         # method report a false success, saving an invalid relation UID.
-        WebDriverWait(self.test_case.driver, 3).until(
-            lambda _: results_ul.is_displayed()
-        )
+        WebDriverWait(
+            self.test_case.driver, test_environment.wait_timeout_seconds
+        ).until(lambda _: results_ul.is_displayed())
 
         # We send Arrow-Down and Enter select the first match.
         # autocompletable_field.js uses a debounce of 10ms, we are
@@ -416,9 +423,10 @@ class Form:  # pylint: disable=invalid-name
         # full target value (e.g. "REQ-001"), selecting the match commits
         # the same text, so the field's length never grows even though the
         # selection succeeded.
-        WebDriverWait(self.test_case.driver, timeout=3).until(
-            lambda _: not results_ul.is_displayed()
-        )
+        WebDriverWait(
+            self.test_case.driver,
+            timeout=test_environment.wait_timeout_seconds,
+        ).until(lambda _: not results_ul.is_displayed())
 
     def do_clear_field(self, field_name: str, field_order: int = 1) -> None:
         assert isinstance(field_name, str)

@@ -67,6 +67,22 @@ class Test(E2ECase):
             screen_table.do_save_inline_cell_by_outside_click()
 
             self.assert_text("Corrected value", selector=row)
-            self.assert_element_not_present(error)
+            try:
+                self.assert_element_not_present(error)
+            except Exception:
+                # This assertion has failed intermittently on CI with no
+                # local repro, including under a forced 1s delay on the
+                # first save's response (which did not reproduce it). Dump
+                # the row so a future CI failure carries the actual DOM
+                # instead of just a timeout message.
+                row_html = self.execute_script(
+                    f"return document.querySelector('{row}').outerHTML;"
+                )
+                print(  # noqa: T201
+                    "\n[edit_table_document_custom_meta_value_validation] "
+                    "Timed out waiting for the stale validation error to "
+                    f"disappear.\nRow HTML:\n{row_html}"
+                )
+                raise
 
         assert test_setup.compare_sandbox_and_expected_output()

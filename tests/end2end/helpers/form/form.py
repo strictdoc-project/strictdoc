@@ -43,9 +43,25 @@ class Form:  # pylint: disable=invalid-name
         )
 
     def assert_error_not_present(self, message: str) -> None:
-        self.test_case.assert_element_not_present(
-            f"//sdoc-form-error[contains(., '{message}')]", by=By.XPATH
-        )
+        try:
+            self.test_case.assert_element_not_present(
+                f"//sdoc-form-error[contains(., '{message}')]", by=By.XPATH
+            )
+        except Exception:
+            # This assertion has failed intermittently on CI with no local
+            # repro (message still present after the default wait). Dump
+            # the live state of every form row so a future CI failure
+            # carries the actual DOM instead of just a timeout message.
+            rows_html = self.test_case.execute_script(
+                "return [...document.querySelectorAll('sdoc-form-row')]"
+                ".map(row => row.outerHTML).join('\\n---\\n');"
+            )
+            print(  # noqa: T201
+                "\n[assert_error_not_present] Timed out waiting for this "
+                f"error to disappear: {message!r}\n"
+                f"Current sdoc-form-row elements on the page:\n{rows_html}"
+            )
+            raise
 
     def assert_contenteditable_contains(self, text: str) -> None:
         self.test_case.assert_element(

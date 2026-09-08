@@ -102,6 +102,21 @@
         return formData;
     }
 
+    // Serialized value of only the inputs a cell itself owns. Used to detect
+    // whether *this* cell's content changed since a dispatch (see
+    // runCellSave), scoped to the cell rather than its form: for a custom
+    // metadata field, getFieldForm() resolves to the one shared form that
+    // wraps every row, so comparing its full serialization would treat an
+    // unrelated row's still-in-progress edit as if this cell's own value had
+    // changed, and could resubmit that row's stale content as a side effect.
+    function getCellOwnFieldsData(cell) {
+        const params = new URLSearchParams();
+        cell
+            .querySelectorAll('input[name], textarea[name], select[name]')
+            .forEach(el => params.append(el.name, el.value));
+        return params.toString();
+    }
+
     function getCellState(cell) {
         let state = cellStates.get(cell);
         if (!state) {
@@ -112,10 +127,11 @@
                 originalFormData: undefined,
                 // Shared by duplicate save triggers for this cell.
                 savePromise: null,
-                // Serialized form data as of the in-flight save's dispatch,
-                // so a save queued behind it can tell a real duplicate
-                // trigger from a correction typed before the response landed.
-                dispatchedFormData: undefined,
+                // This cell's own fields (see getCellOwnFieldsData) as of the
+                // in-flight save's dispatch, so a save queued behind it can
+                // tell a real duplicate trigger from a correction typed
+                // before the response landed.
+                dispatchedOwnFieldsData: undefined,
                 // Delayed blur save used by autocomplete dropdown interaction.
                 autocompleteBlurTimer: null,
                 // Bumped on every initInlineCellState() call for this cell so a
@@ -499,14 +515,13 @@
             // least one animation frame, so the field being unedited here is
             // not proof the in-flight request already covered it — compare
             // against the data that request actually dispatched instead.
+            // Scoped to this cell's own fields (not the whole form, which
+            // for a custom metadata field is shared across every row) so an
+            // unrelated row's edit can't be mistaken for a change here.
             await state.savePromise;
-            const dispatchedData = state.dispatchedFormData;
-            const form = getFieldForm(cell);
-            const currentData = form
-                ? buildCellSaveFormData(cell, form).toString()
-                : undefined;
+            const dispatchedData = state.dispatchedOwnFieldsData;
+            const currentData = getCellOwnFieldsData(cell);
             if (
-                currentData !== undefined &&
                 dispatchedData !== undefined &&
                 currentData === dispatchedData
             ) {
@@ -924,7 +939,7 @@
         // Recorded so a save queued behind this one (see runCellSave) can
         // tell a real duplicate trigger from a correction typed before this
         // request's response landed.
-        state.dispatchedFormData = formData.toString();
+        state.dispatchedOwnFieldsData = getCellOwnFieldsData(cell);
 
         try {
             const { response, html } = await postTurboStream(form.action, formData);

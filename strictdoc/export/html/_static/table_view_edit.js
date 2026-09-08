@@ -760,6 +760,10 @@
                     // check behind Turbo's own (registered first, above, when
                     // renderTurboStream() ran), so it runs in the same frame
                     // right after Turbo's stale mutation lands, and undoes it.
+                    // This ordering is exercised deterministically (by
+                    // delaying every requestAnimationFrame callback on the
+                    // page to widen the one-frame window) in
+                    // edit_table_document_custom_meta_cancel_during_fetch.
                     if (requestId !== null && originalHTML !== undefined) {
                         requestAnimationFrame(() => {
                             if (isEditRequestStaleAndUncontested(cell, requestId)) {

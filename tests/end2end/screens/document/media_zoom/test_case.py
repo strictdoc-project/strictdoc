@@ -1,5 +1,7 @@
 import os
 
+from selenium.webdriver.common.keys import Keys
+
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.exporter import SDocTestHTMLExporter
 from tests.end2end.helpers.components.media_zoom import MediaZoom
@@ -73,6 +75,31 @@ class Test(E2ECase):
             # while zooming the wrong way.
             media_zoom.do_wheel_zoom_in()
             assert media_zoom.get_stage_scale() > 1.0
+
+            # Arrow keys pan independent of Space (a reported Linux setup
+            # had Space+drag panning not work at all, so it cannot be the
+            # only way in). Right/Down must move the opposite axis's
+            # translate not at all, and Alt held must pan further per key
+            # press than a plain arrow key -- checking direction and
+            # relative speed rather than an exact pixel delta keeps this
+            # independent of the panning step size chosen in media_zoom.js.
+            translate_start = media_zoom.get_stage_translate()
+            media_zoom.do_arrow_pan(Keys.ARROW_RIGHT)
+            translate_after_right = media_zoom.get_stage_translate()
+            assert translate_after_right[0] < translate_start[0]
+            assert translate_after_right[1] == translate_start[1]
+
+            media_zoom.do_arrow_pan(Keys.ARROW_DOWN)
+            translate_after_down = media_zoom.get_stage_translate()
+            assert translate_after_down[1] < translate_after_right[1]
+            assert translate_after_down[0] == translate_after_right[0]
+
+            translate_before_fast = media_zoom.get_stage_translate()
+            media_zoom.do_arrow_pan(Keys.ARROW_RIGHT, alt=True)
+            translate_after_fast = media_zoom.get_stage_translate()
+            plain_delta = translate_start[0] - translate_after_right[0]
+            fast_delta = translate_before_fast[0] - translate_after_fast[0]
+            assert fast_delta > plain_delta
 
             media_zoom.do_close_with_escape()
 

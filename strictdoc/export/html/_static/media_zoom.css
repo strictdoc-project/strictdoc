@@ -48,7 +48,7 @@ sdoc-media-zoom-stage svg {
 
 sdoc-media-zoom-hint {
   position: absolute;
-  top: var(--base-rhythm);
+  bottom: var(--base-rhythm);
   left: var(--base-rhythm);
   padding: 0 var(--base-rhythm);;
   background: var(--color-bg-ui);

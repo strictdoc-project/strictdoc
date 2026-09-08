@@ -22,6 +22,8 @@
   const MAX_SCALE = 8;
   const WHEEL_ZOOM_SENSITIVITY = 0.0015;
   const FIT_VIEWPORT_PADDING = 32;
+  const ARROW_PAN_STEP = 20;
+  const ARROW_PAN_STEP_FAST = ARROW_PAN_STEP * 10;
 
   /*
    * Zoomability marking.
@@ -149,7 +151,8 @@
     const hint = document.createElement('sdoc-media-zoom-hint');
     // Fixed to the overlay, not the stage: must stay put while panning/
     // zooming moves the stage underneath it.
-    hint.innerHTML = 'Use <kbd>Space</kbd> to pan, wheel to zoom.';
+    hint.innerHTML =
+      'Use <kbd>Space</kbd> or arrow keys to pan, wheel to zoom.';
     overlay.appendChild(hint);
 
     overlay.addEventListener('click', (event) => {
@@ -287,6 +290,35 @@
     if (!current) return;
     current.dragOrigin = null;
     current.overlay.removeAttribute('data-dragging');
+  });
+
+  // Arrow-key panning, independent of Space: on at least one reported
+  // Linux setup, Space+drag panning didn't work at all (likely a window
+  // manager/browser combination eating the drag), so a mouse-free way to
+  // pan is needed regardless of that path. Mirrors pan_with_space.js's
+  // own arrow-key handling (same step size, same Alt-held speedup).
+  document.addEventListener('keydown', (event) => {
+    const current = getState();
+    if (!current) return;
+    const active = document.activeElement;
+    if (active?.tagName === 'INPUT' || active?.tagName === 'TEXTAREA' ||
+        active?.isContentEditable) {
+      return;
+    }
+    const step = event.altKey ? ARROW_PAN_STEP_FAST : ARROW_PAN_STEP;
+    if (event.key === 'ArrowUp') {
+      current.translateY += step;
+    } else if (event.key === 'ArrowDown') {
+      current.translateY -= step;
+    } else if (event.key === 'ArrowLeft') {
+      current.translateX += step;
+    } else if (event.key === 'ArrowRight') {
+      current.translateX -= step;
+    } else {
+      return;
+    }
+    event.preventDefault();
+    applyTransform();
   });
 
 })();

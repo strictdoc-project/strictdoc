@@ -18,6 +18,8 @@ Inside the overlay:
   the media's natural size shall be allowed.
 - Dragging (optionally with Space held) shall pan the media. Content shall be
   unselectable while dragging and selectable/copyable at rest.
+- Arrow keys shall pan the media, independent of Space. Alt held shall pan
+  faster.
 - A double-click shall toggle between fit-to-screen and 100%.
 - Escape or a click on the backdrop shall close the overlay.
 - A small hint in the corner of the overlay shall show the pan/zoom keys.
@@ -77,4 +79,8 @@ Mermaid/PlantUML scripts.
   `click`; the open-on-click handler checks `window.getSelection()` first
   and skips opening the overlay when it is non-empty, since a plain click
   (no drag) always leaves the selection empty.
+- Arrow-key panning mirrors `pan_with_space.js`'s own arrow-key handling
+  (same step size, same Alt-held speedup), and exists independently of
+  Space+drag: on at least one reported Linux setup, Space+drag panning
+  did not work at all, so mouse-drag cannot be the only way to pan.
 - e2e coverage: `tests/end2end/screens/document/media_zoom/`.

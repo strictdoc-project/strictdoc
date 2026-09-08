@@ -1,5 +1,6 @@
 import re
 
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webelement import WebElement
@@ -41,6 +42,19 @@ class MediaZoom:  # pylint: disable=invalid-name
         assert match, f"Unexpected transform value: {transform!r}"
         return float(match.group(1))
 
+    def get_stage_translate(self) -> tuple:
+        """
+        Reads (tx, ty) off the stage's "matrix(a, b, c, d, tx, ty)"
+        transform.
+        """
+        transform = self.get_stage_transform()
+        match = re.match(
+            r"matrix\(([^,]+),([^,]+),([^,]+),([^,]+),([^,]+),([^,)]+)\)",
+            transform,
+        )
+        assert match, f"Unexpected transform value: {transform!r}"
+        return float(match.group(5)), float(match.group(6))
+
     def do_close_with_escape(self) -> None:
         """Uses Escape key. Includes assert_not_open."""
         self.test_case.get_element("html").send_keys(Keys.ESCAPE)
@@ -75,6 +89,14 @@ class MediaZoom:  # pylint: disable=invalid-name
             "new MouseEvent('click', {bubbles: true, cancelable: true}));",
             element,
         )
+
+    def do_arrow_pan(self, key: str, *, alt: bool = False) -> None:
+        if alt:
+            ActionChains(self.test_case.driver).key_down(Keys.ALT).send_keys(
+                key
+            ).key_up(Keys.ALT).perform()
+        else:
+            self.test_case.get_element("html").send_keys(key)
 
     def do_wheel_zoom_in(self) -> None:
         self.test_case.execute_script(

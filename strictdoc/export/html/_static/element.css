@@ -2068,3 +2068,58 @@ sdoc-node-content .field_issue-ribbon::before {
 .icon-checkbox input[type="checkbox"]:not(:checked) ~ * {
   color: var(--color-fg-secondary);
 }
+
+/* toggle switch (template: #template-switch) */
+
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--base-rhythm);
+  color: var(--color-fg-main);
+  font-size: var(--font-size-sm);
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+}
+
+.switch__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
+.switch__slider {
+  position: relative;
+  flex: 0 0 auto;
+  width: 28px;
+  height: 16px;
+  border-radius: 8px;
+  background: var(--color-border);
+  transition: background-color 100ms ease-out;
+}
+
+.switch__slider::before {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-bg-main);
+  content: "";
+  transition: transform 100ms ease-out;
+}
+
+.switch__input:checked + .switch__slider {
+  background: var(--color-action);
+}
+
+.switch__input:checked + .switch__slider::before {
+  transform: translateX(12px);
+}
+
+.switch__input:focus-visible + .switch__slider {
+  outline: 2px solid var(--color-action);
+  outline-offset: 2px;
+}

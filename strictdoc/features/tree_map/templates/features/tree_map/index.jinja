@@ -60,6 +60,7 @@
     <template id="tree-map-tips-modal-template">
       {% include "features/tree_map/tips.jinja" %}
     </template>
+    {%- include "components/switch/index.jinja" -%}
     <script id="tree-map-data" type="application/json">
       {{- view_object.tree_map_json -}}
     </script>

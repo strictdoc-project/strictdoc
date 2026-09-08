@@ -10,150 +10,18 @@ const FRAGMENT_SELECTOR = `.project_tree-file[${FRAGMENT_ATTR}]`;
 const FILE_SELECTOR = `.project_tree-file`;
 const FOLDER_SELECTOR = `.project_tree-folder`;
 
-// This class Switch was taken
-// from strictdoc/export/html/_static/source-code-coverage.js
-// and improved a bit:
-class Switch {
-  constructor({
-    callback,
-    labelText,
-    checked,
-    componentClass,
-    colorOn,
-    colorOff,
-    size,
-    stroke,
-    units,
-    position,
-    topPosition,
-    leftPosition,
-    rightPosition,
-    bottomPosition,
-    dataTestID,
-  }) {
-    this.colorOn = colorOn || 'rgb(242, 100, 42)';
-    this.colorOff = colorOff || 'rgb(200, 200, 200)';
-    this.labelInitialText = labelText || '';
-    this.checked = (checked === false) ? false : true;
+function createSwitch({ labelText, checked, dataTestID, callback }) {
+  const template = document.getElementById('template-switch');
+  const label = template.content.cloneNode(true).querySelector('label');
+  const input = label.querySelector('input[type=checkbox]');
+  const text = label.querySelector('.switch__label-text');
 
-    this.dataTestID = dataTestID || 'std-switch';
-    this.componentClass = componentClass || 'std-switch-scc';
-    this.size = size || 0.75;
-    this.stroke = stroke || 0.25;
-    this.units = units || 'rem';
+  text.innerHTML = labelText;
+  input.checked = checked;
+  input.addEventListener('change', () => callback(input.checked));
+  label.setAttribute('data-testid', dataTestID);
 
-    this.topPosition = topPosition || 'unset',
-    this.leftPosition = leftPosition || 'unset',
-    this.rightPosition = rightPosition || 'unset',
-    this.bottomPosition = bottomPosition || 'unset',
-    this.position = position || 'static',
-
-    this.controlLabelTextSpan = document.createElement('span');
-    this.callback = callback;
-  }
-
-  create() {
-    const block = document.createElement('div');
-    block.classList.add(this.componentClass);
-    const label = document.createElement('label');
-    label.classList.add(`${this.componentClass}__label`);
-    const input = document.createElement('input');
-    input.classList.add(`${this.componentClass}__input`);
-    input.type = 'checkbox';
-    input.checked = this.checked;
-    const slider = document.createElement('span');
-    slider.classList.add(`${this.componentClass}__slider`);
-
-    label.append(input, slider, this.controlLabelTextSpan);
-    block.append(label);
-
-    this.insertStyle();
-    this.updateLabelText(this.labelInitialText);
-    input.addEventListener('change', () => this.callback(input.checked));
-
-    label.setAttribute('data-testid', this.dataTestID);
-
-    return block;
-  }
-
-  updateLabelText(text) {
-    this.controlLabelTextSpan.innerHTML = text;
-  }
-
-  insertStyle() {
-
-    const css = `
-    .${this.componentClass} {
-      display: inline-block;
-      line-height: 0;
-      position: ${this.position};
-      top: ${this.topPosition};
-      left: ${this.leftPosition};
-      right: ${this.rightPosition};
-      bottom: ${this.bottomPosition};
-    }
-    .${this.componentClass}__label {
-      display: inline-flex;
-      column-gap: 8px;
-      line-height: ${this.size * 1.6}${this.units};
-      line-height: 1.25;
-      align-items: flex-start;
-      justify-content: flex-start;
-      user-select: none;
-      cursor: pointer;
-      font-size: small;
-    }
-    .${this.componentClass}__input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-      position: absolute;
-    }
-    .${this.componentClass}__slider {
-      position: relative;
-      cursor: pointer;
-      background-color: ${this.colorOff};
-      -webkit-transition: .4s;
-      transition: .4s;
-      display: inline-block;
-      width: ${this.size * 2 + this.stroke * 2}${this.units};
-      min-width: ${this.size * 2 + this.stroke * 2}${this.units};
-      height: ${this.size + this.stroke * 2}${this.units};
-      margin-right: ${this.size * 0.5}${this.units};
-      border-radius: ${this.size * 0.5 + this.stroke}${this.units};
-    }
-    .${this.componentClass}__slider::before  {
-      position: absolute;
-      content: "";
-      height: ${this.size}${this.units};
-      width: ${this.size}${this.units};
-      left: ${this.stroke}${this.units};
-      bottom: ${this.stroke}${this.units};
-      background-color: white;
-      -webkit-transition: .4s;
-      transition: .4s;
-      border-radius: 50%;
-    }
-    input:checked + .${this.componentClass}__slider {
-      background-color: ${this.colorOn};
-    }
-    input:focus + .${this.componentClass}__slider {
-      box-shadow: 0 0 1px ${this.colorOn};
-    }
-    input:checked + .${this.componentClass}__slider::before {
-      -webkit-transform: translateX(${this.size}${this.units});
-      -ms-transform: translateX(${this.size}${this.units});
-      transform: translateX(${this.size}${this.units});
-    }
-    `;
-
-    const head = document.querySelector('head');
-    const style = document.createElement('style');
-    style.append(document.createTextNode(css));
-    style.setAttribute("data-slider-styles", '');
-    head.append(style);
-  }
-
+  return { element: label, textElement: text };
 }
 
 class ProjectTree {
@@ -258,7 +126,7 @@ class ProjectTree {
   }
 
   _updateControl(num) {
-    this.control.updateLabelText(`<b>Show ${num} fragment${num > 1 ? 's' : ''}</b> included in&nbsp;other documents in the Project document tree.`)
+    this.control.textElement.innerHTML = `<b>Show ${num} fragment${num > 1 ? 's' : ''}</b> included in&nbsp;other documents in the Project document tree.`;
 
     if (num) {
       this._addControl();
@@ -304,21 +172,13 @@ class ProjectTree {
   }
 
   _createControl() {
-    this.control = new Switch(
-      {
-        labelText: `<b>Show fragments</b>`, // * This text will be updated later.
-        dataTestID: 'show-hide-fragments-toggler',
-        size: 0.5,
-        stroke: 0.175,
-        // position: 'absolute',
-        // topPosition: '16px',
-        // leftPosition: 0,
-        // checked: false,
-        checked: this.getCurrentFragmentVisibilityBool(),
-        callback: (checked) => this.toggleFragmentsVisibility(checked),
-      }
-    );
-    this.controlElement = this.control.create();
+    this.control = createSwitch({
+      labelText: `<b>Show fragments</b>`, // * This text will be updated later.
+      dataTestID: 'show-hide-fragments-toggler',
+      checked: this.getCurrentFragmentVisibilityBool(),
+      callback: (checked) => this.toggleFragmentsVisibility(checked),
+    });
+    this.controlElement = this.control.element;
   }
 
   _addControl() {

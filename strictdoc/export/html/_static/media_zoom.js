@@ -1,7 +1,8 @@
-// Lets a reader zoom into an image or a rendered Mermaid/PlantUML diagram
-// that StrictDoc has shrunk to fit the page (see autogen.css's
-// "sdoc-autogen img, svg { max-width: 100% }"). Media whose natural size
-// does not exceed its displayed size shows no zoom affordance.
+// Lets a reader zoom into any image or rendered Mermaid/PlantUML diagram
+// in a document. Opens a full-viewport overlay with a clone of the media;
+// the initial view fits it to the viewport without enlarging it past its
+// natural pixel size, and wheel/double-click let the reader zoom in
+// further from there.
 //
 // Uses StrictDoc.onInsert (app_core.js) instead of a dedicated
 // MutationObserver, so late-arriving media (async Mermaid/PlantUML
@@ -14,11 +15,6 @@
   const ZOOMABLE_ATTR = 'data-js-zoomable';
   const SEL_ZOOMABLE = '[data-js-zoomable]';
 
-  // A media element counts as "shrunk" once its natural size exceeds its
-  // displayed size by this ratio -- small margin to absorb sub-pixel
-  // rounding from the browser's own layout, not a deliberate fudge factor.
-  const OVERSIZED_RATIO = 1.15;
-
   // Initial reasonable bounds/rates, not derived from any measurement --
   // revisit by feel if wheel-zoom ever feels too fast/slow, or the zoom
   // caps feel too tight/loose.
@@ -28,13 +24,8 @@
   const FIT_VIEWPORT_PADDING = 32;
 
   /*
-   * Zoomability tracking.
+   * Zoomability marking.
    */
-
-  // Elements StrictDoc.onInsert has handed us, kept so a viewport resize
-  // can re-evaluate them (shrinking/growing the page can flip whether an
-  // element still counts as oversized).
-  const trackedMedia = new Set();
 
   function naturalSize(el) {
     if (el.tagName === 'IMG') {
@@ -48,41 +39,19 @@
       : null;
   }
 
-  function evaluateZoomability(el) {
-    const natural = naturalSize(el);
-    if (!natural) return;
-    const displayedWidth = el.getBoundingClientRect().width;
-    if (!displayedWidth) return;
-    el.toggleAttribute(
-      ZOOMABLE_ATTR, natural.width > displayedWidth * OVERSIZED_RATIO
-    );
-  }
-
-  function trackMedia(el) {
-    trackedMedia.add(el);
-    evaluateZoomability(el);
+  function markZoomable(el) {
+    // naturalSize can fail to resolve for a broken image or an SVG
+    // without a viewBox; such an element gets no affordance, since
+    // openOverlay would have nothing to size the stage from.
+    if (naturalSize(el)) el.setAttribute(ZOOMABLE_ATTR, '');
   }
 
   window.StrictDoc.onInsert(SEL_MEDIA, (el) => {
     if (el.tagName === 'IMG' && !el.complete) {
-      el.addEventListener('load', () => trackMedia(el), { once: true });
+      el.addEventListener('load', () => markZoomable(el), { once: true });
       return;
     }
-    trackMedia(el);
-  });
-
-  let resizeTimer;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimer);
-    resizeTimer = setTimeout(() => {
-      trackedMedia.forEach((el) => {
-        if (!el.isConnected) {
-          trackedMedia.delete(el);
-          return;
-        }
-        evaluateZoomability(el);
-      });
-    }, 150);
+    markZoomable(el);
   });
 
   /*
@@ -109,8 +78,12 @@
   function computeFitScale(natural) {
     const availableWidth = window.innerWidth - FIT_VIEWPORT_PADDING * 2;
     const availableHeight = window.innerHeight - FIT_VIEWPORT_PADDING * 2;
+    // Capped at 1: "fit" never enlarges media past its natural pixel
+    // size. Without the cap, a small image would open blown up to fill
+    // the viewport instead of at the size it's actually stored at;
+    // zooming in past that remains available via wheel/double-click.
     return Math.min(
-      availableWidth / natural.width, availableHeight / natural.height
+      availableWidth / natural.width, availableHeight / natural.height, 1
     );
   }
 

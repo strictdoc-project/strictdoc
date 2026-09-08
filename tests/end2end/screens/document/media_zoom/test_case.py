@@ -11,12 +11,10 @@ path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
 DOC_PATH = "media_zoom/input/index.html"
 
-# input/index.sdoc pairs a "small" node per media type (must render well
-# under any reasonable content column width -- never zoomable) with a
-# "large" one (must render far wider than any reasonable column -- always
-# zoomable). The large PlantUML diagram needs its full 20 participants:
-# an earlier 8-participant version wasn't reliably wider than the shrunk
-# display width in the actual test browser window.
+# input/index.sdoc has a small and a large image (used below to check that
+# the overlay's initial scale depends on the image's own size), plus one
+# Mermaid and one PlantUML diagram (used to check the overlay works for
+# every media kind).
 
 
 class Test(E2ECase):
@@ -30,76 +28,39 @@ class Test(E2ECase):
             screen_document.assert_on_screen_document()
 
             # Async Mermaid/PlantUML rendering must complete before the
-            # zoomability checks and click targets below exist.
+            # click targets below exist.
             self.assert_element("pre.mermaid svg")
             self.assert_element("pre.plantuml svg")
 
-            # The zoomability check itself (natural vs. displayed size) also
-            # runs asynchronously; wait for the large element of each media
-            # type to have settled on "zoomable" first, then assert the
-            # exact counts on both sides -- this is what actually verifies
-            # the small counterpart stayed excluded (assert_element alone
-            # only waits for *one* match, it does not bound the count).
+            # Zoomability marking runs asynchronously (image load / async
+            # diagram render); wait for it to settle before reading
+            # attributes off specific elements.
             self.assert_element("sdoc-autogen img[data-js-zoomable]")
             self.assert_element("pre.mermaid svg[data-js-zoomable]")
             self.assert_element("pre.plantuml svg[data-js-zoomable]")
 
-            for zoomable_selector, not_zoomable_selector in (
-                (
-                    "sdoc-autogen img[data-js-zoomable]",
-                    "sdoc-autogen img:not([data-js-zoomable])",
-                ),
-                (
-                    "pre.mermaid svg[data-js-zoomable]",
-                    "pre.mermaid svg:not([data-js-zoomable])",
-                ),
-                (
-                    "pre.plantuml svg[data-js-zoomable]",
-                    "pre.plantuml svg:not([data-js-zoomable])",
-                ),
-            ):
-                assert len(self.find_elements(zoomable_selector)) == 1
-                assert len(self.find_elements(not_zoomable_selector)) == 1
+            small_image = self.find_element('sdoc-autogen img[src*="small"]')
+            large_image = self.find_element('sdoc-autogen img[src*="large"]')
+            assert small_image.get_attribute("data-js-zoomable") is not None
+            assert large_image.get_attribute("data-js-zoomable") is not None
+
+            mermaid = self.find_element("pre.mermaid svg")
+            plantuml = self.find_element("pre.plantuml svg")
 
             media_zoom = MediaZoom(self)
 
-            small_image = self.find_element(
-                "sdoc-autogen img:not([data-js-zoomable])"
-            )
-            large_image = self.find_element(
-                "sdoc-autogen img[data-js-zoomable]"
-            )
-            small_mermaid = self.find_element(
-                "pre.mermaid svg:not([data-js-zoomable])"
-            )
-            large_mermaid = self.find_element(
-                "pre.mermaid svg[data-js-zoomable]"
-            )
-            small_plantuml = self.find_element(
-                "pre.plantuml svg:not([data-js-zoomable])"
-            )
-            large_plantuml = self.find_element(
-                "pre.plantuml svg[data-js-zoomable]"
-            )
-
-            # A non-zoomable element must not open the overlay. Checked for
-            # all three media kinds: the click delegate matches on
-            # [data-js-zoomable], and only the size-threshold check above
-            # decides which elements carry it -- a bug in either could
-            # still open the overlay for a "small" element of one kind but
-            # not another.
+            # The overlay's initial view fits the media to the viewport but
+            # never enlarges it past its natural pixel size: a small image
+            # opens at its real size (scale 1), a large one opens shrunk to
+            # fit (scale < 1).
             small_image.click()
-            media_zoom.assert_not_open()
-            small_mermaid.click()
-            media_zoom.assert_not_open()
-            small_plantuml.click()
-            media_zoom.assert_not_open()
+            media_zoom.assert_open()
+            assert media_zoom.get_stage_scale() == 1.0
+            media_zoom.do_close_with_escape()
 
-            # A zoomable element opens the full-viewport overlay with a
-            # clone of that element.
             large_image.click()
             media_zoom.assert_open()
-            assert media_zoom.get_stage_element("img") is not None
+            assert media_zoom.get_stage_scale() < 1.0
 
             # Double-click toggles between fit-to-screen and natural
             # (100%, scale factor 1) size.
@@ -115,13 +76,13 @@ class Test(E2ECase):
 
             media_zoom.do_close_with_escape()
 
-            # Regression: cloning must keep the source SVG's id, or
-            # Mermaid's id-scoped generated <style> ("#mermaid-<n> .node
-            # rect {...}") stops matching the clone's shapes, leaving them
-            # unstyled. Comparing against the source's own computed fill
-            # (rather than hardcoding Mermaid's current theme color in the
-            # main comparison) is what actually catches that. The sanity
-            # check below still names Mermaid's actual default node color
+            # Mermaid: cloning must keep the source SVG's id, or Mermaid's
+            # id-scoped generated <style> ("#mermaid-<n> .node rect {...}")
+            # stops matching the clone's shapes, leaving them unstyled.
+            # Comparing against the source's own computed fill (rather
+            # than hardcoding Mermaid's current theme color in the main
+            # comparison) is what actually catches that. The sanity check
+            # below still names Mermaid's actual default node color
             # explicitly -- an unstyled rect falls back to a dark grey
             # (verified empirically: NOT plain black), which would make a
             # "not black" guard pass right through an unstyled source.
@@ -130,20 +91,19 @@ class Test(E2ECase):
                 "  arguments[0].querySelector('.node rect')"
                 ").fill;"
             )
-            source_id = large_mermaid.get_attribute("id")
+            source_id = mermaid.get_attribute("id")
             source_rect_fill = self.execute_script(
-                get_node_rect_fill_js, large_mermaid
+                get_node_rect_fill_js, mermaid
             )
             assert source_rect_fill == "rgb(236, 236, 255)"  # Mermaid's #ECECFF
 
-            large_mermaid.click()
+            mermaid.click()
             media_zoom.assert_open()
 
             # The fit/natural toggle must not leave the browser's own
             # double-click-to-select-word behavior selecting a diagram
-            # label in passing (mermaid's node text is real, selectable
-            # SVG text, unlike the plain <img> used for the scale check
-            # above).
+            # label in passing (Mermaid's node text is real, selectable
+            # SVG text).
             media_zoom.do_toggle_fit_natural_with_double_click()
             assert (
                 self.execute_script("return window.getSelection().toString();")
@@ -159,6 +119,6 @@ class Test(E2ECase):
 
             media_zoom.do_close_with_backdrop_click()
 
-            large_plantuml.click()
+            plantuml.click()
             media_zoom.assert_open()
             media_zoom.do_close_with_escape()

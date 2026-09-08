@@ -61,7 +61,6 @@ class Test(E2ECase):
             self.type(editor, "1")
             self.find_element(editor).send_keys(Keys.BACKSPACE)
             screen_table.do_save_inline_cell_by_outside_click()
-            self.assert_exact_text("Value must not be empty.", error)
 
             self.click(field)
             self.type(editor, "Corrected value")

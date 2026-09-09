@@ -65,13 +65,26 @@ def test_05a_writes_plantuml_fence_as_plantuml_pre_block():
     )
 
 
-def test_06_writes_regular_fence_as_code_block():
+def test_06_writes_recognized_language_fence_as_highlighted_code_block():
     markdown_input = "```python\nprint(1)\n```\n"
 
     html_output = MarkdownToHtmlFragmentWriter().write(markdown_input)
 
     assert html_output == (
-        '<pre><code class="language-python">print(1)\n</code></pre>\n'
+        '<pre class="code">\n'
+        '<span class="nb">print</span><span class="p">(</span>'
+        '<span class="mi">1</span><span class="p">)</span>\n'
+        "</pre>\n"
+    )
+
+
+def test_06a_writes_unrecognized_language_fence_as_plain_code_block():
+    markdown_input = "```notalang\nsome text\n```\n"
+
+    html_output = MarkdownToHtmlFragmentWriter().write(markdown_input)
+
+    assert html_output == (
+        '<pre><code class="language-notalang">some text\n</code></pre>\n'
     )
 
 

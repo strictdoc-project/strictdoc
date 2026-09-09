@@ -1,0 +1,9 @@
+RUN: %strictdoc export %S --formats=html --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Export completed.
+
+RUN: %cat %T/html/30_code_block/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-FILE
+CHECK-HTML-FILE: Lorem Ipsum.
+CHECK-HTML-FILE: <pre class="code">
+CHECK-HTML-FILE: <span class="k">def</span>
+CHECK-HTML-FILE: Lorem ipsum.
+CHECK-HTML-FILE: <pre><code class="language-notalang123">some text

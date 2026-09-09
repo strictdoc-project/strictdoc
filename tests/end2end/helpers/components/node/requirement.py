@@ -275,6 +275,11 @@ class Requirement(Node):  # pylint: disable=invalid-name
         return Screen_Document(self.test_case)
 
     def do_copy_anchor_to_buffer(self) -> None:
+        # The button only appears on a real CSS :hover, so the hover target
+        # must already be on-screen: ActionChains moves the mouse to the
+        # element's current on-page position, it does not scroll for us, and
+        # a prior step in the same test may have scrolled it out of view.
+        self.test_case.sdoc_do_scroll_to_element_by_xpath(self.node_xpath)
         self.test_case.hover_and_click(
             hover_selector=f"{self.node_xpath}",
             click_selector=(
@@ -285,6 +290,9 @@ class Requirement(Node):  # pylint: disable=invalid-name
         )
 
     def do_copy_rst_anchor_to_buffer(self, anchor_uid: str) -> None:
+        # See do_copy_anchor_to_buffer: the hover target must be on-screen
+        # before hovering, not just present in the DOM.
+        self.test_case.sdoc_do_scroll_to_element_by_xpath(self.node_xpath)
         self.test_case.hover_and_click(
             hover_selector=f"{self.node_xpath}",
             click_selector=(
@@ -298,12 +306,16 @@ class Requirement(Node):  # pylint: disable=invalid-name
     def do_copy_field_content_to_buffer(
         self, field_label: str = "statement"
     ) -> None:
+        field_xpath = (
+            f"{self.node_xpath}"
+            f'//sdoc-node-field[@data-field-label="{field_label}"]'
+            "//sdoc-field"
+        )
+        # See do_copy_anchor_to_buffer: the hover target must be on-screen
+        # before hovering, not just present in the DOM.
+        self.test_case.sdoc_do_scroll_to_element_by_xpath(field_xpath)
         self.test_case.hover_and_click(
-            hover_selector=(
-                f"{self.node_xpath}"
-                f'//sdoc-node-field[@data-field-label="{field_label}"]'
-                "//sdoc-field"
-            ),
+            hover_selector=field_xpath,
             click_selector=(
                 f"{self.node_xpath}"
                 f'//sdoc-node-field[@data-field-label="{field_label}"]'
@@ -314,6 +326,9 @@ class Requirement(Node):  # pylint: disable=invalid-name
         )
 
     def do_copy_stable_link_to_buffer(self) -> None:
+        # See do_copy_anchor_to_buffer: the hover target must be on-screen
+        # before hovering, not just present in the DOM.
+        self.test_case.sdoc_do_scroll_to_element_by_xpath(self.node_xpath)
         self.test_case.hover_and_click(
             hover_selector=f"{self.node_xpath}",
             click_selector=(

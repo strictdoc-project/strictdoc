@@ -138,6 +138,12 @@
                 // fetchTurboStream() response that arrives after the cell was
                 // cancelled (or reopened) can be told apart from the current one.
                 editRequestId: 0,
+                // Bumped every time openInlineCell() (re)activates this cell,
+                // including reactivating a passive-open cell in place. Lets a
+                // save's response tell a stale activation from the current one
+                // (see performInlineCellSave): the cell reference alone can't,
+                // since reopening the same cell doesn't change it.
+                activationId: 0,
             };
             cellStates.set(cell, state);
         }
@@ -781,6 +787,12 @@
     // --- Inline-form cells (contenteditable / comments / relations) ---
 
     function openInlineCell(cell) {
+        // Bumped for any click that reaches this cell, including the no-op
+        // "already active" case right below: that's still the user re-
+        // engaging with the cell, which a save already in flight for it
+        // (dispatched before this click) needs to know about — see the
+        // activationId guard in performInlineCellSave.
+        getCellState(cell).activationId++;
         if (activeInlineCell === cell) return;
         if (activeInlineCell) {
             // [FEATURE: passive-open] Null activeInlineCell immediately so the
@@ -980,14 +992,30 @@
         // tell a real duplicate trigger from a correction typed before this
         // request's response landed.
         state.dispatchedOwnFieldsData = getCellOwnFieldsData(cell);
+        // Recorded so this save's own response can tell whether the user
+        // reopened this exact cell (passive-open reactivation) while the
+        // request was in flight — see the activeInlineCell guard below.
+        const dispatchedActivationId = state.activationId;
 
         try {
             const { response, html } = await postTurboStream(form.action, formData);
+            // A reopen click bumps activationId but, for an already
+            // passive-open cell, doesn't dispatch a new request (see
+            // openInlineCell) — it just resumes tracking the cell the user
+            // is now looking at. If that happened while this response was
+            // in flight, activeInlineCell already correctly points at the
+            // reactivated cell; clearing it here would leave the very next
+            // outside click with no active cell to save, silently dropping
+            // whatever the user typed after reopening.
+            const reactivatedSinceDispatch =
+                state.activationId !== dispatchedActivationId;
             if (response.ok) {
                 // Only clear activeInlineCell if this cell is still the active one.
                 // When called via openInlineCell, activeInlineCell was already nulled
                 // there — don't overwrite it if it has moved on to another cell.
-                if (activeInlineCell === cell) activeInlineCell = null;
+                if (activeInlineCell === cell && !reactivatedSinceDispatch) {
+                    activeInlineCell = null;
+                }
                 updateMode(cell);
                 cell.removeAttribute('data-validation-error');
                 state.originalHTML = undefined;
@@ -1000,7 +1028,9 @@
                 // [FEATURE: passive-open] Validation error — go passive-open regardless
                 // of whether save was triggered by click-outside or by a cell switch.
                 // Discard pendingNextCell: the next cell must not open while this one has an error.
-                if (activeInlineCell === cell) activeInlineCell = null;
+                if (activeInlineCell === cell && !reactivatedSinceDispatch) {
+                    activeInlineCell = null;
+                }
                 pendingNextCell = null;
                 const contentType = response.headers.get('Content-Type') || '';
                 if (contentType.includes('turbo-stream')) {
@@ -1017,7 +1047,9 @@
         } catch (err) {
             console.error('Inline cell save error:', err);
             // Network error — restore cell and discard any pending next cell.
-            if (activeInlineCell === cell) activeInlineCell = null;
+            if (activeInlineCell === cell && state.activationId === dispatchedActivationId) {
+                activeInlineCell = null;
+            }
             pendingNextCell = null;
             restoreInlineCellDOM(cell);
         }

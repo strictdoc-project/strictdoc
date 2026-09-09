@@ -576,6 +576,10 @@
     }
 
     function openAutocompleteCell(cell) {
+        // See openInlineCell's identical activationId bump: this cell's
+        // save (if any is in flight) needs to know a reopen happened, even
+        // when it's this same-cell no-op below.
+        getCellState(cell).activationId++;
         if (activeAutocompleteCell === cell) return;
         if (activeAutocompleteCell) cancelAutocompleteCell();
         if (activeInlineCell) saveInlineCell(activeInlineCell);
@@ -662,13 +666,22 @@
         formData.append('field_name', cell.dataset.fieldName);
         formData.append('field_value', newValue);
 
+        // See performInlineCellSave's identical guard: if the user reopens
+        // this cell while this request is still in flight, activeAutocompleteCell
+        // already correctly points at it again by the time the response
+        // lands, and deactivating it here would leave the next outside
+        // click with nothing to save.
+        const dispatchedActivationId = state.activationId;
+
         try {
             const { response, html } = await postTurboStream(
                 '/actions/table/update_node_field',
                 formData
             );
+            const reactivatedSinceDispatch =
+                state.activationId !== dispatchedActivationId;
             if (response.ok) {
-                deactivateAutocompleteCell(cell);
+                if (!reactivatedSinceDispatch) deactivateAutocompleteCell(cell);
                 cell.removeAttribute('data-validation-error');
                 state.originalHTML = undefined;
                 renderTurboStream(html);
@@ -686,7 +699,9 @@
             }
         } catch (err) {
             console.error('Table autocomplete save error:', err);
-            deactivateAutocompleteCell(cell);
+            if (state.activationId === dispatchedActivationId) {
+                deactivateAutocompleteCell(cell);
+            }
             cell.dataset.currentValue = originalValue;
             if (state.originalHTML !== undefined) {
                 cell.innerHTML = state.originalHTML;

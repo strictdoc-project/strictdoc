@@ -44,6 +44,11 @@ class Section(Node):  # pylint: disable=invalid-name
         )
 
     def do_copy_anchor_to_buffer(self) -> None:
+        # The button only appears on a real CSS :hover, so the hover target
+        # must already be on-screen: ActionChains moves the mouse to the
+        # element's current on-page position, it does not scroll for us, and
+        # a prior step in the same test may have scrolled it out of view.
+        self.test_case.sdoc_do_scroll_to_element_by_xpath(self.node_xpath)
         self.test_case.hover_and_click(
             hover_selector=f"{self.node_xpath}",
             click_selector=(

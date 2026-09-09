@@ -1967,6 +1967,27 @@ def create_main_router(
                 request_form_data=request_form_data,
             )
         )
+        # The custom-metadata grid shares one <form> with hidden TITLE/UID/
+        # VERSION/CLASSIFICATION/PREFIX inputs, snapshotted whenever that
+        # form was last rendered. table__update_document_config_field saves
+        # those fields through a separate request and never refreshes this
+        # form, so a metadata-only action here (edit/add/delete/reorder a
+        # row) would otherwise resubmit that stale snapshot and silently
+        # revert whichever of those fields changed since. This endpoint
+        # owns the metadata fields only; the rest must come from the
+        # document itself, not from the request.
+        current_config_fields = DocumentConfigFormObject.create_from_document(
+            document=document
+        )
+        form_object.document_title = current_config_fields.document_title
+        form_object.document_uid = current_config_fields.document_uid
+        form_object.document_version = current_config_fields.document_version
+        form_object.document_classification = (
+            current_config_fields.document_classification
+        )
+        form_object.document_requirement_prefix = (
+            current_config_fields.document_requirement_prefix
+        )
         is_block_action = action in ("delete", "reorder")
         active_metadata_field = None
         active_metadata_index = -1

@@ -1,0 +1,61 @@
+/* media_zoom */
+
+sdoc-autogen [data-js-zoomable] {
+  cursor: zoom-in;
+}
+
+sdoc-media-zoom {
+  /* fixed, not sdoc-backdrop's absolute: this overlay must stay pinned to
+     the viewport regardless of page scroll position, since wheel-zoom and
+     drag math below are computed in viewport (clientX/clientY) coordinates. */
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: rgba(0, 0, 0, .9);
+  cursor: default;
+  /* Above sdoc-backdrop's 99999 (form.css): only one of the two overlay
+     kinds is ever open at a time in practice, but this guarantees the
+     zoom viewer wins if that ever changes. */
+  z-index: 999999;
+}
+
+sdoc-media-zoom[data-space-pressed] {
+  cursor: grab;
+}
+
+sdoc-media-zoom[data-dragging],
+sdoc-media-zoom[data-dragging] * {
+  cursor: grabbing;
+  user-select: none;
+}
+
+sdoc-media-zoom-stage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform-origin: 0 0;
+  will-change: transform;
+  /* Diagrams/images assume a page-like canvas, same as autogen.css gives
+     them in-place ("sdoc-autogen img, svg, object"); without it, a
+     transparent SVG background shows the dark overlay through it. */
+  background: var(--color-bg-contrast);
+}
+
+sdoc-media-zoom-stage img,
+sdoc-media-zoom-stage svg {
+  display: block;
+}
+
+sdoc-media-zoom-hint {
+  position: absolute;
+  bottom: var(--base-rhythm);
+  left: var(--base-rhythm);
+  padding: 0 var(--base-rhythm);;
+  background: var(--color-bg-ui);
+  color: var(--color-fg-secondary-invert);
+  font-size: var(--font-size-xxsm);
+  border-radius: var(--base-rhythm);
+  /* A label, not a control: clicks must fall through to the backdrop
+     beneath it (closing the overlay), not get stuck on this chip. */
+  pointer-events: none;
+}

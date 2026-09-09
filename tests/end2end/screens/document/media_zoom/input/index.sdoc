@@ -1,0 +1,33 @@
+[DOCUMENT]
+TITLE: Media Zoom Test
+
+[TEXT]
+STATEMENT: >>>
+.. image:: _assets/small.png
+<<<
+
+[TEXT]
+STATEMENT: >>>
+.. image:: _assets/large.png
+<<<
+
+[TEXT]
+STATEMENT: >>>
+.. raw:: html
+
+    <pre class="mermaid">
+    graph TD
+    A[Enter Chart Definition] --> B(Preview)
+    </pre>
+<<<
+
+[TEXT]
+STATEMENT: >>>
+.. raw:: html
+
+    <pre class="plantuml">
+    @startuml
+    Alice -> Bob: Hello
+    @enduml
+    </pre>
+<<<

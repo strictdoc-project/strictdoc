@@ -82,15 +82,9 @@
   font-size: var(--font-size-sm);
 }
 
-.tree-map__footer-tip kbd {
-  margin: 0 calc(var(--base-rhythm)/2);
-  padding: calc(var(--base-rhythm)/4) calc(var(--base-rhythm)/2);
-}
-
 /* "preview folder content" control uses the shared .switch component
    (components/switch/index.jinja, styled in element.css); this control
    only needs to sit at the end of the footer */
-
 .tree-map__preview-control {
   margin-left: auto;
 }
@@ -653,12 +647,6 @@
   padding-top: var(--base-rhythm);
   margin-top: var(--base-rhythm);
   font-size: var(--font-size-xxsm);
-}
-
-.tree-map__info-panel-tip kbd {
-  font-size: 9px;
-  margin: 0 calc(var(--base-rhythm)/4);
-  padding: calc(var(--base-rhythm)/4) calc(var(--base-rhythm)/2);
 }
 
 .tree-map__info-table {

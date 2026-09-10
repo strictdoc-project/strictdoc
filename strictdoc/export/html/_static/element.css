@@ -391,6 +391,7 @@ sdoc-field {
 sdoc-field-content {
   flex-grow: 1;
   width: 100%; /* holds within the width of the parent */
+  container-type: inline-size;
 }
 
 .copy_to_clipboard-cover {

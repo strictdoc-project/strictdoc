@@ -58,6 +58,7 @@
   --font-size-xsm: 0.75rem;
   --font-size-xxsm: 11px;
   --code-font-size: .85em;
+  --code-font-size-min: 10px;
 
   --base-font-family: 'Noto Sans', sans-serif;
   --code-font-family: 'Noto Sans Mono', consolas, monaco, monospace;

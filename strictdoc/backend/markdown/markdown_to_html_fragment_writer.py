@@ -6,6 +6,7 @@ import re
 from html import escape
 from typing import Callable, MutableMapping, Optional, Sequence, Tuple, cast
 
+import pygments
 from markdown_it import MarkdownIt
 from markdown_it.common.utils import escapeHtml, unescapeAll
 from markdown_it.renderer import RendererHTML
@@ -13,8 +14,41 @@ from markdown_it.rules_inline import StateInline
 from markdown_it.token import Token
 from markdown_it.utils import EnvType, OptionsDict
 from markupsafe import Markup
+from pygments.formatters import HtmlFormatter
+from pygments.lexers import get_lexer_by_name
+from pygments.util import ClassNotFound
 
-_MARKDOWN_PARSER = MarkdownIt("default", {"html": True})
+# This mirrors RstToHtmlFragmentWriter.BASE_SETTINGS' "syntax_highlight":
+# "short", so that Markdown and RST code blocks emit the same short Pygments
+# CSS classes and share strictdoc/export/html/_static/pygments.css.
+_PYGMENTS_HTML_FORMATTER = HtmlFormatter(nowrap=True)
+
+
+def _highlight_fenced_code_with_pygments(
+    source_code: str,
+    language_name: str,
+    _language_attributes: str,
+) -> str:
+    if not language_name:
+        return ""
+    try:
+        lexer = get_lexer_by_name(language_name)
+    except ClassNotFound:
+        return ""
+    highlighted_code_html: str = pygments.highlight(
+        source_code, lexer, _PYGMENTS_HTML_FORMATTER
+    )
+    # The "code" class is the only one docutils' RST output guarantees for a
+    # highlighted code block (see RstToHtmlFragmentWriter.BASE_SETTINGS), and
+    # it is the only one strictdoc/export/html/_static/pygments.css and
+    # autogen.css rely on, so it is also the only class we add here.
+    return f'<pre class="code">\n{highlighted_code_html}</pre>'
+
+
+_MARKDOWN_PARSER = MarkdownIt(
+    "default",
+    {"html": True, "highlight": _highlight_fenced_code_with_pygments},
+)
 _MARKDOWN_RENDERER = cast(RendererHTML, _MARKDOWN_PARSER.renderer)
 _FenceRenderer = Callable[[Sequence[Token], int, OptionsDict, EnvType], str]
 _MARKDOWN_RENDERER_RULES = cast(

@@ -16,7 +16,11 @@ The actual lines produced do not have any "linenos" but:
 <span class="ln">2 </span>
 ...
 
-NOTE: These styles are coupled to the RST Writer settings, see RstToHtmlFragmentWriter.
+NOTE:
+These styles are coupled to the RST Writer settings, see RstToHtmlFragmentWriter
+(the source of the "short" Pygments class names, e.g. .k, .s, .c1).
+The Markdown Writer (MarkdownToHtmlFragmentWriter) reuses the same class names
+for its own Pygments-highlighted code blocks, so these rules apply to both.
 **/
 
 .code .ln { /* Line number */

@@ -391,6 +391,11 @@ sdoc-field {
 sdoc-field-content {
   flex-grow: 1;
   width: 100%; /* holds within the width of the parent */
+}
+
+sdoc-node-field sdoc-field-content {
+  /* For `sdoc-node` context only. Not for `sdoc-meta`
+     or another parent that has fit-content */
   container-type: inline-size;
 }
 

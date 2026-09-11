@@ -295,10 +295,13 @@
 
 .tree-map__node[data-synthetic-group="true"]
   > .tree-map__node-surface {
+  /* can be overridden by the node's color settings: */
+  background-color: var(--color-bg-main);
+  /* texture over the background: */
   background-image: repeating-linear-gradient(
     135deg,
-    transparent,
-    transparent 6px,
+    rgb(0 0 0 / 2%),
+    rgb(0 0 0 / 2%) 6px,
     rgb(255 255 255 / 20%) 6px,
     rgb(255 255 255 / 20%) 12px
   );

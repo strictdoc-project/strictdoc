@@ -53,6 +53,28 @@ def test_33_exclude_source_paths_bad_mask():
         _ = ProjectConfig(exclude_source_paths=[" "])
 
 
+def test_34_dev_include_paths_bad_mask():
+    with pytest.raises(ValueError):
+        _ = ProjectConfig(dev_include_paths=[" "])
+
+
+def test_35_dev_include_paths_only_active_on_development_server(monkeypatch):
+    project_config = ProjectConfig(dev_include_paths=["/developer/docs/**"])
+
+    monkeypatch.setattr(project_config.environment, "is_development_mode", True)
+    assert project_config.get_active_dev_include_paths() == []
+
+    project_config.is_running_on_server = True
+    assert project_config.get_active_dev_include_paths() == [
+        "/developer/docs/**"
+    ]
+
+    monkeypatch.setattr(
+        project_config.environment, "is_development_mode", False
+    )
+    assert project_config.get_active_dev_include_paths() == []
+
+
 #
 # Editable document extensions.
 #

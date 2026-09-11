@@ -50,6 +50,24 @@ releases:
 <<<
 
 [[SECTION]]
+MID: 6c9f4559713a49e9889c16a90d8812f8
+TITLE: Unreleased
+
+[TEXT]
+MID: e10f4d75b3374bbc96748927d712f868
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) The ``dev_include_paths`` project option lets StrictDoc developers load
+local test documents on the development web server. These paths bypass the
+regular document filters and ``.gitignore``. Selected asset directories are
+exported with the documents. StrictDoc does not apply the option in other
+server modes or during export.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e
 TITLE: 0.29.0 (2026-08-30)
 

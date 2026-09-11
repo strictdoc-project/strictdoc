@@ -101,6 +101,32 @@ class PathFilter:
 
         return False
 
+    def may_match_descendant(self, found_directory: str) -> bool:
+        if len(self.filtered_paths) == 0:
+            return False
+
+        directory_path = found_directory.lstrip("/").replace("\\", "/")
+        if len(directory_path) > 0 and not directory_path.endswith("/"):
+            directory_path += "/"
+
+        for filtered_path_ in self.filtered_paths:
+            # A non-rooted mask may match below any directory. Such masks
+            # cannot safely prune an excluded branch during a top-down walk.
+            if not filtered_path_.startswith(("/", "\\")):
+                return True
+
+            normalized_mask = filtered_path_.lstrip("/\\").replace("\\", "/")
+            wildcard_position = normalized_mask.find("*")
+            static_prefix = (
+                normalized_mask
+                if wildcard_position == -1
+                else normalized_mask[:wildcard_position]
+            )
+            if static_prefix.startswith(directory_path):
+                return True
+
+        return False
+
     def dump(self) -> str:
         return "\n".join(
             str(m_).replace("\\\\", "\\") for m_ in self.compiled_masks

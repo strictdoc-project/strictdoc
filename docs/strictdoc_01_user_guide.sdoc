@@ -4367,6 +4367,37 @@ The behavior of wildcard symbols ``*`` and ``**`` is as follows:
     See [LINK: SECTION-UG-Finding-document-and-source-files] for a description of performance considerations related to file discovery.
 <<<
 
+[TEXT]
+MID: 4b21c9155ad047bc88004c1b654ba94f
+STATEMENT: >>>
+StrictDoc developers can use ``dev_include_paths`` to load local test
+documents outside the regular project filters. The option is active only on
+the development web server. The ``invoke server`` command starts the server in
+this mode.
+
+.. code:: python
+
+    from strictdoc.core.project_config import ProjectConfig
+
+
+    def create_config() -> ProjectConfig:
+        return ProjectConfig(
+            dev_include_paths=[
+                "/developer/test_documents/**"
+            ],
+        )
+
+Development paths are relative to the server input root. They bypass
+``include_doc_paths``, ``exclude_doc_paths``, and ``.gitignore``. Selected
+``_assets`` directories are exported with the documents.
+
+In other server modes and during export, StrictDoc accepts the option but does
+not apply it. The option cannot override the system exclusions for ``.git``,
+the active output directory, or the StrictDoc cache directory. Adding any of
+these directories to ``dev_include_paths`` has no effect: StrictDoc does not
+include the directory's contents and does not report an error.
+<<<
+
 [[/SECTION]]
 
 [[SECTION]]

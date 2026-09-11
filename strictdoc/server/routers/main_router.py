@@ -3236,11 +3236,34 @@ def create_main_router(
                     ),
                 )
 
+        # dev_include_paths allows document creation when include_doc_paths
+        # would not include the path or exclude_doc_paths would exclude it.
+        # This exception does not override system exclusions,
+        # so documents cannot be created in .git, output, or cache.
+        active_dev_include_paths = project_config.get_active_dev_include_paths()
+        path_filter_dev_includes = PathFilter(
+            active_dev_include_paths, positive_or_negative=True
+        )
+        path_is_dev_included = len(
+            active_dev_include_paths
+        ) > 0 and path_filter_dev_includes.match(document_path)
+        if (
+            path_is_dev_included
+            and project_config.is_path_in_system_ignored_dir(document_path)
+        ):
+            path_is_dev_included = False
+            error_object.add_error(
+                "document_path",
+                "Document path is inside a system directory.",
+            )
+
         if project_config.include_doc_paths is not None:
             path_filter_includes = PathFilter(
                 project_config.include_doc_paths, positive_or_negative=True
             )
-            if not path_filter_includes.match(document_path):
+            if not path_is_dev_included and not path_filter_includes.match(
+                document_path
+            ):
                 error_object.add_error(
                     "document_path",
                     (
@@ -3253,7 +3276,9 @@ def create_main_router(
             path_filter_excludes = PathFilter(
                 project_config.exclude_doc_paths, positive_or_negative=False
             )
-            if path_filter_excludes.match(document_path):
+            if not path_is_dev_included and path_filter_excludes.match(
+                document_path
+            ):
                 error_object.add_error(
                     "document_path",
                     (
@@ -3262,7 +3287,6 @@ def create_main_router(
                         f"{project_config.exclude_doc_paths}."
                     ),
                 )
-
         editable_document_extensions = (
             project_config.get_editable_document_extensions()
         )
@@ -5276,6 +5300,8 @@ def create_main_router(
             output_dir_abs_path=project_config.output_dir,
             on_documents_changed=notify_clients_after_file_change,
             watched_extensions=get_watched_document_extensions(project_config),
+            dev_include_paths=project_config.get_active_dev_include_paths(),
+            ignored_dirs=project_config.get_system_ignored_dirs(),
         )
 
     @router.websocket("/ws/{client_id}")

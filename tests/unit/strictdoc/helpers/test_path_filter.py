@@ -276,6 +276,22 @@ def test_case_50_negative_empty_mask():
     assert not path_filter.match("foo/bar/hello.sdoc")
 
 
+def test_case_52_rooted_mask_may_match_descendant():
+    path_filter = PathFilter(
+        ["/developer/test_documents/**"], positive_or_negative=True
+    )
+
+    assert path_filter.may_match_descendant("developer/")
+    assert path_filter.may_match_descendant("developer/test_documents/")
+    assert not path_filter.may_match_descendant("docs/")
+
+
+def test_case_53_non_rooted_mask_may_match_any_descendant():
+    path_filter = PathFilter(["test_documents/**"], positive_or_negative=True)
+
+    assert path_filter.may_match_descendant("developer/")
+
+
 def test_case_51_negative_behaves_just_like_positive():
     mask = "*.sdoc"
     path_filter = PathFilter([mask], positive_or_negative=False)

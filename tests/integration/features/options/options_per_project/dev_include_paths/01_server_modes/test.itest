@@ -1,0 +1,1 @@
+RUN: python %S/test_server_selection.py %S

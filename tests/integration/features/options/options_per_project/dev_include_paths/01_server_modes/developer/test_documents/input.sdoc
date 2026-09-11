@@ -1,0 +1,7 @@
+[DOCUMENT]
+TITLE: Development document
+
+[TEXT]
+STATEMENT: >>>
+.. image:: _assets/image.svg
+<<<

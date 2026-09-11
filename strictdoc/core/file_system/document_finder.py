@@ -287,6 +287,13 @@ class DocumentFinder:
 
         root_trees: List[FileTree] = []
         asset_manager = AssetManager()
+        active_dev_include_paths = project_config.get_active_dev_include_paths()
+        # Documents and assets must use the same path rules.
+        # Development paths may override project exclusions,
+        # but not system exclusions.
+        # Compute both lists once and pass them to both scans so their results
+        # stay consistent.
+        system_ignored_dirs = project_config.get_system_ignored_dirs()
 
         for path_to_doc_root_raw in project_config.input_paths:
             if os.path.isfile(path_to_doc_root_raw):
@@ -323,6 +330,8 @@ class DocumentFinder:
                     "_assets",
                     include_paths=project_config.include_doc_paths,
                     exclude_paths=project_config.exclude_doc_paths,
+                    ignored_dirs=system_ignored_dirs,
+                    dev_include_paths=active_dev_include_paths,
                 )
 
             for asset_dir_ in tree_asset_dirs:
@@ -338,10 +347,11 @@ class DocumentFinder:
             with measure_performance("Find SDoc files"):
                 file_tree_structure = FileFinder.find_files_with_extensions(
                     root_path=path_to_doc_root,
-                    ignored_dirs=[project_config.output_dir],
+                    ignored_dirs=system_ignored_dirs,
                     extensions=get_document_extensions(project_config),
                     include_paths=project_config.include_doc_paths,
                     exclude_paths=project_config.exclude_doc_paths,
+                    dev_include_paths=active_dev_include_paths,
                 )
             root_trees.append(file_tree_structure)
 

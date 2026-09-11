@@ -144,6 +144,64 @@ def test_53_both_include_and_exclude_paths():
         assert found_file2.full_path == path_to_file2
 
 
+def test_55_dev_path_bypasses_include_and_exclude_filters():
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        ignored_dir = os.path.join(tmp_dir, "ignored")
+        Path(ignored_dir).mkdir()
+        included_file = os.path.join(ignored_dir, "included.sdoc")
+        excluded_file = os.path.join(ignored_dir, "excluded.sdoc")
+        Path(included_file).touch()
+        Path(excluded_file).touch()
+
+        file_tree = FileFinder.find_files_with_extensions(
+            root_path=tmp_dir,
+            ignored_dirs=[],
+            extensions=[".sdoc"],
+            include_paths=["/docs/"],
+            exclude_paths=["/ignored/"],
+            dev_include_paths=["/ignored/included.sdoc"],
+        )
+
+        found_files = [file_ for _, file_, _ in file_tree.iterate()]
+        assert len(found_files) == 1
+        assert found_files[0].full_path == included_file
+
+
+def test_56_exclude_filter_applies_without_dev_paths():
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        ignored_file = os.path.join(tmp_dir, "ignored.sdoc")
+        Path(ignored_file).touch()
+
+        file_tree = FileFinder.find_files_with_extensions(
+            root_path=tmp_dir,
+            ignored_dirs=[],
+            extensions=[".sdoc"],
+            include_paths=[],
+            exclude_paths=["/ignored.sdoc"],
+        )
+
+        assert list(file_tree.iterate()) == []
+
+
+def test_57_system_ignored_directory_cannot_be_dev_included():
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        ignored_dir = os.path.join(tmp_dir, "ignored")
+        Path(ignored_dir).mkdir()
+        excluded_file = os.path.join(ignored_dir, "excluded.sdoc")
+        Path(excluded_file).touch()
+
+        file_tree = FileFinder.find_files_with_extensions(
+            root_path=tmp_dir,
+            extensions=[".sdoc"],
+            include_paths=[],
+            exclude_paths=[],
+            dev_include_paths=["/ignored/excluded.sdoc"],
+            ignored_dirs=[ignored_dir],
+        )
+
+        assert list(file_tree.iterate()) == []
+
+
 def test_54_exclude_paths():
     """
     Verify that spaces in filenames have no effect on the exclusion/inclusion

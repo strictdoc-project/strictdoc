@@ -104,6 +104,7 @@ class FileFinder:
         extensions: Optional[List[str]],
         include_paths: List[str],
         exclude_paths: List[str],
+        dev_include_paths: Optional[List[str]] = None,
     ) -> FileTree:
         assert os.path.isdir(root_path)
         assert os.path.isabs(root_path), root_path
@@ -117,6 +118,9 @@ class FileFinder:
         path_filter_excludes = PathFilter(
             exclude_paths, positive_or_negative=False
         )
+        path_filter_dev_includes = PathFilter(
+            dev_include_paths or [], positive_or_negative=True
+        )
         root_level: int = root_path.count(os.sep)
 
         root_folder: Folder = Folder(root_path, ".", 0)
@@ -127,6 +131,9 @@ class FileFinder:
         for current_dir_full_path_, dirs, files in os.walk(
             root_path, topdown=True
         ):
+            # ignored_dirs contains system exclusions that no path filter can
+            # override. Stop scanning these directories before applying the
+            # configurable filters.
             if current_dir_full_path_ in ignored_dirs:
                 dirs[:] = []
                 continue
@@ -141,15 +148,55 @@ class FileFinder:
             )
             current_dir_rel_path = SDocRelativePath(current_dir_rel_path_)
 
-            if path_filter_excludes.match(
+            directory_is_excluded = path_filter_excludes.match(
                 current_dir_rel_path.relative_path_posix
+            )
+            directory_is_dev_included = (
+                dev_include_paths is not None
+                and len(dev_include_paths) > 0
+                and path_filter_dev_includes.match(
+                    current_dir_rel_path.relative_path_posix
+                )
+            )
+            directory_may_contain_dev_include = (
+                path_filter_dev_includes.may_match_descendant(
+                    current_dir_rel_path.relative_path_posix
+                )
+            )
+            # An excluded parent must remain open while it leads to a selected
+            # development path. Unrelated excluded branches stay pruned.
+            if (
+                directory_is_excluded
+                and not directory_is_dev_included
+                and not directory_may_contain_dev_include
             ):
                 dirs[:] = []
                 continue
 
             count += 1
 
-            dirs[:] = [d for d in dirs if d not in ("output", "Output")]
+            filtered_dirs: List[str] = []
+            for child_dir_ in dirs:
+                if child_dir_ in ("output", "Output"):
+                    child_relative_path = "/".join(
+                        filter(
+                            None,
+                            (
+                                current_dir_rel_path.relative_path_posix.rstrip(
+                                    "/"
+                                ),
+                                child_dir_,
+                            ),
+                        )
+                    )
+                    if not path_filter_dev_includes.match(
+                        child_relative_path
+                    ) and not path_filter_dev_includes.may_match_descendant(
+                        child_relative_path
+                    ):
+                        continue
+                filtered_dirs.append(child_dir_)
+            dirs[:] = filtered_dirs
             dirs.sort(key=alphanumeric_sort)
 
             current_root_path_level: int = (
@@ -184,12 +231,20 @@ class FileFinder:
                     os.path.join(current_dir_rel_path.relative_path, file)
                 )
 
-                if path_filter_excludes.match(
+                file_is_excluded = path_filter_excludes.match(
                     rel_file_path.relative_path_posix
-                ):
+                )
+                file_is_dev_included = (
+                    dev_include_paths is not None
+                    and len(dev_include_paths) > 0
+                    and path_filter_dev_includes.match(
+                        rel_file_path.relative_path_posix
+                    )
+                )
+                if file_is_excluded and not file_is_dev_included:
                     continue
 
-                if path_filter_includes.match(
+                if file_is_dev_included or path_filter_includes.match(
                     rel_file_path.relative_path_posix
                 ):
                     # TODO: For now, ignore the binary files but one day a user
@@ -259,7 +314,17 @@ class PathFinder:
         directory: str,
         include_paths: List[str],
         exclude_paths: List[str],
+        ignored_dirs: Optional[List[str]] = None,
+        dev_include_paths: Optional[List[str]] = None,
     ) -> List[str]:
+        """
+        Find named directories using two levels of path exclusion.
+
+        Project exclusions may be overridden by ``dev_include_paths`` so a
+        developer can load local test content. ``ignored_dirs`` is reserved
+        for system directories and is always final. This is the same boundary
+        used when document files are selected.
+        """
         assert os.path.isdir(root_path)
         assert os.path.isabs(root_path)
 
@@ -269,6 +334,10 @@ class PathFinder:
         path_filter_excludes = PathFilter(
             exclude_paths, positive_or_negative=False
         )
+        path_filter_dev_includes = PathFilter(
+            dev_include_paths or [], positive_or_negative=True
+        )
+        ignored_dirs = ignored_dirs or []
 
         directories = []
         count = 0
@@ -276,6 +345,11 @@ class PathFinder:
         # Declare str type to make os.path.relpath type checking happy.
         current_dir_full_path_: str
         for current_dir_full_path_, dirs, _ in os.walk(root_path, topdown=True):
+            # Apply the system boundary before either selectable filter.
+            if current_dir_full_path_ in ignored_dirs:
+                dirs[:] = []
+                continue
+
             count += 1
 
             current_root_relative_path: str = os.path.relpath(
@@ -290,23 +364,64 @@ class PathFinder:
                 current_root_relative_path
             ).relative_path_posix
 
+            normal_path_is_selected = True
+            dev_path_is_selected = False
+            path_may_contain_dev_include = False
             if len(current_root_relative_path) > 0:
-                if path_filter_excludes.match(
+                normal_path_is_selected = not path_filter_excludes.match(
                     current_root_relative_path_posix
-                ) or not path_filter_includes.match(
+                ) and path_filter_includes.match(
                     current_root_relative_path_posix
+                )
+                dev_path_is_selected = (
+                    dev_include_paths is not None
+                    and len(dev_include_paths) > 0
+                    and path_filter_dev_includes.match(
+                        current_root_relative_path_posix
+                    )
+                )
+                path_may_contain_dev_include = (
+                    path_filter_dev_includes.may_match_descendant(
+                        current_root_relative_path_posix
+                    )
+                )
+                if (
+                    not normal_path_is_selected
+                    and not dev_path_is_selected
+                    and not path_may_contain_dev_include
                 ):
                     dirs[:] = []
                     continue
 
-            dirs[:] = [
-                d
-                for d in dirs
-                if not d.startswith("__")
-                and d not in ("build", "output", "Output", "tests")
-            ]
+            filtered_dirs: List[str] = []
+            for child_dir_ in dirs:
+                if child_dir_.startswith("__") or child_dir_ in (
+                    "build",
+                    "output",
+                    "Output",
+                    "tests",
+                ):
+                    child_relative_path = "/".join(
+                        filter(
+                            None,
+                            (
+                                current_root_relative_path_posix.rstrip("/"),
+                                child_dir_,
+                            ),
+                        )
+                    )
+                    if not path_filter_dev_includes.match(
+                        child_relative_path
+                    ) and not path_filter_dev_includes.may_match_descendant(
+                        child_relative_path
+                    ):
+                        continue
+                filtered_dirs.append(child_dir_)
+            dirs[:] = filtered_dirs
 
-            if os.path.basename(current_dir_full_path_) == directory:
+            if os.path.basename(current_dir_full_path_) == directory and (
+                normal_path_is_selected or dev_path_is_selected
+            ):
                 directories.append(current_dir_full_path_)
 
         print(f"Scanned {count} directories.")  # noqa: T201

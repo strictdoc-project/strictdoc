@@ -13,6 +13,8 @@ from watchdog.observers.api import BaseObserver
 
 from strictdoc.core.file_system.document_finder import get_document_extensions
 from strictdoc.core.project_config import ProjectConfig
+from strictdoc.helpers.path_filter import PathFilter
+from strictdoc.helpers.paths import SDocRelativePath
 
 # Fallback used when no ProjectConfig is available (e.g. in unit tests
 # constructing DocumentWatcher directly). Mirrors
@@ -80,6 +82,8 @@ class DocumentWatcher:
         on_documents_changed: Callable[[], None],
         debounce_seconds: float = 0.3,
         watched_extensions: Tuple[str, ...] = WATCHED_DOCUMENT_EXTENSIONS,
+        dev_include_paths: Optional[List[str]] = None,
+        ignored_dirs: Optional[List[str]] = None,
     ) -> None:
         self._watch_paths = [os.path.abspath(path) for path in watch_paths]
         self._output_dir_abs_path = (
@@ -87,9 +91,21 @@ class DocumentWatcher:
             if output_dir_abs_path is not None
             else None
         )
+        # Keep system directories separate from development path masks. The
+        # watcher must not reintroduce files that document discovery refuses
+        # to load, especially generated output that can trigger reload loops.
+        self._ignored_dirs = [
+            os.path.abspath(path_) for path_ in (ignored_dirs or [])
+        ]
         self._on_documents_changed = on_documents_changed
         self._debounce_seconds = debounce_seconds
         self._watched_extensions = watched_extensions
+        self._path_filter_dev_includes = PathFilter(
+            dev_include_paths or [], positive_or_negative=True
+        )
+        self._has_dev_include_paths = (
+            dev_include_paths is not None and len(dev_include_paths) > 0
+        )
         self._observer: Optional[BaseObserver] = None
         self._debounce_timer: Optional[threading.Timer] = None
         self._lock = threading.Lock()
@@ -99,13 +115,43 @@ class DocumentWatcher:
 
     def is_watched_document(self, path: str) -> bool:
         absolute_path = os.path.abspath(path)
-        if self._output_dir_abs_path is not None and absolute_path.startswith(
-            self._output_dir_abs_path
-        ):
+        if self._is_inside_ignored_directory(absolute_path):
             return False
-        if self._is_inside_hidden_directory(absolute_path):
+        if self._is_inside_hidden_directory(
+            absolute_path
+        ) and not self._is_dev_included(absolute_path):
             return False
         return absolute_path.endswith(self._watched_extensions)
+
+    def _is_inside_ignored_directory(self, absolute_path: str) -> bool:
+        ignored_dirs = list(self._ignored_dirs)
+        if self._output_dir_abs_path is not None:
+            ignored_dirs.append(self._output_dir_abs_path)
+        for ignored_dir_ in ignored_dirs:
+            try:
+                common_path = os.path.commonpath((absolute_path, ignored_dir_))
+            except ValueError:
+                continue
+            if common_path == ignored_dir_:
+                return True
+        return False
+
+    def _is_dev_included(self, absolute_path: str) -> bool:
+        if not self._has_dev_include_paths:
+            return False
+        for watch_path_ in self._watch_paths:
+            try:
+                relative_path = os.path.relpath(absolute_path, watch_path_)
+            except ValueError:
+                continue
+            if relative_path.startswith(".."):
+                continue
+            relative_path_posix = SDocRelativePath(
+                relative_path
+            ).relative_path_posix
+            if self._path_filter_dev_includes.match(relative_path_posix):
+                return True
+        return False
 
     def _is_inside_hidden_directory(self, absolute_path: str) -> bool:
         for watch_path in self._watch_paths:
@@ -124,7 +170,7 @@ class DocumentWatcher:
                     child_dir
                     for child_dir in child_dirs
                     if not child_dir.startswith(".")
-                    and not self._is_output_dir(
+                    and not self._is_inside_ignored_directory(
                         os.path.join(current_dir, child_dir)
                     )
                 ]
@@ -135,12 +181,6 @@ class DocumentWatcher:
                         self._content_hashes[absolute_path] = _hash_file(
                             absolute_path
                         )
-
-    def _is_output_dir(self, path: str) -> bool:
-        return (
-            self._output_dir_abs_path is not None
-            and os.path.abspath(path) == self._output_dir_abs_path
-        )
 
     def _on_document_touched(self, path: str) -> None:
         with self._lock:

@@ -4,12 +4,20 @@ import threading
 from strictdoc.server.document_watcher import DocumentWatcher
 
 
-def _make_watcher(tmp_path, on_documents_changed, output_dir=None):
+def _make_watcher(
+    tmp_path,
+    on_documents_changed,
+    output_dir=None,
+    dev_include_paths=None,
+    ignored_dirs=None,
+):
     return DocumentWatcher(
         watch_paths=[str(tmp_path)],
         output_dir_abs_path=output_dir,
         on_documents_changed=on_documents_changed,
         debounce_seconds=0.05,
+        dev_include_paths=dev_include_paths,
+        ignored_dirs=ignored_dirs,
     )
 
 
@@ -50,6 +58,33 @@ def test_is_watched_document_rejects_hidden_directories(tmp_path):
         watcher.is_watched_document(str(tmp_path / ".venv" / "pkg" / "x.md"))
         is False
     )
+
+
+def test_is_watched_document_accepts_dev_path_in_hidden_directory(tmp_path):
+    watcher = _make_watcher(
+        tmp_path,
+        lambda: None,
+        dev_include_paths=["/.local/documents/**"],
+    )
+
+    assert (
+        watcher.is_watched_document(
+            str(tmp_path / ".local" / "documents" / "input.sdoc")
+        )
+        is True
+    )
+
+
+def test_is_watched_document_rejects_dev_path_in_system_directory(tmp_path):
+    git_dir = tmp_path / ".git"
+    watcher = _make_watcher(
+        tmp_path,
+        lambda: None,
+        dev_include_paths=["/.git/**"],
+        ignored_dirs=[str(git_dir)],
+    )
+
+    assert watcher.is_watched_document(str(git_dir / "input.sdoc")) is False
 
 
 # ---------------------------------------------------------------------------

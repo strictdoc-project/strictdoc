@@ -178,6 +178,7 @@ class ProjectConfig:
         input_paths: Optional[List[str]] = None,
         include_doc_paths: Optional[List[str]] = None,
         exclude_doc_paths: Optional[List[str]] = None,
+        dev_include_paths: Optional[List[str]] = None,
         source_root_path: Optional[str] = None,
         include_source_paths: Optional[List[str]] = None,
         exclude_source_paths: Optional[List[str]] = None,
@@ -354,6 +355,21 @@ class ProjectConfig:
                     f"config: exclude_doc_paths: {exception_}"
                 ) from exception_
         self.exclude_doc_paths: List[str] = exclude_doc_paths
+
+        # dev_include_paths is an extra allowlist for the development server.
+        # A matching path is included even if include_doc_paths,
+        # exclude_doc_paths, or .gitignore would otherwise leave it out.
+        # System exclusions still apply.
+        dev_include_paths = dev_include_paths or []
+        assert isinstance(dev_include_paths, list), dev_include_paths
+        for dev_include_path in dev_include_paths:
+            try:
+                validate_mask(dev_include_path)
+            except SyntaxError as exception_:
+                raise ValueError(
+                    f"config: dev_include_paths: {exception_}"
+                ) from exception_
+        self.dev_include_paths: List[str] = dev_include_paths
 
         #
         # include_source_paths
@@ -736,6 +752,52 @@ class ProjectConfig:
         self.export_formats = ["html"]
         self.generate_bundle_document = False
         self.export_included_documents = True
+
+    def get_active_dev_include_paths(self) -> List[str]:
+        """
+        Limit the filter override to the development web server.
+
+        The option remains valid in other modes, but must not change their
+        document selection.
+        """
+        if self.is_running_on_server and self.environment.is_development_mode:
+            return self.dev_include_paths
+        return []
+
+    def get_system_ignored_dirs(self) -> List[str]:
+        """
+        Return directories that no path-selection option may reopen.
+
+        Unlike project and Git exclusions, these directories contain project
+        metadata or generated files. Keeping them in a separate collection
+        ensures that ``dev_include_paths`` cannot add them to the input tree.
+        """
+        system_ignored_dirs: List[str] = []
+        for path_ in (
+            os.path.join(self.get_project_root_path(), ".git"),
+            self.output_dir,
+            self.dir_for_sdoc_cache,
+        ):
+            absolute_path = os.path.abspath(path_)
+            if absolute_path not in system_ignored_dirs:
+                system_ignored_dirs.append(absolute_path)
+        return system_ignored_dirs
+
+    def is_path_in_system_ignored_dir(self, path: str) -> bool:
+        """Check the non-overridable boundary used by server operations."""
+        absolute_path = os.path.abspath(
+            path
+            if os.path.isabs(path)
+            else os.path.join(self.get_project_root_path(), path)
+        )
+        for ignored_dir_ in self.get_system_ignored_dirs():
+            try:
+                common_path = os.path.commonpath((absolute_path, ignored_dir_))
+            except ValueError:
+                continue
+            if common_path == ignored_dir_:
+                return True
+        return False
 
     def integrate_export_config(
         self, export_config: ExportCommandConfig
@@ -1335,6 +1397,7 @@ class ProjectConfigLoader:
         )
         include_doc_paths: List[str] = []
         exclude_doc_paths: List[str] = []
+        dev_include_paths: List[str] = []
         source_root_path = None
         include_source_paths: List[str] = []
         exclude_source_paths: List[str] = []
@@ -1386,6 +1449,11 @@ class ProjectConfigLoader:
 
             exclude_doc_paths = project_content.get(
                 "exclude_doc_paths", exclude_doc_paths
+            )
+
+            dev_include_paths = project_content.get(
+                "dev_include_paths",
+                dev_include_paths,
             )
 
             source_root_path = project_content.get(
@@ -1510,6 +1578,7 @@ class ProjectConfigLoader:
             lazy_document_loading_threshold=lazy_document_loading_threshold,
             include_doc_paths=include_doc_paths,
             exclude_doc_paths=exclude_doc_paths,
+            dev_include_paths=dev_include_paths,
             source_root_path=source_root_path,
             include_source_paths=include_source_paths,
             exclude_source_paths=exclude_source_paths,

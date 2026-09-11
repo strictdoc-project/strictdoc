@@ -39,11 +39,10 @@ __pycache__
 /*.local.toml
 /__*.sdoc
 /__*.sgra
-/docs/_draft/
-/docs/_fixture/
-/docs/_test/
 /.claude/
 /.agents/
+# **/_fixture/
+**/_draft/
 
 ### webdriver_manager: cache with downloaded Chrome Driver binaries ###
 /strictdoc/export/html2pdf/.wdm

@@ -13,7 +13,7 @@
         {%- if section.is_document_node() -%}
           {%- if not section.ng_has_requirements and view_object.is_deeptrace() -%}
             <span class="toc-title-no-link" title="Section has no requirements">
-              <span class="section-number">
+              <span class="toc-section-number">
                 {{ section.context.title_number_string }}
               </span>{{ section.title }}
             </span>
@@ -31,7 +31,7 @@
               anchor="{{ view_object.render_local_anchor(section) }}"
               data-turbo="false"
             >
-              <span class="section-number">
+              <span class="toc-section-number">
                 {{ section.context.title_number_string if section.context.title_number_string else "&nbsp;"|safe * (node_context_.get_level() * 2 - 1) }}
               </span>{{- section.title -}}
               {# TODO #fragment #}
@@ -45,7 +45,7 @@
           anchor="{{ view_object.render_local_anchor(section) }}"
           data-turbo="false"
         >
-          <span class="section-number">
+          <span class="toc-section-number">
             {{ section.context.title_number_string if section.context.title_number_string else "&nbsp;"|safe * (node_context_.get_level() * 2 - 1) }}
           </span>
           {%- if section.reserved_title is not none -%}

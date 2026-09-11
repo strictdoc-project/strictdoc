@@ -30,7 +30,7 @@ CHECK-ALL-NEXT: data-file_name="input.sdoc"
 CHECK-ALL-NEXT: >&lt;b&gt;&#34;escaping&#34;&amp;nbsp;&#39;document title&#39;&lt;/b&gt;</div>
 
 # Right-hand bar: Document TOC.
-CHECK-ALL: <span class="section-number">
+CHECK-ALL: <span class="toc-section-number">
 CHECK-ALL-NEXT: {{[0-9]+}}
 CHECK-ALL-NEXT: </span>&lt;b&gt;&#34;escaping&#34;&amp;nbsp;&#39;section title&#39;&lt;/b&gt;
 

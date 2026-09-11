@@ -1421,6 +1421,16 @@ a.tree_item,
   padding-top: var(--base-rhythm);
   padding-bottom: var(--base-rhythm);
   padding-right: var(--base-rhythm);
+  /* to wrap a long token */
+  overflow-wrap: anywhere;
+}
+
+.toc-section-number {
+  margin-right: .5rem;
+  font-size: 0.85em;
+  font-weight: bold;
+  /* to keep on the first line when wrapping a long token */
+  float: left;
 }
 
 .toc a,

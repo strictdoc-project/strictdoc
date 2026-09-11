@@ -91,9 +91,11 @@
   pointer-events: none;
 
   display: flex;
+  flex-direction: column;
   justify-content: center;
   /* align-items: flex-end */
   align-items: center;
+  gap: var(--base-rhythm);
 
   padding: calc(var(--base-rhythm)*10);
 }
@@ -111,6 +113,9 @@ sdoc-toast {
 
 sdoc-toast:not(:empty) {
   padding: .75rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
 sdoc-toast a,
@@ -121,4 +126,26 @@ sdoc-toast a:visited {
 
 sdoc-toast a:hover {
   color: var(--color-fg-accent);
+}
+
+/* .toast {} */
+
+.toast-close {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.toast-warn {
+  color: inherit;
+  background: var(--color-highlight-danger);
+}
+
+.toast-loud {
+  color: var(--color-bg-main);
+  background: inherit;
 }

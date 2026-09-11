@@ -132,10 +132,12 @@ def test_render_favicon_svg_wires_resolved_variant_into_the_template():
     assert 'data-testid="dev-favicon"' in svg
 
 
-# Exercises the real HTMLGenerator.export_assets() and real filesystem
+# Exercises the real HTMLGenerator.export_strictdoc_assets() and real filesystem
 # I/O (tmp_path), asserting on actual bytes written to disk rather than
 # mocked calls.
-def test_export_assets_copies_custom_favicon_for_default_variant(tmp_path):
+def test_export_strictdoc_assets_copies_custom_favicon_for_default_variant(
+    tmp_path,
+):
     favicon_source = tmp_path / "logo.png"
     favicon_source.write_bytes(b"fake-png-bytes")
 
@@ -147,8 +149,7 @@ def test_export_assets_copies_custom_favicon_for_default_variant(tmp_path):
     output_root = tmp_path / "output"
     output_root.mkdir()
 
-    HTMLGenerator.export_assets(
-        traceability_index=None,
+    HTMLGenerator.export_strictdoc_assets(
         project_config=project_config,
         html_templates=NormalHTMLTemplates(),
         export_output_html_root=str(output_root),
@@ -171,8 +172,7 @@ def test_export_assets_uses_custom_favicon_for_dev_variant_too(tmp_path):
     output_root = tmp_path / "output"
     output_root.mkdir()
 
-    HTMLGenerator.export_assets(
-        traceability_index=None,
+    HTMLGenerator.export_strictdoc_assets(
         project_config=project_config,
         html_templates=NormalHTMLTemplates(),
         export_output_html_root=str(output_root),

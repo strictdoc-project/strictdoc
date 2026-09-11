@@ -1039,11 +1039,20 @@
                 // [FEATURE: passive-open] Open the cell the user clicked while this
                 // save was in flight (set by openInlineCell before starting the save).
                 openPendingCell();
+            } else if (reactivatedSinceDispatch) {
+                // The user reopened this cell (and may already be typing a
+                // correction) while this now-stale error response was still
+                // in flight. Applying it here would blow away whatever the
+                // reopened session currently holds — e.g. overwrite a
+                // corrected value with the server's stale echo of the
+                // rejected one, right before a real save silently persists
+                // that clobbered content instead of the correction.
+                pendingNextCell = null;
             } else {
                 // [FEATURE: passive-open] Validation error — go passive-open regardless
                 // of whether save was triggered by click-outside or by a cell switch.
                 // Discard pendingNextCell: the next cell must not open while this one has an error.
-                if (activeInlineCell === cell && !reactivatedSinceDispatch) {
+                if (activeInlineCell === cell) {
                     activeInlineCell = null;
                 }
                 pendingNextCell = null;

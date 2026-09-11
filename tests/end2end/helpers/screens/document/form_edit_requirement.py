@@ -25,14 +25,24 @@ class Form_EditRequirement(Form):  # pylint: disable=invalid-name
 
     def do_form_add_field_comment(self) -> MID:
         any_comment_xpath = "//*[@data-testid='requirement-form-comment-row']"
+        add_comment_xpath = "//*[@data-testid='form-action-add-comment']"
+
+        # Wait for the inline form's own content to be loaded before
+        # counting existing comment rows: do_open_inline_cell only waits
+        # for data-mode="editing", which is set before the form's fetch
+        # resolves, so this link (and any pre-existing comment rows
+        # rendered alongside it) may not exist yet. Reading comments_number
+        # too early sees 0 and, once the row that is actually the new one
+        # renders after the already-loaded content, misidentifies an
+        # existing row as the new one.
+        self.test_case.find_element(add_comment_xpath, by=By.XPATH)
+
         comments_number = len(
             self.test_case.find_elements(any_comment_xpath, by=By.XPATH)
         )
         new_comment_ordinal_number = comments_number + 1
 
-        self.test_case.click_xpath(
-            "//*[@data-testid='form-action-add-comment']"
-        )
+        self.test_case.click_xpath(add_comment_xpath)
 
         xpath = f"({any_comment_xpath})[{new_comment_ordinal_number}]"
         element = self.test_case.find_element(xpath)

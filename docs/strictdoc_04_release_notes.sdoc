@@ -50,6 +50,57 @@ releases:
 <<<
 
 [[SECTION]]
+MID: a1b2c3d4e5f647a8b9c0d1e2f3a4b5c6
+TITLE: Unreleased
+
+[TEXT]
+MID: b2c3d4e5f6a748b9c0d1e2f3a4b5c6d7
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) A new, native interactive tree map screen replaces StrictDoc's
+Plotly-based tree map. The new screen adds:
+
+- a zoomable, pannable canvas
+- breadcrumb navigation
+- per-node descriptions and legends
+- a view state that persists in the URL, so a link reproduces the same
+  zoom level and selection.
+
+2\) Users can now zoom images and Mermaid/PlantUML diagrams in
+documents. Clicking one opens a full-viewport overlay with:
+
+- cursor-anchored wheel zoom
+- Space+drag or arrow-key panning
+- a double-click fit/100% toggle.
+
+3\) Pygments now syntax-highlights Markdown fenced code blocks, matching
+the existing RST highlighting. Code-block styling now matches between
+RST and Markdown output. A code block also shrinks its own font size to
+fit narrow layouts instead of wrapping.
+
+4\) Added a project configuration option to disable the SSL certificate
+check during export.
+
+5\) Fixed several race conditions in the table screen's inline cell
+editing. A save still in flight could:
+
+- drop a correction typed in the meantime
+- leave a stale validation error on screen
+- revert the document's TITLE/UID/VERSION/CLASSIFICATION/PREFIX fields
+  when a user saved only a custom metadata row.
+
+6\) Fixed: StrictDoc now reports a worker-process exception during
+export with its real error message, instead of a confusing
+``BrokenProcessPool`` crash.
+
+7\) Fixed: long tokens in the table of contents now wrap instead of
+overflowing.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e
 TITLE: 0.29.0 (2026-08-30)
 

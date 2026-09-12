@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.2.5 Chrome/138.0.7204.251 Electron/37.6.1 Safari/537.36">
   <diagram name="Roadmap" id="QL4QDE5GQBR7DcBM7GMb">
-    <mxGraphModel dx="3687" dy="4143" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="3300" math="0" shadow="0">
+    <mxGraphModel dx="4265" dy="4676" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="3300" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <object label="Background" id="e4xbaoC47YMUbLc9hft--7">
@@ -508,7 +508,7 @@
           <mxGeometry height="70" width="460" x="1210" y="1440" as="geometry" />
         </mxCell>
         <mxCell id="NG1bawOdFmVwRv8Im0xz-2" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;div&gt;Drag-and-drop image upload&lt;/div&gt;" vertex="1">
-          <mxGeometry height="70" width="860" x="1130" y="1260" as="geometry" />
+          <mxGeometry height="70" width="960" x="1130" y="1260" as="geometry" />
         </mxCell>
         <mxCell id="RImopIBfapGW27McXgfb-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;div&gt;Single- vs multiline field issues&lt;/div&gt;" vertex="1">
           <mxGeometry height="70" width="80" x="1360" y="990" as="geometry" />
@@ -526,7 +526,7 @@
           <mxGeometry height="70" width="230" x="1460" y="900" as="geometry" />
         </mxCell>
         <mxCell id="m9XbbClwqRoo2d-S99YS-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;div&gt;Editable web: Readonly content for autogen fields&lt;/div&gt;" vertex="1">
-          <mxGeometry height="70" width="480" x="1510" y="990" as="geometry" />
+          <mxGeometry height="70" width="640" x="1510" y="990" as="geometry" />
         </mxCell>
         <mxCell id="m9XbbClwqRoo2d-S99YS-2" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;div&gt;TK-based launcher GUI&lt;/div&gt;" vertex="1">
           <mxGeometry height="70" width="280" x="1220" y="1170" as="geometry" />
@@ -537,11 +537,11 @@
         <mxCell id="avZaHCUyBh2S1JCu4Szq-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;div&gt;Markdown:&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Grammar, LINK/ANCHOR, parsing corner cases&lt;/span&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="70" width="220" x="1520" y="1080" as="geometry" />
         </mxCell>
-        <mxCell id="rtCiIeL7m7KNmv-1_1vX-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" value="&lt;div&gt;Stabilization 2026 Q3: Major performance improvements (focus: POSIX), AI skills for software development and technical writing, Nix flake, migrate from Tox to uv&lt;/div&gt;" vertex="1">
+        <mxCell id="rtCiIeL7m7KNmv-1_1vX-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" value="&lt;div&gt;Stabilization 2026 Q3: Major performance improvements (focus: POSIX), AI skills for software development and technical writing, Nix flake, migrate from Tox to uv, flaky tests fixes&lt;/div&gt;" vertex="1">
           <mxGeometry height="70" width="460" x="1690" y="1440" as="geometry" />
         </mxCell>
         <mxCell id="rtCiIeL7m7KNmv-1_1vX-2" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;div&gt;Build documentation with unresolved relations&lt;/div&gt;" vertex="1">
-          <mxGeometry height="70" width="380" x="1610" y="1170" as="geometry" />
+          <mxGeometry height="70" width="540" x="1610" y="1170" as="geometry" />
         </mxCell>
         <mxCell id="rtCiIeL7m7KNmv-1_1vX-4" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;div&gt;Browsing very large documentation trees - Lazy loading&lt;/div&gt;" vertex="1">
           <mxGeometry height="70" width="370" x="1530" y="1350" as="geometry" />
@@ -563,6 +563,9 @@
         </mxCell>
         <mxCell id="ERW_ZwOSoLGoblEHYdkj-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" value="PlantUML" vertex="1">
           <mxGeometry height="70" width="60" x="1930" y="900" as="geometry" />
+        </mxCell>
+        <mxCell id="B8qJVDq6c8O8GEGYHyqU-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" value="Markdown/&lt;div&gt;Pygments/&lt;/div&gt;&lt;div&gt;code blocks&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="90" x="2000" y="900" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

@@ -15,7 +15,18 @@ def get_exception_origin() -> Tuple[str, int, str, str]:
 
 class ExceptionInfo:
     def __init__(self, exception: Exception):
-        self.exception = exception
+        # Store the rendered message, not the exception object itself:
+        # ExceptionInfo is sent from a worker process to the parent via
+        # StrictDocChildProcessException (see parallelizer.py), and an
+        # exception object is only picklable if its class round-trips
+        # through Exception's default __reduce__ (`type(exc)(*exc.args)`).
+        # Custom StrictDoc exceptions with a keyword-only or otherwise
+        # non-trivial __init__ (e.g. StrictDocSemanticError) don't, so
+        # keeping a live reference here would make ExceptionInfo itself
+        # unpicklable and turn a normal, reportable error into an opaque
+        # BrokenProcessPool crash instead. A plain string has no such
+        # requirement and is all get_detailed_error_message() ever needed.
+        self.exception_message = str(exception)
 
         filename, lineno, func, _ = get_exception_origin()
         self.filename = filename
@@ -35,7 +46,7 @@ class ExceptionInfo:
 
     def get_detailed_error_message(self) -> str:
         return (
-            f"error: {str(self.exception)}\n"
+            f"error: {self.exception_message}\n"
             f"error source: {self.filename}:{self.lineno}, function: {self.func}()"
         )
 

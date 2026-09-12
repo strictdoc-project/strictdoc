@@ -43,6 +43,23 @@ def child_process_that_reads_the_worker_context(_):
     return get_worker_context()
 
 
+class ExceptionWithKeywordOnlyInit(Exception):
+    """
+    Mirrors StrictDocSemanticError's shape: a keyword-only __init__ that
+    forwards positional args to Exception.__init__(), which is exactly what
+    breaks Exception's default __reduce__ (`type(exc)(*exc.args)`) when the
+    exception has to be pickled back from a worker process.
+    """
+
+    def __init__(self, *, title):
+        super().__init__(title)
+        self.title = title
+
+
+def child_process_that_raises_an_unpicklable_exception(_):
+    raise ExceptionWithKeywordOnlyInit(title="This exception is not picklable.")
+
+
 def test_nominal_use_case():
     parallelizer = MultiprocessingParallelizer()
 
@@ -68,8 +85,34 @@ def test_if_child_process_fails_then_parallelizer_exits_with_non_zero():
             parallelizer.run_parallel(input_items, child_process_that_fails)
 
         assert exc_info.type is StrictDocChildProcessException
-        assert exc_info.value.args[0].exception.args[0] == (
+        assert exc_info.value.args[0].exception_message == (
             "This child process always fails."
+        )
+    finally:
+        parallelizer.shutdown()
+
+
+def test_if_child_process_raises_an_exception_with_a_non_standard_init_it_still_propagates():
+    """
+    Regression test: a worker exception whose __init__ doesn't accept
+    Exception's default __reduce__ round-trip (`type(exc)(*exc.args)`) used
+    to make the wrapping StrictDocChildProcessException itself unpicklable,
+    turning a normal, reportable error into an opaque BrokenProcessPool
+    crash instead of propagating the real error message.
+    """
+    parallelizer = MultiprocessingParallelizer()
+
+    input_items = ["FAKE_INPUT"]
+
+    try:
+        with pytest.raises(Exception) as exc_info:
+            parallelizer.run_parallel(
+                input_items, child_process_that_raises_an_unpicklable_exception
+            )
+
+        assert exc_info.type is StrictDocChildProcessException
+        assert exc_info.value.args[0].exception_message == (
+            "This exception is not picklable."
         )
     finally:
         parallelizer.shutdown()

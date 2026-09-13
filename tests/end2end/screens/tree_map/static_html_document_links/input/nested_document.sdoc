@@ -1,0 +1,7 @@
+[DOCUMENT]
+TITLE: Nested document
+
+[REQUIREMENT]
+UID: REQ-NESTED-1
+TITLE: Nested requirement
+STATEMENT: The system shall provide a nested requirement.

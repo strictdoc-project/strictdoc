@@ -189,7 +189,7 @@ class DocumentMeta:
     def get_root_path_prefix(
         self, other_doc_level: Optional[int] = None
     ) -> str:
-        level: int = self.level if not other_doc_level else other_doc_level
+        level: int = self.level if other_doc_level is None else other_doc_level
         if level == 0:
             return ""
         return ("../" * level)[:-1]

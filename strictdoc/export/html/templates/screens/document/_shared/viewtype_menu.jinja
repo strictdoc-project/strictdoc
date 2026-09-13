@@ -33,7 +33,7 @@
         data-viewtype_link="document"
         class="dropdown_menu_item"
         title="Go to Document view"
-        href="{{ view_object.render_document_link(view_object.document, none, "DOCUMENT") }}">
+        href="{{ view_object.render_document_link(view_object.document, "DOCUMENT") }}">
       Document</a>
     </li>
     {%- if view_object.project_config.is_activated_table_screen() -%}
@@ -42,7 +42,7 @@
         data-viewtype_link="table"
         class="dropdown_menu_item"
         title="Go to Table view"
-        href="{{ view_object.render_document_link(view_object.document, none, "TABLE") }}">
+        href="{{ view_object.render_document_link(view_object.document, "TABLE") }}">
       Table</a>
     </li>
     {%- endif -%}
@@ -52,7 +52,7 @@
         data-viewtype_link="traceability"
         class="dropdown_menu_item{% if trace_is_empty %} empty{% endif %}"
         title="{% if trace_is_empty %}This page has no content{% else %}Go to Traceability view{% endif %}"
-        href="{{ view_object.render_document_link(view_object.document, none, "TRACE") }}">
+        href="{{ view_object.render_document_link(view_object.document, "TRACE") }}">
       Traceability{% if trace_is_empty %} (empty){% endif %}</a>
     </li>
     {%- endif -%}
@@ -62,7 +62,7 @@
         data-viewtype_link="deep_traceability"
         class="dropdown_menu_item{% if deeptrace_is_empty %} empty{% endif %}"
         title="{% if deeptrace_is_empty %}This page has no content{% else %}Go to Deep Traceability view{% endif %}"
-        href="{{ view_object.render_document_link(view_object.document, none, "DEEPTRACE") }}">
+        href="{{ view_object.render_document_link(view_object.document, "DEEPTRACE") }}">
       Deep Traceability{% if deeptrace_is_empty %} (empty){% endif %}</a>
     </li>
     {%- endif -%}
@@ -72,7 +72,7 @@
         data-viewtype_link="html2pdf"
         class="dropdown_menu_item"
         title="Go to PDF view"
-        href="{{ view_object.render_document_link(view_object.document, none, "PDF") }}">
+        href="{{ view_object.render_document_link(view_object.document, "PDF") }}">
       PDF</a>
     </li>
     {%- endif -%}

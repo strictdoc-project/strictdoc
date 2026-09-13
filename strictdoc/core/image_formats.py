@@ -1,16 +1,41 @@
+"""
+Image formats supported by StrictDoc's drag-and-drop/paste image upload and
+by the wildcard-based RST/Sphinx image directive
+(strictdoc/backend/rst/directives/wildcard_enhanced_image.py). This is the
+single source of truth for the supported extensions and their expected MIME
+content types; the client-side upload script
+(strictdoc/export/html/_static/editable_field.js) mirrors this list for
+same-format checks in the browser.
+"""
+
+from enum import Enum
 from pathlib import Path
 
+
+class ImageFormat(Enum):
+    SVG = (".svg", "image/svg+xml")
+    PNG = (".png", "image/png")
+    GIF = (".gif", "image/gif")
+    JPG = (".jpg", "image/jpeg")
+    JPEG = (".jpeg", "image/jpeg")
+    WebP = (".webp", "image/webp")
+    AVIF = (".avif", "image/avif")
+
+    def __init__(self, extension: str, content_type: str) -> None:
+        self.extension = extension
+        self.content_type = content_type
+
+    @classmethod
+    def names(cls) -> str:
+        return ", ".join(image_format.name for image_format in cls)
+
+
 SUPPORTED_IMAGE_FORMATS: dict[str, str] = {
-    ".svg": "image/svg+xml",
-    ".png": "image/png",
-    ".gif": "image/gif",
-    ".jpg": "image/jpeg",
-    ".jpeg": "image/jpeg",
-    ".webp": "image/webp",
-    ".avif": "image/avif",
+    image_format.extension: image_format.content_type
+    for image_format in ImageFormat
 }
 
-SUPPORTED_IMAGE_FORMAT_NAMES = "SVG, PNG, GIF, JPG, JPEG, WebP, AVIF"
+SUPPORTED_IMAGE_FORMAT_NAMES = ImageFormat.names()
 
 
 def is_supported_image_format(filename: str, content_type: str | None) -> bool:

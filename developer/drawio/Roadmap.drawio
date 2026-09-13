@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.2.5 Chrome/138.0.7204.251 Electron/37.6.1 Safari/537.36">
   <diagram name="Roadmap" id="QL4QDE5GQBR7DcBM7GMb">
-    <mxGraphModel dx="4265" dy="4676" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="3300" math="0" shadow="0">
+    <mxGraphModel dx="4265" dy="4504" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="3300" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <object label="Background" id="e4xbaoC47YMUbLc9hft--7">
@@ -507,8 +507,8 @@
         <mxCell id="NG1bawOdFmVwRv8Im0xz-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;strokeColor=#82b366;fillColor=#d5e8d4;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" value="&lt;div&gt;Stabilization 2026 Q2:&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Remove language aware parsers feature option (now default), features/ migration, remove RAPIDOC feature, remove most of strictdoc.toml files&lt;/span&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="70" width="460" x="1210" y="1440" as="geometry" />
         </mxCell>
-        <mxCell id="NG1bawOdFmVwRv8Im0xz-2" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;div&gt;Drag-and-drop image upload&lt;/div&gt;" vertex="1">
-          <mxGeometry height="70" width="960" x="1130" y="1260" as="geometry" />
+        <mxCell id="NG1bawOdFmVwRv8Im0xz-2" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;div&gt;Drag-and-drop image upload&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="950" x="1130" y="1260" as="geometry" />
         </mxCell>
         <mxCell id="RImopIBfapGW27McXgfb-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;div&gt;Single- vs multiline field issues&lt;/div&gt;" vertex="1">
           <mxGeometry height="70" width="80" x="1360" y="990" as="geometry" />

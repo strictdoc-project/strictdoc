@@ -1051,22 +1051,38 @@
             } else {
                 // [FEATURE: passive-open] Validation error — go passive-open regardless
                 // of whether save was triggered by click-outside or by a cell switch.
-                // Discard pendingNextCell: the next cell must not open while this one has an error.
-                if (activeInlineCell === cell) {
-                    activeInlineCell = null;
-                }
-                pendingNextCell = null;
-                const contentType = response.headers.get('Content-Type') || '';
-                if (contentType.includes('turbo-stream')) {
-                    // Server re-rendered the form with errors in the right places.
-                    // data-mode='editing' stays — form remains visible and interactive.
-                    renderTurboStream(html);
-                } else {
-                    // Validation responses are currently HTMLResponse objects whose
-                    // body is plain text. A 5xx response, however, contains a full
-                    // error page and must never be split into field-error elements.
-                    renderInlineFieldErrors(form, cell, response, html);
-                }
+                // Applying this is deferred one frame past a fresh reactivation
+                // check, not done inline here: renderTurboStream() only queues
+                // Turbo's own DOM mutation for the next animation frame (see
+                // fetchTurboStream's identical hazard), so a reopen click that
+                // lands in that gap — after reactivatedSinceDispatch was
+                // already checked above, but before Turbo actually applies —
+                // would otherwise have this stale error silently overwrite
+                // whatever the user has already retyped into the reopened
+                // cell. Re-checking right before the call keeps that window
+                // to the one frame no WebDriver command can reliably hit,
+                // instead of the full round-trip that already passed above.
+                requestAnimationFrame(() => {
+                    if (state.activationId !== dispatchedActivationId) {
+                        pendingNextCell = null;
+                        return;
+                    }
+                    if (activeInlineCell === cell) {
+                        activeInlineCell = null;
+                    }
+                    pendingNextCell = null;
+                    const contentType = response.headers.get('Content-Type') || '';
+                    if (contentType.includes('turbo-stream')) {
+                        // Server re-rendered the form with errors in the right places.
+                        // data-mode='editing' stays — form remains visible and interactive.
+                        renderTurboStream(html);
+                    } else {
+                        // Validation responses are currently HTMLResponse objects whose
+                        // body is plain text. A 5xx response, however, contains a full
+                        // error page and must never be split into field-error elements.
+                        renderInlineFieldErrors(form, cell, response, html);
+                    }
+                });
             }
         } catch (err) {
             console.error('Inline cell save error:', err);

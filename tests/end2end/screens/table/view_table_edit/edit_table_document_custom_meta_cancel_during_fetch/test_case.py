@@ -9,6 +9,18 @@ from tests.end2end.server import SDocTestServer
 
 class Test(E2ECase):
     def test(self):
+        """
+        Verify that cancelling a custom-metadata field with Escape sticks,
+        even when the field's editor is slow to appear. A user can click a
+        metadata value to start editing, then press Escape right away,
+        before the editor has finished loading on screen. The test
+        simulates that slow loading by artificially delaying screen
+        updates, so the cancel reliably happens while the editor is still
+        on its way in. The test then confirms the field ends up back in
+        its non-editing display state: no editor controls, and its
+        original value. The slow-loading editor must not still appear
+        after the cancel.
+        """
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
         with SDocTestServer(

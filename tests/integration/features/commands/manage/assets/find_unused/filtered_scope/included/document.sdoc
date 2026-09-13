@@ -1,0 +1,9 @@
+[DOCUMENT]
+TITLE: Included document
+
+[TEXT]
+STATEMENT: >>>
+.. image:: _assets/keep_no_prefix.svg
+
+.. image:: ./_assets/keep_dot.svg
+<<<

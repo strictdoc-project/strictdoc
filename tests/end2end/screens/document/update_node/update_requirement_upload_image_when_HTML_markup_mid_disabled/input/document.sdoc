@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Document 1
+OPTIONS:
+  MARKUP: HTML
+
+[REQUIREMENT]
+UID: REQ-1
+STATEMENT: >>>
+Requirement statement.
+<<<

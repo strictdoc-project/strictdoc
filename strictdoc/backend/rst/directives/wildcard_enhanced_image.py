@@ -4,12 +4,16 @@ from typing import List
 from docutils import nodes
 from docutils.parsers.rst.directives.images import Image
 
+from strictdoc.core.image_formats import SUPPORTED_IMAGE_FORMATS
+
 STRICTDOC_REFERENCE_PATH_SETTING = "strictdoc_reference_path"
 STRICTDOC_FLAT_ASSETS_SETTING = "strictdoc_flat_assets"
 
 
 class WildcardEnhancedImage(Image):  # type: ignore[misc]
-    WILDCARD_EXTENSIONS = ["svg", "png", "gif", "jpg", "jpeg"]
+    WILDCARD_EXTENSIONS = [
+        extension.lstrip(".") for extension in SUPPORTED_IMAGE_FORMATS
+    ]
 
     def run(self) -> List[nodes.Node]:
         # A user has suggested that StrictDoc could be capable of rendering
@@ -75,9 +79,7 @@ class WildcardEnhancedImage(Image):  # type: ignore[misc]
                 )
                 if os.path.exists(full_path_to_image_with_extension):
                     # We have found a matching file, let's use it.
-                    self.arguments[0] = os.path.join(
-                        rel_path_to_image_with_extension
-                    )
+                    self.arguments[0] = rel_path_to_image_with_extension
                     break
             else:
                 # If the argument is not provided, raise an error.

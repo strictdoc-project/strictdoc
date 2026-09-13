@@ -17,6 +17,7 @@ from strictdoc.commands.launcher_command import (
     LauncherCommand,
     is_launcher_available,
 )
+from strictdoc.commands.manage_assets_command import ManageAssetsCommand
 from strictdoc.commands.manage_autouid_command import ManageAutoUIDCommand
 from strictdoc.commands.manage_new_command import ManageNewCommand
 from strictdoc.commands.new_command import NewCommand
@@ -37,7 +38,11 @@ def create_command_registry() -> Dict[str, Any]:
         "convert": ConvertCommand,
         "export": ExportCommand,
         "format": FormatCommand,
-        "manage": {"auto-uid": ManageAutoUIDCommand, "new": ManageNewCommand},
+        "manage": {
+            "assets": ManageAssetsCommand,
+            "auto-uid": ManageAutoUIDCommand,
+            "new": ManageNewCommand,
+        },
         "new": NewCommand,
         "server": ServerCommand,
         "version": VersionCommand,

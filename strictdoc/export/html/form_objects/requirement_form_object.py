@@ -258,6 +258,7 @@ class RequirementFormObject(ErrorObject):
         grammar: DocumentGrammar,
         # FIXME: Better name.
         relation_types: List[str],
+        document_markup: str,
     ) -> None:
         super().__init__()
         assert isinstance(element_type, str), element_type
@@ -284,6 +285,7 @@ class RequirementFormObject(ErrorObject):
         # requirement still has parent/child relations, so the template can
         # offer a button to restore existing_requirement_uid into the field.
         self.uid_rename_blocked_by_relations: bool = False
+        self.document_markup: str = document_markup
 
     @staticmethod
     def create_from_request(
@@ -397,6 +399,7 @@ class RequirementFormObject(ErrorObject):
             existing_requirement_uid=existing_requirement_uid,
             grammar=grammar,
             relation_types=element.get_relation_types(),
+            document_markup=document.config.markup or SDocMarkup.RST,
         )
         return form_object
 
@@ -461,6 +464,7 @@ class RequirementFormObject(ErrorObject):
             existing_requirement_uid=None,
             grammar=grammar,
             relation_types=element.get_relation_types(),
+            document_markup=document.config.markup or SDocMarkup.RST,
         )
 
     @staticmethod
@@ -551,6 +555,7 @@ class RequirementFormObject(ErrorObject):
             existing_requirement_uid=requirement.reserved_uid,
             grammar=grammar,
             relation_types=grammar_element_relations,
+            document_markup=document.config.markup or SDocMarkup.RST,
         )
 
     @staticmethod

@@ -158,15 +158,19 @@ class Form:  # pylint: disable=invalid-name
         assert isinstance(field_value, str)
 
         field_order_str = "last()" if field_order == -1 else str(field_order)
-
-        self.test_case.type(
-            (
-                f"(//*[@data-testid='form-field-{field_name}'])"
-                f"[{field_order_str}]"
-            ),
-            f"{field_value}",
-            by=By.XPATH,
+        field_xpath = (
+            f"(//*[@data-testid='form-field-{field_name}'])[{field_order_str}]"
         )
+
+        self.test_case.type(field_xpath, f"{field_value}", by=By.XPATH)
+
+        # An autocompletable field (e.g. relation UID, or a MultipleChoice
+        # custom field) mirrors this typed text into its hidden control on a
+        # debounce (see _wait_for_hidden_mirror_settled). A caller that
+        # submits the form right after this call would otherwise race that
+        # debounce and submit the mirror's stale pre-edit value.
+        element = self.test_case.find_element(field_xpath, by=By.XPATH)
+        self._wait_for_hidden_mirror_settled(self._find_hidden_mirror(element))
 
     @staticmethod
     def _find_hidden_mirror(visible_field: WebElement) -> WebElement:

@@ -445,12 +445,15 @@ class DocumentScreenViewObject:
     def render_document_link(
         self,
         document: SDocDocument,
-        context_document: SDocDocument,
         document_type_string: str,
     ) -> str:
+        # The view-type menu always links to a different HTML page of this
+        # same document, so the link must use this document's own level as
+        # its context, not the level of whatever page happens to hold it.
         assert document is not None, document
-        return self.link_renderer.render_node_link(
-            document, context_document, DocumentType(document_type_string)
+        assert document.meta is not None
+        return document.meta.get_html_link(
+            DocumentType(document_type_string), document.meta.level
         )
 
     def render_current_view_document_link(self, document: SDocDocument) -> str:

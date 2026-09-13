@@ -5044,7 +5044,11 @@ def create_main_router(
             link_renderer = LinkRenderer(
                 root_path="", static_path=project_config.dir_for_sdoc_assets
             )
-            href = link_renderer.render_node_link(
+            # This route has no document of its own, so the link must be
+            # absolute from the server root: a relative link is resolved
+            # against "/UID/{uid_or_mid}" itself, one directory level
+            # deeper than any real document path.
+            href = "/" + link_renderer.render_node_link(
                 linkable_node, None, document_type=DocumentType.DOCUMENT
             )
             return RedirectResponse(url=href, status_code=302)

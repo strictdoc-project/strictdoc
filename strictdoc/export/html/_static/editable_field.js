@@ -6,6 +6,7 @@
 (() => {
 
   const SEL_EDITABLE = '[data-js-editable-field]';
+  // Source of truth: strictdoc/core/image_formats.py (ImageFormat).
   const SUPPORTED_IMAGE_FORMATS = new Map([
     ['.svg', 'image/svg+xml'],
     ['.png', 'image/png'],

@@ -45,7 +45,6 @@ from strictdoc.backend.reqif.p01_sdoc.reqif_to_sdoc_converter import (
 from strictdoc.backend.reqif.p01_sdoc.sdoc_to_reqif_converter import (
     P01_SDocToReqIFObjectConverter,
 )
-from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import (
@@ -3735,7 +3734,7 @@ def create_main_router(
                 existing_requirement_uid=None,
                 grammar=grammar,
                 relation_types=[],
-                document_markup=document.config.markup or SDocMarkup.RST,
+                document_markup=document.config.get_markup(),
             ),
             field=RequirementFormField(
                 field_mid=MID.create(),
@@ -3789,7 +3788,7 @@ def create_main_router(
                 existing_requirement_uid=None,
                 grammar=grammar,
                 relation_types=grammar_element_relations,
-                document_markup=document.config.markup or SDocMarkup.RST,
+                document_markup=document.config.get_markup(),
             ),
             field=RequirementReferenceFormField(
                 field_mid=MID.create(),

@@ -582,6 +582,9 @@ class ProjectConfig:
         # Imported locally to avoid a circular import: each Format module
         # imports generator/writer classes that, transitively, import
         # ProjectConfig itself.
+        from strictdoc.backend.asciidoc.asciidoc_format import (  # noqa: PLC0415
+            AsciiDocFormat,
+        )
         from strictdoc.backend.excel.export.excel_format import (  # noqa: PLC0415
             ExcelFormat,
         )
@@ -626,6 +629,7 @@ class ProjectConfig:
             HTMLFormat(),
             HTML2PDFFormat(),
             RSTFormat(),
+            AsciiDocFormat(),
             ExcelFormat(),
             ReqIFFormat(),
             SDocFormat(),

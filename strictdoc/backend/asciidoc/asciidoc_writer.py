@@ -13,6 +13,11 @@ from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
+from strictdoc.backend.sdoc.models.reference import (
+    ChildReqReference,
+    FileReference,
+    ParentReqReference,
+)
 from strictdoc.core.document_iterator import DocumentIterationContext
 from strictdoc.core.format import ExportContext
 from strictdoc.helpers.exception import StrictDocException
@@ -314,10 +319,30 @@ class AsciiDocWriter:
                 metadata.append(self._metadata_entry(label, value))
         self._append_metadata(output, metadata)
 
-        if node.relations:
-            raise StrictDocException(
-                "AsciiDoc export: relationships are not supported"
+        for relation_ in node.relations:
+            if isinstance(relation_, FileReference):
+                self._append_metadata(output, metadata)
+                output.append(self._render_file_relation(relation_))
+                continue
+            if not isinstance(
+                relation_, (ParentReqReference, ChildReqReference)
+            ):
+                raise StrictDocException(
+                    f"AsciiDoc export: unsupported relation in "
+                    f"{self._context(source_document, identity)}"
+                )
+            target, label = self._link_target(relation_.ref_uid, page)
+            role = (
+                f" ({escape_text(relation_.role)})"
+                if relation_.role is not None and len(relation_.role) > 0
+                else ""
             )
+            metadata.append(
+                f"{escape_text(relation_.ref_type)}{role}:: "
+                f"xref:{target}[{escape_text(label)}]"
+            )
+
+        self._append_metadata(output, metadata)
 
     @staticmethod
     def _append_metadata(output: List[str], metadata: List[str]) -> None:
@@ -379,6 +404,25 @@ class AsciiDocWriter:
 
         label = target.get_display_title(include_toc_number=False)
         return f"{path}#{uid_to_anchor(uid)}", label
+
+    def _render_file_relation(self, relation: FileReference) -> str:
+        entry = relation.g_file_entry
+        details = [f"Path: {escape_text(entry.g_file_path)}"]
+        descriptors = [
+            ("Format", entry.g_file_format),
+            ("Lines", entry.g_line_range),
+        ]
+        if entry.deprecated_function is not None:
+            descriptors.append(("Function", entry.deprecated_function))
+        elif entry.deprecated_clazz is not None:
+            descriptors.append(("Class", entry.deprecated_clazz))
+        else:
+            descriptors.extend((("Element", entry.element), ("ID", entry.id)))
+        descriptors.extend((("Hash", entry.hash), ("Role", relation.role)))
+        for title_, value_ in descriptors:
+            if value_ is not None and len(value_) > 0:
+                details.append(f"{title_}: {escape_text(value_)}")
+        return "*File:*\n\n" + "\n".join(f"* {item_}" for item_ in details)
 
     def _replace_output(self, rendered: Dict[Path, str]) -> None:
         output_root = Path(self.context.project_config.output_dir) / "asciidoc"

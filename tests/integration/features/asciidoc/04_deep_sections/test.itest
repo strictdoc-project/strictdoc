@@ -1,0 +1,8 @@
+#
+# AsciiDoc permits at most five nested StrictDoc sections after the document
+# title. The exporter fails rather than emitting headings beyond its contract.
+#
+
+RUN: %expect_exit 1 %strictdoc export --formats=asciidoc --output-dir %T %S/input.sdoc | filecheck %s --dump-input=fail
+
+CHECK: error: {{.*}}section nesting exceeds 5

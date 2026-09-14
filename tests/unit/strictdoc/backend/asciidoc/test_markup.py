@@ -5,6 +5,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 import pytest
+from lxml import etree
 
 from strictdoc.backend.asciidoc.markup import MarkupRenderer, escape_text
 from strictdoc.backend.sdoc.models.anchor import Anchor
@@ -188,6 +189,60 @@ def test_rendered_code_keeps_hostile_asciidoc_text_literal(
         "include::secret.adoc[]\neval::[1+1]\n----\n{docname}\n"
         "\\include::secret.adoc[]\n&amp; <b>literal</b>"
     )
+
+
+@pytest.mark.parametrize(
+    "content",
+    [
+        "* Outer\n\n  * Nested\n\n  Continuation.\n",
+        "* Outer\n\n  * Middle\n\n    * Deep\n\n    Continuation.\n",
+        "* Outer\n\n  Paragraph.\n\n  * Nested\n",
+        "* Outer\n\n  * Nested\n\n  1. Another nested list\n",
+    ],
+)
+def test_reject_nested_list_arrangements_that_change_item_structure(
+    content: str,
+) -> None:
+    with pytest.raises(StrictDocException, match="a nested list must"):
+        _renderer().render(
+            _field([content]),
+            "RST",
+            "input.sdoc: REQ-1 STATEMENT occurrence 1",
+        )
+
+
+@pytest.mark.skipif(
+    shutil.which("asciidoctor") is None,
+    reason="Asciidoctor is not installed",
+)
+def test_rendered_adjacent_list_types_remain_siblings(tmp_path: Path) -> None:
+    source = _renderer().render(
+        _field(["* Bullet\n\n1. Numbered\n"]),
+        "RST",
+        "input.sdoc: REQ-1 STATEMENT occurrence 1",
+    )
+    source_path = tmp_path / "input.adoc"
+    output_path = tmp_path / "output.html"
+    source_path.write_text(source, encoding="utf-8")
+    subprocess.run(
+        [
+            "asciidoctor",
+            "--failure-level",
+            "WARN",
+            "-o",
+            str(output_path),
+            str(source_path),
+        ],
+        check=True,
+        capture_output=True,
+        text=True,
+    )
+    with file_open_read_utf8(str(output_path)) as rendered_file:
+        document = etree.HTML(rendered_file.read())
+    assert document is not None
+    assert document.xpath("count(//ol/ancestor::li)") == 0
+    assert document.xpath("//ol/li/p/text()") == ["Numbered"]
+    assert document.xpath("//ul/li/p/text()") == ["Bullet"]
 
 
 class _CodeTextParser(HTMLParser):

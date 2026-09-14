@@ -161,6 +161,60 @@ def test_duplicate_page_anchor_fails(tmp_path: Path) -> None:
     assert not (output / "asciidoc").exists()
 
 
+def test_schema_controls_metadata_and_open_blocks(tmp_path: Path) -> None:
+    source = tmp_path / "input.sdoc"
+    source.write_text(
+        "[DOCUMENT]\nTITLE: Field structure\n\n"
+        "[GRAMMAR]\nELEMENTS:\n- TAG: REQUIREMENT\n  FIELDS:\n"
+        "  - TITLE: UID\n    TYPE: String\n    REQUIRED: True\n"
+        "  - TITLE: OWNER\n    TYPE: String\n    REQUIRED: True\n"
+        "  - TITLE: TITLE\n    TYPE: String\n    REQUIRED: True\n"
+        "  - TITLE: STATEMENT\n    TYPE: String\n    REQUIRED: True\n"
+        "  - TITLE: REVIEW_NOTES\n    TYPE: String\n    REQUIRED: True\n"
+        "  - TITLE: COMMENT\n    TYPE: String\n    REQUIRED: True\n\n"
+        "[REQUIREMENT]\nUID: REQ-1\nOWNER: Engineer\nTITLE: Contract\n"
+        "STATEMENT: One line is still a content field.\n"
+        "REVIEW_NOTES: Custom content.\n"
+        "COMMENT: First comment.\nCOMMENT: Second comment.\n",
+        encoding="utf-8",
+    )
+    output = tmp_path / "output"
+    _action(source, output).export()
+    exported = unescape(_read(output / "asciidoc" / "input.adoc"))
+    assert "[.strictdoc-requirement]\n[[REQ-1]]\n== Contract" in exported
+    assert "[.strictdoc-metadata]\nUID:: REQ-1\nOWNER:: Engineer" in exported
+    assert (
+        "[.strictdoc-field.strictdoc-statement]\n--\n"
+        "One line is still a content field.\n--" in exported
+    )
+    assert "[.strictdoc-field.strictdoc-review-notes]" in exported
+    assert exported.count("[.strictdoc-field.strictdoc-comment]") == 2
+    assert "=== STATEMENT" not in exported
+    assert "*STATEMENT:*" not in exported
+
+
+def test_open_block_keeps_code_delimiters_literal(tmp_path: Path) -> None:
+    source = tmp_path / "input.sdoc"
+    source.write_text(
+        "[DOCUMENT]\nTITLE: Delimiters\n\n"
+        "[REQUIREMENT]\nUID: REQ-1\nTITLE: Code\nSTATEMENT: >>>\n"
+        "Before **code**.\n\n.. code:: text\n\n"
+        "    --\n    ----\n    include::secret[]\n\n"
+        "After code.\n<<<\nRATIONALE: Keep field boundaries.\n",
+        encoding="utf-8",
+    )
+    output = tmp_path / "output"
+    _action(source, output).export()
+    exported = _read(output / "asciidoc" / "input.adoc")
+    assert exported.splitlines().count("--") == 4
+    assert "&#45;&#45;" in exported
+    assert "include::secret[]" not in exported
+    assert (
+        "After code&#46;\n--\n\n[.strictdoc-field.strictdoc-rationale]"
+        in exported
+    )
+
+
 def _action(source: Path, output: Path) -> ExportAction:
     formats = [
         format_

@@ -1,0 +1,19 @@
+[DOCUMENT]
+TITLE: Root document
+UID: DOC-ROOT
+
+[TEXT]
+STATEMENT: >>>
+Read [LINK: DOC-NEST] and [LINK: REQ-NEST].
+<<<
+
+[[SECTION]]
+UID: ROOT-SECTION
+TITLE: Root section
+
+[TEXT]
+STATEMENT: >>>
+The nested document links back to [LINK: ROOT-SECTION].
+<<<
+
+[[/SECTION]]

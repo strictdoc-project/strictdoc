@@ -1,10 +1,7 @@
 # pylint: disable=invalid-name
-import time
-
 from selenium.webdriver import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
-from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.ui import WebDriverWait
 
 from strictdoc.helpers.mid import MID
@@ -158,60 +155,15 @@ class Form:  # pylint: disable=invalid-name
         assert isinstance(field_value, str)
 
         field_order_str = "last()" if field_order == -1 else str(field_order)
-        field_xpath = (
-            f"(//*[@data-testid='form-field-{field_name}'])[{field_order_str}]"
+
+        self.test_case.type(
+            (
+                f"(//*[@data-testid='form-field-{field_name}'])"
+                f"[{field_order_str}]"
+            ),
+            f"{field_value}",
+            by=By.XPATH,
         )
-
-        self.test_case.type(field_xpath, f"{field_value}", by=By.XPATH)
-
-        # An autocompletable field (e.g. relation UID, or a MultipleChoice
-        # custom field) mirrors this typed text into its hidden control on a
-        # debounce (see _wait_for_hidden_mirror_settled). A caller that
-        # submits the form right after this call would otherwise race that
-        # debounce and submit the mirror's stale pre-edit value.
-        element = self.test_case.find_element(field_xpath, by=By.XPATH)
-        self._wait_for_hidden_mirror_settled(self._find_hidden_mirror(element))
-
-    @staticmethod
-    def _find_hidden_mirror(visible_field: WebElement) -> WebElement:
-        # The mirror is an <input type="hidden"> for a singleline field, or a
-        # <textarea hidden> for a multiline one (e.g. COMMENT).
-        return visible_field.find_element(
-            By.XPATH,
-            "following-sibling::*[self::input[@type='hidden'] or self::textarea][1]",
-        )
-
-    def _wait_for_hidden_mirror_settled(
-        self, hidden_field: WebElement, timeout: float = 5
-    ) -> None:
-        # An autocompletable field (e.g. relation UID, or a MultipleChoice
-        # custom field) mirrors its visible contenteditable text into this
-        # hidden control on a debounced 'input' listener
-        # (autocompletable_field.js), not synchronously like a plain
-        # contenteditable field (editable_field.js). Proceeding right after
-        # typing/clearing can race an immediately following action (e.g. form
-        # submit) against that debounce, submitting the mirror's stale value.
-        #
-        # We can't just wait for the mirror to differ from its pre-edit value:
-        # that value may legitimately be unchanged (e.g. filling an
-        # already-empty field with ""), in which case it would never differ
-        # and the wait would time out. Instead, poll until two reads taken
-        # slightly apart agree — which the debounce's own delay (10ms) makes
-        # a reliable signal that it has already fired, whether or not it
-        # ended up changing the value.
-        end_time = time.monotonic() + timeout
-        previous = hidden_field.get_attribute("value")
-        while True:
-            time.sleep(0.05)
-            current = hidden_field.get_attribute("value")
-            if current == previous:
-                return
-            previous = current
-            if time.monotonic() > end_time:
-                raise TimeoutError(
-                    "Hidden mirror value did not settle: "
-                    f"still changing after {timeout}s (last seen {current!r})."
-                )
 
     def do_fill_in_mid(self, mid: MID, test_id: str, field_value: str) -> None:
         assert isinstance(mid, MID)
@@ -219,8 +171,6 @@ class Form:  # pylint: disable=invalid-name
         assert isinstance(field_value, str)
 
         field_xpath = f"(//*[@mid='{mid}' and @data-testid='{test_id}'])"
-        element = self.test_case.find_element(field_xpath)
-        hidden_field = self._find_hidden_mirror(element)
 
         for _ in range(3):
             self.test_case.type(field_xpath, f"{field_value}", by=By.XPATH)
@@ -232,8 +182,6 @@ class Form:  # pylint: disable=invalid-name
                 f"The text field could not be filled with the value: "
                 f"'{field_value}'."
             )
-
-        self._wait_for_hidden_mirror_settled(hidden_field)
 
     def do_use_first_autocomplete_result(
         self, test_id: str, field_value: str
@@ -464,10 +412,6 @@ class Form:  # pylint: disable=invalid-name
         this_field.send_keys(Keys.BACKSPACE)
         this_field.send_keys(Keys.BACKSPACE)
         this_field.send_keys(Keys.BACKSPACE)
-
-        self._wait_for_hidden_mirror_settled(
-            self._find_hidden_mirror(this_field)
-        )
 
     #
     # Save/Cancel.

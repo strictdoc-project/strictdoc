@@ -227,10 +227,14 @@ class AsciiDocWriter:
             heading = f"{'=' * (level + 1)} {escape_text(title)}"
             if node.reserved_uid is not None:
                 heading = f"[[{uid_to_anchor(node.reserved_uid)}]]\n{heading}"
+            if node.node_type != "SECTION":
+                heading = f"[.strictdoc-requirement]\n{heading}"
             output.append(heading)
         elif node.reserved_uid is not None:
             output.append(f"[[{uid_to_anchor(node.reserved_uid)}]]")
 
+        assert source_document.grammar is not None
+        element = source_document.grammar.elements_by_type[node.node_type]
         metadata: List[str] = []
         seen_fields: Set[SDocNodeField] = set()
         field_counts: Dict[str, int] = {}
@@ -274,7 +278,19 @@ class AsciiDocWriter:
                     field_, source_document.config.get_markup(), context
                 ).strip()
             label = escape_text(node.get_field_human_title(field_.field_name))
-            metadata.append(self._metadata_entry(label, value))
+            if element.is_field_multiline(field_.field_name):
+                self._append_metadata(output, metadata)
+                role = field_.field_name.lower().replace("_", "-")
+                block = f"[.strictdoc-field.strictdoc-{role}]"
+                if label != escape_text(field_.field_name):
+                    block += f"\n.{label}"
+                if "--" in value.splitlines():
+                    raise StrictDocException(
+                        f"AsciiDoc export: open block delimiter in {context}"
+                    )
+                output.append(f"{block}\n--\n{value}\n--")
+            else:
+                metadata.append(self._metadata_entry(label, value))
         self._append_metadata(output, metadata)
 
         if node.relations:

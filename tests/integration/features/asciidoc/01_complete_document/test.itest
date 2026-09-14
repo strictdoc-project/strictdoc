@@ -1,0 +1,43 @@
+#
+# A complete document keeps document text, section and requirement anchors,
+# source-ordered fields, and repeated fields. The non-AsciiDoc UID is encoded
+# so it remains a safe target while the visible identifier is not changed.
+#
+
+# A project configuration can register the backend before it becomes a built-in
+# format. Keep this development path covered independently of CLI discovery.
+RUN: %strictdoc export --config %S/strictdoc_config.py --formats=asciidoc --output-dir %T/custom %S/input.sdoc
+
+RUN: %check_exists --file %T/custom/asciidoc/input.adoc
+
+RUN: %strictdoc export --formats=asciidoc --output-dir %T %S/input.sdoc
+
+RUN: %check_exists --file %T/asciidoc/input.adoc
+RUN: %cat %T/asciidoc/input.adoc | filecheck %s --dump-input=fail --check-prefix CHECK
+
+CHECK: = Exported requirements
+CHECK: This introduction has **strong text**&#44; __emphasis__&#44; and ``literal text``&#46;
+CHECK: [[SEC-1]]
+CHECK: == Interface
+CHECK: xref:#sd_uid_7265713a31[Interface contract]
+CHECK: [[sd_uid_7265713a31]]
+CHECK: === Interface contract
+CHECK: [.strictdoc-metadata]
+CHECK: Identifier:: req&#58;1
+CHECK: Requirement status:: Approved
+CHECK: [.strictdoc-field.strictdoc-statement]
+CHECK: .Requirement statement
+CHECK-NEXT: --
+CHECK: The system shall provide the documented interface&#46;
+CHECK: [.strictdoc-field.strictdoc-rationale]
+CHECK: .Rationale
+CHECK: Clients need a stable interface&#46;
+CHECK: [.strictdoc-field.strictdoc-comment]
+CHECK: .Review comment
+CHECK: First review comment&#46;
+CHECK: [.strictdoc-field.strictdoc-comment]
+CHECK: .Review comment
+CHECK: Second review comment&#46;
+CHECK: [.strictdoc-field.strictdoc-verification]
+CHECK: .Verification method
+CHECK: Inspect the published interface&#46;

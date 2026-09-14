@@ -1,0 +1,32 @@
+[DOCUMENT]
+TITLE: Too many section levels
+
+[[SECTION]]
+TITLE: One
+
+[[SECTION]]
+TITLE: Two
+
+[[SECTION]]
+TITLE: Three
+
+[[SECTION]]
+TITLE: Four
+
+[[SECTION]]
+TITLE: Five
+
+[[SECTION]]
+TITLE: Six
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[/SECTION]]

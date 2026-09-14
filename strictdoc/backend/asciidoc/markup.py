@@ -100,6 +100,16 @@ class MarkupRenderer:
                 f"____\n{rendered_text}\n____\n"
             )
 
+        if (
+            re.search(
+                r"(?im)^[ \t]*\.\.[ \t]+(?:\|[^|\n]+\|[ \t]+)?"
+                r"image::[ \t]+[^\n]*\.\*[ \t]*$",
+                source,
+            )
+            is not None
+        ):
+            self._fail("unsupported wildcard image URI")
+
         warning_stream = io.StringIO()
         document = publish_doctree(
             source,
@@ -208,6 +218,8 @@ class MarkupRenderer:
         if isinstance(node, nodes.target) and "refuri" in node:
             self._check_attributes(node, ("ids", "names", "refuri"))
             return ""
+        if isinstance(node, nodes.image):
+            return self._render_image(node, block=False)
         self._fail(f"unsupported RST construct: {node.tagname}", node)
         raise AssertionError
 
@@ -246,6 +258,8 @@ class MarkupRenderer:
                 f'[source{language},subs="specialchars,replacements"]\n'
                 f"----\n{content}\n----\n\n"
             )
+        if isinstance(node, nodes.image):
+            return self._render_image(node, block=True) + "\n\n"
         if isinstance(node, nodes.table):
             return self._render_table(node)
         if isinstance(node, nodes.target) and "refuri" in node:
@@ -307,6 +321,31 @@ class MarkupRenderer:
                 else:
                     output += "+\n" + rendered + "\n"
         return output + "\n"
+
+    def _render_image(self, node: nodes.image, block: bool) -> str:
+        self._check_attributes(node, ("uri", "alt", "width", "height"))
+        source = node["uri"]
+        assert isinstance(source, str)
+        assert self._token_pattern is not None
+        if self._token_pattern.search(source) is not None:
+            self._fail("StrictDoc link or anchor inside an image URI", node)
+        if source.endswith(".*"):
+            self._fail("unsupported wildcard image URI", node)
+        try:
+            target = self.resolve_image(source)
+        except StrictDocException as exception:
+            self._fail(str(exception), node)
+            raise AssertionError from exception
+        alternative = self._literal(node.get("alt", ""), node)
+        attributes = [f'alt="{alternative}"']
+        for dimension_ in ("width", "height"):
+            value = node.get(dimension_)
+            if value is not None:
+                if re.fullmatch(r"[0-9]+(?:px|%)?", str(value)) is None:
+                    self._fail(f"unsupported image {dimension_}: {value}", node)
+                attributes.append(f'{dimension_}="{value}"')
+        separator = "::" if block else ":"
+        return f"image{separator}{target}[{','.join(attributes)}]"
 
     def _render_table(self, node: nodes.table) -> str:
         self._check_attributes(node, ("classes",))

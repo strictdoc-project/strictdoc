@@ -62,6 +62,36 @@ def test_conversion_failure_preserves_previous_export(tmp_path: Path) -> None:
     assert not (output / "asciidoc" / "invalid.adoc").exists()
 
 
+def test_document_metadata_survives(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "input.sdoc"
+    source.write_text(
+        "[DOCUMENT]\nTITLE: Metadata\nUID: DOC-1\nVERSION: 1.2\n"
+        "DATE: 2026-09-14\nCLASSIFICATION: Internal\n"
+        "METADATA:\n  OWNER: [LINK: PARENT]\n\n"
+        "[GRAMMAR]\nELEMENTS:\n- TAG: REQUIREMENT\n  FIELDS:\n"
+        "  - TITLE: UID\n    TYPE: String\n    REQUIRED: True\n"
+        "  - TITLE: TITLE\n    TYPE: String\n    REQUIRED: False\n"
+        "  - TITLE: STATEMENT\n    TYPE: String\n    REQUIRED: True\n"
+        "  RELATIONS:\n  - TYPE: Parent\n    ROLE: Refines\n\n"
+        "[REQUIREMENT]\nUID: PARENT\nTITLE: Parent requirement\n"
+        "STATEMENT: Parent content.\n\n"
+        "[REQUIREMENT]\nUID: CHILD\nSTATEMENT: Untitled content.\n",
+        encoding="utf-8",
+    )
+    output = tmp_path / "output"
+    _action(source, output).export()
+    exported = unescape(_read(output / "asciidoc" / "input.adoc"))
+    assert "UID:: DOC-1" in exported
+    assert "VERSION:: 1.2" in exported
+    assert "DATE:: 2026-09-14" in exported
+    assert "CLASSIFICATION:: Internal" in exported
+    assert "OWNER:: xref:#PARENT[Parent requirement]" in exported
+    assert "Untitled content." in exported
+    assert "[[CHILD]]" in exported
+
+
 def test_filtered_reference_fails_without_publishing_broken_link(
     tmp_path: Path,
 ) -> None:

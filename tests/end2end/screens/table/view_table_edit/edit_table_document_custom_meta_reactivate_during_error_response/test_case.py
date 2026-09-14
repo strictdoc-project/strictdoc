@@ -1,10 +1,14 @@
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.wait import WebDriverWait
 
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.components.viewtype_selector import ViewType_Selector
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
+)
+from tests.end2end.screens.table.view_table_edit.race_helpers import (
+    BlockedTableFetch,
 )
 from tests.end2end.server import SDocTestServer
 
@@ -31,48 +35,45 @@ class Test(E2ECase):
             row = '[data-testid="document-config-metadata-row-custom_meta_0"]'
             field = f'{row} [data-testid="document-config-metadata-field"]'
             editor = '[data-testid="form-field-metadata-custom_meta_0"]'
-            error = (
-                '[data-testid="document-config-metadata-error-custom_meta_0"]'
+
+            # A validation error for an older value must not replace a newer
+            # correction. Pause the invalid save when the browser calls fetch.
+            # The user reopens the same cell and enters Corrected value before
+            # the request reaches the server. After release, the validation
+            # error must leave that text and the active editor unchanged. A
+            # following save must persist the correction.
+            blocked_fetch = BlockedTableFetch(
+                self,
+                "/actions/table/update_document_custom_meta",
+                "active_field_name=value",
             )
 
             self.click(field)
             self.type(editor, "1")
             self.find_element(editor).send_keys(Keys.BACKSPACE)
             screen_table.do_save_inline_cell_by_outside_click()
-
-            self.assert_exact_text("Value must not be empty.", error)
-            assert self.get_attribute(editor, "errors") == "true"
-            assert len(self.find_elements(error)) == 1
-            assert self.get_text(editor) == ""
-            assert (
-                self.get_text(
-                    '[data-testid="document-config-metadata-row-custom_meta_1"] '
-                    "sdoc-autogen"
-                )
-                == "Second value"
-            )
-
-            self.click(field)
-            screen_table.do_cancel_inline_cell_by_escape()
-            self.assert_text("First value", selector=row)
-            self.assert_element_not_present(error)
-
-            self.click(field)
-            self.type(editor, "1")
-            self.find_element(editor).send_keys(Keys.BACKSPACE)
-            screen_table.do_save_inline_cell_by_outside_click()
+            blocked_fetch.wait_until_requested()
 
             self.click(field)
             self.type(editor, "Corrected value")
-            screen_table.do_save_inline_cell_by_outside_click()
 
-            # The corrected text is visible inside the open editor before the
-            # queued save reaches the server. Wait until the response replaces
-            # the editor with display markup. This proves that the server saved
-            # the correction before the test closes the server and compares the
-            # document on disk.
-            self.assert_element_not_present(editor)
+            blocked_fetch.release()
+            blocked_fetch.restore()
+
+            assert self.get_text(editor) == "Corrected value"
+            assert self.get_attribute(field, "data-mode") == "editing"
+
+            screen_table.do_save_inline_cell_by_outside_click()
+            WebDriverWait(self.driver, 10).until(
+                lambda _: (
+                    (
+                        self.get_attribute(field, "data-mode", hard_fail=False)
+                        or ""
+                    )
+                    != "editing"
+                )
+            )
+
             self.assert_text("Corrected value", selector=row)
-            self.assert_element_not_present(error)
 
         assert test_setup.compare_sandbox_and_expected_output()

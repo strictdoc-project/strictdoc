@@ -326,7 +326,9 @@
       }
     };
 
-    const onInputChange = debounce(() => {
+    // Loading autocomplete options can wait until the user pauses typing. The
+    // delay avoids sending a request for every character.
+    const loadOptionsAfterInput = debounce(() => {
       if (readonly) return;
 
       const query = autocompletable.innerText.trim();
@@ -335,9 +337,21 @@
       } else {
         hideAndRemoveOptions();
       }
-
-      hidden.value = filterSingleLine(autocompletable.innerText);
     }, delayValue);
+
+    function onInputChange() {
+      if (readonly) return;
+
+      // The visible autocomplete control is contenteditable, so the browser
+      // does not include its text when the surrounding form is submitted. The
+      // adjacent hidden control holds the value that the browser submits.
+      // Update that hidden value during the same input event. If this update
+      // were delayed together with loading the options, submitting the form
+      // immediately after typing could send the previous value.
+      hidden.value = filterSingleLine(autocompletable.innerText);
+
+      loadOptionsAfterInput();
+    }
 
     autocompletable.addEventListener('input', onInputChange);
 

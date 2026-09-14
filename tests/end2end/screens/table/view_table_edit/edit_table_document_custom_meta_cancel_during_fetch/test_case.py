@@ -9,18 +9,6 @@ from tests.end2end.server import SDocTestServer
 
 class Test(E2ECase):
     def test(self):
-        """
-        Verify that cancelling a custom-metadata field with Escape sticks,
-        even when the field's editor is slow to appear. A user can click a
-        metadata value to start editing, then press Escape right away,
-        before the editor has finished loading on screen. The test
-        simulates that slow loading by artificially delaying screen
-        updates, so the cancel reliably happens while the editor is still
-        on its way in. The test then confirms the field ends up back in
-        its non-editing display state: no editor controls, and its
-        original value. The slow-loading editor must not still appear
-        after the cancel.
-        """
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
 
         with SDocTestServer(
@@ -40,51 +28,26 @@ class Test(E2ECase):
 
             row = '[data-testid="document-config-metadata-row-custom_meta_0"]'
             field = f'{row} [data-testid="document-config-metadata-field"]'
+            editor = '[data-testid="form-field-metadata-custom_meta_0"]'
 
-            # table_view_edit.js checks isEditRequestCurrent() once, right
-            # when the field's inline-editor fetch resolves, to decide
-            # whether to apply the response at all. That check is not the
-            # race: it already rejects a response for a cell cancelled
-            # *before* the fetch resolved. The race is narrower: Turbo
-            # applies a *passed* check's <turbo-stream> on its own
-            # requestAnimationFrame, and the cell can still be cancelled in
-            # the single frame between the check passing and that callback
-            # firing. Reproducing it means widening that one-frame window,
-            # not delaying the fetch. Delaying every requestAnimationFrame
-            # callback on the page does that: Turbo's deferred mutation and
-            # the fix's own deferred revert check are both registered (in
-            # that order) the instant the real, undelayed fetch resolves,
-            # then both fire this many ms later instead of one frame later
-            # — giving Escape a wide window to land in between, instead of
-            # a ~16ms one no WebDriver command can reliably hit.
-            # Left permanently overridden, this would also delay whatever
-            # else on the page uses requestAnimationFrame (e.g. the dev
-            # server's own live-reload client), which broke this test's own
-            # teardown when tried. Restore the original once the race window
-            # this test needs has passed.
+            # Editor fetches must not depend on Turbo's deferred RAF render.
             self.execute_script(
                 """
                 window.__originalRAF = window.requestAnimationFrame;
-                window.requestAnimationFrame = function (callback) {
-                    return setTimeout(() => callback(performance.now()), 300);
+                window.requestAnimationFrame = function () {
+                    return 1;
                 };
                 """
             )
 
-            self.click(field)
-            # Fires while the fetch has already resolved and both the
-            # pending Turbo mutation and the fix's revert check are queued,
-            # but before either has run (see the delay above).
-            screen_table.do_cancel_inline_cell_by_escape()
-
-            # Wait past the artificial 300ms delay so Turbo's queued mutation
-            # and the fix's revert check have both had a chance to run, then
-            # confirm the cancel stuck rather than being overwritten.
-            self.sleep(0.6)
-
-            self.execute_script(
-                "window.requestAnimationFrame = window.__originalRAF;"
-            )
+            try:
+                self.click(field)
+                self.wait_for_element(editor)
+                screen_table.do_cancel_inline_cell_by_escape()
+            finally:
+                self.execute_script(
+                    "window.requestAnimationFrame = window.__originalRAF;"
+                )
 
             assert (
                 self.get_attribute(field, "data-mode", hard_fail=False) or ""

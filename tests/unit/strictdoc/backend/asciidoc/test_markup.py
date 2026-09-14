@@ -113,6 +113,48 @@ def test_render_text_keeps_newlines_and_escapes_asciidoc_syntax() -> None:
     )
 
 
+def test_render_rst_supports_nested_lists_and_rectangular_tables() -> None:
+    output = _renderer().render(
+        _field(
+            [
+                (
+                    "- Outer\n\n"
+                    "  1. First\n"
+                    "  2. Second\n\n"
+                    "- Last\n\n"
+                    "+---+---+\n"
+                    "| H | I |\n"
+                    "+===+===+\n"
+                    "| A | B |\n"
+                    "+---+---+\n"
+                )
+            ]
+        ),
+        "RST",
+        "input.sdoc: REQ-1 STATEMENT occurrence 1",
+    )
+
+    assert "* Outer\n. First\n. Second\n* Last" in output
+    assert '[cols="3,3",options="header"]' in output
+    assert "|H |I\n|A |B" in output
+
+
+def test_render_rst_keeps_strictdoc_link_inside_a_table_cell() -> None:
+    output = _renderer().render(
+        _field(
+            [
+                "+----------------+\n| ",
+                InlineLink(None, "TARGET"),
+                " |\n+================+\n| body           |\n+----------------+\n",
+            ]
+        ),
+        "RST",
+        "input.sdoc: REQ-1 STATEMENT occurrence 1",
+    )
+
+    assert "|xref:#TARGET[Target title]" in output
+
+
 def test_render_anchor_only_field_uses_a_persistent_anchor_macro() -> None:
     field = _field([])
     field.parts = [Anchor(field, "ANCHOR-1", None)]

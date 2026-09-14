@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Unsupported markup
+
+[REQUIREMENT]
+UID: REQ-MARKUP
+STATEMENT: >>>
+.. note::
+
+   This RST directive is not in the supported subset.
+<<<

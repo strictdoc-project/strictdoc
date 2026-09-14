@@ -62,7 +62,7 @@ def test_conversion_failure_preserves_previous_export(tmp_path: Path) -> None:
     assert not (output / "asciidoc" / "invalid.adoc").exists()
 
 
-def test_document_metadata_survives(
+def test_document_metadata_and_authored_relation_role_survive(
     tmp_path: Path,
 ) -> None:
     source = tmp_path / "input.sdoc"
@@ -77,7 +77,8 @@ def test_document_metadata_survives(
         "  RELATIONS:\n  - TYPE: Parent\n    ROLE: Refines\n\n"
         "[REQUIREMENT]\nUID: PARENT\nTITLE: Parent requirement\n"
         "STATEMENT: Parent content.\n\n"
-        "[REQUIREMENT]\nUID: CHILD\nSTATEMENT: Untitled content.\n",
+        "[REQUIREMENT]\nUID: CHILD\nSTATEMENT: Untitled content.\n"
+        "RELATIONS:\n- TYPE: Parent\n  VALUE: PARENT\n  ROLE: Refines\n",
         encoding="utf-8",
     )
     output = tmp_path / "output"
@@ -88,6 +89,7 @@ def test_document_metadata_survives(
     assert "DATE:: 2026-09-14" in exported
     assert "CLASSIFICATION:: Internal" in exported
     assert "OWNER:: xref:#PARENT[Parent requirement]" in exported
+    assert exported.count("Parent (Refines)::") == 1
     assert "Untitled content." in exported
     assert "[[CHILD]]" in exported
 
@@ -110,6 +112,47 @@ def test_filtered_reference_fails_without_publishing_broken_link(
     with pytest.raises(StrictDocException, match="filtered out"):
         action.export()
     assert not (output / "asciidoc").exists()
+
+
+def test_file_relationship_preserves_role_and_function(tmp_path: Path) -> None:
+    source = tmp_path / "input"
+    source.mkdir()
+    (source / "file.py").write_text(
+        "def check():\n    pass\n", encoding="utf-8"
+    )
+    (source / "input.sdoc").write_text(
+        "[DOCUMENT]\nTITLE: Source reference\n\n"
+        "[GRAMMAR]\nELEMENTS:\n- TAG: REQUIREMENT\n  FIELDS:\n"
+        "  - TITLE: UID\n    TYPE: String\n    REQUIRED: True\n"
+        "  - TITLE: STATEMENT\n    TYPE: String\n    REQUIRED: True\n"
+        "  RELATIONS:\n  - TYPE: File\n    ROLE: Implementation\n\n"
+        "[REQUIREMENT]\nUID: REQ-1\nSTATEMENT: Preserve source details.\n"
+        "RELATIONS:\n- TYPE: File\n  ROLE: Implementation\n"
+        "  VALUE: file.py\n  FUNCTION: check\n",
+        encoding="utf-8",
+    )
+    output = tmp_path / "output"
+    _action(source, output).export()
+    exported = unescape(_read(output / "asciidoc" / "input.adoc"))
+    assert "* Path: file.py" in exported
+    assert "* Function: check" in exported
+    assert "* Role: Implementation" in exported
+
+
+def test_uid_stays_literal_when_relations_use_mid(tmp_path: Path) -> None:
+    source = tmp_path / "input.sdoc"
+    source.write_text(
+        "[DOCUMENT]\nTITLE: Identifiers\nOPTIONS:\n"
+        "  ENABLE_MID: True\n  RELATION_FIELD: MID\n\n"
+        "[REQUIREMENT]\nMID: REQ-MID\nUID: ID_\n"
+        "STATEMENT: Preserve the literal UID.\n",
+        encoding="utf-8",
+    )
+    output = tmp_path / "output"
+    _action(source, output).export()
+    exported = unescape(_read(output / "asciidoc" / "input.adoc"))
+    assert "ID_" in exported
+    assert "REQ-MID" in exported
 
 
 def test_cross_directory_links_encode_path_characters(tmp_path: Path) -> None:

@@ -214,6 +214,8 @@ class MarkupRenderer:
     def _render_block(
         self,
         node: nodes.Node,
+        bullet_depth: int = 0,
+        ordered_depth: int = 0,
     ) -> str:
         if isinstance(node, nodes.paragraph):
             self._check_attributes(node)
@@ -221,6 +223,8 @@ class MarkupRenderer:
                 "".join(self._render_inline(child_) for child_ in node.children)
                 + "\n\n"
             )
+        if isinstance(node, (nodes.bullet_list, nodes.enumerated_list)):
+            return self._render_list(node, bullet_depth, ordered_depth)
         if isinstance(node, nodes.literal_block):
             self._check_attributes(node, ("classes", "xml:space"))
             classes = node.get("classes", [])
@@ -247,3 +251,57 @@ class MarkupRenderer:
             return ""
         self._fail(f"unsupported RST construct: {node.tagname}", node)
         raise AssertionError
+
+    def _render_list(
+        self,
+        node: Union[nodes.bullet_list, nodes.enumerated_list],
+        bullet_depth: int,
+        ordered_depth: int,
+    ) -> str:
+        top_level = bullet_depth == 0 and ordered_depth == 0
+        if isinstance(node, nodes.bullet_list):
+            self._check_attributes(node, ("bullet",))
+            bullet_depth += 1
+            marker = "*" * bullet_depth
+            attributes = ""
+        else:
+            self._check_attributes(
+                node, ("enumtype", "prefix", "suffix", "start")
+            )
+            if node.get("enumtype") != "arabic":
+                self._fail("unsupported non-Arabic ordered list", node)
+            ordered_depth += 1
+            marker = "." * ordered_depth
+            start = node.get("start", 1)
+            attributes = f"[start={start}]\n" if start != 1 else ""
+        output = ("[]\n" if top_level else "") + attributes
+        for item_ in node.children:
+            if not isinstance(item_, nodes.list_item):
+                self._fail("unsupported list child", item_)
+            assert isinstance(item_, nodes.list_item)
+            self._check_attributes(item_)
+            if len(item_.children) == 0 or not isinstance(
+                item_.children[0], nodes.paragraph
+            ):
+                self._fail("list item must start with a paragraph", item_)
+            for position_, child_ in enumerate(item_.children):
+                if isinstance(
+                    child_, (nodes.bullet_list, nodes.enumerated_list)
+                ) and (position_ != 1 or position_ != len(item_.children) - 1):
+                    self._fail(
+                        "a nested list must immediately follow its item's "
+                        "first paragraph and be its last block",
+                        child_,
+                    )
+                rendered = self._render_block(
+                    child_, bullet_depth, ordered_depth
+                ).rstrip("\n")
+                if position_ == 0:
+                    output += f"{marker} {rendered}\n"
+                elif isinstance(
+                    child_, (nodes.bullet_list, nodes.enumerated_list)
+                ):
+                    output += rendered + "\n"
+                else:
+                    output += "+\n" + rendered + "\n"
+        return output + "\n"

@@ -1,0 +1,70 @@
+[DOCUMENT]
+TITLE: Exported requirements
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    HUMAN_TITLE: Identifier
+    TYPE: String
+    REQUIRED: True
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATUS
+    HUMAN_TITLE: Requirement status
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATEMENT
+    HUMAN_TITLE: Requirement statement
+    TYPE: String
+    REQUIRED: True
+  - TITLE: RATIONALE
+    HUMAN_TITLE: Rationale
+    TYPE: String
+    REQUIRED: True
+  - TITLE: COMMENT
+    HUMAN_TITLE: Review comment
+    TYPE: String
+    REQUIRED: True
+  - TITLE: VERIFICATION
+    HUMAN_TITLE: Verification method
+    TYPE: String
+    REQUIRED: True
+
+[TEXT]
+STATEMENT: >>>
+This introduction has **strong text**, *emphasis*, and ``literal text``.
+<<<
+
+[[SECTION]]
+UID: SEC-1
+TITLE: Interface
+
+[TEXT]
+STATEMENT: >>>
+Read [LINK: req:1] for the interface contract.
+<<<
+
+[REQUIREMENT]
+UID: req:1
+TITLE: Interface contract
+STATUS: Approved
+STATEMENT: >>>
+The system shall provide the documented interface.
+<<<
+RATIONALE: >>>
+Clients need a stable interface.
+<<<
+COMMENT: >>>
+First review comment.
+<<<
+COMMENT: >>>
+Second review comment.
+<<<
+VERIFICATION: >>>
+Inspect the published interface.
+<<<
+
+[[/SECTION]]

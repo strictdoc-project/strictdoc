@@ -98,10 +98,12 @@ class AsciiDocWriter:
             output_paths.add(output_path)
             self.documents.append(document)
             self.paths[document] = output_path
-            if document.included_documents:
-                raise StrictDocException(
-                    "AsciiDoc export: included documents are not supported"
-                )
+            for included_ in document.included_documents:
+                if not isinstance(included_, SDocDocument):
+                    raise StrictDocException(
+                        f"AsciiDoc export: invalid included document in {document.title}"
+                    )
+                add_document(included_)
 
         for document_ in self.index.document_tree.document_list:
             add_document(document_)

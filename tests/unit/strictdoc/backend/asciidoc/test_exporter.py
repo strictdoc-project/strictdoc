@@ -155,6 +155,33 @@ def test_uid_stays_literal_when_relations_use_mid(tmp_path: Path) -> None:
     assert "REQ-MID" in exported
 
 
+def test_included_document_has_standalone_page_and_local_links(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "input"
+    nested = source / "nested"
+    nested.mkdir(parents=True)
+    (source / "index.sdoc").write_text(
+        "[DOCUMENT]\nTITLE: Parent\nUID: DOC-PARENT\n\n"
+        "[DOCUMENT_FROM_FILE]\nFILE: nested/child.sdoc\n\n"
+        "[TEXT]\nSTATEMENT: >>>\nSee [LINK: CHILD].\n<<<\n",
+        encoding="utf-8",
+    )
+    (nested / "child.sdoc").write_text(
+        _document("Child document", "CHILD"), encoding="utf-8"
+    )
+    output = tmp_path / "output"
+    _action(source, output).export()
+
+    parent = _read(output / "asciidoc" / "index.adoc")
+    child = _read(output / "asciidoc" / "nested" / "child.adoc")
+    assert "== Child document" in parent
+    assert parent.count("[[CHILD]]") == 1
+    assert "xref:#CHILD[Requirement]" in parent
+    assert child.startswith("= Child document\n")
+    assert child.count("[[CHILD]]") == 1
+
+
 def test_cross_directory_links_encode_path_characters(tmp_path: Path) -> None:
     source = tmp_path / "input"
     nested = source / "space directory"

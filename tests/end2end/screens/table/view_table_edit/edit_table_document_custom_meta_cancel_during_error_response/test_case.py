@@ -6,6 +6,9 @@ from tests.end2end.helpers.components.viewtype_selector import ViewType_Selector
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
 )
+from tests.end2end.screens.table.view_table_edit.race_helpers import (
+    BlockedTableFetch,
+)
 from tests.end2end.server import SDocTestServer
 
 
@@ -35,44 +38,51 @@ class Test(E2ECase):
                 '[data-testid="document-config-metadata-error-custom_meta_0"]'
             )
 
+            # Pause the invalid save when the browser calls fetch. The user
+            # cancels the cell before the request reaches the server. After
+            # release, the validation error belongs to the closed input. The
+            # error must not reopen the cell or replace its displayed value.
+            blocked_validation = BlockedTableFetch(
+                self,
+                "/actions/table/update_document_custom_meta",
+                "active_field_name=value",
+            )
             self.click(field)
             self.type(editor, "1")
             self.find_element(editor).send_keys(Keys.BACKSPACE)
             screen_table.do_save_inline_cell_by_outside_click()
-
-            self.assert_exact_text("Value must not be empty.", error)
-            assert self.get_attribute(editor, "errors") == "true"
-            assert len(self.find_elements(error)) == 1
-            assert self.get_text(editor) == ""
-            assert (
-                self.get_text(
-                    '[data-testid="document-config-metadata-row-custom_meta_1"] '
-                    "sdoc-autogen"
-                )
-                == "Second value"
-            )
+            blocked_validation.wait_until_requested()
 
             self.click(field)
             screen_table.do_cancel_inline_cell_by_escape()
-            self.assert_text("First value", selector=row)
-            self.assert_element_not_present(error)
+            blocked_validation.release()
+            blocked_validation.restore()
 
-            self.click(field)
-            self.type(editor, "1")
-            self.find_element(editor).send_keys(Keys.BACKSPACE)
-            screen_table.do_save_inline_cell_by_outside_click()
-
-            self.click(field)
-            self.type(editor, "Corrected value")
-            screen_table.do_save_inline_cell_by_outside_click()
-
-            # The corrected text is visible inside the open editor before the
-            # queued save reaches the server. Wait until the response replaces
-            # the editor with display markup. This proves that the server saved
-            # the correction before the test closes the server and compares the
-            # document on disk.
             self.assert_element_not_present(editor)
-            self.assert_text("Corrected value", selector=row)
             self.assert_element_not_present(error)
+            self.assert_text("First value", selector=row)
+
+            # Pause another save after the browser calls fetch. The user cancels
+            # the cell before the test rejects the held fetch. The network
+            # failure belongs to the closed input. The failure must not add an
+            # error or reopen the cell after cancellation.
+            blocked_network = BlockedTableFetch(
+                self,
+                "/actions/table/update_document_custom_meta",
+                "active_field_name=value",
+            )
+            self.click(field)
+            self.type(editor, "Unsaved value")
+            screen_table.do_save_inline_cell_by_outside_click()
+            blocked_network.wait_until_requested()
+
+            self.click(field)
+            screen_table.do_cancel_inline_cell_by_escape()
+            blocked_network.reject()
+            blocked_network.restore()
+
+            self.assert_element_not_present(editor)
+            self.assert_element_not_present(error)
+            self.assert_text("First value", selector=row)
 
         assert test_setup.compare_sandbox_and_expected_output()

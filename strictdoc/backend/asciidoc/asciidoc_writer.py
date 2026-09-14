@@ -145,13 +145,11 @@ class AsciiDocWriter:
 
     def _render_page(self, document: SDocDocument) -> str:
         output: List[str] = []
-        self._render_document(document, output, level=0, _page=document)
+        self._render_document(document, output, level=0, page=document)
         for item_, iteration_context_ in self.page_content[document]:
             level = iteration_context_.get_level()
             if isinstance(item_, SDocDocument):
-                self._render_document(
-                    item_, output, level=level, _page=document
-                )
+                self._render_document(item_, output, level=level, page=document)
             else:
                 self._render_node(item_, output, level=level, page=document)
         return "\n\n".join(part_ for part_ in output if len(part_) > 0) + "\n"
@@ -161,7 +159,7 @@ class AsciiDocWriter:
         document: SDocDocument,
         output: List[str],
         level: int,
-        _page: SDocDocument,
+        page: SDocDocument,
     ) -> None:
         if level > 5:
             self._raise_depth(document, document.title)
@@ -191,10 +189,33 @@ class AsciiDocWriter:
             if value_ is not None and len(value_) > 0:
                 metadata.append(f"{title_}:: {escape_text(value_)}")
 
-        if config.custom_metadata is not None:
-            raise StrictDocException(
-                "AsciiDoc export: custom document metadata is not supported"
-            )
+        custom_metadata = config.custom_metadata
+        if custom_metadata is not None:
+            for entry_ in custom_metadata.entries:
+                if entry_.key is None:
+                    continue
+                reserved_value = {
+                    "UID": config.uid,
+                    "VERSION": config.version,
+                    "DATE": config.date,
+                    "CLASSIFICATION": config.classification,
+                }.get(entry_.key.upper())
+                if reserved_value is not None and len(reserved_value) > 0:
+                    continue
+                context = self._context(document, f"metadata {entry_.key}")
+                renderer = self._renderer(page, document)
+                metadata_field = SDocNodeField(
+                    parent=None,
+                    field_name=entry_.key,
+                    parts=entry_.parts,
+                    multiline__=None,
+                )
+                value = renderer.render(
+                    metadata_field, config.get_markup(), context
+                )
+                metadata.append(
+                    self._metadata_entry(escape_text(entry_.key), value.strip())
+                )
         self._append_metadata(output, metadata)
 
     def _render_node(

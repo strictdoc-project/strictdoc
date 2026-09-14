@@ -246,6 +246,8 @@ class MarkupRenderer:
                 f'[source{language},subs="specialchars,replacements"]\n'
                 f"----\n{content}\n----\n\n"
             )
+        if isinstance(node, nodes.table):
+            return self._render_table(node)
         if isinstance(node, nodes.target) and "refuri" in node:
             self._check_attributes(node, ("ids", "names", "refuri"))
             return ""
@@ -305,3 +307,65 @@ class MarkupRenderer:
                 else:
                     output += "+\n" + rendered + "\n"
         return output + "\n"
+
+    def _render_table(self, node: nodes.table) -> str:
+        self._check_attributes(node, ("classes",))
+        if any(
+            class_ not in ("colwidths-auto", "colwidths-given")
+            for class_ in node.get("classes", [])
+        ):
+            self._fail("unsupported table classes", node)
+        if len(node.children) != 1 or not isinstance(
+            node.children[0], nodes.tgroup
+        ):
+            self._fail("unsupported table structure", node)
+        group = node.children[0]
+        assert isinstance(group, nodes.tgroup)
+        self._check_attributes(group, ("cols",))
+        columns = group["cols"]
+        widths: List[str] = []
+        rows: List[str] = []
+        header_count = 0
+        for child_ in group.children:
+            if isinstance(child_, nodes.colspec):
+                self._check_attributes(child_, ("colwidth",))
+                widths.append(str(child_["colwidth"]))
+                continue
+            if not isinstance(child_, (nodes.thead, nodes.tbody)):
+                self._fail("unsupported table group", child_)
+            assert isinstance(child_, (nodes.thead, nodes.tbody))
+            self._check_attributes(child_)
+            if isinstance(child_, nodes.thead):
+                header_count += len(child_.children)
+            for row_ in child_.children:
+                if not isinstance(row_, nodes.row):
+                    self._fail("unsupported table row", row_)
+                assert isinstance(row_, nodes.row)
+                self._check_attributes(row_)
+                if len(row_.children) != columns:
+                    self._fail("unsupported table cell span", row_)
+                cells: List[str] = []
+                for entry_ in row_.children:
+                    if not isinstance(entry_, nodes.entry):
+                        self._fail("unsupported table entry", entry_)
+                    assert isinstance(entry_, nodes.entry)
+                    self._check_attributes(entry_)
+                    if len(entry_.children) == 0:
+                        cells.append("")
+                    elif len(entry_.children) == 1 and isinstance(
+                        entry_.children[0], nodes.paragraph
+                    ):
+                        cells.append(
+                            self._render_block(entry_.children[0])
+                            .strip("\n")
+                            .replace("\n", " ")
+                        )
+                    else:
+                        self._fail("unsupported complex table cell", entry_)
+                rows.append("|" + " |".join(cells))
+        if header_count > 1 or len(widths) != columns:
+            self._fail("unsupported table headers or columns", node)
+        attributes = f'cols="{",".join(widths)}"'
+        if header_count == 1:
+            attributes += ',options="header"'
+        return f"[{attributes}]\n|===\n" + "\n".join(rows) + "\n|===\n\n"

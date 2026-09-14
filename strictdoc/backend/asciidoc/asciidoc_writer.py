@@ -6,7 +6,7 @@ import tempfile
 import uuid
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple, Union
-from urllib.parse import quote
+from urllib.parse import quote, unquote, urlsplit
 
 from strictdoc.backend.asciidoc.markup import MarkupRenderer, escape_text
 from strictdoc.backend.sdoc.constants import SDocMarkup
@@ -20,7 +20,9 @@ from strictdoc.backend.sdoc.models.reference import (
 )
 from strictdoc.core.document_iterator import DocumentIterationContext
 from strictdoc.core.format import ExportContext
+from strictdoc.core.image_formats import SUPPORTED_IMAGE_FORMATS
 from strictdoc.helpers.exception import StrictDocException
+from strictdoc.helpers.file_system import file_open_read_bytes
 
 LinkTarget = Union[SDocDocument, SDocNode, Anchor]
 SAFE_UID = re.compile(r"[A-Za-z][A-Za-z0-9_-]*\Z")
@@ -48,6 +50,7 @@ class AsciiDocWriter:
             ],
         ] = {}
         self.page_targets: Dict[SDocDocument, Set[LinkTarget]] = {}
+        self.assets: Dict[Path, bytes] = {}
 
     def export_tree(self) -> None:
         self._collect_documents()
@@ -365,12 +368,14 @@ class AsciiDocWriter:
         return f"{label}:: {value}"
 
     def _renderer(
-        self, page: SDocDocument, _source_document: SDocDocument
+        self, page: SDocDocument, source_document: SDocDocument
     ) -> MarkupRenderer:
         return MarkupRenderer(
             resolve_link=lambda link_: self._link_target(link_.link, page),
             resolve_anchor=lambda anchor_: uid_to_anchor(anchor_.value),
-            resolve_image=lambda path_: path_,
+            resolve_image=lambda path_: self._image_path(
+                path_, page, source_document
+            ),
         )
 
     def _link_target(self, uid: str, page: SDocDocument) -> Tuple[str, str]:
@@ -426,6 +431,122 @@ class AsciiDocWriter:
                 details.append(f"{title_}: {escape_text(value_)}")
         return "*File:*\n\n" + "\n".join(f"* {item_}" for item_ in details)
 
+    def _image_path(
+        self, image_path: str, page: SDocDocument, source_document: SDocDocument
+    ) -> str:
+        try:
+            decoded_path = unquote(image_path, errors="strict")
+        except UnicodeDecodeError as exception:
+            raise StrictDocException(
+                f"AsciiDoc export: invalid image URI {image_path!r} in "
+                f"{self._context(source_document, 'image')}"
+            ) from exception
+        try:
+            image_scheme = urlsplit(decoded_path).scheme
+        except ValueError as exception:
+            raise StrictDocException(
+                f"AsciiDoc export: invalid image URI {image_path!r} in "
+                f"{self._context(source_document, 'image')}"
+            ) from exception
+        if len(image_scheme) > 0 or decoded_path.startswith(("/", "\\")):
+            raise StrictDocException(
+                f"AsciiDoc export: unsupported image path {image_path!r} "
+                f"in {self._context(source_document, 'image')}"
+            )
+        if "?" in decoded_path or "#" in decoded_path or "\\" in decoded_path:
+            raise StrictDocException(
+                f"AsciiDoc export: unsupported image path {image_path!r} "
+                f"in {self._context(source_document, 'image')}"
+            )
+        if (
+            "\x00" in decoded_path
+            or re.match(r"^[A-Za-z]:", decoded_path) is not None
+        ):
+            raise StrictDocException(
+                f"AsciiDoc export: unsupported image path {image_path!r} "
+                f"in {self._context(source_document, 'image')}"
+            )
+        relative_image = Path(decoded_path)
+        assert source_document.meta is not None
+        source_dir = Path(source_document.meta.input_doc_full_path).parent
+        source = source_dir / relative_image
+        try:
+            resolved = source.resolve(strict=True)
+        except (OSError, RuntimeError) as exception:
+            raise StrictDocException(
+                f"AsciiDoc export: missing image {image_path!r} in "
+                f"{self._context(source_document, 'image')}"
+            ) from exception
+        if not resolved.is_file():
+            raise StrictDocException(
+                f"AsciiDoc export: unsupported image {image_path!r} in "
+                f"{self._context(source_document, 'image')}"
+            )
+
+        input_paths = self.context.project_config.input_paths or []
+        allowed = False
+        for input_path_ in input_paths:
+            input_root = Path(input_path_)
+            if not input_root.is_dir():
+                input_root = input_root.parent
+            input_root_absolute = input_root.absolute()
+            source_absolute = source.absolute()
+            if not source_absolute.is_relative_to(input_root_absolute):
+                continue
+            if not resolved.is_relative_to(input_root.resolve()):
+                continue
+            relative_to_root = source_absolute.relative_to(input_root_absolute)
+            current = input_root_absolute
+            has_symlink = False
+            for part_ in relative_to_root.parts:
+                current /= part_
+                if current.is_symlink():
+                    has_symlink = True
+                    break
+            if not has_symlink:
+                allowed = True
+                break
+        if not allowed:
+            raise StrictDocException(
+                f"AsciiDoc export: image escapes the source tree or uses a "
+                f"symlink: {image_path!r}"
+            )
+        if resolved.suffix.lower() not in SUPPORTED_IMAGE_FORMATS:
+            raise StrictDocException(
+                f"AsciiDoc export: unsupported image format: {image_path!r}"
+            )
+
+        source_rel_dir = self._safe_relative_path(
+            source_document.meta.input_doc_dir_rel_path.relative_path,
+            self._context(source_document, "image"),
+            allow_empty=True,
+        )
+        normalized_asset = posixpath.normpath(
+            (source_rel_dir / relative_image).as_posix()
+        )
+        if normalized_asset in (".", "..") or normalized_asset.startswith(
+            "../"
+        ):
+            raise StrictDocException(
+                f"AsciiDoc export: image escapes the output tree: "
+                f"{image_path!r}"
+            )
+        asset_path = Path("_assets") / normalized_asset
+        if asset_path in self.paths.values():
+            raise StrictDocException(
+                f"AsciiDoc export: asset collides with document: {asset_path}"
+            )
+        with file_open_read_bytes(str(resolved)) as image_file:
+            data = image_file.read()
+        previous = self.assets.get(asset_path)
+        if previous is not None and previous != data:
+            raise StrictDocException(
+                f"AsciiDoc export: conflicting image assets: {asset_path}"
+            )
+        self.assets[asset_path] = data
+        relative_output = os.path.relpath(asset_path, self.paths[page].parent)
+        return self._quote_path(Path(relative_output))
+
     def _replace_output(self, rendered: Dict[Path, str]) -> None:
         output_root = Path(self.context.project_config.output_dir) / "asciidoc"
         parent = output_root.parent
@@ -459,6 +580,10 @@ class AsciiDocWriter:
                 destination = stage / path_
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 destination.write_text(content_, encoding="utf-8", newline="\n")
+            for path_, asset_bytes_ in self.assets.items():
+                destination = stage / path_
+                destination.parent.mkdir(parents=True, exist_ok=True)
+                destination.write_bytes(asset_bytes_)
             if output_root.exists():
                 output_root.rename(backup)
                 old_moved = True

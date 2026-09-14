@@ -182,6 +182,54 @@ def test_included_document_has_standalone_page_and_local_links(
     assert child.count("[[CHILD]]") == 1
 
 
+def test_local_image_is_copied_and_stale_asset_is_removed(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "input"
+    source.mkdir()
+    image = source / "diagram space.svg"
+    image.write_text(
+        '<svg xmlns="http://www.w3.org/2000/svg"/>', encoding="utf-8"
+    )
+    document = source / "input.sdoc"
+    document.write_text(
+        "[DOCUMENT]\nTITLE: Image\n\n[TEXT]\nSTATEMENT: >>>\n"
+        ".. image:: diagram%20space.svg\n   :alt: Interface diagram\n<<<\n",
+        encoding="utf-8",
+    )
+    output = tmp_path / "output"
+    _action(source, output).export()
+    asset = output / "asciidoc" / "_assets" / image.name
+    assert _read(asset) == _read(image)
+    assert "diagram%20space.svg" in _read(output / "asciidoc" / "input.adoc")
+
+    document.write_text(_document("Image removed", "REQ-1"), encoding="utf-8")
+    _action(source, output).export()
+    assert not asset.exists()
+
+
+def test_nested_document_uses_shared_image_with_encoded_filename(
+    tmp_path: Path,
+) -> None:
+    source = tmp_path / "input"
+    nested = source / "nested"
+    nested.mkdir(parents=True)
+    assets = source / "_assets"
+    assets.mkdir()
+    image = assets / "shared image.svg"
+    image.write_text("<svg/>", encoding="utf-8")
+    (nested / "input.sdoc").write_text(
+        "[DOCUMENT]\nTITLE: Image\n\n[TEXT]\nSTATEMENT: >>>\n"
+        ".. image:: ../_assets/shared%20image.svg\n<<<\n",
+        encoding="utf-8",
+    )
+    output = tmp_path / "output"
+    _action(source, output).export()
+    assert _read(output / "asciidoc" / "_assets" / "_assets" / image.name) == (
+        _read(image)
+    )
+
+
 def test_cross_directory_links_encode_path_characters(tmp_path: Path) -> None:
     source = tmp_path / "input"
     nested = source / "space directory"
@@ -200,6 +248,21 @@ def test_cross_directory_links_encode_path_characters(tmp_path: Path) -> None:
     assert "xref:space%20directory/spec.v1.adoc#REQ-1[Requirement]" in _read(
         output / "asciidoc" / "index.adoc"
     )
+
+
+@pytest.mark.parametrize(
+    "image_path", ["missing.svg", "https://host/a.svg", "https://[invalid"]
+)
+def test_missing_or_remote_image_fails(tmp_path: Path, image_path: str) -> None:
+    source = tmp_path / "input"
+    source.mkdir()
+    (source / "input.sdoc").write_text(
+        "[DOCUMENT]\nTITLE: Image\n\n[TEXT]\nSTATEMENT: >>>\n"
+        f".. image:: {image_path}\n<<<\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(StrictDocException, match="image"):
+        _action(source, tmp_path / "output").export()
 
 
 def test_owned_output_symlink_does_not_modify_external_directory(
@@ -259,6 +322,23 @@ def test_duplicate_page_anchor_fails(tmp_path: Path) -> None:
     with pytest.raises(StrictDocException, match="duplicate anchor"):
         action.export()
     assert not (output / "asciidoc").exists()
+
+
+@pytest.mark.parametrize("image_path", ["unsupported.txt", "../external.svg"])
+def test_unsupported_image_and_escape_from_input_tree_fail(
+    tmp_path: Path, image_path: str
+) -> None:
+    source = tmp_path / "input"
+    source.mkdir()
+    (source / "unsupported.txt").write_text("text", encoding="utf-8")
+    (tmp_path / "external.svg").write_text("<svg/>", encoding="utf-8")
+    (source / "input.sdoc").write_text(
+        "[DOCUMENT]\nTITLE: Image\n\n[TEXT]\nSTATEMENT: >>>\n"
+        f".. image:: {image_path}\n<<<\n",
+        encoding="utf-8",
+    )
+    with pytest.raises(StrictDocException, match="image"):
+        _action(source, tmp_path / "output").export()
 
 
 def test_schema_controls_metadata_and_open_blocks(tmp_path: Path) -> None:

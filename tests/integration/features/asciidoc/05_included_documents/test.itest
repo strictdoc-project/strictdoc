@@ -1,0 +1,23 @@
+#
+# An included document expands in its host document and still receives its own
+# canonical page, so links to it remain usable outside the composed document.
+#
+
+RUN: %strictdoc export --formats=asciidoc --output-dir %T %S
+
+RUN: %check_exists --file %T/asciidoc/input.adoc
+RUN: %check_exists --file %T/asciidoc/nested/included.adoc
+RUN: %cat %T/asciidoc/input.adoc | filecheck %s --dump-input=fail --check-prefix CHECK-HOST
+RUN: %cat %T/asciidoc/nested/included.adoc | filecheck %s --dump-input=fail --check-prefix CHECK-INCLUDED
+
+CHECK-HOST: = Parent document
+CHECK-HOST: [[DOC-INCLUDED]]
+CHECK-HOST: == Included document
+CHECK-HOST: [[REQ-INCLUDED]]
+CHECK-HOST: === Included requirement
+CHECK-HOST: xref:#DOC-INCLUDED[Included document]
+
+CHECK-INCLUDED: = Included document
+CHECK-INCLUDED: [[DOC-INCLUDED]]
+CHECK-INCLUDED: [[REQ-INCLUDED]]
+CHECK-INCLUDED: == Included requirement

@@ -1,0 +1,11 @@
+[DOCUMENT]
+TITLE: Parent document
+UID: DOC-PARENT
+
+[DOCUMENT_FROM_FILE]
+FILE: nested/included.sdoc
+
+[TEXT]
+STATEMENT: >>>
+Read [LINK: DOC-INCLUDED].
+<<<

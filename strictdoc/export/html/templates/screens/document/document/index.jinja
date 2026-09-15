@@ -166,7 +166,6 @@
           : setTimeout(kickMermaid, 0);
       });
     </script>
-  {%- if view_object.is_running_on_server -%}
     <script>
       // Re-render mermaid diagrams; idempotent for already rendered
       // diagrams thanks to mermaid's data-processed marker.
@@ -174,6 +173,7 @@
         requestAnimationFrame(() => mermaid.run());
       }
 
+  {%- if view_object.is_running_on_server -%}
       // Re-run mermaid after node updates (i.e. after saving). The vendored
       // turbo.min.js applies the stream action one requestAnimationFrame
       // after this event, so a single rAF here would race it and run
@@ -182,6 +182,7 @@
       document.addEventListener("turbo:before-stream-render", () => {
         requestAnimationFrame(rerunMermaid);
       });
+  {%- endif -%}
 
       // Lazily loaded document chunks (see frame_document_content.jinja.html)
       // arrive after the initial idle-time rendering; re-run when one loads.
@@ -190,7 +191,6 @@
         rerunMermaid();
       });
     </script>
-  {%- endif -%}
   {%- endif -%}
   {%- if view_object.project_config.is_activated_plantuml() -%}
     <script src="{{ view_object.render_static_url('plantuml/viz-global.js') }}"></script>
@@ -212,6 +212,7 @@
       document.addEventListener("turbo:before-stream-render", () => {
         requestAnimationFrame(() => requestAnimationFrame(kickPlantUML));
       });
+  {%- endif -%}
 
       // Lazily loaded document chunks (see frame_document_content.jinja.html)
       // arrive after the initial idle-time rendering; re-run when one loads.
@@ -219,7 +220,6 @@
         if (!event.target.id?.startsWith("document-chunk-")) return;
         requestAnimationFrame(kickPlantUML);
       });
-  {%- endif -%}
     </script>
   {%- endif -%}
   {{ super() }}

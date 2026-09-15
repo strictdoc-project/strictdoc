@@ -174,4 +174,19 @@ STATEMENT: The lazy loading fixture statement LAZYSTMT-034 must appear exactly o
 [REQUIREMENT]
 UID: REQ-035
 TITLE: Requirement 35
-STATEMENT: The lazy loading fixture statement LAZYSTMT-035 must appear exactly once.
+STATEMENT: >>>
+The lazy loading fixture statement LAZYSTMT-035 must appear exactly once.
+
+.. raw:: html
+
+    <pre class="mermaid">
+    graph TD
+    A --> B
+    </pre>
+
+    <pre class="plantuml">
+    @startuml
+    Alice -> Bob: Hello
+    @enduml
+    </pre>
+<<<

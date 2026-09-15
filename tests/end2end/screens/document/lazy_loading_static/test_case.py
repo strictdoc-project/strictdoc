@@ -91,6 +91,8 @@ class Test(E2ECase):
                 "The lazy loading fixture statement LAZYSTMT-035 "
                 "must appear exactly once."
             )
+            self.assert_element("pre.mermaid svg")
+            self.assert_element("pre.plantuml svg")
 
             #
             # Scenario 3: Clicking a TOC entry whose target is in an
@@ -125,6 +127,8 @@ class Test(E2ECase):
                 "The lazy loading fixture statement LAZYSTMT-035 "
                 "must appear exactly once."
             )
+            self.assert_element("pre.mermaid svg")
+            self.assert_element("pre.plantuml svg")
 
             #
             # Scenario 4: A document below the chunking threshold renders

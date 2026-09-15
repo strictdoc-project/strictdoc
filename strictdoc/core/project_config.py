@@ -208,6 +208,7 @@ class ProjectConfig:
         diff_git_revisions: Optional[str] = None,
         diff_dir_revisions: Optional[Tuple[str, str]] = None,
         chromedriver: Optional[str] = None,
+        chrome_binary: Optional[str] = None,
         # FIXME: The section_behavior field will be removed by the end of 2025-Q4.
         section_behavior: Optional[
             str
@@ -491,6 +492,7 @@ class ProjectConfig:
         self.diff_page = False
 
         self.chromedriver: Optional[str] = chromedriver
+        self.chrome_binary: Optional[str] = chrome_binary
         self.section_behavior: Optional[str] = section_behavior
 
         self.statistics_generator: Optional[str] = statistics_generator
@@ -790,6 +792,7 @@ class ProjectConfig:
                 self.diff_page = True
 
         self.chromedriver = export_config.chromedriver
+        self.chrome_binary = export_config.chrome_binary
         # If enabled in project config, keep it enabled unless explicitly
         # requested via CLI (which can only enable it as well).
         if export_config.disable_ssl_check:
@@ -904,6 +907,16 @@ class ProjectConfig:
         ) is not None and not os.path.isfile(chromedriver):
             raise ValueError(
                 f"config: chromedriver: not found at path: {chromedriver}."
+            )
+
+        #
+        # Validate path to Chrome binary.
+        #
+        if (
+            chrome_binary := self.chrome_binary
+        ) is not None and not os.path.isfile(chrome_binary):
+            raise ValueError(
+                f"config: chrome_binary: not found at path: {chrome_binary}."
             )
 
         #
@@ -1384,6 +1397,7 @@ class ProjectConfigLoader:
         reqif_enable_mid = False
         reqif_import_markup: Optional[str] = None
         chromedriver: Optional[str] = None
+        chrome_binary: Optional[str] = None
         html2pdf_disable_ssl_check: bool = False
 
         section_behavior: str = ProjectConfigDefault.DEFAULT_SECTION_BEHAVIOR
@@ -1466,6 +1480,8 @@ class ProjectConfigLoader:
                     traceability_matrix_relation_columns.append(relation_tuple)
 
             chromedriver = project_content.get("chromedriver", chromedriver)
+
+            chrome_binary = project_content.get("chrome_binary", chrome_binary)
 
             html2pdf_disable_ssl_check = project_content.get(
                 "html2pdf_disable_ssl_check", html2pdf_disable_ssl_check
@@ -1552,6 +1568,7 @@ class ProjectConfigLoader:
             reqif_enable_mid=reqif_enable_mid,
             reqif_import_markup=reqif_import_markup,
             chromedriver=chromedriver,
+            chrome_binary=chrome_binary,
             html2pdf_disable_ssl_check=html2pdf_disable_ssl_check,
             section_behavior=section_behavior,
             statistics_generator=statistics_generator,

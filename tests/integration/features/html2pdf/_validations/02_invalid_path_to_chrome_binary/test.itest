@@ -1,0 +1,5 @@
+# @relation(SDOC-SRS-51, scope=file)
+
+RUN: %expect_exit 1 %strictdoc export %S --formats=html2pdf --chrome-binary="DOES_NOT_EXIST" --output-dir %T | filecheck %s --dump-input=fail
+
+CHECK: error: config: chrome_binary: not found at path: DOES_NOT_EXIST.

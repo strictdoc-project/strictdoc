@@ -1,0 +1,6 @@
+[DOCUMENT]
+TITLE: Project settings test
+
+[REQUIREMENT]
+UID: REQ-1
+STATEMENT: The project settings shall be editable.

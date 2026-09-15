@@ -10,6 +10,23 @@
   ws.onmessage = function(event) {
     if (event.data === "reload") {
       window.location.reload();
+    } else if (event.data === "project-settings:reload") {
+      window.location.reload();
+    } else if (event.data.indexOf("project-settings:error:") === 0) {
+      const reloadContainer = document.querySelector(
+        "[data-js-project-settings-reload-blocking]"
+      );
+      if (reloadContainer) {
+        reloadContainer.removeAttribute(
+          "data-js-project-settings-reload-blocking"
+        );
+        reloadContainer.querySelector(
+          "[data-js-project-settings-reload-message]"
+        ).textContent = event.data.slice("project-settings:error:".length);
+        reloadContainer.querySelector(
+          "[data-js-project-settings-reload-spinner]"
+        ).hidden = true;
+      }
     } else if (event.data.indexOf("error:") === 0) {
       document.getElementById("connection_status").innerHTML = `
         Document build failed. Fix the source files and save again.

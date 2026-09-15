@@ -234,6 +234,7 @@ class ProjectConfig:
         formats: Optional[List["Format"]] = None,
         # Reserved for StrictDoc's internal use.
         _config_last_update: Optional[datetime.datetime] = None,
+        _config_path: Optional[str] = None,
     ) -> None:
         self.environment: SDocRuntimeEnvironment = environment
 
@@ -264,34 +265,14 @@ class ProjectConfig:
         #
         # project_features
         #
-        project_features_: List[Union[str, Feature]] = (
+        project_features_ = (
             project_features
             if project_features is not None
             else list(ProjectConfigDefault.DEFAULT_FEATURES)
         )
-
-        assert isinstance(project_features_, list), (
-            f"config: project_features: parameter must be an "
-            f"array: '{project_features_}'."
+        self.project_features: List[Union[str, Feature]] = (
+            ProjectConfig._normalize_project_features(project_features_)
         )
-
-        for feature in project_features_:
-            if isinstance(feature, Feature):
-                continue
-            assert feature in ProjectFeature.all(), (
-                f"config: project_features: unknown feature declared: "
-                f"'{feature}'."
-            )
-
-        if ProjectFeature.ALL_FEATURES in project_features_:
-            custom_features = [
-                feature
-                for feature in project_features_
-                if isinstance(feature, Feature)
-            ]
-            project_features_ = [*ProjectFeature.all(), *custom_features]
-
-        self.project_features: List[Union[str, Feature]] = project_features_
 
         #
         # server_host and server_port
@@ -529,12 +510,47 @@ class ProjectConfig:
         self.config_last_update: Optional[datetime.datetime] = (
             _config_last_update
         )
+        self.config_path: Optional[str] = _config_path
         self.is_running_on_server: bool = False
         self.watch_enabled: bool = False
 
     @staticmethod
     def default_config() -> "ProjectConfig":
         return ProjectConfig()
+
+    @staticmethod
+    def _normalize_project_features(
+        project_features: List[Union[str, Feature]],
+    ) -> List[Union[str, Feature]]:
+        """
+        Validate project_features and expand the ALL_FEATURES sentinel into
+        the full ProjectFeature list, preserving any custom Feature
+        instances. Called both from __init__ (a project_features
+        constructor argument) and from validate_and_finalize() (a
+        project_features attribute assigned after construction, as done by
+        an extending create_config() function), since assigning the
+        attribute directly bypasses __init__.
+        """
+        assert isinstance(project_features, list), (
+            f"config: project_features: parameter must be an "
+            f"array: '{project_features}'."
+        )
+
+        for feature in project_features:
+            if isinstance(feature, Feature):
+                continue
+            assert feature in ProjectFeature.all(), (
+                f"config: project_features: unknown feature declared: "
+                f"'{feature}'."
+            )
+
+        if ProjectFeature.ALL_FEATURES in project_features:
+            custom_features = [
+                feature for feature in project_features if isinstance(feature, Feature)
+            ]
+            return [*ProjectFeature.all(), *custom_features]
+
+        return project_features
 
     def resolve_custom_node_prefix(
         self,
@@ -816,6 +832,15 @@ class ProjectConfig:
             self.reqif_enable_mid = export_config.reqif_enable_mid
 
     def validate_and_finalize(self) -> None:
+        # project_features may have been reassigned after __init__ (an
+        # extending create_config() function commonly does
+        # `config.project_features = [...]`), which bypasses the
+        # ALL_FEATURES expansion normally done in __init__. Re-normalize it
+        # here so every loading path ends up with the same expanded state.
+        self.project_features = ProjectConfig._normalize_project_features(
+            self.project_features
+        )
+
         project_path = self.get_project_root_path()
 
         #
@@ -1133,7 +1158,7 @@ class ProjectConfigLoader:
         cls, input_path: str, output_dir: Optional[str] = None
     ) -> ProjectConfig:
         assert os.path.exists(input_path), input_path
-        project_config: ProjectConfig = cls.load_from_path_or_get_default(
+        project_config, _ = cls.load_from_path_or_get_default(
             path_to_config=input_path
         )
         project_config.input_paths = [input_path]
@@ -1148,7 +1173,7 @@ class ProjectConfigLoader:
         export_config: ExportCommandConfig,
     ) -> ProjectConfig:
         path_to_config = export_config.get_path_to_config()
-        project_config: ProjectConfig = cls.load_from_path_or_get_default(
+        project_config, _ = cls.load_from_path_or_get_default(
             path_to_config=path_to_config
         )
         project_config.integrate_export_config(export_config)
@@ -1161,9 +1186,10 @@ class ProjectConfigLoader:
         server_config: ServerCommandConfig,
     ) -> ProjectConfig:
         path_to_config = server_config.get_path_to_config()
-        project_config: ProjectConfig = cls.load_from_path_or_get_default(
-            path_to_config=path_to_config
+        project_config, resolved_config_path = (
+            cls.load_from_path_or_get_default(path_to_config=path_to_config)
         )
+        project_config.config_path = resolved_config_path
         project_config.integrate_server_config(server_config)
         project_config.validate_and_finalize()
         return project_config
@@ -1174,7 +1200,7 @@ class ProjectConfigLoader:
         convert_config: ConvertCommandConfig,
     ) -> ProjectConfig:
         path_to_config = convert_config.get_path_to_config()
-        project_config: ProjectConfig = cls.load_from_path_or_get_default(
+        project_config, _ = cls.load_from_path_or_get_default(
             path_to_config=path_to_config
         )
         project_config.input_paths = [os.getcwd()]
@@ -1188,7 +1214,7 @@ class ProjectConfigLoader:
     ) -> ProjectConfig:
         path_to_config = manage_autouid_config.get_path_to_config()
 
-        project_config: ProjectConfig = cls.load_from_path_or_get_default(
+        project_config, _ = cls.load_from_path_or_get_default(
             path_to_config=path_to_config
         )
 
@@ -1218,7 +1244,7 @@ class ProjectConfigLoader:
     ) -> "ProjectConfig":
         path_to_config = format_config.get_path_to_config()
 
-        project_config: ProjectConfig = cls.load_from_path_or_get_default(
+        project_config, _ = cls.load_from_path_or_get_default(
             path_to_config=path_to_config
         )
 
@@ -1242,7 +1268,7 @@ class ProjectConfigLoader:
     ) -> "ProjectConfig":
         path_to_config = manage_new_config.get_path_to_config()
 
-        project_config: ProjectConfig = cls.load_from_path_or_get_default(
+        project_config, _ = cls.load_from_path_or_get_default(
             path_to_config=path_to_config
         )
 
@@ -1266,7 +1292,7 @@ class ProjectConfigLoader:
     ) -> ProjectConfig:
         path_to_config = manage_assets_config.get_path_to_config()
 
-        project_config: ProjectConfig = cls.load_from_path_or_get_default(
+        project_config, _ = cls.load_from_path_or_get_default(
             path_to_config=path_to_config
         )
 
@@ -1285,40 +1311,50 @@ class ProjectConfigLoader:
         return project_config
 
     @staticmethod
+    def _resolve_config_path(*, path_to_config: str) -> str:
+        # Resolves path_to_config to a concrete configuration file path. When
+        # path_to_config is a directory, the Python config file is preferred
+        # over the TOML one; if neither exists, the (non-existent) Python
+        # config path is returned, since callers that write a new config
+        # file (e.g. the project settings editor) need a target path.
+        absolute_path = os.path.abspath(path_to_config)
+        if os.path.isdir(absolute_path):
+            python_config_path = os.path.join(
+                absolute_path, "strictdoc_config.py"
+            )
+            if os.path.isfile(python_config_path):
+                return python_config_path
+            toml_config_path = os.path.join(absolute_path, "strictdoc.toml")
+            if os.path.isfile(toml_config_path):
+                return toml_config_path
+            return python_config_path
+        return absolute_path
+
+    @staticmethod
     def load_from_path_or_get_default(
         *,
         path_to_config: str,
-    ) -> ProjectConfig:
-        if not os.path.exists(path_to_config):
-            return ProjectConfig.default_config()
-        if os.path.isdir(path_to_config):
-            path_to_config_dir = path_to_config
-            # Prefer the Python config file when both are present.
-            path_to_py_config = os.path.join(
-                path_to_config_dir, "strictdoc_config.py"
-            )
-            path_to_toml_config = os.path.join(
-                path_to_config_dir, "strictdoc.toml"
-            )
+    ) -> Tuple[ProjectConfig, str]:
+        resolved_config_path = ProjectConfigLoader._resolve_config_path(
+            path_to_config=path_to_config
+        )
 
-            if os.path.isfile(path_to_py_config):
-                path_to_config = path_to_py_config
-            elif os.path.isfile(path_to_toml_config):
-                path_to_config = path_to_toml_config
+        if not os.path.isfile(resolved_config_path):
+            return ProjectConfig.default_config(), resolved_config_path
 
-        if not os.path.isfile(path_to_config):
-            return ProjectConfig.default_config()
-
-        if path_to_config.endswith(".py"):
-            return ProjectConfigLoader.load_from_python(
-                config_py_path=path_to_config
+        if resolved_config_path.endswith(".py"):
+            return (
+                ProjectConfigLoader.load_from_python(
+                    config_py_path=resolved_config_path
+                ),
+                resolved_config_path,
             )
 
         try:
-            config_content = toml.load(path_to_config)
+            config_content = toml.load(resolved_config_path)
         except toml.decoder.TomlDecodeError as exception:
             raise StrictDocException(  # noqa: T201
-                f"Could not parse the config file {path_to_config}: "
+                f"Could not parse the config file {resolved_config_path}: "
                 f"{exception}."
             ) from None
         except Exception as exception:  # pragma: no cover
@@ -1334,11 +1370,14 @@ class ProjectConfigLoader:
             ),
         )
 
-        config_last_update = get_file_modification_time(path_to_config)
+        config_last_update = get_file_modification_time(resolved_config_path)
 
-        return ProjectConfigLoader._load_from_dictionary(
-            config_dict=config_content,
-            config_last_update=config_last_update,
+        return (
+            ProjectConfigLoader._load_from_dictionary(
+                config_dict=config_content,
+                config_last_update=config_last_update,
+            ),
+            resolved_config_path,
         )
 
     @staticmethod

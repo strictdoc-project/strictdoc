@@ -2836,7 +2836,7 @@ Sphinx-style syntax is also supported:
     [TEXT]
     STATEMENT: >>>
     The following formula :math:`a^2 + b^2 = c^2` is rendered inline with the text.
-  
+
     When using the math directive, the enclosing $$ are not required.
 
     .. math::
@@ -2944,6 +2944,169 @@ The created RST files can be copied to a project created using Sphinx, see
     cp -v output/YourDoc.rst path/to/sphinx-project/source/
     cd path/to/sphinx-project && make html
 <<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: a79adcd08f24494da1f4f1e72d705313
+UID: SECTION-UG-AsciiDoc-export
+TITLE: AsciiDoc export
+
+[TEXT]
+MID: 826ac6377d864eb69d20da82e38e461b
+STATEMENT: >>>
+Export complete requirements documents as AsciiDoc:
+
+.. code:: text
+
+    strictdoc export docs/ --formats=asciidoc --output-dir output
+
+The exporter writes UTF-8 ``.adoc`` files under ``output/asciidoc/``.
+For example, ``foo/bar.sdoc`` becomes
+``output/asciidoc/foo/bar.adoc``.
+
+Every page starts with the document title.  The exporter includes the
+following content when present in the source:
+
+- fields in source order, with custom field titles
+- rationale and each repeated comment
+- authored relationships and their roles
+- file relationships with their source-reference metadata.
+
+Single-line metadata fields use description lists with the
+``strictdoc-metadata`` AsciiDoc role. Fields classified as multiline by the
+document grammar use open blocks, even when their value has only one line.
+The open blocks carry ``strictdoc-field`` and a field-specific role such as
+``strictdoc-statement`` or ``strictdoc-rationale``. Custom field roles use
+lowercase names with underscores replaced by hyphens.
+Repeated fields remain separate blocks. Explicit human-readable field titles
+become block captions. Default field names do not add visible labels.
+Requirement headings carry the ``strictdoc-requirement`` role.
+
+Open blocks retain paragraphs, inline markup, lists, code, tables, and images.
+AsciiDoc processors convert roles into HTML classes that a site UI can style.
+The output uses standard AsciiDoc syntax without custom extensions.
+Documentation frameworks such as `Antora <https://antora.org/>`_ can render
+the generated files.
+
+Edit requirements in StrictDoc source files. Each successful export replaces
+the entire ``asciidoc/`` subtree to remove stale pages and images.
+Keep handwritten documentation outside that subtree.
+Conversion errors leave the previous export intact.
+
+.. note::
+
+    The exporter does not support AsciiDoc import, editing, individual
+    requirement partials, server export, or ``convert`` output.
+
+<<<
+
+[[SECTION]]
+MID: 52667e06ede041b4ac32afa5cfcd1ec7
+TITLE: Links and identifiers
+
+[TEXT]
+MID: 71eca2d7ccf744fea6b2fb10cd9de157
+STATEMENT: >>>
+StrictDoc links can target documents, sections, requirements, and explicit
+anchors. Links within a page use local anchors. Links between pages use
+relative ``.adoc`` paths.
+
+UIDs matching ``[A-Za-z][A-Za-z0-9_-]*`` remain unchanged, except those starting
+with ``sd_uid_``. Other UIDs become ``sd_uid_`` followed by their UTF-8 bytes
+in lowercase hexadecimal. For example, ``req:1`` becomes
+``sd_uid_7265713a31``. The same mapping applies to explicit anchors.
+The ``sd_uid_`` prefix reserves a namespace for encoded UIDs.
+Encoding UIDs that already use the prefix prevents anchor collisions.
+Handwritten AsciiDoc can link to a requirement with:
+
+.. code:: text
+
+    xref:requirements.adoc#REQ-1[Requirement REQ-1]
+
+Included documents appear inside their including pages and as standalone
+pages. An expanded page links locally to targets present on that page.
+Other links use the target's standalone page.
+Links to targets removed by filtering fail the export.
+Duplicate anchors on one page also fail the export.
+
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 70480b70c4e94aa5b3a665176d6fb0b7
+TITLE: Supported source markup
+
+[TEXT]
+MID: fc81fc61a62c4168a5992bd04b5b092e
+STATEMENT: >>>
+The exporter supports ``RST`` and ``Text`` source markup.
+``Text`` preserves line breaks and treats markup characters literally.
+Both modes resolve StrictDoc links and anchors.
+
+The supported RST subset includes:
+
+- paragraphs, emphasis, strong emphasis, and inline literals
+- code blocks with an optional language
+- nested bullet lists and Arabic numbered lists
+- HTTP, HTTPS, and email links
+- rectangular tables with simple cells and at most one header row
+- local images with alternative text and integer pixel or percentage dimensions.
+
+A nested list must immediately follow its item's first paragraph.
+The nested list must also be the item's last block.
+Other nested-list arrangements fail with a diagnostic.
+
+Literal source characters cannot activate AsciiDoc attributes or directives.
+Generated files use character references to preserve those characters.
+Formatting can span a StrictDoc inline link.
+StrictDoc links inside literals, code blocks, or URLs fail the export.
+
+The exporter rejects Markdown and HTML source markup.
+Unsupported RST constructs also fail, including raw content, includes, math,
+admonitions, footnotes, field headings, and tables with spanning cells.
+Use StrictDoc sections and anchors for document structure.
+Diagnostics identify the source document, node, field, and repeated occurrence.
+Parser diagnostics also report a field-relative line when available.
+Section nesting cannot exceed five levels below the document title.
+
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: aa187a8e0988423488d6f236cffa9054
+TITLE: Images
+
+[TEXT]
+MID: 7f0fa8e5caa346d89a759a1e8622addd
+STATEMENT: >>>
+Image paths resolve relative to the source document.
+The exporter copies supported local images under ``asciidoc/_assets/``.
+Missing images, unsupported formats, remote images, wildcard paths, and
+symlinks within the source tree fail the export.
+Images must remain within the selected input tree.
+
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 43acfefc18424abf8c171cb5cf4f5fb5
+TITLE: Publishing with Antora
+
+[TEXT]
+MID: cb76138401864a278dcf7befcb7d9538
+STATEMENT: >>>
+AsciiDoc export does not require Antora. For Antora publishing, add generated
+pages and images to the content catalog before rendering.
+Verify whether the configured content source reads the local worktree or Git
+history. Sources that read Git history need a mechanism to add untracked
+generated pages.
+<<<
+
+[[/SECTION]]
 
 [[/SECTION]]
 

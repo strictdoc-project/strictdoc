@@ -26,6 +26,7 @@ EXPORT_FORMATS = [
     "sdoc",
     "doxygen",
     "spdx",
+    "asciidoc",
 ]
 
 

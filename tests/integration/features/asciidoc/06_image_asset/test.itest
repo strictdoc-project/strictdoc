@@ -1,0 +1,11 @@
+#
+# Local supported images are copied below the exporter-owned asset directory
+# and the generated page points to that copy.
+#
+
+RUN: %strictdoc export --formats=asciidoc --output-dir %T %S/input.sdoc
+
+RUN: %check_exists --file "%T/asciidoc/_assets/diagram space.svg"
+RUN: %cat %T/asciidoc/input.adoc | filecheck %s --dump-input=fail
+
+CHECK: image::_assets/diagram%20space.svg[alt="Requirement diagram",width="64"]

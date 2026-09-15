@@ -50,6 +50,24 @@ releases:
 <<<
 
 [[SECTION]]
+MID: c7042a2b60154fdb98b05bdfb0f5b5b8
+TITLE: Unreleased
+
+[TEXT]
+MID: 7c9cd8938ffc4852a6d2aba83c6f8a76
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) Added AsciiDoc export with ``strictdoc export --formats=asciidoc``.
+The exporter preserves document structure, fields, and requirement links.
+Metadata uses description lists; rich-text fields use role-marked open blocks.
+The initial release supports a subset of RST and plain text.
+Unsupported markup produces source-field diagnostics.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: a1b2c3d4e5f647a8b9c0d1e2f3a4b5c6
 TITLE: 0.30.0 (2026-09-13)
 

@@ -1,0 +1,7 @@
+# @relation(SDOC-SRS-51, scope=file)
+
+REQUIRES: PLATFORM_IS_NOT_WINDOWS
+
+RUN: %expect_exit 1 %strictdoc export %S --formats=html2pdf --chrome-binary="%S/not_chrome.sh" --output-dir %T | filecheck %s --dump-input=fail
+
+CHECK: error: html2pdf4doc: Could not determine the Chrome version from --chrome-binary: '{{.*}}not_chrome.sh'.

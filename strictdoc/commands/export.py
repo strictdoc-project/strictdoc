@@ -256,6 +256,13 @@ class ExportCommand(BaseCommand):
             "strictdoc cache.",
         )
         command_parser_export.add_argument(
+            "--chrome-binary",
+            type=str,
+            help="Path to a Chrome/Chromium binary for html2pdf. "
+            "If not given, html2pdf attempts to detect an existing "
+            "Chrome installation.",
+        )
+        command_parser_export.add_argument(
             "--disable-ssl-check",
             action="store_true",
             default=False,

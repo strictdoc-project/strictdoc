@@ -5595,6 +5595,12 @@ default, or uses a pre installed executable if ``strictdoc export
 --chromedriver=/path/to/chromedriver`` or the equivalent ``strictdoc_config.py``
 option is given.
 
+By default, StrictDoc attempts to detect an existing Chrome/Chromium
+installation. If Chrome is installed in a non-standard location, its binary can
+be specified explicitly with ``strictdoc export
+--chrome-binary=/path/to/chrome`` or the equivalent ``strictdoc_config.py``
+option.
+
 When printing from the command line (the first method), you can use the
 ``--generate-bundle-document`` option to have StrictDoc generate a single PDF
 document that bundles together all individual PDFs. The bundle document gets the

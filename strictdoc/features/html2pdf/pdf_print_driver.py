@@ -81,6 +81,13 @@ class PDFPrintDriver:
                     project_config.chromedriver,
                 ]
             )
+        if project_config.chrome_binary is not None:
+            cmd.extend(
+                [
+                    "--chrome-binary",
+                    project_config.chrome_binary,
+                ]
+            )
         if project_config.html2pdf_disable_ssl_check:
             cmd.append("--disable-ssl-check")
         if project_config.html2pdf_strict:

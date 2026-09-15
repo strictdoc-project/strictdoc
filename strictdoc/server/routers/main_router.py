@@ -443,10 +443,15 @@ def create_main_router(
             candidate_html_generator = HTMLGenerator(
                 candidate_config, candidate_html_templates
             )
-            candidate_html_generator.export_assets(
-                traceability_index=candidate_traceability_index,
+            candidate_html_generator.export_strictdoc_assets(
                 project_config=candidate_config,
                 html_templates=candidate_html_templates,
+                export_output_html_root=(
+                    candidate_config.export_output_html_root
+                ),
+            )
+            candidate_html_generator.export_project_assets(
+                traceability_index=candidate_traceability_index,
                 export_output_html_root=(
                     candidate_config.export_output_html_root
                 ),

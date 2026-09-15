@@ -1,7 +1,11 @@
 from pathlib import Path
 from typing import Dict
 
-from strictdoc.core.project_config import ProjectConfig, ProjectConfigLoader
+from strictdoc.core.project_config import (
+    ProjectConfig,
+    ProjectConfigLoader,
+    ProjectFeature,
+)
 from strictdoc.export.html.html_templates import NormalHTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.features.project_configuration.generator import (
@@ -169,6 +173,61 @@ def create_config() -> ProjectConfig:
         "config.project_features = ['SEARCH', 'DIFF']"
         in config_path.read_text(encoding="utf8")
     )
+
+
+def test_all_features_expands_when_assigned_after_construction(
+    tmp_path: Path,
+) -> None:
+    """
+    An extending create_config() assigns project_features to an
+    already-constructed ProjectConfig (`config.project_features = [...]`),
+    bypassing the ALL_FEATURES expansion that __init__ would otherwise do.
+    validate_and_finalize() must still expand it.
+    """
+    config_path = tmp_path / "strictdoc_config.py"
+    config_path.write_text(
+        """\
+from strictdoc.core.project_config import ProjectConfig
+
+def create_config() -> ProjectConfig:
+    config = ProjectConfig()
+    config.project_features = ["ALL_FEATURES", "SEARCH"]
+    return config
+""",
+        encoding="utf8",
+    )
+
+    project_config = ProjectConfigLoader.load(str(tmp_path))
+
+    assert "ALL_FEATURES" in project_config.project_features
+    assert "TABLE_SCREEN" in project_config.project_features
+    assert "DIFF" in project_config.project_features
+    assert project_config.project_features == ProjectFeature.all()
+
+
+def test_all_features_expands_after_save_to_extending_config(
+    tmp_path: Path,
+) -> None:
+    config_path = tmp_path / "strictdoc_config.py"
+    config_path.write_text(
+        """\
+from strictdoc.core.project_config import ProjectConfig
+
+def create_config() -> ProjectConfig:
+    config = ProjectConfig()
+    config.project_features = ["SEARCH"]
+    return config
+""",
+        encoding="utf8",
+    )
+    manager = ProjectSettingsManager(create_project_config(config_path))
+    values = editable_values(manager)
+    values["project_features"] = ["ALL_FEATURES", "SEARCH"]
+
+    manager.save(values)
+
+    reloaded_config = ProjectConfigLoader.load(str(tmp_path))
+    assert reloaded_config.project_features == ProjectFeature.all()
 
 
 def test_save_creates_missing_config_with_changed_values(

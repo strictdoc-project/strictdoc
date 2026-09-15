@@ -75,13 +75,3 @@ class Test(E2ECase):
         assert "SEARCH" in config_source
         assert "DIFF" in config_source
         assert "ALL_FEATURES" not in config_source
-        assert (
-            len(
-                [
-                    filename_
-                    for filename_ in os.listdir(test_setup.path_to_sandbox)
-                    if filename_.startswith("strictdoc_config.py.saved.")
-                ]
-            )
-            == 1
-        )

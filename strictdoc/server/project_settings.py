@@ -1,7 +1,5 @@
 import ast
-import datetime
 import os
-import shutil
 import tempfile
 from dataclasses import dataclass, replace
 from typing import Dict, List, Optional, Union
@@ -44,7 +42,6 @@ class ProjectSettingsInspection:
 @dataclass(frozen=True)
 class ProjectSettingsSaveResult:
     changed: bool
-    saved_version_path: Optional[str]
 
 
 PROJECT_SETTING_DEFINITIONS: List[ProjectSettingDefinition] = [
@@ -60,8 +57,6 @@ PROJECT_SETTING_DEFINITIONS: List[ProjectSettingDefinition] = [
 
 
 class ProjectSettingsManager:
-    MAX_SAVED_VERSIONS = 5
-
     def __init__(self, project_config: ProjectConfig) -> None:
         self.project_config = project_config
         if project_config.config_path is not None:
@@ -216,9 +211,7 @@ class ProjectSettingsManager:
         }
         values_changed = normalized_values != current_values
         if not values_changed:
-            return ProjectSettingsSaveResult(
-                changed=False, saved_version_path=None
-            )
+            return ProjectSettingsSaveResult(changed=False)
 
         source = self._read_config_source()
         if source is None:
@@ -256,11 +249,8 @@ class ProjectSettingsManager:
                 )
 
         self._validate_candidate(candidate_source)
-        saved_version_path = self._save_candidate(candidate_source)
-        return ProjectSettingsSaveResult(
-            changed=True,
-            saved_version_path=saved_version_path,
-        )
+        self._save_candidate(candidate_source)
+        return ProjectSettingsSaveResult(changed=True)
 
     @staticmethod
     def default_values() -> Dict[str, SettingValue]:
@@ -697,15 +687,7 @@ class ProjectSettingsManager:
             if temporary_path is not None and os.path.exists(temporary_path):
                 os.unlink(temporary_path)
 
-    def _save_candidate(self, candidate_source: str) -> Optional[str]:
-        saved_version_path: Optional[str] = None
-        if os.path.isfile(self.config_path):
-            timestamp = datetime.datetime.now(datetime.timezone.utc).strftime(
-                "%Y%m%dT%H%M%S%fZ"
-            )
-            saved_version_path = f"{self.config_path}.saved.{timestamp}"
-            shutil.copy2(self.config_path, saved_version_path)
-
+    def _save_candidate(self, candidate_source: str) -> None:
         target_directory = os.path.dirname(self.config_path)
         with tempfile.NamedTemporaryFile(
             mode="w",
@@ -723,23 +705,3 @@ class ProjectSettingsManager:
         finally:
             if os.path.exists(temporary_path):
                 os.unlink(temporary_path)
-
-        self._rotate_saved_versions()
-        return saved_version_path
-
-    def _rotate_saved_versions(self) -> None:
-        target_directory = os.path.dirname(self.config_path)
-        prefix = f"{os.path.basename(self.config_path)}.saved."
-        versions = sorted(
-            (
-                os.path.join(target_directory, filename_)
-                for filename_ in os.listdir(target_directory)
-                if filename_.startswith(prefix)
-            ),
-            reverse=True,
-        )
-        for old_version_ in versions[self.MAX_SAVED_VERSIONS :]:
-            try:
-                os.unlink(old_version_)
-            except OSError:
-                pass

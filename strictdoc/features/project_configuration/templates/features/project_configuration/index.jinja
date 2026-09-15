@@ -5,6 +5,9 @@
 {% block head_css %}
   {{ super() }}
   <link rel="stylesheet" href="{{ view_object.render_static_url('project_tree.css') }}"/>
+  {% if view_object.is_running_on_server %}
+    <link rel="stylesheet" href="{{ view_object.render_static_url('project_settings.css') }}"/>
+  {% endif %}
 {% endblock head_css %}
 
 {% block head_scripts %}
@@ -12,6 +15,7 @@
   <script src="{{ view_object.render_static_url('path_reveal.js') }}" defer></script>
   {% if view_object.is_running_on_server %}
     <script src="{{ view_object.render_static_url('modal.js') }}"></script>
+    <script src="{{ view_object.render_static_url('project_settings.js') }}" defer></script>
   {% endif %}
 {% endblock head_scripts %}
 

@@ -79,7 +79,6 @@ from strictdoc.core.image_formats import (
 from strictdoc.core.project_config import (
     ProjectConfig,
     ProjectConfigLoader,
-    ProjectFeature,
 )
 from strictdoc.core.query_engine.query_object import Query, QueryObject
 from strictdoc.core.query_engine.query_reader import QueryReader
@@ -156,6 +155,9 @@ from strictdoc.features.html2pdf.pdf_print_driver import (
 )
 from strictdoc.features.nestor.view_object import (
     NestorViewObject,
+)
+from strictdoc.features.project_configuration.view_object import (
+    ProjectSettingsEditViewObject,
 )
 from strictdoc.features.project_index.view_object import (
     ProjectTreeViewObject,
@@ -422,12 +424,6 @@ def create_main_router(
             candidate_config.watch_enabled = project_config.watch_enabled
             candidate_config.server_host = project_config.server_host
             candidate_config.server_port = project_config.server_port
-            candidate_config.server_host_overridden = (
-                project_config.server_host_overridden
-            )
-            candidate_config.server_port_overridden = (
-                project_config.server_port_overridden
-            )
             candidate_config.validate_and_finalize()
 
             candidate_traceability_index = TraceabilityIndexBuilder.create(
@@ -502,13 +498,14 @@ def create_main_router(
     @read_router.get("/actions/project_settings", response_class=Response)
     def get_project_settings() -> Response:
         settings_manager = ProjectSettingsManager(project_config)
+        view_object = ProjectSettingsEditViewObject(
+            project_config=project_config,
+            inspection=settings_manager.inspect(),
+            error_message=None,
+        )
         output = env().render_template_as_markup(
             "actions/project_settings/modal.jinja",
-            inspection=settings_manager.inspect(),
-            all_features=ProjectFeature.all(),
-            default_values=settings_manager.default_values(),
-            project_config=project_config,
-            error_message=None,
+            view_object=view_object,
         )
         return HTMLResponse(content=output, status_code=200)
 
@@ -533,13 +530,14 @@ def create_main_router(
                 inspection,
                 values,
             )
+            view_object = ProjectSettingsEditViewObject(
+                project_config=project_config,
+                inspection=inspection,
+                error_message=str(exception_),
+            )
             output = env().render_template_as_markup(
                 "actions/project_settings/modal.jinja",
-                inspection=inspection,
-                all_features=ProjectFeature.all(),
-                default_values=settings_manager.default_values(),
-                project_config=project_config,
-                error_message=str(exception_),
+                view_object=view_object,
             )
             return HTMLResponse(content=output, status_code=200)
 

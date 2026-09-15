@@ -30,20 +30,21 @@ The page has a separate read-only block for additional configuration:
 - output directory;
 - grammar aliases;
 - custom CSS path;
-- favicon path;
-- launcher logo path;
-- document line width;
-- HTML2PDF strict mode, template, and forced page-break nodes;
-- ReqIF profile, multiline XHTML mode, MID mode, and import markup.
+- favicon path.
 
 None of these values are editable through the UI. To change them, a user
 edits the active configuration file directly.
 
 ### Project features
 
-The page shows a ``Project features`` row with the full list of active
-features. When ``ALL_FEATURES`` is among them, the row shows
-``ALL_FEATURES:`` followed by the other active features on the same line.
+The page shows a ``Project features`` row with the active features. When
+``ALL_FEATURES`` is among them, the row shows ``ALL_FEATURES:`` followed by
+the other active features on the same line.
+
+The row and the editing modal both hide ``NESTOR``, since the feature is
+still immature, and the deprecated ``MATHJAX``, ``MERMAID``, and
+``SOURCE_FILE_LANGUAGE_PARSERS`` features, since these are enabled by
+default and no longer need to be listed.
 
 ``project_features`` is the only setting the UI can edit. In server mode, the
 page shows one of two things in its place, never both:
@@ -119,13 +120,6 @@ project configuration, and the page and its edit action are still available.
 The first successful Apply creates ``strictdoc_config.py`` in the project
 root with the edited ``project_features`` value.
 
-Before replacing an existing configuration file, StrictDoc saves its current
-contents as a timestamped version beside it and keeps the five most recent
-versions, deleting older ones. The first Apply for a missing configuration
-file does not create an empty saved version. Saved configuration version
-filenames are ignored by Git. The page does not list, restore, or delete
-these versions; managing them in the UI is outside this task.
-
 After a successful Apply, StrictDoc reloads the project configuration and
 rebuilds the server state once, under the existing write lock, replacing the
 active state only after the rebuild succeeds. Connected browser tabs reload
@@ -133,8 +127,7 @@ automatically once the new state is ready.
 
 If the reload fails, StrictDoc keeps the previous in-memory project state,
 and the modal shows a settings-specific error in place of the reload
-message. The changed configuration file and its saved previous version stay
-on disk.
+message. The changed configuration file stays on disk.
 
 ### Failed requests
 
@@ -165,12 +158,12 @@ Tests shall cover:
 - Cancel and both Escape behaviors;
 - disabled and enabled Apply states;
 - ``ALL_FEATURES`` without loss of individual feature selections;
+- hiding ``NESTOR`` and the deprecated features from the row and the modal;
 - direct ``ProjectConfig(...)`` arguments;
 - literal assignments in an extending configuration file;
 - replacement of ``ProjectFeature.all()`` with an explicit list;
 - a missing configuration file;
 - validation and write errors;
-- saved-version retention;
 - one application-level reload after Apply;
 - reload failure without replacement of the active in-memory state.
 
@@ -204,9 +197,14 @@ only the ``project_features`` value, preserving unrelated imports, comments,
 assignments, and configuration values through targeted source-range edits.
 
 Before replacing the file, the manager builds the candidate source, parses
-it, and loads it as a full ``ProjectConfig`` to validate it. It saves and
-rotates the five previous versions and writes the new file atomically only
-after validation succeeds.
+it, and loads it as a full ``ProjectConfig`` to validate it, then writes the
+new file atomically only after validation succeeds.
+
+The Enable / disable features route builds a ``ProjectSettingsEditViewObject``
+(``strictdoc/features/project_configuration/view_object.py``) from the
+manager's inspection result and renders the modal through it. The same view
+object filters the feature list shown in the modal to exclude ``NESTOR`` and
+the deprecated features listed above.
 
 The Apply route reloads the configuration from disk and rebuilds the project
 under the existing write lock, replacing the active server state only after
@@ -214,7 +212,8 @@ the rebuild succeeds, then broadcasts a WebSocket message so connected
 browsers reload; a failed rebuild broadcasts an error message instead and
 leaves the previous state in place.
 
-The modal's fetch handlers in ``project_settings.js`` check the response
+The modal's fetch handlers in ``project_settings.js``
+(``strictdoc/features/project_configuration/assets/``) check the response
 status before using it. A network error or a non-2xx response shows a
 self-contained error notice instead of inserting the server's response body,
 which for an internal error would otherwise be a full HTML page, not a modal

@@ -1,3 +1,6 @@
+// Toggles the external-prefix part of a truncated project path
+// (`[data-js-path-reveal]`) between hidden ("…") and fully shown, for paths
+// displayed on the Project configuration page.
 (() => {
   const revealPathPrefix = (pathRevealControl) => {
     const pathReveal = pathRevealControl.closest('[data-js-path-reveal]');

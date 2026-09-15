@@ -87,7 +87,6 @@ def create_config() -> ProjectConfig:
     result = manager.save(values)
 
     assert result.changed is True
-    assert result.saved_version_path is not None
     source = config_path.read_text(encoding="utf8")
     assert "# This comment must remain." in source
     assert 'project_title="Example"' in source
@@ -183,32 +182,8 @@ def test_save_creates_missing_config_with_changed_values(
     result = manager.save(values)
 
     assert result.changed is True
-    assert result.saved_version_path is None
     source = config_path.read_text(encoding="utf8")
     assert "project_features=['SEARCH', 'DIFF']" in source
-
-
-def test_save_rotates_saved_versions(tmp_path: Path) -> None:
-    config_path = tmp_path / "strictdoc_config.py"
-    config_path.write_text(
-        """\
-from strictdoc.core.project_config import ProjectConfig
-
-def create_config() -> ProjectConfig:
-    return ProjectConfig(project_features=["SEARCH"])
-""",
-        encoding="utf8",
-    )
-    manager = ProjectSettingsManager(create_project_config(config_path))
-
-    for iteration_ in range(2, 9):
-        values = editable_values(manager)
-        values["project_features"] = (
-            ["SEARCH", "DIFF"] if iteration_ % 2 == 0 else ["SEARCH"]
-        )
-        manager.save(values)
-
-    assert len(list(tmp_path.glob("strictdoc_config.py.saved.*"))) == 5
 
 
 def test_save_does_nothing_for_unchanged_values(tmp_path: Path) -> None:
@@ -227,7 +202,6 @@ def create_config() -> ProjectConfig:
     result = manager.save(editable_values(manager))
 
     assert result.changed is False
-    assert list(tmp_path.glob("strictdoc_config.py.saved.*")) == []
 
 
 def test_invalid_feature_does_not_change_file(tmp_path: Path) -> None:
@@ -254,7 +228,6 @@ def create_config() -> ProjectConfig:
         raise AssertionError("An unknown feature was accepted.")
 
     assert config_path.read_text(encoding="utf8") == original_source
-    assert list(tmp_path.glob("strictdoc_config.py.saved.*")) == []
 
 
 def test_static_project_configuration_has_no_edit_action(

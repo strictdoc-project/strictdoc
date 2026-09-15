@@ -18,18 +18,18 @@
     data-testid="project-settings-form"
   >
     <sdoc-form-grid>
-      {% if error_message is not none %}
+      {% if view_object.error_message is not none %}
         <sdoc-form-row-main>
-          <sdoc-form-error class="project_settings_error" data-testid="project-settings-error">{{ error_message }}</sdoc-form-error>
+          <sdoc-form-error class="project_settings_error" data-testid="project-settings-error">{{ view_object.error_message }}</sdoc-form-error>
         </sdoc-form-row-main>
-      {% elif inspection.message is not none %}
+      {% elif view_object.inspection.message is not none %}
         <sdoc-form-row-main>
-          <sdoc-form-error class="project_settings_notice" data-testid="project-settings-notice">{{ inspection.message }}</sdoc-form-error>
+          <sdoc-form-error class="project_settings_notice" data-testid="project-settings-notice">{{ view_object.inspection.message }}</sdoc-form-error>
         </sdoc-form-row-main>
       {% endif %}
 
       <sdoc-form-row-main>
-        {% for setting_ in inspection.settings if setting_.definition.kind == "features" %}
+        {% for setting_ in view_object.inspection.settings if setting_.definition.kind == "features" %}
           {% if setting_.editable %}
             <fieldset class="project_settings_fieldset" data-js-project-settings-field data-testid="project-settings-field-{{ setting_.definition.name }}">
               <span class="project_settings_changed_marker" data-js-project-settings-changed-marker hidden>Changed</span>
@@ -45,8 +45,9 @@
                 Enable all features
               </label>
               <div class="project_settings_individual_features" data-js-project-settings-individual-features>
+                {% set default_feature_values = view_object.default_values()[setting_.definition.name] %}
                 <sdoc-form-field-group data-field-label="Default" class="column">
-                {% for feature_ in all_features if feature_ != "ALL_FEATURES" and feature_ in default_values[setting_.definition.name] %}
+                {% for feature_ in view_object.get_features() if feature_ in default_feature_values %}
                   <label>
                     <input type="checkbox" name="{{ setting_.definition.name }}" value="{{ feature_ }}" data-testid="project-settings-feature-{{ feature_ }}" {% if feature_ in setting_.value %}checked{% endif %}>
                     {{ feature_ }}
@@ -54,7 +55,7 @@
                 {% endfor %}
                 </sdoc-form-field-group>
                 <sdoc-form-field-group data-field-label="Optional" class="column">
-                {% for feature_ in all_features if feature_ != "ALL_FEATURES" and feature_ not in default_values[setting_.definition.name] %}
+                {% for feature_ in view_object.get_features() if feature_ not in default_feature_values %}
                   <label>
                     <input type="checkbox" name="{{ setting_.definition.name }}" value="{{ feature_ }}" data-testid="project-settings-feature-{{ feature_ }}" {% if feature_ in setting_.value %}checked{% endif %}>
                     {{ feature_ }}
@@ -89,7 +90,7 @@
 {% endblock modal_form__footer_cancel %}
 
 {% block modal_form__footer_submit %}
-  {% if inspection.writable and inspection.settings | selectattr("editable") | list %}
+  {% if view_object.inspection.writable and view_object.inspection.settings | selectattr("editable") | list %}
     <button form="{{ form }}" type="submit" class="action_button" data-action-type="submit" title="Apply changes" data-js-project-settings-apply data-testid="project-settings-apply" disabled>Apply</button>
   {% endif %}
 {% endblock modal_form__footer_submit %}

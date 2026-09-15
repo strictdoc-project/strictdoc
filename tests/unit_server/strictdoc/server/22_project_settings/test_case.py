@@ -73,8 +73,8 @@ def test_project_configuration_page_and_modal(tmp_path: Path) -> None:
         assert str(config_path) in project_response.text
         assert "project_tree.css" in project_response.text
         assert "path_reveal.js" in project_response.text
-        assert "HTML2PDF strict mode" in project_response.text
-        assert "ReqIF import markup" in project_response.text
+        assert "Custom CSS path" in project_response.text
+        assert "Favicon path" in project_response.text
         assert "200 by default" in project_response.text
 
         index_response = client.get("/")
@@ -122,7 +122,6 @@ def test_project_settings_are_saved_and_reloaded(tmp_path: Path) -> None:
         config_py_path=str(config_path)
     )
     assert saved_config.project_features == ["SEARCH", "DIFF"]
-    assert len(list(tmp_path.glob("strictdoc_config.py.saved.*"))) == 1
 
 
 def test_external_config_is_the_only_file_changed(tmp_path: Path) -> None:

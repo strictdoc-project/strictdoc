@@ -13,12 +13,18 @@ The ``Project tree configuration`` block sits in the page sidebar and shows,
 each only when the underlying list is not empty:
 
 - input paths;
-- included and excluded document paths;
+- included document paths, and excluded document paths declared in the
+  config;
 - the source root path;
-- included and excluded source paths.
+- included source paths, and excluded source paths declared in the config.
 
 Each input path and the source root path show a truncated external prefix
 that a user can click to reveal in full.
+
+Excluded paths picked up from ``.gitignore`` (rather than declared in the
+config) show separately, in a collapsed ``Excluded via .gitignore (N)``
+section, so the config-declared excludes stay short and readable even on a
+project with a large ``.gitignore``.
 
 The page shows these main project values as read-only data:
 
@@ -56,7 +62,8 @@ Tests shall cover:
 - the main, features, and additional configuration blocks;
 - hiding ``NESTOR`` and the deprecated features from the ``Project features``
   row;
-- the input-path and source-root-path external-prefix reveal/hide toggle.
+- the input-path and source-root-path external-prefix reveal/hide toggle;
+- separating config-declared excludes from ``.gitignore``-derived ones.
 
 ## WHY
 
@@ -79,3 +86,10 @@ features listed above before rendering the ``ALL_FEATURES:`` line.
 path or the source root path into an external prefix and the remaining
 path, so the template can render the prefix behind a click-to-reveal toggle
 (``path_reveal.js``).
+
+``ProjectConfig.exclude_paths_from_gitignore`` (``strictdoc/core/project_config.py``)
+holds the patterns ``validate_and_finalize()`` read from ``.gitignore``,
+separately from the merged ``exclude_doc_paths``/``exclude_source_paths``
+lists used for actual filtering. The template splits each merged list
+against this one to decide which excludes render in the main list and
+which render in the collapsed ``.gitignore`` section.

@@ -436,6 +436,11 @@ class ProjectConfig:
                 ) from exception_
         self.exclude_source_paths: List[str] = exclude_source_paths
 
+        # Populated by validate_and_finalize() with the patterns read from
+        # .gitignore, if any, so templates can tell those apart from the
+        # excludes declared explicitly in the config.
+        self.exclude_paths_from_gitignore: List[str] = []
+
         #
         # source_root_path
         #
@@ -1041,6 +1046,7 @@ class ProjectConfig:
                         continue
                     patterns.append(line)
 
+            self.exclude_paths_from_gitignore = patterns
             self.exclude_doc_paths.extend(patterns)
             self.exclude_source_paths.extend(patterns)
 

@@ -146,7 +146,7 @@ def create_config():
         f.write(config_content)
         path = f.name
     try:
-        config = ProjectConfigLoader.load_from_path_or_get_default(
+        config, _ = ProjectConfigLoader.load_from_path_or_get_default(
             path_to_config=path
         )
         assert config.project_title == "Canonical"
@@ -167,7 +167,7 @@ def create_config():
         f.write(config_content)
         path = f.name
     try:
-        config = ProjectConfigLoader.load_from_path_or_get_default(
+        config, _ = ProjectConfigLoader.load_from_path_or_get_default(
             path_to_config=path
         )
         assert config.project_title == "NonCanonical"
@@ -186,7 +186,7 @@ def create_config():
     return ProjectConfig(lazy_document_loading_threshold=50)
 """
     )
-    project_config = ProjectConfigLoader.load_from_path_or_get_default(
+    project_config, _ = ProjectConfigLoader.load_from_path_or_get_default(
         path_to_config=str(path_to_config)
     )
     assert project_config.lazy_document_loading_threshold == 50
@@ -203,7 +203,7 @@ def create_config():
     return ProjectConfig(project_title="No threshold set")
 """
     )
-    project_config = ProjectConfigLoader.load_from_path_or_get_default(
+    project_config, _ = ProjectConfigLoader.load_from_path_or_get_default(
         path_to_config=str(path_to_config)
     )
     assert project_config.lazy_document_loading_threshold == 200

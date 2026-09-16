@@ -47,9 +47,10 @@ def _load_project_config_for_preparse() -> ProjectConfig:
     if config_path is None:
         config_path = os.getcwd()
     try:
-        return ProjectConfigLoader.load_from_path_or_get_default(
+        project_config, _ = ProjectConfigLoader.load_from_path_or_get_default(
             path_to_config=config_path
         )
+        return project_config
     except Exception:
         # A broken config surfaces properly later, when ConvertCommand.run()
         # loads it for real.

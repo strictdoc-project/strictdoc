@@ -5293,6 +5293,11 @@ def create_main_router(
                     )
                 elif (
                     document_relative_path.relative_path
+                    == "project_configuration.html"
+                ):
+                    html_generator.export_project_configuration_screen()
+                elif (
+                    document_relative_path.relative_path
                     == "traceability_matrix.html"
                 ):
                     if not project_config.is_activated_requirements_coverage():

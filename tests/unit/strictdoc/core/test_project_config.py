@@ -164,6 +164,49 @@ def create_config():
         os.unlink(path)
 
 
+def test_72_config_path_prefers_python_config_in_directory(tmp_path):
+    (tmp_path / "strictdoc_config.py").write_text(
+        """\
+from strictdoc.core.project_config import ProjectConfig
+
+def create_config():
+    return ProjectConfig(project_title="Python config")
+"""
+    )
+    (tmp_path / "strictdoc.toml").write_text(
+        '[project]\ntitle = "TOML config"\n'
+    )
+
+    config = ProjectConfigLoader.load_from_path_or_get_default(
+        path_to_config=str(tmp_path)
+    )
+
+    assert config.project_title == "Python config"
+    assert config.config_path == str(tmp_path / "strictdoc_config.py")
+
+
+def test_73_config_path_points_to_toml_config_in_directory(tmp_path):
+    (tmp_path / "strictdoc.toml").write_text(
+        '[project]\ntitle = "TOML config"\n'
+    )
+
+    config = ProjectConfigLoader.load_from_path_or_get_default(
+        path_to_config=str(tmp_path)
+    )
+
+    assert config.project_title == "TOML config"
+    assert config.config_path == str(tmp_path / "strictdoc.toml")
+
+
+def test_74_config_path_without_config_file_in_directory(tmp_path):
+    config = ProjectConfigLoader.load_from_path_or_get_default(
+        path_to_config=str(tmp_path)
+    )
+
+    assert config.project_title == ProjectConfig().project_title
+    assert config.config_path is None
+
+
 def test_80_lazy_document_loading_threshold_from_config(tmp_path):
     path_to_config = tmp_path / "strictdoc_config.py"
     path_to_config.write_text(

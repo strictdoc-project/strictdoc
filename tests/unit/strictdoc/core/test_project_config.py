@@ -33,6 +33,39 @@ def test_10__project_features__accepts_strings_or_enums():
     assert project_config.is_activated_reqif()
 
 
+def test_11__project_features__all_features_expands_via_constructor():
+    project_config = ProjectConfig(project_features=["ALL_FEATURES", "SEARCH"])
+    assert project_config.project_features == ProjectFeature.all()
+
+
+def test_12__project_features__all_features_expands_when_assigned_after_construction(
+    tmp_path,
+):
+    """
+    An extending create_config() commonly assigns project_features to an
+    already-constructed ProjectConfig (`config.project_features = [...]`),
+    bypassing the ALL_FEATURES expansion that __init__ would otherwise do.
+    validate_and_finalize(), which every ProjectConfigLoader path calls,
+    must still expand it.
+    """
+    config_path = tmp_path / "strictdoc_config.py"
+    config_path.write_text(
+        """\
+from strictdoc.core.project_config import ProjectConfig
+
+def create_config() -> ProjectConfig:
+    config = ProjectConfig()
+    config.project_features = ["ALL_FEATURES", "SEARCH"]
+    return config
+""",
+        encoding="utf8",
+    )
+
+    project_config = ProjectConfigLoader.load(str(tmp_path))
+
+    assert project_config.project_features == ProjectFeature.all()
+
+
 def test_30_include_doc_paths_bad_mask():
     with pytest.raises(ValueError):
         _ = ProjectConfig(include_doc_paths=[" "])

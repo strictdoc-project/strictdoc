@@ -1,14 +1,9 @@
 <div class="main">
-  <div class="dashboard">
-    <div class="dashboard-main">
-      {% include "features/project_index/frame_project_tree.jinja.html" %}
-    </div>
-    <div class="dashboard-aside">
+    <div>
       {% if view_object.should_display_fragments_toggle() %}
-      <div class="dashboard-block" id="project_tree_controls">{# must to be empty #}</div>
+      <div id="project_tree_controls" class="project_tree-controls">{# must to be empty #}</div>
       {% endif %}
       {%- include "components/switch/index.jinja" -%}
-
     </div>
-  </div>
+    {% include "features/project_index/frame_project_tree.jinja.html" %}
 </div>

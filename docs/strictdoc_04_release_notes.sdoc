@@ -50,6 +50,32 @@ releases:
 <<<
 
 [[SECTION]]
+MID: 8a13de7253c14afb8dfc95f88948b22f
+TITLE: 0.30.1 (2026-09-15)
+
+[TEXT]
+MID: 9c24ef8364d25b09fce06f99a059c33d
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) Added a ``--chrome-binary`` CLI option (and matching
+``strictdoc_config.py`` option) to pin the Chrome/Chromium binary used for
+HTML2PDF export, instead of relying on StrictDoc's auto-detection.
+
+2\) Fixed: Mermaid and PlantUML diagrams now render in static HTML exports
+that split large documents into lazily loaded chunks.
+
+3\) Fixed: autocomplete fields no longer submit a stale value when a form
+is submitted immediately after typing.
+
+4\) Fixed remaining race conditions in the table screen's inline cell
+editing, so a late save response no longer overwrites a value entered
+afterward.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: a1b2c3d4e5f647a8b9c0d1e2f3a4b5c6
 TITLE: 0.30.0 (2026-09-13)
 

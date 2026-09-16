@@ -1663,6 +1663,18 @@ kbd {
   color: var(--color-danger);
 }
 
+kbd,
+.keyboard_key {
+  font-family: inherit;
+  white-space: nowrap;
+  padding: 0 calc(var(--base-rhythm)/2);
+  border: 1px solid;
+  border-radius: calc(var(--base-rhythm)/2);
+  font-size: var(--font-size-xxsm);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
 /* tabs */
 
 sdoc-tab-content {

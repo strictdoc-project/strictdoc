@@ -86,6 +86,31 @@ def test_33_exclude_source_paths_bad_mask():
         _ = ProjectConfig(exclude_source_paths=[" "])
 
 
+def test_34_exclude_paths_from_gitignore_tracked_separately(tmp_path):
+    (tmp_path / ".gitignore").write_text(
+        "output/\n# a comment\n\nbuild/\n",
+        encoding="utf8",
+    )
+    project_config = ProjectConfig(exclude_doc_paths=["/docs/drafts/"])
+    project_config.input_paths = [str(tmp_path)]
+    project_config.validate_and_finalize()
+
+    assert project_config.exclude_paths_from_gitignore == [
+        "/.git/",
+        "output/",
+        "build/",
+    ]
+    # The explicitly configured exclude is not mistaken for a gitignore one.
+    assert "/docs/drafts/" not in project_config.exclude_paths_from_gitignore
+    # Both still end up in the merged list used for actual filtering.
+    assert project_config.exclude_doc_paths == [
+        "/docs/drafts/",
+        "/.git/",
+        "output/",
+        "build/",
+    ]
+
+
 #
 # Editable document extensions.
 #

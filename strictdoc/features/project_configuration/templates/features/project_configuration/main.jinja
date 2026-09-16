@@ -44,9 +44,9 @@
       </div>{# // .dashboard-block #}
     </div>{# // .dashboard-main #}
 
-    <div class="dashboard-aside">
-      <div class="dashboard-block" data-testid="project-tree-configuration">
-        <div class="dashboard-block-title">Project tree configuration</div>
+    <div class="dashboard-aside" data-testid="project-tree-configuration">
+      <div class="dashboard-block">
+        {# <div class="dashboard-block-title"></div> #}
 
         {% if view_object.project_config.input_paths|length %}
           <b>Input paths:</b>
@@ -61,17 +61,35 @@
           {% endfor %}
         {% endif %}
 
-        {% if view_object.project_config.include_doc_paths|length or view_object.project_config.exclude_doc_paths|length %}
+        {% set exclude_doc_paths_configured = view_object.project_config.exclude_doc_paths | reject("in", view_object.project_config.exclude_paths_from_gitignore) | list %}
+        {% set exclude_doc_paths_gitignore = view_object.project_config.exclude_doc_paths | select("in", view_object.project_config.exclude_paths_from_gitignore) | list %}
+        {% if view_object.project_config.include_doc_paths|length or exclude_doc_paths_configured|length %}
           <p>Document paths:</p>
           <ul>
             {% for path_ in view_object.project_config.include_doc_paths %}
               <li style="list-style-type: '✔️    '">{{ path_ }}</li>
             {% endfor %}
-            {% for path_ in view_object.project_config.exclude_doc_paths %}
+            {% for path_ in exclude_doc_paths_configured %}
               <li style="list-style-type: '⛔    '">{{ path_ }}</li>
             {% endfor %}
           </ul>
         {% endif %}
+
+        {% if exclude_doc_paths_gitignore|length %}
+          <details class="dashboard-excluded-via-gitignore">
+            <summary>⛔ Excluded via .gitignore ({{ exclude_doc_paths_gitignore|length }})</summary>
+            <ul>
+              {% for path_ in exclude_doc_paths_gitignore %}
+                <li style="list-style-type: '⛔    '">{{ path_ }}</li>
+              {% endfor %}
+            </ul>
+          </details>
+        {% endif %}
+
+
+      </div>
+      <div class="dashboard-block">
+        {# <div class="dashboard-block-title"></div> #}
 
         {% if view_object.project_config.source_root_path is not none %}
           {% set external_, internal_ = view_object.split_path_for_display(view_object.project_config.source_root_path) %}
@@ -84,16 +102,29 @@
           </code>
         {% endif %}
 
-        {% if view_object.project_config.include_source_paths|length or view_object.project_config.exclude_source_paths|length %}
+        {% set exclude_source_paths_configured = view_object.project_config.exclude_source_paths | reject("in", view_object.project_config.exclude_paths_from_gitignore) | list %}
+        {% set exclude_source_paths_gitignore = view_object.project_config.exclude_source_paths | select("in", view_object.project_config.exclude_paths_from_gitignore) | list %}
+        {% if view_object.project_config.include_source_paths|length or exclude_source_paths_configured|length %}
           <p>Source paths:</p>
           <ul>
             {% for path_ in view_object.project_config.include_source_paths %}
               <li style="list-style-type: '✔️    '">{{ path_ }}</li>
             {% endfor %}
-            {% for path_ in view_object.project_config.exclude_source_paths %}
+            {% for path_ in exclude_source_paths_configured %}
               <li style="list-style-type: '⛔    '">{{ path_ }}</li>
             {% endfor %}
           </ul>
+        {% endif %}
+
+        {% if exclude_source_paths_gitignore|length %}
+          <details class="dashboard-excluded-via-gitignore">
+            <summary>⛔ Excluded via .gitignore ({{ exclude_source_paths_gitignore|length }})</summary>
+            <ul>
+              {% for path_ in exclude_source_paths_gitignore %}
+                <li style="list-style-type: '⛔    '">{{ path_ }}</li>
+              {% endfor %}
+            </ul>
+          </details>
         {% endif %}
       </div>
     </div>

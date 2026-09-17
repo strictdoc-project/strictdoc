@@ -5,13 +5,13 @@ description: Rules and DO/AVOID examples for writing terse, well-structured tech
 
 # Technical writing guide
 
-Version: v1
+Version: v1.1
 
 ## Check-in
 
 MANDATORY: When this skill is used in a response, print this line before anything else:
 
-`**technical-writing-guide v1** activated`
+`**technical-writing-guide v1.1** activated`
 
 ## Rule of thumb
 
@@ -45,10 +45,10 @@ Use Sentence case, not Title Case, for headings, titles, and similar text. Capit
 
 Rationale: Title Case alternates capital and lowercase letters, which increases reading effort: `Managing External Python Dependencies in Large Software Projects`.
 
-Examples:
-
-- DO: `Managing dependencies with Python.`
-- AVOID: `Managing Dependencies With Python.`
+|  | Example |
+|---|---|
+| AVOID | Managing Dependencies With Python. |
+| DO | Managing dependencies with Python. |
 
 ## Technical writing
 
@@ -68,14 +68,15 @@ The rule of thumb: can I delete this word, sentence, or paragraph without losing
 
 Rationale: Concise wording makes the important technical information easier to identify.
 
-Examples:
+|  | Example |
+|---|---|
+| AVOID | In order to be able to perform the validation, the system needs to first load the configuration file. |
+| DO | To validate, the system first loads the configuration file. |
 
-- DO: `To validate, the system first loads the configuration file.`
-- AVOID: `In order to be able to perform the validation, the system needs to first load the configuration file.`
-
-
-- DO: `The function returns the same value.`
-- AVOID: `Basically, this means that the function will simply return the same value again.`
+|  | Example |
+|---|---|
+| AVOID | Basically, this means that the function will simply return the same value again. |
+| DO | The function returns the same value. |
 
 ### Repeat the subject instead of using ambiguous references
 
@@ -85,26 +86,20 @@ If several consecutive sentences repeat the same subject, consider introducing t
 
 Rationale: Repeating the subject may feel redundant in general writing, but technical writing prioritizes unambiguous references over stylistic variety.
 
-Examples:
+|  | Example |
+|---|---|
+| AVOID | The parser validates the configuration before startup. This prevents invalid states. |
+| DO | The configuration validation prevents invalid states during startup. |
 
-- DO: `The configuration validation prevents invalid states during startup.`
-- AVOID: `The parser validates the configuration before startup. This prevents invalid states.`
+|  | Example |
+|---|---|
+| AVOID | The OBC sends the command to the PDH. It validates the command before execution. |
+| DO | The OBC sends the command to the PDH. The PDH validates the command before execution. |
 
-
-- DO: `The OBC sends the command to the PDH. The PDH validates the command before execution.`
-- AVOID: `The OBC sends the command to the PDH. It validates the command before execution.`
-
-
-- DO:
-
-```
-The parser:
-- validates the configuration
-- reports validation errors
-- stores the validated configuration.
-```
-
-- AVOID: `The parser validates the configuration. The parser reports validation errors. The parser stores the validated configuration.`
+|  | Example |
+|---|---|
+| AVOID | The parser validates the configuration. The parser reports validation errors. The parser stores the validated configuration. |
+| DO | The parser:<br>- validates the configuration<br>- reports validation errors<br>- stores the validated configuration. |
 
 ### Prefer direct statements over indirect or elaborate phrasing
 
@@ -112,10 +107,10 @@ State the relevant fact directly.
 
 Rationale: Direct statements reduce interpretation and make the author's meaning explicit.
 
-Examples:
-
-- DO: `The parser does not support empty sections.`
-- AVOID: `It should be noted that the parser is not currently capable of handling empty sections.`
+|  | Example |
+|---|---|
+| AVOID | It should be noted that the parser is not currently capable of handling empty sections. |
+| DO | The parser does not support empty sections. |
 
 ### Prefer direct statements over contrastive statements
 
@@ -123,14 +118,15 @@ State what something is or does directly. Avoid explaining it by contrasting it 
 
 Rationale: Direct statements keep attention on the relevant behavior instead of unnecessary alternatives.
 
-Examples:
+|  | Example |
+|---|---|
+| AVOID | The parser does not process files individually but instead processes the entire directory. |
+| DO | The parser processes the entire directory. |
 
-- DO: `The parser processes the entire directory.`
-- AVOID: `The parser does not process files individually but instead processes the entire directory.`
-
-
-- DO: `This component forwards the data to the PDH.`
-- AVOID: `This component is not responsible for storage. Instead, it forwards the data to the PDH.`
+|  | Example |
+|---|---|
+| AVOID | This component is not responsible for storage. Instead, it forwards the data to the PDH. |
+| DO | This component forwards the data to the PDH. |
 
 ### Keep sentences, paragraphs, and sections focused on one point
 
@@ -138,10 +134,10 @@ Separate independent ideas into separate sentences, paragraphs, or sections. Spl
 
 Rationale: One point at a time makes technical information easier to understand, scan, and reference.
 
-Examples:
-
-- DO: `The command validates the configuration before writing the output to disk. Configuration validation prevents later failures caused by invalid configuration.`
-- AVOID: `The command writes the output to disk, and it also validates the configuration, which is useful because invalid configuration can otherwise cause failures later.`
+|  | Example |
+|---|---|
+| AVOID | The command writes the output to disk, and it also validates the configuration, which is useful because invalid configuration can otherwise cause failures later. |
+| DO | The command validates the configuration before writing the output to disk. Configuration validation prevents later failures caused by invalid configuration. |
 
 #### One idea/fact per sentence
 
@@ -149,25 +145,20 @@ A sentence should state one fact. When a sentence joins two independent clauses 
 
 Exception: keep clauses joined when they describe a single tightly coupled action or a direct cause and effect, and splitting would force an artificial subject repetition without adding clarity (for example, `The receiver discards the packet if its checksum is invalid.`). Judge by whether the reader loses or gains clarity, not by clause count alone.
 
-Examples:
+|  | Example |
+|---|---|
+| AVOID | The parser validates input and logs errors to stdout. |
+| DO | The parser validates input. The parser logs errors to stdout. |
 
-- DO: `The parser validates input. The parser logs errors to stdout.`
-- AVOID: `The parser validates input and logs errors to stdout.`
+|  | Example |
+|---|---|
+| AVOID | The scheduler retries failed jobs, and it uses exponential backoff. |
+| DO | The scheduler retries failed jobs. Retries use exponential backoff. |
 
-
-- DO: `The scheduler retries failed jobs. Retries use exponential backoff.`
-- AVOID: `The scheduler retries failed jobs, and it uses exponential backoff.`
-
-
-- DO:
-
-```
-The parser reads the configuration file and validates its syntax. Validation errors are logged to the console and the parser exits with a nonzero code.
-
-The parser caches the parsed configuration in memory for later use by other components.
-```
-
-- AVOID: `The parser reads the configuration file and validates its syntax. Validation errors are logged to the console and the parser exits with a nonzero code. The parser also caches the parsed configuration in memory for later use by other components.`
+|  | Example |
+|---|---|
+| AVOID | The parser reads the configuration file and validates its syntax. Validation errors are logged to the console and the parser exits with a nonzero code. The parser also caches the parsed configuration in memory for later use by other components. |
+| DO | The parser reads the configuration file and validates its syntax. Validation errors are logged to the console and the parser exits with a nonzero code.<br><br>The parser caches the parsed configuration in memory for later use by other components. |
 
 ### Do not repeat information unless repetition is necessary for understanding
 
@@ -175,10 +166,10 @@ State each fact once unless the reader needs additional context.
 
 Rationale: Repetition increases document length without adding information.
 
-Examples:
-
-- DO: `The cache is cleared on startup.`
-- AVOID: `The cache is cleared on startup. This means that every startup clears the cache.`
+|  | Example |
+|---|---|
+| AVOID | The cache is cleared on startup. This means that every startup clears the cache. |
+| DO | The cache is cleared on startup. |
 
 ### Preserve technical accuracy and essential context
 
@@ -186,10 +177,10 @@ Do not sacrifice precision or introduce ambiguity to make the text shorter. Brev
 
 Rationale: Technical writing must remain precise enough to support correct interpretation and implementation.
 
-Examples:
-
-- DO: `The request times out if no response is received within 5 seconds.`
-- AVOID: `The request fails after 5 seconds.`
+|  | Example |
+|---|---|
+| AVOID | The request fails after 5 seconds. |
+| DO | The request times out if no response is received within 5 seconds. |
 
 ### Use active voice
 
@@ -197,33 +188,59 @@ Active voice makes technical writing more direct. It also makes the actor and re
 
 Rationale: Active voice makes responsibilities and system behavior easier to identify.
 
-Examples:
+|  | Example |
+|---|---|
+| AVOID | The configuration file is loaded before validation is performed. |
+| DO | The system loads the configuration file before validating it. |
 
-- DO: `The system loads the configuration file before validating it.`
-- AVOID: `The configuration file is loaded before validation is performed.`
+|  | Example |
+|---|---|
+| AVOID | The packet is discarded if its checksum is invalid. |
+| DO | The receiver discards the packet if its checksum is invalid. |
 
+|  | Example |
+|---|---|
+| AVOID | The requirement was linked to the test case. |
+| DO | The engineer linked the requirement to the test case. |
 
-- DO: `The receiver discards the packet if its checksum is invalid.`
-- AVOID: `The packet is discarded if its checksum is invalid.`
+### Avoid "-ing" verb forms
 
+Rewrite "-ing" verbs as a finite verb form (for example, simple present or simple past).
 
-- DO: `The engineer linked the requirement to the test case.`
-- AVOID: `The requirement was linked to the test case.`
+Exception: keep an "-ing" word when it functions as an established technical noun (`installation and servicing`) or as a fixed modifier inside a technical noun (`operating system`).
 
-### Name the responsible party instead of "us vs. them"
+Rationale: The "-ing" form can act as a verb, an adjective, or a noun depending on where it sits in the sentence. A reader has to resolve that role before parsing the rest of the sentence. Drafts that lean on "-ing" also tend to stack clauses instead of stating one action per sentence.
+
+|  | Example |
+|---|---|
+| AVOID | Restarting the service is required after editing the configuration. |
+| DO | Restart the service after you edit the configuration. |
+
+|  | Example |
+|---|---|
+| AVOID | An operator ignoring the interlock risks damaging the arm. |
+| DO | An operator who ignores the interlock can damage the arm. |
+
+|  | Example |
+|---|---|
+| AVOID | Saving the file and then closing the editor completes the task. |
+| DO | Save the file, then close the editor. |
+
+### Name the team or organization instead of "we" and "they"
 
 Avoid pronouns such as "we," "us," "they," and "them" when referring to teams, organizations, or components. Name the responsible party explicitly.
 
 Rationale: Explicit names prevent ambiguity about ownership and responsibility. They also avoid tribal "us vs. them" framing between teams or organizations.
 
-Examples:
+|  | Example |
+|---|---|
+| AVOID | We provide the interface, and they implement the client. |
+| DO | Thales provides the interface. Airbus implements the client. |
 
-- DO: `Thales provides the interface. Airbus implements the client.`
-- AVOID: `We provide the interface, and they implement the client.`
-
-
-- DO: `Boeing sends the telemetry to Thales.`
-- AVOID: `They send the telemetry to us.`
+|  | Example |
+|---|---|
+| AVOID | They send the telemetry to us. |
+| DO | Boeing sends the telemetry to Thales. |
 
 ## Avoid common AI-writing patterns
 
@@ -234,14 +251,15 @@ Text drafted by an LLM tends to carry tics that read as filler in technical docs
 - **Rule-of-three padding**: forcing three examples or adjectives where one or two suffice ("fast, reliable, and efficient"). List only as many items as add distinct information.
 - **Throat-clearing openers**: "This document describes..." followed by a sentence that repeats the title. Open with the BLUF instead.
 
-Examples:
+|  | Example |
+|---|---|
+| AVOID | It's worth noting that, generally speaking, the parser tends to reject malformed input in most cases. |
+| DO | The parser rejects malformed input. |
 
-- DO: `The parser rejects malformed input.`
-- AVOID: `It's worth noting that, generally speaking, the parser tends to reject malformed input in most cases.`
-
-
-- DO: `The scheduler retries failed jobs up to three times.`
-- AVOID: `The scheduler is fast, robust, and efficient — it retries failed jobs up to three times.`
+|  | Example |
+|---|---|
+| AVOID | The scheduler is fast, robust, and efficient — it retries failed jobs up to three times. |
+| DO | The scheduler retries failed jobs up to three times. |
 
 ## Punctuation
 
@@ -249,24 +267,15 @@ Examples:
 
 No semicolons. This rule applies to joining two clauses in a sentence and to separating items in a list. Split it into separate sentences instead. When a lead-in and its bullets form one sentence, put the period only on the last item. The other items are mid-sentence, not sentence-final.
 
-- DO: `The build failed. Check the logs for details.`
-- AVOID: `The build failed; check the logs for details.`
+|  | Example |
+|---|---|
+| AVOID | The build failed; check the logs for details. |
+| DO | The build failed. Check the logs for details. |
 
-- DO:
-
-```
-The parser:
-- validates the configuration
-- reports validation errors.
-```
-
-- AVOID:
-
-```
-The parser:
-- validates the configuration;
-- reports validation errors;
-```
+|  | Example |
+|---|---|
+| AVOID | The parser:<br>- validates the configuration;<br>- reports validation errors; |
+| DO | The parser:<br>- validates the configuration<br>- reports validation errors. |
 
 ## More structure, less prose
 
@@ -278,56 +287,31 @@ Rationale: Structure reduces context switching and makes technical documents eas
 
 Use bullet points or a numbered list instead of embedding multiple items in a long sentence.
 
-Examples:
-
-- DO:
-
-```
-The command-line tool accepts five flags:
-- --verbose: enables detailed logging.
-- --dry-run: previews changes without applying them.
-- --force: skips confirmation prompts.
-- --output: specifies the destination path.
-- --config: points to a custom configuration file.
-```
-
-- AVOID: `The command-line tool accepts five flags: --verbose for detailed logging, --dry-run for previewing changes, --force for skipping confirmation prompts, --output for specifying the destination path, and --config for pointing to a custom configuration file.`
+|  | Example |
+|---|---|
+| AVOID | The command-line tool accepts five flags: `--verbose` for detailed logging, `--dry-run` for previewing changes, `--force` for skipping confirmation prompts, `--output` for specifying the destination path, and `--config` for pointing to a custom configuration file. |
+| DO | The command-line tool accepts five flags:<br>- `--verbose`: enables detailed logging.<br>- `--dry-run`: previews changes without applying them.<br>- `--force`: skips confirmation prompts.<br>- `--output`: specifies the destination path.<br>- `--config`: points to a custom configuration file. |
 
 ### Use tables for structured comparisons
 
 Use a table when comparing multiple items across the same set of attributes.
 
-Examples:
+AVOID: The staging environment uses 2 CPUs, 4 GB of memory, and a 10 GB disk. The production environment uses 8 CPUs, 32 GB of memory, and a 100 GB disk.
 
-- DO:
+**Example**:
 
-```
+DO:
+
 | Environment | CPUs | Memory | Disk |
 |---|---|---|---|
 | Staging | 2 | 4 GB | 10 GB |
 | Production | 8 | 32 GB | 100 GB |
-```
-
-- AVOID: `The staging environment uses 2 CPUs, 4 GB of memory, and a 10 GB disk. The production environment uses 8 CPUs, 32 GB of memory, and a 100 GB disk.`
 
 ## Worked example
 
 A single paragraph, rewritten by applying BLUF, active voice, direct statements, subject repetition, and list structure together.
 
-AVOID:
-
-```
-It should be noted that in order to be able to deploy the service, several things generally need to happen first. The configuration file is read by the deployment script, and then it is validated. If the configuration is invalid, the deployment is not performed, which is useful because this prevents partial or broken deployments. Once the configuration has been validated, the script also checks that the target environment is reachable, and after that it uploads the build artifact and restarts the service.
-```
-
-DO:
-
-```
-The deployment script validates the configuration before deploying. This prevents partial or broken deployments.
-
-To deploy, the script:
-- reads and validates the configuration file
-- checks that the target environment is reachable
-- uploads the build artifact
-- restarts the service.
-```
+|  | Example |
+|---|---|
+| AVOID | It should be noted that in order to be able to deploy the service, several things generally need to happen first. The configuration file is read by the deployment script, and then it is validated. If the configuration is invalid, the deployment is not performed, which is useful because this prevents partial or broken deployments. Once the configuration has been validated, the script also checks that the target environment is reachable, and after that it uploads the build artifact and restarts the service. |
+| DO | The deployment script validates the configuration before deploying. This prevents partial or broken deployments.<br><br>To deploy, the script:<br>- reads and validates the configuration file<br>- checks that the target environment is reachable<br>- uploads the build artifact<br>- restarts the service. |

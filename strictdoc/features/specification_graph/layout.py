@@ -8,7 +8,7 @@ See developer/tasks/20260809_feat_specification_graph/task.md for the full
 "highway" layout rule this implements.
 """
 
-from typing import Dict, List, Sequence, Tuple
+from typing import Dict, List, Sequence, Set, Tuple
 
 from strictdoc.backend.sdoc.models.model import SDocDocumentIF
 from strictdoc.features.specification_graph.relations import (
@@ -28,8 +28,11 @@ def compute_document_layout(
     include every document referenced by `edges` (both as a child and as
     a parent), since edges alone don't carry isolated documents.
 
-    Row: a document with no outgoing edges (no parent-relation to another
-    document) is at row 0. Otherwise its row is
+    Row: row 0 is reserved for documents with no relations at all (neither
+    outgoing nor incoming). A document with no outgoing edges (no
+    parent-relation to another document) but at least one incoming edge
+    (it is itself someone else's parent) is the top of a hierarchy and
+    sits at row 1. Otherwise a document's row is
     1 + max(row(parent) for parent in its parent documents) — the
     "highway" rule: when a document has parent edges reaching different
     rows, the deepest chain wins.
@@ -40,8 +43,10 @@ def compute_document_layout(
     parents_of: Dict[SDocDocumentIF, List[SDocDocumentIF]] = {
         document_: [] for document_ in documents
     }
+    documents_with_incoming_edges: Set[SDocDocumentIF] = set()
     for child_document_, parent_document_ in edges:
         parents_of[child_document_].append(parent_document_)
+        documents_with_incoming_edges.add(parent_document_)
 
     row_of: Dict[SDocDocumentIF, int] = {}
 
@@ -49,11 +54,10 @@ def compute_document_layout(
         if document_ in row_of:
             return row_of[document_]
         parent_documents = parents_of.get(document_, [])
-        row = (
-            0
-            if len(parent_documents) == 0
-            else 1 + max(compute_row(parent_) for parent_ in parent_documents)
-        )
+        if len(parent_documents) == 0:
+            row = 1 if document_ in documents_with_incoming_edges else 0
+        else:
+            row = 1 + max(compute_row(parent_) for parent_ in parent_documents)
         row_of[document_] = row
         return row
 

@@ -9,7 +9,7 @@ string templates are enough for boxes, arrows, and text.
 
 import html
 import textwrap
-from typing import Dict, List, Set
+from typing import Dict, List, Set, Tuple
 
 from strictdoc.backend.sdoc.models.model import SDocDocumentIF
 from strictdoc.features.specification_graph.layout import DocumentPosition
@@ -34,6 +34,11 @@ TITLE_WRAP_WIDTH = 24
 # coordinate when every row has a single document).
 SKIP_LANE_START_GAP = 30
 SKIP_LANE_GAP = 30
+
+# How far a skip edge's stub runs straight out of a box (above the child
+# box's top edge / below the parent box's bottom edge) before turning
+# sideways into the lane. Must be smaller than ROW_GAP.
+SKIP_STUB_LENGTH = 15
 
 EMPTY_GRAPH_SVG = (
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 60" '
@@ -90,17 +95,64 @@ def _render_document_box(
     )
 
 
+def _distribute_attachment_points(
+    edges_on_edge_face: Dict[SDocDocumentIF, List[DocumentRelationEdge]],
+    layout: Dict[SDocDocumentIF, DocumentPosition],
+) -> Dict[DocumentRelationEdge, float]:
+    """
+    Arrows may not share an attachment point on a box's edge (top or
+    bottom face). For the N edges attaching to one face, the k-th point
+    (1-indexed) sits at k/(N+1) of the face's width: 1 edge -> centered
+    (1/2), 2 edges -> 1/3 and 2/3, 3 edges -> 1/4, 2/4, 3/4, and so on -
+    evenly spaced, with the same gap between consecutive points and from
+    each end point to the nearest end of the face.
+    """
+    attach_x: Dict[DocumentRelationEdge, float] = {}
+    for document_, edges_ in edges_on_edge_face.items():
+        _, column_ = layout[document_]
+        box_x = _box_x(column_)
+        count = len(edges_)
+        for index_, edge_ in enumerate(edges_):
+            attach_x[edge_] = box_x + BOX_WIDTH * (index_ + 1) / (count + 1)
+    return attach_x
+
+
+def _compute_edge_attachment_points(
+    edges: List[DocumentRelationEdge],
+    layout: Dict[SDocDocumentIF, DocumentPosition],
+) -> Tuple[
+    Dict[DocumentRelationEdge, float], Dict[DocumentRelationEdge, float]
+]:
+    """
+    Returns (child_attach_x, parent_attach_x): for each edge, the x
+    coordinate where it attaches to its child's top edge and to its
+    parent's bottom edge, respectively.
+    """
+    top_edges_of: Dict[SDocDocumentIF, List[DocumentRelationEdge]] = {}
+    bottom_edges_of: Dict[SDocDocumentIF, List[DocumentRelationEdge]] = {}
+    for edge_ in edges:
+        child_document_, parent_document_ = edge_
+        top_edges_of.setdefault(child_document_, []).append(edge_)
+        bottom_edges_of.setdefault(parent_document_, []).append(edge_)
+
+    child_attach_x = _distribute_attachment_points(top_edges_of, layout)
+    parent_attach_x = _distribute_attachment_points(bottom_edges_of, layout)
+    return child_attach_x, parent_attach_x
+
+
 def _render_normal_edge(
     edge: DocumentRelationEdge,
     layout: Dict[SDocDocumentIF, DocumentPosition],
+    child_attach_x: Dict[DocumentRelationEdge, float],
+    parent_attach_x: Dict[DocumentRelationEdge, float],
 ) -> str:
     child_document_, parent_document_ = edge
-    child_row, child_column = layout[child_document_]
-    parent_row, parent_column = layout[parent_document_]
+    child_row, _ = layout[child_document_]
+    parent_row, _ = layout[parent_document_]
 
-    x1 = _box_x(child_column) + BOX_WIDTH / 2
+    x1 = child_attach_x[edge]
     y1 = _box_y(child_row)
-    x2 = _box_x(parent_column) + BOX_WIDTH / 2
+    x2 = parent_attach_x[edge]
     y2 = _box_y(parent_row) + BOX_HEIGHT
 
     return (
@@ -113,27 +165,34 @@ def _render_skip_edge(
     edge: DocumentRelationEdge,
     layout: Dict[SDocDocumentIF, DocumentPosition],
     lane_x: float,
+    child_attach_x: Dict[DocumentRelationEdge, float],
+    parent_attach_x: Dict[DocumentRelationEdge, float],
 ) -> str:
     """
-    Route a skip edge out to the right of the child box, straight down/up
-    a dedicated vertical lane, then into the right side of the parent
-    box — instead of a straight line — so it doesn't overlap the normal
-    edges of the direct chain it bypasses.
+    Route a skip edge straight out of the child box's top edge, sideways
+    into a dedicated vertical "lane" to the right of all document
+    columns, down/up the lane, then sideways back into the parent box's
+    bottom edge — instead of a straight line — so it doesn't overlap the
+    normal edges of the direct chain it bypasses.
     """
     child_document_, parent_document_ = edge
-    child_row, child_column = layout[child_document_]
-    parent_row, parent_column = layout[parent_document_]
+    child_row, _ = layout[child_document_]
+    parent_row, _ = layout[parent_document_]
 
-    start_x = _box_x(child_column) + BOX_WIDTH
-    start_y = _box_y(child_row) + BOX_HEIGHT / 2
-    end_x = _box_x(parent_column) + BOX_WIDTH
-    end_y = _box_y(parent_row) + BOX_HEIGHT / 2
+    x_child = child_attach_x[edge]
+    x_parent = parent_attach_x[edge]
+    child_top_y = _box_y(child_row)
+    child_stub_y = child_top_y - SKIP_STUB_LENGTH
+    parent_bottom_y = _box_y(parent_row) + BOX_HEIGHT
+    parent_stub_y = parent_bottom_y + SKIP_STUB_LENGTH
 
     path = (
-        f"M {start_x},{start_y} "
-        f"L {lane_x},{start_y} "
-        f"L {lane_x},{end_y} "
-        f"L {end_x},{end_y}"
+        f"M {x_child},{child_top_y} "
+        f"L {x_child},{child_stub_y} "
+        f"L {lane_x},{child_stub_y} "
+        f"L {lane_x},{parent_stub_y} "
+        f"L {x_parent},{parent_stub_y} "
+        f"L {x_parent},{parent_bottom_y}"
     )
 
     return (
@@ -197,13 +256,26 @@ def render_svg(
         "</defs>",
     ]
 
+    child_attach_x, parent_attach_x = _compute_edge_attachment_points(
+        edges, layout
+    )
     for edge_ in edges:
         if edge_ in skip_edge_set:
             parts.append(
-                _render_skip_edge(edge_, layout, lane_x_by_edge[edge_])
+                _render_skip_edge(
+                    edge_,
+                    layout,
+                    lane_x_by_edge[edge_],
+                    child_attach_x,
+                    parent_attach_x,
+                )
             )
         else:
-            parts.append(_render_normal_edge(edge_, layout))
+            parts.append(
+                _render_normal_edge(
+                    edge_, layout, child_attach_x, parent_attach_x
+                )
+            )
 
     for document_, position_ in layout.items():
         parts.append(_render_document_box(document_, position_))

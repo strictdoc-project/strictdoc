@@ -4,7 +4,10 @@ from strictdoc.features.specification_graph.layout import (
     compute_document_layout,
     get_skip_edges,
 )
-from strictdoc.features.specification_graph.svg_renderer import render_svg
+from strictdoc.features.specification_graph.svg_renderer import (
+    BOX_WIDTH,
+    render_svg,
+)
 from tests.unit.helpers.document_builder import DocumentBuilder
 
 
@@ -88,21 +91,63 @@ def test_skip_edge_does_not_overlap_the_chain_it_bypasses():
 
     svg = render_svg(layout=layout, edges=edges, skip_edges=skip_edges)
 
-    normal_edge_xs = {
-        float(x_)
-        for x_ in re.findall(r'<line x1="([\d.]+)"', svg)
+    line_xs = {
+        float(x_) for x_ in re.findall(r'<line x[12]="([\d.]+)"', svg)
     }
-    assert len(normal_edge_xs) == 1, (
-        "the direct chain's edges should all share one column x"
-    )
-    (chain_x,) = normal_edge_xs
 
-    skip_path = re.search(r'<path d="([^"]+)"', svg)
+    skip_path = re.search(
+        r'<path d="([^"]+)" fill="none" stroke="#b45309"', svg
+    )
     assert skip_path is not None
-    skip_path_xs = {
-        float(x_) for x_ in re.findall(r"[ML] ([\d.]+),", skip_path.group(1))
-    }
-    assert chain_x not in skip_path_xs
+    points = re.findall(r"[ML] ([\d.]+),([\d.]+)", skip_path.group(1))
+    # points[2] and points[3] are the two ends of the lane's long vertical
+    # run, which spans the same rows as the direct chain and so is the
+    # only segment that could visually overlap it.
+    lane_x = float(points[2][0])
+    assert lane_x == float(points[3][0])
+    assert lane_x not in line_xs
+
+
+def test_multiple_edges_on_the_same_box_edge_get_distinct_attachment_points():
+    # Doc D has two outgoing edges (to Doc A and to Doc C) that both leave
+    # from Doc D's top edge. Per the "evenly spaced, k/(N+1)" attachment
+    # rule, with 2 edges they must land at 1/3 and 2/3 of the box width,
+    # not both at the center.
+    doc_a = _doc("DOC-A")
+    doc_b = _doc("DOC-B")
+    doc_c = _doc("DOC-C")
+    doc_d = _doc("DOC-D")
+
+    edges = [
+        (doc_b, doc_a),
+        (doc_c, doc_b),
+        (doc_d, doc_a),
+        (doc_d, doc_c),
+    ]
+    layout = compute_document_layout(
+        documents=[doc_a, doc_b, doc_c, doc_d], edges=edges
+    )
+    skip_edges = get_skip_edges(edges, layout)
+    svg = render_svg(layout=layout, edges=edges, skip_edges=skip_edges)
+
+    _, doc_d_column = layout[doc_d]
+    box_x = 20 + doc_d_column * BOX_WIDTH  # MARGIN, single column per row
+    expected_xs = {box_x + BOX_WIDTH / 3, box_x + 2 * BOX_WIDTH / 3}
+
+    # d->a (skip) leaves from the first attachment point, d->c (normal)
+    # from the second.
+    line_x1 = {float(x_) for x_ in re.findall(r'<line x1="([\d.]+)"', svg)}
+    skip_path = re.search(
+        r'<path d="([^"]+)" fill="none" stroke="#b45309"', svg
+    )
+    assert skip_path is not None
+    skip_start_match = re.match(r"M ([\d.]+),", skip_path.group(1))
+    assert skip_start_match is not None
+    skip_start_x = float(skip_start_match.group(1))
+
+    assert skip_start_x in expected_xs
+    assert expected_xs & line_x1
+    assert skip_start_x not in line_x1
 
 
 def test_long_title_is_wrapped_and_truncated_with_ellipsis():

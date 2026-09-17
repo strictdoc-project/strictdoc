@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Specification Graph - visual test gallery</title>
+<style>
+  body { font-family: sans-serif; margin: 24px; color: #222; }
+  section { margin-bottom: 48px; padding-bottom: 24px; border-bottom: 1px solid #ddd; }
+  h2 { margin-bottom: 4px; }
+  p { color: #555; max-width: 800px; }
+  .svg-wrap { overflow: auto; border: 1px dashed #ccc; padding: 8px; }
+  svg { display: block; }
+</style>
+</head>
+<body>
+<h1>Specification Graph - visual test gallery</h1>
+<p>Regenerate: <code>uv run python developer/examples/specification_graph/visual_test_gallery.py</code></p>
+
+    <section>
+      <h2>Simple chain</h2>
+      <p>No detours: A <- B <- C, one document per row.</p>
+      <div class="svg-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 380" width="220" height="380" role="img" aria-label="Specification graph">
+<defs>
+<marker id="specification_graph_arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" /></marker>
+<marker id="specification_graph_arrow_skip" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b45309" /></marker>
+</defs>
+<line x1="110.0" y1="160" x2="110.0" y2="80" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<line x1="110.0" y1="300" x2="110.0" y2="220" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<rect x="20" y="20" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="50.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">A</tspan></text>
+<rect x="20" y="160" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="190.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">B</tspan></text>
+<rect x="20" y="300" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="330.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">C</tspan></text>
+</svg></div>
+    </section>
+    
+    <section>
+      <h2>Basic highway conflict</h2>
+      <p>D relates to both A (directly) and C (via B) - the deepest chain (through C) wins, so the D->A relation becomes a skip edge.</p>
+      <div class="svg-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 520" width="250" height="520" role="img" aria-label="Specification graph">
+<defs>
+<marker id="specification_graph_arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" /></marker>
+<marker id="specification_graph_arrow_skip" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b45309" /></marker>
+</defs>
+<line x1="110.0" y1="160" x2="44.0" y2="80" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<line x1="110.0" y1="300" x2="110.0" y2="220" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<path d="M 44.0,440 L 44.0,412.0 L 230,412.0 L 230,108.0 L 176.0,108.0 L 176.0,80" fill="none" stroke="#b45309" stroke-dasharray="6,4" marker-end="url(#specification_graph_arrow_skip)" />
+<line x1="176.0" y1="440" x2="110.0" y2="360" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<rect x="20" y="20" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="50.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">A</tspan></text>
+<rect x="20" y="160" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="190.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">B</tspan></text>
+<rect x="20" y="300" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="330.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">C</tspan></text>
+<rect x="20" y="440" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="470.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">D</tspan></text>
+</svg></div>
+    </section>
+    
+    <section>
+      <h2>Narrow row in the middle - local lane</h2>
+      <p>Row B has a single document; C1 and C2 both detour around it, each with its own short, local lane (not sized to row C's width).</p>
+      <div class="svg-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 520" width="440" height="520" role="img" aria-label="Specification graph">
+<defs>
+<marker id="specification_graph_arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" /></marker>
+<marker id="specification_graph_arrow_skip" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b45309" /></marker>
+</defs>
+<line x1="110.0" y1="160" x2="44.0" y2="80" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<line x1="44.0" y1="300" x2="44.0" y2="220" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<line x1="264.0" y1="300" x2="176.0" y2="220" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<line x1="110.0" y1="440" x2="110.0" y2="360" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<line x1="330.0" y1="440" x2="330.0" y2="360" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<path d="M 176.0,300 L 176.0,268.0 L 230,268.0 L 230,112.0 L 176.0,112.0 L 176.0,80" fill="none" stroke="#b45309" stroke-dasharray="6,4" marker-end="url(#specification_graph_arrow_skip)" />
+<path d="M 396.0,300 L 396.0,276.0 L 396.0,276.0 L 396.0,104.0 L 330.0,104.0 L 330.0,80" fill="none" stroke="#b45309" stroke-dasharray="6,4" marker-end="url(#specification_graph_arrow_skip)" />
+<rect x="20" y="20" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="50.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">A1</tspan></text>
+<rect x="240" y="20" width="180" height="60" fill="white" stroke="black" /><text x="330.0" y="50.0" text-anchor="middle" font-size="13"><tspan x="330.0" dy="0">A2</tspan></text>
+<rect x="20" y="160" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="190.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">B</tspan></text>
+<rect x="20" y="300" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="330.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">C1</tspan></text>
+<rect x="240" y="300" width="180" height="60" fill="white" stroke="black" /><text x="330.0" y="330.0" text-anchor="middle" font-size="13"><tspan x="330.0" dy="0">C2</tspan></text>
+<rect x="20" y="440" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="470.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">D1</tspan></text>
+<rect x="240" y="440" width="180" height="60" fill="white" stroke="black" /><text x="330.0" y="470.0" text-anchor="middle" font-size="13"><tspan x="330.0" dy="0">D2</tspan></text>
+</svg></div>
+    </section>
+    
+    <section>
+      <h2>No diagonal: right -> left, nothing to dodge</h2>
+      <p>C2 (right document) -> A1 (left document). Directly above C2, row B is empty, so edge 2 (the detour) has zero length: edges 1 and 3 sit on the same vertical, and edge 4 just carries the arrowhead left to A1.</p>
+      <div class="svg-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 380" width="440" height="380" role="img" aria-label="Specification graph">
+<defs>
+<marker id="specification_graph_arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" /></marker>
+<marker id="specification_graph_arrow_skip" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b45309" /></marker>
+</defs>
+<line x1="44.0" y1="160" x2="44.0" y2="80" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<line x1="176.0" y1="160" x2="330.0" y2="80" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<line x1="44.0" y1="300" x2="44.0" y2="220" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<line x1="264.0" y1="300" x2="176.0" y2="220" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<path d="M 176.0,300 L 176.0,268.0 L 230,268.0 L 230,112.0 L 110.0,112.0 L 110.0,80" fill="none" stroke="#b45309" stroke-dasharray="6,4" marker-end="url(#specification_graph_arrow_skip)" />
+<path d="M 396.0,300 L 396.0,276.0 L 396.0,276.0 L 396.0,104.0 L 176.0,104.0 L 176.0,80" fill="none" stroke="#b45309" stroke-dasharray="6,4" marker-end="url(#specification_graph_arrow_skip)" />
+<rect x="20" y="20" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="50.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">A1</tspan></text>
+<rect x="240" y="20" width="180" height="60" fill="white" stroke="black" /><text x="330.0" y="50.0" text-anchor="middle" font-size="13"><tspan x="330.0" dy="0">A2</tspan></text>
+<rect x="20" y="160" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="190.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">B</tspan></text>
+<rect x="20" y="300" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="330.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">C1</tspan></text>
+<rect x="240" y="300" width="180" height="60" fill="white" stroke="black" /><text x="330.0" y="330.0" text-anchor="middle" font-size="13"><tspan x="330.0" dy="0">C2</tspan></text>
+</svg></div>
+    </section>
+    
+    <section>
+      <h2>Still no diagonal when a detour IS needed</h2>
+      <p>C1 (left document) -> A2 (right). Row B sits directly above C1 (column 0) - a detour is required, but the path stays orthogonal (edge 2 is non-zero), never diagonal.</p>
+      <div class="svg-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 446.0 380" width="446.0" height="380" role="img" aria-label="Specification graph">
+<defs>
+<marker id="specification_graph_arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" /></marker>
+<marker id="specification_graph_arrow_skip" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b45309" /></marker>
+</defs>
+<line x1="44.0" y1="160" x2="110.0" y2="80" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<line x1="176.0" y1="160" x2="264.0" y2="80" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<line x1="44.0" y1="300" x2="44.0" y2="220" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<line x1="330.0" y1="300" x2="176.0" y2="220" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<path d="M 176.0,300 L 176.0,272.0 L 426.0,272.0 L 426.0,108.0 L 396.0,108.0 L 396.0,80" fill="none" stroke="#b45309" stroke-dasharray="6,4" marker-end="url(#specification_graph_arrow_skip)" />
+<rect x="20" y="20" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="50.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">A1</tspan></text>
+<rect x="240" y="20" width="180" height="60" fill="white" stroke="black" /><text x="330.0" y="50.0" text-anchor="middle" font-size="13"><tspan x="330.0" dy="0">A2</tspan></text>
+<rect x="20" y="160" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="190.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">B</tspan></text>
+<rect x="20" y="300" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="330.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">C1</tspan></text>
+<rect x="240" y="300" width="180" height="60" fill="white" stroke="black" /><text x="330.0" y="330.0" text-anchor="middle" font-size="13"><tspan x="330.0" dy="0">C2</tspan></text>
+</svg></div>
+    </section>
+    
+    <section>
+      <h2>Independent detours share one lane</h2>
+      <p>Two unrelated groups (A0-B1-C2 and A4-B5-C6, separated by filler documents) don't overlap in rows - their skip edges reuse the same lane instead of drifting further right one after another.</p>
+      <div class="svg-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 470 1080" width="470" height="1080" role="img" aria-label="Specification graph">
+<defs>
+<marker id="specification_graph_arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" /></marker>
+<marker id="specification_graph_arrow_skip" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b45309" /></marker>
+</defs>
+<line x1="110.0" y1="160" x2="44.0" y2="80" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<line x1="44.0" y1="300" x2="110.0" y2="220" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<path d="M 176.0,300 L 176.0,272.0 L 450,272.0 L 450,108.0 L 176.0,108.0 L 176.0,80" fill="none" stroke="#b45309" stroke-dasharray="6,4" marker-end="url(#specification_graph_arrow_skip)" />
+<line x1="330.0" y1="160" x2="330.0" y2="80" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<line x1="330.0" y1="300" x2="330.0" y2="220" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<line x1="330.0" y1="440" x2="330.0" y2="360" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<line x1="330.0" y1="580" x2="330.0" y2="500" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<line x1="330.0" y1="720" x2="330.0" y2="640" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<line x1="330.0" y1="860" x2="264.0" y2="780" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<line x1="264.0" y1="1000" x2="330.0" y2="920" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<path d="M 396.0,1000 L 396.0,972.0 L 450,972.0 L 450,808.0 L 396.0,808.0 L 396.0,780" fill="none" stroke="#b45309" stroke-dasharray="6,4" marker-end="url(#specification_graph_arrow_skip)" />
+<rect x="20" y="20" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="50.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">A0</tspan></text>
+<rect x="240" y="20" width="180" height="60" fill="white" stroke="black" /><text x="330.0" y="50.0" text-anchor="middle" font-size="13"><tspan x="330.0" dy="0">F0</tspan></text>
+<rect x="20" y="160" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="190.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">B1</tspan></text>
+<rect x="240" y="160" width="180" height="60" fill="white" stroke="black" /><text x="330.0" y="190.0" text-anchor="middle" font-size="13"><tspan x="330.0" dy="0">F1</tspan></text>
+<rect x="20" y="300" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="330.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">C2</tspan></text>
+<rect x="240" y="300" width="180" height="60" fill="white" stroke="black" /><text x="330.0" y="330.0" text-anchor="middle" font-size="13"><tspan x="330.0" dy="0">F2</tspan></text>
+<rect x="240" y="440" width="180" height="60" fill="white" stroke="black" /><text x="330.0" y="470.0" text-anchor="middle" font-size="13"><tspan x="330.0" dy="0">F3</tspan></text>
+<rect x="240" y="580" width="180" height="60" fill="white" stroke="black" /><text x="330.0" y="610.0" text-anchor="middle" font-size="13"><tspan x="330.0" dy="0">F4</tspan></text>
+<rect x="240" y="720" width="180" height="60" fill="white" stroke="black" /><text x="330.0" y="750.0" text-anchor="middle" font-size="13"><tspan x="330.0" dy="0">A5</tspan></text>
+<rect x="240" y="860" width="180" height="60" fill="white" stroke="black" /><text x="330.0" y="890.0" text-anchor="middle" font-size="13"><tspan x="330.0" dy="0">B6</tspan></text>
+<rect x="240" y="1000" width="180" height="60" fill="white" stroke="black" /><text x="330.0" y="1030.0" text-anchor="middle" font-size="13"><tspan x="330.0" dy="0">C7</tspan></text>
+</svg></div>
+    </section>
+    
+    <section>
+      <h2>Overlapping detours - different lanes</h2>
+      <p>C1->A1 and C2->A2 both span rows 1-3 (they overlap each other) - they must get different lanes. D1->B spans rows 2-4 (overlaps both) - a third lane.</p>
+      <div class="svg-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 470 520" width="470" height="520" role="img" aria-label="Specification graph">
+<defs>
+<marker id="specification_graph_arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" /></marker>
+<marker id="specification_graph_arrow_skip" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b45309" /></marker>
+</defs>
+<line x1="44.0" y1="160" x2="44.0" y2="80" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<line x1="176.0" y1="160" x2="264.0" y2="80" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<line x1="44.0" y1="300" x2="44.0" y2="220" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<line x1="264.0" y1="300" x2="110.0" y2="220" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<line x1="44.0" y1="440" x2="110.0" y2="360" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<line x1="330.0" y1="440" x2="330.0" y2="360" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<path d="M 176.0,300 L 176.0,268.0 L 230,268.0 L 230,112.0 L 176.0,112.0 L 176.0,80" fill="none" stroke="#b45309" stroke-dasharray="6,4" marker-end="url(#specification_graph_arrow_skip)" />
+<path d="M 396.0,300 L 396.0,276.0 L 396.0,276.0 L 396.0,104.0 L 396.0,104.0 L 396.0,80" fill="none" stroke="#b45309" stroke-dasharray="6,4" marker-end="url(#specification_graph_arrow_skip)" />
+<path d="M 176.0,440 L 176.0,412.0 L 450,412.0 L 450,248.0 L 176.0,248.0 L 176.0,220" fill="none" stroke="#b45309" stroke-dasharray="6,4" marker-end="url(#specification_graph_arrow_skip)" />
+<rect x="20" y="20" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="50.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">A1</tspan></text>
+<rect x="240" y="20" width="180" height="60" fill="white" stroke="black" /><text x="330.0" y="50.0" text-anchor="middle" font-size="13"><tspan x="330.0" dy="0">A2</tspan></text>
+<rect x="20" y="160" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="190.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">B</tspan></text>
+<rect x="20" y="300" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="330.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">C1</tspan></text>
+<rect x="240" y="300" width="180" height="60" fill="white" stroke="black" /><text x="330.0" y="330.0" text-anchor="middle" font-size="13"><tspan x="330.0" dy="0">C2</tspan></text>
+<rect x="20" y="440" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="470.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">D1</tspan></text>
+<rect x="240" y="440" width="180" height="60" fill="white" stroke="black" /><text x="330.0" y="470.0" text-anchor="middle" font-size="13"><tspan x="330.0" dy="0">D2</tspan></text>
+</svg></div>
+    </section>
+    
+    <section>
+      <h2>Isolated document + hierarchy</h2>
+      <p>E has no relations at all - it stays alone in row 0. The A-B-C-D hierarchy starts at row 1 (not row 0), since A is the top of the hierarchy (incoming relations only).</p>
+      <div class="svg-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 660" width="250" height="660" role="img" aria-label="Specification graph">
+<defs>
+<marker id="specification_graph_arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" /></marker>
+<marker id="specification_graph_arrow_skip" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b45309" /></marker>
+</defs>
+<line x1="110.0" y1="300" x2="44.0" y2="220" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<line x1="110.0" y1="440" x2="110.0" y2="360" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<path d="M 44.0,580 L 44.0,552.0 L 230,552.0 L 230,248.0 L 176.0,248.0 L 176.0,220" fill="none" stroke="#b45309" stroke-dasharray="6,4" marker-end="url(#specification_graph_arrow_skip)" />
+<line x1="176.0" y1="580" x2="110.0" y2="500" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<rect x="20" y="20" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="50.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">E</tspan></text>
+<rect x="20" y="160" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="190.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">A</tspan></text>
+<rect x="20" y="300" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="330.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">B</tspan></text>
+<rect x="20" y="440" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="470.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">C</tspan></text>
+<rect x="20" y="580" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="610.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">D</tspan></text>
+</svg></div>
+    </section>
+    
+    <section>
+      <h2>A wide row doesn't affect an unrelated narrow detour</h2>
+      <p>Row 0 has 5 unrelated documents (just to widen the canvas). A separate, narrow A-B-C chain detours around B: its lane is sized to that chain's own local width, not row 0's width.</p>
+      <div class="svg-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 520" width="1100" height="520" role="img" aria-label="Specification graph">
+<defs>
+<marker id="specification_graph_arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" /></marker>
+<marker id="specification_graph_arrow_skip" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b45309" /></marker>
+</defs>
+<line x1="110.0" y1="300" x2="44.0" y2="220" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<line x1="44.0" y1="440" x2="110.0" y2="360" stroke="black" marker-end="url(#specification_graph_arrow)" />
+<path d="M 176.0,440 L 176.0,412.0 L 230,412.0 L 230,248.0 L 176.0,248.0 L 176.0,220" fill="none" stroke="#b45309" stroke-dasharray="6,4" marker-end="url(#specification_graph_arrow_skip)" />
+<rect x="20" y="20" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="50.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">W0</tspan></text>
+<rect x="240" y="20" width="180" height="60" fill="white" stroke="black" /><text x="330.0" y="50.0" text-anchor="middle" font-size="13"><tspan x="330.0" dy="0">W1</tspan></text>
+<rect x="460" y="20" width="180" height="60" fill="white" stroke="black" /><text x="550.0" y="50.0" text-anchor="middle" font-size="13"><tspan x="550.0" dy="0">W2</tspan></text>
+<rect x="680" y="20" width="180" height="60" fill="white" stroke="black" /><text x="770.0" y="50.0" text-anchor="middle" font-size="13"><tspan x="770.0" dy="0">W3</tspan></text>
+<rect x="900" y="20" width="180" height="60" fill="white" stroke="black" /><text x="990.0" y="50.0" text-anchor="middle" font-size="13"><tspan x="990.0" dy="0">W4</tspan></text>
+<rect x="20" y="160" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="190.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">A</tspan></text>
+<rect x="20" y="300" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="330.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">B</tspan></text>
+<rect x="20" y="440" width="180" height="60" fill="white" stroke="black" /><text x="110.0" y="470.0" text-anchor="middle" font-size="13"><tspan x="110.0" dy="0">C</tspan></text>
+</svg></div>
+    </section>
+    
+</body>
+</html>

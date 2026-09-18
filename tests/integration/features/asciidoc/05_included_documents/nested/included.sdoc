@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Included document
+UID: DOC-INCLUDED
+
+[REQUIREMENT]
+UID: REQ-INCLUDED
+TITLE: Included requirement
+STATEMENT: >>>
+The included requirement shall remain available as its own page.
+<<<

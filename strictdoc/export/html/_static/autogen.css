@@ -51,6 +51,13 @@ sdoc-autogen table caption {
 
 sdoc-autogen table th {
   background-color: var(--color-bg-main);
+  /* Allow long tokens to break in table cells, but keep words in headers intact.
+   * Header text wraps only at natural break points, preventing columns from
+   * shrinking to one or two characters wide and allowing header text to control
+   * the minimum column width.
+   */
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 sdoc-autogen table th,

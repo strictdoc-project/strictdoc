@@ -38,32 +38,34 @@ developer.examples.specification_graph.gallery</code></p>
 <nav><ol>
 <li><a href="#case-0">Nested relations in one channel</a></li>
 <li><a href="#case-1">Relations across levels from far columns</a></li>
-<li><a href="#case-2">Simple chain</a></li>
-<li><a href="#case-3">Basic highway conflict</a></li>
-<li><a href="#case-4">Isolated document + hierarchy</a></li>
-<li><a href="#case-5">Real project case: root corrected to sit level with its sibling</a></li>
-<li><a href="#case-6">Root correction picks the nearest child, not the farthest</a></li>
-<li><a href="#case-7">Corrected root with two non-skip children: sits between them</a></li>
-<li><a href="#case-8">Corrected root with THREE non-skip children (odd count)</a></li>
-<li><a href="#case-9">Three chains compete for one parent column</a></li>
-<li><a href="#case-10">Disconnected components form separate islands</a></li>
-<li><a href="#case-11">Standalone nodes wrap to the connected graph width</a></li>
-<li><a href="#case-12">Complete 3 by 3 relation grid</a></li>
-<li><a href="#case-13">Direction-aware track order</a></li>
-<li><a href="#case-14">Busy channel expands to fit its lanes</a></li>
-<li><a href="#case-15">Extreme number of relations from N8</a></li>
-<li><a href="#case-16">Two cycles have separate diagnostics</a></li>
-<li><a href="#case-17">Three-document cycle with an incoming branch</a></li>
-<li><a href="#case-18">Opposite cycle relations use separate routes</a></li>
+<li><a href="#case-2">Opposite ports in one gate</a></li>
+<li><a href="#case-3">Many ports in one gate</a></li>
+<li><a href="#case-4">Simple chain</a></li>
+<li><a href="#case-5">Basic highway conflict</a></li>
+<li><a href="#case-6">Isolated document + hierarchy</a></li>
+<li><a href="#case-7">Real project case: root corrected to sit level with its sibling</a></li>
+<li><a href="#case-8">Root correction picks the nearest child, not the farthest</a></li>
+<li><a href="#case-9">Corrected root with two non-skip children: sits between them</a></li>
+<li><a href="#case-10">Corrected root with THREE non-skip children (odd count)</a></li>
+<li><a href="#case-11">Three chains compete for one parent column</a></li>
+<li><a href="#case-12">Disconnected components form separate islands</a></li>
+<li><a href="#case-13">Standalone nodes wrap to the connected graph width</a></li>
+<li><a href="#case-14">Complete 3 by 3 relation grid</a></li>
+<li><a href="#case-15">Direction-aware track order</a></li>
+<li><a href="#case-16">Busy channel expands to fit its lanes</a></li>
+<li><a href="#case-17">Extreme number of relations from N8</a></li>
+<li><a href="#case-18">Two cycles have separate diagnostics</a></li>
+<li><a href="#case-19">Three-document cycle with an incoming branch</a></li>
+<li><a href="#case-20">Opposite cycle relations use separate routes</a></li>
 </ol></nav>
 
 <section id="case-0">
 <h2>Nested relations in one channel</h2>
-<div><span class="badge">mode: levels</span><span class="badge question">open question 22</span></div>
+<div><span class="badge">mode: levels</span></div>
 <p class="description">X -&gt; D and Y -&gt; C both go right in the channel below A, B, C, D. The segment of Y -&gt; C lies inside the segment of X -&gt; D. X -&gt; D must cross one vertical of Y -&gt; C. Entry priority: X -&gt; D stays above Y -&gt; C and crosses the vertical into C. Exit priority: X -&gt; D stays below Y -&gt; C and crosses the vertical out of Y.</p>
 <div class="preview">
 <div class="variants"><figure>
-<h3>Entry priority</h3>
+<h3>Entry priority (default)</h3>
 <svg xmlns="http://www.w3.org/2000/svg" width="792"
 height="216">
 <defs><marker id="arrow-333" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/></marker><marker id="arrow-c00" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#c00"/></marker><marker id="arrow-e07000" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#e07000"/></marker></defs>
@@ -139,7 +141,7 @@ Y -&gt; D (parent)</pre>
 
 <section id="case-1">
 <h2>Relations across levels from far columns</h2>
-<div><span class="badge">mode: levels</span><span class="badge question">open question 25</span></div>
+<div><span class="badge">mode: levels</span></div>
 <p class="description">M3 -&gt; P1 and Q3 -&gt; P1 skip one level. Near source: each relation climbs in the vertical channel next to its source, so the two relations use two channels. Near target: both relations climb in the vertical channel next to P1.</p>
 <div class="preview">
 <div class="variants"><figure>
@@ -174,7 +176,7 @@ height="360">
 
 </figure>
 <figure>
-<h3>Near target</h3>
+<h3>Near target (default)</h3>
 <svg xmlns="http://www.w3.org/2000/svg" width="608"
 height="360">
 <defs><marker id="arrow-333" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/></marker><marker id="arrow-c00" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#c00"/></marker><marker id="arrow-e07000" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#e07000"/></marker></defs>
@@ -260,6 +262,153 @@ Q3 -&gt; P1 (parent)</pre>
 </section>
 
 <section id="case-2">
+<h2>Opposite ports in one gate</h2>
+<div><span class="badge">mode: levels</span></div>
+<p class="description">The bottom face of U and the top face of L open into one channel in one column. U receives B -&gt; U from the left. L sends L -&gt; A to the left. All ports of the two faces take different positions. The two relations go in opposite directions and cross once: no lane order avoids this crossing.</p>
+<div class="preview">
+<div class="variants"><figure>
+
+<svg xmlns="http://www.w3.org/2000/svg" width="424"
+height="208">
+<defs><marker id="arrow-333" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/></marker><marker id="arrow-c00" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#c00"/></marker><marker id="arrow-e07000" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#e07000"/></marker></defs>
+<rect x="40" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">A</text>
+<rect x="224" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">U</text>
+<rect x="40" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">B</text>
+<rect x="224" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">L</text>
+<polyline points="120.0,116 120.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-1: B -&gt; A</title></polyline>
+<polyline points="304.0,116 304.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-2: L -&gt; U</title></polyline>
+<polyline points="280.0,116 280.0,100.0 132.0,100.0 132.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-3: L -&gt; A</title></polyline>
+<polyline points="144.0,116 144.0,108.0 292.0,108.0 292.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-4: B -&gt; U</title></polyline>
+</svg>
+
+</figure></div>
+<p>Dashed: relation across levels. Red: cycle. Orange: relations with an
+unavoidable crossing in one channel. Thick border: corrected root. Grey
+area: standalone nodes.</p>
+</div>
+<div class="columns">
+<div class="panel">
+<h3>Input: nodes, then edges</h3>
+<pre>A
+U
+B
+L
+
+B -&gt; A (parent)
+L -&gt; U (parent)
+L -&gt; A (parent)
+B -&gt; U (parent)</pre>
+</div>
+<div class="panel">
+<h3>Stage 1: normalization</h3>
+<table>
+<tr><th>ID</th><th>Source</th><th>Target</th><th>Type</th>
+<th>Level edge</th><th>Cycle</th><th>Ancestor link</th></tr>
+<tr><td>edge-1</td><td>B</td><td>A</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+<tr><td>edge-2</td><td>L</td><td>U</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+<tr><td>edge-3</td><td>L</td><td>A</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+<tr><td>edge-4</td><td>B</td><td>U</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+</table>
+<h3>Diagnostics</h3>
+<ul><li>None.</li></ul>
+</div>
+</div>
+</section>
+
+<section id="case-3">
+<h2>Many ports in one gate</h2>
+<div><span class="badge">mode: levels</span></div>
+<p class="description">L sends relations to U and to U2-U5. U receives relations from L and from L2-L5. The gate between U and L has nine ports. The port pitch shrinks so that all ports stay on the faces.</p>
+<div class="preview">
+<div class="variants"><figure>
+
+<svg xmlns="http://www.w3.org/2000/svg" width="976"
+height="256">
+<defs><marker id="arrow-333" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/></marker><marker id="arrow-c00" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#c00"/></marker><marker id="arrow-e07000" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#e07000"/></marker></defs>
+<rect x="40" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">U</text>
+<rect x="224" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">U2</text>
+<rect x="408" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">U3</text>
+<rect x="592" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="672.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">U4</text>
+<rect x="776" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="856.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">U5</text>
+<rect x="40" y="164" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="190.0" text-anchor="middle" dominant-baseline="middle" font-size="12">L</text>
+<rect x="224" y="164" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="190.0" text-anchor="middle" dominant-baseline="middle" font-size="12">L2</text>
+<rect x="408" y="164" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="190.0" text-anchor="middle" dominant-baseline="middle" font-size="12">L3</text>
+<rect x="592" y="164" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="672.0" y="190.0" text-anchor="middle" dominant-baseline="middle" font-size="12">L4</text>
+<rect x="776" y="164" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="856.0" y="190.0" text-anchor="middle" dominant-baseline="middle" font-size="12">L5</text>
+<polyline points="120.0,164 120.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-1: L -&gt; U</title></polyline>
+<polyline points="129.0,164 129.0,132.0 280.0,132.0 280.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-2: L -&gt; U2</title></polyline>
+<polyline points="147.0,164 147.0,140.0 464.0,140.0 464.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-3: L -&gt; U3</title></polyline>
+<polyline points="165.0,164 165.0,148.0 648.0,148.0 648.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-4: L -&gt; U4</title></polyline>
+<polyline points="183.0,164 183.0,156.0 832.0,156.0 832.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-5: L -&gt; U5</title></polyline>
+<polyline points="292.0,164 292.0,124.0 138.0,124.0 138.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-6: L2 -&gt; U</title></polyline>
+<polyline points="476.0,164 476.0,116.0 156.0,116.0 156.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-7: L3 -&gt; U</title></polyline>
+<polyline points="660.0,164 660.0,108.0 174.0,108.0 174.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-8: L4 -&gt; U</title></polyline>
+<polyline points="844.0,164 844.0,100.0 192.0,100.0 192.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-9: L5 -&gt; U</title></polyline>
+<polyline points="304.0,164 304.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-10: L2 -&gt; U2</title></polyline>
+<polyline points="488.0,164 488.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-11: L3 -&gt; U3</title></polyline>
+<polyline points="672.0,164 672.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-12: L4 -&gt; U4</title></polyline>
+<polyline points="856.0,164 856.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-13: L5 -&gt; U5</title></polyline>
+</svg>
+
+</figure></div>
+<p>Dashed: relation across levels. Red: cycle. Orange: relations with an
+unavoidable crossing in one channel. Thick border: corrected root. Grey
+area: standalone nodes.</p>
+</div>
+<div class="columns">
+<div class="panel">
+<h3>Input: nodes, then edges</h3>
+<pre>U
+U2
+U3
+U4
+U5
+L
+L2
+L3
+L4
+L5
+
+L -&gt; U (parent)
+L -&gt; U2 (parent)
+L -&gt; U3 (parent)
+L -&gt; U4 (parent)
+L -&gt; U5 (parent)
+L2 -&gt; U (parent)
+L3 -&gt; U (parent)
+L4 -&gt; U (parent)
+L5 -&gt; U (parent)
+L2 -&gt; U2 (parent)
+L3 -&gt; U3 (parent)
+L4 -&gt; U4 (parent)
+L5 -&gt; U5 (parent)</pre>
+</div>
+<div class="panel">
+<h3>Stage 1: normalization</h3>
+<table>
+<tr><th>ID</th><th>Source</th><th>Target</th><th>Type</th>
+<th>Level edge</th><th>Cycle</th><th>Ancestor link</th></tr>
+<tr><td>edge-1</td><td>L</td><td>U</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+<tr><td>edge-2</td><td>L</td><td>U2</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+<tr><td>edge-3</td><td>L</td><td>U3</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+<tr><td>edge-4</td><td>L</td><td>U4</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+<tr><td>edge-5</td><td>L</td><td>U5</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+<tr><td>edge-6</td><td>L2</td><td>U</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+<tr><td>edge-7</td><td>L3</td><td>U</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+<tr><td>edge-8</td><td>L4</td><td>U</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+<tr><td>edge-9</td><td>L5</td><td>U</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+<tr><td>edge-10</td><td>L2</td><td>U2</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+<tr><td>edge-11</td><td>L3</td><td>U3</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+<tr><td>edge-12</td><td>L4</td><td>U4</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+<tr><td>edge-13</td><td>L5</td><td>U5</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+</table>
+<h3>Diagnostics</h3>
+<ul><li>None.</li></ul>
+</div>
+</div>
+</section>
+
+<section id="case-4">
 <h2>Simple chain</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">A &lt;- B &lt;- C. One node per level, one column.</p>
@@ -305,7 +454,7 @@ C -&gt; B (parent)</pre>
 </div>
 </section>
 
-<section id="case-3">
+<section id="case-5">
 <h2>Basic highway conflict</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">D relates to A directly and to C through B. The deepest parent wins: D stays below C. The relation D -&gt; A crosses levels and is dashed.</p>
@@ -359,7 +508,7 @@ D -&gt; C (parent)</pre>
 </div>
 </section>
 
-<section id="case-4">
+<section id="case-6">
 <h2>Isolated document + hierarchy</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">E has no relations. E stands in the block of standalone nodes above the connected graph.</p>
@@ -416,7 +565,7 @@ D -&gt; C (parent)</pre>
 </div>
 </section>
 
-<section id="case-5">
+<section id="case-7">
 <h2>Real project case: root corrected to sit level with its sibling</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">Zephyr and DO-178C are roots. L1 relates to Zephyr. L2 relates to L1 and to DO-178C. DO-178C moves down to the level of L1. Both relations of L2 are solid.</p>
@@ -467,7 +616,7 @@ L2 -&gt; DO-178C (parent)</pre>
 </div>
 </section>
 
-<section id="case-6">
+<section id="case-8">
 <h2>Root correction picks the nearest child, not the farthest</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">ROOT has two children. NEAR has its own chain of two levels. FAR has its own chain of three levels. ROOT moves one level above NEAR. The relation FAR -&gt; ROOT crosses levels and is dashed. The FAR branch stays one straight column.</p>
@@ -538,7 +687,7 @@ FAR -&gt; ROOT (parent)</pre>
 </div>
 </section>
 
-<section id="case-7">
+<section id="case-9">
 <h2>Corrected root with two non-skip children: sits between them</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">GUEST has two children, L and R, on the same level. GUEST stands between them. The relations of GUEST do not cross.</p>
@@ -604,7 +753,7 @@ R -&gt; GUEST (parent)</pre>
 </div>
 </section>
 
-<section id="case-8">
+<section id="case-10">
 <h2>Corrected root with THREE non-skip children (odd count)</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">GUEST has three children, L, M, and R, on the same level. GUEST stands right of M. The relation to L crosses the column of M.</p>
@@ -685,7 +834,7 @@ R -&gt; GUEST (parent)</pre>
 </div>
 </section>
 
-<section id="case-9">
+<section id="case-11">
 <h2>Three chains compete for one parent column</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">P has three children, A, B, and C. Each child has its own child. Q stands right of P and has a chain of two nodes. A, B, and C compete for the column of P. A wins. B and C stand right of A in input order. Q moves right. All branches stay straight.</p>
@@ -763,7 +912,7 @@ Q2 -&gt; Q1 (parent)</pre>
 </div>
 </section>
 
-<section id="case-10">
+<section id="case-12">
 <h2>Disconnected components form separate islands</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">The input order interleaves two independent chains. Each chain is an island in its own column. The standalone node stands above the islands.</p>
@@ -814,7 +963,7 @@ B2 -&gt; B1 (parent)</pre>
 </div>
 </section>
 
-<section id="case-11">
+<section id="case-13">
 <h2>Standalone nodes wrap to the connected graph width</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">Eight standalone nodes stand in a grid above the connected graph. The grid has the three columns of the connected graph.</p>
@@ -886,7 +1035,7 @@ Child C -&gt; Root C (parent)</pre>
 </div>
 </section>
 
-<section id="case-12">
+<section id="case-14">
 <h2>Complete 3 by 3 relation grid</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">Each of the three lower nodes relates to each of the three upper nodes.</p>
@@ -959,7 +1108,7 @@ F -&gt; C (parent)</pre>
 </div>
 </section>
 
-<section id="case-13">
+<section id="case-15">
 <h2>Direction-aware track order</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">Four children keep their vertical relations to their parents. Two extra relations go right to R. Two extra relations go left to L.</p>
@@ -1033,7 +1182,7 @@ C4 -&gt; L (parent)</pre>
 </div>
 </section>
 
-<section id="case-14">
+<section id="case-16">
 <h2>Busy channel expands to fit its lanes</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">Eight nodes create competing routes across three levels. The channel between the first two levels widens. Each relation keeps one horizontal lane.</p>
@@ -1051,11 +1200,11 @@ height="292">
 <rect x="592" y="124" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="672.0" y="150.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N5</text>
 <rect x="40" y="124" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="150.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N6</text>
 <rect x="592" y="200" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="672.0" y="226.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N7</text>
-<polyline points="660.0,200 660.0,188.0 580.0,188.0 580.0,100.0 144.0,100.0 144.0,92" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-333)"><title>edge-1: N7 -&gt; N0</title></polyline>
+<polyline points="660.0,200 660.0,188.0 212.0,188.0 212.0,100.0 132.0,100.0 132.0,92" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-333)"><title>edge-1: N7 -&gt; N0</title></polyline>
 <polyline points="672.0,124 672.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-2: N5 -&gt; N3</title></polyline>
 <polyline points="328.0,124 328.0,116.0 660.0,116.0 660.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-3: N4 -&gt; N3</title></polyline>
 <polyline points="316.0,124 316.0,108.0 476.0,108.0 476.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-4: N4 -&gt; N2</title></polyline>
-<polyline points="132.0,124 132.0,108.0 292.0,108.0 292.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-5: N6 -&gt; N1</title></polyline>
+<polyline points="144.0,124 144.0,108.0 292.0,108.0 292.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-5: N6 -&gt; N1</title></polyline>
 <polyline points="304.0,124 304.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-6: N4 -&gt; N1</title></polyline>
 <polyline points="672.0,200 672.0,176" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-7: N7 -&gt; N5</title></polyline>
 <polyline points="120.0,124 120.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-8: N6 -&gt; N0</title></polyline>
@@ -1107,43 +1256,43 @@ N6 -&gt; N0 (parent)</pre>
 </div>
 </section>
 
-<section id="case-15">
+<section id="case-17">
 <h2>Extreme number of relations from N8</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">N8 relates to every other connected node.</p>
 <div class="preview">
 <div class="variants"><figure>
 
-<svg xmlns="http://www.w3.org/2000/svg" width="840"
-height="448">
+<svg xmlns="http://www.w3.org/2000/svg" width="808"
+height="432">
 <defs><marker id="arrow-333" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/></marker><marker id="arrow-c00" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#c00"/></marker><marker id="arrow-e07000" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#e07000"/></marker></defs>
 <rect x="40" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N0</text>
-<rect x="224" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N1</text>
-<rect x="408" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N2</text>
-<rect x="640" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="720.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N3</text>
-<rect x="224" y="156" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="182.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N4</text>
-<rect x="640" y="156" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="720.0" y="182.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N5</text>
-<rect x="40" y="156" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="182.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N6</text>
-<rect x="640" y="240" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="720.0" y="266.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N7</text>
-<rect x="640" y="356" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="720.0" y="382.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N8</text>
-<polyline points="696.0,240 696.0,216.0 624.0,216.0 624.0,100.0 156.0,100.0 156.0,92" fill="none" stroke="#e07000" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-e07000)"><title>edge-1: N7 -&gt; N0</title></polyline>
-<polyline points="720.0,156 720.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-2: N5 -&gt; N3</title></polyline>
-<polyline points="340.0,156 340.0,140.0 696.0,140.0 696.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-3: N4 -&gt; N3</title></polyline>
-<polyline points="316.0,156 316.0,132.0 476.0,132.0 476.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-4: N4 -&gt; N2</title></polyline>
-<polyline points="132.0,156 132.0,132.0 292.0,132.0 292.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-5: N6 -&gt; N1</title></polyline>
-<polyline points="304.0,156 304.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-6: N4 -&gt; N1</title></polyline>
-<polyline points="720.0,240 720.0,208" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-7: N7 -&gt; N5</title></polyline>
-<polyline points="120.0,156 120.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-8: N6 -&gt; N0</title></polyline>
-<polyline points="720.0,356 720.0,292" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-9: N8 -&gt; N7</title></polyline>
-<polyline points="660.0,356 660.0,332.0 592.0,332.0 592.0,124.0 144.0,124.0 144.0,92" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-333)"><title>edge-10: N8 -&gt; N0</title></polyline>
-<polyline points="636.0,356 636.0,348.0 576.0,348.0 576.0,224.0 316.0,224.0 316.0,208" fill="none" stroke="#e07000" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-e07000)"><title>edge-11: N8 -&gt; N4</title></polyline>
-<polyline points="648.0,356 648.0,340.0 584.0,340.0 584.0,216.0 132.0,216.0 132.0,208" fill="none" stroke="#e07000" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-e07000)"><title>edge-12: N8 -&gt; N6</title></polyline>
-<polyline points="672.0,356 672.0,324.0 600.0,324.0 600.0,116.0 328.0,116.0 328.0,92" fill="none" stroke="#e07000" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-e07000)"><title>edge-13: N8 -&gt; N1</title></polyline>
-<polyline points="684.0,356 684.0,316.0 608.0,316.0 608.0,108.0 500.0,108.0 500.0,92" fill="none" stroke="#e07000" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-e07000)"><title>edge-14: N8 -&gt; N2</title></polyline>
-<polyline points="696.0,356 696.0,308.0 616.0,308.0 616.0,148.0 708.0,148.0 708.0,92" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-333)"><title>edge-15: N8 -&gt; N3</title></polyline>
-<polyline points="708.0,356 708.0,300.0 632.0,300.0 632.0,232.0 708.0,232.0 708.0,208" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-333)"><title>edge-16: N8 -&gt; N5</title></polyline>
+<rect x="232" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="312.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N1</text>
+<rect x="416" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="496.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N2</text>
+<rect x="608" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="688.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N3</text>
+<rect x="232" y="140" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="312.0" y="166.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N4</text>
+<rect x="608" y="140" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="688.0" y="166.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N5</text>
+<rect x="40" y="140" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="166.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N6</text>
+<rect x="608" y="224" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="688.0" y="250.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N7</text>
+<rect x="608" y="340" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="688.0" y="366.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N8</text>
+<polyline points="664.0,224 664.0,200.0 224.0,200.0 224.0,100.0 144.0,100.0 144.0,92" fill="none" stroke="#e07000" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-e07000)"><title>edge-1: N7 -&gt; N0</title></polyline>
+<polyline points="688.0,140 688.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-2: N5 -&gt; N3</title></polyline>
+<polyline points="348.0,140 348.0,124.0 664.0,124.0 664.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-3: N4 -&gt; N3</title></polyline>
+<polyline points="336.0,140 336.0,116.0 484.0,116.0 484.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-4: N4 -&gt; N2</title></polyline>
+<polyline points="156.0,140 156.0,116.0 300.0,116.0 300.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-5: N6 -&gt; N1</title></polyline>
+<polyline points="312.0,140 312.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-6: N4 -&gt; N1</title></polyline>
+<polyline points="688.0,224 688.0,192" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-7: N7 -&gt; N5</title></polyline>
+<polyline points="120.0,140 120.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-8: N6 -&gt; N0</title></polyline>
+<polyline points="688.0,340 688.0,276" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-9: N8 -&gt; N7</title></polyline>
+<polyline points="626.2857142857142,340 626.2857142857142,324.0 216.0,324.0 216.0,108.0 132.0,108.0 132.0,92" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-333)"><title>edge-10: N8 -&gt; N0</title></polyline>
+<polyline points="636.5714285714286,340 636.5714285714286,316.0 400.0,316.0 400.0,208.0 324.0,208.0 324.0,192" fill="none" stroke="#e07000" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-e07000)"><title>edge-11: N8 -&gt; N4</title></polyline>
+<polyline points="616.0,340 616.0,332.0 208.0,332.0 208.0,200.0 132.0,200.0 132.0,192" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-333)"><title>edge-12: N8 -&gt; N6</title></polyline>
+<polyline points="646.8571428571429,340 646.8571428571429,308.0 408.0,308.0 408.0,100.0 324.0,100.0 324.0,92" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-333)"><title>edge-13: N8 -&gt; N1</title></polyline>
+<polyline points="657.1428571428571,340 657.1428571428571,300.0 584.0,300.0 584.0,100.0 508.0,100.0 508.0,92" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-333)"><title>edge-14: N8 -&gt; N2</title></polyline>
+<polyline points="667.4285714285714,340 667.4285714285714,292.0 592.0,292.0 592.0,132.0 676.0,132.0 676.0,92" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-333)"><title>edge-15: N8 -&gt; N3</title></polyline>
+<polyline points="677.7142857142857,340 677.7142857142857,284.0 600.0,284.0 600.0,216.0 676.0,216.0 676.0,192" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-333)"><title>edge-16: N8 -&gt; N5</title></polyline>
 </svg>
-<ul class='conflicts'><li>edge-1 crosses edge-13 in H(0)</li><li>edge-1 crosses edge-14 in H(0)</li><li>edge-12 crosses edge-11 in H(1)</li></ul>
+<ul class='conflicts'><li>edge-1 crosses edge-11 in H(1)</li></ul>
 </figure></div>
 <p>Dashed: relation across levels. Red: cycle. Orange: relations with an
 unavoidable crossing in one channel. Thick border: corrected root. Grey
@@ -1207,7 +1356,7 @@ N8 -&gt; N5 (parent)</pre>
 </div>
 </section>
 
-<section id="case-16">
+<section id="case-18">
 <h2>Two cycles have separate diagnostics</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">A and B form the first cycle. C, D, and E form the second cycle. F relates to C and is not part of a cycle. Each cycle has its own ID.</p>
@@ -1272,7 +1421,7 @@ F -&gt; C (parent)</pre>
 </div>
 </section>
 
-<section id="case-17">
+<section id="case-19">
 <h2>Three-document cycle with an incoming branch</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">A, B, and C form one cycle. D relates to A and is not part of the cycle. The relation C -&gt; A closes the cycle and does not take part in the level calculation.</p>
@@ -1326,7 +1475,7 @@ D -&gt; A (parent)</pre>
 </div>
 </section>
 
-<section id="case-18">
+<section id="case-20">
 <h2>Opposite cycle relations use separate routes</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">A relates to B. B relates to A. The two relations use separate lanes.</p>

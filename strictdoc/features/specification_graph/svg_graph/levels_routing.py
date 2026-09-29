@@ -22,8 +22,11 @@ class LaneConflictPriority(Enum):
     """
     Which crossing to avoid when a segment lies inside another one.
 
-    ENTRY keeps the entry verticals uncrossed. EXIT keeps the exit verticals
-    uncrossed. See open question 22 in spec.md.
+    ENTRY keeps the entry verticals uncrossed: the outer segment crosses the
+    vertical of the inner segment near the target. EXIT keeps the exit
+    verticals uncrossed: the outer segment crosses the vertical of the inner
+    segment near the source. The gallery case "Nested relations in one
+    channel" shows both variants.
     """
 
     ENTRY = "entry"
@@ -34,7 +37,9 @@ class SkipChannelChoice(Enum):
     """
     Which vertical channel an edge across levels uses.
 
-    See open question 25 in spec.md.
+    NEAR_SOURCE climbs in the channel next to the source column. NEAR_TARGET
+    climbs in the channel next to the target column. The gallery case
+    "Relations across levels from far columns" shows both variants.
     """
 
     NEAR_SOURCE = "near_source"
@@ -43,8 +48,16 @@ class SkipChannelChoice(Enum):
 
 @dataclass(frozen=True)
 class RoutingOptions:
+    """
+    Routing choices with more than one valid answer.
+
+    The defaults are the decisions recorded in spec.md, section "Маршруты".
+    To change a decision, change the default here and update spec.md. The
+    other variant stays implemented, so the gallery can compare both.
+    """
+
     lane_conflict_priority: LaneConflictPriority = LaneConflictPriority.ENTRY
-    skip_channel_choice: SkipChannelChoice = SkipChannelChoice.NEAR_SOURCE
+    skip_channel_choice: SkipChannelChoice = SkipChannelChoice.NEAR_TARGET
 
 
 class Face(Enum):

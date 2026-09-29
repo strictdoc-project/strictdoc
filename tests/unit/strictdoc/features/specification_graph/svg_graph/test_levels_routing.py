@@ -4,6 +4,10 @@ from developer.examples.specification_graph.gallery_cases import (
     GALLERY_CASES,
     GalleryCase,
 )
+from strictdoc.features.specification_graph.svg_graph.levels_geometry import (
+    GeometryConfig,
+    compute_levels_geometry,
+)
 from strictdoc.features.specification_graph.svg_graph.levels_routing import (
     LaneConflictPriority,
     LevelsRouting,
@@ -97,3 +101,58 @@ def test_skip_channel_choice_selects_the_vertical_channel() -> None:
     assert vertical_channels(
         RoutingOptions(skip_channel_choice=SkipChannelChoice.NEAR_TARGET)
     ) == (0, 0)
+
+
+def _slots(
+    case: GalleryCase, routing: LevelsRouting
+) -> Dict[Tuple[str, str], Tuple[int, int]]:
+    return {
+        pair_: (
+            routing.routes[edge_id_].source_port.slot,
+            routing.routes[edge_id_].target_port.slot,
+        )
+        for pair_, edge_id_ in _edge_ids_by_name(case).items()
+    }
+
+
+def test_opposite_ports_of_one_gate_take_different_slots() -> None:
+    case = _case("Opposite ports in one gate")
+
+    slots = _slots(case, _routing(case, RoutingOptions()))
+
+    # Gate of column 1: the top face of L and the bottom face of U.
+    assert slots[("L", "U")] == (0, 0)
+    assert slots[("L", "A")][0] == -2
+    assert slots[("B", "U")][1] == -1
+    # Gate of column 0: the top face of B and the bottom face of A.
+    assert slots[("B", "A")] == (0, 0)
+    assert slots[("L", "A")][1] == 1
+    assert slots[("B", "U")][0] == 2
+
+
+def test_many_ports_of_one_gate_shrink_the_pitch() -> None:
+    case = _case("Many ports in one gate")
+    normalized_graph = normalize_graph(case.graph)
+    structure = compute_levels_structure(normalized_graph)
+    routing = compute_levels_routing(normalized_graph, structure)
+    geometry = compute_levels_geometry(structure, routing)
+    edge_ids = _edge_ids_by_name(case)
+    config = GeometryConfig()
+
+    rect = geometry.node_rects["U"]
+    incoming_x = [
+        geometry.edge_paths[edge_ids[(source_id_, "U")]][-1].x
+        for source_id_ in ("L", "L2", "L3", "L4", "L5")
+    ]
+    outgoing_x = [
+        geometry.edge_paths[edge_ids[("L", target_id_)]][0].x
+        for target_id_ in ("U", "U2", "U3", "U4", "U5")
+    ]
+
+    # Nine ports: the straight relation and eight side ports. The pitch
+    # shrinks so that the outermost slot 8 stays inside the port margin.
+    pitch = (rect.width / 2 - config.port_margin) / 8
+    assert pitch < config.port_pitch
+    center = rect.x + rect.width / 2
+    assert incoming_x == [center + slot_ * pitch for slot_ in (0, 2, 4, 6, 8)]
+    assert outgoing_x == [center + slot_ * pitch for slot_ in (0, 1, 3, 5, 7)]

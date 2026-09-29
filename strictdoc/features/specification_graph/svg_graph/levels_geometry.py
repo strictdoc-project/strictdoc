@@ -7,7 +7,7 @@ not search for routes: it only converts lanes and ports into coordinates.
 """
 
 from dataclasses import dataclass
-from typing import Dict, List, Mapping, Optional, Tuple
+from typing import Callable, Dict, List, Mapping, Optional, Tuple
 
 from strictdoc.features.specification_graph.svg_graph.levels_routing import (
     ChannelId,
@@ -26,7 +26,11 @@ from strictdoc.features.specification_graph.svg_graph.levels_structure import (
 class GeometryConfig:
     node_width: float = 160
     node_height: float = 52
+    # Preferred distance between neighbor ports. A gate with many ports uses
+    # a smaller distance so that all ports stay on the face.
     port_pitch: float = 12
+    # Minimum distance from the outermost port to the node corner.
+    port_margin: float = 8
     lane_pitch: float = 8
     min_channel_size: float = 24
     margin: float = 16
@@ -131,9 +135,15 @@ def compute_levels_geometry(
         for node_id_, position_ in structure.positions.items()
     }
 
+    gate_pitches = _gate_port_pitches(structure, routing, config)
     edge_paths: Dict[str, Tuple[Point, ...]] = {
         edge_id_: _route_path(
-            route_, node_rects, channel_rects, routing, config
+            route_,
+            node_rects,
+            channel_rects,
+            routing,
+            config,
+            lambda port_: gate_pitches[_gate_of(port_, structure)],
         )
         for edge_id_, route_ in routing.routes.items()
     }
@@ -176,12 +186,53 @@ def _lane_offset(
     )
 
 
-def _port_point(
-    port: Port, node_rects: Dict[str, Rect], config: GeometryConfig
-) -> Point:
+def _gate_of(port: Port, structure: LevelsStructure) -> Tuple[int, int]:
+    """
+    Return the gate of a port: its column and the channel its face opens into.
+
+    The two faces of a gate share one list of port slots. See the ports rules
+    in spec.md, section "Маршруты".
+    """
+
+    position = structure.positions[port.node_id]
+    channel = position.row - 1 if port.face is Face.TOP else position.row
+    return position.column, channel
+
+
+def _gate_port_pitches(
+    structure: LevelsStructure,
+    routing: LevelsRouting,
+    config: GeometryConfig,
+) -> Dict[Tuple[int, int], float]:
+    """
+    Compute one port pitch per gate.
+
+    Both faces of a gate use the same pitch, so equal slots on the two faces
+    stand on one vertical.
+    """
+
+    max_slot_by_gate: Dict[Tuple[int, int], int] = {}
+    for route_ in routing.routes.values():
+        for port_ in (route_.source_port, route_.target_port):
+            gate_ = _gate_of(port_, structure)
+            max_slot_by_gate[gate_] = max(
+                max_slot_by_gate.get(gate_, 0), abs(port_.slot)
+            )
+    available_half_width = config.node_width / 2 - config.port_margin
+    return {
+        gate_: (
+            config.port_pitch
+            if max_slot_ == 0
+            else min(config.port_pitch, available_half_width / max_slot_)
+        )
+        for gate_, max_slot_ in max_slot_by_gate.items()
+    }
+
+
+def _port_point(port: Port, node_rects: Dict[str, Rect], pitch: float) -> Point:
     rect = node_rects[port.node_id]
     return Point(
-        x=rect.x + rect.width / 2 + port.slot * config.port_pitch,
+        x=rect.x + rect.width / 2 + port.slot * pitch,
         y=rect.y if port.face is Face.TOP else rect.y + rect.height,
     )
 
@@ -192,9 +243,14 @@ def _route_path(
     channel_rects: Dict[ChannelId, Rect],
     routing: LevelsRouting,
     config: GeometryConfig,
+    port_pitch: Callable[[Port], float],
 ) -> Tuple[Point, ...]:
-    start = _port_point(route.source_port, node_rects, config)
-    end = _port_point(route.target_port, node_rects, config)
+    start = _port_point(
+        route.source_port, node_rects, port_pitch(route.source_port)
+    )
+    end = _port_point(
+        route.target_port, node_rects, port_pitch(route.target_port)
+    )
     lane_offsets = [
         _lane_offset(lane_.channel, lane_.lane, channel_rects, routing, config)
         for lane_ in route.lanes

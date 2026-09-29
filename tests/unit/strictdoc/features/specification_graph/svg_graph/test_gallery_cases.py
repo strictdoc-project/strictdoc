@@ -12,17 +12,21 @@ from developer.examples.specification_graph.gallery_cases import (
     GalleryCase,
 )
 from strictdoc.features.specification_graph.svg_graph.levels_geometry import (
+    GeometryConfig,
     LevelsGeometry,
     Point,
     compute_levels_geometry,
 )
 from strictdoc.features.specification_graph.svg_graph.levels_routing import (
+    Face,
     LaneConflictPriority,
+    LevelsRouting,
     RoutingOptions,
     SkipChannelChoice,
     compute_levels_routing,
 )
 from strictdoc.features.specification_graph.svg_graph.levels_structure import (
+    LevelsStructure,
     compute_levels_structure,
 )
 from strictdoc.features.specification_graph.svg_graph.model import LayoutMode
@@ -121,6 +125,8 @@ def test_levels_geometry_invariants(
     geometry = compute_levels_geometry(structure, routing)
 
     assert _geometry_problems(geometry) == []
+    _assert_ports_stay_on_faces(routing, geometry)
+    _assert_gate_ports_are_distinct(structure, routing, geometry)
 
     ports = [
         (route_.edge_id, port_)
@@ -131,6 +137,55 @@ def test_levels_geometry_invariants(
 
 
 _Segment = Tuple[Point, Point]
+
+
+def _assert_ports_stay_on_faces(
+    routing: LevelsRouting, geometry: LevelsGeometry
+) -> None:
+    margin = GeometryConfig().port_margin
+    for route_ in routing.routes.values():
+        path_ = geometry.edge_paths[route_.edge_id]
+        for port_, point_ in (
+            (route_.source_port, path_[0]),
+            (route_.target_port, path_[-1]),
+        ):
+            rect_ = geometry.node_rects[port_.node_id]
+            face_y_ = (
+                rect_.y if port_.face is Face.TOP else rect_.y + rect_.height
+            )
+            assert point_.y == face_y_
+            assert (
+                rect_.x + margin <= point_.x <= rect_.x + rect_.width - margin
+            )
+
+
+def _assert_gate_ports_are_distinct(
+    structure: LevelsStructure,
+    routing: LevelsRouting,
+    geometry: LevelsGeometry,
+) -> None:
+    """
+    Check that two relations never share a port position in one gate.
+
+    A gate is the pair of faces that open into one channel in one column.
+    Only the two ends of one straight relation share a position.
+    """
+
+    edge_by_gate_position: Dict[Tuple[int, int, float], str] = {}
+    for route_ in routing.routes.values():
+        path_ = geometry.edge_paths[route_.edge_id]
+        for port_, point_ in (
+            (route_.source_port, path_[0]),
+            (route_.target_port, path_[-1]),
+        ):
+            position_ = structure.positions[port_.node_id]
+            channel_ = (
+                position_.row - 1 if port_.face is Face.TOP else position_.row
+            )
+            key_ = (position_.column, channel_, point_.x)
+            assert edge_by_gate_position.setdefault(key_, route_.edge_id) == (
+                route_.edge_id
+            )
 
 
 def _geometry_problems(geometry: LevelsGeometry) -> List[str]:

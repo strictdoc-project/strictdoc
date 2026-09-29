@@ -95,10 +95,9 @@ LEVELS_CASES: Tuple[GalleryCase, ...] = (
         ),
         ["A", "B", "C", "D", "X", "Y"],
         [("X", "A"), ("X", "D"), ("Y", "B"), ("Y", "C"), ("Y", "D")],
-        open_question=22,
         variants=(
             (
-                "Entry priority",
+                "Entry priority (default)",
                 RoutingOptions(
                     lane_conflict_priority=LaneConflictPriority.ENTRY
                 ),
@@ -121,7 +120,6 @@ LEVELS_CASES: Tuple[GalleryCase, ...] = (
         ),
         _chain_nodes(["P", "M", "Q"], 4),
         [*_chain_edges(["P", "M", "Q"], 4), ("M3", "P1"), ("Q3", "P1")],
-        open_question=25,
         variants=(
             (
                 "Near source",
@@ -130,12 +128,48 @@ LEVELS_CASES: Tuple[GalleryCase, ...] = (
                 ),
             ),
             (
-                "Near target",
+                "Near target (default)",
                 RoutingOptions(
                     skip_channel_choice=SkipChannelChoice.NEAR_TARGET
                 ),
             ),
         ),
+    ),
+    _levels_case(
+        "Opposite ports in one gate",
+        (
+            "The bottom face of U and the top face of L open into one "
+            "channel in one column. U receives B -> U from the left. L sends "
+            "L -> A to the left. All ports of the two faces take different "
+            "positions. The two relations go in opposite directions and "
+            "cross once: no lane order avoids this crossing."
+        ),
+        ["A", "U", "B", "L"],
+        [("B", "A"), ("L", "U"), ("L", "A"), ("B", "U")],
+    ),
+    _levels_case(
+        "Many ports in one gate",
+        (
+            "L sends relations to U and to U2-U5. U receives relations from "
+            "L and from L2-L5. The gate between U and L has nine ports. The "
+            "port pitch shrinks so that all ports stay on the faces."
+        ),
+        ["U", "U2", "U3", "U4", "U5", "L", "L2", "L3", "L4", "L5"],
+        [
+            ("L", "U"),
+            ("L", "U2"),
+            ("L", "U3"),
+            ("L", "U4"),
+            ("L", "U5"),
+            ("L2", "U"),
+            ("L3", "U"),
+            ("L4", "U"),
+            ("L5", "U"),
+            ("L2", "U2"),
+            ("L3", "U3"),
+            ("L4", "U4"),
+            ("L5", "U5"),
+        ],
     ),
     _levels_case(
         "Simple chain",

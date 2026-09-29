@@ -22,15 +22,26 @@ from strictdoc.features.specification_graph.svg_graph.model import (
 
 
 @dataclass(frozen=True)
+class RejectedAlternative:
+    """
+    A routing choice that spec.md rejects.
+
+    The gallery renders the case a second time with these options, next to
+    the generator result, and marks the picture as rejected.
+    """
+
+    # The option value that produces the rejected route, as Python code.
+    option_code: str
+    options: RoutingOptions
+    description: str
+
+
+@dataclass(frozen=True)
 class GalleryCase:
     title: str
     description: str
     graph: Graph
-    # Number of the open question in spec.md that the case helps to decide.
-    open_question: Optional[int] = None
-    # Routing variants to compare side by side. An empty tuple means the
-    # default routing options.
-    variants: Tuple[Tuple[str, RoutingOptions], ...] = ()
+    rejected_alternative: Optional[RejectedAlternative] = None
 
 
 def _levels_case(
@@ -38,8 +49,7 @@ def _levels_case(
     description: str,
     node_ids: Sequence[str],
     edges: Sequence[Tuple[str, str]],
-    open_question: Optional[int] = None,
-    variants: Tuple[Tuple[str, RoutingOptions], ...] = (),
+    rejected_alternative: Optional[RejectedAlternative] = None,
 ) -> GalleryCase:
     """
     Create a levels mode case.
@@ -65,8 +75,7 @@ def _levels_case(
                 for child_id_, parent_id_ in edges
             ),
         ),
-        open_question=open_question,
-        variants=variants,
+        rejected_alternative=rejected_alternative,
     )
 
 
@@ -82,56 +91,109 @@ def _chain_edges(names: Sequence[str], length: int) -> List[Tuple[str, str]]:
     ]
 
 
+def _extreme_gate_case(
+    goes_right: bool, sent_count: int, received_count: int
+) -> GalleryCase:
+    """
+    Create a case with many ports in the gate between U and L.
+
+    U stands above L. L -> U is straight. L sends relations to the nodes
+    U2, U3, ... beside U. U receives relations from the nodes L2, L3, ...
+    beside L. Each Lk -> Uk is straight and fixes the columns.
+    """
+
+    side_count = max(sent_count, received_count)
+    upper_side = [f"U{index_ + 2}" for index_ in range(side_count)]
+    lower_side = [f"L{index_ + 2}" for index_ in range(side_count)]
+    if goes_right:
+        node_ids = ["U", *upper_side, "L", *lower_side]
+    else:
+        node_ids = [*upper_side, "U", *lower_side, "L"]
+    edges = [
+        ("L", "U"),
+        *(("L", target_id_) for target_id_ in upper_side[:sent_count]),
+        *((source_id_, "U") for source_id_ in lower_side[:received_count]),
+        *zip(lower_side, upper_side),
+    ]
+    side = "right" if goes_right else "left"
+    if goes_right:
+        rule = (
+            "The group is safe: the segments into U run left in the top "
+            "half, the segments out of L run right in the bottom half. Both "
+            "faces keep one rhythm, with equal slots on one vertical."
+        )
+    else:
+        rule = (
+            "The group is unsafe: the segments into U run right in the "
+            "bottom half, the segments out of L run left in the top half. "
+            "The faces share one slot list, so each port skips the slots of "
+            "the other face."
+        )
+    return _levels_case(
+        f"Extreme gate, {side}: L sends {sent_count}, "
+        f"U receives {received_count}",
+        (
+            f"L -> U is straight. L sends {sent_count} relations to the "
+            f"{side}. U receives {received_count} relations from the {side}. "
+            f"All of them use the {side} group of the gate between U and L. "
+            + rule
+        ),
+        node_ids,
+        edges,
+    )
+
+
+EXTREME_GATE_CASES: Tuple[GalleryCase, ...] = tuple(
+    _extreme_gate_case(goes_right_, sent_count_, received_count_)
+    for goes_right_ in (True, False)
+    for sent_count_, received_count_ in ((12, 12), (12, 13), (12, 4))
+)
+
+
 LEVELS_CASES: Tuple[GalleryCase, ...] = (
     _levels_case(
         "Nested relations in one channel",
         (
             "X -> D and Y -> C both go right in the channel below A, B, C, "
-            "D. The segment of Y -> C lies inside the segment of X -> D. "
-            "X -> D must cross one vertical of Y -> C. Entry priority: "
-            "X -> D stays above Y -> C and crosses the vertical into C. Exit "
-            "priority: X -> D stays below Y -> C and crosses the vertical "
-            "out of Y."
+            "D. The segment of Y -> C lies inside the segment of X -> D, so "
+            "X -> D must cross one vertical of Y -> C. Entry priority: X -> D "
+            "stays above Y -> C and crosses the vertical into C."
         ),
         ["A", "B", "C", "D", "X", "Y"],
         [("X", "A"), ("X", "D"), ("Y", "B"), ("Y", "C"), ("Y", "D")],
-        variants=(
-            (
-                "Entry priority (default)",
-                RoutingOptions(
-                    lane_conflict_priority=LaneConflictPriority.ENTRY
-                ),
+        rejected_alternative=RejectedAlternative(
+            option_code=(
+                "RoutingOptions("
+                "lane_conflict_priority=LaneConflictPriority.EXIT)"
             ),
-            (
-                "Exit priority",
-                RoutingOptions(
-                    lane_conflict_priority=LaneConflictPriority.EXIT
-                ),
+            options=RoutingOptions(
+                lane_conflict_priority=LaneConflictPriority.EXIT
+            ),
+            description=(
+                "Exit priority: X -> D stays below Y -> C and crosses the "
+                "vertical out of Y."
             ),
         ),
     ),
     _levels_case(
         "Relations across levels from far columns",
         (
-            "M3 -> P1 and Q3 -> P1 skip one level. Near source: each "
-            "relation climbs in the vertical channel next to its source, so "
-            "the two relations use two channels. Near target: both relations "
-            "climb in the vertical channel next to P1."
+            "M3 -> P1 and Q3 -> P1 skip one level. Both relations climb in "
+            "the vertical channel next to P1, the column of the target."
         ),
         _chain_nodes(["P", "M", "Q"], 4),
         [*_chain_edges(["P", "M", "Q"], 4), ("M3", "P1"), ("Q3", "P1")],
-        variants=(
-            (
-                "Near source",
-                RoutingOptions(
-                    skip_channel_choice=SkipChannelChoice.NEAR_SOURCE
-                ),
+        rejected_alternative=RejectedAlternative(
+            option_code=(
+                "RoutingOptions("
+                "skip_channel_choice=SkipChannelChoice.NEAR_SOURCE)"
             ),
-            (
-                "Near target (default)",
-                RoutingOptions(
-                    skip_channel_choice=SkipChannelChoice.NEAR_TARGET
-                ),
+            options=RoutingOptions(
+                skip_channel_choice=SkipChannelChoice.NEAR_SOURCE
+            ),
+            description=(
+                "Near source: each relation climbs in the vertical channel "
+                "next to its source, so the two relations use two channels."
             ),
         ),
     ),
@@ -458,4 +520,4 @@ LEVELS_CASES: Tuple[GalleryCase, ...] = (
     ),
 )
 
-GALLERY_CASES: Tuple[GalleryCase, ...] = LEVELS_CASES
+GALLERY_CASES: Tuple[GalleryCase, ...] = LEVELS_CASES + EXTREME_GATE_CASES

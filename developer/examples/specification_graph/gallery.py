@@ -53,7 +53,6 @@ p.description { color: #444; max-width: 800px; }
   display: inline-block; padding: 1px 6px; margin-right: 6px;
   border-radius: 4px; background: #eee; font-size: 12px;
 }
-.badge.question { background: #ffe8b3; }
 .columns { display: flex; gap: 24px; flex-wrap: wrap; align-items: start; }
 .panel { border: 1px solid #ddd; padding: 8px 12px; background: #fafafa; }
 .panel h3 { margin: 0 0 8px; font-size: 14px; }
@@ -62,9 +61,12 @@ table { border-collapse: collapse; font-size: 13px; }
 td, th { border: 1px solid #ddd; padding: 2px 6px; text-align: left; }
 .no { color: #b00; }
 .preview { margin: 8px 0 16px; }
-.variants { display: flex; gap: 24px; flex-wrap: wrap; align-items: start; }
 figure { margin: 0; }
+.figures { display: flex; gap: 24px; flex-wrap: wrap; align-items: start; }
 figure h3 { margin: 0 0 4px; font-size: 14px; }
+figure.rejected { padding: 8px; border: 2px dashed #b00; background: #fff5f5; }
+figure.rejected h3 { color: #b00; }
+figure .note { max-width: 520px; font-size: 12px; color: #444; }
 ul.conflicts { margin: 4px 0; font-size: 12px; color: #a50; }
 .preview p { margin: 4px 0; color: #666; font-size: 12px; }
 """
@@ -116,11 +118,6 @@ developer.examples.specification_graph.gallery</code></p>
 def _render_case(index: int, case: GalleryCase) -> str:
     normalized_graph = normalize_graph(case.graph)
     badges = f'<span class="badge">mode: {case.graph.mode.value}</span>'
-    if case.open_question is not None:
-        badges += (
-            f'<span class="badge question">'
-            f"open question {case.open_question}</span>"
-        )
     return f"""
 <section id="case-{index}">
 <h2>{html.escape(case.title)}</h2>
@@ -193,26 +190,36 @@ def _render_routes(case: GalleryCase, normalized_graph: NormalizedGraph) -> str:
     if normalized_graph.mode is not LayoutMode.LEVELS:
         return ""
     structure = compute_levels_structure(normalized_graph)
-    variants = case.variants
-    if len(variants) == 0:
-        variants = (("", RoutingOptions()),)
-    figures = "\n".join(
-        _render_variant(normalized_graph, structure, label_, options_)
-        for label_, options_ in variants
+    figures = _render_levels_svg(
+        normalized_graph, structure, RoutingOptions(), "Generator result"
     )
+    alternative = case.rejected_alternative
+    if alternative is not None:
+        figures += _render_levels_svg(
+            normalized_graph,
+            structure,
+            alternative.options,
+            "Rejected alternative: the generator does not use this route",
+            (
+                f"{html.escape(alternative.description)} Rendered only here, "
+                f"with the option <code>"
+                f"{html.escape(alternative.option_code)}</code>."
+            ),
+        )
     return f"""<div class="preview">
-<div class="variants">{figures}</div>
+<div class="figures">{figures}</div>
 <p>Dashed: relation across levels. Red: cycle. Orange: relations with an
 unavoidable crossing in one channel. Thick border: corrected root. Grey
 area: standalone nodes.</p>
 </div>"""
 
 
-def _render_variant(
+def _render_levels_svg(
     normalized_graph: NormalizedGraph,
     structure: LevelsStructure,
-    label: str,
     options: RoutingOptions,
+    caption: str,
+    note: str = "",
 ) -> str:
     routing = compute_levels_routing(normalized_graph, structure, options)
     geometry = compute_levels_geometry(structure, routing)
@@ -289,12 +296,15 @@ def _render_variant(
         f"V({conflict_.channel.index})</li>"
         for conflict_ in routing.conflicts
     )
-    caption = f"<h3>{html.escape(label)}</h3>" if len(label) > 0 else ""
     conflict_list = (
         f"<ul class='conflicts'>{conflicts}</ul>" if len(conflicts) > 0 else ""
     )
-    return f"""<figure>
-{caption}
+    is_rejected = options != RoutingOptions()
+    figure_class = ' class="rejected"' if is_rejected else ""
+    note_html = f'<p class="note">{note}</p>' if len(note) > 0 else ""
+    return f"""<figure{figure_class}>
+<h3>{html.escape(caption)}</h3>
+{note_html}
 <svg xmlns="http://www.w3.org/2000/svg" width="{geometry.width}"
 height="{geometry.height}">
 <defs>{ARROW_MARKERS}</defs>

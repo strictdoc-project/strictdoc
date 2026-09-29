@@ -115,22 +115,35 @@ def _slots(
     }
 
 
-def test_opposite_ports_of_one_gate_take_different_slots() -> None:
+def test_unsafe_group_shares_one_slot_list() -> None:
     case = _case("Opposite ports in one gate")
 
     slots = _slots(case, _routing(case, RoutingOptions()))
 
-    # Gate of column 1: the top face of L and the bottom face of U.
+    # Gate of column 1, left group. B -> U arrives at U from the left: its
+    # segment runs right, in the bottom half. L -> A leaves L to the left:
+    # its segment runs left, in the top half. The verticals would overlap on
+    # one x, so the two faces share one slot list.
     assert slots[("L", "U")] == (0, 0)
     assert slots[("L", "A")][0] == -2
     assert slots[("B", "U")][1] == -1
-    # Gate of column 0: the top face of B and the bottom face of A.
+
+
+def test_safe_group_keeps_one_rhythm_on_both_faces() -> None:
+    case = _case("Opposite ports in one gate")
+
+    slots = _slots(case, _routing(case, RoutingOptions()))
+
+    # Gate of column 0, right group. L -> A arrives at A from the right: its
+    # segment runs left, in the top half. B -> U leaves B to the right: its
+    # segment runs right, in the bottom half. The verticals cannot meet, so
+    # each face numbers its ports on its own.
     assert slots[("B", "A")] == (0, 0)
     assert slots[("L", "A")][1] == 1
-    assert slots[("B", "U")][0] == 2
+    assert slots[("B", "U")][0] == 1
 
 
-def test_many_ports_of_one_gate_shrink_the_pitch() -> None:
+def test_many_ports_of_one_gate() -> None:
     case = _case("Many ports in one gate")
     normalized_graph = normalize_graph(case.graph)
     structure = compute_levels_structure(normalized_graph)
@@ -140,6 +153,7 @@ def test_many_ports_of_one_gate_shrink_the_pitch() -> None:
     config = GeometryConfig()
 
     rect = geometry.node_rects["U"]
+    center = rect.x + rect.width / 2
     incoming_x = [
         geometry.edge_paths[edge_ids[(source_id_, "U")]][-1].x
         for source_id_ in ("L", "L2", "L3", "L4", "L5")
@@ -149,10 +163,16 @@ def test_many_ports_of_one_gate_shrink_the_pitch() -> None:
         for target_id_ in ("U", "U2", "U3", "U4", "U5")
     ]
 
-    # Nine ports: the straight relation and eight side ports. The pitch
-    # shrinks so that the outermost slot 8 stays inside the port margin.
-    pitch = (rect.width / 2 - config.port_margin) / 8
-    assert pitch < config.port_pitch
-    center = rect.x + rect.width / 2
-    assert incoming_x == [center + slot_ * pitch for slot_ in (0, 2, 4, 6, 8)]
-    assert outgoing_x == [center + slot_ * pitch for slot_ in (0, 1, 3, 5, 7)]
+    # The right group of the gate between U and L is safe: both faces use
+    # slots 1-4 with the normal pitch.
+    expected_x = [
+        center + slot_ * config.port_pitch for slot_ in (0, 1, 2, 3, 4)
+    ]
+    assert incoming_x == expected_x
+    assert outgoing_x == expected_x
+
+    # The left group of the gate between U2 and L2 is unsafe: the faces
+    # share one slot list.
+    slots = _slots(case, routing)
+    assert slots[("L", "U2")][1] == -2
+    assert slots[("L2", "U")][0] == -1

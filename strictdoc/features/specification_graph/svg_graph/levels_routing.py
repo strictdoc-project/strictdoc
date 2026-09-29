@@ -25,8 +25,7 @@ class LaneConflictPriority(Enum):
     ENTRY keeps the entry verticals uncrossed: the outer segment crosses the
     vertical of the inner segment near the target. EXIT keeps the exit
     verticals uncrossed: the outer segment crosses the vertical of the inner
-    segment near the source. The gallery case "Nested relations in one
-    channel" shows both variants.
+    segment near the source.
     """
 
     ENTRY = "entry"
@@ -38,8 +37,7 @@ class SkipChannelChoice(Enum):
     Which vertical channel an edge across levels uses.
 
     NEAR_SOURCE climbs in the channel next to the source column. NEAR_TARGET
-    climbs in the channel next to the target column. The gallery case
-    "Relations across levels from far columns" shows both variants.
+    climbs in the channel next to the target column.
     """
 
     NEAR_SOURCE = "near_source"
@@ -52,8 +50,7 @@ class RoutingOptions:
     Routing choices with more than one valid answer.
 
     The defaults are the decisions recorded in spec.md, section "Маршруты".
-    To change a decision, change the default here and update spec.md. The
-    other variant stays implemented, so the gallery can compare both.
+    To change a decision, change the default here and update spec.md.
     """
 
     lane_conflict_priority: LaneConflictPriority = LaneConflictPriority.ENTRY
@@ -367,21 +364,53 @@ def _assign_vertical_lanes(
     return result
 
 
+@dataclass(frozen=True)
+class _GateEndpoint:
+    endpoint_key: Tuple[str, int]
+    node_id: str
+    face: Face
+    # -1: the horizontal segment extends left of the port. 1: right of the
+    # port. 0: the edge is straight and has no horizontal segment.
+    side: int
+    # Half of the channel that holds the horizontal segment: 0 for the top
+    # half (the segment goes left), 1 for the bottom half (goes right).
+    half: int
+    sort_key: Tuple[_Position, int]
+
+
 def _assign_ports(
     plans: List[_EdgePlan], vertical_lanes: Dict[str, LaneRef]
 ) -> Dict[Tuple[str, int], Port]:
     """
-    Order the ports in each gate.
+    Assign a slot to each port. spec.md, section "Порты", defines the rule.
 
     A gate is the pair of faces that open into one horizontal channel in one
-    column: the bottom face of the upper node and the top face of the lower
-    node. All ports of a gate take different slots, so no two verticals in
-    the channel share an x position.
+    column: the bottom face of the upper node (the upper face) and the top
+    face of the lower node (the lower face).
 
+    Each face of a gate has a left group, the center slot, and a right group.
     A straight edge takes the center slot. A gate has at most one straight
-    edge. The edges to the left take the slots left of the center, the edges
-    to the right take the slots right of the center. Within a side, the slots
-    follow the positions where the edges go.
+    edge. Within a group, the slots follow the positions where the edges go.
+
+    Each face numbers its group on its own, so both faces keep one rhythm:
+    ports with equal slots stand on one vertical. This is safe when the two
+    verticals cannot meet. The vertical of an upper port runs from the top of
+    the channel down to its lane. The vertical of a lower port runs from the
+    bottom of the channel up to its lane. The half of the channel of each
+    lane is known before the lanes are assigned (right-hand traffic):
+
+    - upper segment in the top half, lower segment in the bottom half: the
+      verticals never meet
+    - upper segment in the bottom half, lower segment in the top half: the
+      verticals always overlap
+    - both segments in one half: the lanes decide, so the pair counts as
+      unsafe.
+
+    If a group of a gate has at least one unsafe pair of an upper and a lower
+    port, the two faces number this group with one shared list. A port of
+    one face then skips the slot of a port of the other face (a fictitious
+    slot). For upward edges, the right group is safe and the left group is
+    unsafe.
     """
 
     straight_edge_ids: Set[str] = set()
@@ -396,14 +425,10 @@ def _assign_ports(
             straight_gates.add(gate_)
             straight_edge_ids.add(plan_.edge_id)
 
-    # Gate -> list of (side, sort key, endpoint key, node ID, face).
-    endpoints_by_gate: Dict[
-        Tuple[int, int],
-        List[Tuple[int, Tuple[_Position, int], Tuple[str, int], str, Face]],
-    ] = {}
+    endpoints_by_gate: Dict[Tuple[int, int], List[_GateEndpoint]] = {}
     for plan_ in plans:
         for (
-            endpoint_,
+            endpoint_role_,
             node_id_,
             face_,
             own_column_,
@@ -439,34 +464,74 @@ def _assign_ports(
                 side_ = -1
             else:
                 side_ = 1
+            # The segment leaves a source port and arrives at a target port.
+            if endpoint_role_ == _SOURCE:
+                goes_left_ = other_position_ < own_position_
+            else:
+                goes_left_ = other_position_ > own_position_
             endpoints_by_gate.setdefault((own_column_, channel_), []).append(
-                (
-                    side_,
-                    (other_position_, plan_.index),
-                    (plan_.edge_id, endpoint_),
-                    node_id_,
-                    face_,
+                _GateEndpoint(
+                    endpoint_key=(plan_.edge_id, endpoint_role_),
+                    node_id=node_id_,
+                    face=face_,
+                    side=side_,
+                    half=0 if goes_left_ else 1,
+                    sort_key=(other_position_, plan_.index),
                 )
             )
 
     ports: Dict[Tuple[str, int], Port] = {}
     for endpoints_ in endpoints_by_gate.values():
-        left_ = sorted(
-            (endpoint_ for endpoint_ in endpoints_ if endpoint_[0] == -1),
-            key=lambda endpoint_: endpoint_[1],
-        )
-        right_ = sorted(
-            (endpoint_ for endpoint_ in endpoints_ if endpoint_[0] == 1),
-            key=lambda endpoint_: endpoint_[1],
-        )
-        for index_, (_, _, endpoint_key_, node_id_, face_) in enumerate(left_):
-            ports[endpoint_key_] = Port(node_id_, face_, index_ - len(left_))
-        for index_, (_, _, endpoint_key_, node_id_, face_) in enumerate(right_):
-            ports[endpoint_key_] = Port(node_id_, face_, index_ + 1)
-        for side_, _, endpoint_key_, node_id_, face_ in endpoints_:
-            if side_ == 0:
-                ports[endpoint_key_] = Port(node_id_, face_, 0)
+        for endpoint_ in endpoints_:
+            if endpoint_.side == 0:
+                ports[endpoint_.endpoint_key] = Port(
+                    endpoint_.node_id, endpoint_.face, 0
+                )
+        for side_ in (-1, 1):
+            group_ = sorted(
+                (
+                    endpoint_
+                    for endpoint_ in endpoints_
+                    if endpoint_.side == side_
+                ),
+                key=lambda endpoint_: endpoint_.sort_key,
+            )
+            upper_ = [
+                endpoint_
+                for endpoint_ in group_
+                if endpoint_.face is Face.BOTTOM
+            ]
+            lower_ = [
+                endpoint_ for endpoint_ in group_ if endpoint_.face is Face.TOP
+            ]
+            if _group_is_unsafe(upper_, lower_):
+                numbered_lists_ = [group_]
+            else:
+                numbered_lists_ = [upper_, lower_]
+            for list_ in numbered_lists_:
+                for index_, endpoint_ in enumerate(list_):
+                    slot_ = index_ - len(list_) if side_ == -1 else index_ + 1
+                    ports[endpoint_.endpoint_key] = Port(
+                        endpoint_.node_id, endpoint_.face, slot_
+                    )
     return ports
+
+
+def _group_is_unsafe(
+    upper: List[_GateEndpoint], lower: List[_GateEndpoint]
+) -> bool:
+    """
+    Return True if an upper port and a lower port of a group can meet.
+
+    A pair is safe only if the upper segment lies in the top half and the
+    lower segment lies in the bottom half.
+    """
+
+    if len(upper) == 0 or len(lower) == 0:
+        return False
+    return any(endpoint_.half != 0 for endpoint_ in upper) or any(
+        endpoint_.half != 1 for endpoint_ in lower
+    )
 
 
 def _assign_horizontal_lanes(

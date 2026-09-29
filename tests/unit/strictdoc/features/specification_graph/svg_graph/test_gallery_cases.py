@@ -165,27 +165,45 @@ def _assert_gate_ports_are_distinct(
     geometry: LevelsGeometry,
 ) -> None:
     """
-    Check that two relations never share a port position in one gate.
+    Check the port rule of a gate.
 
     A gate is the pair of faces that open into one channel in one column.
-    Only the two ends of one straight relation share a position.
+    Two relations may share a port position in a gate only if their
+    verticals do not meet: one vertical ends above the other one starts.
+    The two ends of one straight relation share a position.
     """
 
-    edge_by_gate_position: Dict[Tuple[int, int, float], str] = {}
+    verticals_by_gate_position: Dict[
+        Tuple[int, int, float], List[Tuple[str, float, float]]
+    ] = {}
     for route_ in routing.routes.values():
         path_ = geometry.edge_paths[route_.edge_id]
-        for port_, point_ in (
-            (route_.source_port, path_[0]),
-            (route_.target_port, path_[-1]),
+        for port_, point_, next_point_ in (
+            (route_.source_port, path_[0], path_[1]),
+            (route_.target_port, path_[-1], path_[-2]),
         ):
             position_ = structure.positions[port_.node_id]
             channel_ = (
                 position_.row - 1 if port_.face is Face.TOP else position_.row
             )
-            key_ = (position_.column, channel_, point_.x)
-            assert edge_by_gate_position.setdefault(key_, route_.edge_id) == (
-                route_.edge_id
+            verticals_by_gate_position.setdefault(
+                (position_.column, channel_, point_.x), []
+            ).append(
+                (
+                    route_.edge_id,
+                    min(point_.y, next_point_.y),
+                    max(point_.y, next_point_.y),
+                )
             )
+    for verticals_ in verticals_by_gate_position.values():
+        for (first_id_, first_top_, first_bottom_), (
+            second_id_,
+            second_top_,
+            second_bottom_,
+        ) in combinations(verticals_, 2):
+            if first_id_ == second_id_:
+                continue
+            assert first_bottom_ < second_top_ or second_bottom_ < first_top_
 
 
 def _geometry_problems(geometry: LevelsGeometry) -> List[str]:

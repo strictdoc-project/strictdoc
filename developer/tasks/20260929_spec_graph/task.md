@@ -96,8 +96,8 @@ Order of work:
 - Feature: `strictdoc/features/specification_graph/`, with `generator.py`,
   `view_object.py`, and templates under
   `strictdoc/features/specification_graph/templates/`.
-- Generator: a subpackage of the feature without StrictDoc imports. Package
-  name: to be defined.
+- Generator: `strictdoc/features/specification_graph/svg_graph/`, a
+  subpackage of the feature without StrictDoc imports.
 - Gallery: `developer/examples/specification_graph/`.
 
 ### Tests

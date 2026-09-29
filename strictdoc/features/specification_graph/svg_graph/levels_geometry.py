@@ -135,7 +135,6 @@ def compute_levels_geometry(
         for node_id_, position_ in structure.positions.items()
     }
 
-    gate_pitches = _gate_port_pitches(structure, routing, config)
     edge_paths: Dict[str, Tuple[Point, ...]] = {
         edge_id_: _route_path(
             route_,
@@ -143,7 +142,7 @@ def compute_levels_geometry(
             channel_rects,
             routing,
             config,
-            lambda port_: gate_pitches[_gate_of(port_, structure)],
+            lambda port_: _port_pitch(port_, config),
         )
         for edge_id_, route_ in routing.routes.items()
     }
@@ -186,47 +185,20 @@ def _lane_offset(
     )
 
 
-def _gate_of(port: Port, structure: LevelsStructure) -> Tuple[int, int]:
+def _port_pitch(port: Port, config: GeometryConfig) -> float:
     """
-    Return the gate of a port: its column and the channel its face opens into.
+    Return the pitch of the numbering list of a port.
 
-    The two faces of a gate share one list of port slots. See the ports rules
-    in spec.md, section "Маршруты".
-    """
-
-    position = structure.positions[port.node_id]
-    channel = position.row - 1 if port.face is Face.TOP else position.row
-    return position.column, channel
-
-
-def _gate_port_pitches(
-    structure: LevelsStructure,
-    routing: LevelsRouting,
-    config: GeometryConfig,
-) -> Dict[Tuple[int, int], float]:
-    """
-    Compute one port pitch per gate.
-
-    Both faces of a gate use the same pitch, so equal slots on the two faces
-    stand on one vertical.
+    A list that does not fit on the face with the preferred pitch gets a
+    smaller pitch. Ports of one list share one pitch. Lists of different
+    faces use their own pitch, so a face with few ports keeps the preferred
+    pitch.
     """
 
-    max_slot_by_gate: Dict[Tuple[int, int], int] = {}
-    for route_ in routing.routes.values():
-        for port_ in (route_.source_port, route_.target_port):
-            gate_ = _gate_of(port_, structure)
-            max_slot_by_gate[gate_] = max(
-                max_slot_by_gate.get(gate_, 0), abs(port_.slot)
-            )
+    if port.list_size == 0:
+        return config.port_pitch
     available_half_width = config.node_width / 2 - config.port_margin
-    return {
-        gate_: (
-            config.port_pitch
-            if max_slot_ == 0
-            else min(config.port_pitch, available_half_width / max_slot_)
-        )
-        for gate_, max_slot_ in max_slot_by_gate.items()
-    }
+    return min(config.port_pitch, available_half_width / port.list_size)
 
 
 def _port_point(port: Port, node_rects: Dict[str, Rect], pitch: float) -> Point:

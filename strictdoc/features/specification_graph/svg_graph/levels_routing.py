@@ -88,6 +88,9 @@ class Port:
     # Position on the face relative to the center: 0 is the center, negative
     # values are left of the center.
     slot: int
+    # Number of slots in the list that numbered this port. The port pitch
+    # depends on it: a long list gets a smaller pitch. 0 for the center slot.
+    list_size: int = 0
 
 
 @dataclass(frozen=True)
@@ -407,10 +410,15 @@ def _assign_ports(
       unsafe.
 
     If a group of a gate has at least one unsafe pair of an upper and a lower
-    port, the two faces number this group with one shared list. A port of
-    one face then skips the slot of a port of the other face (a fictitious
-    slot). For upward edges, the right group is safe and the left group is
-    unsafe.
+    port, the two faces number this group with one shared list of two
+    blocks: the ports of the upper face near the center, the ports of the
+    lower face after them. Each face keeps its ports together as one bundle
+    and skips the slots of the other block (fictitious slots). For upward
+    edges, the right group is safe and the left group is unsafe.
+
+    Upper block near the center: for upward edges the unavoidable crossings
+    of the two blocks then happen near the source ports, away from the
+    arrowheads.
     """
 
     straight_edge_ids: Set[str] = set()
@@ -504,15 +512,24 @@ def _assign_ports(
             lower_ = [
                 endpoint_ for endpoint_ in group_ if endpoint_.face is Face.TOP
             ]
+            if side_ == -1:
+                # The lists run from the center outward. On the left side,
+                # the port next to the center goes to the rightmost position.
+                upper_.reverse()
+                lower_.reverse()
             if _group_is_unsafe(upper_, lower_):
-                numbered_lists_ = [group_]
+                numbered_lists_ = [upper_ + lower_]
             else:
                 numbered_lists_ = [upper_, lower_]
             for list_ in numbered_lists_:
                 for index_, endpoint_ in enumerate(list_):
-                    slot_ = index_ - len(list_) if side_ == -1 else index_ + 1
+                    # Index 0 is the slot next to the center on both sides.
+                    slot_ = -(index_ + 1) if side_ == -1 else index_ + 1
                     ports[endpoint_.endpoint_key] = Port(
-                        endpoint_.node_id, endpoint_.face, slot_
+                        endpoint_.node_id,
+                        endpoint_.face,
+                        slot_,
+                        list_size=len(list_),
                     )
     return ports
 

@@ -127,6 +127,7 @@ def test_levels_geometry_invariants(
     assert _geometry_problems(geometry) == []
     _assert_ports_stay_on_faces(routing, geometry)
     _assert_gate_ports_are_distinct(structure, routing, geometry)
+    _assert_face_ports_form_ordered_bundles(structure, routing)
 
     ports = [
         (route_.edge_id, port_)
@@ -204,6 +205,62 @@ def _assert_gate_ports_are_distinct(
             if first_id_ == second_id_:
                 continue
             assert first_bottom_ < second_top_ or second_bottom_ < first_top_
+
+
+def _assert_face_ports_form_ordered_bundles(
+    structure: LevelsStructure, routing: LevelsRouting
+) -> None:
+    """
+    Check the bundle rule of the ports.
+
+    On each side of a gate, no port of the other face stands between the
+    ports of one face. A port of the other face on the same slot is aligned,
+    not between. Within a face, the ports follow the order of the positions
+    where the relations go.
+    """
+
+    slots_by_gate_side: Dict[Tuple[int, int, int], List[Tuple[int, Face]]] = {}
+    for route_ in routing.routes.values():
+        for port_ in (route_.source_port, route_.target_port):
+            if port_.slot == 0:
+                continue
+            position_ = structure.positions[port_.node_id]
+            channel_ = (
+                position_.row - 1 if port_.face is Face.TOP else position_.row
+            )
+            side_ = -1 if port_.slot < 0 else 1
+            slots_by_gate_side.setdefault(
+                (position_.column, channel_, side_), []
+            ).append((abs(port_.slot), port_.face))
+    for slots_ in slots_by_gate_side.values():
+        for face_ in (Face.TOP, Face.BOTTOM):
+            own_slots_ = {
+                slot_ for slot_, slot_face_ in slots_ if slot_face_ is face_
+            }
+            if len(own_slots_) == 0:
+                continue
+            other_slots_ = {
+                slot_ for slot_, slot_face_ in slots_ if slot_face_ is not face_
+            }
+            between_ = {
+                slot_
+                for slot_ in other_slots_
+                if min(own_slots_) < slot_ < max(own_slots_)
+                and slot_ not in own_slots_
+            }
+            assert between_ == set()
+
+    for route_ in routing.routes.values():
+        source_position_ = structure.positions[route_.source_port.node_id]
+        target_position_ = structure.positions[route_.target_port.node_id]
+        for port_, own_position_, other_position_ in (
+            (route_.source_port, source_position_, target_position_),
+            (route_.target_port, target_position_, source_position_),
+        ):
+            if port_.slot < 0:
+                assert other_position_.column <= own_position_.column
+            if port_.slot > 0 and len(route_.lanes) != 3:
+                assert other_position_.column >= own_position_.column
 
 
 def _geometry_problems(geometry: LevelsGeometry) -> List[str]:

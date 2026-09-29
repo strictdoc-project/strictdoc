@@ -172,7 +172,30 @@ def test_many_ports_of_one_gate() -> None:
     assert outgoing_x == expected_x
 
     # The left group of the gate between U2 and L2 is unsafe: the faces
-    # share one slot list.
+    # share one list of two blocks, the upper face next to the center.
     slots = _slots(case, routing)
-    assert slots[("L", "U2")][1] == -2
-    assert slots[("L2", "U")][0] == -1
+    assert slots[("L", "U2")][1] == -1
+    assert slots[("L2", "U")][0] == -2
+
+
+def test_face_with_few_ports_keeps_the_preferred_pitch() -> None:
+    case = _case("Extreme gate, right: L sends 12, U receives 4")
+    normalized_graph = normalize_graph(case.graph)
+    structure = compute_levels_structure(normalized_graph)
+    routing = compute_levels_routing(normalized_graph, structure)
+    geometry = compute_levels_geometry(structure, routing)
+    edge_ids = _edge_ids_by_name(case)
+    config = GeometryConfig()
+
+    rect = geometry.node_rects["U"]
+    center = rect.x + rect.width / 2
+    incoming_x = sorted(
+        geometry.edge_paths[edge_ids[(source_id_, "U")]][-1].x
+        for source_id_ in ("L", "L2", "L3", "L4", "L5")
+    )
+
+    # The right group is safe, so U numbers its four side ports on its own
+    # and does not take the small pitch of the twelve ports of L.
+    assert incoming_x == [
+        center + slot_ * config.port_pitch for slot_ in (0, 1, 2, 3, 4)
+    ]

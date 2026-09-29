@@ -57,6 +57,9 @@ adapter supports two views:
 - The screen has a help modal, a legend, and a toolbox with the view
   switch and the zoom controls.
 - Feature settings in the project configuration: to be defined.
+- The screen catches `GraphModelError` from the generator. The screen shows
+  the error text instead of the diagram and logs the error. The rest of the
+  export continues.
 
 ### 5. SVG file export
 

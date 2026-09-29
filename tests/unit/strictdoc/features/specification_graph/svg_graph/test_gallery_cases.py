@@ -10,10 +10,18 @@ from developer.examples.specification_graph.gallery_cases import (
     GALLERY_CASES,
     GalleryCase,
 )
+from strictdoc.features.specification_graph.svg_graph.levels_structure import (
+    compute_levels_structure,
+)
+from strictdoc.features.specification_graph.svg_graph.model import LayoutMode
 from strictdoc.features.specification_graph.svg_graph.normalization import (
     NormalizedGraph,
     normalize_graph,
 )
+
+LEVELS_CASES = [
+    case_ for case_ in GALLERY_CASES if case_.graph.mode is LayoutMode.LEVELS
+]
 
 
 @pytest.mark.parametrize(
@@ -37,6 +45,40 @@ def test_normalization_invariants(case: GalleryCase) -> None:
             assert edge_.target_id in cycle_members[edge_.cycle_id]
 
     assert normalize_graph(case.graph) == normalized_graph
+
+
+@pytest.mark.parametrize(
+    "case", LEVELS_CASES, ids=[case_.title for case_ in LEVELS_CASES]
+)
+def test_levels_structure_invariants(case: GalleryCase) -> None:
+    normalized_graph = normalize_graph(case.graph)
+    structure = compute_levels_structure(normalized_graph)
+
+    assert set(structure.positions) == {
+        node_.node_id for node_ in normalized_graph.nodes
+    }
+    cells = [
+        (position_.row, position_.column)
+        for position_ in structure.positions.values()
+    ]
+    assert len(cells) == len(set(cells))
+    for row_, column_ in cells:
+        assert 0 <= row_ < structure.row_count
+        assert 0 <= column_ < structure.column_count
+
+    for edge_ in normalized_graph.edges:
+        if edge_.is_level_edge:
+            assert (
+                structure.positions[edge_.target_id].row
+                < structure.positions[edge_.source_id].row
+            )
+
+    standalone_node_ids = set(structure.standalone_node_ids)
+    for node_id_, position_ in structure.positions.items():
+        is_standalone_row_ = position_.row < structure.standalone_row_count
+        assert is_standalone_row_ == (node_id_ in standalone_node_ids)
+
+    assert compute_levels_structure(normalized_graph) == structure
 
 
 def _assert_level_edges_are_acyclic(normalized_graph: NormalizedGraph) -> None:

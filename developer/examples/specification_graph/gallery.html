@@ -24,6 +24,10 @@ table { border-collapse: collapse; font-size: 13px; }
 td, th { border: 1px solid #ddd; padding: 2px 6px; text-align: left; }
 .no { color: #b00; }
 .preview { margin: 8px 0 16px; }
+.variants { display: flex; gap: 24px; flex-wrap: wrap; align-items: start; }
+figure { margin: 0; }
+figure h3 { margin: 0 0 4px; font-size: 14px; }
+ul.conflicts { margin: 4px 0; font-size: 12px; color: #a50; }
 .preview p { margin: 4px 0; color: #666; font-size: 12px; }
 </style>
 </head>
@@ -32,43 +36,250 @@ td, th { border: 1px solid #ddd; padding: 2px 6px; text-align: left; }
 <p>Regenerate from the repository root: <code>uv run python -m
 developer.examples.specification_graph.gallery</code></p>
 <nav><ol>
-<li><a href="#case-0">Simple chain</a></li>
-<li><a href="#case-1">Basic highway conflict</a></li>
-<li><a href="#case-2">Isolated document + hierarchy</a></li>
-<li><a href="#case-3">Real project case: root corrected to sit level with its sibling</a></li>
-<li><a href="#case-4">Root correction picks the nearest child, not the farthest</a></li>
-<li><a href="#case-5">Corrected root with two non-skip children: sits between them</a></li>
-<li><a href="#case-6">Corrected root with THREE non-skip children (odd count)</a></li>
-<li><a href="#case-7">Three chains compete for one parent column</a></li>
-<li><a href="#case-8">Disconnected components form separate islands</a></li>
-<li><a href="#case-9">Standalone nodes wrap to the connected graph width</a></li>
-<li><a href="#case-10">Complete 3 by 3 relation grid</a></li>
-<li><a href="#case-11">Direction-aware track order</a></li>
-<li><a href="#case-12">Busy channel expands to fit its lanes</a></li>
-<li><a href="#case-13">Extreme number of relations from N8</a></li>
-<li><a href="#case-14">Two cycles have separate diagnostics</a></li>
-<li><a href="#case-15">Three-document cycle with an incoming branch</a></li>
-<li><a href="#case-16">Opposite cycle relations use separate routes</a></li>
+<li><a href="#case-0">Nested relations in one channel</a></li>
+<li><a href="#case-1">Relations across levels from far columns</a></li>
+<li><a href="#case-2">Simple chain</a></li>
+<li><a href="#case-3">Basic highway conflict</a></li>
+<li><a href="#case-4">Isolated document + hierarchy</a></li>
+<li><a href="#case-5">Real project case: root corrected to sit level with its sibling</a></li>
+<li><a href="#case-6">Root correction picks the nearest child, not the farthest</a></li>
+<li><a href="#case-7">Corrected root with two non-skip children: sits between them</a></li>
+<li><a href="#case-8">Corrected root with THREE non-skip children (odd count)</a></li>
+<li><a href="#case-9">Three chains compete for one parent column</a></li>
+<li><a href="#case-10">Disconnected components form separate islands</a></li>
+<li><a href="#case-11">Standalone nodes wrap to the connected graph width</a></li>
+<li><a href="#case-12">Complete 3 by 3 relation grid</a></li>
+<li><a href="#case-13">Direction-aware track order</a></li>
+<li><a href="#case-14">Busy channel expands to fit its lanes</a></li>
+<li><a href="#case-15">Extreme number of relations from N8</a></li>
+<li><a href="#case-16">Two cycles have separate diagnostics</a></li>
+<li><a href="#case-17">Three-document cycle with an incoming branch</a></li>
+<li><a href="#case-18">Opposite cycle relations use separate routes</a></li>
 </ol></nav>
 
 <section id="case-0">
+<h2>Nested relations in one channel</h2>
+<div><span class="badge">mode: levels</span><span class="badge question">open question 22</span></div>
+<p class="description">X -&gt; D and Y -&gt; C both go right in the channel below A, B, C, D. The segment of Y -&gt; C lies inside the segment of X -&gt; D. X -&gt; D must cross one vertical of Y -&gt; C. Entry priority: X -&gt; D stays above Y -&gt; C and crosses the vertical into C. Exit priority: X -&gt; D stays below Y -&gt; C and crosses the vertical out of Y.</p>
+<div class="preview">
+<div class="variants"><figure>
+<h3>Entry priority</h3>
+<svg xmlns="http://www.w3.org/2000/svg" width="792"
+height="216">
+<defs><marker id="arrow-333" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/></marker><marker id="arrow-c00" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#c00"/></marker><marker id="arrow-e07000" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#e07000"/></marker></defs>
+<rect x="40" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">A</text>
+<rect x="224" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">B</text>
+<rect x="408" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">C</text>
+<rect x="592" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="672.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">D</text>
+<rect x="40" y="124" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="150.0" text-anchor="middle" dominant-baseline="middle" font-size="12">X</text>
+<rect x="224" y="124" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="150.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Y</text>
+<polyline points="120.0,124 120.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-1: X -&gt; A</title></polyline>
+<polyline points="132.0,124 132.0,100.0 648.0,100.0 648.0,92" fill="none" stroke="#e07000" stroke-width="1.5" marker-end="url(#arrow-e07000)"><title>edge-2: X -&gt; D</title></polyline>
+<polyline points="304.0,124 304.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-3: Y -&gt; B</title></polyline>
+<polyline points="316.0,124 316.0,108.0 476.0,108.0 476.0,92" fill="none" stroke="#e07000" stroke-width="1.5" marker-end="url(#arrow-e07000)"><title>edge-4: Y -&gt; C</title></polyline>
+<polyline points="328.0,124 328.0,116.0 660.0,116.0 660.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-5: Y -&gt; D</title></polyline>
+</svg>
+<ul class='conflicts'><li>edge-2 crosses edge-4 in H(0)</li></ul>
+</figure>
+<figure>
+<h3>Exit priority</h3>
+<svg xmlns="http://www.w3.org/2000/svg" width="792"
+height="216">
+<defs><marker id="arrow-333" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/></marker><marker id="arrow-c00" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#c00"/></marker><marker id="arrow-e07000" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#e07000"/></marker></defs>
+<rect x="40" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">A</text>
+<rect x="224" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">B</text>
+<rect x="408" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">C</text>
+<rect x="592" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="672.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">D</text>
+<rect x="40" y="124" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="150.0" text-anchor="middle" dominant-baseline="middle" font-size="12">X</text>
+<rect x="224" y="124" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="150.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Y</text>
+<polyline points="120.0,124 120.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-1: X -&gt; A</title></polyline>
+<polyline points="132.0,124 132.0,108.0 648.0,108.0 648.0,92" fill="none" stroke="#e07000" stroke-width="1.5" marker-end="url(#arrow-e07000)"><title>edge-2: X -&gt; D</title></polyline>
+<polyline points="304.0,124 304.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-3: Y -&gt; B</title></polyline>
+<polyline points="316.0,124 316.0,100.0 476.0,100.0 476.0,92" fill="none" stroke="#e07000" stroke-width="1.5" marker-end="url(#arrow-e07000)"><title>edge-4: Y -&gt; C</title></polyline>
+<polyline points="328.0,124 328.0,116.0 660.0,116.0 660.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-5: Y -&gt; D</title></polyline>
+</svg>
+<ul class='conflicts'><li>edge-2 crosses edge-4 in H(0)</li></ul>
+</figure></div>
+<p>Dashed: relation across levels. Red: cycle. Orange: relations with an
+unavoidable crossing in one channel. Thick border: corrected root. Grey
+area: standalone nodes.</p>
+</div>
+<div class="columns">
+<div class="panel">
+<h3>Input: nodes, then edges</h3>
+<pre>A
+B
+C
+D
+X
+Y
+
+X -&gt; A (parent)
+X -&gt; D (parent)
+Y -&gt; B (parent)
+Y -&gt; C (parent)
+Y -&gt; D (parent)</pre>
+</div>
+<div class="panel">
+<h3>Stage 1: normalization</h3>
+<table>
+<tr><th>ID</th><th>Source</th><th>Target</th><th>Type</th>
+<th>Level edge</th><th>Cycle</th><th>Ancestor link</th></tr>
+<tr><td>edge-1</td><td>X</td><td>A</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+<tr><td>edge-2</td><td>X</td><td>D</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+<tr><td>edge-3</td><td>Y</td><td>B</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+<tr><td>edge-4</td><td>Y</td><td>C</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+<tr><td>edge-5</td><td>Y</td><td>D</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+</table>
+<h3>Diagnostics</h3>
+<ul><li>None.</li></ul>
+</div>
+</div>
+</section>
+
+<section id="case-1">
+<h2>Relations across levels from far columns</h2>
+<div><span class="badge">mode: levels</span><span class="badge question">open question 25</span></div>
+<p class="description">M3 -&gt; P1 and Q3 -&gt; P1 skip one level. Near source: each relation climbs in the vertical channel next to its source, so the two relations use two channels. Near target: both relations climb in the vertical channel next to P1.</p>
+<div class="preview">
+<div class="variants"><figure>
+<h3>Near source</h3>
+<svg xmlns="http://www.w3.org/2000/svg" width="608"
+height="360">
+<defs><marker id="arrow-333" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/></marker><marker id="arrow-c00" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#c00"/></marker><marker id="arrow-e07000" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#e07000"/></marker></defs>
+<rect x="40" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">P0</text>
+<rect x="224" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">M0</text>
+<rect x="408" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Q0</text>
+<rect x="40" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">P1</text>
+<rect x="224" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">M1</text>
+<rect x="408" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Q1</text>
+<rect x="40" y="192" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="218.0" text-anchor="middle" dominant-baseline="middle" font-size="12">P2</text>
+<rect x="224" y="192" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="218.0" text-anchor="middle" dominant-baseline="middle" font-size="12">M2</text>
+<rect x="408" y="192" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="218.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Q2</text>
+<rect x="40" y="268" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="294.0" text-anchor="middle" dominant-baseline="middle" font-size="12">P3</text>
+<rect x="224" y="268" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="294.0" text-anchor="middle" dominant-baseline="middle" font-size="12">M3</text>
+<rect x="408" y="268" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="294.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Q3</text>
+<polyline points="120.0,116 120.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-1: P1 -&gt; P0</title></polyline>
+<polyline points="120.0,192 120.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-2: P2 -&gt; P1</title></polyline>
+<polyline points="120.0,268 120.0,244" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-3: P3 -&gt; P2</title></polyline>
+<polyline points="304.0,116 304.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-4: M1 -&gt; M0</title></polyline>
+<polyline points="304.0,192 304.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-5: M2 -&gt; M1</title></polyline>
+<polyline points="304.0,268 304.0,244" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-6: M3 -&gt; M2</title></polyline>
+<polyline points="488.0,116 488.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-7: Q1 -&gt; Q0</title></polyline>
+<polyline points="488.0,192 488.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-8: Q2 -&gt; Q1</title></polyline>
+<polyline points="488.0,268 488.0,244" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-9: Q3 -&gt; Q2</title></polyline>
+<polyline points="292.0,268 292.0,256.0 212.0,256.0 212.0,184.0 132.0,184.0 132.0,168" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-333)"><title>edge-10: M3 -&gt; P1</title></polyline>
+<polyline points="476.0,268 476.0,256.0 396.0,256.0 396.0,176.0 144.0,176.0 144.0,168" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-333)"><title>edge-11: Q3 -&gt; P1</title></polyline>
+</svg>
+
+</figure>
+<figure>
+<h3>Near target</h3>
+<svg xmlns="http://www.w3.org/2000/svg" width="608"
+height="360">
+<defs><marker id="arrow-333" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/></marker><marker id="arrow-c00" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#c00"/></marker><marker id="arrow-e07000" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#e07000"/></marker></defs>
+<rect x="40" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">P0</text>
+<rect x="224" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">M0</text>
+<rect x="408" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Q0</text>
+<rect x="40" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">P1</text>
+<rect x="224" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">M1</text>
+<rect x="408" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Q1</text>
+<rect x="40" y="192" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="218.0" text-anchor="middle" dominant-baseline="middle" font-size="12">P2</text>
+<rect x="224" y="192" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="218.0" text-anchor="middle" dominant-baseline="middle" font-size="12">M2</text>
+<rect x="408" y="192" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="218.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Q2</text>
+<rect x="40" y="268" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="294.0" text-anchor="middle" dominant-baseline="middle" font-size="12">P3</text>
+<rect x="224" y="268" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="294.0" text-anchor="middle" dominant-baseline="middle" font-size="12">M3</text>
+<rect x="408" y="268" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="294.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Q3</text>
+<polyline points="120.0,116 120.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-1: P1 -&gt; P0</title></polyline>
+<polyline points="120.0,192 120.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-2: P2 -&gt; P1</title></polyline>
+<polyline points="120.0,268 120.0,244" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-3: P3 -&gt; P2</title></polyline>
+<polyline points="304.0,116 304.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-4: M1 -&gt; M0</title></polyline>
+<polyline points="304.0,192 304.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-5: M2 -&gt; M1</title></polyline>
+<polyline points="304.0,268 304.0,244" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-6: M3 -&gt; M2</title></polyline>
+<polyline points="488.0,116 488.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-7: Q1 -&gt; Q0</title></polyline>
+<polyline points="488.0,192 488.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-8: Q2 -&gt; Q1</title></polyline>
+<polyline points="488.0,268 488.0,244" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-9: Q3 -&gt; Q2</title></polyline>
+<polyline points="292.0,268 292.0,260.0 208.0,260.0 208.0,184.0 132.0,184.0 132.0,168" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-333)"><title>edge-10: M3 -&gt; P1</title></polyline>
+<polyline points="476.0,268 476.0,252.0 216.0,252.0 216.0,176.0 144.0,176.0 144.0,168" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-333)"><title>edge-11: Q3 -&gt; P1</title></polyline>
+</svg>
+
+</figure></div>
+<p>Dashed: relation across levels. Red: cycle. Orange: relations with an
+unavoidable crossing in one channel. Thick border: corrected root. Grey
+area: standalone nodes.</p>
+</div>
+<div class="columns">
+<div class="panel">
+<h3>Input: nodes, then edges</h3>
+<pre>P0
+M0
+Q0
+P1
+M1
+Q1
+P2
+M2
+Q2
+P3
+M3
+Q3
+
+P1 -&gt; P0 (parent)
+P2 -&gt; P1 (parent)
+P3 -&gt; P2 (parent)
+M1 -&gt; M0 (parent)
+M2 -&gt; M1 (parent)
+M3 -&gt; M2 (parent)
+Q1 -&gt; Q0 (parent)
+Q2 -&gt; Q1 (parent)
+Q3 -&gt; Q2 (parent)
+M3 -&gt; P1 (parent)
+Q3 -&gt; P1 (parent)</pre>
+</div>
+<div class="panel">
+<h3>Stage 1: normalization</h3>
+<table>
+<tr><th>ID</th><th>Source</th><th>Target</th><th>Type</th>
+<th>Level edge</th><th>Cycle</th><th>Ancestor link</th></tr>
+<tr><td>edge-1</td><td>P1</td><td>P0</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+<tr><td>edge-2</td><td>P2</td><td>P1</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+<tr><td>edge-3</td><td>P3</td><td>P2</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+<tr><td>edge-4</td><td>M1</td><td>M0</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+<tr><td>edge-5</td><td>M2</td><td>M1</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+<tr><td>edge-6</td><td>M3</td><td>M2</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+<tr><td>edge-7</td><td>Q1</td><td>Q0</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+<tr><td>edge-8</td><td>Q2</td><td>Q1</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+<tr><td>edge-9</td><td>Q3</td><td>Q2</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+<tr><td>edge-10</td><td>M3</td><td>P1</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+<tr><td>edge-11</td><td>Q3</td><td>P1</td><td>parent</td><td>yes</td><td></td><td></td></tr>
+</table>
+<h3>Diagnostics</h3>
+<ul><li>None.</li></ul>
+</div>
+</div>
+</section>
+
+<section id="case-2">
 <h2>Simple chain</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">A &lt;- B &lt;- C. One node per level, one column.</p>
 <div class="preview">
-<svg xmlns="http://www.w3.org/2000/svg" width="170" height="230">
-<defs><marker id="preview-arrow" viewBox="0 0 10 10" refX="10" refY="5"
-markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-<path d="M 0 0 L 10 5 L 0 10 z" fill="#555"/></marker></defs>
-<line x1="85.0" y1="115.0" x2="85.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-1: B -&gt; A</title></line>
-<line x1="85.0" y1="185.0" x2="85.0" y2="115.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-2: C -&gt; B</title></line>
-<rect x="25.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">A</text>
-<rect x="25.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">B</text>
-<rect x="25.0" y="167.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="185.0" text-anchor="middle" dominant-baseline="middle" font-size="12">C</text>
+<div class="variants"><figure>
+
+<svg xmlns="http://www.w3.org/2000/svg" width="240"
+height="284">
+<defs><marker id="arrow-333" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/></marker><marker id="arrow-c00" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#c00"/></marker><marker id="arrow-e07000" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#e07000"/></marker></defs>
+<rect x="40" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">A</text>
+<rect x="40" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">B</text>
+<rect x="40" y="192" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="218.0" text-anchor="middle" dominant-baseline="middle" font-size="12">C</text>
+<polyline points="120.0,116 120.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-1: B -&gt; A</title></polyline>
+<polyline points="120.0,192 120.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-2: C -&gt; B</title></polyline>
 </svg>
-<p>Stage 2 preview: grid cells and straight lines between node centers,
-without routing. Dashed: relation across levels. Red: cycle. Thick border:
-corrected root. Grey area: standalone nodes.</p>
+
+</figure></div>
+<p>Dashed: relation across levels. Red: cycle. Orange: relations with an
+unavoidable crossing in one channel. Thick border: corrected root. Grey
+area: standalone nodes.</p>
 </div>
 <div class="columns">
 <div class="panel">
@@ -94,27 +305,30 @@ C -&gt; B (parent)</pre>
 </div>
 </section>
 
-<section id="case-1">
+<section id="case-3">
 <h2>Basic highway conflict</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">D relates to A directly and to C through B. The deepest parent wins: D stays below C. The relation D -&gt; A crosses levels and is dashed.</p>
 <div class="preview">
-<svg xmlns="http://www.w3.org/2000/svg" width="170" height="300">
-<defs><marker id="preview-arrow" viewBox="0 0 10 10" refX="10" refY="5"
-markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-<path d="M 0 0 L 10 5 L 0 10 z" fill="#555"/></marker></defs>
-<line x1="85.0" y1="115.0" x2="85.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-1: B -&gt; A</title></line>
-<line x1="85.0" y1="185.0" x2="85.0" y2="115.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-2: C -&gt; B</title></line>
-<line x1="85.0" y1="255.0" x2="85.0" y2="45.0" stroke="#555" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#preview-arrow)"><title>edge-3: D -&gt; A</title></line>
-<line x1="85.0" y1="255.0" x2="85.0" y2="185.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-4: D -&gt; C</title></line>
-<rect x="25.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">A</text>
-<rect x="25.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">B</text>
-<rect x="25.0" y="167.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="185.0" text-anchor="middle" dominant-baseline="middle" font-size="12">C</text>
-<rect x="25.0" y="237.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="255.0" text-anchor="middle" dominant-baseline="middle" font-size="12">D</text>
+<div class="variants"><figure>
+
+<svg xmlns="http://www.w3.org/2000/svg" width="240"
+height="360">
+<defs><marker id="arrow-333" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/></marker><marker id="arrow-c00" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#c00"/></marker><marker id="arrow-e07000" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#e07000"/></marker></defs>
+<rect x="40" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">A</text>
+<rect x="40" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">B</text>
+<rect x="40" y="192" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="218.0" text-anchor="middle" dominant-baseline="middle" font-size="12">C</text>
+<rect x="40" y="268" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="294.0" text-anchor="middle" dominant-baseline="middle" font-size="12">D</text>
+<polyline points="120.0,116 120.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-1: B -&gt; A</title></polyline>
+<polyline points="120.0,192 120.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-2: C -&gt; B</title></polyline>
+<polyline points="108.0,268 108.0,256.0 28.0,256.0 28.0,104.0 108.0,104.0 108.0,92" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-333)"><title>edge-3: D -&gt; A</title></polyline>
+<polyline points="120.0,268 120.0,244" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-4: D -&gt; C</title></polyline>
 </svg>
-<p>Stage 2 preview: grid cells and straight lines between node centers,
-without routing. Dashed: relation across levels. Red: cycle. Thick border:
-corrected root. Grey area: standalone nodes.</p>
+
+</figure></div>
+<p>Dashed: relation across levels. Red: cycle. Orange: relations with an
+unavoidable crossing in one channel. Thick border: corrected root. Grey
+area: standalone nodes.</p>
 </div>
 <div class="columns">
 <div class="panel">
@@ -145,29 +359,32 @@ D -&gt; C (parent)</pre>
 </div>
 </section>
 
-<section id="case-2">
+<section id="case-4">
 <h2>Isolated document + hierarchy</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">E has no relations. E stands in the block of standalone nodes above the connected graph.</p>
 <div class="preview">
-<svg xmlns="http://www.w3.org/2000/svg" width="170" height="370">
-<defs><marker id="preview-arrow" viewBox="0 0 10 10" refX="10" refY="5"
-markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-<path d="M 0 0 L 10 5 L 0 10 z" fill="#555"/></marker></defs>
-<rect x="5.0" y="5.0" width="160" height="80" fill="#f3f3f3" stroke="#ccc" stroke-dasharray="4 3"/>
-<line x1="85.0" y1="185.0" x2="85.0" y2="115.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-1: B -&gt; A</title></line>
-<line x1="85.0" y1="255.0" x2="85.0" y2="185.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-2: C -&gt; B</title></line>
-<line x1="85.0" y1="325.0" x2="85.0" y2="115.0" stroke="#555" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#preview-arrow)"><title>edge-3: D -&gt; A</title></line>
-<line x1="85.0" y1="325.0" x2="85.0" y2="255.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-4: D -&gt; C</title></line>
-<rect x="25.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">E</text>
-<rect x="25.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">A</text>
-<rect x="25.0" y="167.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="185.0" text-anchor="middle" dominant-baseline="middle" font-size="12">B</text>
-<rect x="25.0" y="237.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="255.0" text-anchor="middle" dominant-baseline="middle" font-size="12">C</text>
-<rect x="25.0" y="307.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="325.0" text-anchor="middle" dominant-baseline="middle" font-size="12">D</text>
+<div class="variants"><figure>
+
+<svg xmlns="http://www.w3.org/2000/svg" width="240"
+height="436">
+<defs><marker id="arrow-333" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/></marker><marker id="arrow-c00" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#c00"/></marker><marker id="arrow-e07000" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#e07000"/></marker></defs>
+<rect x="32" y="32" width="200" height="68" fill="#f3f3f3" stroke="#ccc" stroke-dasharray="4 3"/>
+<rect x="40" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">E</text>
+<rect x="40" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">A</text>
+<rect x="40" y="192" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="218.0" text-anchor="middle" dominant-baseline="middle" font-size="12">B</text>
+<rect x="40" y="268" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="294.0" text-anchor="middle" dominant-baseline="middle" font-size="12">C</text>
+<rect x="40" y="344" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="370.0" text-anchor="middle" dominant-baseline="middle" font-size="12">D</text>
+<polyline points="120.0,192 120.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-1: B -&gt; A</title></polyline>
+<polyline points="120.0,268 120.0,244" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-2: C -&gt; B</title></polyline>
+<polyline points="108.0,344 108.0,332.0 28.0,332.0 28.0,180.0 108.0,180.0 108.0,168" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-333)"><title>edge-3: D -&gt; A</title></polyline>
+<polyline points="120.0,344 120.0,320" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-4: D -&gt; C</title></polyline>
 </svg>
-<p>Stage 2 preview: grid cells and straight lines between node centers,
-without routing. Dashed: relation across levels. Red: cycle. Thick border:
-corrected root. Grey area: standalone nodes.</p>
+
+</figure></div>
+<p>Dashed: relation across levels. Red: cycle. Orange: relations with an
+unavoidable crossing in one channel. Thick border: corrected root. Grey
+area: standalone nodes.</p>
 </div>
 <div class="columns">
 <div class="panel">
@@ -199,26 +416,29 @@ D -&gt; C (parent)</pre>
 </div>
 </section>
 
-<section id="case-3">
+<section id="case-5">
 <h2>Real project case: root corrected to sit level with its sibling</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">Zephyr and DO-178C are roots. L1 relates to Zephyr. L2 relates to L1 and to DO-178C. DO-178C moves down to the level of L1. Both relations of L2 are solid.</p>
 <div class="preview">
-<svg xmlns="http://www.w3.org/2000/svg" width="320" height="230">
-<defs><marker id="preview-arrow" viewBox="0 0 10 10" refX="10" refY="5"
-markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-<path d="M 0 0 L 10 5 L 0 10 z" fill="#555"/></marker></defs>
-<line x1="85.0" y1="115.0" x2="85.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-1: L1 -&gt; Zephyr</title></line>
-<line x1="85.0" y1="185.0" x2="85.0" y2="115.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-2: L2 -&gt; L1</title></line>
-<line x1="85.0" y1="185.0" x2="235.0" y2="115.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-3: L2 -&gt; DO-178C</title></line>
-<rect x="25.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">L1</text>
-<rect x="25.0" y="167.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="185.0" text-anchor="middle" dominant-baseline="middle" font-size="12">L2</text>
-<rect x="175.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="3"/><text x="235.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">DO-178C</text>
-<rect x="25.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Zephyr</text>
+<div class="variants"><figure>
+
+<svg xmlns="http://www.w3.org/2000/svg" width="424"
+height="284">
+<defs><marker id="arrow-333" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/></marker><marker id="arrow-c00" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#c00"/></marker><marker id="arrow-e07000" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#e07000"/></marker></defs>
+<rect x="40" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">L1</text>
+<rect x="40" y="192" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="218.0" text-anchor="middle" dominant-baseline="middle" font-size="12">L2</text>
+<rect x="224" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="3"/><text x="304.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">DO-178C</text>
+<rect x="40" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Zephyr</text>
+<polyline points="120.0,116 120.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-1: L1 -&gt; Zephyr</title></polyline>
+<polyline points="120.0,192 120.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-2: L2 -&gt; L1</title></polyline>
+<polyline points="132.0,192 132.0,180.0 292.0,180.0 292.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-3: L2 -&gt; DO-178C</title></polyline>
 </svg>
-<p>Stage 2 preview: grid cells and straight lines between node centers,
-without routing. Dashed: relation across levels. Red: cycle. Thick border:
-corrected root. Grey area: standalone nodes.</p>
+
+</figure></div>
+<p>Dashed: relation across levels. Red: cycle. Orange: relations with an
+unavoidable crossing in one channel. Thick border: corrected root. Grey
+area: standalone nodes.</p>
 </div>
 <div class="columns">
 <div class="panel">
@@ -247,34 +467,37 @@ L2 -&gt; DO-178C (parent)</pre>
 </div>
 </section>
 
-<section id="case-4">
+<section id="case-6">
 <h2>Root correction picks the nearest child, not the farthest</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">ROOT has two children. NEAR has its own chain of two levels. FAR has its own chain of three levels. ROOT moves one level above NEAR. The relation FAR -&gt; ROOT crosses levels and is dashed. The FAR branch stays one straight column.</p>
 <div class="preview">
-<svg xmlns="http://www.w3.org/2000/svg" width="470" height="300">
-<defs><marker id="preview-arrow" viewBox="0 0 10 10" refX="10" refY="5"
-markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-<path d="M 0 0 L 10 5 L 0 10 z" fill="#555"/></marker></defs>
-<line x1="85.0" y1="115.0" x2="85.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-1: NEAR-ANCHOR -&gt; NEAR-ANCHOR-ROOT</title></line>
-<line x1="85.0" y1="185.0" x2="85.0" y2="115.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-2: NEAR -&gt; NEAR-ANCHOR</title></line>
-<line x1="85.0" y1="185.0" x2="235.0" y2="115.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-3: NEAR -&gt; ROOT</title></line>
-<line x1="385.0" y1="115.0" x2="385.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-4: FAR-ANCHOR-1 -&gt; FAR-ANCHOR-ROOT</title></line>
-<line x1="385.0" y1="185.0" x2="385.0" y2="115.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-5: FAR-ANCHOR-2 -&gt; FAR-ANCHOR-1</title></line>
-<line x1="385.0" y1="255.0" x2="385.0" y2="185.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-6: FAR -&gt; FAR-ANCHOR-2</title></line>
-<line x1="385.0" y1="255.0" x2="235.0" y2="115.0" stroke="#555" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#preview-arrow)"><title>edge-7: FAR -&gt; ROOT</title></line>
-<rect x="175.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="3"/><text x="235.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">ROOT</text>
-<rect x="25.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">NEAR-ANCHOR-ROOT</text>
-<rect x="25.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">NEAR-ANCHOR</text>
-<rect x="25.0" y="167.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="185.0" text-anchor="middle" dominant-baseline="middle" font-size="12">NEAR</text>
-<rect x="325.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="385.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">FAR-ANCHOR-ROOT</text>
-<rect x="325.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="385.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">FAR-ANCHOR-1</text>
-<rect x="325.0" y="167.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="385.0" y="185.0" text-anchor="middle" dominant-baseline="middle" font-size="12">FAR-ANCHOR-2</text>
-<rect x="325.0" y="237.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="385.0" y="255.0" text-anchor="middle" dominant-baseline="middle" font-size="12">FAR</text>
+<div class="variants"><figure>
+
+<svg xmlns="http://www.w3.org/2000/svg" width="608"
+height="360">
+<defs><marker id="arrow-333" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/></marker><marker id="arrow-c00" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#c00"/></marker><marker id="arrow-e07000" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#e07000"/></marker></defs>
+<rect x="224" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="3"/><text x="304.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">ROOT</text>
+<rect x="40" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">NEAR-ANCHOR-ROOT</text>
+<rect x="40" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">NEAR-ANCHOR</text>
+<rect x="40" y="192" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="218.0" text-anchor="middle" dominant-baseline="middle" font-size="12">NEAR</text>
+<rect x="408" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">FAR-ANCHOR-ROOT</text>
+<rect x="408" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">FAR-ANCHOR-1</text>
+<rect x="408" y="192" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="218.0" text-anchor="middle" dominant-baseline="middle" font-size="12">FAR-ANCHOR-2</text>
+<rect x="408" y="268" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="294.0" text-anchor="middle" dominant-baseline="middle" font-size="12">FAR</text>
+<polyline points="120.0,116 120.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-1: NEAR-ANCHOR -&gt; NEAR-ANCHOR-ROOT</title></polyline>
+<polyline points="120.0,192 120.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-2: NEAR -&gt; NEAR-ANCHOR</title></polyline>
+<polyline points="132.0,192 132.0,184.0 292.0,184.0 292.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-3: NEAR -&gt; ROOT</title></polyline>
+<polyline points="488.0,116 488.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-4: FAR-ANCHOR-1 -&gt; FAR-ANCHOR-ROOT</title></polyline>
+<polyline points="488.0,192 488.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-5: FAR-ANCHOR-2 -&gt; FAR-ANCHOR-1</title></polyline>
+<polyline points="488.0,268 488.0,244" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-6: FAR -&gt; FAR-ANCHOR-2</title></polyline>
+<polyline points="476.0,268 476.0,256.0 396.0,256.0 396.0,176.0 316.0,176.0 316.0,168" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-333)"><title>edge-7: FAR -&gt; ROOT</title></polyline>
 </svg>
-<p>Stage 2 preview: grid cells and straight lines between node centers,
-without routing. Dashed: relation across levels. Red: cycle. Thick border:
-corrected root. Grey area: standalone nodes.</p>
+
+</figure></div>
+<p>Dashed: relation across levels. Red: cycle. Orange: relations with an
+unavoidable crossing in one channel. Thick border: corrected root. Grey
+area: standalone nodes.</p>
 </div>
 <div class="columns">
 <div class="panel">
@@ -315,32 +538,35 @@ FAR -&gt; ROOT (parent)</pre>
 </div>
 </section>
 
-<section id="case-5">
+<section id="case-7">
 <h2>Corrected root with two non-skip children: sits between them</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">GUEST has two children, L and R, on the same level. GUEST stands between them. The relations of GUEST do not cross.</p>
 <div class="preview">
-<svg xmlns="http://www.w3.org/2000/svg" width="470" height="230">
-<defs><marker id="preview-arrow" viewBox="0 0 10 10" refX="10" refY="5"
-markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-<path d="M 0 0 L 10 5 L 0 10 z" fill="#555"/></marker></defs>
-<line x1="85.0" y1="115.0" x2="85.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-1: L-ANCHOR -&gt; L-ANCHOR-ROOT</title></line>
-<line x1="85.0" y1="185.0" x2="85.0" y2="115.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-2: L -&gt; L-ANCHOR</title></line>
-<line x1="85.0" y1="185.0" x2="235.0" y2="115.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-3: L -&gt; GUEST</title></line>
-<line x1="385.0" y1="115.0" x2="385.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-4: R-ANCHOR -&gt; R-ANCHOR-ROOT</title></line>
-<line x1="385.0" y1="185.0" x2="385.0" y2="115.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-5: R -&gt; R-ANCHOR</title></line>
-<line x1="385.0" y1="185.0" x2="235.0" y2="115.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-6: R -&gt; GUEST</title></line>
-<rect x="175.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="3"/><text x="235.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">GUEST</text>
-<rect x="25.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">L-ANCHOR-ROOT</text>
-<rect x="25.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">L-ANCHOR</text>
-<rect x="25.0" y="167.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="185.0" text-anchor="middle" dominant-baseline="middle" font-size="12">L</text>
-<rect x="325.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="385.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">R-ANCHOR-ROOT</text>
-<rect x="325.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="385.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">R-ANCHOR</text>
-<rect x="325.0" y="167.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="385.0" y="185.0" text-anchor="middle" dominant-baseline="middle" font-size="12">R</text>
+<div class="variants"><figure>
+
+<svg xmlns="http://www.w3.org/2000/svg" width="608"
+height="284">
+<defs><marker id="arrow-333" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/></marker><marker id="arrow-c00" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#c00"/></marker><marker id="arrow-e07000" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#e07000"/></marker></defs>
+<rect x="224" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="3"/><text x="304.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">GUEST</text>
+<rect x="40" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">L-ANCHOR-ROOT</text>
+<rect x="40" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">L-ANCHOR</text>
+<rect x="40" y="192" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="218.0" text-anchor="middle" dominant-baseline="middle" font-size="12">L</text>
+<rect x="408" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">R-ANCHOR-ROOT</text>
+<rect x="408" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">R-ANCHOR</text>
+<rect x="408" y="192" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="218.0" text-anchor="middle" dominant-baseline="middle" font-size="12">R</text>
+<polyline points="120.0,116 120.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-1: L-ANCHOR -&gt; L-ANCHOR-ROOT</title></polyline>
+<polyline points="120.0,192 120.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-2: L -&gt; L-ANCHOR</title></polyline>
+<polyline points="132.0,192 132.0,184.0 292.0,184.0 292.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-3: L -&gt; GUEST</title></polyline>
+<polyline points="488.0,116 488.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-4: R-ANCHOR -&gt; R-ANCHOR-ROOT</title></polyline>
+<polyline points="488.0,192 488.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-5: R -&gt; R-ANCHOR</title></polyline>
+<polyline points="476.0,192 476.0,176.0 316.0,176.0 316.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-6: R -&gt; GUEST</title></polyline>
 </svg>
-<p>Stage 2 preview: grid cells and straight lines between node centers,
-without routing. Dashed: relation across levels. Red: cycle. Thick border:
-corrected root. Grey area: standalone nodes.</p>
+
+</figure></div>
+<p>Dashed: relation across levels. Red: cycle. Orange: relations with an
+unavoidable crossing in one channel. Thick border: corrected root. Grey
+area: standalone nodes.</p>
 </div>
 <div class="columns">
 <div class="panel">
@@ -378,38 +604,41 @@ R -&gt; GUEST (parent)</pre>
 </div>
 </section>
 
-<section id="case-6">
+<section id="case-8">
 <h2>Corrected root with THREE non-skip children (odd count)</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">GUEST has three children, L, M, and R, on the same level. GUEST stands right of M. The relation to L crosses the column of M.</p>
 <div class="preview">
-<svg xmlns="http://www.w3.org/2000/svg" width="620" height="230">
-<defs><marker id="preview-arrow" viewBox="0 0 10 10" refX="10" refY="5"
-markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-<path d="M 0 0 L 10 5 L 0 10 z" fill="#555"/></marker></defs>
-<line x1="85.0" y1="115.0" x2="85.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-1: L-ANCHOR -&gt; L-ANCHOR-ROOT</title></line>
-<line x1="85.0" y1="185.0" x2="85.0" y2="115.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-2: L -&gt; L-ANCHOR</title></line>
-<line x1="85.0" y1="185.0" x2="385.0" y2="115.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-3: L -&gt; GUEST</title></line>
-<line x1="235.0" y1="115.0" x2="235.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-4: M-ANCHOR -&gt; M-ANCHOR-ROOT</title></line>
-<line x1="235.0" y1="185.0" x2="235.0" y2="115.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-5: M -&gt; M-ANCHOR</title></line>
-<line x1="235.0" y1="185.0" x2="385.0" y2="115.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-6: M -&gt; GUEST</title></line>
-<line x1="535.0" y1="115.0" x2="535.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-7: R-ANCHOR -&gt; R-ANCHOR-ROOT</title></line>
-<line x1="535.0" y1="185.0" x2="535.0" y2="115.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-8: R -&gt; R-ANCHOR</title></line>
-<line x1="535.0" y1="185.0" x2="385.0" y2="115.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-9: R -&gt; GUEST</title></line>
-<rect x="325.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="3"/><text x="385.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">GUEST</text>
-<rect x="25.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">L-ANCHOR-ROOT</text>
-<rect x="25.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">L-ANCHOR</text>
-<rect x="25.0" y="167.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="185.0" text-anchor="middle" dominant-baseline="middle" font-size="12">L</text>
-<rect x="175.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="235.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">M-ANCHOR-ROOT</text>
-<rect x="175.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="235.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">M-ANCHOR</text>
-<rect x="175.0" y="167.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="235.0" y="185.0" text-anchor="middle" dominant-baseline="middle" font-size="12">M</text>
-<rect x="475.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="535.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">R-ANCHOR-ROOT</text>
-<rect x="475.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="535.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">R-ANCHOR</text>
-<rect x="475.0" y="167.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="535.0" y="185.0" text-anchor="middle" dominant-baseline="middle" font-size="12">R</text>
+<div class="variants"><figure>
+
+<svg xmlns="http://www.w3.org/2000/svg" width="792"
+height="292">
+<defs><marker id="arrow-333" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/></marker><marker id="arrow-c00" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#c00"/></marker><marker id="arrow-e07000" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#e07000"/></marker></defs>
+<rect x="408" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="3"/><text x="488.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">GUEST</text>
+<rect x="40" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">L-ANCHOR-ROOT</text>
+<rect x="40" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">L-ANCHOR</text>
+<rect x="40" y="200" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="226.0" text-anchor="middle" dominant-baseline="middle" font-size="12">L</text>
+<rect x="224" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">M-ANCHOR-ROOT</text>
+<rect x="224" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">M-ANCHOR</text>
+<rect x="224" y="200" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="226.0" text-anchor="middle" dominant-baseline="middle" font-size="12">M</text>
+<rect x="592" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="672.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">R-ANCHOR-ROOT</text>
+<rect x="592" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="672.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">R-ANCHOR</text>
+<rect x="592" y="200" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="672.0" y="226.0" text-anchor="middle" dominant-baseline="middle" font-size="12">R</text>
+<polyline points="120.0,116 120.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-1: L-ANCHOR -&gt; L-ANCHOR-ROOT</title></polyline>
+<polyline points="120.0,200 120.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-2: L -&gt; L-ANCHOR</title></polyline>
+<polyline points="132.0,200 132.0,184.0 464.0,184.0 464.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-3: L -&gt; GUEST</title></polyline>
+<polyline points="304.0,116 304.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-4: M-ANCHOR -&gt; M-ANCHOR-ROOT</title></polyline>
+<polyline points="304.0,200 304.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-5: M -&gt; M-ANCHOR</title></polyline>
+<polyline points="316.0,200 316.0,192.0 476.0,192.0 476.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-6: M -&gt; GUEST</title></polyline>
+<polyline points="672.0,116 672.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-7: R-ANCHOR -&gt; R-ANCHOR-ROOT</title></polyline>
+<polyline points="672.0,200 672.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-8: R -&gt; R-ANCHOR</title></polyline>
+<polyline points="660.0,200 660.0,176.0 500.0,176.0 500.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-9: R -&gt; GUEST</title></polyline>
 </svg>
-<p>Stage 2 preview: grid cells and straight lines between node centers,
-without routing. Dashed: relation across levels. Red: cycle. Thick border:
-corrected root. Grey area: standalone nodes.</p>
+
+</figure></div>
+<p>Dashed: relation across levels. Red: cycle. Orange: relations with an
+unavoidable crossing in one channel. Thick border: corrected root. Grey
+area: standalone nodes.</p>
 </div>
 <div class="columns">
 <div class="panel">
@@ -456,37 +685,40 @@ R -&gt; GUEST (parent)</pre>
 </div>
 </section>
 
-<section id="case-7">
+<section id="case-9">
 <h2>Three chains compete for one parent column</h2>
-<div><span class="badge">mode: levels</span><span class="badge question">open question 24</span></div>
-<p class="description">P has three children, A, B, and C. Each child has its own child. Q stands right of P and has a chain of two nodes. A, B, and C compete for the column of P. Q1 takes the column of Q. The case shows which branches stay straight.</p>
+<div><span class="badge">mode: levels</span></div>
+<p class="description">P has three children, A, B, and C. Each child has its own child. Q stands right of P and has a chain of two nodes. A, B, and C compete for the column of P. A wins. B and C stand right of A in input order. Q moves right. All branches stay straight.</p>
 <div class="preview">
-<svg xmlns="http://www.w3.org/2000/svg" width="620" height="230">
-<defs><marker id="preview-arrow" viewBox="0 0 10 10" refX="10" refY="5"
-markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-<path d="M 0 0 L 10 5 L 0 10 z" fill="#555"/></marker></defs>
-<line x1="85.0" y1="115.0" x2="85.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-1: A -&gt; P</title></line>
-<line x1="385.0" y1="115.0" x2="85.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-2: B -&gt; P</title></line>
-<line x1="235.0" y1="115.0" x2="85.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-3: C -&gt; P</title></line>
-<line x1="85.0" y1="185.0" x2="85.0" y2="115.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-4: A1 -&gt; A</title></line>
-<line x1="385.0" y1="185.0" x2="385.0" y2="115.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-5: B1 -&gt; B</title></line>
-<line x1="235.0" y1="185.0" x2="235.0" y2="115.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-6: C1 -&gt; C</title></line>
-<line x1="535.0" y1="115.0" x2="535.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-7: Q1 -&gt; Q</title></line>
-<line x1="535.0" y1="185.0" x2="535.0" y2="115.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-8: Q2 -&gt; Q1</title></line>
-<rect x="25.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">P</text>
-<rect x="475.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="535.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Q</text>
-<rect x="25.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">A</text>
-<rect x="325.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="385.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">B</text>
-<rect x="175.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="235.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">C</text>
-<rect x="25.0" y="167.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="185.0" text-anchor="middle" dominant-baseline="middle" font-size="12">A1</text>
-<rect x="325.0" y="167.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="385.0" y="185.0" text-anchor="middle" dominant-baseline="middle" font-size="12">B1</text>
-<rect x="175.0" y="167.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="235.0" y="185.0" text-anchor="middle" dominant-baseline="middle" font-size="12">C1</text>
-<rect x="475.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="535.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Q1</text>
-<rect x="475.0" y="167.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="535.0" y="185.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Q2</text>
+<div class="variants"><figure>
+
+<svg xmlns="http://www.w3.org/2000/svg" width="792"
+height="284">
+<defs><marker id="arrow-333" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/></marker><marker id="arrow-c00" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#c00"/></marker><marker id="arrow-e07000" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#e07000"/></marker></defs>
+<rect x="40" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">P</text>
+<rect x="592" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="672.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Q</text>
+<rect x="40" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">A</text>
+<rect x="224" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">B</text>
+<rect x="408" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">C</text>
+<rect x="40" y="192" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="218.0" text-anchor="middle" dominant-baseline="middle" font-size="12">A1</text>
+<rect x="224" y="192" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="218.0" text-anchor="middle" dominant-baseline="middle" font-size="12">B1</text>
+<rect x="408" y="192" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="218.0" text-anchor="middle" dominant-baseline="middle" font-size="12">C1</text>
+<rect x="592" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="672.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Q1</text>
+<rect x="592" y="192" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="672.0" y="218.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Q2</text>
+<polyline points="120.0,116 120.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-1: A -&gt; P</title></polyline>
+<polyline points="292.0,116 292.0,108.0 132.0,108.0 132.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-2: B -&gt; P</title></polyline>
+<polyline points="476.0,116 476.0,100.0 144.0,100.0 144.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-3: C -&gt; P</title></polyline>
+<polyline points="120.0,192 120.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-4: A1 -&gt; A</title></polyline>
+<polyline points="304.0,192 304.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-5: B1 -&gt; B</title></polyline>
+<polyline points="488.0,192 488.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-6: C1 -&gt; C</title></polyline>
+<polyline points="672.0,116 672.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-7: Q1 -&gt; Q</title></polyline>
+<polyline points="672.0,192 672.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-8: Q2 -&gt; Q1</title></polyline>
 </svg>
-<p>Stage 2 preview: grid cells and straight lines between node centers,
-without routing. Dashed: relation across levels. Red: cycle. Thick border:
-corrected root. Grey area: standalone nodes.</p>
+
+</figure></div>
+<p>Dashed: relation across levels. Red: cycle. Orange: relations with an
+unavoidable crossing in one channel. Thick border: corrected root. Grey
+area: standalone nodes.</p>
 </div>
 <div class="columns">
 <div class="panel">
@@ -531,27 +763,30 @@ Q2 -&gt; Q1 (parent)</pre>
 </div>
 </section>
 
-<section id="case-8">
+<section id="case-10">
 <h2>Disconnected components form separate islands</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">The input order interleaves two independent chains. Each chain is an island in its own column. The standalone node stands above the islands.</p>
 <div class="preview">
-<svg xmlns="http://www.w3.org/2000/svg" width="320" height="230">
-<defs><marker id="preview-arrow" viewBox="0 0 10 10" refX="10" refY="5"
-markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-<path d="M 0 0 L 10 5 L 0 10 z" fill="#555"/></marker></defs>
-<rect x="5.0" y="5.0" width="310" height="80" fill="#f3f3f3" stroke="#ccc" stroke-dasharray="4 3"/>
-<line x1="85.0" y1="185.0" x2="85.0" y2="115.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-1: A2 -&gt; A1</title></line>
-<line x1="235.0" y1="185.0" x2="235.0" y2="115.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-2: B2 -&gt; B1</title></line>
-<rect x="25.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">A1</text>
-<rect x="175.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="235.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">B1</text>
-<rect x="25.0" y="167.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="185.0" text-anchor="middle" dominant-baseline="middle" font-size="12">A2</text>
-<rect x="175.0" y="167.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="235.0" y="185.0" text-anchor="middle" dominant-baseline="middle" font-size="12">B2</text>
-<rect x="25.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Standalone</text>
+<div class="variants"><figure>
+
+<svg xmlns="http://www.w3.org/2000/svg" width="424"
+height="284">
+<defs><marker id="arrow-333" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/></marker><marker id="arrow-c00" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#c00"/></marker><marker id="arrow-e07000" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#e07000"/></marker></defs>
+<rect x="32" y="32" width="384" height="68" fill="#f3f3f3" stroke="#ccc" stroke-dasharray="4 3"/>
+<rect x="40" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">A1</text>
+<rect x="224" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">B1</text>
+<rect x="40" y="192" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="218.0" text-anchor="middle" dominant-baseline="middle" font-size="12">A2</text>
+<rect x="224" y="192" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="218.0" text-anchor="middle" dominant-baseline="middle" font-size="12">B2</text>
+<rect x="40" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Standalone</text>
+<polyline points="120.0,192 120.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-1: A2 -&gt; A1</title></polyline>
+<polyline points="304.0,192 304.0,168" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-2: B2 -&gt; B1</title></polyline>
 </svg>
-<p>Stage 2 preview: grid cells and straight lines between node centers,
-without routing. Dashed: relation across levels. Red: cycle. Thick border:
-corrected root. Grey area: standalone nodes.</p>
+
+</figure></div>
+<p>Dashed: relation across levels. Red: cycle. Orange: relations with an
+unavoidable crossing in one channel. Thick border: corrected root. Grey
+area: standalone nodes.</p>
 </div>
 <div class="columns">
 <div class="panel">
@@ -579,37 +814,40 @@ B2 -&gt; B1 (parent)</pre>
 </div>
 </section>
 
-<section id="case-9">
+<section id="case-11">
 <h2>Standalone nodes wrap to the connected graph width</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">Eight standalone nodes stand in a grid above the connected graph. The grid has the three columns of the connected graph.</p>
 <div class="preview">
-<svg xmlns="http://www.w3.org/2000/svg" width="470" height="370">
-<defs><marker id="preview-arrow" viewBox="0 0 10 10" refX="10" refY="5"
-markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-<path d="M 0 0 L 10 5 L 0 10 z" fill="#555"/></marker></defs>
-<rect x="5.0" y="5.0" width="460" height="220" fill="#f3f3f3" stroke="#ccc" stroke-dasharray="4 3"/>
-<line x1="85.0" y1="325.0" x2="85.0" y2="255.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-1: Child A -&gt; Root A</title></line>
-<line x1="235.0" y1="325.0" x2="235.0" y2="255.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-2: Child B -&gt; Root B</title></line>
-<line x1="385.0" y1="325.0" x2="385.0" y2="255.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-3: Child C -&gt; Root C</title></line>
-<rect x="25.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Standalone 1</text>
-<rect x="175.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="235.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Standalone 2</text>
-<rect x="325.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="385.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Standalone 3</text>
-<rect x="25.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Standalone 4</text>
-<rect x="175.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="235.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Standalone 5</text>
-<rect x="325.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="385.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Standalone 6</text>
-<rect x="25.0" y="167.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="185.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Standalone 7</text>
-<rect x="175.0" y="167.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="235.0" y="185.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Standalone 8</text>
-<rect x="25.0" y="237.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="255.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Root A</text>
-<rect x="175.0" y="237.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="235.0" y="255.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Root B</text>
-<rect x="325.0" y="237.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="385.0" y="255.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Root C</text>
-<rect x="25.0" y="307.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="325.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Child A</text>
-<rect x="175.0" y="307.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="235.0" y="325.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Child B</text>
-<rect x="325.0" y="307.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="385.0" y="325.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Child C</text>
+<div class="variants"><figure>
+
+<svg xmlns="http://www.w3.org/2000/svg" width="608"
+height="436">
+<defs><marker id="arrow-333" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/></marker><marker id="arrow-c00" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#c00"/></marker><marker id="arrow-e07000" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#e07000"/></marker></defs>
+<rect x="32" y="32" width="568" height="220" fill="#f3f3f3" stroke="#ccc" stroke-dasharray="4 3"/>
+<rect x="40" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Standalone 1</text>
+<rect x="224" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Standalone 2</text>
+<rect x="408" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Standalone 3</text>
+<rect x="40" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Standalone 4</text>
+<rect x="224" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Standalone 5</text>
+<rect x="408" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Standalone 6</text>
+<rect x="40" y="192" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="218.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Standalone 7</text>
+<rect x="224" y="192" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="218.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Standalone 8</text>
+<rect x="40" y="268" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="294.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Root A</text>
+<rect x="224" y="268" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="294.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Root B</text>
+<rect x="408" y="268" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="294.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Root C</text>
+<rect x="40" y="344" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="370.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Child A</text>
+<rect x="224" y="344" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="370.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Child B</text>
+<rect x="408" y="344" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="370.0" text-anchor="middle" dominant-baseline="middle" font-size="12">Child C</text>
+<polyline points="120.0,344 120.0,320" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-1: Child A -&gt; Root A</title></polyline>
+<polyline points="304.0,344 304.0,320" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-2: Child B -&gt; Root B</title></polyline>
+<polyline points="488.0,344 488.0,320" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-3: Child C -&gt; Root C</title></polyline>
 </svg>
-<p>Stage 2 preview: grid cells and straight lines between node centers,
-without routing. Dashed: relation across levels. Red: cycle. Thick border:
-corrected root. Grey area: standalone nodes.</p>
+
+</figure></div>
+<p>Dashed: relation across levels. Red: cycle. Orange: relations with an
+unavoidable crossing in one channel. Thick border: corrected root. Grey
+area: standalone nodes.</p>
 </div>
 <div class="columns">
 <div class="panel">
@@ -648,34 +886,37 @@ Child C -&gt; Root C (parent)</pre>
 </div>
 </section>
 
-<section id="case-10">
+<section id="case-12">
 <h2>Complete 3 by 3 relation grid</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">Each of the three lower nodes relates to each of the three upper nodes.</p>
 <div class="preview">
-<svg xmlns="http://www.w3.org/2000/svg" width="470" height="160">
-<defs><marker id="preview-arrow" viewBox="0 0 10 10" refX="10" refY="5"
-markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-<path d="M 0 0 L 10 5 L 0 10 z" fill="#555"/></marker></defs>
-<line x1="85.0" y1="115.0" x2="85.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-1: D -&gt; A</title></line>
-<line x1="85.0" y1="115.0" x2="235.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-2: D -&gt; B</title></line>
-<line x1="85.0" y1="115.0" x2="385.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-3: D -&gt; C</title></line>
-<line x1="235.0" y1="115.0" x2="85.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-4: E -&gt; A</title></line>
-<line x1="235.0" y1="115.0" x2="235.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-5: E -&gt; B</title></line>
-<line x1="235.0" y1="115.0" x2="385.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-6: E -&gt; C</title></line>
-<line x1="385.0" y1="115.0" x2="85.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-7: F -&gt; A</title></line>
-<line x1="385.0" y1="115.0" x2="235.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-8: F -&gt; B</title></line>
-<line x1="385.0" y1="115.0" x2="385.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-9: F -&gt; C</title></line>
-<rect x="25.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">A</text>
-<rect x="175.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="235.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">B</text>
-<rect x="325.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="385.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">C</text>
-<rect x="25.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">D</text>
-<rect x="175.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="235.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">E</text>
-<rect x="325.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="385.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">F</text>
+<div class="variants"><figure>
+
+<svg xmlns="http://www.w3.org/2000/svg" width="608"
+height="240">
+<defs><marker id="arrow-333" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/></marker><marker id="arrow-c00" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#c00"/></marker><marker id="arrow-e07000" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#e07000"/></marker></defs>
+<rect x="40" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">A</text>
+<rect x="224" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">B</text>
+<rect x="408" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">C</text>
+<rect x="40" y="148" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="174.0" text-anchor="middle" dominant-baseline="middle" font-size="12">D</text>
+<rect x="224" y="148" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="174.0" text-anchor="middle" dominant-baseline="middle" font-size="12">E</text>
+<rect x="408" y="148" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="174.0" text-anchor="middle" dominant-baseline="middle" font-size="12">F</text>
+<polyline points="120.0,148 120.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-1: D -&gt; A</title></polyline>
+<polyline points="132.0,148 132.0,124.0 280.0,124.0 280.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-2: D -&gt; B</title></polyline>
+<polyline points="156.0,148 156.0,132.0 440.0,132.0 440.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-3: D -&gt; C</title></polyline>
+<polyline points="292.0,148 292.0,116.0 144.0,116.0 144.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-4: E -&gt; A</title></polyline>
+<polyline points="304.0,148 304.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-5: E -&gt; B</title></polyline>
+<polyline points="316.0,148 316.0,140.0 464.0,140.0 464.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-6: E -&gt; C</title></polyline>
+<polyline points="452.0,148 452.0,108.0 168.0,108.0 168.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-7: F -&gt; A</title></polyline>
+<polyline points="476.0,148 476.0,100.0 328.0,100.0 328.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-8: F -&gt; B</title></polyline>
+<polyline points="488.0,148 488.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-9: F -&gt; C</title></polyline>
 </svg>
-<p>Stage 2 preview: grid cells and straight lines between node centers,
-without routing. Dashed: relation across levels. Red: cycle. Thick border:
-corrected root. Grey area: standalone nodes.</p>
+
+</figure></div>
+<p>Dashed: relation across levels. Red: cycle. Orange: relations with an
+unavoidable crossing in one channel. Thick border: corrected root. Grey
+area: standalone nodes.</p>
 </div>
 <div class="columns">
 <div class="panel">
@@ -718,35 +959,38 @@ F -&gt; C (parent)</pre>
 </div>
 </section>
 
-<section id="case-11">
+<section id="case-13">
 <h2>Direction-aware track order</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">Four children keep their vertical relations to their parents. Two extra relations go right to R. Two extra relations go left to L.</p>
 <div class="preview">
-<svg xmlns="http://www.w3.org/2000/svg" width="620" height="160">
-<defs><marker id="preview-arrow" viewBox="0 0 10 10" refX="10" refY="5"
-markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-<path d="M 0 0 L 10 5 L 0 10 z" fill="#555"/></marker></defs>
-<line x1="85.0" y1="115.0" x2="85.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-1: C1 -&gt; L</title></line>
-<line x1="85.0" y1="115.0" x2="535.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-2: C1 -&gt; R</title></line>
-<line x1="235.0" y1="115.0" x2="235.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-3: C2 -&gt; M1</title></line>
-<line x1="235.0" y1="115.0" x2="535.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-4: C2 -&gt; R</title></line>
-<line x1="385.0" y1="115.0" x2="385.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-5: C3 -&gt; M2</title></line>
-<line x1="385.0" y1="115.0" x2="85.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-6: C3 -&gt; L</title></line>
-<line x1="535.0" y1="115.0" x2="535.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-7: C4 -&gt; R</title></line>
-<line x1="535.0" y1="115.0" x2="85.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-8: C4 -&gt; L</title></line>
-<rect x="25.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">L</text>
-<rect x="175.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="235.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">M1</text>
-<rect x="325.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="385.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">M2</text>
-<rect x="475.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="535.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">R</text>
-<rect x="25.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">C1</text>
-<rect x="175.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="235.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">C2</text>
-<rect x="325.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="385.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">C3</text>
-<rect x="475.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="535.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">C4</text>
+<div class="variants"><figure>
+
+<svg xmlns="http://www.w3.org/2000/svg" width="792"
+height="224">
+<defs><marker id="arrow-333" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/></marker><marker id="arrow-c00" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#c00"/></marker><marker id="arrow-e07000" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#e07000"/></marker></defs>
+<rect x="40" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">L</text>
+<rect x="224" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">M1</text>
+<rect x="408" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">M2</text>
+<rect x="592" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="672.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">R</text>
+<rect x="40" y="132" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="158.0" text-anchor="middle" dominant-baseline="middle" font-size="12">C1</text>
+<rect x="224" y="132" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="158.0" text-anchor="middle" dominant-baseline="middle" font-size="12">C2</text>
+<rect x="408" y="132" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="158.0" text-anchor="middle" dominant-baseline="middle" font-size="12">C3</text>
+<rect x="592" y="132" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="672.0" y="158.0" text-anchor="middle" dominant-baseline="middle" font-size="12">C4</text>
+<polyline points="120.0,132 120.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-1: C1 -&gt; L</title></polyline>
+<polyline points="144.0,132 144.0,116.0 636.0,116.0 636.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-2: C1 -&gt; R</title></polyline>
+<polyline points="304.0,132 304.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-3: C2 -&gt; M1</title></polyline>
+<polyline points="316.0,132 316.0,124.0 660.0,124.0 660.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-4: C2 -&gt; R</title></polyline>
+<polyline points="488.0,132 488.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-5: C3 -&gt; M2</title></polyline>
+<polyline points="476.0,132 476.0,108.0 132.0,108.0 132.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-6: C3 -&gt; L</title></polyline>
+<polyline points="672.0,132 672.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-7: C4 -&gt; R</title></polyline>
+<polyline points="648.0,132 648.0,100.0 156.0,100.0 156.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-8: C4 -&gt; L</title></polyline>
 </svg>
-<p>Stage 2 preview: grid cells and straight lines between node centers,
-without routing. Dashed: relation across levels. Red: cycle. Thick border:
-corrected root. Grey area: standalone nodes.</p>
+
+</figure></div>
+<p>Dashed: relation across levels. Red: cycle. Orange: relations with an
+unavoidable crossing in one channel. Thick border: corrected root. Grey
+area: standalone nodes.</p>
 </div>
 <div class="columns">
 <div class="panel">
@@ -789,35 +1033,38 @@ C4 -&gt; L (parent)</pre>
 </div>
 </section>
 
-<section id="case-12">
+<section id="case-14">
 <h2>Busy channel expands to fit its lanes</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">Eight nodes create competing routes across three levels. The channel between the first two levels widens. Each relation keeps one horizontal lane.</p>
 <div class="preview">
-<svg xmlns="http://www.w3.org/2000/svg" width="620" height="230">
-<defs><marker id="preview-arrow" viewBox="0 0 10 10" refX="10" refY="5"
-markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-<path d="M 0 0 L 10 5 L 0 10 z" fill="#555"/></marker></defs>
-<line x1="535.0" y1="185.0" x2="85.0" y2="45.0" stroke="#555" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#preview-arrow)"><title>edge-1: N7 -&gt; N0</title></line>
-<line x1="535.0" y1="115.0" x2="535.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-2: N5 -&gt; N3</title></line>
-<line x1="235.0" y1="115.0" x2="535.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-3: N4 -&gt; N3</title></line>
-<line x1="235.0" y1="115.0" x2="385.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-4: N4 -&gt; N2</title></line>
-<line x1="85.0" y1="115.0" x2="235.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-5: N6 -&gt; N1</title></line>
-<line x1="235.0" y1="115.0" x2="235.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-6: N4 -&gt; N1</title></line>
-<line x1="535.0" y1="185.0" x2="535.0" y2="115.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-7: N7 -&gt; N5</title></line>
-<line x1="85.0" y1="115.0" x2="85.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-8: N6 -&gt; N0</title></line>
-<rect x="25.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N0</text>
-<rect x="175.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="235.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N1</text>
-<rect x="325.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="385.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N2</text>
-<rect x="475.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="535.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N3</text>
-<rect x="175.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="235.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N4</text>
-<rect x="475.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="535.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N5</text>
-<rect x="25.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N6</text>
-<rect x="475.0" y="167.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="535.0" y="185.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N7</text>
+<div class="variants"><figure>
+
+<svg xmlns="http://www.w3.org/2000/svg" width="792"
+height="292">
+<defs><marker id="arrow-333" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/></marker><marker id="arrow-c00" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#c00"/></marker><marker id="arrow-e07000" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#e07000"/></marker></defs>
+<rect x="40" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N0</text>
+<rect x="224" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N1</text>
+<rect x="408" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N2</text>
+<rect x="592" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="672.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N3</text>
+<rect x="224" y="124" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="150.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N4</text>
+<rect x="592" y="124" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="672.0" y="150.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N5</text>
+<rect x="40" y="124" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="150.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N6</text>
+<rect x="592" y="200" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="672.0" y="226.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N7</text>
+<polyline points="660.0,200 660.0,188.0 580.0,188.0 580.0,100.0 144.0,100.0 144.0,92" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-333)"><title>edge-1: N7 -&gt; N0</title></polyline>
+<polyline points="672.0,124 672.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-2: N5 -&gt; N3</title></polyline>
+<polyline points="328.0,124 328.0,116.0 660.0,116.0 660.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-3: N4 -&gt; N3</title></polyline>
+<polyline points="316.0,124 316.0,108.0 476.0,108.0 476.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-4: N4 -&gt; N2</title></polyline>
+<polyline points="132.0,124 132.0,108.0 292.0,108.0 292.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-5: N6 -&gt; N1</title></polyline>
+<polyline points="304.0,124 304.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-6: N4 -&gt; N1</title></polyline>
+<polyline points="672.0,200 672.0,176" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-7: N7 -&gt; N5</title></polyline>
+<polyline points="120.0,124 120.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-8: N6 -&gt; N0</title></polyline>
 </svg>
-<p>Stage 2 preview: grid cells and straight lines between node centers,
-without routing. Dashed: relation across levels. Red: cycle. Thick border:
-corrected root. Grey area: standalone nodes.</p>
+
+</figure></div>
+<p>Dashed: relation across levels. Red: cycle. Orange: relations with an
+unavoidable crossing in one channel. Thick border: corrected root. Grey
+area: standalone nodes.</p>
 </div>
 <div class="columns">
 <div class="panel">
@@ -860,44 +1107,47 @@ N6 -&gt; N0 (parent)</pre>
 </div>
 </section>
 
-<section id="case-13">
+<section id="case-15">
 <h2>Extreme number of relations from N8</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">N8 relates to every other connected node.</p>
 <div class="preview">
-<svg xmlns="http://www.w3.org/2000/svg" width="620" height="300">
-<defs><marker id="preview-arrow" viewBox="0 0 10 10" refX="10" refY="5"
-markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-<path d="M 0 0 L 10 5 L 0 10 z" fill="#555"/></marker></defs>
-<line x1="535.0" y1="185.0" x2="85.0" y2="45.0" stroke="#555" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#preview-arrow)"><title>edge-1: N7 -&gt; N0</title></line>
-<line x1="535.0" y1="115.0" x2="535.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-2: N5 -&gt; N3</title></line>
-<line x1="235.0" y1="115.0" x2="535.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-3: N4 -&gt; N3</title></line>
-<line x1="235.0" y1="115.0" x2="385.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-4: N4 -&gt; N2</title></line>
-<line x1="85.0" y1="115.0" x2="235.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-5: N6 -&gt; N1</title></line>
-<line x1="235.0" y1="115.0" x2="235.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-6: N4 -&gt; N1</title></line>
-<line x1="535.0" y1="185.0" x2="535.0" y2="115.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-7: N7 -&gt; N5</title></line>
-<line x1="85.0" y1="115.0" x2="85.0" y2="45.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-8: N6 -&gt; N0</title></line>
-<line x1="535.0" y1="255.0" x2="535.0" y2="185.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-9: N8 -&gt; N7</title></line>
-<line x1="535.0" y1="255.0" x2="85.0" y2="45.0" stroke="#555" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#preview-arrow)"><title>edge-10: N8 -&gt; N0</title></line>
-<line x1="535.0" y1="255.0" x2="235.0" y2="115.0" stroke="#555" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#preview-arrow)"><title>edge-11: N8 -&gt; N4</title></line>
-<line x1="535.0" y1="255.0" x2="85.0" y2="115.0" stroke="#555" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#preview-arrow)"><title>edge-12: N8 -&gt; N6</title></line>
-<line x1="535.0" y1="255.0" x2="235.0" y2="45.0" stroke="#555" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#preview-arrow)"><title>edge-13: N8 -&gt; N1</title></line>
-<line x1="535.0" y1="255.0" x2="385.0" y2="45.0" stroke="#555" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#preview-arrow)"><title>edge-14: N8 -&gt; N2</title></line>
-<line x1="535.0" y1="255.0" x2="535.0" y2="45.0" stroke="#555" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#preview-arrow)"><title>edge-15: N8 -&gt; N3</title></line>
-<line x1="535.0" y1="255.0" x2="535.0" y2="115.0" stroke="#555" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#preview-arrow)"><title>edge-16: N8 -&gt; N5</title></line>
-<rect x="25.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N0</text>
-<rect x="175.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="235.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N1</text>
-<rect x="325.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="385.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N2</text>
-<rect x="475.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="535.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N3</text>
-<rect x="175.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="235.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N4</text>
-<rect x="475.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="535.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N5</text>
-<rect x="25.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N6</text>
-<rect x="475.0" y="167.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="535.0" y="185.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N7</text>
-<rect x="475.0" y="237.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="535.0" y="255.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N8</text>
+<div class="variants"><figure>
+
+<svg xmlns="http://www.w3.org/2000/svg" width="840"
+height="448">
+<defs><marker id="arrow-333" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/></marker><marker id="arrow-c00" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#c00"/></marker><marker id="arrow-e07000" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#e07000"/></marker></defs>
+<rect x="40" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N0</text>
+<rect x="224" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N1</text>
+<rect x="408" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="488.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N2</text>
+<rect x="640" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="720.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N3</text>
+<rect x="224" y="156" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="182.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N4</text>
+<rect x="640" y="156" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="720.0" y="182.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N5</text>
+<rect x="40" y="156" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="182.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N6</text>
+<rect x="640" y="240" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="720.0" y="266.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N7</text>
+<rect x="640" y="356" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="720.0" y="382.0" text-anchor="middle" dominant-baseline="middle" font-size="12">N8</text>
+<polyline points="696.0,240 696.0,216.0 624.0,216.0 624.0,100.0 156.0,100.0 156.0,92" fill="none" stroke="#e07000" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-e07000)"><title>edge-1: N7 -&gt; N0</title></polyline>
+<polyline points="720.0,156 720.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-2: N5 -&gt; N3</title></polyline>
+<polyline points="340.0,156 340.0,140.0 696.0,140.0 696.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-3: N4 -&gt; N3</title></polyline>
+<polyline points="316.0,156 316.0,132.0 476.0,132.0 476.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-4: N4 -&gt; N2</title></polyline>
+<polyline points="132.0,156 132.0,132.0 292.0,132.0 292.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-5: N6 -&gt; N1</title></polyline>
+<polyline points="304.0,156 304.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-6: N4 -&gt; N1</title></polyline>
+<polyline points="720.0,240 720.0,208" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-7: N7 -&gt; N5</title></polyline>
+<polyline points="120.0,156 120.0,92" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-8: N6 -&gt; N0</title></polyline>
+<polyline points="720.0,356 720.0,292" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-9: N8 -&gt; N7</title></polyline>
+<polyline points="660.0,356 660.0,332.0 592.0,332.0 592.0,124.0 144.0,124.0 144.0,92" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-333)"><title>edge-10: N8 -&gt; N0</title></polyline>
+<polyline points="636.0,356 636.0,348.0 576.0,348.0 576.0,224.0 316.0,224.0 316.0,208" fill="none" stroke="#e07000" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-e07000)"><title>edge-11: N8 -&gt; N4</title></polyline>
+<polyline points="648.0,356 648.0,340.0 584.0,340.0 584.0,216.0 132.0,216.0 132.0,208" fill="none" stroke="#e07000" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-e07000)"><title>edge-12: N8 -&gt; N6</title></polyline>
+<polyline points="672.0,356 672.0,324.0 600.0,324.0 600.0,116.0 328.0,116.0 328.0,92" fill="none" stroke="#e07000" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-e07000)"><title>edge-13: N8 -&gt; N1</title></polyline>
+<polyline points="684.0,356 684.0,316.0 608.0,316.0 608.0,108.0 500.0,108.0 500.0,92" fill="none" stroke="#e07000" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-e07000)"><title>edge-14: N8 -&gt; N2</title></polyline>
+<polyline points="696.0,356 696.0,308.0 616.0,308.0 616.0,148.0 708.0,148.0 708.0,92" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-333)"><title>edge-15: N8 -&gt; N3</title></polyline>
+<polyline points="708.0,356 708.0,300.0 632.0,300.0 632.0,232.0 708.0,232.0 708.0,208" fill="none" stroke="#333" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-333)"><title>edge-16: N8 -&gt; N5</title></polyline>
 </svg>
-<p>Stage 2 preview: grid cells and straight lines between node centers,
-without routing. Dashed: relation across levels. Red: cycle. Thick border:
-corrected root. Grey area: standalone nodes.</p>
+<ul class='conflicts'><li>edge-1 crosses edge-13 in H(0)</li><li>edge-1 crosses edge-14 in H(0)</li><li>edge-12 crosses edge-11 in H(1)</li></ul>
+</figure></div>
+<p>Dashed: relation across levels. Red: cycle. Orange: relations with an
+unavoidable crossing in one channel. Thick border: corrected root. Grey
+area: standalone nodes.</p>
 </div>
 <div class="columns">
 <div class="panel">
@@ -957,31 +1207,34 @@ N8 -&gt; N5 (parent)</pre>
 </div>
 </section>
 
-<section id="case-14">
+<section id="case-16">
 <h2>Two cycles have separate diagnostics</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">A and B form the first cycle. C, D, and E form the second cycle. F relates to C and is not part of a cycle. Each cycle has its own ID.</p>
 <div class="preview">
-<svg xmlns="http://www.w3.org/2000/svg" width="320" height="300">
-<defs><marker id="preview-arrow" viewBox="0 0 10 10" refX="10" refY="5"
-markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-<path d="M 0 0 L 10 5 L 0 10 z" fill="#555"/></marker></defs>
-<line x1="85.0" y1="115.0" x2="85.0" y2="45.0" stroke="#c00" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-1: A -&gt; B</title></line>
-<line x1="85.0" y1="45.0" x2="85.0" y2="115.0" stroke="#c00" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#preview-arrow)"><title>edge-2: B -&gt; A</title></line>
-<line x1="235.0" y1="185.0" x2="235.0" y2="115.0" stroke="#c00" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-3: C -&gt; D</title></line>
-<line x1="235.0" y1="115.0" x2="235.0" y2="45.0" stroke="#c00" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-4: D -&gt; E</title></line>
-<line x1="235.0" y1="45.0" x2="235.0" y2="185.0" stroke="#c00" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#preview-arrow)"><title>edge-5: E -&gt; C</title></line>
-<line x1="235.0" y1="255.0" x2="235.0" y2="185.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-6: F -&gt; C</title></line>
-<rect x="25.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#c00" stroke-width="1"/><text x="85.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">A</text>
-<rect x="25.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#c00" stroke-width="1"/><text x="85.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">B</text>
-<rect x="175.0" y="167.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#c00" stroke-width="1"/><text x="235.0" y="185.0" text-anchor="middle" dominant-baseline="middle" font-size="12">C</text>
-<rect x="175.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#c00" stroke-width="1"/><text x="235.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">D</text>
-<rect x="175.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#c00" stroke-width="1"/><text x="235.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">E</text>
-<rect x="175.0" y="237.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="235.0" y="255.0" text-anchor="middle" dominant-baseline="middle" font-size="12">F</text>
+<div class="variants"><figure>
+
+<svg xmlns="http://www.w3.org/2000/svg" width="424"
+height="360">
+<defs><marker id="arrow-333" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/></marker><marker id="arrow-c00" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#c00"/></marker><marker id="arrow-e07000" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#e07000"/></marker></defs>
+<rect x="40" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#c00" stroke-width="1"/><text x="120.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">A</text>
+<rect x="40" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#c00" stroke-width="1"/><text x="120.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">B</text>
+<rect x="224" y="192" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#c00" stroke-width="1"/><text x="304.0" y="218.0" text-anchor="middle" dominant-baseline="middle" font-size="12">C</text>
+<rect x="224" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#c00" stroke-width="1"/><text x="304.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">D</text>
+<rect x="224" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#c00" stroke-width="1"/><text x="304.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">E</text>
+<rect x="224" y="268" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="304.0" y="294.0" text-anchor="middle" dominant-baseline="middle" font-size="12">F</text>
+<polyline points="120.0,116 120.0,92" fill="none" stroke="#c00" stroke-width="1.5" marker-end="url(#arrow-c00)"><title>edge-1: A -&gt; B</title></polyline>
+<polyline points="132.0,92 132.0,108.0 144.0,108.0 144.0,116" fill="none" stroke="#c00" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-c00)"><title>edge-2: B -&gt; A</title></polyline>
+<polyline points="304.0,192 304.0,168" fill="none" stroke="#c00" stroke-width="1.5" marker-end="url(#arrow-c00)"><title>edge-3: C -&gt; D</title></polyline>
+<polyline points="304.0,116 304.0,92" fill="none" stroke="#c00" stroke-width="1.5" marker-end="url(#arrow-c00)"><title>edge-4: D -&gt; E</title></polyline>
+<polyline points="292.0,92 292.0,100.0 212.0,100.0 212.0,180.0 292.0,180.0 292.0,192" fill="none" stroke="#c00" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-c00)"><title>edge-5: E -&gt; C</title></polyline>
+<polyline points="304.0,268 304.0,244" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-6: F -&gt; C</title></polyline>
 </svg>
-<p>Stage 2 preview: grid cells and straight lines between node centers,
-without routing. Dashed: relation across levels. Red: cycle. Thick border:
-corrected root. Grey area: standalone nodes.</p>
+
+</figure></div>
+<p>Dashed: relation across levels. Red: cycle. Orange: relations with an
+unavoidable crossing in one channel. Thick border: corrected root. Grey
+area: standalone nodes.</p>
 </div>
 <div class="columns">
 <div class="panel">
@@ -1019,27 +1272,30 @@ F -&gt; C (parent)</pre>
 </div>
 </section>
 
-<section id="case-15">
+<section id="case-17">
 <h2>Three-document cycle with an incoming branch</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">A, B, and C form one cycle. D relates to A and is not part of the cycle. The relation C -&gt; A closes the cycle and does not take part in the level calculation.</p>
 <div class="preview">
-<svg xmlns="http://www.w3.org/2000/svg" width="170" height="300">
-<defs><marker id="preview-arrow" viewBox="0 0 10 10" refX="10" refY="5"
-markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-<path d="M 0 0 L 10 5 L 0 10 z" fill="#555"/></marker></defs>
-<line x1="85.0" y1="185.0" x2="85.0" y2="115.0" stroke="#c00" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-1: A -&gt; B</title></line>
-<line x1="85.0" y1="115.0" x2="85.0" y2="45.0" stroke="#c00" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-2: B -&gt; C</title></line>
-<line x1="85.0" y1="45.0" x2="85.0" y2="185.0" stroke="#c00" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#preview-arrow)"><title>edge-3: C -&gt; A</title></line>
-<line x1="85.0" y1="255.0" x2="85.0" y2="185.0" stroke="#555" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-4: D -&gt; A</title></line>
-<rect x="25.0" y="167.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#c00" stroke-width="1"/><text x="85.0" y="185.0" text-anchor="middle" dominant-baseline="middle" font-size="12">A</text>
-<rect x="25.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#c00" stroke-width="1"/><text x="85.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">B</text>
-<rect x="25.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#c00" stroke-width="1"/><text x="85.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">C</text>
-<rect x="25.0" y="237.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="85.0" y="255.0" text-anchor="middle" dominant-baseline="middle" font-size="12">D</text>
+<div class="variants"><figure>
+
+<svg xmlns="http://www.w3.org/2000/svg" width="240"
+height="360">
+<defs><marker id="arrow-333" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/></marker><marker id="arrow-c00" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#c00"/></marker><marker id="arrow-e07000" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#e07000"/></marker></defs>
+<rect x="40" y="192" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#c00" stroke-width="1"/><text x="120.0" y="218.0" text-anchor="middle" dominant-baseline="middle" font-size="12">A</text>
+<rect x="40" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#c00" stroke-width="1"/><text x="120.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">B</text>
+<rect x="40" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#c00" stroke-width="1"/><text x="120.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">C</text>
+<rect x="40" y="268" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#333" stroke-width="1"/><text x="120.0" y="294.0" text-anchor="middle" dominant-baseline="middle" font-size="12">D</text>
+<polyline points="120.0,192 120.0,168" fill="none" stroke="#c00" stroke-width="1.5" marker-end="url(#arrow-c00)"><title>edge-1: A -&gt; B</title></polyline>
+<polyline points="120.0,116 120.0,92" fill="none" stroke="#c00" stroke-width="1.5" marker-end="url(#arrow-c00)"><title>edge-2: B -&gt; C</title></polyline>
+<polyline points="108.0,92 108.0,104.0 28.0,104.0 28.0,180.0 108.0,180.0 108.0,192" fill="none" stroke="#c00" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-c00)"><title>edge-3: C -&gt; A</title></polyline>
+<polyline points="120.0,268 120.0,244" fill="none" stroke="#333" stroke-width="1.5" marker-end="url(#arrow-333)"><title>edge-4: D -&gt; A</title></polyline>
 </svg>
-<p>Stage 2 preview: grid cells and straight lines between node centers,
-without routing. Dashed: relation across levels. Red: cycle. Thick border:
-corrected root. Grey area: standalone nodes.</p>
+
+</figure></div>
+<p>Dashed: relation across levels. Red: cycle. Orange: relations with an
+unavoidable crossing in one channel. Thick border: corrected root. Grey
+area: standalone nodes.</p>
 </div>
 <div class="columns">
 <div class="panel">
@@ -1070,23 +1326,26 @@ D -&gt; A (parent)</pre>
 </div>
 </section>
 
-<section id="case-16">
+<section id="case-18">
 <h2>Opposite cycle relations use separate routes</h2>
 <div><span class="badge">mode: levels</span></div>
 <p class="description">A relates to B. B relates to A. The two relations use separate lanes.</p>
 <div class="preview">
-<svg xmlns="http://www.w3.org/2000/svg" width="170" height="160">
-<defs><marker id="preview-arrow" viewBox="0 0 10 10" refX="10" refY="5"
-markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-<path d="M 0 0 L 10 5 L 0 10 z" fill="#555"/></marker></defs>
-<line x1="85.0" y1="115.0" x2="85.0" y2="45.0" stroke="#c00" stroke-width="1.5" marker-end="url(#preview-arrow)"><title>edge-1: A -&gt; B</title></line>
-<line x1="85.0" y1="45.0" x2="85.0" y2="115.0" stroke="#c00" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#preview-arrow)"><title>edge-2: B -&gt; A</title></line>
-<rect x="25.0" y="97.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#c00" stroke-width="1"/><text x="85.0" y="115.0" text-anchor="middle" dominant-baseline="middle" font-size="12">A</text>
-<rect x="25.0" y="27.0" width="120" height="36" rx="4" fill="#e8f0fb" stroke="#c00" stroke-width="1"/><text x="85.0" y="45.0" text-anchor="middle" dominant-baseline="middle" font-size="12">B</text>
+<div class="variants"><figure>
+
+<svg xmlns="http://www.w3.org/2000/svg" width="240"
+height="208">
+<defs><marker id="arrow-333" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#333"/></marker><marker id="arrow-c00" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#c00"/></marker><marker id="arrow-e07000" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#e07000"/></marker></defs>
+<rect x="40" y="116" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#c00" stroke-width="1"/><text x="120.0" y="142.0" text-anchor="middle" dominant-baseline="middle" font-size="12">A</text>
+<rect x="40" y="40" width="160" height="52" rx="4" fill="#e8f0fb" stroke="#c00" stroke-width="1"/><text x="120.0" y="66.0" text-anchor="middle" dominant-baseline="middle" font-size="12">B</text>
+<polyline points="120.0,116 120.0,92" fill="none" stroke="#c00" stroke-width="1.5" marker-end="url(#arrow-c00)"><title>edge-1: A -&gt; B</title></polyline>
+<polyline points="132.0,92 132.0,104.0 144.0,104.0 144.0,116" fill="none" stroke="#c00" stroke-width="1.5" stroke-dasharray="6 4" marker-end="url(#arrow-c00)"><title>edge-2: B -&gt; A</title></polyline>
 </svg>
-<p>Stage 2 preview: grid cells and straight lines between node centers,
-without routing. Dashed: relation across levels. Red: cycle. Thick border:
-corrected root. Grey area: standalone nodes.</p>
+
+</figure></div>
+<p>Dashed: relation across levels. Red: cycle. Orange: relations with an
+unavoidable crossing in one channel. Thick border: corrected root. Grey
+area: standalone nodes.</p>
 </div>
 <div class="columns">
 <div class="panel">

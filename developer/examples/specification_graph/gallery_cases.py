@@ -6,8 +6,13 @@ cases for visual control. The unit tests use the same cases as test inputs.
 """
 
 from dataclasses import dataclass
-from typing import Optional, Sequence, Tuple
+from typing import List, Optional, Sequence, Tuple
 
+from strictdoc.features.specification_graph.svg_graph.levels_routing import (
+    LaneConflictPriority,
+    RoutingOptions,
+    SkipChannelChoice,
+)
 from strictdoc.features.specification_graph.svg_graph.model import (
     Graph,
     GraphEdge,
@@ -23,6 +28,9 @@ class GalleryCase:
     graph: Graph
     # Number of the open question in spec.md that the case helps to decide.
     open_question: Optional[int] = None
+    # Routing variants to compare side by side. An empty tuple means the
+    # default routing options.
+    variants: Tuple[Tuple[str, RoutingOptions], ...] = ()
 
 
 def _levels_case(
@@ -31,6 +39,7 @@ def _levels_case(
     node_ids: Sequence[str],
     edges: Sequence[Tuple[str, str]],
     open_question: Optional[int] = None,
+    variants: Tuple[Tuple[str, RoutingOptions], ...] = (),
 ) -> GalleryCase:
     """
     Create a levels mode case.
@@ -57,10 +66,77 @@ def _levels_case(
             ),
         ),
         open_question=open_question,
+        variants=variants,
     )
 
 
+def _chain_nodes(names: Sequence[str], length: int) -> List[str]:
+    return [f"{name_}{index_}" for index_ in range(length) for name_ in names]
+
+
+def _chain_edges(names: Sequence[str], length: int) -> List[Tuple[str, str]]:
+    return [
+        (f"{name_}{index_ + 1}", f"{name_}{index_}")
+        for name_ in names
+        for index_ in range(length - 1)
+    ]
+
+
 LEVELS_CASES: Tuple[GalleryCase, ...] = (
+    _levels_case(
+        "Nested relations in one channel",
+        (
+            "X -> D and Y -> C both go right in the channel below A, B, C, "
+            "D. The segment of Y -> C lies inside the segment of X -> D. "
+            "X -> D must cross one vertical of Y -> C. Entry priority: "
+            "X -> D stays above Y -> C and crosses the vertical into C. Exit "
+            "priority: X -> D stays below Y -> C and crosses the vertical "
+            "out of Y."
+        ),
+        ["A", "B", "C", "D", "X", "Y"],
+        [("X", "A"), ("X", "D"), ("Y", "B"), ("Y", "C"), ("Y", "D")],
+        open_question=22,
+        variants=(
+            (
+                "Entry priority",
+                RoutingOptions(
+                    lane_conflict_priority=LaneConflictPriority.ENTRY
+                ),
+            ),
+            (
+                "Exit priority",
+                RoutingOptions(
+                    lane_conflict_priority=LaneConflictPriority.EXIT
+                ),
+            ),
+        ),
+    ),
+    _levels_case(
+        "Relations across levels from far columns",
+        (
+            "M3 -> P1 and Q3 -> P1 skip one level. Near source: each "
+            "relation climbs in the vertical channel next to its source, so "
+            "the two relations use two channels. Near target: both relations "
+            "climb in the vertical channel next to P1."
+        ),
+        _chain_nodes(["P", "M", "Q"], 4),
+        [*_chain_edges(["P", "M", "Q"], 4), ("M3", "P1"), ("Q3", "P1")],
+        open_question=25,
+        variants=(
+            (
+                "Near source",
+                RoutingOptions(
+                    skip_channel_choice=SkipChannelChoice.NEAR_SOURCE
+                ),
+            ),
+            (
+                "Near target",
+                RoutingOptions(
+                    skip_channel_choice=SkipChannelChoice.NEAR_TARGET
+                ),
+            ),
+        ),
+    ),
     _levels_case(
         "Simple chain",
         "A <- B <- C. One node per level, one column.",
@@ -183,8 +259,8 @@ LEVELS_CASES: Tuple[GalleryCase, ...] = (
         (
             "P has three children, A, B, and C. Each child has its own "
             "child. Q stands right of P and has a chain of two nodes. A, B, "
-            "and C compete for the column of P. Q1 takes the column of Q. "
-            "The case shows which branches stay straight."
+            "and C compete for the column of P. A wins. B and C stand right "
+            "of A in input order. Q moves right. All branches stay straight."
         ),
         ["P", "Q", "A", "B", "C", "A1", "B1", "C1", "Q1", "Q2"],
         [
@@ -197,7 +273,6 @@ LEVELS_CASES: Tuple[GalleryCase, ...] = (
             ("Q1", "Q"),
             ("Q2", "Q1"),
         ],
-        open_question=24,
     ),
     _levels_case(
         "Disconnected components form separate islands",

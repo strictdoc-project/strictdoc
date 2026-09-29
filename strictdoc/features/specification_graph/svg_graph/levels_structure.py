@@ -329,30 +329,23 @@ class _IslandLayout:
 
         reserved_columns = set(claimed)
         occupied_columns: Set[int] = set()
+        # The last placed contender for the column of each winner. A node that
+        # loses the column stands right of it, so the contenders keep the
+        # input order.
+        last_contender_of: Dict[str, str] = {}
         for node_id_ in level_nodes:
             column_ = preferred_column.get(node_id_)
             if column_ is not None and claimed[column_] == node_id_:
                 selected_ = column_
+                last_contender_of[node_id_] = node_id_
             elif column_ is not None:
-                existing_max_column_ = max(self.column_of.values(), default=-1)
-                candidates_ = sorted(
-                    (
-                        candidate_
-                        for candidate_ in (column_ - 1, column_ + 1)
-                        if candidate_ >= 0
-                        and candidate_ not in occupied_columns
-                        and candidate_ not in reserved_columns
-                    ),
-                    key=lambda candidate_: (
-                        candidate_ > existing_max_column_,
-                        abs(candidate_ - column_),
-                        candidate_,
-                    ),
-                )
-                if len(candidates_) > 0:
-                    selected_ = candidates_[0]
-                else:
-                    selected_ = column_ + 1
+                winner_id_ = claimed[column_]
+                selected_ = self.column_of[last_contender_of[winner_id_]] + 1
+                last_contender_of[winner_id_] = node_id_
+                if (
+                    selected_ in occupied_columns
+                    or selected_ in reserved_columns
+                ):
                     self._insert_column(selected_)
                     occupied_columns = _shift_columns(
                         occupied_columns, selected_

@@ -108,6 +108,23 @@ def test_corrected_root_with_three_children_stands_right_of_middle() -> None:
     assert positions["R"] == (2, 3)
 
 
+def test_contenders_for_one_column_keep_the_input_order() -> None:
+    structure = _structure_of_case("Three chains compete for one parent column")
+
+    assert _positions(structure) == {
+        "P": (0, 0),
+        "Q": (0, 3),
+        "A": (1, 0),
+        "B": (1, 1),
+        "C": (1, 2),
+        "A1": (2, 0),
+        "B1": (2, 1),
+        "C1": (2, 2),
+        "Q1": (1, 3),
+        "Q2": (2, 3),
+    }
+
+
 def test_islands_stand_side_by_side_below_standalone_nodes() -> None:
     structure = _structure_of_case(
         "Disconnected components form separate islands"

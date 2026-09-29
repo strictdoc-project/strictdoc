@@ -2,13 +2,25 @@
 Stage invariants on every gallery case.
 """
 
-from typing import Dict, List, Set
+from itertools import combinations
+from typing import Dict, List, Set, Tuple
 
 import pytest
 
 from developer.examples.specification_graph.gallery_cases import (
     GALLERY_CASES,
     GalleryCase,
+)
+from strictdoc.features.specification_graph.svg_graph.levels_geometry import (
+    LevelsGeometry,
+    Point,
+    compute_levels_geometry,
+)
+from strictdoc.features.specification_graph.svg_graph.levels_routing import (
+    LaneConflictPriority,
+    RoutingOptions,
+    SkipChannelChoice,
+    compute_levels_routing,
 )
 from strictdoc.features.specification_graph.svg_graph.levels_structure import (
     compute_levels_structure,
@@ -79,6 +91,145 @@ def test_levels_structure_invariants(case: GalleryCase) -> None:
         assert is_standalone_row_ == (node_id_ in standalone_node_ids)
 
     assert compute_levels_structure(normalized_graph) == structure
+
+
+ROUTING_VARIANTS = [
+    RoutingOptions(priority_, choice_)
+    for priority_ in LaneConflictPriority
+    for choice_ in SkipChannelChoice
+]
+
+
+@pytest.mark.parametrize(
+    "options",
+    ROUTING_VARIANTS,
+    ids=[
+        f"{options_.lane_conflict_priority.value}-"
+        f"{options_.skip_channel_choice.value}"
+        for options_ in ROUTING_VARIANTS
+    ],
+)
+@pytest.mark.parametrize(
+    "case", LEVELS_CASES, ids=[case_.title for case_ in LEVELS_CASES]
+)
+def test_levels_geometry_invariants(
+    case: GalleryCase, options: RoutingOptions
+) -> None:
+    normalized_graph = normalize_graph(case.graph)
+    structure = compute_levels_structure(normalized_graph)
+    routing = compute_levels_routing(normalized_graph, structure, options)
+    geometry = compute_levels_geometry(structure, routing)
+
+    assert _geometry_problems(geometry) == []
+
+    ports = [
+        (route_.edge_id, port_)
+        for route_ in routing.routes.values()
+        for port_ in (route_.source_port, route_.target_port)
+    ]
+    assert len({port_ for _, port_ in ports}) == len(ports)
+
+
+_Segment = Tuple[Point, Point]
+
+
+def _geometry_problems(geometry: LevelsGeometry) -> List[str]:
+    """
+    Check the result invariants from spec.md, section "Инварианты результата".
+
+    Two relations may cross only perpendicularly inside the segments of both
+    relations.
+    """
+
+    problems: List[str] = []
+    segments_by_edge: Dict[str, List[_Segment]] = {
+        edge_id_: [
+            (start_, end_)
+            for start_, end_ in zip(path_, path_[1:])
+            if start_ != end_
+        ]
+        for edge_id_, path_ in geometry.edge_paths.items()
+    }
+    for edge_id_, segments_ in segments_by_edge.items():
+        for start_, end_ in segments_:
+            if start_.x != end_.x and start_.y != end_.y:
+                problems.append(f"{edge_id_}: diagonal segment")
+            for point_ in (start_, end_):
+                if not (
+                    0 <= point_.x <= geometry.width
+                    and 0 <= point_.y <= geometry.height
+                ):
+                    problems.append(f"{edge_id_}: point outside the SVG")
+            for node_id_, rect_ in geometry.node_rects.items():
+                if (
+                    max(start_.x, end_.x) > rect_.x
+                    and min(start_.x, end_.x) < rect_.x + rect_.width
+                    and max(start_.y, end_.y) > rect_.y
+                    and min(start_.y, end_.y) < rect_.y + rect_.height
+                ):
+                    problems.append(f"{edge_id_}: passes through {node_id_}")
+
+    for (first_id_, first_), (second_id_, second_) in combinations(
+        segments_by_edge.items(), 2
+    ):
+        for first_segment_ in first_:
+            for second_segment_ in second_:
+                if _collinear_contact(first_segment_, second_segment_):
+                    problems.append(
+                        f"{first_id_} and {second_id_}: shared or touching "
+                        "segment"
+                    )
+        for bend_owner_, bends_, other_id_, other_segments_ in (
+            (
+                first_id_,
+                geometry.edge_paths[first_id_][1:-1],
+                second_id_,
+                second_,
+            ),
+            (
+                second_id_,
+                geometry.edge_paths[second_id_][1:-1],
+                first_id_,
+                first_,
+            ),
+        ):
+            for bend_ in bends_:
+                if any(
+                    _point_on_segment(bend_, segment_)
+                    for segment_ in other_segments_
+                ):
+                    problems.append(
+                        f"{bend_owner_}: bend on {other_id_} at "
+                        f"({bend_.x}, {bend_.y})"
+                    )
+    return problems
+
+
+def _collinear_contact(first: _Segment, second: _Segment) -> bool:
+    for axis_, other_axis_ in (("y", "x"), ("x", "y")):
+        values_ = {getattr(point_, axis_) for point_ in (*first, *second)}
+        if len(values_) != 1:
+            continue
+        low_ = max(
+            min(getattr(point_, other_axis_) for point_ in first),
+            min(getattr(point_, other_axis_) for point_ in second),
+        )
+        high_ = min(
+            max(getattr(point_, other_axis_) for point_ in first),
+            max(getattr(point_, other_axis_) for point_ in second),
+        )
+        if low_ <= high_:
+            return True
+    return False
+
+
+def _point_on_segment(point: Point, segment: _Segment) -> bool:
+    start, end = segment
+    if start.x == end.x == point.x:
+        return min(start.y, end.y) <= point.y <= max(start.y, end.y)
+    if start.y == end.y == point.y:
+        return min(start.x, end.x) <= point.x <= max(start.x, end.x)
+    return False
 
 
 def _assert_level_edges_are_acyclic(normalized_graph: NormalizedGraph) -> None:

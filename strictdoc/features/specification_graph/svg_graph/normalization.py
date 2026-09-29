@@ -307,6 +307,8 @@ def _level_edge_flags(
     edges: List[GraphEdge], cycle_id_by_node: Dict[str, str]
 ) -> List[bool]:
     """
+    Select the edges that take part in the level calculation.
+
     An edge between different cycles cannot close a cycle. Inside a cycle,
     the edges are accepted in input order. An edge is rejected if its target
     already reaches its source through the accepted edges.

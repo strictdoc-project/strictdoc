@@ -6,12 +6,13 @@ StrictDoc provides a "Specification graph" screen. The screen shows the
 project structure as an SVG diagram of nodes, nested containers, and the
 relations between them.
 
-The work has four parts:
+The work has five parts:
 
 1. Graph generator with a public API.
 2. Interactivity of the generated diagram.
 3. StrictDoc adapter.
 4. StrictDoc feature integration.
+5. SVG file export.
 
 ### 1. Graph generator
 
@@ -29,7 +30,8 @@ The work has four parts:
 
 - Pan and zoom, with zoom controls and fit-to-view.
 - Hover and focus highlight a relation and the nodes it connects.
-- Nodes link to their source. A link opens only on an explicit action.
+- Shift + hover shows the node data. Shift + click opens the node link in
+  a new tab. A plain click does not open the link.
 - The legend and the controls stay fixed while the diagram moves.
 - Interactivity works on the server-generated inline SVG. The feature does
   not add a client-side graph library.
@@ -56,6 +58,14 @@ adapter supports two views:
   switch and the zoom controls.
 - Feature settings in the project configuration: to be defined.
 
+### 5. SVG file export
+
+- In server mode, the screen offers to save the diagram as an SVG file.
+- Static export writes the SVG file into the export folder. The screen
+  links to the file.
+- The SVG file contains the legend.
+- The SVG file has no interactivity.
+
 ## WHY
 
 A StrictDoc project can have many documents connected through relations of
@@ -79,6 +89,7 @@ Order of work:
 5. StrictDoc adapter for the documents view and the nodes view.
 6. Feature registration, export screen, server route, navigation entry,
    help, legend, toolbox.
+7. SVG file export.
 
 ### Code location
 

@@ -634,8 +634,9 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
         (
             "Documents A, B, and C relate to each other and stand in the "
             "row. Documents D, E, F, and G have no relation to another "
-            "document. They stand on shelves in the block above the row. "
-            "The block is not wider than the row."
+            "document. They stand in the block above the row. Each document "
+            "takes the highest free place, so G stands below D. The block is "
+            "not wider than the row."
         ),
         [
             ("A", ["A1", "A2"]),

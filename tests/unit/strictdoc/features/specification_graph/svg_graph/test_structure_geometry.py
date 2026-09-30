@@ -117,7 +117,7 @@ def test_block_stands_above_the_row_and_is_not_wider() -> None:
     The block of unconnected root children stands above the row.
 
     Code: structure_geometry._GeometryBuilder.build,
-    structure_geometry._shelf_positions.
+    structure_geometry._skyline_positions.
     Fails if:
     - the block uses the square rule while a connected row exists.
     """
@@ -131,14 +131,12 @@ def test_block_stands_above_the_row_and_is_not_wider() -> None:
         rect_.y for rect_ in row
     )
     assert max(rect_.x + rect_.width for rect_ in block) <= row_right
-    # The shelf takes the width of the row: D, E, and F fit on the first
-    # shelf, G does not.
-    first_shelf_top = geometry.node_rects["D"].y
-    assert [geometry.node_rects[id_].y for id_ in ("E", "F")] == [
-        first_shelf_top,
-        first_shelf_top,
-    ]
-    assert geometry.node_rects["G"].y > first_shelf_top
+    # The block takes the width of the row: D, E, and F fit side by side.
+    # G takes the highest free place: below D, the shortest of the three.
+    top = geometry.node_rects["D"].y
+    assert [geometry.node_rects[id_].y for id_ in ("E", "F")] == [top, top]
+    assert geometry.node_rects["G"].x == geometry.node_rects["D"].x
+    assert geometry.node_rects["G"].y > top
 
 
 def test_block_without_row_is_close_to_a_square() -> None:
@@ -152,11 +150,11 @@ def test_block_without_row_is_close_to_a_square() -> None:
 
     geometry = _geometry(_case("Root without relations"))
 
-    shelf_tops = sorted(
-        {geometry.node_rects[f"Doc {index_}"].y for index_ in range(1, 7)}
-    )
-    # Three boxes per shelf, two shelves.
-    assert len(shelf_tops) == 2
+    lefts = {geometry.node_rects[f"Doc {index_}"].x for index_ in range(1, 7)}
+    # Two columns: 520 x 670 px. Three columns give 752 x 486 px, farther
+    # from a square.
+    assert len(lefts) == 2
+    assert (geometry.width, geometry.height) == (520, 670)
 
 
 def test_serializer_draws_containers_before_their_children() -> None:

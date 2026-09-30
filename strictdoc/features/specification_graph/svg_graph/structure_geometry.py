@@ -283,12 +283,12 @@ class _GeometryBuilder:
         top: float,
     ) -> Tuple[float, float]:
         """
-        Place the unconnected root children on shelves, in input order.
+        Place the unconnected root children by the skyline, in input order.
 
         Return the height and the used width of the block.
         """
 
-        positions, used_width, height = _shelf_positions(
+        positions, used_width, height = _skyline_positions(
             block_sizes, block_width, self.config.min_channel_size
         )
         for node_id_, (x_, y_) in zip(block_ids, positions):
@@ -296,59 +296,100 @@ class _GeometryBuilder:
         return height, used_width
 
 
-def _shelf_positions(
-    sizes: List[Tuple[float, float]], shelf_width: float, channel: float
+def _skyline_positions(
+    sizes: List[Tuple[float, float]], block_width: float, channel: float
 ) -> Tuple[List[Tuple[float, float]], float, float]:
     """
-    Put boxes on shelves from left to right, in input order.
+    Pack boxes by the skyline, in input order.
 
-    A shelf wraps when the next box does not fit into the shelf width. A
-    channel separates the boxes and the shelves. Return the box positions,
-    the used width, and the height.
+    This function is the only place of the block packing rule. spec.md,
+    section "Раскладка корня". The skyline is the lower edge of the boxes
+    placed so far. Each next box takes the highest place on the skyline where
+    it fits into the block width. On a tie, the leftmost place wins. A
+    channel separates the boxes. Return the box positions, the used width,
+    and the height.
     """
 
+    # Skyline segments: (left, right, top of the free space).
+    skyline: List[Tuple[float, float, float]] = [
+        (channel, max(block_width, channel), channel)
+    ]
     positions: List[Tuple[float, float]] = []
-    x = channel
-    y = channel
-    shelf_height = 0.0
     used_width = 0.0
+    height = 0.0
     for width_, height_ in sizes:
-        if x > channel and x + width_ + channel > shelf_width:
-            x = channel
-            y += shelf_height + channel
-            shelf_height = 0.0
-        positions.append((x, y))
-        x += width_ + channel
-        used_width = max(used_width, x)
-        shelf_height = max(shelf_height, height_)
-    return positions, used_width, y + shelf_height
+        footprint_ = width_ + channel
+        best_: Optional[Tuple[float, float]] = None
+        for left_, _, _ in skyline:
+            right_ = left_ + footprint_
+            if right_ > block_width and left_ > channel:
+                continue
+            top_ = max(
+                segment_top_
+                for segment_left_, segment_right_, segment_top_ in skyline
+                if segment_left_ < right_ and segment_right_ > left_
+            )
+            if best_ is None or (top_, left_) < (best_[1], best_[0]):
+                best_ = (left_, top_)
+        assert best_ is not None
+        x_, y_ = best_
+        positions.append((x_, y_))
+        used_width = max(used_width, x_ + footprint_)
+        height = max(height, y_ + height_)
+        skyline = _raise_skyline(
+            skyline, x_, x_ + footprint_, y_ + height_ + channel
+        )
+    return positions, used_width, height
+
+
+def _raise_skyline(
+    skyline: List[Tuple[float, float, float]],
+    left: float,
+    right: float,
+    top: float,
+) -> List[Tuple[float, float, float]]:
+    """
+    Set the skyline between left and right to the given top.
+    """
+
+    result: List[Tuple[float, float, float]] = []
+    for segment_left_, segment_right_, segment_top_ in skyline:
+        if segment_right_ <= left or segment_left_ >= right:
+            result.append((segment_left_, segment_right_, segment_top_))
+            continue
+        if segment_left_ < left:
+            result.append((segment_left_, left, segment_top_))
+        if segment_right_ > right:
+            result.append((right, segment_right_, segment_top_))
+    result.append((left, right, top))
+    return sorted(result)
 
 
 def _block_width(
     block_sizes: List[Tuple[float, float]], channel: float
 ) -> float:
     """
-    Return the shelf width of the block when the root has no connected row.
+    Return the width of the block when the root has no connected row.
 
     This function is the only place of this rule. spec.md, section
     "Раскладка корня": the block is close to a square, but not narrower than
     its widest child.
 
-    The function tries each shelf width that fits the first 1, 2, ... n
-    boxes on the first shelf. It picks the width with the width to height
-    ratio closest to 1. On a tie, the narrower width wins.
+    The function tries each block width that fits the first 1, 2, ... n
+    boxes side by side. It picks the width with the width to height ratio of
+    the packed block closest to 1. On a tie, the narrower width wins.
     """
 
     best_width = 0.0
     best_score = math.inf
-    first_shelf_width = channel
+    candidate_width = channel
     for width_, _ in block_sizes:
-        first_shelf_width += width_ + channel
-        _, used_width_, height_ = _shelf_positions(
-            block_sizes, first_shelf_width, channel
+        candidate_width += width_ + channel
+        _, used_width_, height_ = _skyline_positions(
+            block_sizes, candidate_width, channel
         )
         score_ = abs(math.log(used_width_ / height_))
         if score_ < best_score:
             best_score = score_
-            best_width = first_shelf_width
+            best_width = candidate_width
     return best_width

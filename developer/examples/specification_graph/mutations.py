@@ -389,6 +389,13 @@ MUTATIONS = (
         "        if best_width == 0.0 or score_ > best_score:",
     ),
     Mutation(
+        "L7",
+        "block box takes the leftmost place instead of the highest",
+        STRUCTURE_GEOMETRY,
+        "if best_ is None or (top_, left_) < (best_[1], best_[0]):",
+        "if best_ is None:",
+    ),
+    Mutation(
         "L5",
         "container height ignores the header",
         STRUCTURE_GEOMETRY,

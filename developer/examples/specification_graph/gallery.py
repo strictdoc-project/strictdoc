@@ -38,8 +38,15 @@ from strictdoc.features.specification_graph.svg_graph.normalization import (
     NormalizedGraph,
     normalize_graph,
 )
+from strictdoc.features.specification_graph.svg_graph.structure_geometry import (
+    compute_structure_geometry,
+)
+from strictdoc.features.specification_graph.svg_graph.structure_layout import (
+    compute_structure_layout,
+)
 from strictdoc.features.specification_graph.svg_graph.svg_serializer import (
     serialize_levels_svg,
+    serialize_structure_svg,
 )
 
 OUTPUT_FILE_NAME = "gallery.html"
@@ -192,6 +199,8 @@ def _render_normalization(normalized_graph: NormalizedGraph) -> str:
 def _render_routes(
     index: int, case: GalleryCase, normalized_graph: NormalizedGraph
 ) -> str:
+    if normalized_graph.mode is LayoutMode.STRUCTURE:
+        return _render_structure(index, normalized_graph)
     if normalized_graph.mode is not LayoutMode.LEVELS:
         return ""
     structure = compute_levels_structure(normalized_graph)
@@ -221,6 +230,22 @@ def _render_routes(
 <p>Built-in relation types: warning (dashed) marks a relation across
 levels, danger (red) marks a cycle. The "!" sign marks a node with a
 diagnostic.</p>
+</div>"""
+
+
+def _render_structure(index: int, normalized_graph: NormalizedGraph) -> str:
+    layout = compute_structure_layout(normalized_graph)
+    geometry = compute_structure_geometry(normalized_graph, layout)
+    svg = serialize_structure_svg(
+        normalized_graph, geometry, svg_id=f"case-{index}-result"
+    )
+    return f"""<div class="preview">
+<figure>
+<h3>Generator result</h3>
+{svg}
+</figure>
+<p>The routing of the structure mode is not implemented yet. The picture
+shows the layout of the nodes and containers without relations.</p>
 </div>"""
 
 

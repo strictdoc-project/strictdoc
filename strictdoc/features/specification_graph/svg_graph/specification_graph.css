@@ -43,6 +43,35 @@
   overflow-wrap: anywhere;
 }
 
+/* A composite node: a frame with a header strip. */
+.specification-graph-node--composite > .specification-graph-node__box {
+  fill: #fbf8ee;
+  stroke: #555555;
+}
+
+.specification-graph-node__header-line {
+  stroke: #b8b2a0;
+  stroke-width: 1;
+}
+
+/*
+ * The container title takes at most two lines, at the left, centered
+ * vertically in the header strip.
+ */
+.specification-graph-node__title--container {
+  align-items: center;
+  justify-content: flex-start;
+  padding: 4px 8px;
+  text-align: left;
+  font-weight: bold;
+}
+
+.specification-graph-node__title--container
+  .specification-graph-node__title-text {
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+}
+
 .specification-graph-edge__line {
   fill: none;
   stroke-width: 1.5;

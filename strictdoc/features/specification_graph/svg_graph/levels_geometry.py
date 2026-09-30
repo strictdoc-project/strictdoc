@@ -55,6 +55,10 @@ class GeometryConfig:
     # Size of a channel with few lanes or no lanes.
     min_channel_size: float = 24
 
+    # Containers (structure mode).
+    # Height of the header strip: two lines of the title and the padding.
+    container_header_height: float = 38
+
     # SVG.
     # Empty border around the graph.
     margin: float = 16

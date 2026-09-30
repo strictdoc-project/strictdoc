@@ -6,7 +6,7 @@ cases for visual control. The unit tests use the same cases as test inputs.
 """
 
 from dataclasses import dataclass
-from typing import List, Optional, Sequence, Tuple
+from typing import Dict, List, Optional, Sequence, Tuple, Union
 
 from strictdoc.features.specification_graph.svg_graph.levels_routing import (
     LaneConflictPriority,
@@ -524,6 +524,193 @@ LEVELS_CASES: Tuple[GalleryCase, ...] = (
     ),
 )
 
+# A structure node: a string is a simple node, a pair is a composite node
+# with its children.
+StructureSpec = Union[str, Tuple[str, Sequence["StructureSpec"]]]
+
+
+def _structure_node(spec: StructureSpec, titles: Dict[str, str]) -> GraphNode:
+    if isinstance(spec, str):
+        return GraphNode(node_id=spec, title=titles.get(spec, spec))
+    node_id, children = spec
+    return GraphNode(
+        node_id=node_id,
+        title=titles.get(node_id, node_id),
+        children=tuple(_structure_node(child_, titles) for child_ in children),
+    )
+
+
+def _structure_case(
+    title: str,
+    description: str,
+    root: Sequence[StructureSpec],
+    edges: Sequence[Tuple[str, str]] = (),
+    titles: Optional[Dict[str, str]] = None,
+) -> GalleryCase:
+    """
+    Create a structure mode case.
+
+    Each edge is a (source, target) pair.
+    """
+
+    titles_ = {} if titles is None else titles
+    return GalleryCase(
+        title=title,
+        description=description,
+        graph=Graph(
+            mode=LayoutMode.STRUCTURE,
+            root=tuple(_structure_node(spec_, titles_) for spec_ in root),
+            edges=tuple(
+                GraphEdge(
+                    source_id=source_id_,
+                    target_id=target_id_,
+                    relation_type="parent",
+                )
+                for source_id_, target_id_ in edges
+            ),
+        ),
+    )
+
+
+STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
+    _structure_case(
+        "Document tree from the sketch",
+        (
+            "Section 1 holds simple nodes, Section 4, and Section 2 with "
+            "Section 3 inside. Consecutive simple nodes form one column. "
+            "Each section takes a column of its own. T1, T2, and T3 relate "
+            "to nodes inside Section 1, so all four root children stand in "
+            "the row."
+        ),
+        [
+            "T1",
+            "T2",
+            "T3",
+            (
+                "Section 1",
+                [
+                    "N1",
+                    ("Section 4", ["S4-1", "S4-2", "S4-3", "S4-4"]),
+                    "N2",
+                    "N3",
+                    (
+                        "Section 2",
+                        [
+                            "S2-1",
+                            ("Section 3", ["S3-1", "S3-2", "S3-3", "S3-4"]),
+                        ],
+                    ),
+                    "N4",
+                    "N5",
+                    "N6",
+                    "N7",
+                    "N8",
+                ],
+            ),
+        ],
+        [("N1", "T1"), ("S3-1", "T2"), ("N4", "T3"), ("S4-2", "N1")],
+    ),
+    _structure_case(
+        "Columns of different height",
+        (
+            "Column 1 has one node, column 2 has five nodes, column 3 is a "
+            "section of medium height. The columns align at the top. The "
+            "bottom corridor lies below the tallest column. The space below "
+            "a short column is not a channel."
+        ),
+        [
+            (
+                "Document",
+                [
+                    ("Short", ["A1"]),
+                    ("Tall", ["B1", "B2", "B3", "B4", "B5"]),
+                    ("Medium", ["C1", "C2"]),
+                ],
+            )
+        ],
+    ),
+    _structure_case(
+        "Root with connected and unconnected documents",
+        (
+            "Documents A, B, and C relate to each other and stand in the "
+            "row. Documents D, E, F, and G have no relation to another "
+            "document. They stand on shelves in the block above the row. "
+            "The block is not wider than the row."
+        ),
+        [
+            ("A", ["A1", "A2"]),
+            ("D", ["D1"]),
+            ("B", ["B1", "B2", "B3"]),
+            ("E", ["E1", "E2", "E3", "E4"]),
+            ("C", ["C1"]),
+            ("F", ["F1", "F2"]),
+            ("G", ["G1"]),
+        ],
+        [("B1", "A1"), ("C1", "B2"), ("D1", "D"), ("E2", "E1")],
+    ),
+    _structure_case(
+        "Root without relations",
+        (
+            "No document relates to another document. All documents stand "
+            "in the block. The block is close to a square by area."
+        ),
+        [
+            ("Doc 1", ["D1-1", "D1-2"]),
+            ("Doc 2", ["D2-1"]),
+            ("Doc 3", ["D3-1", "D3-2", "D3-3"]),
+            ("Doc 4", ["D4-1"]),
+            ("Doc 5", ["D5-1", "D5-2"]),
+            ("Doc 6", ["D6-1"]),
+        ],
+    ),
+    _structure_case(
+        "Deep nesting",
+        (
+            "Four levels of sections. Each container gets its size from "
+            "its columns, from the inside out."
+        ),
+        [
+            (
+                "Document",
+                [
+                    "Intro",
+                    (
+                        "Level 1",
+                        [
+                            (
+                                "Level 2",
+                                [
+                                    ("Level 3", ["Deep 1", "Deep 2"]),
+                                    "Beside 3",
+                                ],
+                            ),
+                            "Beside 2",
+                        ],
+                    ),
+                    "Outro",
+                ],
+            )
+        ],
+    ),
+    _structure_case(
+        "Long container titles",
+        (
+            "A container title takes at most two lines at the top left of "
+            "the header. The rest is cut. The full title is in the tooltip."
+        ),
+        [("Doc", [("Sec", ["Req 1", "Req 2"]), "Req 3"])],
+        titles={
+            "Doc": (
+                "A document with a very long title that does not fit into "
+                "two lines of the container header at all, so the header "
+                "cuts it and the tooltip shows the full text"
+            ),
+            "Sec": "A section title of medium length for a narrow box",
+        },
+    ),
+)
+
+
 SERIALIZATION_CASES: Tuple[GalleryCase, ...] = (
     GalleryCase(
         title="Titles, relation types, and diagnostics",
@@ -570,5 +757,5 @@ SERIALIZATION_CASES: Tuple[GalleryCase, ...] = (
 )
 
 GALLERY_CASES: Tuple[GalleryCase, ...] = (
-    SERIALIZATION_CASES + LEVELS_CASES + EXTREME_GATE_CASES
+    SERIALIZATION_CASES + STRUCTURE_CASES + LEVELS_CASES + EXTREME_GATE_CASES
 )

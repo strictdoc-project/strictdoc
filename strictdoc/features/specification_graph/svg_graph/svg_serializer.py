@@ -35,6 +35,9 @@ from strictdoc.features.specification_graph.svg_graph.normalization import (
     NormalizedEdge,
     NormalizedGraph,
 )
+from strictdoc.features.specification_graph.svg_graph.structure_geometry import (
+    StructureGeometry,
+)
 
 CSS_PREFIX = "specification-graph"
 
@@ -89,8 +92,31 @@ def serialize_levels_svg(
         ),
     ]
     if debug:
-        elements.append(_render_debug_layer(geometry))
-    elements.append(_render_nodes(normalized_graph, geometry))
+        elements.append(
+            _render_debug_layer(
+                [
+                    (
+                        (
+                            "H"
+                            if channel_id_.orientation is Orientation.HORIZONTAL
+                            else "V"
+                        )
+                        + str(channel_id_.index),
+                        rect_,
+                    )
+                    for channel_id_, rect_ in sorted(
+                        geometry.channel_rects.items(),
+                        key=lambda item_: (
+                            item_[0].orientation.value,
+                            item_[0].index,
+                        ),
+                    )
+                ]
+            )
+        )
+    elements.append(
+        _render_nodes(normalized_graph, geometry.node_rects, header_rects={})
+    )
     elements.append(
         _render_edges(
             normalized_graph,
@@ -102,7 +128,68 @@ def serialize_levels_svg(
             svg_id,
         )
     )
-    elements.append(_render_warning_signs(normalized_graph, geometry))
+    elements.append(
+        _render_warning_signs(normalized_graph, geometry.node_rects)
+    )
+    elements.append("</svg>")
+    return "\n".join(elements) + "\n"
+
+
+def serialize_structure_svg(
+    normalized_graph: NormalizedGraph,
+    geometry: StructureGeometry,
+    debug: bool = False,
+    svg_id: str = CSS_PREFIX,
+) -> str:
+    """
+    Serialize the structure mode result.
+
+    The routing of the structure mode is not implemented yet: the SVG has
+    the nodes and the containers without relations.
+    """
+
+    danger_style = normalized_graph.relation_types[DANGER_RELATION_TYPE]
+    elements: List[str] = [
+        (
+            f'<svg xmlns="http://www.w3.org/2000/svg" id="{_escape(svg_id)}" '
+            f'class="{CSS_PREFIX}" '
+            f'width="{_number(geometry.width)}" '
+            f'height="{_number(geometry.height)}" '
+            f'viewBox="0 0 {_number(geometry.width)} '
+            f'{_number(geometry.height)}">'
+        ),
+        (
+            "<defs>\n<style>\n"
+            f"#{svg_id} .{CSS_PREFIX}-node--danger .{CSS_PREFIX}-node__box "
+            f"{{ stroke: {danger_style.color}; }}\n"
+            "</style>\n</defs>"
+        ),
+    ]
+    if debug:
+        elements.append(
+            _render_debug_layer(
+                [
+                    (
+                        channel_.kind.value
+                        + (
+                            f":{channel_.container_id}"
+                            if channel_.container_id is not None
+                            else ""
+                        ),
+                        channel_.rect,
+                    )
+                    for channel_ in geometry.channels
+                ]
+            )
+        )
+    elements.append(
+        _render_nodes(
+            normalized_graph, geometry.node_rects, geometry.header_rects
+        )
+    )
+    elements.append(
+        _render_warning_signs(normalized_graph, geometry.node_rects)
+    )
     elements.append("</svg>")
     return "\n".join(elements) + "\n"
 
@@ -174,26 +261,32 @@ def _render_defs(
     )
 
 
-def _render_debug_layer(geometry: LevelsGeometry) -> str:
-    rects: List[str] = []
-    for channel_id_, rect_ in sorted(
-        geometry.channel_rects.items(),
-        key=lambda item_: (item_[0].orientation.value, item_[0].index),
-    ):
-        letter_ = (
-            "H" if channel_id_.orientation is Orientation.HORIZONTAL else "V"
-        )
-        rects.append(
-            f'<rect class="{CSS_PREFIX}-debug__channel" '
-            f'data-debug-channel="{letter_}{channel_id_.index}" '
-            f"{_rect_attributes(rect_)}/>"
-        )
+def _render_debug_layer(channels: List[Tuple[str, Rect]]) -> str:
+    """
+    Render the debug layer: one rectangle per channel with its label.
+    """
+
+    rects = [
+        f'<rect class="{CSS_PREFIX}-debug__channel" '
+        f'data-debug-channel="{_escape(label_)}" '
+        f"{_rect_attributes(rect_)}/>"
+        for label_, rect_ in channels
+    ]
     return f'<g class="{CSS_PREFIX}-debug">\n' + "\n".join(rects) + "\n</g>"
 
 
 def _render_nodes(
-    normalized_graph: NormalizedGraph, geometry: LevelsGeometry
+    normalized_graph: NormalizedGraph,
+    node_rects: Mapping[str, Rect],
+    header_rects: Mapping[str, Rect],
 ) -> str:
+    """
+    Render the nodes in input order.
+
+    The input order is a pre-order traversal, so a composite node comes
+    before its children and its frame lies under them.
+    """
+
     cycle_id_by_node: Dict[str, str] = {
         node_id_: cycle_.cycle_id
         for cycle_ in normalized_graph.cycles
@@ -202,9 +295,12 @@ def _render_nodes(
     messages_by_node = _warning_messages_by_node(normalized_graph)
     nodes: List[str] = []
     for node_ in normalized_graph.nodes:
-        rect_ = geometry.node_rects[node_.node_id]
+        rect_ = node_rects[node_.node_id]
+        header_rect_ = header_rects.get(node_.node_id)
         cycle_id_ = cycle_id_by_node.get(node_.node_id)
         classes_ = f"{CSS_PREFIX}-node"
+        if header_rect_ is not None:
+            classes_ += f" {CSS_PREFIX}-node--composite"
         attributes_ = [f'data-node-id="{_escape(node_.node_id)}"']
         if node_.link is not None:
             attributes_.append(f'data-node-link="{_escape(node_.link)}"')
@@ -219,23 +315,36 @@ def _render_nodes(
             attributes_.append(
                 f'data-diagnostics="{_escape(_json(messages_))}"'
             )
+        if header_rect_ is None:
+            content_ = _render_node_title(node_, rect_, is_container=False)
+        else:
+            header_bottom_ = header_rect_.y + header_rect_.height
+            content_ = (
+                f'<line class="{CSS_PREFIX}-node__header-line" '
+                f'x1="{_number(header_rect_.x)}" '
+                f'y1="{_number(header_bottom_)}" '
+                f'x2="{_number(header_rect_.x + header_rect_.width)}" '
+                f'y2="{_number(header_bottom_)}"/>\n'
+                + _render_node_title(node_, header_rect_, is_container=True)
+            )
         nodes.append(
             f'<g class="{classes_}" {" ".join(attributes_)}>\n'
             f'<rect class="{CSS_PREFIX}-node__box" rx="4" '
             f"{_rect_attributes(rect_)}/>\n"
-            f"{_render_node_title(node_, rect_)}\n"
+            f"{content_}\n"
             f"<title>{_escape(node_.title)}</title>\n"
             "</g>"
         )
     return f'<g class="{CSS_PREFIX}-nodes">\n' + "\n".join(nodes) + "\n</g>"
 
 
-def _render_node_title(node: GraphNode, rect: Rect) -> str:
+def _render_node_title(node: GraphNode, rect: Rect, is_container: bool) -> str:
     """
     Render the node title as HTML in a foreignObject.
 
-    The browser wraps the title and cuts it after three lines (spec.md,
-    section "Размеры нод и текст"). Outside a browser, a foreignObject shows
+    The browser wraps the title and cuts it after three lines, or after two
+    lines in the header of a container (spec.md, sections "Размеры нод и
+    текст" and "Геометрия контейнера"). Outside a browser, a foreignObject shows
     no text. To keep the text in an exported SVG file, this function has to
     render the lines as SVG <text> elements instead. That requires the
     generator to wrap the title itself, with the font metrics of the page.
@@ -245,7 +354,9 @@ def _render_node_title(node: GraphNode, rect: Rect) -> str:
         f'<foreignObject class="{CSS_PREFIX}-node__title-box" '
         f"{_rect_attributes(rect)}>"
         f'<div xmlns="http://www.w3.org/1999/xhtml" '
-        f'class="{CSS_PREFIX}-node__title">'
+        f'class="{CSS_PREFIX}-node__title'
+        + (f" {CSS_PREFIX}-node__title--container" if is_container else "")
+        + '">'
         f'<span class="{CSS_PREFIX}-node__title-text">'
         f"{_escape(node.title)}</span></div></foreignObject>"
     )
@@ -301,7 +412,7 @@ def _render_edges(
 
 
 def _render_warning_signs(
-    normalized_graph: NormalizedGraph, geometry: LevelsGeometry
+    normalized_graph: NormalizedGraph, node_rects: Mapping[str, Rect]
 ) -> str:
     signs: List[str] = []
     messages_by_node = _warning_messages_by_node(normalized_graph)
@@ -309,7 +420,7 @@ def _render_warning_signs(
         messages_ = messages_by_node.get(node_.node_id)
         if messages_ is None:
             continue
-        rect_ = geometry.node_rects[node_.node_id]
+        rect_ = node_rects[node_.node_id]
         size_ = WARNING_SIGN_SIZE
         # The sign sits on the top right corner of the frame, like a badge,
         # so that it does not cover the title.

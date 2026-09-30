@@ -31,6 +31,8 @@ STRUCTURE = PACKAGE_PATH + "levels_structure.py"
 ROUTING = PACKAGE_PATH + "levels_routing.py"
 GEOMETRY = PACKAGE_PATH + "levels_geometry.py"
 SERIALIZER = PACKAGE_PATH + "svg_serializer.py"
+STRUCTURE_LAYOUT = PACKAGE_PATH + "structure_layout.py"
+STRUCTURE_GEOMETRY = PACKAGE_PATH + "structure_geometry.py"
 
 
 @dataclass(frozen=True)
@@ -357,6 +359,55 @@ MUTATIONS = (
         GEOMETRY,
         "(lane_count - 1) * config.lane_pitch + 2 * config.lane_clearance,",
         "(lane_count + 1) * config.lane_pitch,",
+    ),
+    Mutation(
+        "L1",
+        "composite node does not break the column of simple nodes",
+        STRUCTURE_LAYOUT,
+        "        if len(child_.children) == 0:",
+        "        if True:",
+    ),
+    Mutation(
+        "L2",
+        "relation inside a root child connects the child",
+        STRUCTURE_LAYOUT,
+        "        if source_root_ != target_root_:",
+        "        if True:",
+    ),
+    Mutation(
+        "L3",
+        "block uses the square rule while a connected row exists",
+        STRUCTURE_GEOMETRY,
+        "            row_width\n            if len(row_columns) > 0\n",
+        "            row_width\n            if False\n",
+    ),
+    Mutation(
+        "L4",
+        "block picks the width farthest from a square",
+        STRUCTURE_GEOMETRY,
+        "        if score_ < best_score:",
+        "        if best_width == 0.0 or score_ > best_score:",
+    ),
+    Mutation(
+        "L5",
+        "container height ignores the header",
+        STRUCTURE_GEOMETRY,
+        "self.config.container_header_height + area_height,",
+        "area_height,",
+    ),
+    Mutation(
+        "L6",
+        "bottom corridor below the shortest column",
+        STRUCTURE_GEOMETRY,
+        "+ max(column_height_ for _, column_height_ in column_sizes)",
+        "+ min(column_height_ for _, column_height_ in column_sizes)",
+    ),
+    Mutation(
+        "Z10",
+        "container drawn as a simple node",
+        SERIALIZER,
+        "        if header_rect_ is None:",
+        "        if True:",
     ),
     Mutation(
         "Z1",

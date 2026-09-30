@@ -32,7 +32,10 @@ ROUTING = PACKAGE_PATH + "levels_routing.py"
 GEOMETRY = PACKAGE_PATH + "levels_geometry.py"
 SERIALIZER = PACKAGE_PATH + "svg_serializer.py"
 STRUCTURE_LAYOUT = PACKAGE_PATH + "structure_layout.py"
+LANES = PACKAGE_PATH + "lane_assignment.py"
+GATES = PACKAGE_PATH + "gate_ports.py"
 STRUCTURE_GEOMETRY = PACKAGE_PATH + "structure_geometry.py"
+STRUCTURE_ROUTING = PACKAGE_PATH + "structure_routing.py"
 
 
 @dataclass(frozen=True)
@@ -267,9 +270,9 @@ MUTATIONS = (
     Mutation(
         "R2",
         "lane priority inverted",
-        ROUTING,
-        "options.lane_conflict_priority is LaneConflictPriority.ENTRY",
-        "options.lane_conflict_priority is not LaneConflictPriority.ENTRY",
+        LANES,
+        "prefer_entry = priority is LaneConflictPriority.ENTRY",
+        "prefer_entry = priority is not LaneConflictPriority.ENTRY",
     ),
     Mutation(
         "R3",
@@ -281,14 +284,14 @@ MUTATIONS = (
     Mutation(
         "R4",
         "unsafe groups numbered per face",
-        ROUTING,
+        GATES,
         "    if len(upper) == 0 or len(lower) == 0:\n        return False",
         "    if True:\n        return False",
     ),
     Mutation(
         "R5",
         "safe groups share one list",
-        ROUTING,
+        GATES,
         "    if len(upper) == 0 or len(lower) == 0:\n        return False",
         "    if len(upper) == 0 or len(lower) == 0:\n"
         "        return False\n"
@@ -297,7 +300,7 @@ MUTATIONS = (
     Mutation(
         "R6",
         "shared list interleaves the faces",
-        ROUTING,
+        GATES,
         "numbered_lists_ = [upper_ + lower_]",
         "numbered_lists_ = [sorted(upper_ + lower_, "
         "key=lambda e_: e_.sort_key, reverse=side_ == -1)]",
@@ -305,14 +308,14 @@ MUTATIONS = (
     Mutation(
         "R7",
         "left side ports not ordered from the center outward",
-        ROUTING,
-        "                upper_.reverse()\n                lower_.reverse()",
-        "                pass",
+        GATES,
+        "            upper_.reverse()\n            lower_.reverse()",
+        "            pass",
     ),
     Mutation(
         "R8",
         "overlapping segments may share a lane",
-        ROUTING,
+        LANES,
         "            while any(\n                lanes[placed_key_] == lane_",
         "            while False and any(\n"
         "                lanes[placed_key_] == lane_",
@@ -396,6 +399,41 @@ MUTATIONS = (
         "if best_ is None:",
     ),
     Mutation(
+        "R10",
+        "port order not mirrored for a downward relation",
+        GATES,
+        "    if endpoint.flows_down:\n        return (-position, -secondary), index",
+        "    if False:\n        return (-position, -secondary), index",
+    ),
+    Mutation(
+        "SR1",
+        "structure path cost compares the length before the bends",
+        STRUCTURE_ROUTING,
+        "cost_ = (bends_, length_, face_rank_)",
+        "cost_ = (0, length_, face_rank_)",
+    ),
+    Mutation(
+        "SR2",
+        "no straight relation in the structure mode",
+        STRUCTURE_ROUTING,
+        "            if gate_ not in straight_gates:",
+        "            if False:",
+    ),
+    Mutation(
+        "SR4",
+        "halves swapped in the horizontal channels of the structure mode",
+        STRUCTURE_ROUTING,
+        "half=0 if exit_ < entry_ else 1,",
+        "half=1 if exit_ < entry_ else 0,",
+    ),
+    Mutation(
+        "SR5",
+        "halves swapped in the vertical channels of the structure mode",
+        STRUCTURE_ROUTING,
+        "half=1 if exit_y_ < entry_y_ else 0,",
+        "half=0 if exit_y_ < entry_y_ else 1,",
+    ),
+    Mutation(
         "L5",
         "container height ignores the header",
         STRUCTURE_GEOMETRY,
@@ -456,8 +494,8 @@ MUTATIONS = (
         "Z5",
         "debug attributes written without the debug mode",
         SERIALIZER,
-        "        if debug:\n            route_ = routing.routes[edge_.edge_id]",
-        "        if True:\n            route_ = routing.routes[edge_.edge_id]",
+        "_levels_debug_attributes(routing) if debug else {},",
+        "_levels_debug_attributes(routing),",
     ),
     Mutation(
         "Z6",
@@ -477,8 +515,8 @@ MUTATIONS = (
         "Z9",
         "serializer ignores the configuration of the geometry",
         SERIALIZER,
-        "            geometry.config,\n",
-        "            GeometryConfig(),\n",
+        'markerWidth="{_number(config.arrow_length)}"',
+        'markerWidth="{_number(6)}"',
     ),
     Mutation(
         "Z8",

@@ -2,46 +2,46 @@
 Stages 5 and 6 of the graph generator for the structure mode.
 
 Stage 5 computes the sizes from the inside out: a container gets its size
-from its columns. Stage 6 computes the coordinates from the outside in.
-spec.md, section "Геометрия контейнера", defines the rules.
+from its columns and channels. Stage 6 computes the coordinates from the
+outside in. spec.md, section "Геометрия контейнера", defines the rules.
 
-The routing of the structure mode is not implemented yet. All channels have
-the minimum size.
+The size of each channel follows from its lane count. A channel without
+lanes has the minimum size.
 """
 
 import math
 from dataclasses import dataclass
-from enum import Enum
 from typing import Dict, List, Mapping, Optional, Tuple
 
 from strictdoc.features.specification_graph.svg_graph.levels_geometry import (
     GeometryConfig,
     Rect,
+    horizontal_channel_size,
+    vertical_channel_size,
 )
 from strictdoc.features.specification_graph.svg_graph.normalization import (
     NormalizedGraph,
 )
 from strictdoc.features.specification_graph.svg_graph.structure_layout import (
+    ChannelKind,
     ContainerColumn,
+    StructureChannelId,
     StructureLayout,
 )
 
 
-class ChannelKind(Enum):
-    TOP_CORRIDOR = "top_corridor"
-    BOTTOM_CORRIDOR = "bottom_corridor"
-    VERTICAL = "vertical"
-    COLUMN = "column"
-    # Between the block of the unconnected root children and the row.
-    BLOCK_SEPARATOR = "block_separator"
-
-
 @dataclass(frozen=True)
 class StructureChannel:
-    kind: ChannelKind
-    # The composite node that holds the channel. None for the root.
-    container_id: Optional[str]
+    channel_id: StructureChannelId
     rect: Rect
+
+    @property
+    def kind(self) -> ChannelKind:
+        return self.channel_id.kind
+
+    @property
+    def container_id(self) -> Optional[str]:
+        return self.channel_id.container_id
 
 
 @dataclass(frozen=True)
@@ -55,16 +55,31 @@ class StructureGeometry:
     # the header line.
     header_rects: Mapping[str, Rect]
     channels: Tuple[StructureChannel, ...]
+    # Lane count of each channel that has lanes.
+    lane_counts: Mapping[StructureChannelId, int]
+
+    def channel_rect(self, channel_id: StructureChannelId) -> Rect:
+        return next(
+            channel_.rect
+            for channel_ in self.channels
+            if channel_.channel_id == channel_id
+        )
 
 
 def compute_structure_geometry(
     normalized_graph: NormalizedGraph,
     layout: StructureLayout,
     config: Optional[GeometryConfig] = None,
+    lane_counts: Optional[Mapping[StructureChannelId, int]] = None,
 ) -> StructureGeometry:
     if config is None:
         config = GeometryConfig()
-    return _GeometryBuilder(normalized_graph, layout, config).build()
+    return _GeometryBuilder(
+        normalized_graph,
+        layout,
+        config,
+        {} if lane_counts is None else lane_counts,
+    ).build()
 
 
 class _GeometryBuilder:
@@ -73,9 +88,11 @@ class _GeometryBuilder:
         normalized_graph: NormalizedGraph,
         layout: StructureLayout,
         config: GeometryConfig,
+        lane_counts: Mapping[StructureChannelId, int],
     ) -> None:
         self.layout: StructureLayout = layout
         self.config: GeometryConfig = config
+        self.lane_counts: Mapping[StructureChannelId, int] = lane_counts
         self.is_composite: Dict[str, bool] = {
             node_.node_id: len(node_.children) > 0
             for node_ in normalized_graph.nodes
@@ -89,7 +106,7 @@ class _GeometryBuilder:
         config = self.config
         channel = config.min_channel_size
         row_columns = self.layout.columns[None]
-        row_width, row_height = self._area_size(row_columns)
+        row_width, row_height = self._area_size(None, row_columns)
         block_ids = self.layout.root_block_ids
         block_sizes = [self._size(node_id_) for node_id_ in block_ids]
         block_width = (
@@ -109,9 +126,8 @@ class _GeometryBuilder:
             if len(row_columns) > 0:
                 self.channels.append(
                     StructureChannel(
-                        kind=ChannelKind.BLOCK_SEPARATOR,
-                        container_id=None,
-                        rect=Rect(config.margin, top, width, channel),
+                        StructureChannelId(ChannelKind.BLOCK_SEPARATOR, None),
+                        Rect(config.margin, top, width, channel),
                     )
                 )
                 top += channel
@@ -125,7 +141,14 @@ class _GeometryBuilder:
             node_rects=self.node_rects,
             header_rects=self.header_rects,
             channels=tuple(self.channels),
+            lane_counts=dict(self.lane_counts),
         )
+
+    def _channel_size(self, channel_id: StructureChannelId) -> float:
+        lane_count = self.lane_counts.get(channel_id, 0)
+        if channel_id.is_horizontal:
+            return horizontal_channel_size(lane_count, self.config)
+        return vertical_channel_size(lane_count, self.config)
 
     def _size(self, node_id: str) -> Tuple[float, float]:
         """
@@ -138,7 +161,7 @@ class _GeometryBuilder:
             size = (self.config.node_width, self.config.node_height)
         else:
             area_width, area_height = self._area_size(
-                self.layout.columns[node_id]
+                node_id, self.layout.columns[node_id]
             )
             size = (
                 area_width,
@@ -147,18 +170,31 @@ class _GeometryBuilder:
         self.sizes[node_id] = size
         return size
 
-    def _column_size(self, column: ContainerColumn) -> Tuple[float, float]:
+    def _column_size(
+        self,
+        container_id: Optional[str],
+        column_index: int,
+        column: ContainerColumn,
+    ) -> Tuple[float, float]:
         if column.is_composite:
             return self._size(column.node_ids[0])
-        count = len(column.node_ids)
         return (
             self.config.node_width,
-            count * self.config.node_height
-            + (count - 1) * self.config.min_channel_size,
+            len(column.node_ids) * self.config.node_height
+            + sum(
+                self._channel_size(
+                    StructureChannelId(
+                        ChannelKind.COLUMN, container_id, column_index, gap_
+                    )
+                )
+                for gap_ in range(len(column.node_ids) - 1)
+            ),
         )
 
     def _area_size(
-        self, columns: Tuple[ContainerColumn, ...]
+        self,
+        container_id: Optional[str],
+        columns: Tuple[ContainerColumn, ...],
     ) -> Tuple[float, float]:
         """
         Return the size of the children area of a container.
@@ -169,15 +205,24 @@ class _GeometryBuilder:
 
         if len(columns) == 0:
             return 0, 0
-        channel = self.config.min_channel_size
-        column_sizes = [self._column_size(column_) for column_ in columns]
-        width = channel + sum(
-            column_width_ + channel for column_width_, _ in column_sizes
-        )
+        column_sizes = [
+            self._column_size(container_id, index_, column_)
+            for index_, column_ in enumerate(columns)
+        ]
+        width = sum(
+            self._channel_size(
+                StructureChannelId(ChannelKind.VERTICAL, container_id, index_)
+            )
+            for index_ in range(len(columns) + 1)
+        ) + sum(column_width_ for column_width_, _ in column_sizes)
         height = (
-            channel
+            self._channel_size(
+                StructureChannelId(ChannelKind.TOP_CORRIDOR, container_id)
+            )
             + max(column_height_ for _, column_height_ in column_sizes)
-            + channel
+            + self._channel_size(
+                StructureChannelId(ChannelKind.BOTTOM_CORRIDOR, container_id)
+            )
         )
         return width, height
 
@@ -192,48 +237,53 @@ class _GeometryBuilder:
         Place the children area of a container. Stage 6: from the outside in.
         """
 
-        channel = self.config.min_channel_size
-        width, height = self._area_size(columns)
+        width, height = self._area_size(container_id, columns)
+        top_corridor = StructureChannelId(
+            ChannelKind.TOP_CORRIDOR, container_id
+        )
+        bottom_corridor = StructureChannelId(
+            ChannelKind.BOTTOM_CORRIDOR, container_id
+        )
+        top_size = self._channel_size(top_corridor)
+        bottom_size = self._channel_size(bottom_corridor)
         self.channels.append(
-            StructureChannel(
-                ChannelKind.TOP_CORRIDOR,
-                container_id,
-                Rect(left, top, width, channel),
-            )
+            StructureChannel(top_corridor, Rect(left, top, width, top_size))
         )
         self.channels.append(
             StructureChannel(
-                ChannelKind.BOTTOM_CORRIDOR,
-                container_id,
-                Rect(left, top + height - channel, width, channel),
+                bottom_corridor,
+                Rect(left, top + height - bottom_size, width, bottom_size),
             )
         )
-        columns_top = top + channel
-        columns_height = height - 2 * channel
+        columns_top = top + top_size
+        columns_height = height - top_size - bottom_size
         x = left
-        for column_ in columns:
+        for index_ in range(len(columns) + 1):
+            vertical_ = StructureChannelId(
+                ChannelKind.VERTICAL, container_id, index_
+            )
+            vertical_size_ = self._channel_size(vertical_)
             self.channels.append(
                 StructureChannel(
-                    ChannelKind.VERTICAL,
-                    container_id,
-                    Rect(x, columns_top, channel, columns_height),
+                    vertical_,
+                    Rect(x, columns_top, vertical_size_, columns_height),
                 )
             )
-            x += channel
-            column_width_, _ = self._column_size(column_)
-            self._place_column(container_id, column_, x, columns_top)
-            x += column_width_
-        self.channels.append(
-            StructureChannel(
-                ChannelKind.VERTICAL,
-                container_id,
-                Rect(x, columns_top, channel, columns_height),
+            x += vertical_size_
+            if index_ == len(columns):
+                break
+            column_width_, _ = self._column_size(
+                container_id, index_, columns[index_]
             )
-        )
+            self._place_column(
+                container_id, index_, columns[index_], x, columns_top
+            )
+            x += column_width_
 
     def _place_column(
         self,
         container_id: Optional[str],
+        column_index: int,
         column: ContainerColumn,
         left: float,
         top: float,
@@ -244,19 +294,17 @@ class _GeometryBuilder:
         y = top
         for index_, node_id_ in enumerate(column.node_ids):
             if index_ > 0:
+                gap_channel_ = StructureChannelId(
+                    ChannelKind.COLUMN, container_id, column_index, index_ - 1
+                )
+                gap_size_ = self._channel_size(gap_channel_)
                 self.channels.append(
                     StructureChannel(
-                        ChannelKind.COLUMN,
-                        container_id,
-                        Rect(
-                            left,
-                            y,
-                            self.config.node_width,
-                            self.config.min_channel_size,
-                        ),
+                        gap_channel_,
+                        Rect(left, y, self.config.node_width, gap_size_),
                     )
                 )
-                y += self.config.min_channel_size
+                y += gap_size_
             self._place_node(node_id_, left, y)
             y += self.config.node_height
 

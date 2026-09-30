@@ -44,6 +44,12 @@ from strictdoc.features.specification_graph.svg_graph.structure_geometry import 
 from strictdoc.features.specification_graph.svg_graph.structure_layout import (
     compute_structure_layout,
 )
+from strictdoc.features.specification_graph.svg_graph.structure_paths import (
+    compute_structure_edge_paths,
+)
+from strictdoc.features.specification_graph.svg_graph.structure_routing import (
+    compute_structure_routing,
+)
 from strictdoc.features.specification_graph.svg_graph.svg_serializer import (
     serialize_levels_svg,
     serialize_structure_svg,
@@ -235,17 +241,31 @@ diagnostic.</p>
 
 def _render_structure(index: int, normalized_graph: NormalizedGraph) -> str:
     layout = compute_structure_layout(normalized_graph)
-    geometry = compute_structure_geometry(normalized_graph, layout)
+    routing = compute_structure_routing(normalized_graph, layout)
+    geometry = compute_structure_geometry(
+        normalized_graph, layout, lane_counts=routing.lane_counts
+    )
+    edge_paths = compute_structure_edge_paths(routing, geometry)
     svg = serialize_structure_svg(
-        normalized_graph, geometry, svg_id=f"case-{index}-result"
+        normalized_graph,
+        routing,
+        geometry,
+        edge_paths,
+        svg_id=f"case-{index}-result",
+    )
+    unrouted = ", ".join(html.escape(id_) for id_ in routing.unrouted_edge_ids)
+    note = (
+        "<p>Not routed yet (relations across containers or with a "
+        f"section): {unrouted}.</p>"
+        if len(unrouted) > 0
+        else ""
     )
     return f"""<div class="preview">
 <figure>
 <h3>Generator result</h3>
 {svg}
 </figure>
-<p>The routing of the structure mode is not implemented yet. The picture
-shows the layout of the nodes and containers without relations.</p>
+{note}
 </div>"""
 
 

@@ -10,26 +10,24 @@ from dataclasses import dataclass
 from enum import Enum
 from typing import Dict, List, Mapping, Optional, Set, Tuple
 
+from strictdoc.features.specification_graph.svg_graph.gate_ports import (
+    Face,
+    GateEndpoint,
+    Port,
+    number_gate_ports,
+)
+from strictdoc.features.specification_graph.svg_graph.lane_assignment import (
+    CrossMember,
+    LaneConflictPriority,
+    LaneSegment,
+    assign_lanes,
+)
 from strictdoc.features.specification_graph.svg_graph.levels_structure import (
     LevelsStructure,
 )
 from strictdoc.features.specification_graph.svg_graph.normalization import (
     NormalizedGraph,
 )
-
-
-class LaneConflictPriority(Enum):
-    """
-    Which crossing to avoid when a segment lies inside another one.
-
-    ENTRY keeps the entry verticals uncrossed: the outer segment crosses the
-    vertical of the inner segment near the target. EXIT keeps the exit
-    verticals uncrossed: the outer segment crosses the vertical of the inner
-    segment near the source.
-    """
-
-    ENTRY = "entry"
-    EXIT = "exit"
 
 
 class SkipChannelChoice(Enum):
@@ -57,11 +55,6 @@ class RoutingOptions:
     skip_channel_choice: SkipChannelChoice = SkipChannelChoice.NEAR_TARGET
 
 
-class Face(Enum):
-    TOP = "top"
-    BOTTOM = "bottom"
-
-
 class Orientation(Enum):
     HORIZONTAL = "horizontal"
     VERTICAL = "vertical"
@@ -79,18 +72,6 @@ class ChannelId:
 
     orientation: Orientation
     index: int
-
-
-@dataclass(frozen=True)
-class Port:
-    node_id: str
-    face: Face
-    # Position on the face relative to the center: 0 is the center, negative
-    # values are left of the center.
-    slot: int
-    # Number of slots in the list that numbered this port. The port pitch
-    # depends on it: a long list gets a smaller pitch. 0 for the center slot.
-    list_size: int = 0
 
 
 @dataclass(frozen=True)
@@ -289,42 +270,12 @@ def _choose_vertical_channel(
     return target_column
 
 
-@dataclass(frozen=True)
-class _CrossMember:
-    """
-    A perpendicular part of a route that touches a segment.
-
-    For a horizontal segment, the members are its entry and exit verticals.
-    For a vertical segment, the members are its entry and exit horizontals.
-    """
-
-    position: _Position
-    # The member extends from the segment lane toward the high side of the
-    # channel: the bottom of a horizontal channel or the right of a vertical
-    # channel.
-    to_high_side: bool
-    is_entry: bool
-
-
-@dataclass(frozen=True)
-class _Segment:
-    key: Tuple[str, int]
-    edge_id: str
-    low: _Position
-    high: _Position
-    # Half 0 comes first: the top half of a horizontal channel or the left
-    # half of a vertical channel.
-    half: int
-    members: Tuple[_CrossMember, _CrossMember]
-    order_key: Tuple[_Position, int]
-
-
 def _assign_vertical_lanes(
     plans: List[_EdgePlan],
     options: RoutingOptions,
     conflicts: List[LaneConflict],
 ) -> Dict[str, LaneRef]:
-    segments_by_channel: Dict[int, List[_Segment]] = {}
+    segments_by_channel: Dict[int, List[LaneSegment]] = {}
     for plan_ in plans:
         if plan_.vertical_channel is None:
             continue
@@ -332,7 +283,7 @@ def _assign_vertical_lanes(
         entry_ = (plan_.source_channel, 0)
         exit_ = (plan_.target_channel, 0)
         segments_by_channel.setdefault(channel_, []).append(
-            _Segment(
+            LaneSegment(
                 key=(plan_.edge_id, 0),
                 edge_id=plan_.edge_id,
                 low=min(entry_, exit_),
@@ -341,12 +292,12 @@ def _assign_vertical_lanes(
                 # half.
                 half=1 if plan_.goes_up else 0,
                 members=(
-                    _CrossMember(
+                    CrossMember(
                         position=entry_,
                         to_high_side=plan_.source_column > channel_,
                         is_entry=True,
                     ),
-                    _CrossMember(
+                    CrossMember(
                         position=exit_,
                         to_high_side=plan_.target_column > channel_,
                         is_entry=False,
@@ -367,58 +318,15 @@ def _assign_vertical_lanes(
     return result
 
 
-@dataclass(frozen=True)
-class _GateEndpoint:
-    endpoint_key: Tuple[str, int]
-    node_id: str
-    face: Face
-    # -1: the horizontal segment extends left of the port. 1: right of the
-    # port. 0: the edge is straight and has no horizontal segment.
-    side: int
-    # Half of the channel that holds the horizontal segment: 0 for the top
-    # half (the segment goes left), 1 for the bottom half (goes right).
-    half: int
-    sort_key: Tuple[_Position, int]
-
-
 def _assign_ports(
     plans: List[_EdgePlan], vertical_lanes: Dict[str, LaneRef]
 ) -> Dict[Tuple[str, int], Port]:
     """
-    Assign a slot to each port. spec.md, section "Порты", defines the rule.
+    Assign a slot to each port.
 
-    A gate is the pair of faces that open into one horizontal channel in one
-    column: the bottom face of the upper node (the upper face) and the top
-    face of the lower node (the lower face).
-
-    Each face of a gate has a left group, the center slot, and a right group.
-    A straight edge takes the center slot. A gate has at most one straight
-    edge. Within a group, the slots follow the positions where the edges go.
-
-    Each face numbers its group on its own, so both faces keep one rhythm:
-    ports with equal slots stand on one vertical. This is safe when the two
-    verticals cannot meet. The vertical of an upper port runs from the top of
-    the channel down to its lane. The vertical of a lower port runs from the
-    bottom of the channel up to its lane. The half of the channel of each
-    lane is known before the lanes are assigned (right-hand traffic):
-
-    - upper segment in the top half, lower segment in the bottom half: the
-      verticals never meet
-    - upper segment in the bottom half, lower segment in the top half: the
-      verticals always overlap
-    - both segments in one half: the lanes decide, so the pair counts as
-      unsafe.
-
-    If a group of a gate has at least one unsafe pair of an upper and a lower
-    port, the two faces number this group with one shared list of two
-    blocks: the ports of the upper face near the center, the ports of the
-    lower face after them. Each face keeps its ports together as one bundle
-    and skips the slots of the other block (fictitious slots). For upward
-    edges, the right group is safe and the left group is unsafe.
-
-    Upper block near the center: for upward edges the unavoidable crossings
-    of the two blocks then happen near the source ports, away from the
-    arrowheads.
+    The levels mode collects the endpoints of each gate. The gate is the
+    column and the horizontal channel. gate_ports.number_gate_ports numbers
+    the ports of each gate.
     """
 
     straight_edge_ids: Set[str] = set()
@@ -433,7 +341,7 @@ def _assign_ports(
             straight_gates.add(gate_)
             straight_edge_ids.add(plan_.edge_id)
 
-    endpoints_by_gate: Dict[Tuple[int, int], List[_GateEndpoint]] = {}
+    endpoints_by_gate: Dict[Tuple[int, int], List[GateEndpoint]] = {}
     for plan_ in plans:
         for (
             endpoint_role_,
@@ -478,77 +386,23 @@ def _assign_ports(
             else:
                 goes_left_ = other_position_ > own_position_
             endpoints_by_gate.setdefault((own_column_, channel_), []).append(
-                _GateEndpoint(
+                GateEndpoint(
                     endpoint_key=(plan_.edge_id, endpoint_role_),
                     node_id=node_id_,
                     face=face_,
                     side=side_,
                     half=0 if goes_left_ else 1,
                     sort_key=(other_position_, plan_.index),
+                    flows_down=(
+                        (endpoint_role_ == _SOURCE) == (face_ is Face.BOTTOM)
+                    ),
                 )
             )
 
     ports: Dict[Tuple[str, int], Port] = {}
     for endpoints_ in endpoints_by_gate.values():
-        for endpoint_ in endpoints_:
-            if endpoint_.side == 0:
-                ports[endpoint_.endpoint_key] = Port(
-                    endpoint_.node_id, endpoint_.face, 0
-                )
-        for side_ in (-1, 1):
-            group_ = sorted(
-                (
-                    endpoint_
-                    for endpoint_ in endpoints_
-                    if endpoint_.side == side_
-                ),
-                key=lambda endpoint_: endpoint_.sort_key,
-            )
-            upper_ = [
-                endpoint_
-                for endpoint_ in group_
-                if endpoint_.face is Face.BOTTOM
-            ]
-            lower_ = [
-                endpoint_ for endpoint_ in group_ if endpoint_.face is Face.TOP
-            ]
-            if side_ == -1:
-                # The lists run from the center outward. On the left side,
-                # the port next to the center goes to the rightmost position.
-                upper_.reverse()
-                lower_.reverse()
-            if _group_is_unsafe(upper_, lower_):
-                numbered_lists_ = [upper_ + lower_]
-            else:
-                numbered_lists_ = [upper_, lower_]
-            for list_ in numbered_lists_:
-                for index_, endpoint_ in enumerate(list_):
-                    # Index 0 is the slot next to the center on both sides.
-                    slot_ = -(index_ + 1) if side_ == -1 else index_ + 1
-                    ports[endpoint_.endpoint_key] = Port(
-                        endpoint_.node_id,
-                        endpoint_.face,
-                        slot_,
-                        list_size=len(list_),
-                    )
+        ports.update(number_gate_ports(endpoints_))
     return ports
-
-
-def _group_is_unsafe(
-    upper: List[_GateEndpoint], lower: List[_GateEndpoint]
-) -> bool:
-    """
-    Return True if an upper port and a lower port of a group can meet.
-
-    A pair is safe only if the upper segment lies in the top half and the
-    lower segment lies in the bottom half.
-    """
-
-    if len(upper) == 0 or len(lower) == 0:
-        return False
-    return any(endpoint_.half != 0 for endpoint_ in upper) or any(
-        endpoint_.half != 1 for endpoint_ in lower
-    )
 
 
 def _assign_horizontal_lanes(
@@ -558,7 +412,7 @@ def _assign_horizontal_lanes(
     options: RoutingOptions,
     conflicts: List[LaneConflict],
 ) -> Dict[Tuple[str, int], LaneRef]:
-    segments_by_channel: Dict[int, List[_Segment]] = {}
+    segments_by_channel: Dict[int, List[LaneSegment]] = {}
     for plan_ in plans:
         source_port_ = ports[(plan_.edge_id, _SOURCE)]
         target_port_ = ports[(plan_.edge_id, _TARGET)]
@@ -589,7 +443,7 @@ def _assign_horizontal_lanes(
         for piece_index_, channel_, entry_, exit_ in pieces_:
             goes_left_ = exit_ < entry_
             segments_by_channel.setdefault(channel_, []).append(
-                _Segment(
+                LaneSegment(
                     key=(plan_.edge_id, piece_index_),
                     edge_id=plan_.edge_id,
                     low=min(entry_, exit_),
@@ -598,12 +452,12 @@ def _assign_horizontal_lanes(
                     # bottom half.
                     half=0 if goes_left_ else 1,
                     members=(
-                        _CrossMember(
+                        CrossMember(
                             position=entry_,
                             to_high_side=entry_to_bottom_,
                             is_entry=True,
                         ),
-                        _CrossMember(
+                        CrossMember(
                             position=exit_,
                             to_high_side=not entry_to_bottom_,
                             is_entry=False,
@@ -623,138 +477,20 @@ def _assign_horizontal_lanes(
 
 
 def _assign_lanes(
-    segments: List[_Segment],
+    segments: List[LaneSegment],
     options: RoutingOptions,
     channel: ChannelId,
     conflicts: List[LaneConflict],
 ) -> Dict[Tuple[str, int], int]:
-    """
-    Assign lanes in one channel.
-
-    Within a half, a constraint graph orders the overlapping segments. The
-    longest path from the first lane gives each segment its lane, so segments
-    without overlap can share a lane.
-    """
-
-    result: Dict[Tuple[str, int], int] = {}
-    lane_offset = 0
-    for half_ in (0, 1):
-        half_segments_ = sorted(
-            (segment_ for segment_ in segments if segment_.half == half_),
-            key=lambda segment_: segment_.order_key,
-        )
-        before_: Dict[Tuple[str, int], Set[Tuple[str, int]]] = {
-            segment_.key: set() for segment_ in half_segments_
-        }
-        for first_index_, first_ in enumerate(half_segments_):
-            for second_ in half_segments_[first_index_ + 1 :]:
-                order_ = _pair_order(
-                    first_, second_, options, channel, conflicts
-                )
-                if order_ == 1:
-                    before_[second_.key].add(first_.key)
-                elif order_ == -1:
-                    before_[first_.key].add(second_.key)
-        half_lanes_ = _longest_path_lanes(half_segments_, before_)
-        for key_, lane_ in half_lanes_.items():
-            result[key_] = lane_offset + lane_
-        if len(half_lanes_) > 0:
-            lane_offset += max(half_lanes_.values()) + 1
-    return result
-
-
-def _pair_order(
-    first: _Segment,
-    second: _Segment,
-    options: RoutingOptions,
-    channel: ChannelId,
-    conflicts: List[LaneConflict],
-) -> int:
-    """
-    Return 1 if the first segment takes a lower lane, -1 for the opposite.
-
-    Return 0 if the segments do not overlap.
-    """
-
-    if not _overlap(first, second):
-        return 0
-    # (order, is_entry, is the second segment the inner one).
-    votes: List[Tuple[int, bool, bool]] = []
-    for member_ in second.members:
-        if first.low < member_.position < first.high:
-            # The member of the second segment extends toward the high side.
-            # The first segment must stay on the low side of it.
-            votes.append(
-                (1 if member_.to_high_side else -1, member_.is_entry, True)
-            )
-    for member_ in first.members:
-        if second.low < member_.position < second.high:
-            votes.append(
-                (-1 if member_.to_high_side else 1, member_.is_entry, False)
-            )
-    if len(votes) == 0:
-        return 0
-    orders = {vote_[0] for vote_ in votes}
-    if len(orders) == 1:
-        return votes[0][0]
-
-    prefer_entry = options.lane_conflict_priority is LaneConflictPriority.ENTRY
-    preferred = [vote_ for vote_ in votes if vote_[1] == prefer_entry]
-    chosen = preferred[0] if len(preferred) > 0 else votes[0]
-    outer, inner = (first, second) if chosen[2] else (second, first)
-    conflicts.append(
+    lanes, conflict_pairs = assign_lanes(
+        segments, options.lane_conflict_priority
+    )
+    conflicts.extend(
         LaneConflict(
             channel=channel,
-            outer_edge_id=outer.edge_id,
-            inner_edge_id=inner.edge_id,
+            outer_edge_id=pair_.outer_edge_id,
+            inner_edge_id=pair_.inner_edge_id,
         )
+        for pair_ in conflict_pairs
     )
-    return chosen[0]
-
-
-def _longest_path_lanes(
-    segments: List[_Segment],
-    before: Dict[Tuple[str, int], Set[Tuple[str, int]]],
-) -> Dict[Tuple[str, int], int]:
-    """
-    Give each segment the lane after all segments that must come before it.
-
-    If the constraints form a cycle, the first remaining segment in order
-    ignores its unresolved constraints. A segment never shares a lane with an
-    overlapping segment.
-    """
-
-    segment_by_key = {segment_.key: segment_ for segment_ in segments}
-    remaining = [segment_.key for segment_ in segments]
-    lanes: Dict[Tuple[str, int], int] = {}
-    while len(remaining) > 0:
-        ready = [
-            key_
-            for key_ in remaining
-            if all(before_key_ in lanes for before_key_ in before[key_])
-        ]
-        if len(ready) == 0:
-            ready = [remaining[0]]
-        for key_ in ready:
-            lane_ = max(
-                (
-                    lanes[before_key_] + 1
-                    for before_key_ in before[key_]
-                    if before_key_ in lanes
-                ),
-                default=0,
-            )
-            segment_ = segment_by_key[key_]
-            while any(
-                lanes[placed_key_] == lane_
-                and _overlap(segment_, segment_by_key[placed_key_])
-                for placed_key_ in lanes
-            ):
-                lane_ += 1
-            lanes[key_] = lane_
-        remaining = [key_ for key_ in remaining if key_ not in lanes]
     return lanes
-
-
-def _overlap(first: _Segment, second: _Segment) -> bool:
-    return not (first.high < second.low or second.high < first.low)

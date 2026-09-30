@@ -18,12 +18,18 @@ from strictdoc.features.specification_graph.svg_graph.normalization import (
     normalize_graph,
 )
 from strictdoc.features.specification_graph.svg_graph.structure_geometry import (
-    ChannelKind,
     StructureGeometry,
     compute_structure_geometry,
 )
 from strictdoc.features.specification_graph.svg_graph.structure_layout import (
+    ChannelKind,
     compute_structure_layout,
+)
+from strictdoc.features.specification_graph.svg_graph.structure_paths import (
+    compute_structure_edge_paths,
+)
+from strictdoc.features.specification_graph.svg_graph.structure_routing import (
+    compute_structure_routing,
 )
 from strictdoc.features.specification_graph.svg_graph.svg_serializer import (
     serialize_structure_svg,
@@ -169,7 +175,17 @@ def test_serializer_draws_containers_before_their_children() -> None:
 
     case = _case("Deep nesting")
     normalized_graph = normalize_graph(case.graph)
-    svg = serialize_structure_svg(normalized_graph, _geometry(case))
+    layout = compute_structure_layout(normalized_graph)
+    routing = compute_structure_routing(normalized_graph, layout)
+    geometry = compute_structure_geometry(
+        normalized_graph, layout, lane_counts=routing.lane_counts
+    )
+    svg = serialize_structure_svg(
+        normalized_graph,
+        routing,
+        geometry,
+        compute_structure_edge_paths(routing, geometry),
+    )
 
     root = ET.fromstring(svg)
     groups = [

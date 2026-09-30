@@ -6,6 +6,7 @@ no pixel geometry. spec.md, section "Режим «структура»", defines
 """
 
 from dataclasses import dataclass
+from enum import Enum
 from typing import Dict, List, Mapping, Optional, Set, Tuple
 
 from strictdoc.features.specification_graph.svg_graph.model import (
@@ -15,6 +16,48 @@ from strictdoc.features.specification_graph.svg_graph.model import (
 from strictdoc.features.specification_graph.svg_graph.normalization import (
     NormalizedGraph,
 )
+
+
+class ChannelKind(Enum):
+    TOP_CORRIDOR = "top_corridor"
+    BOTTOM_CORRIDOR = "bottom_corridor"
+    VERTICAL = "vertical"
+    COLUMN = "column"
+    # Between the block of the unconnected root children and the row.
+    BLOCK_SEPARATOR = "block_separator"
+
+
+@dataclass(frozen=True)
+class StructureChannelId:
+    """
+    A channel of a container. The container ID None is the root.
+
+    VERTICAL: index is the channel number, 0 is left of the first column.
+    COLUMN: index is the column number, gap is the gap number, 0 is below
+    the first node of the column.
+    """
+
+    kind: ChannelKind
+    container_id: Optional[str]
+    index: int = 0
+    gap: int = 0
+
+    @property
+    def is_horizontal(self) -> bool:
+        return self.kind is not ChannelKind.VERTICAL
+
+
+@dataclass(frozen=True)
+class NodePlace:
+    """
+    The place of a node in the columns of its container.
+    """
+
+    container_id: Optional[str]
+    column: int
+    # Position in a column of simple nodes, 0 is the top node.
+    row: int
+    row_count: int
 
 
 @dataclass(frozen=True)
@@ -31,6 +74,87 @@ class StructureLayout:
     columns: Mapping[Optional[str], Tuple[ContainerColumn, ...]]
     # Root children in the block above the row, in input order.
     root_block_ids: Tuple[str, ...]
+    # Places of the nodes in the columns. The root block has no places.
+    places: Mapping[str, NodePlace]
+
+    def channel_above(self, node_id: str) -> StructureChannelId:
+        """
+        Return the horizontal channel above a node in a column.
+        """
+
+        place = self.places[node_id]
+        if place.row == 0:
+            return StructureChannelId(
+                ChannelKind.TOP_CORRIDOR, place.container_id
+            )
+        return StructureChannelId(
+            ChannelKind.COLUMN, place.container_id, place.column, place.row - 1
+        )
+
+    def channel_below(self, node_id: str) -> StructureChannelId:
+        """
+        Return the horizontal channel below a node in a column.
+        """
+
+        place = self.places[node_id]
+        if place.row == place.row_count - 1:
+            return StructureChannelId(
+                ChannelKind.BOTTOM_CORRIDOR, place.container_id
+            )
+        return StructureChannelId(
+            ChannelKind.COLUMN, place.container_id, place.column, place.row
+        )
+
+    def neighbor_channels(
+        self, channel: StructureChannelId
+    ) -> List[StructureChannelId]:
+        """
+        Return the channels that touch a channel in the same container.
+
+        The corridors touch every vertical channel. A column channel touches
+        the two vertical channels beside its column. A vertical channel
+        touches the corridors and the column channels of the columns beside
+        it.
+        """
+
+        columns = self.columns[channel.container_id]
+        container_id = channel.container_id
+        if channel.kind in (
+            ChannelKind.TOP_CORRIDOR,
+            ChannelKind.BOTTOM_CORRIDOR,
+        ):
+            return [
+                StructureChannelId(ChannelKind.VERTICAL, container_id, index_)
+                for index_ in range(len(columns) + 1)
+            ]
+        if channel.kind is ChannelKind.COLUMN:
+            return [
+                StructureChannelId(
+                    ChannelKind.VERTICAL, container_id, channel.index
+                ),
+                StructureChannelId(
+                    ChannelKind.VERTICAL, container_id, channel.index + 1
+                ),
+            ]
+        if channel.kind is ChannelKind.VERTICAL:
+            result = [
+                StructureChannelId(ChannelKind.TOP_CORRIDOR, container_id),
+                StructureChannelId(ChannelKind.BOTTOM_CORRIDOR, container_id),
+            ]
+            for column_index_ in (channel.index - 1, channel.index):
+                if not 0 <= column_index_ < len(columns):
+                    continue
+                column_ = columns[column_index_]
+                if column_.is_composite:
+                    continue
+                result.extend(
+                    StructureChannelId(
+                        ChannelKind.COLUMN, container_id, column_index_, gap_
+                    )
+                    for gap_ in range(len(column_.node_ids) - 1)
+                )
+            return result
+        return []
 
 
 def compute_structure_layout(
@@ -55,9 +179,20 @@ def compute_structure_layout(
     for node_ in normalized_graph.nodes:
         if len(node_.children) > 0:
             columns[node_.node_id] = _columns(list(node_.children))
+    places: Dict[str, NodePlace] = {}
+    for container_id_, container_columns_ in columns.items():
+        for column_index_, column_ in enumerate(container_columns_):
+            for row_, node_id_ in enumerate(column_.node_ids):
+                places[node_id_] = NodePlace(
+                    container_id=container_id_,
+                    column=column_index_,
+                    row=row_,
+                    row_count=len(column_.node_ids),
+                )
     return StructureLayout(
         columns=columns,
         root_block_ids=tuple(node_.node_id for node_ in block_nodes),
+        places=places,
     )
 
 

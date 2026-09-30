@@ -9,13 +9,15 @@ not search for routes: it only converts lanes and ports into coordinates.
 from dataclasses import dataclass
 from typing import Callable, Dict, List, Mapping, Optional, Tuple
 
+from strictdoc.features.specification_graph.svg_graph.gate_ports import (
+    Face,
+    Port,
+)
 from strictdoc.features.specification_graph.svg_graph.levels_routing import (
     ChannelId,
     EdgeRoute,
-    Face,
     LevelsRouting,
     Orientation,
-    Port,
 )
 from strictdoc.features.specification_graph.svg_graph.levels_structure import (
     LevelsStructure,
@@ -113,7 +115,7 @@ def compute_levels_geometry(
         config = GeometryConfig()
 
     horizontal_sizes = [
-        _horizontal_channel_size(
+        horizontal_channel_size(
             routing.lane_counts.get(
                 ChannelId(Orientation.HORIZONTAL, index_), 0
             ),
@@ -122,7 +124,7 @@ def compute_levels_geometry(
         for index_ in range(-1, structure.row_count)
     ]
     vertical_sizes = [
-        _vertical_channel_size(
+        vertical_channel_size(
             routing.lane_counts.get(ChannelId(Orientation.VERTICAL, index_), 0),
             config,
         )
@@ -218,7 +220,7 @@ def compute_levels_geometry(
     )
 
 
-def _horizontal_channel_size(lane_count: int, config: GeometryConfig) -> float:
+def horizontal_channel_size(lane_count: int, config: GeometryConfig) -> float:
     """
     Return the size of a horizontal channel.
 
@@ -234,7 +236,7 @@ def _horizontal_channel_size(lane_count: int, config: GeometryConfig) -> float:
     )
 
 
-def _vertical_channel_size(lane_count: int, config: GeometryConfig) -> float:
+def vertical_channel_size(lane_count: int, config: GeometryConfig) -> float:
     """
     Return the size of a vertical channel.
 

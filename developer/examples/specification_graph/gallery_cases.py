@@ -574,6 +574,71 @@ def _structure_case(
 
 STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
     _structure_case(
+        "Fewest bends before the shortest length",
+        (
+            "A2 -> B2 connects the bottom nodes of two short columns. The "
+            "section T is tall, so the bottom corridor lies far below. The "
+            "route over the top corridor is shorter but has six bends. The "
+            "route over the bottom corridor has two bends and wins."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    "A2",
+                    ("S", ["S1"]),
+                    "B1",
+                    "B2",
+                    ("T", ["T1", "T2", "T3", "T4", "T5", "T6"]),
+                ],
+            )
+        ],
+        [("A2", "B2")],
+    ),
+    _structure_case(
+        "Relations that turn together",
+        (
+            "A2 -> B1 and A3 -> B1 both climb in the vertical channel left of "
+            "the section S and turn right into the top corridor. The lanes "
+            "nest, so the two relations do not cross."
+        ),
+        [("Doc", ["A1", "A2", "A3", ("S", ["S1"]), "B1", "B2"])],
+        [("A2", "B1"), ("A3", "B1")],
+    ),
+    _structure_case(
+        "Relations inside one container",
+        (
+            "All relations connect simple nodes of the document. A3 -> A2 "
+            "is straight between neighbors in one column. A1 -> C1 and "
+            "C2 -> A2 pass the section S through the corridors or the "
+            "vertical channels. Each route takes the fewest bends, then the "
+            "shortest length. S2 -> S1 stays inside the section."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    "A2",
+                    "A3",
+                    ("S", ["S1", "S2"]),
+                    "C1",
+                    "C2",
+                    "C3",
+                ],
+            )
+        ],
+        [
+            ("A3", "A2"),
+            ("A1", "C1"),
+            ("C2", "A2"),
+            ("C3", "A3"),
+            ("S2", "S1"),
+            ("C1", "C3"),
+        ],
+    ),
+    _structure_case(
         "Document tree from the sketch",
         (
             "Section 1 holds simple nodes, Section 4, and Section 2 with "

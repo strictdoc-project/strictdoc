@@ -38,6 +38,9 @@ from strictdoc.features.specification_graph.svg_graph.normalization import (
 from strictdoc.features.specification_graph.svg_graph.structure_geometry import (
     StructureGeometry,
 )
+from strictdoc.features.specification_graph.svg_graph.structure_routing import (
+    StructureRouting,
+)
 
 CSS_PREFIX = "specification-graph"
 
@@ -120,11 +123,10 @@ def serialize_levels_svg(
     elements.append(
         _render_edges(
             normalized_graph,
-            routing,
-            geometry,
+            geometry.edge_paths,
             style_types,
             type_indexes,
-            debug,
+            _levels_debug_attributes(routing) if debug else {},
             svg_id,
         )
     )
@@ -137,18 +139,29 @@ def serialize_levels_svg(
 
 def serialize_structure_svg(
     normalized_graph: NormalizedGraph,
+    routing: StructureRouting,
     geometry: StructureGeometry,
+    edge_paths: Mapping[str, Tuple[Point, ...]],
     debug: bool = False,
     svg_id: str = CSS_PREFIX,
 ) -> str:
     """
     Serialize the structure mode result.
 
-    The routing of the structure mode is not implemented yet: the SVG has
-    the nodes and the containers without relations.
+    The SVG has the relations that the routing routes. The routing does not
+    route all relations of the structure mode yet.
     """
 
-    danger_style = normalized_graph.relation_types[DANGER_RELATION_TYPE]
+    style_types = {
+        edge_.edge_id: structure_style_relation_type(edge_)
+        for edge_ in normalized_graph.edges
+    }
+    type_indexes = {
+        type_id_: index_
+        for index_, type_id_ in enumerate(
+            sorted(set(style_types.values()) | {DANGER_RELATION_TYPE})
+        )
+    }
     elements: List[str] = [
         (
             f'<svg xmlns="http://www.w3.org/2000/svg" id="{_escape(svg_id)}" '
@@ -158,11 +171,11 @@ def serialize_structure_svg(
             f'viewBox="0 0 {_number(geometry.width)} '
             f'{_number(geometry.height)}">'
         ),
-        (
-            "<defs>\n<style>\n"
-            f"#{svg_id} .{CSS_PREFIX}-node--danger .{CSS_PREFIX}-node__box "
-            f"{{ stroke: {danger_style.color}; }}\n"
-            "</style>\n</defs>"
+        _render_defs(
+            normalized_graph.relation_types,
+            type_indexes,
+            geometry.config,
+            svg_id,
         ),
     ]
     if debug:
@@ -175,7 +188,9 @@ def serialize_structure_svg(
                             f":{channel_.container_id}"
                             if channel_.container_id is not None
                             else ""
-                        ),
+                        )
+                        + f":{channel_.channel_id.index}"
+                        + f":{channel_.channel_id.gap}",
                         channel_.rect,
                     )
                     for channel_ in geometry.channels
@@ -188,10 +203,78 @@ def serialize_structure_svg(
         )
     )
     elements.append(
+        _render_edges(
+            normalized_graph,
+            edge_paths,
+            style_types,
+            type_indexes,
+            _structure_debug_attributes(routing) if debug else {},
+            svg_id,
+        )
+    )
+    elements.append(
         _render_warning_signs(normalized_graph, geometry.node_rects)
     )
     elements.append("</svg>")
     return "\n".join(elements) + "\n"
+
+
+def _levels_debug_attributes(
+    routing: LevelsRouting,
+) -> Dict[str, Dict[str, str]]:
+    result: Dict[str, Dict[str, str]] = {}
+    for edge_id_, route_ in routing.routes.items():
+        lanes_ = " ".join(
+            (
+                "H"
+                if lane_.channel.orientation is Orientation.HORIZONTAL
+                else "V"
+            )
+            + f"{lane_.channel.index}:{lane_.lane}"
+            for lane_ in route_.lanes
+        )
+        ports_ = " ".join(
+            f"{port_.node_id}:{port_.face.value}:{port_.slot}"
+            for port_ in (route_.source_port, route_.target_port)
+        )
+        result[edge_id_] = {
+            "data-debug-lanes": lanes_,
+            "data-debug-ports": ports_,
+        }
+    return result
+
+
+def _structure_debug_attributes(
+    routing: StructureRouting,
+) -> Dict[str, Dict[str, str]]:
+    result: Dict[str, Dict[str, str]] = {}
+    for edge_id_, route_ in routing.routes.items():
+        lanes_ = " ".join(
+            f"{channel_.kind.value}:{channel_.container_id}:"
+            f"{channel_.index}:{channel_.gap}={lane_}"
+            for channel_, lane_ in zip(route_.channels, route_.lanes)
+        )
+        ports_ = " ".join(
+            f"{port_.node_id}:{port_.face.value}:{port_.slot}"
+            for port_ in (route_.source_port, route_.target_port)
+        )
+        result[edge_id_] = {
+            "data-debug-lanes": lanes_,
+            "data-debug-ports": ports_,
+        }
+    return result
+
+
+def structure_style_relation_type(edge: NormalizedEdge) -> str:
+    """
+    Return the type that gives an edge of the structure mode its style.
+
+    A cycle relation is danger. The other relations keep the input type.
+    """
+
+    if edge.cycle_id is not None:
+        return DANGER_RELATION_TYPE
+    return edge.relation_type
 
 
 def style_relation_type(
@@ -364,15 +447,20 @@ def _render_node_title(node: GraphNode, rect: Rect, is_container: bool) -> str:
 
 def _render_edges(
     normalized_graph: NormalizedGraph,
-    routing: LevelsRouting,
-    geometry: LevelsGeometry,
+    edge_paths: Mapping[str, Tuple[Point, ...]],
     style_types: Dict[str, str],
     type_indexes: Dict[str, int],
-    debug: bool,
+    debug_attributes: Mapping[str, Dict[str, str]],
     svg_id: str,
 ) -> str:
+    """
+    Render the edges that have a path, in the order of the edge IDs.
+    """
+
     edges: List[str] = []
     for edge_ in normalized_graph.edges:
+        if edge_.edge_id not in edge_paths:
+            continue
         type_index_ = type_indexes[style_types[edge_.edge_id]]
         attributes_ = [
             f'data-edge-id="{_escape(edge_.edge_id)}"',
@@ -382,24 +470,9 @@ def _render_edges(
         ]
         if edge_.cycle_id is not None:
             attributes_.append(f'data-cycle-id="{_escape(edge_.cycle_id)}"')
-        if debug:
-            route_ = routing.routes[edge_.edge_id]
-            lanes_ = " ".join(
-                (
-                    "H"
-                    if lane_.channel.orientation is Orientation.HORIZONTAL
-                    else "V"
-                )
-                + f"{lane_.channel.index}:{lane_.lane}"
-                for lane_ in route_.lanes
-            )
-            ports_ = " ".join(
-                f"{port_.node_id}:{port_.face.value}:{port_.slot}"
-                for port_ in (route_.source_port, route_.target_port)
-            )
-            attributes_.append(f'data-debug-lanes="{_escape(lanes_)}"')
-            attributes_.append(f'data-debug-ports="{_escape(ports_)}"')
-        path_ = _path_data(geometry.edge_paths[edge_.edge_id])
+        for name_, value_ in debug_attributes.get(edge_.edge_id, {}).items():
+            attributes_.append(f'{name_}="{_escape(value_)}"')
+        path_ = _path_data(edge_paths[edge_.edge_id])
         edges.append(
             f'<g class="{CSS_PREFIX}-edge {CSS_PREFIX}-edge--type-'
             f'{type_index_}" {" ".join(attributes_)}>\n'

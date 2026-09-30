@@ -42,6 +42,14 @@ def _edge_ids_by_name(case: GalleryCase) -> Dict[Tuple[str, str], str]:
 
 
 def test_straight_edge_has_no_lanes() -> None:
+    """
+    A straight edge takes the center slots and no lanes.
+
+    Code: levels_routing._assign_ports, levels_routing._assign_horizontal_lanes.
+    Fails if:
+    - no gate has a straight edge.
+    """
+
     case = _case("Simple chain")
 
     routing = _routing(case, RoutingOptions())
@@ -53,6 +61,18 @@ def test_straight_edge_has_no_lanes() -> None:
 
 
 def test_nested_segment_priority_decides_the_crossed_vertical() -> None:
+    """
+    The lane priority option decides the crossed vertical.
+
+    Entry priority: the outer segment stays above the nested segment. Exit
+    priority: below it.
+
+    Code: levels_routing._pair_order, levels_routing._assign_ports.
+    Fails if:
+    - the priority option is inverted.
+    - the left side ports are not ordered from the center outward.
+    """
+
     case = _case("Nested relations in one channel")
     edge_ids = _edge_ids_by_name(case)
     outer_id = edge_ids[("X", "D")]
@@ -83,6 +103,16 @@ def test_nested_segment_priority_decides_the_crossed_vertical() -> None:
 
 
 def test_skip_channel_choice_selects_the_vertical_channel() -> None:
+    """
+    The skip channel option selects the vertical channel.
+
+    Near the source or near the target.
+
+    Code: levels_routing._choose_vertical_channel.
+    Fails if:
+    - the near target option uses the channel near the source.
+    """
+
     case = _case("Relations across levels from far columns")
     edge_ids = _edge_ids_by_name(case)
 
@@ -116,6 +146,15 @@ def _slots(
 
 
 def test_unsafe_group_shares_one_slot_list() -> None:
+    """
+    An unsafe group of a gate numbers both faces with one list.
+
+    Code: levels_routing._assign_ports, levels_routing._group_is_unsafe.
+    Fails if:
+    - unsafe groups are numbered per face.
+    - no gate has a straight edge.
+    """
+
     case = _case("Opposite ports in one gate")
 
     slots = _slots(case, _routing(case, RoutingOptions()))
@@ -130,6 +169,15 @@ def test_unsafe_group_shares_one_slot_list() -> None:
 
 
 def test_safe_group_keeps_one_rhythm_on_both_faces() -> None:
+    """
+    A safe group of a gate numbers each face on its own.
+
+    Code: levels_routing._assign_ports, levels_routing._group_is_unsafe.
+    Fails if:
+    - safe groups share one list.
+    - no gate has a straight edge.
+    """
+
     case = _case("Opposite ports in one gate")
 
     slots = _slots(case, _routing(case, RoutingOptions()))
@@ -144,6 +192,19 @@ def test_safe_group_keeps_one_rhythm_on_both_faces() -> None:
 
 
 def test_many_ports_of_one_gate() -> None:
+    """
+    Safe and unsafe groups in a gate with many ports.
+
+    A safe group keeps the preferred pitch. An unsafe group puts the upper block
+    next to the center.
+
+    Code: levels_routing._assign_ports, levels_geometry.compute_levels_geometry.
+    Fails if:
+    - unsafe groups are numbered per face.
+    - safe groups share one list.
+    - a shared list interleaves the faces.
+    """
+
     case = _case("Many ports in one gate")
     normalized_graph = normalize_graph(case.graph)
     structure = compute_levels_structure(normalized_graph)
@@ -179,6 +240,16 @@ def test_many_ports_of_one_gate() -> None:
 
 
 def test_face_with_few_ports_keeps_the_preferred_pitch() -> None:
+    """
+    A face with few ports keeps the preferred pitch next to a crowded face.
+
+    Code: levels_geometry.compute_levels_geometry (port pitch),
+    levels_routing.Port.list_size.
+    Fails if:
+    - the pitch comes from the longest list of the gate side.
+    - safe groups share one list.
+    """
+
     case = _case("Extreme gate, right: L sends 12, U receives 4")
     normalized_graph = normalize_graph(case.graph)
     structure = compute_levels_structure(normalized_graph)
@@ -187,8 +258,12 @@ def test_face_with_few_ports_keeps_the_preferred_pitch() -> None:
     edge_ids = _edge_ids_by_name(case)
     config = GeometryConfig()
 
+    # The gate center is the x of the straight relation L -> U. The twelve
+    # ports of L do not fit right of the node center, so the gate center
+    # moves left.
+    center = geometry.edge_paths[edge_ids[("L", "U")]][-1].x
     rect = geometry.node_rects["U"]
-    center = rect.x + rect.width / 2
+    assert center < rect.x + rect.width / 2
     incoming_x = sorted(
         geometry.edge_paths[edge_ids[(source_id_, "U")]][-1].x
         for source_id_ in ("L", "L2", "L3", "L4", "L5")

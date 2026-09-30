@@ -41,6 +41,15 @@ def _edge_pairs(graph: NormalizedGraph) -> Tuple[Tuple[str, str], ...]:
 
 
 def test_nodes_follow_pre_order_of_the_structure() -> None:
+    """
+    Nodes and their parents follow the pre-order of the input structure.
+
+    Code: normalization._collect_nodes.
+    Fails if:
+    - the traversal pushes the children in input order, so the last child comes
+      out first.
+    """
+
     graph = Graph(
         mode=LayoutMode.STRUCTURE,
         root=(
@@ -79,16 +88,40 @@ def test_nodes_follow_pre_order_of_the_structure() -> None:
 
 
 def test_duplicate_node_id_is_an_error() -> None:
+    """
+    A duplicate node ID rejects the input.
+
+    Code: normalization._collect_nodes.
+    Fails if:
+    - the duplicate node ID check is missing.
+    """
+
     with pytest.raises(GraphModelError, match="Duplicate node ID: A"):
         normalize_graph(_levels_graph(["A", "B", "A"], []))
 
 
 def test_edge_to_unknown_node_is_an_error() -> None:
+    """
+    An edge to an unknown node rejects the input.
+
+    Code: normalization._deduplicate_edges.
+    Fails if:
+    - the unknown endpoint check is missing.
+    """
+
     with pytest.raises(GraphModelError, match="unknown node: X"):
         normalize_graph(_levels_graph(["A"], [("A", "X")]))
 
 
 def test_children_outside_structure_mode_are_an_error() -> None:
+    """
+    Children outside the structure mode reject the input.
+
+    Code: normalization._collect_nodes.
+    Fails if:
+    - children are accepted in any mode.
+    """
+
     graph = Graph(
         mode=LayoutMode.LEVELS,
         root=(
@@ -105,6 +138,14 @@ def test_children_outside_structure_mode_are_an_error() -> None:
 
 
 def test_group_outside_groups_mode_is_an_error() -> None:
+    """
+    A node group outside the levels with groups mode rejects the input.
+
+    Code: normalization._collect_nodes.
+    Fails if:
+    - a node group is accepted in any mode.
+    """
+
     graph = Graph(
         mode=LayoutMode.LEVELS,
         root=(GraphNode(node_id="A", title="A", group_id="G"),),
@@ -115,6 +156,14 @@ def test_group_outside_groups_mode_is_an_error() -> None:
 
 
 def test_unknown_group_is_an_error() -> None:
+    """
+    A reference to an unknown group rejects the input.
+
+    Code: normalization._validate_groups.
+    Fails if:
+    - the unknown group check is missing.
+    """
+
     graph = Graph(
         mode=LayoutMode.LEVELS_WITH_GROUPS,
         root=(GraphNode(node_id="A", title="A", group_id="G"),),
@@ -126,6 +175,16 @@ def test_unknown_group_is_an_error() -> None:
 
 
 def test_exact_duplicate_edges_are_drawn_once_and_reported() -> None:
+    """
+    An exact duplicate edge is dropped and reported.
+
+    An edge with the same ends and another type stays.
+
+    Code: normalization._deduplicate_edges.
+    Fails if:
+    - exact duplicates are kept.
+    """
+
     graph = Graph(
         mode=LayoutMode.LEVELS,
         root=(
@@ -151,6 +210,14 @@ def test_exact_duplicate_edges_are_drawn_once_and_reported() -> None:
 
 
 def test_self_loop_is_not_drawn_and_marks_the_node() -> None:
+    """
+    A self-loop is dropped and reported on its node.
+
+    Code: normalization._deduplicate_edges.
+    Fails if:
+    - self-loops are kept.
+    """
+
     normalized_graph = normalize_graph(
         _levels_graph(["A", "B"], [("A", "A"), ("A", "B")])
     )
@@ -163,6 +230,14 @@ def test_self_loop_is_not_drawn_and_marks_the_node() -> None:
 
 
 def test_edge_ids_are_stable_and_follow_input_order() -> None:
+    """
+    Edge IDs are edge-1, edge-2, ... in input order.
+
+    Code: normalization.normalize_graph.
+    Fails if:
+    - the numbering starts at 0.
+    """
+
     normalized_graph = normalize_graph(
         _levels_graph(["A", "B", "C"], [("B", "A"), ("C", "B")])
     )
@@ -175,7 +250,13 @@ def test_edge_ids_are_stable_and_follow_input_order() -> None:
 
 def test_two_cycles_have_separate_diagnostics() -> None:
     """
+    Each cycle has its own ID, numbered by the first node of the cycle.
+
     Gallery case: "Two cycles have separate diagnostics".
+
+    Code: normalization._cycles_from_components.
+    Fails if:
+    - the cycles are numbered in another order.
     """
 
     normalized_graph = normalize_graph(
@@ -216,7 +297,15 @@ def test_two_cycles_have_separate_diagnostics() -> None:
 
 def test_edge_that_closes_a_cycle_does_not_take_part_in_levels() -> None:
     """
+    The edge that closes a cycle does not take part in the levels.
+
+    The edges are accepted in input order.
+
     Gallery case: "Three-document cycle with an incoming branch".
+
+    Code: normalization._level_edge_flags.
+    Fails if:
+    - the edge that closes a cycle takes part in the levels.
     """
 
     normalized_graph = normalize_graph(
@@ -239,6 +328,14 @@ def test_edge_that_closes_a_cycle_does_not_take_part_in_levels() -> None:
 
 
 def test_level_edges_are_acyclic_for_nested_cycles() -> None:
+    """
+    The level edges stay acyclic when cycles share nodes.
+
+    Code: normalization._level_edge_flags, normalization._reaches.
+    Fails if:
+    - the edge that closes a cycle takes part in the levels.
+    """
+
     normalized_graph = normalize_graph(
         _levels_graph(
             ["A", "B", "C"],
@@ -254,6 +351,14 @@ def test_level_edges_are_acyclic_for_nested_cycles() -> None:
 
 
 def test_ancestor_links_are_detected_in_both_directions() -> None:
+    """
+    A link between a node and its ancestor is detected in both directions.
+
+    Code: normalization._is_ancestor_link.
+    Fails if:
+    - only the link from the ancestor to its descendant is detected.
+    """
+
     graph = Graph(
         mode=LayoutMode.STRUCTURE,
         root=(
@@ -287,6 +392,16 @@ def test_ancestor_links_are_detected_in_both_directions() -> None:
 
 
 def test_deep_chain_does_not_hit_the_recursion_limit() -> None:
+    """
+    A cycle of 1500 nodes does not hit the Python recursion limit.
+
+    Code: normalization._strongly_connected_components,
+    normalization._level_edge_flags.
+    Fails if:
+    - the cycle search is recursive.
+    - the edge that closes the cycle takes part in the levels.
+    """
+
     node_ids = [f"N{index_}" for index_ in range(1500)]
     edges = [
         (node_ids[index_ + 1], node_ids[index_])

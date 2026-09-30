@@ -18,6 +18,7 @@ from strictdoc.features.specification_graph.svg_graph.model import (
     GraphEdge,
     GraphNode,
     LayoutMode,
+    RelationStyle,
 )
 
 
@@ -523,4 +524,51 @@ LEVELS_CASES: Tuple[GalleryCase, ...] = (
     ),
 )
 
-GALLERY_CASES: Tuple[GalleryCase, ...] = LEVELS_CASES + EXTREME_GATE_CASES
+SERIALIZATION_CASES: Tuple[GalleryCase, ...] = (
+    GalleryCase(
+        title="Titles, relation types, and diagnostics",
+        description=(
+            "A long title wraps and stops after three lines. The full title "
+            "is in the tooltip. B -> A has the input type verifies with its "
+            "own style. C -> A has the input type unknown without a style: "
+            "it gets the default style. C relates to itself, and B -> A is "
+            "given twice: the generator drops both and marks the nodes with "
+            "a warning sign."
+        ),
+        graph=Graph(
+            mode=LayoutMode.LEVELS,
+            root=(
+                GraphNode(
+                    node_id="A",
+                    title=(
+                        "A requirement with a very long title that does not "
+                        "fit into three lines of the node box"
+                    ),
+                    link="https://example.com/A",
+                    details=(("UID", "REQ-A"), ("Document", "Spec")),
+                ),
+                GraphNode(node_id="B", title="B: short title"),
+                GraphNode(node_id="C", title="C"),
+            ),
+            edges=(
+                GraphEdge(
+                    source_id="B", target_id="A", relation_type="verifies"
+                ),
+                GraphEdge(
+                    source_id="B", target_id="A", relation_type="verifies"
+                ),
+                GraphEdge(
+                    source_id="C", target_id="A", relation_type="unknown"
+                ),
+                GraphEdge(source_id="C", target_id="C", relation_type="parent"),
+            ),
+            relation_types={
+                "verifies": RelationStyle(label="Verifies", color="#1f6fd1"),
+            },
+        ),
+    ),
+)
+
+GALLERY_CASES: Tuple[GalleryCase, ...] = (
+    SERIALIZATION_CASES + LEVELS_CASES + EXTREME_GATE_CASES
+)

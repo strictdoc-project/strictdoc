@@ -30,6 +30,7 @@ NORMALIZATION = PACKAGE_PATH + "normalization.py"
 STRUCTURE = PACKAGE_PATH + "levels_structure.py"
 ROUTING = PACKAGE_PATH + "levels_routing.py"
 GEOMETRY = PACKAGE_PATH + "levels_geometry.py"
+SERIALIZER = PACKAGE_PATH + "svg_serializer.py"
 
 
 @dataclass(frozen=True)
@@ -349,6 +350,70 @@ MUTATIONS = (
         GEOMETRY,
         "    half_width = node_width / 2 - config.port_margin",
         "    half_width = node_width / 2",
+    ),
+    Mutation(
+        "Z1",
+        "type without a style does not fall back to default",
+        SERIALIZER,
+        "type_id_, relation_types[DEFAULT_RELATION_TYPE]",
+        "type_id_, relation_types[DANGER_RELATION_TYPE]",
+    ),
+    Mutation(
+        "Z2",
+        "warning wins over danger",
+        SERIALIZER,
+        "    if edge.cycle_id is not None:\n"
+        "        return DANGER_RELATION_TYPE\n"
+        "    if edge.edge_id in structure.skip_edge_ids:\n"
+        "        return WARNING_RELATION_TYPE",
+        "    if edge.edge_id in structure.skip_edge_ids:\n"
+        "        return WARNING_RELATION_TYPE\n"
+        "    if edge.cycle_id is not None:\n"
+        "        return DANGER_RELATION_TYPE",
+    ),
+    Mutation(
+        "Z3",
+        "relation across levels keeps its input type",
+        SERIALIZER,
+        "    if edge.edge_id in structure.skip_edge_ids:\n"
+        "        return WARNING_RELATION_TYPE",
+        "",
+    ),
+    Mutation(
+        "Z4",
+        "cycle gets a warning sign",
+        SERIALIZER,
+        "        if diagnostic_.kind is DiagnosticKind.CYCLE:\n"
+        "            continue",
+        "",
+    ),
+    Mutation(
+        "Z5",
+        "debug attributes written without the debug mode",
+        SERIALIZER,
+        "        if debug:\n            route_ = routing.routes[edge_.edge_id]",
+        "        if True:\n            route_ = routing.routes[edge_.edge_id]",
+    ),
+    Mutation(
+        "Z6",
+        "type style rule not scoped by the SVG ID",
+        SERIALIZER,
+        'f"#{svg_id} .{CSS_PREFIX}-edge--type-{index_} "',
+        'f".{CSS_PREFIX}-edge--type-{index_} "',
+    ),
+    Mutation(
+        "Z7",
+        "coordinates keep trailing zeros",
+        SERIALIZER,
+        'text = f"{round(value, 2):.2f}".rstrip("0").rstrip(".")',
+        'text = f"{round(value, 2):.2f}"',
+    ),
+    Mutation(
+        "Z8",
+        "node link attribute missing",
+        SERIALIZER,
+        "        if node_.link is not None:\n            attributes_.append(",
+        "        if False:\n            attributes_.append(",
     ),
 )
 

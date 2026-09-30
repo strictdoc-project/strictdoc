@@ -1,0 +1,76 @@
+/*
+ * Constant styles of the specification graph SVG.
+ *
+ * The serializer writes the input-dependent styles into the SVG: the stroke
+ * of each relation type and the color of the danger nodes.
+ */
+
+.specification-graph {
+  font-family: sans-serif;
+}
+
+.specification-graph-node__box {
+  fill: #e8f0fb;
+  stroke: #333333;
+  stroke-width: 1;
+}
+
+.specification-graph-node--danger .specification-graph-node__box {
+  stroke-width: 2;
+}
+
+/* The title takes at most three lines, centered in the node. */
+.specification-graph-node__title {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 2px 8px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 15px;
+  color: #222222;
+}
+
+.specification-graph-node__title-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
+.specification-graph-edge__line {
+  fill: none;
+  stroke-width: 1.5;
+}
+
+/* A wider transparent line catches hover and focus. */
+.specification-graph-edge__hit-area {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 12;
+  pointer-events: stroke;
+}
+
+.specification-graph-warning-sign path {
+  fill: #f2b01e;
+  stroke: #7a5200;
+  stroke-width: 1;
+}
+
+.specification-graph-warning-sign text {
+  font-size: 11px;
+  font-weight: bold;
+  text-anchor: middle;
+  fill: #3a2700;
+}
+
+.specification-graph-debug__channel {
+  fill: rgba(80, 160, 255, 0.08);
+  stroke: rgba(80, 160, 255, 0.5);
+  stroke-dasharray: 2 2;
+}

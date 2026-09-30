@@ -11,11 +11,13 @@ from enum import Enum
 from typing import Dict, List, Mapping, Optional, Set, Tuple
 
 from strictdoc.features.specification_graph.svg_graph.model import (
+    BUILTIN_RELATION_STYLES,
     Graph,
     GraphEdge,
     GraphGroup,
     GraphNode,
     LayoutMode,
+    RelationStyle,
 )
 
 
@@ -66,6 +68,8 @@ class NormalizedGraph:
     groups: Tuple[GraphGroup, ...]
     cycles: Tuple[GraphCycle, ...]
     diagnostics: Tuple[Diagnostic, ...]
+    # Styles of the built-in types and of the input types.
+    relation_types: Mapping[str, RelationStyle]
 
 
 def normalize_graph(graph: Graph) -> NormalizedGraph:
@@ -131,6 +135,7 @@ def normalize_graph(graph: Graph) -> NormalizedGraph:
         groups=graph.groups,
         cycles=cycles,
         diagnostics=tuple(diagnostics),
+        relation_types={**BUILTIN_RELATION_STYLES, **graph.relation_types},
     )
 
 

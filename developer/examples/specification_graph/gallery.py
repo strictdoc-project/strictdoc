@@ -17,8 +17,8 @@ from developer.examples.specification_graph.gallery_cases import (
     GALLERY_CASES,
     GalleryCase,
 )
+from strictdoc.features.specification_graph.svg_graph import svg_serializer
 from strictdoc.features.specification_graph.svg_graph.levels_geometry import (
-    GeometryConfig,
     compute_levels_geometry,
 )
 from strictdoc.features.specification_graph.svg_graph.levels_routing import (
@@ -37,6 +37,9 @@ from strictdoc.features.specification_graph.svg_graph.model import (
 from strictdoc.features.specification_graph.svg_graph.normalization import (
     NormalizedGraph,
     normalize_graph,
+)
+from strictdoc.features.specification_graph.svg_graph.svg_serializer import (
+    serialize_levels_svg,
 )
 
 OUTPUT_FILE_NAME = "gallery.html"
@@ -73,20 +76,15 @@ ul.conflicts { margin: 4px 0; font-size: 12px; color: #a50; }
 """
 
 
-EDGE_COLORS = ("#333", "#c00", "#e07000")
-
-# The arrowhead base has the width that the geometry reserves for it.
-ARROW_WIDTH = GeometryConfig().arrow_width
-ARROW_MARKERS = "".join(
-    f'<marker id="arrow-{color_[1:]}" viewBox="0 0 10 10" refX="10" '
-    f'refY="5" markerUnits="userSpaceOnUse" markerWidth="{ARROW_WIDTH}" '
-    f'markerHeight="{ARROW_WIDTH}" orient="auto-start-reverse">'
-    f'<path d="M 0 0 L 10 5 L 0 10 z" fill="{color_}"/></marker>'
-    for color_ in EDGE_COLORS
+# Constant styles of the generator SVG.
+GENERATOR_CSS_PATH = os.path.join(
+    os.path.dirname(svg_serializer.__file__), "specification_graph.css"
 )
 
 
 def main() -> None:
+    with open(GENERATOR_CSS_PATH, encoding="utf-8") as css_file:
+        generator_css = css_file.read()
     sections: List[str] = []
     for index_, case_ in enumerate(GALLERY_CASES):
         sections.append(_render_case(index_, case_))
@@ -101,6 +99,7 @@ def main() -> None:
 <meta charset="utf-8">
 <title>Specification graph gallery</title>
 <style>{PAGE_STYLE}</style>
+<style>{generator_css}</style>
 </head>
 <body>
 <h1>Specification graph gallery</h1>
@@ -127,7 +126,7 @@ def _render_case(index: int, case: GalleryCase) -> str:
 <h2>{html.escape(case.title)}</h2>
 <div>{badges}</div>
 <p class="description">{html.escape(case.description)}</p>
-{_render_routes(case, normalized_graph)}
+{_render_routes(index, case, normalized_graph)}
 <div class="columns">
 {_render_input(case)}
 {_render_normalization(normalized_graph)}
@@ -190,12 +189,18 @@ def _render_normalization(normalized_graph: NormalizedGraph) -> str:
 </div>"""
 
 
-def _render_routes(case: GalleryCase, normalized_graph: NormalizedGraph) -> str:
+def _render_routes(
+    index: int, case: GalleryCase, normalized_graph: NormalizedGraph
+) -> str:
     if normalized_graph.mode is not LayoutMode.LEVELS:
         return ""
     structure = compute_levels_structure(normalized_graph)
     figures = _render_levels_svg(
-        normalized_graph, structure, RoutingOptions(), "Generator result"
+        normalized_graph,
+        structure,
+        RoutingOptions(),
+        f"case-{index}-result",
+        "Generator result",
     )
     alternative = case.rejected_alternative
     if alternative is not None:
@@ -203,6 +208,7 @@ def _render_routes(case: GalleryCase, normalized_graph: NormalizedGraph) -> str:
             normalized_graph,
             structure,
             alternative.options,
+            f"case-{index}-rejected",
             "Rejected alternative: the generator does not use this route",
             (
                 f"{html.escape(alternative.description)} Rendered only here, "
@@ -212,9 +218,9 @@ def _render_routes(case: GalleryCase, normalized_graph: NormalizedGraph) -> str:
         )
     return f"""<div class="preview">
 <div class="figures">{figures}</div>
-<p>Dashed: relation across levels. Red: cycle. Orange: relations with an
-unavoidable crossing in one channel. Thick border: corrected root. Grey
-area: standalone nodes.</p>
+<p>Built-in relation types: warning (dashed) marks a relation across
+levels, danger (red) marks a cycle. The "!" sign marks a node with a
+diagnostic.</p>
 </div>"""
 
 
@@ -222,86 +228,32 @@ def _render_levels_svg(
     normalized_graph: NormalizedGraph,
     structure: LevelsStructure,
     options: RoutingOptions,
+    svg_id: str,
     caption: str,
     note: str = "",
 ) -> str:
     routing = compute_levels_routing(normalized_graph, structure, options)
     geometry = compute_levels_geometry(structure, routing)
-    cyclic_node_ids = {
-        node_id_
-        for cycle_ in normalized_graph.cycles
-        for node_id_ in cycle_.node_ids
-    }
-    conflict_edge_ids = {
-        edge_id_
-        for conflict_ in routing.conflicts
-        for edge_id_ in (conflict_.outer_edge_id, conflict_.inner_edge_id)
-    }
-
-    elements: List[str] = []
-    if structure.standalone_row_count > 0:
-        first_rect_ = geometry.node_rects[structure.standalone_node_ids[0]]
-        last_row_bottom_ = max(
-            geometry.node_rects[node_id_].y
-            + geometry.node_rects[node_id_].height
-            for node_id_ in structure.standalone_node_ids
-        )
-        elements.append(
-            f'<rect x="{first_rect_.x - 8}" y="{first_rect_.y - 8}" '
-            f'width="{geometry.width - first_rect_.x}" '
-            f'height="{last_row_bottom_ - first_rect_.y + 16}" '
-            'fill="#f3f3f3" stroke="#ccc" stroke-dasharray="4 3"/>'
-        )
-    for node_ in normalized_graph.nodes:
-        rect_ = geometry.node_rects[node_.node_id]
-        stroke_ = "#c00" if node_.node_id in cyclic_node_ids else "#333"
-        stroke_width_ = (
-            "3" if node_.node_id in structure.corrected_root_ids else "1"
-        )
-        elements.append(
-            f'<rect x="{rect_.x}" y="{rect_.y}" width="{rect_.width}" '
-            f'height="{rect_.height}" rx="4" fill="#e8f0fb" '
-            f'stroke="{stroke_}" stroke-width="{stroke_width_}"/>'
-            f'<text x="{rect_.x + rect_.width / 2}" '
-            f'y="{rect_.y + rect_.height / 2}" text-anchor="middle" '
-            f'dominant-baseline="middle" font-size="12">'
-            f"{html.escape(node_.title)}</text>"
-        )
-    for edge_ in normalized_graph.edges:
-        path_ = geometry.edge_paths[edge_.edge_id]
-        if edge_.edge_id in conflict_edge_ids:
-            color_ = "#e07000"
-        elif edge_.cycle_id is not None:
-            color_ = "#c00"
-        else:
-            color_ = "#333"
-        dash_ = (
-            ' stroke-dasharray="6 4"'
-            if edge_.edge_id in structure.skip_edge_ids
-            else ""
-        )
-        points_ = " ".join(f"{point_.x},{point_.y}" for point_ in path_)
-        elements.append(
-            f'<polyline points="{points_}" fill="none" stroke="{color_}" '
-            f'stroke-width="1.5"{dash_} '
-            f'marker-end="url(#arrow-{color_[1:]})">'
-            f"<title>{html.escape(edge_.edge_id)}: "
-            f"{html.escape(edge_.source_id)} -&gt; "
-            f"{html.escape(edge_.target_id)}</title></polyline>"
-        )
+    svg = serialize_levels_svg(
+        normalized_graph, structure, routing, geometry, svg_id=svg_id
+    )
 
     conflicts = "".join(
         f"<li>{html.escape(conflict_.outer_edge_id)} crosses "
         f"{html.escape(conflict_.inner_edge_id)} in "
-        f"H({conflict_.channel.index})</li>"
-        if conflict_.channel.orientation is Orientation.HORIZONTAL
-        else f"<li>{html.escape(conflict_.outer_edge_id)} crosses "
-        f"{html.escape(conflict_.inner_edge_id)} in "
-        f"V({conflict_.channel.index})</li>"
+        + (
+            "H"
+            if conflict_.channel.orientation is Orientation.HORIZONTAL
+            else "V"
+        )
+        + f"({conflict_.channel.index})</li>"
         for conflict_ in routing.conflicts
     )
     conflict_list = (
-        f"<ul class='conflicts'>{conflicts}</ul>" if len(conflicts) > 0 else ""
+        "<p class='note'>Unavoidable crossings of nested segments:</p>"
+        f"<ul class='conflicts'>{conflicts}</ul>"
+        if len(conflicts) > 0
+        else ""
     )
     is_rejected = options != RoutingOptions()
     figure_class = ' class="rejected"' if is_rejected else ""
@@ -309,11 +261,7 @@ def _render_levels_svg(
     return f"""<figure{figure_class}>
 <h3>{html.escape(caption)}</h3>
 {note_html}
-<svg xmlns="http://www.w3.org/2000/svg" width="{geometry.width}"
-height="{geometry.height}">
-<defs>{ARROW_MARKERS}</defs>
-{chr(10).join(elements)}
-</svg>
+{svg}
 {conflict_list}
 </figure>"""
 

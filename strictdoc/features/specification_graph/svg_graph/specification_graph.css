@@ -98,8 +98,25 @@
   fill: #3a2700;
 }
 
+/* The debug layer lies on top of the graph and does not take the mouse. */
+.specification-graph-debug {
+  pointer-events: none;
+}
+
 .specification-graph-debug__channel {
-  fill: rgba(80, 160, 255, 0.08);
-  stroke: rgba(80, 160, 255, 0.5);
+  fill: rgba(80, 160, 255, 0.12);
+  stroke: rgba(40, 110, 220, 0.6);
+  stroke-width: 1;
+  stroke-dasharray: 3 2;
+}
+
+.specification-graph-debug__lane {
+  stroke: rgba(220, 0, 140, 0.55);
+  stroke-width: 1;
   stroke-dasharray: 2 2;
+}
+
+.specification-graph-debug__label {
+  font-size: 8px;
+  fill: rgba(20, 60, 160, 0.9);
 }

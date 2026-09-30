@@ -8,6 +8,7 @@ defines the markup.
 
 import html
 import json
+from dataclasses import dataclass
 from typing import Dict, List, Mapping, Set, Tuple
 
 from strictdoc.features.specification_graph.svg_graph.levels_geometry import (
@@ -37,6 +38,10 @@ from strictdoc.features.specification_graph.svg_graph.normalization import (
 )
 from strictdoc.features.specification_graph.svg_graph.structure_geometry import (
     StructureGeometry,
+)
+from strictdoc.features.specification_graph.svg_graph.structure_layout import (
+    ChannelKind,
+    StructureChannelId,
 )
 from strictdoc.features.specification_graph.svg_graph.structure_routing import (
     StructureRouting,
@@ -94,29 +99,6 @@ def serialize_levels_svg(
             svg_id,
         ),
     ]
-    if debug:
-        elements.append(
-            _render_debug_layer(
-                [
-                    (
-                        (
-                            "H"
-                            if channel_id_.orientation is Orientation.HORIZONTAL
-                            else "V"
-                        )
-                        + str(channel_id_.index),
-                        rect_,
-                    )
-                    for channel_id_, rect_ in sorted(
-                        geometry.channel_rects.items(),
-                        key=lambda item_: (
-                            item_[0].orientation.value,
-                            item_[0].index,
-                        ),
-                    )
-                ]
-            )
-        )
     elements.append(
         _render_nodes(normalized_graph, geometry.node_rects, header_rects={})
     )
@@ -130,6 +112,34 @@ def serialize_levels_svg(
             svg_id,
         )
     )
+    if debug:
+        elements.append(
+            _render_debug_layer(
+                [
+                    _DebugChannel(
+                        label=(
+                            "H"
+                            if channel_id_.orientation is Orientation.HORIZONTAL
+                            else "V"
+                        )
+                        + str(channel_id_.index),
+                        rect=rect_,
+                        is_horizontal=(
+                            channel_id_.orientation is Orientation.HORIZONTAL
+                        ),
+                        lane_count=routing.lane_counts.get(channel_id_, 0),
+                    )
+                    for channel_id_, rect_ in sorted(
+                        geometry.channel_rects.items(),
+                        key=lambda item_: (
+                            item_[0].orientation.value,
+                            item_[0].index,
+                        ),
+                    )
+                ],
+                geometry.config,
+            )
+        )
     elements.append(
         _render_warning_signs(normalized_graph, geometry.node_rects)
     )
@@ -178,25 +188,6 @@ def serialize_structure_svg(
             svg_id,
         ),
     ]
-    if debug:
-        elements.append(
-            _render_debug_layer(
-                [
-                    (
-                        channel_.kind.value
-                        + (
-                            f":{channel_.container_id}"
-                            if channel_.container_id is not None
-                            else ""
-                        )
-                        + f":{channel_.channel_id.index}"
-                        + f":{channel_.channel_id.gap}",
-                        channel_.rect,
-                    )
-                    for channel_ in geometry.channels
-                ]
-            )
-        )
     elements.append(
         _render_nodes(
             normalized_graph, geometry.node_rects, geometry.header_rects
@@ -212,6 +203,23 @@ def serialize_structure_svg(
             svg_id,
         )
     )
+    if debug:
+        elements.append(
+            _render_debug_layer(
+                [
+                    _DebugChannel(
+                        label=_structure_channel_label(channel_.channel_id),
+                        rect=channel_.rect,
+                        is_horizontal=channel_.channel_id.is_horizontal,
+                        lane_count=geometry.lane_counts.get(
+                            channel_.channel_id, 0
+                        ),
+                    )
+                    for channel_ in geometry.channels
+                ],
+                geometry.config,
+            )
+        )
     elements.append(
         _render_warning_signs(normalized_graph, geometry.node_rects)
     )
@@ -344,18 +352,79 @@ def _render_defs(
     )
 
 
-def _render_debug_layer(channels: List[Tuple[str, Rect]]) -> str:
+@dataclass(frozen=True)
+class _DebugChannel:
+    label: str
+    rect: Rect
+    is_horizontal: bool
+    lane_count: int
+
+
+def _structure_channel_label(channel: StructureChannelId) -> str:
     """
-    Render the debug layer: one rectangle per channel with its label.
+    Return a short label of a channel for the debug layer.
+
+    T and B are the corridors, V1 is a vertical channel, C2.0 is a column
+    gap, S is the block separator.
     """
 
-    rects = [
-        f'<rect class="{CSS_PREFIX}-debug__channel" '
-        f'data-debug-channel="{_escape(label_)}" '
-        f"{_rect_attributes(rect_)}/>"
-        for label_, rect_ in channels
-    ]
-    return f'<g class="{CSS_PREFIX}-debug">\n' + "\n".join(rects) + "\n</g>"
+    if channel.kind is ChannelKind.TOP_CORRIDOR:
+        return "T"
+    if channel.kind is ChannelKind.BOTTOM_CORRIDOR:
+        return "B"
+    if channel.kind is ChannelKind.VERTICAL:
+        return f"V{channel.index}"
+    if channel.kind is ChannelKind.COLUMN:
+        return f"C{channel.index}.{channel.gap}"
+    return "S"
+
+
+def _render_debug_layer(
+    channels: List[_DebugChannel], config: GeometryConfig
+) -> str:
+    """
+    Render the debug layer on top of the graph.
+
+    Each channel is a translucent rectangle with its label. Each lane is a
+    dotted line at the position that the geometry gives it: the lanes of a
+    channel are centered in the channel.
+    """
+
+    elements: List[str] = []
+    for channel_ in channels:
+        rect_ = channel_.rect
+        elements.append(
+            f'<rect class="{CSS_PREFIX}-debug__channel" '
+            f'data-debug-channel="{_escape(channel_.label)}" '
+            f"{_rect_attributes(rect_)}/>"
+        )
+        elements.append(
+            f'<text class="{CSS_PREFIX}-debug__label" '
+            f'x="{_number(rect_.x + 2)}" y="{_number(rect_.y + 8)}">'
+            f"{_escape(channel_.label)}</text>"
+        )
+        size_ = rect_.height if channel_.is_horizontal else rect_.width
+        start_ = rect_.y if channel_.is_horizontal else rect_.x
+        for lane_ in range(channel_.lane_count):
+            offset_ = (
+                start_
+                + (size_ - (channel_.lane_count - 1) * config.lane_pitch) / 2
+                + lane_ * config.lane_pitch
+            )
+            if channel_.is_horizontal:
+                line_ = (
+                    f'x1="{_number(rect_.x)}" y1="{_number(offset_)}" '
+                    f'x2="{_number(rect_.x + rect_.width)}" '
+                    f'y2="{_number(offset_)}"'
+                )
+            else:
+                line_ = (
+                    f'x1="{_number(offset_)}" y1="{_number(rect_.y)}" '
+                    f'x2="{_number(offset_)}" '
+                    f'y2="{_number(rect_.y + rect_.height)}"'
+                )
+            elements.append(f'<line class="{CSS_PREFIX}-debug__lane" {line_}/>')
+    return f'<g class="{CSS_PREFIX}-debug">\n' + "\n".join(elements) + "\n</g>"
 
 
 def _render_nodes(

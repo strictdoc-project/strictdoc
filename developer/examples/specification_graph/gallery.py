@@ -77,6 +77,8 @@ pre { margin: 0; font-size: 13px; line-height: 1.4; }
 table { border-collapse: collapse; font-size: 13px; }
 td, th { border: 1px solid #ddd; padding: 2px 6px; text-align: left; }
 .no { color: #b00; }
+body:not(.show-debug) .specification-graph-debug { display: none; }
+.debug-toggle { display: inline-block; margin: 0 0 16px; font-size: 14px; }
 .preview { margin: 8px 0 16px; }
 figure { margin: 0; }
 .figures { display: flex; gap: 24px; flex-wrap: wrap; align-items: start; }
@@ -116,6 +118,14 @@ def main() -> None:
 </head>
 <body>
 <h1>Specification graph gallery</h1>
+<label class="debug-toggle"><input type="checkbox" id="debug-toggle" checked>
+Show debug layer: channels (blue) and lanes (pink)</label>
+<script>
+document.body.classList.add("show-debug");
+document.getElementById("debug-toggle").addEventListener("change", (event) => {{
+  document.body.classList.toggle("show-debug", event.target.checked);
+}});
+</script>
 <p>Regenerate from the repository root: <code>uv run python -m
 developer.examples.specification_graph.gallery</code></p>
 <nav><ol>
@@ -251,6 +261,7 @@ def _render_structure(index: int, normalized_graph: NormalizedGraph) -> str:
         routing,
         geometry,
         edge_paths,
+        debug=True,
         svg_id=f"case-{index}-result",
     )
     unrouted = ", ".join(html.escape(id_) for id_ in routing.unrouted_edge_ids)
@@ -280,7 +291,12 @@ def _render_levels_svg(
     routing = compute_levels_routing(normalized_graph, structure, options)
     geometry = compute_levels_geometry(structure, routing)
     svg = serialize_levels_svg(
-        normalized_graph, structure, routing, geometry, svg_id=svg_id
+        normalized_graph,
+        structure,
+        routing,
+        geometry,
+        debug=True,
+        svg_id=svg_id,
     )
 
     conflicts = "".join(

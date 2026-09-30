@@ -18,6 +18,7 @@ from developer.examples.specification_graph.gallery_cases import (
     GalleryCase,
 )
 from strictdoc.features.specification_graph.svg_graph.levels_geometry import (
+    GeometryConfig,
     compute_levels_geometry,
 )
 from strictdoc.features.specification_graph.svg_graph.levels_routing import (
@@ -74,9 +75,12 @@ ul.conflicts { margin: 4px 0; font-size: 12px; color: #a50; }
 
 EDGE_COLORS = ("#333", "#c00", "#e07000")
 
+# The arrowhead base has the width that the geometry reserves for it.
+ARROW_WIDTH = GeometryConfig().arrow_width
 ARROW_MARKERS = "".join(
     f'<marker id="arrow-{color_[1:]}" viewBox="0 0 10 10" refX="10" '
-    'refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">'
+    f'refY="5" markerUnits="userSpaceOnUse" markerWidth="{ARROW_WIDTH}" '
+    f'markerHeight="{ARROW_WIDTH}" orient="auto-start-reverse">'
     f'<path d="M 0 0 L 10 5 L 0 10 z" fill="{color_}"/></marker>'
     for color_ in EDGE_COLORS
 )

@@ -383,8 +383,9 @@ LEVELS_CASES: Tuple[GalleryCase, ...] = (
     _levels_case(
         "Standalone nodes wrap to the connected graph width",
         (
-            "Eight standalone nodes stand in a grid above the connected "
-            "graph. The grid has the three columns of the connected graph."
+            "Ten standalone nodes stand in a grid above the connected "
+            "graph. The grid has the three columns of the connected graph, "
+            "not the four columns of a square grid."
         ),
         [
             "Standalone 1",
@@ -395,6 +396,8 @@ LEVELS_CASES: Tuple[GalleryCase, ...] = (
             "Standalone 6",
             "Standalone 7",
             "Standalone 8",
+            "Standalone 9",
+            "Standalone 10",
             "Root A",
             "Root B",
             "Root C",

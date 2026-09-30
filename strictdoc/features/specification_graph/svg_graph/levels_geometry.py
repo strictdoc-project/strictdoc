@@ -24,13 +24,24 @@ from strictdoc.features.specification_graph.svg_graph.levels_structure import (
 
 @dataclass(frozen=True)
 class GeometryConfig:
+    # Minimum node width. A column with crowded gates gets wider nodes.
     node_width: float = 160
     node_height: float = 52
-    # Preferred distance between neighbor ports. A gate with many ports uses
-    # a smaller distance so that all ports stay on the face.
+    # Preferred distance between neighbor ports. A crowded port list uses a
+    # smaller distance, down to the minimum port pitch.
     port_pitch: float = 12
+    # Width of the arrowhead base. The serializer draws arrowheads of this
+    # width.
+    arrow_width: float = 7
+    # Free space between two neighbor arrowheads at the minimum port pitch.
+    arrow_gap: float = 2
     # Minimum distance from the outermost port to the node corner.
     port_margin: float = 8
+
+    @property
+    def min_port_pitch(self) -> float:
+        return self.arrow_width + self.arrow_gap
+
     lane_pitch: float = 8
     min_channel_size: float = 24
     margin: float = 16
@@ -92,11 +103,13 @@ def compute_levels_geometry(
         offset += config.node_height + horizontal_sizes[row_ + 1]
     height = offset + config.margin
 
+    list_sizes_by_gate = _list_sizes_by_gate(structure, routing)
+    column_widths = _column_widths(structure, list_sizes_by_gate, config)
     column_lefts: List[float] = []
     offset = config.margin + vertical_sizes[0]
     for column_ in range(structure.column_count):
         column_lefts.append(offset)
-        offset += config.node_width + vertical_sizes[column_ + 1]
+        offset += column_widths[column_] + vertical_sizes[column_ + 1]
     width = offset + config.margin
 
     channel_rects: Dict[ChannelId, Rect] = {}
@@ -116,7 +129,7 @@ def compute_levels_geometry(
         left_ = (
             config.margin
             if index_ == -1
-            else column_lefts[index_] + config.node_width
+            else column_lefts[index_] + column_widths[index_]
         )
         channel_rects[ChannelId(Orientation.VERTICAL, index_)] = Rect(
             x=left_,
@@ -129,20 +142,35 @@ def compute_levels_geometry(
         node_id_: Rect(
             x=column_lefts[position_.column],
             y=row_tops[position_.row],
-            width=config.node_width,
+            width=column_widths[position_.column],
             height=config.node_height,
         )
         for node_id_, position_ in structure.positions.items()
     }
 
+    gate_layouts = {
+        gate_: _gate_layout(list_sizes_, column_widths[gate_[0]], config)
+        for gate_, list_sizes_ in list_sizes_by_gate.items()
+    }
+
+    def port_point(port: Port) -> Point:
+        rect = node_rects[port.node_id]
+        gate_layout = gate_layouts[_gate_of(port, structure)]
+        x = rect.x + rect.width / 2 + gate_layout.center_offset
+        if port.slot != 0:
+            side = -1 if port.slot < 0 else 1
+            pitch = min(
+                config.port_pitch,
+                gate_layout.side_widths[side] / port.list_size,
+            )
+            x += port.slot * pitch
+        return Point(
+            x=x, y=rect.y if port.face is Face.TOP else rect.y + rect.height
+        )
+
     edge_paths: Dict[str, Tuple[Point, ...]] = {
         edge_id_: _route_path(
-            route_,
-            node_rects,
-            channel_rects,
-            routing,
-            config,
-            lambda port_: _port_pitch(port_, config),
+            route_, channel_rects, routing, config, port_point
         )
         for edge_id_, route_ in routing.routes.items()
     }
@@ -185,44 +213,106 @@ def _lane_offset(
     )
 
 
-def _port_pitch(port: Port, config: GeometryConfig) -> float:
+# A gate: the column and the horizontal channel. See the ports rules in
+# spec.md, section "Маршруты".
+_Gate = Tuple[int, int]
+
+
+@dataclass(frozen=True)
+class _GateLayout:
+    # Shift of the gate center from the node center. Both faces of a gate use
+    # the same shift, so a straight edge stays straight.
+    center_offset: float
+    # Width available for the ports on each side of the center: -1 for the
+    # left side, 1 for the right side.
+    side_widths: Mapping[int, float]
+
+
+def _gate_of(port: Port, structure: LevelsStructure) -> _Gate:
+    position = structure.positions[port.node_id]
+    channel = position.row - 1 if port.face is Face.TOP else position.row
+    return position.column, channel
+
+
+def _list_sizes_by_gate(
+    structure: LevelsStructure, routing: LevelsRouting
+) -> Dict[_Gate, Dict[int, int]]:
     """
-    Return the pitch of the numbering list of a port.
-
-    A list that does not fit on the face with the preferred pitch gets a
-    smaller pitch. Ports of one list share one pitch. Lists of different
-    faces use their own pitch, so a face with few ports keeps the preferred
-    pitch.
+    Return the longest port list on each side of each gate.
     """
 
-    if port.list_size == 0:
-        return config.port_pitch
-    available_half_width = config.node_width / 2 - config.port_margin
-    return min(config.port_pitch, available_half_width / port.list_size)
+    result: Dict[_Gate, Dict[int, int]] = {}
+    for route_ in routing.routes.values():
+        for port_ in (route_.source_port, route_.target_port):
+            sizes_ = result.setdefault(
+                _gate_of(port_, structure), {-1: 0, 1: 0}
+            )
+            if port_.slot != 0:
+                side_ = -1 if port_.slot < 0 else 1
+                sizes_[side_] = max(sizes_[side_], port_.list_size)
+    return result
 
 
-def _port_point(port: Port, node_rects: Dict[str, Rect], pitch: float) -> Point:
-    rect = node_rects[port.node_id]
-    return Point(
-        x=rect.x + rect.width / 2 + port.slot * pitch,
-        y=rect.y if port.face is Face.TOP else rect.y + rect.height,
+def _column_widths(
+    structure: LevelsStructure,
+    list_sizes_by_gate: Dict[_Gate, Dict[int, int]],
+    config: GeometryConfig,
+) -> List[float]:
+    """
+    Return the node width of each column.
+
+    A gate needs room for the longest list on each side at the minimum port
+    pitch. If the minimum node width is not enough even with a shifted gate
+    center, all nodes of the column get wider.
+    """
+
+    widths = [config.node_width] * structure.column_count
+    for (column_, _), sizes_ in list_sizes_by_gate.items():
+        needed_ = (
+            sizes_[-1] + sizes_[1]
+        ) * config.min_port_pitch + 2 * config.port_margin
+        widths[column_] = max(widths[column_], needed_)
+    return widths
+
+
+def _gate_layout(
+    list_sizes: Dict[int, int], node_width: float, config: GeometryConfig
+) -> _GateLayout:
+    """
+    Place the center of a gate.
+
+    The center stays in the middle of the face while both sides fit at the
+    minimum port pitch. If one side does not fit, the center moves toward
+    the other side by the missing width. The column width guarantees that
+    the other side still fits.
+    """
+
+    half_width = node_width / 2 - config.port_margin
+    left_needed = list_sizes[-1] * config.min_port_pitch
+    right_needed = list_sizes[1] * config.min_port_pitch
+    center_offset = 0.0
+    if left_needed > half_width:
+        center_offset = left_needed - half_width
+    elif right_needed > half_width:
+        center_offset = half_width - right_needed
+    return _GateLayout(
+        center_offset=center_offset,
+        side_widths={
+            -1: half_width + center_offset,
+            1: half_width - center_offset,
+        },
     )
 
 
 def _route_path(
     route: EdgeRoute,
-    node_rects: Dict[str, Rect],
     channel_rects: Dict[ChannelId, Rect],
     routing: LevelsRouting,
     config: GeometryConfig,
-    port_pitch: Callable[[Port], float],
+    port_point: Callable[[Port], Point],
 ) -> Tuple[Point, ...]:
-    start = _port_point(
-        route.source_port, node_rects, port_pitch(route.source_port)
-    )
-    end = _port_point(
-        route.target_port, node_rects, port_pitch(route.target_port)
-    )
+    start = port_point(route.source_port)
+    end = port_point(route.target_port)
     lane_offsets = [
         _lane_offset(lane_.channel, lane_.lane, channel_rects, routing, config)
         for lane_ in route.lanes

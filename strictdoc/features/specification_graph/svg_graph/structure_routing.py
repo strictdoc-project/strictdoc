@@ -40,8 +40,14 @@ from strictdoc.features.specification_graph.svg_graph.normalization import (
 from strictdoc.features.specification_graph.svg_graph.structure_geometry import (
     StructureGeometry,
     compute_structure_geometry,
+    corridor_contour,
 )
 from strictdoc.features.specification_graph.svg_graph.structure_layout import (
+    ChannelKind,
+    CorridorSegment,
+    LaneEnd,
+    PortEnd,
+    SegmentEnd,
     StructureChannelId,
     StructureLayout,
 )
@@ -70,7 +76,11 @@ class StructureLaneConflict:
 @dataclass(frozen=True)
 class StructureRouting:
     routes: Mapping[str, StructureRoute]
+    # Lane count of each channel with lanes at fixed positions. The bottom
+    # corridor places its segments by the contour of the columns, see
+    # bottom_segments.
     lane_counts: Mapping[StructureChannelId, int]
+    bottom_segments: Tuple[CorridorSegment, ...]
     conflicts: Tuple[StructureLaneConflict, ...]
     # Relations this stage does not route yet: relations across containers
     # and relations with a composite node.
@@ -105,6 +115,10 @@ class _Plan:
     source_face: Face
     target_face: Face
     channels: Tuple[StructureChannelId, ...]
+    # The estimated level of each channel: the y of a horizontal segment or
+    # the x of a vertical segment. A through pass is a vertical segment
+    # between two horizontal segments of the same level.
+    levels: Tuple[float, ...]
     # The two nodes stand next to each other in one column.
     is_straight_candidate: bool
 
@@ -131,6 +145,18 @@ class _Router:
             for node_ in normalized_graph.nodes
             if len(node_.children) > 0
         }
+        # Container -> (left, right, bottom) of each column in the estimate.
+        self.column_spans: Dict[
+            Optional[str], List[Tuple[float, float, float]]
+        ] = {
+            container_id_: [
+                _column_span(
+                    [estimate.node_rects[id_] for id_ in column_.node_ids]
+                )
+                for column_ in columns_
+            ]
+            for container_id_, columns_ in layout.columns.items()
+        }
 
     def route(self) -> StructureRouting:
         plans: List[_Plan] = []
@@ -151,6 +177,7 @@ class _Router:
 
         routes: Dict[str, StructureRoute] = {}
         lane_counts: Dict[StructureChannelId, int] = {}
+        bottom_segments: List[CorridorSegment] = []
         for plan_ in plans:
             edge_id_ = plan_.edge.edge_id
             if edge_id_ in straight_ids:
@@ -164,20 +191,40 @@ class _Router:
                     )
                     for position_ in range(len(plan_.channels))
                 )
-                for channel_, lane_ in zip(plan_.channels, lanes_):
-                    lane_counts[channel_] = max(
-                        lane_counts.get(channel_, 0), lane_ + 1
-                    )
-            routes[edge_id_] = StructureRoute(
+            route_ = StructureRoute(
                 edge_id=edge_id_,
                 source_port=ports[(edge_id_, _SOURCE)],
                 target_port=ports[(edge_id_, _TARGET)],
                 channels=plan_.channels,
                 lanes=lanes_,
             )
+            routes[edge_id_] = route_
+            for position_, (channel_, lane_) in enumerate(
+                zip(plan_.channels, lanes_)
+            ):
+                if channel_.kind is ChannelKind.BOTTOM_CORRIDOR:
+                    bottom_segments.append(
+                        CorridorSegment(
+                            key=(edge_id_, position_),
+                            container_id=channel_.container_id,
+                            lane=lane_,
+                            ends=(
+                                _segment_end(route_, position_ - 1),
+                                _segment_end(route_, position_ + 1),
+                            ),
+                            level_from=_through_level(
+                                route_, plan_.levels, position_
+                            ),
+                        )
+                    )
+                else:
+                    lane_counts[channel_] = max(
+                        lane_counts.get(channel_, 0), lane_ + 1
+                    )
         return StructureRouting(
             routes=routes,
             lane_counts=lane_counts,
+            bottom_segments=tuple(bottom_segments),
             conflicts=tuple(conflicts),
             unrouted_edge_ids=tuple(unrouted),
         )
@@ -216,6 +263,7 @@ class _Router:
                 source_face=Face.BOTTOM if source_is_upper else Face.TOP,
                 target_face=Face.TOP if source_is_upper else Face.BOTTOM,
                 channels=(channel,),
+                levels=(_center_y(self.channel_rects[channel]),),
                 is_straight_candidate=True,
             )
 
@@ -233,7 +281,7 @@ class _Router:
             )
             if path_ is None:
                 continue
-            (bends_, length_), channels_ = path_
+            (bends_, length_), channels_, levels_ = path_
             cost_ = (bends_, length_, face_rank_)
             if best is None or cost_ < best[0]:
                 best = (
@@ -244,6 +292,7 @@ class _Router:
                         source_face=source_face_,
                         target_face=target_face_,
                         channels=channels_,
+                        levels=levels_,
                         is_straight_candidate=False,
                     ),
                 )
@@ -261,29 +310,45 @@ class _Router:
         source_face: Face,
         target_id: str,
         target_face: Face,
-    ) -> Optional[Tuple[Tuple[int, float], Tuple[StructureChannelId, ...]]]:
+    ) -> Optional[
+        Tuple[
+            Tuple[int, float],
+            Tuple[StructureChannelId, ...],
+            Tuple[float, ...],
+        ]
+    ]:
         """
         Find the path with the fewest bends, then the shortest length.
 
         The path alternates horizontal and vertical channels. Each change of
-        channel is a bend. Each port adds a bend where its vertical stub
-        turns into the first or the last horizontal channel. The length
-        includes the stubs from the node faces to the channels.
+        channel is a bend, except a through pass. Each port adds a bend where
+        its vertical stub turns into the first or the last horizontal
+        channel. The length includes the stubs from the node faces to the
+        channels. Return the cost, the channels, and the level of each
+        channel: the y of a horizontal segment or the x of a vertical one.
+
+        A point in the bottom corridor that comes by a turn first takes the
+        lowest height of the corridor. When the segment ends, its height
+        follows from the columns it passes over, and the length gets the
+        difference for both of its vertical ends. A point that comes by a
+        through pass keeps its height.
         """
 
         start = self._port_channel(source_id, source_face)
         end = self._port_channel(target_id, target_face)
         source_x = _center_x(self.estimate.node_rects[source_id])
         target_x = _center_x(self.estimate.node_rects[target_id])
-        start_point = (source_x, _center_y(self.channel_rects[start]))
+        start_point = (source_x, self._channel_y(start))
         stubs_length = self._stub_length(
             source_id, source_face, start
         ) + self._stub_length(target_id, target_face, end)
 
-        # Queue items: (bends, length, tie, is_done, channel, point, path).
-        # A done item is a complete path with the final segment to the
-        # target port. The search returns when it takes a done item, so the
-        # final segment counts in the order of the queue.
+        # Queue items: (bends, length, tie, is_done, channel, point,
+        # is_through, path, levels). A done item is a complete path with the
+        # final segment to the target port. The search returns when it takes
+        # a done item, so the final segment counts in the order of the
+        # queue. is_through: the point came by a through pass and keeps its
+        # height.
         queue: List[
             Tuple[
                 int,
@@ -292,62 +357,193 @@ class _Router:
                 bool,
                 StructureChannelId,
                 Tuple[float, float],
+                bool,
                 Tuple[StructureChannelId, ...],
+                Tuple[float, ...],
             ]
-        ] = [(1, stubs_length, 0, False, start, start_point, (start,))]
-        tie = 1
-        visited: Set[Tuple[StructureChannelId, Tuple[float, float]]] = set()
-        while len(queue) > 0:
-            bends, length, _, is_done, channel, point, path = heapq.heappop(
-                queue
+        ] = [
+            (
+                1,
+                stubs_length,
+                0,
+                False,
+                start,
+                start_point,
+                False,
+                (start,),
+                (start_point[1],),
             )
+        ]
+        tie = 1
+        visited: Set[Tuple[StructureChannelId, Tuple[float, float], bool]] = (
+            set()
+        )
+        while len(queue) > 0:
+            (
+                bends,
+                length,
+                _,
+                is_done,
+                channel,
+                point,
+                is_through,
+                path,
+                levels,
+            ) = heapq.heappop(queue)
             if is_done:
-                return (bends, length), path
-            if (channel, point) in visited:
+                return (bends, length), path, levels
+            if (channel, point, is_through) in visited:
                 continue
-            visited.add((channel, point))
+            visited.add((channel, point, is_through))
             if channel == end:
-                heapq.heappush(
-                    queue,
-                    (
-                        bends + 1,
-                        length + abs(point[0] - target_x),
-                        tie,
-                        True,
-                        channel,
-                        point,
-                        path,
-                    ),
+                segment_y_ = self._segment_y(
+                    channel, point[0], target_x, point[1], is_through
                 )
-                tie += 1
+                if segment_y_ is not None:
+                    heapq.heappush(
+                        queue,
+                        (
+                            bends + 1,
+                            length
+                            + abs(point[0] - target_x)
+                            + (segment_y_ - point[1])
+                            + (segment_y_ - self._channel_y(channel)),
+                            tie,
+                            True,
+                            channel,
+                            point,
+                            is_through,
+                            path,
+                            levels[:-1] + (segment_y_,),
+                        ),
+                    )
+                    tie += 1
                 continue
             for neighbor_ in self.layout.neighbor_channels(channel):
                 if neighbor_ in path:
                     continue
                 turn_ = self._turn_point(channel, neighbor_)
+                if not channel.is_horizontal:
+                    heapq.heappush(
+                        queue,
+                        (
+                            bends + 1,
+                            length + abs(point[1] - turn_[1]),
+                            tie,
+                            False,
+                            neighbor_,
+                            turn_,
+                            False,
+                            path + (neighbor_,),
+                            levels + (turn_[1],),
+                        ),
+                    )
+                    tie += 1
+                    continue
+                # The segment in this horizontal channel ends at the
+                # vertical channel: by a turn or by a through pass.
+                segment_y_ = self._segment_y(
+                    channel, point[0], turn_[0], point[1], is_through
+                )
+                if segment_y_ is None:
+                    continue
+                length_ = (
+                    length + abs(point[0] - turn_[0]) + (segment_y_ - point[1])
+                )
+                next_point_ = (turn_[0], segment_y_)
+                closed_levels_ = levels[:-1] + (segment_y_, turn_[0])
                 heapq.heappush(
                     queue,
                     (
                         bends + 1,
-                        length
-                        + abs(point[0] - turn_[0])
-                        + abs(point[1] - turn_[1]),
+                        length_,
                         tie,
                         False,
                         neighbor_,
-                        turn_,
+                        next_point_,
+                        False,
                         path + (neighbor_,),
+                        closed_levels_,
                     ),
                 )
                 tie += 1
+                for through_ in self._through_passes(
+                    channel, point[0], neighbor_, segment_y_
+                ):
+                    if through_ in path:
+                        continue
+                    heapq.heappush(
+                        queue,
+                        (
+                            bends,
+                            length_,
+                            tie,
+                            False,
+                            through_,
+                            next_point_,
+                            True,
+                            path + (neighbor_, through_),
+                            closed_levels_ + (segment_y_,),
+                        ),
+                    )
+                    tie += 1
         return None
+
+    def _through_passes(
+        self,
+        channel: StructureChannelId,
+        x: float,
+        vertical: StructureChannelId,
+        y: float,
+    ) -> List[StructureChannelId]:
+        """
+        Return the channels that a horizontal line enters by a through pass.
+
+        spec.md, section "Сквозной проход". The line goes along the channel
+        from x at the height y and crosses the vertical channel straight.
+        On the other side, the line continues at the same height:
+
+        - in a column channel whose lane lies at this height;
+        - in the space under the columns (the bottom corridor), if the
+          columns it passes over end at least the clearance above.
+
+        In the route, the through pass is a vertical segment of zero length,
+        so the channels still alternate.
+        """
+
+        columns = self.layout.columns[channel.container_id]
+        vertical_x = _center_x(self.channel_rects[vertical])
+        column_index = vertical.index if x < vertical_x else vertical.index - 1
+        if not 0 <= column_index < len(columns):
+            return []
+        column = columns[column_index]
+        result: List[StructureChannelId] = []
+        if not column.is_composite:
+            for gap_ in range(len(column.node_ids) - 1):
+                gap_channel_ = StructureChannelId(
+                    ChannelKind.COLUMN,
+                    channel.container_id,
+                    column_index,
+                    gap_,
+                )
+                if _center_y(self.channel_rects[gap_channel_]) == y:
+                    result.append(gap_channel_)
+        # The segment under the columns checks the columns it passes over
+        # when it ends, see _segment_y.
+        if channel.kind is ChannelKind.COLUMN:
+            result.append(
+                StructureChannelId(
+                    ChannelKind.BOTTOM_CORRIDOR, channel.container_id
+                )
+            )
+        return result
 
     def _stub_length(
         self, node_id: str, face: Face, channel: StructureChannelId
     ) -> float:
         rect = self.estimate.node_rects[node_id]
         face_y = rect.y if face is Face.TOP else rect.y + rect.height
-        return abs(face_y - _center_y(self.channel_rects[channel]))
+        return abs(face_y - self._channel_y(channel))
 
     def _turn_point(
         self, first: StructureChannelId, second: StructureChannelId
@@ -357,8 +553,57 @@ class _Router:
         )
         return (
             _center_x(self.channel_rects[vertical]),
-            _center_y(self.channel_rects[horizontal]),
+            self._channel_y(horizontal),
         )
+
+    def _channel_y(self, channel: StructureChannelId) -> float:
+        """
+        Return the height of a point in a horizontal channel.
+
+        In the bottom corridor, the height is the lowest height a segment can
+        take: the clearance below the shortest column.
+        """
+
+        if channel.kind is not ChannelKind.BOTTOM_CORRIDOR:
+            return _center_y(self.channel_rects[channel])
+        return (
+            min(
+                bottom_
+                for _, _, bottom_ in self.column_spans[channel.container_id]
+            )
+            + self.config.lane_clearance
+        )
+
+    def _segment_y(
+        self,
+        channel: StructureChannelId,
+        first_x: float,
+        second_x: float,
+        y: float,
+        is_through: bool,
+    ) -> Optional[float]:
+        """
+        Return the height of a segment in a horizontal channel.
+
+        In the bottom corridor, a segment that came by a turn lies the
+        clearance below the lowest column it passes over. A segment that
+        came by a through pass keeps its height y. Return None if it would
+        pass closer than the clearance to a column above it.
+        """
+
+        if channel.kind is not ChannelKind.BOTTOM_CORRIDOR:
+            return _center_y(self.channel_rects[channel])
+        lowest_y = (
+            corridor_contour(
+                self.column_spans[channel.container_id],
+                min(first_x, second_x),
+                max(first_x, second_x),
+            )
+            + self.config.lane_clearance
+        )
+        if not is_through:
+            return lowest_y
+        return y if y >= lowest_y else None
 
     # Stage 4: lanes and ports.
 
@@ -372,13 +617,9 @@ class _Router:
             channels_ = plan_.channels
             for position_ in range(1, len(channels_), 2):
                 channel_ = channels_[position_]
-                vertical_x_ = _center_x(self.channel_rects[channel_])
-                entry_y_ = _center_y(
-                    self.channel_rects[channels_[position_ - 1]]
-                )
-                exit_y_ = _center_y(
-                    self.channel_rects[channels_[position_ + 1]]
-                )
+                vertical_x_ = plan_.levels[position_]
+                entry_y_ = plan_.levels[position_ - 1]
+                exit_y_ = plan_.levels[position_ + 1]
                 entry_far_x_ = self._horizontal_far_x(
                     plan_, position_ - 1, position_
                 )
@@ -547,35 +788,60 @@ class _Router:
             channels_ = plan_.channels
             last_ = len(channels_) - 1
             for position_ in range(0, len(channels_), 2):
-                channel_y_ = _center_y(self.channel_rects[channels_[position_]])
+                channel_y_ = plan_.levels[position_]
+                # A through pass has no perpendicular member: the segment
+                # leaves the channel straight.
+                members_: List[CrossMember] = []
                 if position_ == 0:
                     entry_ = self._port_position(
                         ports[(edge_id_, _SOURCE)], plan_.edge.source_id
                     )
                     # The source stub reaches the node below or above the
                     # channel.
-                    entry_to_bottom_ = plan_.source_face is Face.TOP
+                    members_.append(
+                        CrossMember(
+                            position=entry_,
+                            to_high_side=plan_.source_face is Face.TOP,
+                            is_entry=True,
+                        )
+                    )
                 else:
                     entry_ = self._vertical_lane_x(
                         plan_, position_ - 1, vertical_lanes
                     )
-                    previous_y_ = _center_y(
-                        self.channel_rects[channels_[position_ - 2]]
-                    )
-                    entry_to_bottom_ = previous_y_ > channel_y_
+                    previous_y_ = plan_.levels[position_ - 2]
+                    if previous_y_ != channel_y_:
+                        members_.append(
+                            CrossMember(
+                                position=entry_,
+                                to_high_side=previous_y_ > channel_y_,
+                                is_entry=True,
+                            )
+                        )
                 if position_ == last_:
                     exit_ = self._port_position(
                         ports[(edge_id_, _TARGET)], plan_.edge.target_id
                     )
-                    exit_to_bottom_ = plan_.target_face is Face.TOP
+                    members_.append(
+                        CrossMember(
+                            position=exit_,
+                            to_high_side=plan_.target_face is Face.TOP,
+                            is_entry=False,
+                        )
+                    )
                 else:
                     exit_ = self._vertical_lane_x(
                         plan_, position_ + 1, vertical_lanes
                     )
-                    next_y_ = _center_y(
-                        self.channel_rects[channels_[position_ + 2]]
-                    )
-                    exit_to_bottom_ = next_y_ > channel_y_
+                    next_y_ = plan_.levels[position_ + 2]
+                    if next_y_ != channel_y_:
+                        members_.append(
+                            CrossMember(
+                                position=exit_,
+                                to_high_side=next_y_ > channel_y_,
+                                is_entry=False,
+                            )
+                        )
                 segments_by_channel.setdefault(channels_[position_], []).append(
                     LaneSegment(
                         key=(edge_id_, position_),
@@ -585,18 +851,7 @@ class _Router:
                         # Right-hand traffic: left in the top half, right in
                         # the bottom half.
                         half=0 if exit_ < entry_ else 1,
-                        members=(
-                            CrossMember(
-                                position=entry_,
-                                to_high_side=entry_to_bottom_,
-                                is_entry=True,
-                            ),
-                            CrossMember(
-                                position=exit_,
-                                to_high_side=exit_to_bottom_,
-                                is_entry=False,
-                            ),
-                        ),
+                        members=tuple(members_),
                         order_key=(entry_, plan_.index),
                     )
                 )
@@ -625,6 +880,57 @@ class _Router:
                 for pair_ in pairs_
             )
         return result
+
+
+def _segment_end(route: StructureRoute, position: int) -> SegmentEnd:
+    """
+    Return the end of a horizontal segment at a neighbor position.
+
+    Outside the route, the end is a port. Inside, it is the lane of the
+    vertical channel at that position.
+    """
+
+    if position < 0:
+        port = route.source_port
+    elif position >= len(route.channels):
+        port = route.target_port
+    else:
+        return LaneEnd(
+            channel=route.channels[position], lane=route.lanes[position]
+        )
+    return PortEnd(
+        node_id=port.node_id, slot=port.slot, list_size=port.list_size
+    )
+
+
+def _through_level(
+    route: StructureRoute, levels: Tuple[float, ...], position: int
+) -> Optional[LaneEnd]:
+    """
+    Return the column channel lane that a segment continues straight.
+
+    The entry comes first. A through pass joins two horizontal segments of
+    the same level.
+    """
+
+    for other_ in (position - 2, position + 2):
+        if (
+            0 <= other_ < len(route.channels)
+            and levels[other_] == levels[position]
+            and route.channels[other_].kind is ChannelKind.COLUMN
+        ):
+            return LaneEnd(
+                channel=route.channels[other_], lane=route.lanes[other_]
+            )
+    return None
+
+
+def _column_span(rects: List[Rect]) -> Tuple[float, float, float]:
+    return (
+        min(rect_.x for rect_ in rects),
+        max(rect_.x + rect_.width for rect_ in rects),
+        max(rect_.y + rect_.height for rect_ in rects),
+    )
 
 
 def _center_x(rect: Rect) -> float:

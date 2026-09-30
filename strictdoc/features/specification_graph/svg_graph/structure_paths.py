@@ -5,7 +5,7 @@ The stage converts the ports and the lanes of each route into coordinates.
 The stage does not search for routes.
 """
 
-from typing import Dict, Tuple
+from typing import Dict, List, Tuple
 
 from strictdoc.features.specification_graph.svg_graph.gate_ports import (
     Face,
@@ -16,8 +16,11 @@ from strictdoc.features.specification_graph.svg_graph.levels_geometry import (
 )
 from strictdoc.features.specification_graph.svg_graph.structure_geometry import (
     StructureGeometry,
+    centered_lane_offset,
+    port_offset,
 )
 from strictdoc.features.specification_graph.svg_graph.structure_layout import (
+    ChannelKind,
     StructureChannelId,
 )
 from strictdoc.features.specification_graph.svg_graph.structure_routing import (
@@ -38,23 +41,61 @@ def compute_structure_edge_paths(
 def _route_path(
     route: StructureRoute, geometry: StructureGeometry
 ) -> Tuple[Point, ...]:
+    return _straighten(route_channel_points(route, geometry))
+
+
+def route_channel_points(
+    route: StructureRoute, geometry: StructureGeometry
+) -> List[Point]:
+    """
+    Return the points of a route: the ports and one point per channel.
+
+    Point i + 1 starts the segment in channel i. A through pass gives a
+    vertical segment of zero length.
+    """
+
     start = _port_point(route.source_port, geometry)
     end = _port_point(route.target_port, geometry)
     if len(route.lanes) == 0:
-        return (start, end)
+        return [start, end]
     points = [start]
     x = start.x
     y = start.y
-    for channel_, lane_ in zip(route.channels, route.lanes):
-        coordinate_ = _lane_coordinate(channel_, lane_, geometry)
-        if channel_.is_horizontal:
-            y = coordinate_
+    for position_, (channel_, lane_) in enumerate(
+        zip(route.channels, route.lanes)
+    ):
+        if channel_.kind is ChannelKind.BOTTOM_CORRIDOR:
+            _, _, y = geometry.bottom_segment_lines[(route.edge_id, position_)]
+        elif channel_.is_horizontal:
+            y = _lane_coordinate(channel_, lane_, geometry)
         else:
-            x = coordinate_
+            x = _lane_coordinate(channel_, lane_, geometry)
         points.append(Point(x, y))
     points.append(Point(end.x, y))
     points.append(end)
-    return tuple(points)
+    return points
+
+
+def _straighten(points: List[Point]) -> Tuple[Point, ...]:
+    """
+    Remove the repeated points and the points inside straight runs.
+
+    A through pass is a vertical segment of zero length, so its points
+    repeat or lie on a straight line.
+    """
+
+    result: List[Point] = []
+    for point_ in points:
+        if len(result) > 0 and result[-1] == point_:
+            continue
+        if len(result) >= 2 and (
+            result[-2].x == result[-1].x == point_.x
+            or result[-2].y == result[-1].y == point_.y
+        ):
+            result[-1] = point_
+            continue
+        result.append(point_)
+    return tuple(result)
 
 
 def _lane_coordinate(
@@ -62,30 +103,23 @@ def _lane_coordinate(
 ) -> float:
     """
     Return the y of a horizontal lane or the x of a vertical lane.
-
-    The lanes of a channel are centered in the channel.
     """
 
     rect = geometry.channel_rect(channel)
-    lane_count = geometry.lane_counts[channel]
-    lane_pitch = geometry.config.lane_pitch
     if channel.is_horizontal:
         start, size = rect.y, rect.height
     else:
         start, size = rect.x, rect.width
-    return (
-        start + (size - (lane_count - 1) * lane_pitch) / 2 + lane * lane_pitch
+    return start + centered_lane_offset(
+        size, geometry.lane_counts[channel], lane, geometry.config
     )
 
 
 def _port_point(port: Port, geometry: StructureGeometry) -> Point:
-    config = geometry.config
     rect = geometry.node_rects[port.node_id]
-    x = rect.x + rect.width / 2
-    if port.slot != 0:
-        available_half_width = rect.width / 2 - config.port_margin
-        pitch = min(config.port_pitch, available_half_width / port.list_size)
-        x += port.slot * pitch
     return Point(
-        x=x, y=rect.y if port.face is Face.TOP else rect.y + rect.height
+        x=rect.x
+        + rect.width / 2
+        + port_offset(port.slot, port.list_size, rect.width, geometry.config),
+        y=rect.y if port.face is Face.TOP else rect.y + rect.height,
     )

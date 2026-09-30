@@ -7,7 +7,7 @@ no pixel geometry. spec.md, section "Режим «структура»", defines
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Dict, List, Mapping, Optional, Set, Tuple
+from typing import Dict, List, Mapping, Optional, Set, Tuple, Union
 
 from strictdoc.features.specification_graph.svg_graph.model import (
     GraphNode,
@@ -23,6 +23,10 @@ class ChannelKind(Enum):
     BOTTOM_CORRIDOR = "bottom_corridor"
     VERTICAL = "vertical"
     COLUMN = "column"
+    # Space under a short column, from its bottom down to the bottom
+    # corridor. The index is the column. For the routes, the pockets and the
+    # bottom corridor are one channel: BOTTOM_CORRIDOR.
+    POCKET = "pocket"
     # Between the block of the unconnected root children and the row.
     BLOCK_SEPARATOR = "block_separator"
 
@@ -45,6 +49,51 @@ class StructureChannelId:
     @property
     def is_horizontal(self) -> bool:
         return self.kind is not ChannelKind.VERTICAL
+
+
+@dataclass(frozen=True)
+class PortEnd:
+    """
+    An end of a segment at a port of a node.
+    """
+
+    node_id: str
+    slot: int
+    list_size: int
+
+
+@dataclass(frozen=True)
+class LaneEnd:
+    """
+    An end of a segment at a lane of a vertical channel.
+    """
+
+    channel: StructureChannelId
+    lane: int
+
+
+SegmentEnd = Union[PortEnd, LaneEnd]
+
+
+@dataclass(frozen=True)
+class CorridorSegment:
+    """
+    A horizontal segment of a route in the bottom corridor.
+
+    The geometry places the segment at its base height if it is free,
+    otherwise lower. spec.md, section "Геометрия контейнера".
+    """
+
+    # The edge ID and the position of the channel in the route.
+    key: Tuple[str, int]
+    container_id: Optional[str]
+    lane: int
+    ends: Tuple[SegmentEnd, SegmentEnd]
+    # The lane of a column channel that the segment continues straight
+    # through a through pass. Its height is the base height. Without it, the
+    # base height lies the clearance below the columns the segment passes
+    # over.
+    level_from: Optional[LaneEnd] = None
 
 
 @dataclass(frozen=True)

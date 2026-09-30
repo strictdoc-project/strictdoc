@@ -26,6 +26,7 @@ from strictdoc.features.specification_graph.svg_graph.structure_layout import (
 )
 from strictdoc.features.specification_graph.svg_graph.structure_paths import (
     compute_structure_edge_paths,
+    route_channel_points,
 )
 from strictdoc.features.specification_graph.svg_graph.structure_routing import (
     StructureRouting,
@@ -57,7 +58,10 @@ def _result(
     layout = compute_structure_layout(normalized_graph)
     routing = compute_structure_routing(normalized_graph, layout)
     geometry = compute_structure_geometry(
-        normalized_graph, layout, lane_counts=routing.lane_counts
+        normalized_graph,
+        layout,
+        lane_counts=routing.lane_counts,
+        bottom_segments=routing.bottom_segments,
     )
     return (
         normalized_graph,
@@ -146,13 +150,102 @@ def test_fewest_bends_win_over_the_shortest_length() -> None:
     """
 
     normalized_graph, routing, _, _ = _result(
-        _case("Fewest bends before the shortest length")
+        _case("Fewest bends under a tall section")
     )
 
     route = routing.routes[_edge_id(normalized_graph, "A2", "B2")]
     assert [channel_.kind for channel_ in route.channels] == [
         ChannelKind.BOTTOM_CORRIDOR
     ]
+
+
+def test_bottom_segment_lies_below_the_columns_it_passes_over() -> None:
+    """
+    A segment in the bottom corridor lies the clearance below the columns
+    it passes over.
+
+    Code: structure_geometry._GeometryBuilder._bottom_corridor,
+    structure_geometry.corridor_contour, structure_paths._route_path.
+    Fails if:
+    - the segment lies below the tallest column of the container.
+    - the contour counts a column that the segment does not pass over.
+    """
+
+    normalized_graph, _, geometry, paths = _result(
+        _case("Bottom corridor follows the columns")
+    )
+
+    clearance = geometry.config.lane_clearance
+    for source_id_, target_id_, column_id_ in (
+        ("A2", "B1", "S"),
+        ("A2", "C1", "T"),
+    ):
+        path_ = paths[_edge_id(normalized_graph, source_id_, target_id_)]
+        column_ = geometry.node_rects[column_id_]
+        assert path_[1].y == path_[2].y
+        assert path_[1].y == column_.y + column_.height + clearance
+
+
+def test_bottom_corridor_keeps_the_lane_order() -> None:
+    """
+    Of two overlapping segments in the bottom corridor, the larger lane lies
+    lower, and the corridor fits the lowest segment.
+
+    Code: structure_geometry._GeometryBuilder._bottom_corridor.
+    Fails if:
+    - a segment ignores an overlapping segment with a smaller lane.
+    - the corridor size does not fit the lowest segment.
+    """
+
+    normalized_graph, _, geometry, paths = _result(
+        _case("Lane order in the bottom corridor")
+    )
+
+    left = paths[_edge_id(normalized_graph, "C2", "A2")]
+    right = paths[_edge_id(normalized_graph, "B2", "C2")]
+    assert right[1].y == left[1].y + geometry.config.lane_pitch
+    corridor = next(
+        channel_.rect
+        for channel_ in geometry.channels
+        if channel_.kind is ChannelKind.BOTTOM_CORRIDOR
+        and channel_.container_id == "Doc"
+    )
+    assert corridor.y + corridor.height == (
+        right[1].y + geometry.config.lane_clearance
+    )
+
+
+def test_through_pass_goes_straight_under_a_short_section() -> None:
+    """
+    A line crosses the vertical channels and the pocket under a short
+    section straight, at the height of the column channel lane.
+
+    Code: structure_routing._Router._through_passes,
+    structure_routing._Router._best_path,
+    structure_routing._Router._segment_y,
+    structure_geometry._GeometryBuilder._bottom_corridor.
+    Fails if:
+    - a through pass counts as a bend.
+    - the segment under the section does not keep the height of the column
+      channel lane.
+    """
+
+    normalized_graph, routing, _, paths = _result(
+        _case("Through pass under a short section")
+    )
+
+    for source_id_, target_id_ in (("A3", "B3"), ("A4", "B4")):
+        edge_id_ = _edge_id(normalized_graph, source_id_, target_id_)
+        assert [
+            channel_.kind for channel_ in routing.routes[edge_id_].channels
+        ] == [
+            ChannelKind.COLUMN,
+            ChannelKind.VERTICAL,
+            ChannelKind.BOTTOM_CORRIDOR,
+            ChannelKind.VERTICAL,
+            ChannelKind.COLUMN,
+        ]
+        assert len(paths[edge_id_]) == 4
 
 
 def test_relations_that_turn_together_do_not_cross() -> None:
@@ -194,17 +287,20 @@ def test_structure_routes_follow_right_hand_traffic(case: GalleryCase) -> None:
     - the halves of a horizontal or a vertical channel are swapped.
     """
 
-    _, routing, _, paths = _result(case)
+    _, routing, geometry, _ = _result(case)
 
     # Channel -> list of (goes toward the low side, lane).
     directions: Dict[object, List[Tuple[bool, int]]] = {}
     for route_ in routing.routes.values():
-        path_ = paths[route_.edge_id]
+        path_ = route_channel_points(route_, geometry)
         # Point i + 1 of the path starts the segment in channel i.
         for index_, (channel_, lane_) in enumerate(
             zip(route_.channels, route_.lanes)
         ):
             start_, end_ = path_[index_ + 1], path_[index_ + 2]
+            if start_ == end_:
+                # A through pass.
+                continue
             if channel_.is_horizontal:
                 goes_low_ = end_.x < start_.x
             else:
@@ -276,6 +372,43 @@ def test_structure_route_invariants(case: GalleryCase) -> None:
             assert rect_.x < point_.x < rect_.x + rect_.width
         last_ = abs(path_[-1].x - path_[-2].x) + abs(path_[-1].y - path_[-2].y)
         assert last_ >= clearance - 1e-9
+
+
+@pytest.mark.parametrize(
+    "case", STRUCTURE_CASES, ids=[case_.title for case_ in STRUCTURE_CASES]
+)
+def test_bottom_corridor_invariants(case: GalleryCase) -> None:
+    """
+    Invariants of the bottom corridor segments on every structure case.
+
+    Code: structure_geometry._GeometryBuilder._bottom_corridor.
+    Fails if:
+    - a segment lies closer than the clearance to a column above it.
+    - of two overlapping segments, the larger lane does not lie lower.
+    """
+
+    normalized_graph, routing, geometry, _ = _result(case)
+
+    config = geometry.config
+    lines = geometry.bottom_segment_lines
+    for segment_ in routing.bottom_segments:
+        low_, high_, y_ = lines[segment_.key]
+        for node_ in normalized_graph.nodes:
+            if normalized_graph.parent_ids[node_.node_id] != (
+                segment_.container_id
+            ):
+                continue
+            rect_ = geometry.node_rects[node_.node_id]
+            if low_ < rect_.x + rect_.width and high_ > rect_.x:
+                assert y_ >= rect_.y + rect_.height + config.lane_clearance
+        for other_ in routing.bottom_segments:
+            other_low_, other_high_, other_y_ = lines[other_.key]
+            if (
+                other_.container_id == segment_.container_id
+                and other_.lane > segment_.lane
+                and not (high_ < other_low_ or other_high_ < low_)
+            ):
+                assert other_y_ >= y_ + config.lane_pitch
 
 
 def _ancestors(normalized_graph: NormalizedGraph) -> Dict[str, set[str]]:

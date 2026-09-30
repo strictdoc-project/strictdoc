@@ -253,7 +253,10 @@ def _render_structure(index: int, normalized_graph: NormalizedGraph) -> str:
     layout = compute_structure_layout(normalized_graph)
     routing = compute_structure_routing(normalized_graph, layout)
     geometry = compute_structure_geometry(
-        normalized_graph, layout, lane_counts=routing.lane_counts
+        normalized_graph,
+        layout,
+        lane_counts=routing.lane_counts,
+        bottom_segments=routing.bottom_segments,
     )
     edge_paths = compute_structure_edge_paths(routing, geometry)
     svg = serialize_structure_svg(

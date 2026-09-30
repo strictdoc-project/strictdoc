@@ -215,9 +215,10 @@ def serialize_structure_svg(
                             channel_.channel_id, 0
                         ),
                     )
-                    for channel_ in geometry.channels
+                    for channel_ in geometry.channels + geometry.bottom_pockets
                 ],
                 geometry.config,
+                segment_lines=tuple(geometry.bottom_segment_lines.values()),
             )
         )
     elements.append(
@@ -364,14 +365,16 @@ def _structure_channel_label(channel: StructureChannelId) -> str:
     """
     Return a short label of a channel for the debug layer.
 
-    T and B are the corridors, V1 is a vertical channel, C2.0 is a column
-    gap, S is the block separator.
+    T and B are the corridors, P1 is the pocket under column 1, V1 is a
+    vertical channel, C2.0 is a column gap, S is the block separator.
     """
 
     if channel.kind is ChannelKind.TOP_CORRIDOR:
         return "T"
     if channel.kind is ChannelKind.BOTTOM_CORRIDOR:
         return "B"
+    if channel.kind is ChannelKind.POCKET:
+        return f"P{channel.index}"
     if channel.kind is ChannelKind.VERTICAL:
         return f"V{channel.index}"
     if channel.kind is ChannelKind.COLUMN:
@@ -380,14 +383,18 @@ def _structure_channel_label(channel: StructureChannelId) -> str:
 
 
 def _render_debug_layer(
-    channels: List[_DebugChannel], config: GeometryConfig
+    channels: List[_DebugChannel],
+    config: GeometryConfig,
+    segment_lines: Tuple[Tuple[float, float, float], ...] = (),
 ) -> str:
     """
     Render the debug layer on top of the graph.
 
     Each channel is a translucent rectangle with its label. Each lane is a
     dotted line at the position that the geometry gives it: the lanes of a
-    channel are centered in the channel.
+    channel are centered in the channel. Segment lines are lanes placed one
+    by one: left x, right x, and y. The bottom corridor of the structure
+    mode places its segments by the contour of the columns.
     """
 
     elements: List[str] = []
@@ -424,6 +431,12 @@ def _render_debug_layer(
                     f'y2="{_number(rect_.y + rect_.height)}"'
                 )
             elements.append(f'<line class="{CSS_PREFIX}-debug__lane" {line_}/>')
+    for left_, right_, y_ in segment_lines:
+        elements.append(
+            f'<line class="{CSS_PREFIX}-debug__lane" '
+            f'x1="{_number(left_)}" y1="{_number(y_)}" '
+            f'x2="{_number(right_)}" y2="{_number(y_)}"/>'
+        )
     return f'<g class="{CSS_PREFIX}-debug">\n' + "\n".join(elements) + "\n</g>"
 
 

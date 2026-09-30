@@ -6,12 +6,13 @@ from its columns and channels. Stage 6 computes the coordinates from the
 outside in. spec.md, section "Геометрия контейнера", defines the rules.
 
 The size of each channel follows from its lane count. A channel without
-lanes has the minimum size.
+lanes has the minimum size. The segments under the columns (the bottom
+corridor and the pockets) take their base heights one by one.
 """
 
 import math
 from dataclasses import dataclass
-from typing import Dict, List, Mapping, Optional, Tuple
+from typing import Dict, List, Mapping, Optional, Sequence, Tuple
 
 from strictdoc.features.specification_graph.svg_graph.levels_geometry import (
     GeometryConfig,
@@ -25,9 +26,15 @@ from strictdoc.features.specification_graph.svg_graph.normalization import (
 from strictdoc.features.specification_graph.svg_graph.structure_layout import (
     ChannelKind,
     ContainerColumn,
+    CorridorSegment,
+    LaneEnd,
+    SegmentEnd,
     StructureChannelId,
     StructureLayout,
 )
+
+# Left, right, and bottom of a column.
+ColumnSpan = Tuple[float, float, float]
 
 
 @dataclass(frozen=True)
@@ -55,8 +62,14 @@ class StructureGeometry:
     # the header line.
     header_rects: Mapping[str, Rect]
     channels: Tuple[StructureChannel, ...]
-    # Lane count of each channel that has lanes.
+    # Pockets: the spaces under the columns shorter than the tallest column
+    # of their container.
+    bottom_pockets: Tuple[StructureChannel, ...]
+    # Lane count of each channel with lanes at fixed positions.
     lane_counts: Mapping[StructureChannelId, int]
+    # Left x, right x, and y of each segment in a bottom corridor, by the
+    # segment key.
+    bottom_segment_lines: Mapping[Tuple[str, int], Tuple[float, float, float]]
 
     def channel_rect(self, channel_id: StructureChannelId) -> Rect:
         return next(
@@ -71,6 +84,7 @@ def compute_structure_geometry(
     layout: StructureLayout,
     config: Optional[GeometryConfig] = None,
     lane_counts: Optional[Mapping[StructureChannelId, int]] = None,
+    bottom_segments: Sequence[CorridorSegment] = (),
 ) -> StructureGeometry:
     if config is None:
         config = GeometryConfig()
@@ -79,7 +93,55 @@ def compute_structure_geometry(
         layout,
         config,
         {} if lane_counts is None else lane_counts,
+        bottom_segments,
     ).build()
+
+
+def corridor_contour(
+    column_spans: Sequence[ColumnSpan], low: float, high: float
+) -> float:
+    """
+    Return the bottom of the lowest column that a segment passes over.
+
+    The segment spans from low to high. Without such a column, return the
+    bottom of the tallest column.
+    """
+
+    return max(
+        (
+            bottom_
+            for left_, right_, bottom_ in column_spans
+            if low < right_ and high > left_
+        ),
+        default=max(bottom_ for _, _, bottom_ in column_spans),
+    )
+
+
+def centered_lane_offset(
+    size: float, lane_count: int, lane: int, config: GeometryConfig
+) -> float:
+    """
+    Return the offset of a lane from the start of a channel.
+
+    The lanes of a channel are centered in the channel.
+    """
+
+    return (size - (lane_count - 1) * config.lane_pitch) / 2 + (
+        lane * config.lane_pitch
+    )
+
+
+def port_offset(
+    slot: int, list_size: int, node_width: float, config: GeometryConfig
+) -> float:
+    """
+    Return the offset of a port from the center of its node face.
+    """
+
+    if slot == 0:
+        return 0
+    available_half_width = node_width / 2 - config.port_margin
+    return slot * min(config.port_pitch, available_half_width / list_size)
 
 
 class _GeometryBuilder:
@@ -89,10 +151,16 @@ class _GeometryBuilder:
         layout: StructureLayout,
         config: GeometryConfig,
         lane_counts: Mapping[StructureChannelId, int],
+        bottom_segments: Sequence[CorridorSegment],
     ) -> None:
         self.layout: StructureLayout = layout
         self.config: GeometryConfig = config
         self.lane_counts: Mapping[StructureChannelId, int] = lane_counts
+        self.bottom_segments: Dict[Optional[str], List[CorridorSegment]] = {}
+        for segment_ in bottom_segments:
+            self.bottom_segments.setdefault(segment_.container_id, []).append(
+                segment_
+            )
         self.is_composite: Dict[str, bool] = {
             node_.node_id: len(node_.children) > 0
             for node_ in normalized_graph.nodes
@@ -101,6 +169,11 @@ class _GeometryBuilder:
         self.node_rects: Dict[str, Rect] = {}
         self.header_rects: Dict[str, Rect] = {}
         self.channels: List[StructureChannel] = []
+        self.bottom_pockets: List[StructureChannel] = []
+        self.corridors: Dict[Optional[str], _BottomCorridor] = {}
+        self.bottom_segment_lines: Dict[
+            Tuple[str, int], Tuple[float, float, float]
+        ] = {}
 
     def build(self) -> StructureGeometry:
         config = self.config
@@ -141,7 +214,9 @@ class _GeometryBuilder:
             node_rects=self.node_rects,
             header_rects=self.header_rects,
             channels=tuple(self.channels),
+            bottom_pockets=tuple(self.bottom_pockets),
             lane_counts=dict(self.lane_counts),
+            bottom_segment_lines=self.bottom_segment_lines,
         )
 
     def _channel_size(self, channel_id: StructureChannelId) -> float:
@@ -220,11 +295,135 @@ class _GeometryBuilder:
                 StructureChannelId(ChannelKind.TOP_CORRIDOR, container_id)
             )
             + max(column_height_ for _, column_height_ in column_sizes)
-            + self._channel_size(
-                StructureChannelId(ChannelKind.BOTTOM_CORRIDOR, container_id)
-            )
+            + self._bottom_corridor(container_id, columns).size
         )
         return width, height
+
+    def _bottom_corridor(
+        self,
+        container_id: Optional[str],
+        columns: Tuple[ContainerColumn, ...],
+    ) -> "_BottomCorridor":
+        """
+        Place the segments of the bottom corridor of a container.
+
+        The coordinates are local: x from the left of the children area, y
+        from the top of the columns. Segments go in lane order. The base
+        height of a segment is the height of the column channel lane that it
+        continues by a through pass. Otherwise, the base height lies the
+        clearance below the lowest column the segment passes over. A segment
+        lies at its base height, but at least one lane pitch below each
+        overlapping segment with a smaller lane. The corridor size below the
+        tallest column fits the lowest segment.
+        """
+
+        if container_id in self.corridors:
+            return self.corridors[container_id]
+        config = self.config
+        column_spans: List[ColumnSpan] = []
+        verticals: Dict[StructureChannelId, float] = {}
+        x = 0.0
+        for index_ in range(len(columns) + 1):
+            vertical_ = StructureChannelId(
+                ChannelKind.VERTICAL, container_id, index_
+            )
+            verticals[vertical_] = x
+            x += self._channel_size(vertical_)
+            if index_ == len(columns):
+                break
+            column_width_, column_height_ = self._column_size(
+                container_id, index_, columns[index_]
+            )
+            column_spans.append((x, x + column_width_, column_height_))
+            x += column_width_
+
+        def end_x(end: SegmentEnd) -> float:
+            if isinstance(end, LaneEnd):
+                return verticals[end.channel] + centered_lane_offset(
+                    self._channel_size(end.channel),
+                    self.lane_counts[end.channel],
+                    end.lane,
+                    config,
+                )
+            node_width_, _ = self._size(end.node_id)
+            left_, _, _ = column_spans[self.layout.places[end.node_id].column]
+            return (
+                left_
+                + node_width_ / 2
+                + port_offset(end.slot, end.list_size, node_width_, config)
+            )
+
+        lines: Dict[Tuple[str, int], Tuple[float, float, float]] = {}
+        placed: List[Tuple[float, float, float]] = []
+        for segment_ in sorted(
+            self.bottom_segments.get(container_id, []),
+            key=lambda segment_: (segment_.lane, segment_.key),
+        ):
+            first_x_, second_x_ = (end_x(end_) for end_ in segment_.ends)
+            low_, high_ = min(first_x_, second_x_), max(first_x_, second_x_)
+            y_ = corridor_contour(column_spans, low_, high_) + (
+                config.lane_clearance
+            )
+            if segment_.level_from is not None:
+                y_ = max(
+                    y_,
+                    self._column_lane_y(
+                        columns,
+                        segment_.level_from.channel,
+                        segment_.level_from.lane,
+                    ),
+                )
+            for placed_low_, placed_high_, placed_y_ in placed:
+                if not (high_ < placed_low_ or placed_high_ < low_):
+                    y_ = max(y_, placed_y_ + config.lane_pitch)
+            placed.append((low_, high_, y_))
+            lines[segment_.key] = (low_, high_, y_)
+        tallest = max((bottom_ for _, _, bottom_ in column_spans), default=0)
+        size = max(
+            (y_ + config.lane_clearance - tallest for _, _, y_ in placed),
+            default=0,
+        )
+        corridor = _BottomCorridor(
+            size=max(config.min_channel_size, size),
+            column_spans=column_spans,
+            lines=lines,
+        )
+        self.corridors[container_id] = corridor
+        return corridor
+
+    def _column_lane_y(
+        self,
+        columns: Tuple[ContainerColumn, ...],
+        channel: StructureChannelId,
+        lane: int,
+    ) -> float:
+        """
+        Return the y of a column channel lane from the top of the columns.
+        """
+
+        config = self.config
+        above = sum(
+            self._channel_size(
+                StructureChannelId(
+                    ChannelKind.COLUMN,
+                    channel.container_id,
+                    channel.index,
+                    gap_,
+                )
+            )
+            for gap_ in range(channel.gap)
+        )
+        assert not columns[channel.index].is_composite
+        return (
+            (channel.gap + 1) * config.node_height
+            + above
+            + centered_lane_offset(
+                self._channel_size(channel),
+                self.lane_counts[channel],
+                lane,
+                config,
+            )
+        )
 
     def _place_area(
         self,
@@ -244,8 +443,9 @@ class _GeometryBuilder:
         bottom_corridor = StructureChannelId(
             ChannelKind.BOTTOM_CORRIDOR, container_id
         )
+        corridor = self._bottom_corridor(container_id, columns)
         top_size = self._channel_size(top_corridor)
-        bottom_size = self._channel_size(bottom_corridor)
+        bottom_size = corridor.size
         self.channels.append(
             StructureChannel(top_corridor, Rect(left, top, width, top_size))
         )
@@ -257,6 +457,31 @@ class _GeometryBuilder:
         )
         columns_top = top + top_size
         columns_height = height - top_size - bottom_size
+        for column_index_, (
+            column_left_,
+            column_right_,
+            column_bottom_,
+        ) in enumerate(corridor.column_spans):
+            if column_bottom_ < columns_height:
+                self.bottom_pockets.append(
+                    StructureChannel(
+                        StructureChannelId(
+                            ChannelKind.POCKET, container_id, column_index_
+                        ),
+                        Rect(
+                            left + column_left_,
+                            columns_top + column_bottom_,
+                            column_right_ - column_left_,
+                            columns_height - column_bottom_,
+                        ),
+                    )
+                )
+        for key_, (low_, high_, y_) in corridor.lines.items():
+            self.bottom_segment_lines[key_] = (
+                left + low_,
+                left + high_,
+                columns_top + y_,
+            )
         x = left
         for index_ in range(len(columns) + 1):
             vertical_ = StructureChannelId(
@@ -342,6 +567,15 @@ class _GeometryBuilder:
         for node_id_, (x_, y_) in zip(block_ids, positions):
             self._place_node(node_id_, left + x_, top + y_)
         return height, used_width
+
+
+@dataclass(frozen=True)
+class _BottomCorridor:
+    size: float
+    # Column spans in local coordinates of the children area.
+    column_spans: List[ColumnSpan]
+    # Left x, right x, and y of each segment in local coordinates.
+    lines: Dict[Tuple[str, int], Tuple[float, float, float]]
 
 
 def _skyline_positions(

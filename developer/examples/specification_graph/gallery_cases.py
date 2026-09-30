@@ -577,9 +577,9 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
         "Fewest bends before the shortest length",
         (
             "A2 -> B2 connects the bottom nodes of two short columns. The "
-            "section T is tall, so the bottom corridor lies far below. The "
-            "route over the top corridor is shorter but has six bends. The "
-            "route over the bottom corridor has two bends and wins."
+            "route over the bottom corridor has two bends and passes under "
+            "S only, so it lies just below S. The tall section T does not "
+            "push it down."
         ),
         [
             (
@@ -595,6 +595,130 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
             )
         ],
         [("A2", "B2")],
+    ),
+    _structure_case(
+        "Fewest bends under a tall section",
+        (
+            "A2 -> B2 connects the bottom nodes of two short columns. The "
+            "section S between them is tall, so the route under S goes far "
+            "down. The route over the top corridor is shorter but has six "
+            "bends. The route under S has two bends and wins."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    "A2",
+                    ("S", ["S1", "S2", "S3", "S4"]),
+                    "B1",
+                    "B2",
+                ],
+            )
+        ],
+        [("A2", "B2")],
+    ),
+    _structure_case(
+        "Bottom corridor follows the columns",
+        (
+            "A segment in the bottom corridor lies just below the columns it "
+            "passes over. A2 -> B1 passes under A and S only, so the tall "
+            "section T does not push it down. A2 -> C1 passes under T."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    "A2",
+                    ("S", ["S1", "S2"]),
+                    "B1",
+                    ("T", ["T1", "T2", "T3", "T4"]),
+                    "C1",
+                ],
+            )
+        ],
+        [("A2", "B1"), ("A2", "C1")],
+    ),
+    _structure_case(
+        "Through pass under a short section",
+        (
+            "A3 -> B3 goes along the gap under A3, crosses the vertical "
+            "channels and the pocket under the short section S straight, "
+            "and reaches B3 at the same height. A4 -> B4 takes the same way "
+            "one lane lower."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    "A2",
+                    "A3",
+                    "A4",
+                    ("S", ["S1"]),
+                    "B1",
+                    "B2",
+                    "B3",
+                    "B4",
+                    ("T", ["T1", "T2", "T3", "T4", "T5", "T6"]),
+                ],
+            )
+        ],
+        [("A3", "B3"), ("A4", "B4")],
+    ),
+    _structure_case(
+        "Vertical lane at the height of a column gap",
+        (
+            "B1 -> A4 goes over the top corridor, down the vertical channel "
+            "between A and S, and into the gap between A3 and A4. A3 -> B3 "
+            "passes through at the height of the gaps. In the gap between "
+            "A3 and A4, B1 -> A4 takes the upper lane, so the two relations "
+            "do not cross. The gap between B3 and B4 has one lane, so "
+            "A3 -> B3 makes a step before B3."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    "A2",
+                    "A3",
+                    "A4",
+                    ("S", ["S1"]),
+                    "B1",
+                    "B2",
+                    "B3",
+                    "B4",
+                ],
+            )
+        ],
+        [("A3", "B3"), ("B1", "A4")],
+    ),
+    _structure_case(
+        "Lane order in the bottom corridor",
+        (
+            "C2 -> A2 goes left and passes under the tall section T. "
+            "B2 -> C2 goes right and passes under short columns only. The "
+            "segments overlap. Right-hand traffic puts the segment that goes "
+            "left above, so B2 -> C2 lies below C2 -> A2."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    "A2",
+                    ("T", ["T1", "T2", "T3", "T4"]),
+                    "B1",
+                    "B2",
+                    ("U", ["U1"]),
+                    "C1",
+                    "C2",
+                ],
+            )
+        ],
+        [("C2", "A2"), ("B2", "C2")],
     ),
     _structure_case(
         "Relations that turn together",

@@ -107,6 +107,11 @@ Order of work:
 
 - Unit tests for each generator stage, against the stage contract in
   `spec.md`.
+- Each unit test docstring names the code under test ("Code:") and the
+  breakages that fail the test ("Fails if:").
+- `developer/examples/specification_graph/mutations.py` applies each
+  breakage to the code, runs the unit tests, and reports a breakage that
+  fails no test or a test that no breakage fails.
 - Integration tests (`tests/integration/`) for export of the screen.
 - End-to-end tests for the screen and the interactivity, run with
   `--headless`.

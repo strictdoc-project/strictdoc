@@ -352,6 +352,13 @@ MUTATIONS = (
         "    half_width = node_width / 2",
     ),
     Mutation(
+        "G5",
+        "horizontal channel ignores the lane clearance",
+        GEOMETRY,
+        "(lane_count - 1) * config.lane_pitch + 2 * config.lane_clearance,",
+        "(lane_count + 1) * config.lane_pitch,",
+    ),
+    Mutation(
         "Z1",
         "type without a style does not fall back to default",
         SERIALIZER,
@@ -407,6 +414,13 @@ MUTATIONS = (
         SERIALIZER,
         'text = f"{round(value, 2):.2f}".rstrip("0").rstrip(".")',
         'text = f"{round(value, 2):.2f}"',
+    ),
+    Mutation(
+        "Z9",
+        "serializer ignores the configuration of the geometry",
+        SERIALIZER,
+        "            geometry.config,\n",
+        "            GeometryConfig(),\n",
     ),
     Mutation(
         "Z8",

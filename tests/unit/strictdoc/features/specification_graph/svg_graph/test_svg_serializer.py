@@ -10,6 +10,7 @@ from developer.examples.specification_graph.gallery_cases import (
     GalleryCase,
 )
 from strictdoc.features.specification_graph.svg_graph.levels_geometry import (
+    GeometryConfig,
     compute_levels_geometry,
 )
 from strictdoc.features.specification_graph.svg_graph.levels_routing import (
@@ -313,3 +314,29 @@ def test_svg_matches_the_model(case: GalleryCase) -> None:
         (edge_.edge_id, edge_.source_id, edge_.target_id)
         for edge_ in normalized_graph.edges
     ]
+
+
+def test_arrowhead_follows_the_geometry_config() -> None:
+    """
+    The arrowhead size comes from the configuration of the geometry.
+
+    Code: svg_serializer.serialize_levels_svg, levels_geometry.GeometryConfig.
+    Fails if:
+    - the serializer uses the default configuration instead of the
+      configuration of the geometry.
+    """
+
+    case = _case("Simple chain")
+    config = GeometryConfig(lane_clearance=20, min_port_pitch=10)
+    normalized_graph = normalize_graph(case.graph)
+    structure = compute_levels_structure(normalized_graph)
+    routing = compute_levels_routing(normalized_graph, structure)
+    geometry = compute_levels_geometry(structure, routing, config)
+
+    root = ET.fromstring(
+        serialize_levels_svg(normalized_graph, structure, routing, geometry)
+    )
+
+    for marker_ in root.iter(f"{SVG_NAMESPACE}marker"):
+        assert marker_.get("markerWidth") == "14"
+        assert marker_.get("markerHeight") == "8"

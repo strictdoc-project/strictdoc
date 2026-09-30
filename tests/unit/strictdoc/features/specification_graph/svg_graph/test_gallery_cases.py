@@ -154,6 +154,8 @@ def test_levels_geometry_invariants(
     - the gate center does not shift.
     - the column does not widen.
     - the outermost port ignores the port margin.
+    - a horizontal channel gives the outermost lane less room than the lane
+      clearance.
     """
 
     normalized_graph = normalize_graph(case.graph)
@@ -166,6 +168,7 @@ def test_levels_geometry_invariants(
     _assert_gate_ports_are_distinct(structure, routing, geometry)
     _assert_face_ports_form_ordered_bundles(structure, routing)
     _assert_face_ports_keep_the_minimum_pitch(routing, geometry)
+    _assert_last_segments_keep_the_lane_clearance(geometry)
 
     ports = [
         (route_.edge_id, port_)
@@ -243,6 +246,23 @@ def _assert_gate_ports_are_distinct(
             if first_id_ == second_id_:
                 continue
             assert first_bottom_ < second_top_ or second_bottom_ < first_top_
+
+
+def _assert_last_segments_keep_the_lane_clearance(
+    geometry: LevelsGeometry,
+) -> None:
+    """
+    Check the room for the arrowhead on the last segment of each relation.
+
+    The last segment ends with the arrowhead at the target face. The segment
+    is at least the lane clearance long.
+    """
+
+    lane_clearance = GeometryConfig().lane_clearance
+    for path_ in geometry.edge_paths.values():
+        before_last_, last_ = path_[-2], path_[-1]
+        length_ = abs(last_.x - before_last_.x) + abs(last_.y - before_last_.y)
+        assert length_ >= lane_clearance - 1e-9
 
 
 def _assert_face_ports_keep_the_minimum_pitch(

@@ -8,7 +8,7 @@ defines the markup.
 
 import html
 import json
-from typing import Dict, List, Mapping, Optional, Set, Tuple
+from typing import Dict, List, Mapping, Set, Tuple
 
 from strictdoc.features.specification_graph.svg_graph.levels_geometry import (
     GeometryConfig,
@@ -47,7 +47,6 @@ def serialize_levels_svg(
     structure: LevelsStructure,
     routing: LevelsRouting,
     geometry: LevelsGeometry,
-    config: Optional[GeometryConfig] = None,
     debug: bool = False,
     svg_id: str = CSS_PREFIX,
 ) -> str:
@@ -56,11 +55,9 @@ def serialize_levels_svg(
 
     The SVG ID scopes the arrowhead markers and the type styles, so several
     SVGs on one page do not affect each other. Each SVG on a page needs its
-    own ID.
+    own ID. The arrowhead size comes from the configuration of the
+    geometry.
     """
-
-    if config is None:
-        config = GeometryConfig()
 
     style_types = {
         edge_.edge_id: style_relation_type(edge_, structure)
@@ -85,7 +82,10 @@ def serialize_levels_svg(
             f'{_number(geometry.height)}">'
         ),
         _render_defs(
-            normalized_graph.relation_types, type_indexes, config, svg_id
+            normalized_graph.relation_types,
+            type_indexes,
+            geometry.config,
+            svg_id,
         ),
     ]
     if debug:
@@ -153,8 +153,9 @@ def _render_defs(
             f'<marker id="{_escape(svg_id)}-arrow-{index_}" '
             f'viewBox="0 0 10 10" '
             f'refX="10" refY="5" markerUnits="userSpaceOnUse" '
-            f'markerWidth="{_number(config.arrow_width)}" '
+            f'markerWidth="{_number(config.arrow_length)}" '
             f'markerHeight="{_number(config.arrow_width)}" '
+            f'preserveAspectRatio="none" '
             f'orient="auto-start-reverse">'
             f'<path d="M 0 0 L 10 5 L 0 10 z" fill="{style_.color}"/>'
             f"</marker>"

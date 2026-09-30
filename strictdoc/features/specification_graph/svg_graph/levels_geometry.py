@@ -24,27 +24,54 @@ from strictdoc.features.specification_graph.svg_graph.levels_structure import (
 
 @dataclass(frozen=True)
 class GeometryConfig:
+    """
+    Size parameters of the levels mode geometry, in pixels.
+
+    The layout parameters define the space. The arrowhead size follows from
+    them: the layout does not depend on the arrowhead style.
+    """
+
+    # Nodes.
     # Minimum node width. A column with crowded gates gets wider nodes.
     node_width: float = 160
     node_height: float = 52
-    # Preferred distance between neighbor ports. A crowded port list uses a
-    # smaller distance, down to the minimum port pitch.
+
+    # Ports.
+    # Preferred distance between neighbor ports on a face.
     port_pitch: float = 12
-    # Width of the arrowhead base. The serializer draws arrowheads of this
-    # width.
-    arrow_width: float = 7
-    # Free space between two neighbor arrowheads at the minimum port pitch.
-    arrow_gap: float = 2
+    # A crowded port list shrinks its pitch down to this value. The gate
+    # center shifts and the column widens before the pitch goes lower.
+    min_port_pitch: float = 8
     # Minimum distance from the outermost port to the node corner.
     port_margin: float = 8
 
-    @property
-    def min_port_pitch(self) -> float:
-        return self.arrow_width + self.arrow_gap
-
+    # Channels.
+    # Distance between neighbor lanes in a channel.
     lane_pitch: float = 8
+    # Distance from the outermost lane of a horizontal channel to the node
+    # face. The last segment of a relation, which ends with the arrowhead,
+    # is at least this long.
+    lane_clearance: float = 12
+    # Size of a channel with few lanes or no lanes.
     min_channel_size: float = 24
+
+    # SVG.
+    # Empty border around the graph.
     margin: float = 16
+
+    # Arrowhead reserves. The arrowhead size is computed from them.
+    # Straight part of the last segment before the arrowhead.
+    arrow_straight: float = 6
+    # Free space between two neighbor arrowheads at the minimum port pitch.
+    arrow_gap: float = 2
+
+    @property
+    def arrow_length(self) -> float:
+        return self.lane_clearance - self.arrow_straight
+
+    @property
+    def arrow_width(self) -> float:
+        return self.min_port_pitch - self.arrow_gap
 
 
 @dataclass(frozen=True)
@@ -63,6 +90,9 @@ class Rect:
 
 @dataclass(frozen=True)
 class LevelsGeometry:
+    # The parameters that produced this geometry. The serializer draws the
+    # arrowheads with them, so the drawing always matches the layout.
+    config: GeometryConfig
     width: float
     height: float
     node_rects: Mapping[str, Rect]
@@ -79,7 +109,7 @@ def compute_levels_geometry(
         config = GeometryConfig()
 
     horizontal_sizes = [
-        _channel_size(
+        _horizontal_channel_size(
             routing.lane_counts.get(
                 ChannelId(Orientation.HORIZONTAL, index_), 0
             ),
@@ -88,7 +118,7 @@ def compute_levels_geometry(
         for index_ in range(-1, structure.row_count)
     ]
     vertical_sizes = [
-        _channel_size(
+        _vertical_channel_size(
             routing.lane_counts.get(ChannelId(Orientation.VERTICAL, index_), 0),
             config,
         )
@@ -175,6 +205,7 @@ def compute_levels_geometry(
         for edge_id_, route_ in routing.routes.items()
     }
     return LevelsGeometry(
+        config=config,
         width=width,
         height=height,
         node_rects=node_rects,
@@ -183,7 +214,30 @@ def compute_levels_geometry(
     )
 
 
-def _channel_size(lane_count: int, config: GeometryConfig) -> float:
+def _horizontal_channel_size(lane_count: int, config: GeometryConfig) -> float:
+    """
+    Return the size of a horizontal channel.
+
+    The lane clearance keeps room for the arrowhead between the outermost
+    lane and the node face on both sides.
+    """
+
+    if lane_count == 0:
+        return config.min_channel_size
+    return max(
+        config.min_channel_size,
+        (lane_count - 1) * config.lane_pitch + 2 * config.lane_clearance,
+    )
+
+
+def _vertical_channel_size(lane_count: int, config: GeometryConfig) -> float:
+    """
+    Return the size of a vertical channel.
+
+    The lanes run along the side faces of the nodes, where no arrowhead
+    ends, so one lane pitch separates the outermost lane from a node.
+    """
+
     return max(config.min_channel_size, (lane_count + 1) * config.lane_pitch)
 
 

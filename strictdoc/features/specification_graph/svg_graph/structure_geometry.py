@@ -308,14 +308,19 @@ class _GeometryBuilder:
         Place the segments of the bottom corridor of a container.
 
         The coordinates are local: x from the left of the children area, y
-        from the top of the columns. Segments go in lane order. The base
-        height of a segment is the height of the first column channel lane
-        that it can continue straight and that fits under the columns it
-        passes over. Otherwise, the base height lies the clearance below the
-        lowest of these columns. A segment
-        lies at its base height, but at least one lane pitch below each
-        overlapping segment with a smaller lane. The corridor size below the
-        tallest column fits the lowest segment.
+        from the top of the columns.
+
+        A segment continues a column channel lane straight if the height of
+        that lane fits under the columns the segment passes over. Such a
+        segment keeps the height of the lane: it belongs to the row of that
+        lane. The other segments form the corridor: in lane order, each lies
+        the clearance below the lowest column it passes over, and at least
+        one lane pitch below each overlapping corridor segment with a
+        smaller lane. Right-hand traffic, which gives the lane order, thus
+        applies within one row or within the corridor, never across them. A
+        segment that meets an overlapping segment closer than one lane pitch
+        moves down. The corridor size below the tallest column fits the
+        lowest segment.
         """
 
         if container_id in self.corridors:
@@ -354,27 +359,52 @@ class _GeometryBuilder:
                 + port_offset(end.slot, end.list_size, node_width_, config)
             )
 
-        lines: Dict[Tuple[str, int], Tuple[float, float, float]] = {}
-        placed: List[Tuple[float, float, float]] = []
-        for segment_ in sorted(
-            self.bottom_segments.get(container_id, []),
-            key=lambda segment_: (segment_.lane, segment_.key),
-        ):
+        through_lines: List[Tuple[CorridorSegment, float, float, float]] = []
+        corridor_lines: List[Tuple[CorridorSegment, float, float, float]] = []
+        for segment_ in self.bottom_segments.get(container_id, []):
             first_x_, second_x_ = (end_x(end_) for end_ in segment_.ends)
             low_, high_ = min(first_x_, second_x_), max(first_x_, second_x_)
-            y_ = corridor_contour(column_spans, low_, high_) + (
+            lowest_y_ = corridor_contour(column_spans, low_, high_) + (
                 config.lane_clearance
             )
-            for through_ in segment_.through_lanes:
-                through_y_ = self._column_lane_y(
-                    columns, through_.channel, through_.lane
-                )
-                if through_y_ >= y_:
-                    y_ = through_y_
-                    break
-            for placed_low_, placed_high_, placed_y_ in placed:
+            through_y_ = next(
+                (
+                    lane_y_
+                    for lane_y_ in (
+                        self._column_lane_y(
+                            columns, through_.channel, through_.lane
+                        )
+                        for through_ in segment_.through_lanes
+                    )
+                    if lane_y_ >= lowest_y_
+                ),
+                None,
+            )
+            if through_y_ is not None:
+                through_lines.append((segment_, low_, high_, through_y_))
+            else:
+                corridor_lines.append((segment_, low_, high_, lowest_y_))
+
+        lines: Dict[Tuple[str, int], Tuple[float, float, float]] = {}
+        placed: List[Tuple[float, float, float]] = []
+        for segment_, low_, high_, base_y_ in sorted(
+            through_lines,
+            key=lambda line_: (line_[3], line_[0].lane, line_[0].key),
+        ):
+            y_ = _free_y(base_y_, low_, high_, placed, config.lane_pitch)
+            placed.append((low_, high_, y_))
+            lines[segment_.key] = (low_, high_, y_)
+        corridor_placed: List[Tuple[float, float, float]] = []
+        for segment_, low_, high_, base_y_ in sorted(
+            corridor_lines,
+            key=lambda line_: (line_[0].lane, line_[0].key),
+        ):
+            y_ = base_y_
+            for placed_low_, placed_high_, placed_y_ in corridor_placed:
                 if not (high_ < placed_low_ or placed_high_ < low_):
                     y_ = max(y_, placed_y_ + config.lane_pitch)
+            y_ = _free_y(y_, low_, high_, placed, config.lane_pitch)
+            corridor_placed.append((low_, high_, y_))
             placed.append((low_, high_, y_))
             lines[segment_.key] = (low_, high_, y_)
         tallest = max((bottom_ for _, _, bottom_ in column_spans), default=0)
@@ -566,6 +596,33 @@ class _GeometryBuilder:
         for node_id_, (x_, y_) in zip(block_ids, positions):
             self._place_node(node_id_, left + x_, top + y_)
         return height, used_width
+
+
+def _free_y(
+    y: float,
+    low: float,
+    high: float,
+    placed: List[Tuple[float, float, float]],
+    lane_pitch: float,
+) -> float:
+    """
+    Return the first free height from y down.
+
+    A free height keeps one lane pitch from the placed segments that overlap
+    the segment from low to high.
+    """
+
+    moved = True
+    while moved:
+        moved = False
+        for placed_low_, placed_high_, placed_y_ in placed:
+            if (
+                not (high < placed_low_ or placed_high_ < low)
+                and abs(placed_y_ - y) < lane_pitch
+            ):
+                y = placed_y_ + lane_pitch
+                moved = True
+    return y
 
 
 @dataclass(frozen=True)

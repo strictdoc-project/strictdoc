@@ -452,18 +452,30 @@ def test_structure_route_invariants(case: GalleryCase) -> None:
 )
 def test_bottom_corridor_invariants(case: GalleryCase) -> None:
     """
-    Invariants of the bottom corridor segments on every structure case.
+    Invariants of the segments under the columns on every structure case.
 
-    Code: structure_geometry._GeometryBuilder._bottom_corridor.
+    A segment that continues a column channel lane straight belongs to the
+    row of that lane. The other segments form the corridor.
+
+    Code: structure_geometry._GeometryBuilder._bottom_corridor,
+    structure_geometry._free_y.
     Fails if:
     - a segment lies closer than the clearance to a column above it.
-    - of two overlapping segments, the larger lane does not lie lower.
+    - two overlapping segments lie closer than one lane pitch.
+    - of two overlapping corridor segments, the larger lane does not lie
+      lower.
     """
 
     normalized_graph, routing, geometry, _ = _result(case)
 
     config = geometry.config
     lines = geometry.bottom_segment_lines
+    in_corridor = {
+        segment_.key: not _continues_a_column_lane(
+            routing, geometry, segment_.key
+        )
+        for segment_ in routing.bottom_segments
+    }
     for segment_ in routing.bottom_segments:
         low_, high_, y_ = lines[segment_.key]
         for node_ in normalized_graph.nodes:
@@ -477,11 +489,36 @@ def test_bottom_corridor_invariants(case: GalleryCase) -> None:
         for other_ in routing.bottom_segments:
             other_low_, other_high_, other_y_ = lines[other_.key]
             if (
-                other_.container_id == segment_.container_id
-                and other_.lane > segment_.lane
-                and not (high_ < other_low_ or other_high_ < low_)
+                other_.key == segment_.key
+                or other_.container_id != segment_.container_id
+                or high_ < other_low_
+                or other_high_ < low_
             ):
-                assert other_y_ >= y_ + config.lane_pitch
+                continue
+            assert abs(other_y_ - y_) >= config.lane_pitch
+            if (
+                in_corridor[segment_.key]
+                and in_corridor[other_.key]
+                and other_.lane > segment_.lane
+            ):
+                assert other_y_ > y_
+
+
+def _continues_a_column_lane(
+    routing: StructureRouting,
+    geometry: StructureGeometry,
+    key: Tuple[str, int],
+) -> bool:
+    edge_id, position = key
+    route = routing.routes[edge_id]
+    points = route_channel_points(route, geometry)
+    # Point i + 1 starts the segment in channel i.
+    return any(
+        0 <= other_ < len(route.channels)
+        and route.channels[other_].kind is ChannelKind.COLUMN
+        and points[other_ + 1].y == points[position + 1].y
+        for other_ in (position - 2, position + 2)
+    )
 
 
 @pytest.mark.parametrize(

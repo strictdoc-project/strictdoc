@@ -456,10 +456,10 @@ MUTATIONS = (
     ),
     Mutation(
         "BC2",
-        "bottom corridor segment ignores overlapping segments",
+        "corridor segment ignores the lane order",
         STRUCTURE_GEOMETRY,
         "y_ = max(y_, placed_y_ + config.lane_pitch)",
-        "y_ = max(y_, placed_y_)",
+        "pass",
     ),
     Mutation(
         "BC3",
@@ -486,8 +486,27 @@ MUTATIONS = (
         "TP2",
         "segment under the columns ignores the height of its through pass",
         STRUCTURE_GEOMETRY,
-        "if through_y_ >= y_:",
-        "if False:",
+        "if lane_y_ >= lowest_y_",
+        "if False",
+    ),
+    Mutation(
+        "RW1",
+        "segments under the columns may lie closer than one lane pitch",
+        STRUCTURE_GEOMETRY,
+        "and abs(placed_y_ - y) < lane_pitch",
+        "and False",
+    ),
+    Mutation(
+        "RW2",
+        "lane order applies across the rows under the columns",
+        STRUCTURE_GEOMETRY,
+        "            if through_y_ is not None:\n"
+        "                through_lines.append((segment_, low_, high_, through_y_))\n"
+        "            else:\n"
+        "                corridor_lines.append((segment_, low_, high_, lowest_y_))\n",
+        "            corridor_lines.append(\n"
+        "                (segment_, low_, high_, through_y_ or lowest_y_)\n"
+        "            )\n",
     ),
     Mutation(
         "CL1",

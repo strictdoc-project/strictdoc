@@ -309,9 +309,10 @@ class _GeometryBuilder:
 
         The coordinates are local: x from the left of the children area, y
         from the top of the columns. Segments go in lane order. The base
-        height of a segment is the height of the column channel lane that it
-        continues by a through pass. Otherwise, the base height lies the
-        clearance below the lowest column the segment passes over. A segment
+        height of a segment is the height of the first column channel lane
+        that it can continue straight and that fits under the columns it
+        passes over. Otherwise, the base height lies the clearance below the
+        lowest of these columns. A segment
         lies at its base height, but at least one lane pitch below each
         overlapping segment with a smaller lane. The corridor size below the
         tallest column fits the lowest segment.
@@ -364,15 +365,13 @@ class _GeometryBuilder:
             y_ = corridor_contour(column_spans, low_, high_) + (
                 config.lane_clearance
             )
-            if segment_.level_from is not None:
-                y_ = max(
-                    y_,
-                    self._column_lane_y(
-                        columns,
-                        segment_.level_from.channel,
-                        segment_.level_from.lane,
-                    ),
+            for through_ in segment_.through_lanes:
+                through_y_ = self._column_lane_y(
+                    columns, through_.channel, through_.lane
                 )
+                if through_y_ >= y_:
+                    y_ = through_y_
+                    break
             for placed_low_, placed_high_, placed_y_ in placed:
                 if not (high_ < placed_low_ or placed_high_ < low_):
                     y_ = max(y_, placed_y_ + config.lane_pitch)

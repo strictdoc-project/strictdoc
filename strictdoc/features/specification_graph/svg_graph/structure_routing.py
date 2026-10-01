@@ -148,15 +148,7 @@ class _Router:
         # Container -> (left, right, bottom) of each column in the estimate.
         self.column_spans: Dict[
             Optional[str], List[Tuple[float, float, float]]
-        ] = {
-            container_id_: [
-                _column_span(
-                    [estimate.node_rects[id_] for id_ in column_.node_ids]
-                )
-                for column_ in columns_
-            ]
-            for container_id_, columns_ in layout.columns.items()
-        }
+        ] = _column_spans(layout, estimate)
 
     def route(self) -> StructureRouting:
         plans: List[_Plan] = []
@@ -168,9 +160,20 @@ class _Router:
             else:
                 plans.append(plan_)
 
+        straight_ids = self._straight_ids(plans)
+        # The heights of the columns are exact from here on: the lane count
+        # of each column channel follows from the routes alone.
+        exact = compute_structure_geometry(
+            self.normalized_graph,
+            self.layout,
+            self.config,
+            lane_counts=self._column_lane_counts(plans, straight_ids),
+        )
+        plans = [self._exact_levels(plan_, exact) for plan_ in plans]
+
         conflicts: List[StructureLaneConflict] = []
         vertical_lanes = self._assign_vertical_lanes(plans, conflicts)
-        ports, straight_ids = self._assign_ports(plans, vertical_lanes)
+        ports = self._assign_ports(plans, vertical_lanes, straight_ids)
         horizontal_lanes = self._assign_horizontal_lanes(
             plans, ports, straight_ids, vertical_lanes, conflicts
         )
@@ -212,9 +215,7 @@ class _Router:
                                 _segment_end(route_, position_ - 1),
                                 _segment_end(route_, position_ + 1),
                             ),
-                            level_from=_through_level(
-                                route_, plan_.levels, position_
-                            ),
+                            through_lanes=_through_lanes(route_, position_),
                         )
                     )
                 else:
@@ -607,6 +608,145 @@ class _Router:
 
     # Stage 4: lanes and ports.
 
+    def _straight_ids(self, plans: List[_Plan]) -> Set[str]:
+        """
+        Return the straight edges. A gate has at most one straight edge.
+        """
+
+        straight_ids: Set[str] = set()
+        straight_gates: Set[Tuple[StructureChannelId, int]] = set()
+        for plan_ in plans:
+            if not plan_.is_straight_candidate:
+                continue
+            gate_ = (
+                plan_.channels[0],
+                self.layout.places[plan_.edge.source_id].column,
+            )
+            if gate_ not in straight_gates:
+                straight_gates.add(gate_)
+                straight_ids.add(plan_.edge.edge_id)
+        return straight_ids
+
+    def _column_lane_counts(
+        self, plans: List[_Plan], straight_ids: Set[str]
+    ) -> Dict[StructureChannelId, int]:
+        """
+        Return the lane count of each column channel from the routes alone.
+
+        This method is the only place of this rule. spec.md, section
+        "Порядок расчёта". The count is known before the lanes, so the
+        heights of the columns are exact when the lanes need them.
+
+        A column channel has two halves by right-hand traffic: the segments
+        that go left and the segments that go right. In one half, the
+        segments to the left vertical channel overlap each other, and so do
+        the segments to the right one. A segment to the left and a segment
+        to the right do not overlap, because the ports of the left side of
+        a face stand left of the ports of the right side. So they share
+        lanes. A segment across the channel overlaps all segments of its
+        half:
+
+            lanes = sum over the two halves of
+                    max(segments to the left, segments to the right)
+                    + segments across
+
+        A test checks that the lane assignment gives the same count.
+        """
+
+        # Channel -> half -> [to the left, to the right, across].
+        counts: Dict[StructureChannelId, Dict[int, List[int]]] = {}
+        for plan_ in plans:
+            if plan_.edge.edge_id in straight_ids:
+                continue
+            channels_ = plan_.channels
+            last_ = len(channels_) - 1
+            for position_, channel_ in enumerate(channels_):
+                if channel_.kind is not ChannelKind.COLUMN:
+                    continue
+                # The vertical channel left of column k has the index k.
+                if 0 < position_ < last_:
+                    goes_left_ = (
+                        channels_[position_ + 1].index
+                        < channels_[position_ - 1].index
+                    )
+                    kind_ = 2
+                elif position_ == 0 and last_ > 0:
+                    to_left_ = channels_[1].index == channel_.index
+                    goes_left_ = to_left_
+                    kind_ = 0 if to_left_ else 1
+                elif position_ == last_ and last_ > 0:
+                    from_left_ = channels_[last_ - 1].index == channel_.index
+                    goes_left_ = not from_left_
+                    kind_ = 0 if from_left_ else 1
+                else:
+                    # From a port to a port of the same channel.
+                    goes_left_ = False
+                    kind_ = 2
+                half_ = 0 if goes_left_ else 1
+                counts.setdefault(channel_, {}).setdefault(half_, [0, 0, 0])[
+                    kind_
+                ] += 1
+        return {
+            channel_: sum(
+                max(left_, right_) + across_
+                for left_, right_, across_ in halves_.values()
+            )
+            for channel_, halves_ in counts.items()
+        }
+
+    def _exact_levels(self, plan: _Plan, exact: StructureGeometry) -> _Plan:
+        """
+        Return the plan with the levels of the exact column heights.
+
+        A segment under the columns takes the level of a column channel that
+        it continues across a vertical channel, if that level fits under the
+        columns. The geometry follows the same rule, see
+        CorridorSegment.through_lanes.
+        """
+
+        rects = {
+            channel_.channel_id: channel_.rect for channel_ in exact.channels
+        }
+        spans = _column_spans(self.layout, exact)
+        channels = plan.channels
+        last = len(channels) - 1
+        levels = list(plan.levels)
+        for position_, channel_ in enumerate(channels):
+            if not channel_.is_horizontal:
+                continue
+            if channel_.kind is not ChannelKind.BOTTOM_CORRIDOR:
+                levels[position_] = _center_y(rects[channel_])
+                continue
+            ends_x_ = (
+                _center_x(exact.node_rects[plan.edge.source_id])
+                if position_ == 0
+                else levels[position_ - 1],
+                _center_x(exact.node_rects[plan.edge.target_id])
+                if position_ == last
+                else levels[position_ + 1],
+            )
+            level_ = corridor_contour(
+                spans[channel_.container_id], min(ends_x_), max(ends_x_)
+            ) + (self.config.lane_clearance)
+            for other_ in (position_ - 2, position_ + 2):
+                if (
+                    0 <= other_ <= last
+                    and channels[other_].kind is ChannelKind.COLUMN
+                    and _center_y(rects[channels[other_]]) >= level_
+                ):
+                    level_ = _center_y(rects[channels[other_]])
+                    break
+            levels[position_] = level_
+        return _Plan(
+            index=plan.index,
+            edge=plan.edge,
+            source_face=plan.source_face,
+            target_face=plan.target_face,
+            channels=channels,
+            levels=tuple(levels),
+            is_straight_candidate=plan.is_straight_candidate,
+        )
+
     def _assign_vertical_lanes(
         self,
         plans: List[_Plan],
@@ -686,26 +826,14 @@ class _Router:
         self,
         plans: List[_Plan],
         vertical_lanes: Dict[Tuple[str, int], int],
-    ) -> Tuple[Dict[EndpointKey, Port], Set[str]]:
+        straight_ids: Set[str],
+    ) -> Dict[EndpointKey, Port]:
         """
         Collect the endpoints of each gate and number the ports.
 
         A gate is a horizontal channel and a column. A gate has at most one
         straight edge.
         """
-
-        straight_ids: Set[str] = set()
-        straight_gates: Set[Tuple[StructureChannelId, int]] = set()
-        for plan_ in plans:
-            if not plan_.is_straight_candidate:
-                continue
-            gate_ = (
-                plan_.channels[0],
-                self.layout.places[plan_.edge.source_id].column,
-            )
-            if gate_ not in straight_gates:
-                straight_gates.add(gate_)
-                straight_ids.add(plan_.edge.edge_id)
 
         endpoints_by_gate: Dict[
             Tuple[StructureChannelId, int], List[GateEndpoint]
@@ -770,7 +898,7 @@ class _Router:
         ports: Dict[EndpointKey, Port] = {}
         for endpoints_ in endpoints_by_gate.values():
             ports.update(number_gate_ports(endpoints_))
-        return ports, straight_ids
+        return ports
 
     def _assign_horizontal_lanes(
         self,
@@ -903,26 +1031,36 @@ def _segment_end(route: StructureRoute, position: int) -> SegmentEnd:
     )
 
 
-def _through_level(
-    route: StructureRoute, levels: Tuple[float, ...], position: int
-) -> Optional[LaneEnd]:
+def _through_lanes(route: StructureRoute, position: int) -> Tuple[LaneEnd, ...]:
     """
-    Return the column channel lane that a segment continues straight.
+    Return the column channel lanes that a segment can continue straight.
 
-    The entry comes first. A through pass joins two horizontal segments of
-    the same level.
+    The candidates are the column channels on both sides of the segment,
+    across a vertical channel. The entry comes first.
     """
 
-    for other_ in (position - 2, position + 2):
-        if (
-            0 <= other_ < len(route.channels)
-            and levels[other_] == levels[position]
-            and route.channels[other_].kind is ChannelKind.COLUMN
-        ):
-            return LaneEnd(
-                channel=route.channels[other_], lane=route.lanes[other_]
-            )
-    return None
+    return tuple(
+        LaneEnd(channel=route.channels[other_], lane=route.lanes[other_])
+        for other_ in (position - 2, position + 2)
+        if 0 <= other_ < len(route.channels)
+        and route.channels[other_].kind is ChannelKind.COLUMN
+    )
+
+
+def _column_spans(
+    layout: StructureLayout, geometry: StructureGeometry
+) -> Dict[Optional[str], List[Tuple[float, float, float]]]:
+    """
+    Return (left, right, bottom) of each column of each container.
+    """
+
+    return {
+        container_id_: [
+            _column_span([geometry.node_rects[id_] for id_ in column_.node_ids])
+            for column_ in columns_
+        ]
+        for container_id_, columns_ in layout.columns.items()
+    }
 
 
 def _column_span(rects: List[Rect]) -> Tuple[float, float, float]:

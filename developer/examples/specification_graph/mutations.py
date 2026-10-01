@@ -486,8 +486,22 @@ MUTATIONS = (
         "TP2",
         "segment under the columns ignores the height of its through pass",
         STRUCTURE_GEOMETRY,
-        "if segment_.level_from is not None:",
+        "if through_y_ >= y_:",
         "if False:",
+    ),
+    Mutation(
+        "CL1",
+        "column lane count rule ignores the lane reuse between the sides",
+        STRUCTURE_ROUTING,
+        "max(left_, right_) + across_",
+        "left_ + right_ + across_",
+    ),
+    Mutation(
+        "CL2",
+        "vertical directions from the estimate instead of the exact heights",
+        STRUCTURE_ROUTING,
+        "plans = [self._exact_levels(plan_, exact) for plan_ in plans]",
+        "pass",
     ),
     Mutation(
         "TP3",

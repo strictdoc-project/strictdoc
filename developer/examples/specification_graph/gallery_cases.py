@@ -672,9 +672,9 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
         (
             "B1 -> A4 goes over the top corridor, down the vertical channel "
             "between A and S, and into the gap between A3 and A4. A3 -> B3 "
-            "passes through at the height of the gaps. In the gap between "
-            "A3 and A4, B1 -> A4 takes the upper lane, so the two relations "
-            "do not cross. The gap between B3 and B4 has one lane, so "
+            "passes through at the height of the gaps. It crosses the "
+            "vertical channel that B1 -> A4 goes down, so one crossing is "
+            "unavoidable. The gap between B3 and B4 has one lane, so "
             "A3 -> B3 makes a step before B3."
         ),
         [
@@ -807,6 +807,58 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
             ("L2", "C2"),
             ("A2", "R2"),
             ("L1", "R1"),
+        ],
+    ),
+    _structure_case(
+        "Steps beside a pocket",
+        (
+            "The case with more ports, with four nodes in the columns C and "
+            "R, and C3 -> R3, R3 -> C3. Both lines pass under W straight. "
+            "The column C has more lanes above C3 than the column R above "
+            "R3, so the gaps under C3 and R3 end at different heights. Each "
+            "line makes a step in a vertical channel: up on the right lane, "
+            "down on the left lane."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "L1",
+                    "L2",
+                    "L3",
+                    ("U", ["U1"]),
+                    "A1",
+                    "A2",
+                    "A3",
+                    ("S", ["S1", "S2"]),
+                    "C1",
+                    "C2",
+                    "C3",
+                    "C4",
+                    ("W", ["W1"]),
+                    "R1",
+                    "R2",
+                    "R3",
+                    "R4",
+                ],
+            )
+        ],
+        [
+            ("A3", "A2"),
+            ("A1", "C1"),
+            ("C2", "A2"),
+            ("C3", "A3"),
+            ("S2", "S1"),
+            ("C1", "C3"),
+            ("A2", "L2"),
+            ("L2", "A2"),
+            ("C2", "R2"),
+            ("R2", "C2"),
+            ("L2", "C2"),
+            ("A2", "R2"),
+            ("L1", "R1"),
+            ("C3", "R3"),
+            ("R3", "C3"),
         ],
     ),
     _structure_case(

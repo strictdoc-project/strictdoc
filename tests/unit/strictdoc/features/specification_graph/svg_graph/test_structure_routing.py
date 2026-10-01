@@ -8,8 +8,12 @@ from developer.examples.specification_graph.gallery_cases import (
 )
 from strictdoc.features.specification_graph.svg_graph.gate_ports import Face
 from strictdoc.features.specification_graph.svg_graph.levels_geometry import (
+    GeometryConfig,
     Point,
     Rect,
+)
+from strictdoc.features.specification_graph.svg_graph.levels_routing import (
+    RoutingOptions,
 )
 from strictdoc.features.specification_graph.svg_graph.model import LayoutMode
 from strictdoc.features.specification_graph.svg_graph.normalization import (
@@ -30,6 +34,7 @@ from strictdoc.features.specification_graph.svg_graph.structure_paths import (
 )
 from strictdoc.features.specification_graph.svg_graph.structure_routing import (
     StructureRouting,
+    _Router,
     compute_structure_routing,
 )
 from tests.unit.strictdoc.features.specification_graph.svg_graph.geometry_checks import (
@@ -477,6 +482,48 @@ def test_bottom_corridor_invariants(case: GalleryCase) -> None:
                 and not (high_ < other_low_ or other_high_ < low_)
             ):
                 assert other_y_ >= y_ + config.lane_pitch
+
+
+@pytest.mark.parametrize(
+    "case", STRUCTURE_CASES, ids=[case_.title for case_ in STRUCTURE_CASES]
+)
+def test_column_lane_count_rule_matches_the_lanes(case: GalleryCase) -> None:
+    """
+    The lane count of each column channel, known right after the routes are
+    chosen, equals the count that the lane assignment gives.
+
+    The routing takes the exact heights of the columns from this rule.
+
+    Code: structure_routing._Router._column_lane_counts.
+    Fails if:
+    - the rule counts the lanes of the two sides of a half separately.
+    - the lane assignment stops sharing lanes between the two sides.
+    """
+
+    normalized_graph = normalize_graph(case.graph)
+    layout = compute_structure_layout(normalized_graph)
+    router = _Router(
+        normalized_graph,
+        layout,
+        compute_structure_geometry(normalized_graph, layout),
+        GeometryConfig(),
+        RoutingOptions(),
+    )
+    plans = [
+        plan_
+        for plan_ in (
+            router._plan(index_, edge_)
+            for index_, edge_ in enumerate(normalized_graph.edges)
+        )
+        if plan_ is not None
+    ]
+    expected = router._column_lane_counts(plans, router._straight_ids(plans))
+    routing = compute_structure_routing(normalized_graph, layout)
+    assert expected == {
+        channel_: count_
+        for channel_, count_ in routing.lane_counts.items()
+        if channel_.kind is ChannelKind.COLUMN
+    }
 
 
 def _ancestors(normalized_graph: NormalizedGraph) -> Dict[str, set[str]]:

@@ -89,11 +89,12 @@ class CorridorSegment:
     container_id: Optional[str]
     lane: int
     ends: Tuple[SegmentEnd, SegmentEnd]
-    # The lane of a column channel that the segment continues straight
-    # through a through pass. Its height is the base height. Without it, the
-    # base height lies the clearance below the columns the segment passes
-    # over.
-    level_from: Optional[LaneEnd] = None
+    # The lanes of the column channels that the segment can continue
+    # straight across a vertical channel, the entry first. The base height
+    # is the height of the first lane that fits under the columns the
+    # segment passes over. Otherwise, the base height lies the clearance
+    # below these columns.
+    through_lanes: Tuple[LaneEnd, ...] = ()
 
 
 @dataclass(frozen=True)

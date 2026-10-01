@@ -504,6 +504,13 @@ MUTATIONS = (
         "return y",
     ),
     Mutation(
+        "NE1",
+        "right-hand traffic does not yield to a nested segment",
+        LANES,
+        "                moved.add(inner_.key)\n",
+        "                pass\n",
+    ),
+    Mutation(
         "Z10",
         "container drawn as a simple node",
         SERIALIZER,

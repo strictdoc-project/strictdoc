@@ -6,7 +6,7 @@ of a route inside one channel. A constraint graph orders the overlapping
 segments of one half of the channel.
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from enum import Enum
 from typing import Dict, List, Set, Tuple
 
@@ -88,6 +88,7 @@ def assign_lanes(
     result: Dict[SegmentKey, int] = {}
     conflicts: List[LaneConflictPair] = []
     lane_offset = 0
+    segments = _yield_to_nesting(segments)
     for half_ in (0, 1):
         half_segments_ = sorted(
             (segment_ for segment_ in segments if segment_.half == half_),
@@ -109,6 +110,48 @@ def assign_lanes(
         if len(half_lanes_) > 0:
             lane_offset += max(half_lanes_.values()) + 1
     return result, conflicts
+
+
+def _yield_to_nesting(segments: List[LaneSegment]) -> List[LaneSegment]:
+    """
+    Move a nested segment into the half of the segment around it.
+
+    spec.md, section "Правостороннее движение". Right-hand traffic yields
+    only here. A segment is nested in an overlapping segment of the other
+    half if both of its members lie inside the outer segment and extend to
+    the same side. If the halves require the order that makes both members
+    cross the outer segment, the inner segment moves to the half of the
+    outer one. There, the constraint graph puts it on the side of its
+    members, and the two segments do not cross.
+    """
+
+    moved: Set[SegmentKey] = set()
+    for inner_ in segments:
+        if len(inner_.members) != 2:
+            continue
+        sides_ = {member_.to_high_side for member_ in inner_.members}
+        if len(sides_) != 1:
+            continue
+        # The members extend toward the high side: the inner segment must
+        # lie on the high side of the outer one, in the later half.
+        must_be_later_ = sides_.pop()
+        for outer_ in segments:
+            if (
+                outer_.half != inner_.half
+                and (outer_.half < inner_.half) != must_be_later_
+                and all(
+                    outer_.low < member_.position < outer_.high
+                    for member_ in inner_.members
+                )
+            ):
+                moved.add(inner_.key)
+                break
+    return [
+        replace(segment_, half=1 - segment_.half)
+        if segment_.key in moved
+        else segment_
+        for segment_ in segments
+    ]
 
 
 def _pair_order(

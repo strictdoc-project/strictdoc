@@ -763,6 +763,53 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
         ],
     ),
     _structure_case(
+        "Relations inside one container, more ports",
+        (
+            'The case "Relations inside one container" with a section and '
+            "a column on each side. A2 and C2 also connect to the nodes on "
+            "the left and on the right, so their faces carry more ports. "
+            "C2 -> A2 stays nested inside A1 -> C1. L1 -> R1 goes over all "
+            "columns."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "L1",
+                    "L2",
+                    "L3",
+                    ("U", ["U1"]),
+                    "A1",
+                    "A2",
+                    "A3",
+                    ("S", ["S1", "S2"]),
+                    "C1",
+                    "C2",
+                    "C3",
+                    ("W", ["W1"]),
+                    "R1",
+                    "R2",
+                    "R3",
+                ],
+            )
+        ],
+        [
+            ("A3", "A2"),
+            ("A1", "C1"),
+            ("C2", "A2"),
+            ("C3", "A3"),
+            ("S2", "S1"),
+            ("C1", "C3"),
+            ("A2", "L2"),
+            ("L2", "A2"),
+            ("C2", "R2"),
+            ("R2", "C2"),
+            ("L2", "C2"),
+            ("A2", "R2"),
+            ("L1", "R1"),
+        ],
+    ),
+    _structure_case(
         "Document tree from the sketch",
         (
             "Section 1 holds simple nodes, Section 4, and Section 2 with "

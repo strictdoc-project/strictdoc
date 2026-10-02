@@ -1000,6 +1000,30 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
 )
 
 
+ACROSS_CONTAINERS_CASES: Tuple[GalleryCase, ...] = (
+    _structure_case(
+        "Relations out of and into a section",
+        (
+            "S2 -> B2 leaves the section S through its side face and "
+            "reaches B2 outside. A1 -> S1 enters the section through its "
+            "side face. The pass port on the frame lies at the height of "
+            "the lane the relation leaves or enters by."
+        ),
+        [("Doc", ["A1", "A2", ("S", ["S1", "S2"]), "B1", "B2"])],
+        [("S2", "B2"), ("A1", "S1")],
+    ),
+    _structure_case(
+        "Relation between two sections",
+        (
+            "S1 -> T2 leaves the section S and enters the section T. Both "
+            "sections lie in one document, with A1 between them."
+        ),
+        [("Doc", [("S", ["S1", "S2"]), "A1", ("T", ["T1", "T2"])])],
+        [("S1", "T2")],
+    ),
+)
+
+
 SERIALIZATION_CASES: Tuple[GalleryCase, ...] = (
     GalleryCase(
         title="Titles, relation types, and diagnostics",
@@ -1053,7 +1077,11 @@ class GalleryChapter:
 
 
 _ALL_CASES: Tuple[GalleryCase, ...] = (
-    SERIALIZATION_CASES + STRUCTURE_CASES + LEVELS_CASES + EXTREME_GATE_CASES
+    SERIALIZATION_CASES
+    + STRUCTURE_CASES
+    + ACROSS_CONTAINERS_CASES
+    + LEVELS_CASES
+    + EXTREME_GATE_CASES
 )
 
 
@@ -1091,6 +1119,10 @@ GALLERY_CHAPTERS: Tuple[GalleryChapter, ...] = (
         "Vertical lane at the height of a column gap",
         "Lane order in the bottom corridor",
         "Steps beside a pocket",
+    ),
+    _chapter(
+        "Structure: routes across containers",
+        *(case_.title for case_ in ACROSS_CONTAINERS_CASES),
     ),
     _chapter(
         "Levels: layout",

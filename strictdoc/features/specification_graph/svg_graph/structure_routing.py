@@ -12,7 +12,7 @@ are not routed yet.
 
 import heapq
 from dataclasses import dataclass, field
-from typing import Dict, List, Mapping, Optional, Set, Tuple
+from typing import Dict, FrozenSet, List, Mapping, Optional, Set, Tuple
 
 from strictdoc.features.specification_graph.svg_graph.gate_ports import (
     EndpointKey,
@@ -175,6 +175,9 @@ class _Router:
             for node_ in normalized_graph.nodes
             if len(node_.children) > 0
         }
+        self.side_face_links: Dict[
+            StructureChannelId, List[StructureChannelId]
+        ] = _side_face_links(layout)
         # Container -> (left, right, bottom) of each column in the estimate.
         self.column_spans: Dict[
             Optional[str], List[Tuple[float, float, float]]
@@ -282,11 +285,11 @@ class _Router:
             return None
         source_place = self.layout.places[source_id]
         target_place = self.layout.places[target_id]
-        if source_place.container_id != target_place.container_id:
-            return None
+        chain = self._chain(source_id, target_id)
 
         if (
-            source_place.column == target_place.column
+            source_place.container_id == target_place.container_id
+            and source_place.column == target_place.column
             and abs(source_place.row - target_place.row) == 1
         ):
             # Neighbors in one column face each other across one channel.
@@ -316,7 +319,7 @@ class _Router:
             )
         ):
             path_ = self._best_path(
-                source_id, source_face_, target_id, target_face_
+                source_id, source_face_, target_id, target_face_, chain
             )
             if path_ is None:
                 continue
@@ -349,6 +352,7 @@ class _Router:
         source_face: Face,
         target_id: str,
         target_face: Face,
+        chain: FrozenSet[Optional[str]],
     ) -> Optional[
         Tuple[
             Tuple[int, float],
@@ -453,7 +457,7 @@ class _Router:
                         item.levels[:-1] + (segment_y_,),
                     )
                 continue
-            for neighbor_ in self.layout.neighbor_channels(item.channel):
+            for neighbor_ in self._neighbors(item.channel, chain):
                 if neighbor_ in item.path:
                     continue
                 turn_ = self._turn_point(item.channel, neighbor_)
@@ -490,7 +494,7 @@ class _Router:
                     closed_levels_,
                 )
                 for through_ in self._through_passes(
-                    item.channel, x, neighbor_, segment_y_
+                    item.channel, x, neighbor_, segment_y_, chain
                 ):
                     if through_ not in item.path:
                         push(
@@ -511,48 +515,117 @@ class _Router:
         x: float,
         vertical: StructureChannelId,
         y: float,
+        chain: FrozenSet[Optional[str]],
     ) -> List[StructureChannelId]:
         """
         Return the channels that a horizontal line enters by a through pass.
 
         spec.md, section "Сквозной проход". The line goes along the channel
         from x at the height y and crosses the vertical channel straight.
-        On the other side, the line continues at the same height:
+        The other side of the vertical channel is a column. The line
+        continues there at the same height:
 
-        - in a column channel whose lane lies at this height;
-        - in the space under the columns (the bottom corridor), if the
-          columns it passes over end at least the clearance above.
+        - a column of simple nodes: in a column channel whose lane lies at
+          this height;
+        - a column of a container on the chain: in a horizontal channel of
+          the container at the facing side face whose lane lies at this
+          height;
+        - in both cases, in the space under the column (the bottom
+          corridor), if the columns it passes over end at least the
+          clearance above.
 
         In the route, the through pass is a vertical segment of zero length,
         so the channels still alternate.
         """
 
-        columns = self.layout.columns[channel.container_id]
+        container_id = vertical.container_id
+        columns = self.layout.columns[container_id]
         vertical_x = _center_x(self.channel_rects[vertical])
         column_index = vertical.index if x < vertical_x else vertical.index - 1
         if not 0 <= column_index < len(columns):
             return []
         column = columns[column_index]
-        result: List[StructureChannelId] = []
+        # The space under the column belongs to this container: the line can
+        # always pass there, see _segment_y.
+        candidates: List[StructureChannelId] = [
+            StructureChannelId(ChannelKind.BOTTOM_CORRIDOR, container_id)
+        ]
         if not column.is_composite:
-            for gap_ in range(len(column.node_ids) - 1):
-                gap_channel_ = StructureChannelId(
-                    ChannelKind.COLUMN,
-                    channel.container_id,
-                    column_index,
-                    gap_,
-                )
-                if _center_y(self.channel_rects[gap_channel_]) == y:
-                    result.append(gap_channel_)
-        # The segment under the columns checks the columns it passes over
-        # when it ends, see _segment_y.
-        if channel.kind is ChannelKind.COLUMN:
-            result.append(
+            candidates.extend(
                 StructureChannelId(
-                    ChannelKind.BOTTOM_CORRIDOR, channel.container_id
+                    ChannelKind.COLUMN, container_id, column_index, gap_
                 )
+                for gap_ in range(len(column.node_ids) - 1)
             )
+        elif column.node_ids[0] in chain:
+            # The channels of the container at the facing side face. Its own
+            # bottom corridor has no fixed height, like the space under the
+            # column.
+            candidates.extend(
+                horizontal_
+                for horizontal_ in self.side_face_links.get(vertical, [])
+                if horizontal_.container_id == column.node_ids[0]
+            )
+        result = [
+            candidate_
+            for candidate_ in candidates
+            if candidate_ != channel
+            and (
+                candidate_.kind is ChannelKind.BOTTOM_CORRIDOR
+                or _center_y(self.channel_rects[candidate_]) == y
+            )
+        ]
         return result
+
+    def _chain(
+        self, source_id: str, target_id: str
+    ) -> FrozenSet[Optional[str]]:
+        """
+        Return the containers of the chain of a relation.
+
+        spec.md, section "Цепочка контейнеров": the containers of the source
+        up to the common container, and down to the target.
+        """
+
+        def containers(node_id: str) -> List[Optional[str]]:
+            result_: List[Optional[str]] = []
+            parent_id_ = self.normalized_graph.parent_ids[node_id]
+            while True:
+                result_.append(parent_id_)
+                if parent_id_ is None:
+                    return result_
+                parent_id_ = self.normalized_graph.parent_ids[parent_id_]
+
+        source_containers = containers(source_id)
+        target_containers = containers(target_id)
+        common = next(
+            container_id_
+            for container_id_ in source_containers
+            if container_id_ in target_containers
+        )
+        return frozenset(
+            source_containers[: source_containers.index(common) + 1]
+            + target_containers[: target_containers.index(common) + 1]
+        )
+
+    def _neighbors(
+        self, channel: StructureChannelId, chain: FrozenSet[Optional[str]]
+    ) -> List[StructureChannelId]:
+        """
+        Return the channels that touch a channel, within the chain.
+
+        The channels of one container touch as in the layout. A horizontal
+        channel of a container that touches its outer vertical channel also
+        touches the vertical channel of the parent next to that side face:
+        the relation leaves or enters the container there.
+        """
+
+        return [
+            neighbor_
+            for neighbor_ in self.layout.neighbor_channels(channel)
+            + self.side_face_links.get(channel, [])
+            if neighbor_.container_id in chain
+        ]
 
     def _stub_length(
         self, node_id: str, face: Face, channel: StructureChannelId
@@ -675,19 +748,23 @@ class _Router:
             for position_, channel_ in enumerate(channels_):
                 if channel_.kind is not ChannelKind.COLUMN:
                     continue
-                # The vertical channel left of column k has the index k.
+                # The levels of the vertical channels are their x.
                 if 0 < position_ < last_:
                     goes_left_ = (
-                        channels_[position_ + 1].index
-                        < channels_[position_ - 1].index
+                        plan_.levels[position_ + 1]
+                        < plan_.levels[position_ - 1]
                     )
                     kind_ = 2
                 elif position_ == 0 and last_ > 0:
-                    to_left_ = channels_[1].index == channel_.index
+                    to_left_ = plan_.levels[1] < _center_x(
+                        self.estimate.node_rects[plan_.edge.source_id]
+                    )
                     goes_left_ = to_left_
                     kind_ = 0 if to_left_ else 1
                 elif position_ == last_ and last_ > 0:
-                    from_left_ = channels_[last_ - 1].index == channel_.index
+                    from_left_ = plan_.levels[last_ - 1] < _center_x(
+                        self.estimate.node_rects[plan_.edge.target_id]
+                    )
                     goes_left_ = not from_left_
                     kind_ = 0 if from_left_ else 1
                 else:
@@ -745,7 +822,8 @@ class _Router:
                     _center_y(rects[channels[other_]])
                     for other_ in (position_ - 2, position_ + 2)
                     if 0 <= other_ <= last
-                    and channels[other_].kind is ChannelKind.COLUMN
+                    and channels[other_].kind
+                    in (ChannelKind.COLUMN, ChannelKind.TOP_CORRIDOR)
                 ),
                 self.config,
             )
@@ -1086,6 +1164,42 @@ def _segment_end(route: StructureRoute, position: int) -> SegmentEnd:
     )
 
 
+def _side_face_links(
+    layout: StructureLayout,
+) -> Dict[StructureChannelId, List[StructureChannelId]]:
+    """
+    Link the channels of each container with its parent at the side faces.
+
+    A horizontal channel that touches the outer vertical channel of a
+    container links to the vertical channel of the parent next to that side
+    face, in both directions.
+    """
+
+    result: Dict[StructureChannelId, List[StructureChannelId]] = {}
+    for container_id_, columns_ in layout.columns.items():
+        for column_index_, column_ in enumerate(columns_):
+            if not column_.is_composite:
+                continue
+            child_id_ = column_.node_ids[0]
+            child_columns_ = layout.columns[child_id_]
+            for parent_index_, child_index_ in (
+                (column_index_, 0),
+                (column_index_ + 1, len(child_columns_)),
+            ):
+                parent_vertical_ = StructureChannelId(
+                    ChannelKind.VERTICAL, container_id_, parent_index_
+                )
+                child_vertical_ = StructureChannelId(
+                    ChannelKind.VERTICAL, child_id_, child_index_
+                )
+                for horizontal_ in layout.neighbor_channels(child_vertical_):
+                    if not horizontal_.is_horizontal:
+                        continue
+                    result.setdefault(parent_vertical_, []).append(horizontal_)
+                    result.setdefault(horizontal_, []).append(parent_vertical_)
+    return result
+
+
 def _through_lanes(route: StructureRoute, position: int) -> Tuple[LaneEnd, ...]:
     """
     Return the column channel lanes that a segment can continue straight.
@@ -1098,7 +1212,8 @@ def _through_lanes(route: StructureRoute, position: int) -> Tuple[LaneEnd, ...]:
         LaneEnd(channel=route.channels[other_], lane=route.lanes[other_])
         for other_ in (position - 2, position + 2)
         if 0 <= other_ < len(route.channels)
-        and route.channels[other_].kind is ChannelKind.COLUMN
+        and route.channels[other_].kind
+        in (ChannelKind.COLUMN, ChannelKind.TOP_CORRIDOR)
     )
 
 

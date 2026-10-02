@@ -371,7 +371,15 @@ class _GeometryBuilder:
             column_spans.append((x, x + column_width_, column_height_))
             x += column_width_
 
+        area_width = x
+
         def end_x(end: SegmentEnd) -> float:
+            if isinstance(end, LaneEnd) and end.channel not in verticals:
+                # The segment leaves the container through a side face: the
+                # lane lies in the parent next to that face.
+                assert container_id is not None
+                own_column_ = self.layout.places[container_id].column
+                return 0.0 if end.channel.index == own_column_ else area_width
             if isinstance(end, LaneEnd):
                 return verticals[end.channel] + centered_lane_offset(
                     self._channel_size(end.channel),
@@ -397,8 +405,8 @@ class _GeometryBuilder:
                 low_,
                 high_,
                 (
-                    self._column_lane_y(
-                        columns, through_.channel, through_.lane
+                    self._through_lane_y(
+                        container_id, through_.channel, through_.lane
                     )
                     for through_ in segment_.through_lanes
                 ),
@@ -444,12 +452,42 @@ class _GeometryBuilder:
         self.corridors[container_id] = corridor
         return corridor
 
-    def _column_lane_y(
+    def _through_lane_y(
         self,
-        columns: Tuple[ContainerColumn, ...],
+        container_id: Optional[str],
         channel: StructureChannelId,
         lane: int,
     ) -> float:
+        """
+        Return the y of a lane that a segment continues straight.
+
+        The lane lies in a column channel of the container, or in a column
+        channel or the top corridor of a child container. The y counts from
+        the top of the columns of the container. A child container stands at
+        the top of its column.
+        """
+
+        if channel.container_id == container_id:
+            return self._column_lane_y(channel, lane)
+        assert channel.container_id is not None
+        child_top = self.config.container_header_height
+        top_corridor = StructureChannelId(
+            ChannelKind.TOP_CORRIDOR, channel.container_id
+        )
+        if channel == top_corridor:
+            return child_top + centered_lane_offset(
+                self._channel_size(top_corridor),
+                self.lane_counts[top_corridor],
+                lane,
+                self.config,
+            )
+        return (
+            child_top
+            + self._channel_size(top_corridor)
+            + self._column_lane_y(channel, lane)
+        )
+
+    def _column_lane_y(self, channel: StructureChannelId, lane: int) -> float:
         """
         Return the y of a column channel lane from the top of the columns.
         """
@@ -466,7 +504,9 @@ class _GeometryBuilder:
             )
             for gap_ in range(channel.gap)
         )
-        assert not columns[channel.index].is_composite
+        assert not self.layout.columns[channel.container_id][
+            channel.index
+        ].is_composite
         return (
             (channel.gap + 1) * config.node_height
             + above

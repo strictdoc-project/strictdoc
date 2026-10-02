@@ -556,6 +556,26 @@ MUTATIONS = (
         "    return max(config.min_channel_size, (lane_count + 1) * config.lane_pitch)\n",
     ),
     Mutation(
+        "XC1",
+        "the lane height of a child container ignores its header",
+        STRUCTURE_GEOMETRY,
+        "        child_top = self.config.container_header_height\n",
+        "        child_top = 0.0\n",
+    ),
+    Mutation(
+        "XC2",
+        "a through pass loses the space under a container column",
+        STRUCTURE_ROUTING,
+        "        candidates: List[StructureChannelId] = [\n"
+        "            StructureChannelId(ChannelKind.BOTTOM_CORRIDOR, container_id)\n"
+        "        ]",
+        "        candidates: List[StructureChannelId] = (\n"
+        "            [StructureChannelId(ChannelKind.BOTTOM_CORRIDOR, container_id)]\n"
+        "            if not column.is_composite\n"
+        "            else []\n"
+        "        )",
+    ),
+    Mutation(
         "CL1",
         "column lane count rule ignores the lane reuse between the sides",
         STRUCTURE_ROUTING,
@@ -573,8 +593,8 @@ MUTATIONS = (
         "TP3",
         "through pass into a column channel at another height",
         STRUCTURE_ROUTING,
-        "if _center_y(self.channel_rects[gap_channel_]) == y:",
-        "if True:",
+        "or _center_y(self.channel_rects[candidate_]) == y",
+        "or True",
     ),
     Mutation(
         "TP4",

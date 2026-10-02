@@ -165,6 +165,26 @@ def test_fewest_bends_win_over_the_shortest_length() -> None:
     ]
 
 
+def test_relation_enters_a_section_straight() -> None:
+    """
+    A relation leaves a section and enters the next one straight.
+
+    The other side of a vertical channel is a column. For a column of a
+    container on the chain, the line continues in a channel of the
+    container at the facing side face, at the same height.
+
+    Code: structure_geometry._GeometryBuilder._through_lane_y.
+    Fails if:
+    - the height of a lane in a child container is counted wrong.
+    """
+
+    normalized_graph, _, _, paths = _result(
+        _case("Relation between two sections")
+    )
+
+    assert len(paths[_edge_id(normalized_graph, "S1", "T2")]) == 4
+
+
 def test_bottom_segment_lies_below_the_columns_it_passes_over() -> None:
     """
     A segment in the bottom corridor lies the clearance below the columns

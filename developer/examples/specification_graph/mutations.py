@@ -487,8 +487,8 @@ MUTATIONS = (
         "TP2",
         "segment under the columns ignores the height of its through pass",
         STRUCTURE_GEOMETRY,
-        "            if through_y_ is not None:\n                through_lines",
-        "            if False:\n                through_lines",
+        "through_y_ if through_y_ is not None else lowest_y_",
+        "lowest_y_",
     ),
     Mutation(
         "RW1",
@@ -501,13 +501,17 @@ MUTATIONS = (
         "RW2",
         "lane order applies across the rows under the columns",
         STRUCTURE_GEOMETRY,
-        "            if through_y_ is not None:\n"
-        "                through_lines.append((segment_, low_, high_, through_y_))\n"
-        "            else:\n"
-        "                corridor_lines.append((segment_, low_, high_, lowest_y_))\n",
-        "            corridor_lines.append(\n"
-        "                (segment_, low_, high_, through_y_ or lowest_y_)\n"
-        "            )\n",
+        "            if not is_row_:\n"
+        "                for placed_low_, placed_high_, placed_y_ in corridor_placed:",
+        "            if True:\n"
+        "                for placed_low_, placed_high_, placed_y_ in placed:",
+    ),
+    Mutation(
+        "RW3",
+        "segments under the columns meet by height, not by lane order",
+        STRUCTURE_GEOMETRY,
+        "bases, key=lambda base_: (base_[0].lane, base_[0].key)",
+        "bases, key=lambda base_: (not base_[4], base_[3], base_[0].lane)",
     ),
     Mutation(
         "ST1",

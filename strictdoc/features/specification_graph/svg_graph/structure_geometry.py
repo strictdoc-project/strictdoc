@@ -336,15 +336,17 @@ class _GeometryBuilder:
 
         A segment continues a column channel lane straight if the height of
         that lane fits under the columns the segment passes over. Such a
-        segment keeps the height of the lane: it belongs to the row of that
-        lane. The other segments form the corridor: in lane order, each lies
-        the clearance below the lowest column it passes over, and at least
-        one lane pitch below each overlapping corridor segment with a
-        smaller lane. Right-hand traffic, which gives the lane order, thus
-        applies within one row or within the corridor, never across them. A
-        segment that meets an overlapping segment closer than one lane pitch
-        moves down. The corridor size below the tallest column fits the
-        lowest segment.
+        segment takes the height of the lane: it belongs to the row of that
+        lane. The other segments form the corridor: each lies the clearance
+        below the lowest column it passes over, and at least one lane pitch
+        below each overlapping corridor segment with a smaller lane.
+
+        The segments take their places in lane order, which follows
+        right-hand traffic. A segment that meets an overlapping placed
+        segment closer than one lane pitch moves down. So the lane order
+        decides where two segments meet, and segments of different rows
+        keep their own heights. The corridor size below the tallest column
+        fits the lowest segment.
         """
 
         if container_id in self.corridors:
@@ -383,8 +385,8 @@ class _GeometryBuilder:
                 + port_offset(end.slot, end.list_size, node_width_, config)
             )
 
-        through_lines: List[Tuple[CorridorSegment, float, float, float]] = []
-        corridor_lines: List[Tuple[CorridorSegment, float, float, float]] = []
+        # (segment, low x, high x, base height, the segment is in a row).
+        bases: List[Tuple[CorridorSegment, float, float, float, bool]] = []
         for segment_ in self.bottom_segments.get(container_id, []):
             first_x_, second_x_ = (end_x(end_) for end_ in segment_.ends)
             low_, high_ = min(first_x_, second_x_), max(first_x_, second_x_)
@@ -400,31 +402,31 @@ class _GeometryBuilder:
                 ),
                 config,
             )
-            if through_y_ is not None:
-                through_lines.append((segment_, low_, high_, through_y_))
-            else:
-                corridor_lines.append((segment_, low_, high_, lowest_y_))
+            is_row_ = through_y_ is not None
+            bases.append(
+                (
+                    segment_,
+                    low_,
+                    high_,
+                    through_y_ if through_y_ is not None else lowest_y_,
+                    is_row_,
+                )
+            )
 
         lines: Dict[Tuple[str, int], Tuple[float, float, float]] = {}
         placed: List[Tuple[float, float, float]] = []
-        for segment_, low_, high_, base_y_ in sorted(
-            through_lines,
-            key=lambda line_: (line_[3], line_[0].lane, line_[0].key),
-        ):
-            y_ = _free_y(base_y_, low_, high_, placed, config.lane_pitch)
-            placed.append((low_, high_, y_))
-            lines[segment_.key] = (low_, high_, y_)
         corridor_placed: List[Tuple[float, float, float]] = []
-        for segment_, low_, high_, base_y_ in sorted(
-            corridor_lines,
-            key=lambda line_: (line_[0].lane, line_[0].key),
+        for segment_, low_, high_, base_y_, is_row_ in sorted(
+            bases, key=lambda base_: (base_[0].lane, base_[0].key)
         ):
             y_ = base_y_
-            for placed_low_, placed_high_, placed_y_ in corridor_placed:
-                if not (high_ < placed_low_ or placed_high_ < low_):
-                    y_ = max(y_, placed_y_ + config.lane_pitch)
+            if not is_row_:
+                for placed_low_, placed_high_, placed_y_ in corridor_placed:
+                    if not (high_ < placed_low_ or placed_high_ < low_):
+                        y_ = max(y_, placed_y_ + config.lane_pitch)
             y_ = _free_y(y_, low_, high_, placed, config.lane_pitch)
-            corridor_placed.append((low_, high_, y_))
+            if not is_row_:
+                corridor_placed.append((low_, high_, y_))
             placed.append((low_, high_, y_))
             lines[segment_.key] = (low_, high_, y_)
         tallest = max((bottom_ for _, _, bottom_ in column_spans), default=0)

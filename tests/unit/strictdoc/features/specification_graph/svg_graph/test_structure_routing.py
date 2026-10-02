@@ -367,6 +367,28 @@ def test_foreign_line_does_not_split_a_ribbon() -> None:
     assert ribbon[1] - ribbon[0] == 1
 
 
+def test_lane_order_decides_where_segments_under_the_columns_meet() -> None:
+    """
+    Two segments under the columns that meet take the order of their lanes.
+
+    A2 -> L2 and L2 -> A2 run under the section U in opposite directions.
+    L2 -> A2 can keep the height of its column channel lane, A2 -> L2 lies
+    by the contour. Their heights are closer than one lane pitch. A2 -> L2
+    goes left, so right-hand traffic puts it above. The pair does not make
+    a loop.
+
+    Code: structure_geometry._GeometryBuilder._bottom_corridor.
+    Fails if:
+    - the segments meet by height instead of by lane order.
+    """
+
+    normalized_graph, _, _, paths = _result(_case("Steps beside a pocket"))
+
+    left = paths[_edge_id(normalized_graph, "A2", "L2")]
+    right = paths[_edge_id(normalized_graph, "L2", "A2")]
+    assert crossing_count(left, right) == 0
+
+
 # One segment of a route in a channel: the start and the end of the
 # segment, the lane, and whether its two legs go to the high side (down or
 # right) or None if they go to different sides.

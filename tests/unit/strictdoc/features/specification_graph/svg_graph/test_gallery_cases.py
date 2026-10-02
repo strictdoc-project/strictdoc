@@ -35,6 +35,7 @@ from strictdoc.features.specification_graph.svg_graph.normalization import (
 )
 from tests.unit.strictdoc.features.specification_graph.svg_graph.geometry_checks import (
     geometry_problems,
+    off_grid_segments,
 )
 
 LEVELS_CASES = [
@@ -158,6 +159,7 @@ def test_levels_geometry_invariants(
     - the outermost port ignores the port margin.
     - a horizontal channel gives the outermost lane less room than the lane
       clearance.
+    - a segment between the port stubs misses the grid of the lane pitch.
     """
 
     normalized_graph = normalize_graph(case.graph)
@@ -165,6 +167,9 @@ def test_levels_geometry_invariants(
     routing = compute_levels_routing(normalized_graph, structure, options)
     geometry = compute_levels_geometry(structure, routing)
 
+    assert (
+        off_grid_segments(geometry.edge_paths, geometry.config.lane_pitch) == []
+    )
     assert (
         geometry_problems(
             geometry.edge_paths,

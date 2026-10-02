@@ -6,6 +6,7 @@ node coordinates. Stage 7 converts the routes into polylines. Stage 7 does
 not search for routes: it only converts lanes and ports into coordinates.
 """
 
+import math
 from dataclasses import dataclass
 from typing import Callable, Dict, List, Mapping, Optional, Tuple
 
@@ -32,11 +33,11 @@ class GeometryConfig:
     The layout parameters define the space. The arrowhead size follows from
     them: the layout does not depend on the arrowhead style.
 
-    The vertical sizes are set in lane pitches, so they are multiples of the
-    lane pitch by construction. Then every horizontal segment lies on one
-    grid: two segments of one relation lie at the same height or at least
-    one lane pitch apart, and a step between them is never smaller than one
-    lane pitch.
+    The sizes of the layout are set in lane pitches, so they are multiples
+    of the lane pitch by construction. Then every segment lies on one grid:
+    two parallel segments of one relation lie on one line or at least one
+    lane pitch apart, and a step between them is never smaller than one lane
+    pitch.
     """
 
     # Channels.
@@ -52,7 +53,7 @@ class GeometryConfig:
 
     # Nodes.
     # Minimum node width. A column with crowded gates gets wider nodes.
-    node_width: float = 160
+    node_width_pitches: int = 20
     # Three lines of the title.
     node_height_pitches: int = 7
 
@@ -86,6 +87,10 @@ class GeometryConfig:
     @property
     def min_channel_size(self) -> float:
         return self.min_channel_pitches * self.lane_pitch
+
+    @property
+    def node_width(self) -> float:
+        return self.node_width_pitches * self.lane_pitch
 
     @property
     def node_height(self) -> float:
@@ -268,11 +273,21 @@ def vertical_channel_size(lane_count: int, config: GeometryConfig) -> float:
     """
     Return the size of a vertical channel.
 
-    The lanes run along the side faces of the nodes, where no arrowhead
-    ends, so one lane pitch separates the outermost lane from a node.
+    A vertical channel follows the rule of a horizontal channel: the lane
+    clearance on both sides of the lanes. The lanes stay on the grid of the
+    lane pitch, and a relation can end at a side face with room for the
+    arrowhead.
     """
 
-    return max(config.min_channel_size, (lane_count + 1) * config.lane_pitch)
+    return horizontal_channel_size(lane_count, config)
+
+
+def grid_ceil(value: float, config: GeometryConfig) -> float:
+    """
+    Return the smallest multiple of the lane pitch not less than the value.
+    """
+
+    return math.ceil(value / config.lane_pitch) * config.lane_pitch
 
 
 def _lane_offset(
@@ -359,7 +374,7 @@ def _column_widths(
         needed_ = (
             sizes_[-1] + sizes_[1]
         ) * config.min_port_pitch + 2 * config.port_margin
-        widths[column_] = max(widths[column_], needed_)
+        widths[column_] = max(widths[column_], grid_ceil(needed_, config))
     return widths
 
 

@@ -40,6 +40,7 @@ from strictdoc.features.specification_graph.svg_graph.structure_routing import (
 from tests.unit.strictdoc.features.specification_graph.svg_graph.geometry_checks import (
     crossing_count,
     geometry_problems,
+    off_grid_segments,
 )
 
 STRUCTURE_CASES = [
@@ -392,27 +393,25 @@ def test_lane_order_decides_where_segments_under_the_columns_meet() -> None:
 @pytest.mark.parametrize(
     "case", STRUCTURE_CASES, ids=[case_.title for case_ in STRUCTURE_CASES]
 )
-def test_horizontal_segments_lie_on_the_lane_grid(case: GalleryCase) -> None:
+def test_segments_lie_on_the_lane_grid(case: GalleryCase) -> None:
     """
-    Every horizontal segment lies on the grid of the lane pitch.
+    Every segment between the port stubs lies on the grid of the lane pitch.
 
-    All vertical sizes are multiples of the lane pitch, so two horizontal
-    segments of one relation lie at the same height or at least one lane
-    pitch apart.
+    All sizes of the layout are multiples of the lane pitch, so two parallel
+    segments of one relation lie on one line or at least one lane pitch
+    apart.
 
     Code: levels_geometry.GeometryConfig,
+    levels_geometry.vertical_channel_size,
     structure_geometry.compute_structure_geometry.
     Fails if:
-    - a vertical size is not a multiple of the lane pitch.
+    - a size of the layout is not a multiple of the lane pitch.
+    - the centered lanes of a vertical channel miss the grid.
     """
 
     _, _, geometry, paths = _result(case)
 
-    pitch = geometry.config.lane_pitch
-    for path_ in paths.values():
-        for start_, end_ in zip(path_, path_[1:]):
-            if start_.y == end_.y:
-                assert start_.y % pitch == 0
+    assert off_grid_segments(paths, geometry.config.lane_pitch) == []
 
 
 # One segment of a route in a channel: the start and the end of the

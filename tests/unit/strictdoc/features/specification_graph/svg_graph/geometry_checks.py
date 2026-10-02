@@ -3,7 +3,7 @@ Geometry checks shared by the tests of the layout modes.
 """
 
 from itertools import combinations
-from typing import Callable, Dict, List, Mapping, Tuple
+from typing import Callable, Dict, List, Mapping, Sequence, Tuple
 
 from strictdoc.features.specification_graph.svg_graph.levels_geometry import (
     Point,
@@ -130,3 +130,25 @@ def _point_on_segment(point: Point, segment: _Segment) -> bool:
     if start.y == end.y == point.y:
         return min(start.x, end.x) <= point.x <= max(start.x, end.x)
     return False
+
+
+def off_grid_segments(
+    edge_paths: Mapping[str, Sequence[Point]], pitch: float
+) -> List[str]:
+    """
+    Return the segments that miss the grid of the lane pitch.
+
+    A horizontal segment must lie on a grid row, a vertical segment on a
+    grid column. The first and the last segments start at the ports and
+    are not checked: the ports stand at the port pitch.
+    """
+
+    problems: List[str] = []
+    for edge_id_, path_ in edge_paths.items():
+        segments_ = list(zip(path_, path_[1:]))[1:-1]
+        for start_, end_ in segments_:
+            if start_.y == end_.y and start_.y % pitch != 0:
+                problems.append(f"{edge_id_}: row {start_.y}")
+            if start_.x == end_.x and start_.x % pitch != 0:
+                problems.append(f"{edge_id_}: column {start_.x}")
+    return problems

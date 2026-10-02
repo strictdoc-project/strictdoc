@@ -339,7 +339,7 @@ MUTATIONS = (
         "G2",
         "column does not widen",
         GEOMETRY,
-        "widths[column_] = max(widths[column_], needed_)",
+        "widths[column_] = max(widths[column_], grid_ceil(needed_, config))",
         "widths[column_] = widths[column_]",
     ),
     Mutation(
@@ -547,6 +547,13 @@ MUTATIONS = (
         GEOMETRY,
         "        return self.node_height_pitches * self.lane_pitch\n",
         "        return self.node_height_pitches * self.lane_pitch - 4\n",
+    ),
+    Mutation(
+        "GR2",
+        "vertical channel without the lane clearance",
+        GEOMETRY,
+        "    return horizontal_channel_size(lane_count, config)\n",
+        "    return max(config.min_channel_size, (lane_count + 1) * config.lane_pitch)\n",
     ),
     Mutation(
         "CL1",

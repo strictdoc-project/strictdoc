@@ -1045,6 +1045,94 @@ SERIALIZATION_CASES: Tuple[GalleryCase, ...] = (
     ),
 )
 
-GALLERY_CASES: Tuple[GalleryCase, ...] = (
+
+@dataclass(frozen=True)
+class GalleryChapter:
+    title: str
+    cases: Tuple[GalleryCase, ...]
+
+
+_ALL_CASES: Tuple[GalleryCase, ...] = (
     SERIALIZATION_CASES + STRUCTURE_CASES + LEVELS_CASES + EXTREME_GATE_CASES
+)
+
+
+def _chapter(title: str, *case_titles: str) -> GalleryChapter:
+    by_title = {case_.title: case_ for case_ in _ALL_CASES}
+    return GalleryChapter(
+        title=title,
+        cases=tuple(by_title[case_title_] for case_title_ in case_titles),
+    )
+
+
+GALLERY_CHAPTERS: Tuple[GalleryChapter, ...] = (
+    _chapter("Serialization", "Titles, relation types, and diagnostics"),
+    _chapter(
+        "Structure: layout",
+        "Document tree from the sketch",
+        "Columns of different height",
+        "Root with connected and unconnected documents",
+        "Root without relations",
+        "Deep nesting",
+        "Long container titles",
+    ),
+    _chapter(
+        "Structure: routes in one container",
+        "Fewest bends before the shortest length",
+        "Fewest bends under a tall section",
+        "Relations that turn together",
+        "Relations inside one container",
+        "Relations inside one container, more ports",
+    ),
+    _chapter(
+        "Structure: space under the columns",
+        "Bottom corridor follows the columns",
+        "Through pass under a short section",
+        "Vertical lane at the height of a column gap",
+        "Lane order in the bottom corridor",
+        "Steps beside a pocket",
+    ),
+    _chapter(
+        "Levels: layout",
+        "Simple chain",
+        "Isolated document + hierarchy",
+        "Real project case: root corrected to sit level with its sibling",
+        "Root correction picks the nearest child, not the farthest",
+        "Corrected root with two non-skip children: sits between them",
+        "Corrected root with THREE non-skip children (odd count)",
+        "Three chains compete for one parent column",
+        "Disconnected components form separate islands",
+        "Standalone nodes wrap to the connected graph width",
+    ),
+    _chapter(
+        "Levels: routes and lanes",
+        "Nested relations in one channel",
+        "Relations across levels from far columns",
+        "Basic highway conflict",
+        "Complete 3 by 3 relation grid",
+        "Direction-aware track order",
+        "Busy channel expands to fit its lanes",
+        "Extreme number of relations from N8",
+    ),
+    _chapter(
+        "Levels: ports and gates",
+        "Opposite ports in one gate",
+        "Many ports in one gate",
+        *(case_.title for case_ in EXTREME_GATE_CASES),
+    ),
+    _chapter(
+        "Levels: cycles",
+        "Two cycles have separate diagnostics",
+        "Three-document cycle with an incoming branch",
+        "Opposite cycle relations use separate routes",
+    ),
+)
+
+GALLERY_CASES: Tuple[GalleryCase, ...] = tuple(
+    case_ for chapter_ in GALLERY_CHAPTERS for case_ in chapter_.cases
+)
+
+# Each case belongs to exactly one chapter.
+assert sorted(case_.title for case_ in GALLERY_CASES) == sorted(
+    case_.title for case_ in _ALL_CASES
 )

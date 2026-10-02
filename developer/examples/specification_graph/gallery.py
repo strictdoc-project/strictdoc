@@ -11,10 +11,11 @@ input, and the result of every implemented generator stage.
 
 import html
 import os
-from typing import List
+import re
+from typing import Dict, List
 
 from developer.examples.specification_graph.gallery_cases import (
-    GALLERY_CASES,
+    GALLERY_CHAPTERS,
     GalleryCase,
 )
 from strictdoc.features.specification_graph.svg_graph import svg_serializer
@@ -59,12 +60,42 @@ OUTPUT_FILE_NAME = "gallery.html"
 
 
 PAGE_STYLE = """
-body { font-family: sans-serif; margin: 24px; color: #222; }
-nav ol { columns: 2; }
+body { font-family: sans-serif; margin: 0; color: #222; }
+.layout { display: flex; align-items: start; }
+aside.sidebar {
+  position: sticky; top: 0; flex: 0 0 222px; height: 100vh;
+  overflow-y: auto; box-sizing: border-box; padding: 16px;
+  border-right: 1px solid #ddd; background: #fafafa; font-size: 13px;
+}
+aside.sidebar h1 { margin: 0 0 12px; font-size: 18px; }
+aside.sidebar input[type=search] {
+  width: 100%; box-sizing: border-box; margin: 8px 0 12px; padding: 4px 6px;
+}
+aside.sidebar details { margin-bottom: 8px; }
+aside.sidebar summary { font-weight: bold; cursor: pointer; }
+aside.sidebar ol { margin: 4px 0 0; padding-left: 20px; }
+aside.sidebar li { margin: 2px 0; }
+aside.sidebar a { color: #235; text-decoration: none; }
+aside.sidebar a.active { font-weight: bold; color: #b00; }
+main { flex: 1; min-width: 0; padding: 16px 24px; }
+h2.chapter {
+  margin: 32px 0 16px; padding: 6px 10px; background: #333; color: #fff;
+  font-size: 18px;
+}
+details.panels { margin-top: 8px; }
+details.panels > summary { cursor: pointer; color: #555; font-size: 13px; }
+details.panels > .columns { margin-top: 8px; }
+@media (max-width: 900px) {
+  .layout { display: block; }
+  aside.sidebar {
+    position: static; height: auto; border-right: none;
+    border-bottom: 1px solid #ddd;
+  }
+}
 section {
   margin-bottom: 40px; padding-bottom: 24px; border-bottom: 1px solid #ddd;
 }
-h2 { margin-bottom: 4px; }
+section h2 { margin-bottom: 4px; }
 p.description { color: #444; max-width: 800px; }
 .badge {
   display: inline-block; padding: 1px 6px; margin-right: 6px;
@@ -88,6 +119,12 @@ figure.rejected h3 { color: #b00; }
 figure .note { max-width: 520px; font-size: 12px; color: #444; }
 ul.conflicts { margin: 4px 0; font-size: 12px; color: #a50; }
 .preview p { margin: 4px 0; color: #666; font-size: 12px; }
+a.to-top {
+  position: fixed; right: 24px; bottom: 24px; padding: 8px 12px;
+  border-radius: 6px; background: #333; color: #fff; text-decoration: none;
+  font-size: 14px; opacity: 0.8;
+}
+a.to-top:hover { opacity: 1; }
 """
 
 
@@ -100,14 +137,26 @@ GENERATOR_CSS_PATH = os.path.join(
 def main() -> None:
     with open(GENERATOR_CSS_PATH, encoding="utf-8") as css_file:
         generator_css = css_file.read()
-    sections: List[str] = []
-    for index_, case_ in enumerate(GALLERY_CASES):
-        sections.append(_render_case(index_, case_))
-
-    navigation = "\n".join(
-        f'<li><a href="#case-{index_}">{html.escape(case_.title)}</a></li>'
-        for index_, case_ in enumerate(GALLERY_CASES)
-    )
+    anchors = _case_anchors()
+    content: List[str] = []
+    navigation: List[str] = []
+    index = 0
+    for chapter_ in GALLERY_CHAPTERS:
+        content.append(
+            f'<h2 class="chapter">{html.escape(chapter_.title)}</h2>'
+        )
+        items_: List[str] = []
+        for case_ in chapter_.cases:
+            anchor_ = anchors[case_.title]
+            content.append(_render_case(index, anchor_, case_))
+            items_.append(
+                f'<li><a href="#{anchor_}">{html.escape(case_.title)}</a></li>'
+            )
+            index += 1
+        navigation.append(
+            f"<details open><summary>{html.escape(chapter_.title)}</summary>"
+            f"<ol>{''.join(items_)}</ol></details>"
+        )
     page = f"""<!doctype html>
 <html lang="en">
 <head>
@@ -116,22 +165,26 @@ def main() -> None:
 <style>{PAGE_STYLE}</style>
 <style>{generator_css}</style>
 </head>
-<body>
+<body id="top" class="show-debug">
+<a class="to-top" href="#top">&uarr; Top</a>
+<div class="layout">
+<aside class="sidebar">
 <h1>Specification graph gallery</h1>
 <label class="debug-toggle"><input type="checkbox" id="debug-toggle" checked>
-Show debug layer: channels (blue) and lanes (pink)</label>
-<script>
-document.body.classList.add("show-debug");
-document.getElementById("debug-toggle").addEventListener("change", (event) => {{
-  document.body.classList.toggle("show-debug", event.target.checked);
-}});
-</script>
-<p>Regenerate from the repository root: <code>uv run python -m
+Show debug layer</label>
+<input type="search" id="case-filter" placeholder="Filter cases">
+<nav>
+{"".join(navigation)}
+</nav>
+</aside>
+<main>
+<p>Debug layer: channels (blue) and lanes (pink). Regenerate from the
+repository root: <code>uv run python -m
 developer.examples.specification_graph.gallery</code></p>
-<nav><ol>
-{navigation}
-</ol></nav>
-{"".join(sections)}
+{"".join(content)}
+</main>
+</div>
+<script>{PAGE_SCRIPT}</script>
 </body>
 </html>
 """
@@ -141,19 +194,83 @@ developer.examples.specification_graph.gallery</code></p>
     print(f"Written: {output_path}")  # noqa: T201
 
 
-def _render_case(index: int, case: GalleryCase) -> str:
+# The debug toggle, the case filter, and the highlight of the current case
+# in the navigation.
+PAGE_SCRIPT = """
+document.getElementById("debug-toggle").addEventListener("change", (event) => {
+  document.body.classList.toggle("show-debug", event.target.checked);
+});
+document.getElementById("case-filter").addEventListener("input", (event) => {
+  const query = event.target.value.trim().toLowerCase();
+  for (const chapter of document.querySelectorAll("aside nav details")) {
+    let visible = 0;
+    for (const item of chapter.querySelectorAll("li")) {
+      const match = item.textContent.toLowerCase().includes(query);
+      item.hidden = !match;
+      visible += match ? 1 : 0;
+    }
+    chapter.hidden = visible === 0;
+    if (query.length > 0) {
+      chapter.open = true;
+    }
+  }
+});
+const links = new Map();
+for (const link of document.querySelectorAll("aside nav a")) {
+  links.set(link.getAttribute("href").slice(1), link);
+}
+const observer = new IntersectionObserver((entries) => {
+  for (const entry of entries) {
+    if (entry.isIntersecting) {
+      for (const link of links.values()) {
+        link.classList.remove("active");
+      }
+      const link = links.get(entry.target.id);
+      if (link !== undefined) {
+        link.classList.add("active");
+        link.scrollIntoView({block: "nearest"});
+      }
+    }
+  }
+}, {rootMargin: "0px 0px -70% 0px"});
+for (const section of document.querySelectorAll("main section")) {
+  observer.observe(section);
+}
+"""
+
+
+def _case_anchors() -> Dict[str, str]:
+    """
+    Return a stable anchor for each case, made from its title.
+    """
+
+    result: Dict[str, str] = {}
+    used: Dict[str, int] = {}
+    for chapter_ in GALLERY_CHAPTERS:
+        for case_ in chapter_.cases:
+            slug_ = re.sub(r"[^a-z0-9]+", "-", case_.title.lower()).strip("-")
+            count_ = used.get(slug_, 0)
+            used[slug_] = count_ + 1
+            result[case_.title] = slug_ if count_ == 0 else f"{slug_}-{count_}"
+    return result
+
+
+def _render_case(index: int, anchor: str, case: GalleryCase) -> str:
     normalized_graph = normalize_graph(case.graph)
     badges = f'<span class="badge">mode: {case.graph.mode.value}</span>'
     return f"""
-<section id="case-{index}">
+<section id="{anchor}">
 <h2>{html.escape(case.title)}</h2>
 <div>{badges}</div>
 <p class="description">{html.escape(case.description)}</p>
 {_render_routes(index, case, normalized_graph)}
+<details class="panels">
+<summary>Input and stage 1: normalization</summary>
 <div class="columns">
 {_render_input(case)}
 {_render_normalization(normalized_graph)}
 </div>
+</details>
 </section>
 """
 

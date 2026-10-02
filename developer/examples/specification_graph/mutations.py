@@ -542,6 +542,13 @@ MUTATIONS = (
         "",
     ),
     Mutation(
+        "GR1",
+        "a vertical size is off the lane grid",
+        GEOMETRY,
+        "        return self.node_height_pitches * self.lane_pitch\n",
+        "        return self.node_height_pitches * self.lane_pitch - 4\n",
+    ),
+    Mutation(
         "CL1",
         "column lane count rule ignores the lane reuse between the sides",
         STRUCTURE_ROUTING,

@@ -389,6 +389,32 @@ def test_lane_order_decides_where_segments_under_the_columns_meet() -> None:
     assert crossing_count(left, right) == 0
 
 
+@pytest.mark.parametrize(
+    "case", STRUCTURE_CASES, ids=[case_.title for case_ in STRUCTURE_CASES]
+)
+def test_horizontal_segments_lie_on_the_lane_grid(case: GalleryCase) -> None:
+    """
+    Every horizontal segment lies on the grid of the lane pitch.
+
+    All vertical sizes are multiples of the lane pitch, so two horizontal
+    segments of one relation lie at the same height or at least one lane
+    pitch apart.
+
+    Code: levels_geometry.GeometryConfig,
+    structure_geometry.compute_structure_geometry.
+    Fails if:
+    - a vertical size is not a multiple of the lane pitch.
+    """
+
+    _, _, geometry, paths = _result(case)
+
+    pitch = geometry.config.lane_pitch
+    for path_ in paths.values():
+        for start_, end_ in zip(path_, path_[1:]):
+            if start_.y == end_.y:
+                assert start_.y % pitch == 0
+
+
 # One segment of a route in a channel: the start and the end of the
 # segment, the lane, and whether its two legs go to the high side (down or
 # right) or None if they go to different sides.

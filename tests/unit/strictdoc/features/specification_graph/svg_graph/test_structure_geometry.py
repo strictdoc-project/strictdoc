@@ -157,10 +157,10 @@ def test_block_without_row_is_close_to_a_square() -> None:
     geometry = _geometry(_case("Root without relations"))
 
     lefts = {geometry.node_rects[f"Doc {index_}"].x for index_ in range(1, 7)}
-    # Two columns: 520 x 670 px. Three columns give 752 x 486 px, farther
+    # Two columns: 520 x 696 px. Three columns give 752 x 528 px, farther
     # from a square.
     assert len(lefts) == 2
-    assert (geometry.width, geometry.height) == (520, 670)
+    assert (geometry.width, geometry.height) == (520, 696)
 
 
 def test_serializer_draws_containers_before_their_children() -> None:

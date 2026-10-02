@@ -31,12 +31,30 @@ class GeometryConfig:
 
     The layout parameters define the space. The arrowhead size follows from
     them: the layout does not depend on the arrowhead style.
+
+    The vertical sizes are set in lane pitches, so they are multiples of the
+    lane pitch by construction. Then every horizontal segment lies on one
+    grid: two segments of one relation lie at the same height or at least
+    one lane pitch apart, and a step between them is never smaller than one
+    lane pitch.
     """
+
+    # Channels.
+    # Distance between neighbor lanes in a channel. The unit of the vertical
+    # sizes.
+    lane_pitch: float = 8
+    # Distance from the outermost lane of a horizontal channel to the node
+    # face. The last segment of a relation, which ends with the arrowhead,
+    # is at least this long.
+    lane_clearance_pitches: int = 2
+    # Size of a channel with few lanes or no lanes.
+    min_channel_pitches: int = 3
 
     # Nodes.
     # Minimum node width. A column with crowded gates gets wider nodes.
     node_width: float = 160
-    node_height: float = 52
+    # Three lines of the title.
+    node_height_pitches: int = 7
 
     # Ports.
     # Preferred distance between neighbor ports on a face.
@@ -47,29 +65,39 @@ class GeometryConfig:
     # Minimum distance from the outermost port to the node corner.
     port_margin: float = 8
 
-    # Channels.
-    # Distance between neighbor lanes in a channel.
-    lane_pitch: float = 8
-    # Distance from the outermost lane of a horizontal channel to the node
-    # face. The last segment of a relation, which ends with the arrowhead,
-    # is at least this long.
-    lane_clearance: float = 12
-    # Size of a channel with few lanes or no lanes.
-    min_channel_size: float = 24
-
     # Containers (structure mode).
     # Height of the header strip: two lines of the title and the padding.
-    container_header_height: float = 38
+    container_header_pitches: int = 5
 
     # SVG.
     # Empty border around the graph.
-    margin: float = 16
+    margin_pitches: int = 2
 
     # Arrowhead reserves. The arrowhead size is computed from them.
     # Straight part of the last segment before the arrowhead.
-    arrow_straight: float = 6
+    arrow_straight: float = 10
     # Free space between two neighbor arrowheads at the minimum port pitch.
     arrow_gap: float = 2
+
+    @property
+    def lane_clearance(self) -> float:
+        return self.lane_clearance_pitches * self.lane_pitch
+
+    @property
+    def min_channel_size(self) -> float:
+        return self.min_channel_pitches * self.lane_pitch
+
+    @property
+    def node_height(self) -> float:
+        return self.node_height_pitches * self.lane_pitch
+
+    @property
+    def container_header_height(self) -> float:
+        return self.container_header_pitches * self.lane_pitch
+
+    @property
+    def margin(self) -> float:
+        return self.margin_pitches * self.lane_pitch
 
     @property
     def arrow_length(self) -> float:

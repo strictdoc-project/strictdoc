@@ -530,6 +530,13 @@ MUTATIONS = (
         "while False:",
     ),
     Mutation(
+        "RB1",
+        "a foreign line may split a ribbon",
+        LANES,
+        "        _keep_ribbons(half_segments_, before_, free_, forced_pairs)\n",
+        "",
+    ),
+    Mutation(
         "CL1",
         "column lane count rule ignores the lane reuse between the sides",
         STRUCTURE_ROUTING,

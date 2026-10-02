@@ -334,6 +334,39 @@ def test_shared_stretch_keeps_the_nested_route_inside() -> None:
     assert crossings(("C3", "A3"), ("C1", "C3")) == 1
 
 
+def test_foreign_line_does_not_split_a_ribbon() -> None:
+    """
+    A foreign line passes a ribbon from one side, if this costs no crossing.
+
+    C2 -> A2 and L2 -> C2 run side by side from the top face of C2 through
+    the vertical channel left of C. C1 -> C3 goes down the same vertical
+    channel. It crosses both lines in either order, so it takes the side of
+    the smaller lanes and the two lines of C2 stay together.
+
+    Code: lane_assignment._keep_ribbons.
+    Fails if:
+    - a foreign line with free orders stays between the lines of a ribbon.
+    """
+
+    normalized_graph, routing, _, _ = _result(
+        _case("Relations inside one container, more ports")
+    )
+
+    def vertical_lane(source_id: str, target_id: str) -> int:
+        route_ = routing.routes[
+            _edge_id(normalized_graph, source_id, target_id)
+        ]
+        return next(
+            lane_
+            for channel_, lane_ in zip(route_.channels, route_.lanes)
+            if channel_.kind is ChannelKind.VERTICAL and channel_.index == 4
+        )
+
+    ribbon = sorted((vertical_lane("C2", "A2"), vertical_lane("L2", "C2")))
+    assert vertical_lane("C1", "C3") < ribbon[0]
+    assert ribbon[1] - ribbon[0] == 1
+
+
 # One segment of a route in a channel: the start and the end of the
 # segment, the lane, and whether its two legs go to the high side (down or
 # right) or None if they go to different sides.

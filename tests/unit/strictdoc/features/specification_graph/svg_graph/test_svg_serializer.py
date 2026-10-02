@@ -327,7 +327,9 @@ def test_arrowhead_follows_the_geometry_config() -> None:
     """
 
     case = _case("Simple chain")
-    config = GeometryConfig(lane_clearance_pitches=3, min_port_pitch=10)
+    config = GeometryConfig(
+        lane_clearance_pitches=3, min_port_pitches=2, arrow_gap=8
+    )
     normalized_graph = normalize_graph(case.graph)
     structure = compute_levels_structure(normalized_graph)
     routing = compute_levels_routing(normalized_graph, structure)

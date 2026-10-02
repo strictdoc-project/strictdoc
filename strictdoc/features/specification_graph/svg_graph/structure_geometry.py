@@ -18,6 +18,7 @@ from strictdoc.features.specification_graph.svg_graph.levels_geometry import (
     GeometryConfig,
     Rect,
     horizontal_channel_size,
+    port_list_pitch,
     vertical_channel_size,
 )
 from strictdoc.features.specification_graph.svg_graph.normalization import (
@@ -164,8 +165,9 @@ def port_offset(
 
     if slot == 0:
         return 0
-    available_half_width = node_width / 2 - config.port_margin
-    return slot * min(config.port_pitch, available_half_width / list_size)
+    return slot * port_list_pitch(
+        list_size, node_width / 2 - config.port_margin, config
+    )
 
 
 class _GeometryBuilder:

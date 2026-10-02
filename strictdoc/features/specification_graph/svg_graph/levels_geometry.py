@@ -58,13 +58,13 @@ class GeometryConfig:
     node_height_pitches: int = 7
 
     # Ports.
-    # Preferred distance between neighbor ports on a face.
-    port_pitch: float = 12
-    # A crowded port list shrinks its pitch down to this value. The gate
-    # center shifts and the column widens before the pitch goes lower.
-    min_port_pitch: float = 8
+    # Distance between neighbor ports on a face.
+    port_pitches: int = 2
+    # A port list that does not fit at the port pitch takes this pitch. The
+    # gate center shifts and the column widens before the list overflows.
+    min_port_pitches: int = 1
     # Minimum distance from the outermost port to the node corner.
-    port_margin: float = 8
+    port_margin_pitches: int = 1
 
     # Containers (structure mode).
     # Height of the header strip: two lines of the title and the padding.
@@ -87,6 +87,18 @@ class GeometryConfig:
     @property
     def min_channel_size(self) -> float:
         return self.min_channel_pitches * self.lane_pitch
+
+    @property
+    def port_pitch(self) -> float:
+        return self.port_pitches * self.lane_pitch
+
+    @property
+    def min_port_pitch(self) -> float:
+        return self.min_port_pitches * self.lane_pitch
+
+    @property
+    def port_margin(self) -> float:
+        return self.port_margin_pitches * self.lane_pitch
 
     @property
     def node_width(self) -> float:
@@ -228,11 +240,9 @@ def compute_levels_geometry(
         x = rect.x + rect.width / 2 + gate_layout.center_offset
         if port.slot != 0:
             side = -1 if port.slot < 0 else 1
-            pitch = min(
-                config.port_pitch,
-                gate_layout.side_widths[side] / port.list_size,
+            x += port.slot * port_list_pitch(
+                port.list_size, gate_layout.side_widths[side], config
             )
-            x += port.slot * pitch
         return Point(
             x=x, y=rect.y if port.face is Face.TOP else rect.y + rect.height
         )
@@ -280,6 +290,23 @@ def vertical_channel_size(lane_count: int, config: GeometryConfig) -> float:
     """
 
     return horizontal_channel_size(lane_count, config)
+
+
+def port_list_pitch(
+    list_size: int, available_width: float, config: GeometryConfig
+) -> float:
+    """
+    Return the pitch of a port list on one side of a gate.
+
+    This function is the only place of this rule. A list that fits into the
+    available width at the port pitch takes the port pitch, otherwise the
+    minimum port pitch. Both are multiples of the lane pitch, so the ports
+    stay on the grid.
+    """
+
+    if list_size * config.port_pitch <= available_width:
+        return config.port_pitch
+    return config.min_port_pitch
 
 
 def grid_ceil(value: float, config: GeometryConfig) -> float:

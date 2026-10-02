@@ -346,9 +346,9 @@ MUTATIONS = (
         "G3",
         "pitch comes from the longest list of the gate side",
         GEOMETRY,
-        "gate_layout.side_widths[side] / port.list_size",
-        "gate_layout.side_widths[side] / "
-        "list_sizes_by_gate[_gate_of(port, structure)][side]",
+        "port.list_size, gate_layout.side_widths[side], config",
+        "list_sizes_by_gate[_gate_of(port, structure)][side],"
+        " gate_layout.side_widths[side], config",
     ),
     Mutation(
         "G4",

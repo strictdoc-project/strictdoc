@@ -12,7 +12,7 @@ corridor and the pockets) take their base heights one by one.
 
 import math
 from dataclasses import dataclass
-from typing import Dict, List, Mapping, Optional, Sequence, Tuple
+from typing import Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
 from strictdoc.features.specification_graph.svg_graph.levels_geometry import (
     GeometryConfig,
@@ -114,6 +114,30 @@ def corridor_contour(
             if low < right_ and high > left_
         ),
         default=max(bottom_ for _, _, bottom_ in column_spans),
+    )
+
+
+def corridor_segment_y(
+    column_spans: Sequence[ColumnSpan],
+    low: float,
+    high: float,
+    through_heights: Iterable[float],
+    config: GeometryConfig,
+) -> Tuple[float, Optional[float]]:
+    """
+    Return the heights of a segment under the columns.
+
+    This function is the only place of this rule. spec.md, section
+    "Геометрия контейнера". The segment spans from low to high. Return the
+    lowest height it may take, the clearance below the lowest column it
+    passes over, and the first through height that is not higher, or None.
+    A through height is the height of a column channel lane that the
+    segment continues straight.
+    """
+
+    lowest = corridor_contour(column_spans, low, high) + config.lane_clearance
+    return lowest, next(
+        (height_ for height_ in through_heights if height_ >= lowest), None
     )
 
 
@@ -364,21 +388,17 @@ class _GeometryBuilder:
         for segment_ in self.bottom_segments.get(container_id, []):
             first_x_, second_x_ = (end_x(end_) for end_ in segment_.ends)
             low_, high_ = min(first_x_, second_x_), max(first_x_, second_x_)
-            lowest_y_ = corridor_contour(column_spans, low_, high_) + (
-                config.lane_clearance
-            )
-            through_y_ = next(
+            lowest_y_, through_y_ = corridor_segment_y(
+                column_spans,
+                low_,
+                high_,
                 (
-                    lane_y_
-                    for lane_y_ in (
-                        self._column_lane_y(
-                            columns, through_.channel, through_.lane
-                        )
-                        for through_ in segment_.through_lanes
+                    self._column_lane_y(
+                        columns, through_.channel, through_.lane
                     )
-                    if lane_y_ >= lowest_y_
+                    for through_ in segment_.through_lanes
                 ),
-                None,
+                config,
             )
             if through_y_ is not None:
                 through_lines.append((segment_, low_, high_, through_y_))

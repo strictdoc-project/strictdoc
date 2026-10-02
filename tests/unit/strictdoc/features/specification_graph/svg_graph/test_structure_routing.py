@@ -314,8 +314,8 @@ def test_shared_stretch_keeps_the_nested_route_inside() -> None:
     L2 -> C2 at the top face of C2. C1 -> C3 and C3 -> A3 only touch in the
     vertical channel left of C, so they share one channel only.
 
-    Code: structure_routing._shared_stretch_orders,
-    structure_routing._Router._assign_ports, lane_assignment.assign_lanes.
+    Code: structure_stretches.shared_stretch_orders,
+    gate_ports.number_gate_ports, lane_assignment.assign_lanes.
     Fails if:
     - the rule is not applied.
     - the port order at the shared face does not follow the rule.
@@ -388,7 +388,7 @@ def test_structure_routes_follow_right_hand_traffic(case: GalleryCase) -> None:
     Code: structure_routing._Router._assign_horizontal_lanes,
     structure_routing._Router._assign_vertical_lanes,
     lane_assignment._yield_to_nesting,
-    structure_routing._shared_stretch_orders.
+    structure_stretches.shared_stretch_orders.
     Fails if:
     - the halves of a horizontal or a vertical channel are swapped.
     - a segment that is not nested leaves its half.

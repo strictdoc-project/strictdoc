@@ -36,6 +36,7 @@ LANES = PACKAGE_PATH + "lane_assignment.py"
 GATES = PACKAGE_PATH + "gate_ports.py"
 STRUCTURE_GEOMETRY = PACKAGE_PATH + "structure_geometry.py"
 STRUCTURE_ROUTING = PACKAGE_PATH + "structure_routing.py"
+STRUCTURE_STRETCHES = PACKAGE_PATH + "structure_stretches.py"
 
 
 @dataclass(frozen=True)
@@ -472,22 +473,22 @@ MUTATIONS = (
         "BC4",
         "path cost takes the bottom corridor below the tallest column",
         STRUCTURE_ROUTING,
-        "min(first_x, second_x),\n                max(first_x, second_x),",
-        "0.0,\n                0.0,",
+        "            min(first_x, second_x),\n            max(first_x, second_x),",
+        "            0.0,\n            0.0,",
     ),
     Mutation(
         "TP1",
         "through pass counts as a bend",
         STRUCTURE_ROUTING,
-        "                        (\n                            bends,\n",
-        "                        (\n                            bends + 1,\n",
+        "                            item.bends,\n                            length_,",
+        "                            item.bends + 1,\n                            length_,",
     ),
     Mutation(
         "TP2",
         "segment under the columns ignores the height of its through pass",
         STRUCTURE_GEOMETRY,
-        "if lane_y_ >= lowest_y_",
-        "if False",
+        "            if through_y_ is not None:\n                through_lines",
+        "            if False:\n                through_lines",
     ),
     Mutation(
         "RW1",
@@ -511,21 +512,21 @@ MUTATIONS = (
     Mutation(
         "ST1",
         "shared stretches of two or more channels are not ordered",
-        STRUCTURE_ROUTING,
-        "    if length < 2:\n        return\n",
-        "    if True:\n        return\n",
+        STRUCTURE_STRETCHES,
+        "    if length < 2:\n        return None\n",
+        "    if True:\n        return None\n",
     ),
     Mutation(
         "ST2",
         "port order at a shared face ignores the shared stretch rule",
-        STRUCTURE_ROUTING,
+        GATES,
         "if (inner_.slot > outer_.slot) != order_.inner_is_right:",
         "if False:",
     ),
     Mutation(
         "ST3",
         "a shared stretch keeps the channels where the routes only touch",
-        STRUCTURE_ROUTING,
+        STRUCTURE_STRETCHES,
         "while length > 0 and overlap(length - 1) <= 0:",
         "while False:",
     ),
@@ -560,9 +561,9 @@ MUTATIONS = (
     Mutation(
         "TP4",
         "through pass under a column that is too low",
-        STRUCTURE_ROUTING,
-        "return y if y >= lowest_y else None",
-        "return y",
+        STRUCTURE_GEOMETRY,
+        "for height_ in through_heights if height_ >= lowest",
+        "for height_ in through_heights",
     ),
     Mutation(
         "NE1",

@@ -5,9 +5,9 @@ spec.md, section "Порты", defines the rule. A gate is the pair of faces tha
 open into one horizontal channel in one column.
 """
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from enum import Enum
-from typing import Dict, List, Tuple
+from typing import Dict, List, Sequence, Tuple
 
 
 class Face(Enum):
@@ -49,7 +49,24 @@ class GateEndpoint:
     flows_down: bool = False
 
 
-def number_gate_ports(endpoints: List[GateEndpoint]) -> Dict[EndpointKey, Port]:
+@dataclass(frozen=True)
+class ForcedPortOrder:
+    """
+    The port order of a nested pair on a face where its stretch ends.
+
+    spec.md, section "Общий участок".
+    """
+
+    inner: EndpointKey
+    outer: EndpointKey
+    # The port of the inner route stands right of the port of the outer one.
+    inner_is_right: bool
+
+
+def number_gate_ports(
+    endpoints: List[GateEndpoint],
+    forced: Sequence[ForcedPortOrder] = (),
+) -> Dict[EndpointKey, Port]:
     """
     Assign a slot to each port of one gate.
 
@@ -87,6 +104,10 @@ def number_gate_ports(endpoints: List[GateEndpoint]) -> Dict[EndpointKey, Port]:
     Upper block near the center: for upward edges the unavoidable crossings
     of the two blocks then happen near the source ports, away from the
     arrowheads.
+
+    A forced port order of a nested pair on a shared stretch puts the two
+    ports in the order of the stretch: the pair exchanges its slots if
+    needed.
     """
 
     ports: Dict[EndpointKey, Port] = {}
@@ -125,6 +146,14 @@ def number_gate_ports(endpoints: List[GateEndpoint]) -> Dict[EndpointKey, Port]:
                     slot_,
                     list_size=len(list_),
                 )
+    for order_ in forced:
+        if order_.inner not in ports or order_.outer not in ports:
+            continue
+        inner_ = ports[order_.inner]
+        outer_ = ports[order_.outer]
+        if (inner_.slot > outer_.slot) != order_.inner_is_right:
+            ports[order_.inner] = replace(inner_, slot=outer_.slot)
+            ports[order_.outer] = replace(outer_, slot=inner_.slot)
     return ports
 
 

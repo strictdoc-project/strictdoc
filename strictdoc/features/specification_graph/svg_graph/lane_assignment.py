@@ -8,7 +8,7 @@ segments of one half of the channel.
 
 from dataclasses import dataclass, replace
 from enum import Enum
-from typing import Dict, List, Set, Tuple
+from typing import Dict, List, Sequence, Set, Tuple
 
 
 class LaneConflictPriority(Enum):
@@ -65,6 +65,21 @@ class LaneSegment:
 
 
 @dataclass(frozen=True)
+class ForcedOrder:
+    """
+    The order of two segments of a nested pair on a shared stretch.
+
+    spec.md, section "Общий участок". The inner segment moves to the half of
+    the outer segment if the halves differ.
+    """
+
+    inner: SegmentKey
+    outer: SegmentKey
+    # The inner segment takes a larger lane than the outer one.
+    inner_is_later: bool
+
+
+@dataclass(frozen=True)
 class LaneConflictPair:
     """
     Two segments with an unavoidable crossing in one channel.
@@ -75,20 +90,30 @@ class LaneConflictPair:
 
 
 def assign_lanes(
-    segments: List[LaneSegment], priority: LaneConflictPriority
+    segments: List[LaneSegment],
+    priority: LaneConflictPriority,
+    forced: Sequence[ForcedOrder] = (),
 ) -> Tuple[Dict[SegmentKey, int], List[LaneConflictPair]]:
     """
     Assign lanes in one channel.
 
     Within a half, a constraint graph orders the overlapping segments. The
     longest path from the first lane gives each segment its lane, so segments
-    without overlap can share a lane.
+    without overlap can share a lane. A forced order of a nested pair on a
+    shared stretch replaces the constraints of that pair.
     """
 
     result: Dict[SegmentKey, int] = {}
     conflicts: List[LaneConflictPair] = []
     lane_offset = 0
-    segments = _yield_to_nesting(segments)
+    segments = _yield_to_nesting(_apply_forced_halves(segments, forced))
+    # (earlier, later) -> the earlier segment takes the smaller lane.
+    forced_pairs: Set[Tuple[SegmentKey, SegmentKey]] = {
+        (order_.outer, order_.inner)
+        if order_.inner_is_later
+        else (order_.inner, order_.outer)
+        for order_ in forced
+    }
     for half_ in (0, 1):
         half_segments_ = sorted(
             (segment_ for segment_ in segments if segment_.half == half_),
@@ -99,7 +124,12 @@ def assign_lanes(
         }
         for first_index_, first_ in enumerate(half_segments_):
             for second_ in half_segments_[first_index_ + 1 :]:
-                order_ = _pair_order(first_, second_, priority, conflicts)
+                if (first_.key, second_.key) in forced_pairs:
+                    order_ = 1
+                elif (second_.key, first_.key) in forced_pairs:
+                    order_ = -1
+                else:
+                    order_ = _pair_order(first_, second_, priority, conflicts)
                 if order_ == 1:
                     before_[second_.key].add(first_.key)
                 elif order_ == -1:
@@ -112,12 +142,33 @@ def assign_lanes(
     return result, conflicts
 
 
+def _apply_forced_halves(
+    segments: List[LaneSegment], forced: Sequence[ForcedOrder]
+) -> List[LaneSegment]:
+    """
+    Move the inner segment of each forced pair into the half of the outer.
+    """
+
+    half_by_key = {segment_.key: segment_.half for segment_ in segments}
+    target_half = {
+        order_.inner: half_by_key[order_.outer]
+        for order_ in forced
+        if order_.inner in half_by_key and order_.outer in half_by_key
+    }
+    return [
+        replace(segment_, half=target_half[segment_.key])
+        if segment_.key in target_half
+        else segment_
+        for segment_ in segments
+    ]
+
+
 def _yield_to_nesting(segments: List[LaneSegment]) -> List[LaneSegment]:
     """
     Move a nested segment into the half of the segment around it.
 
-    spec.md, section "Правостороннее движение". Right-hand traffic yields
-    only here. A segment is nested in an overlapping segment of the other
+    spec.md, section "Общий участок": this is a shared stretch of one
+    channel. A segment is nested in an overlapping segment of the other
     half if both of its members lie inside the outer segment and extend to
     the same side. If the halves require the order that makes both members
     cross the outer segment, the inner segment moves to the half of the

@@ -11,7 +11,7 @@ are not routed yet.
 """
 
 import heapq
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from typing import Dict, List, Mapping, Optional, Set, Tuple
 
 from strictdoc.features.specification_graph.svg_graph.gate_ports import (
@@ -23,6 +23,7 @@ from strictdoc.features.specification_graph.svg_graph.gate_ports import (
 )
 from strictdoc.features.specification_graph.svg_graph.lane_assignment import (
     CrossMember,
+    ForcedOrder,
     LaneSegment,
     assign_lanes,
 )
@@ -140,6 +141,9 @@ class _Router:
         self.channel_rects: Dict[StructureChannelId, Rect] = {
             channel_.channel_id: channel_.rect for channel_ in estimate.channels
         }
+        # The forced orders of the nested pairs on shared stretches.
+        self.forced_orders: Dict[StructureChannelId, List[ForcedOrder]] = {}
+        self.forced_port_orders: List[_ForcedPortOrder] = []
         self.composite_ids: Set[str] = {
             node_.node_id
             for node_ in normalized_graph.nodes
@@ -170,6 +174,14 @@ class _Router:
             lane_counts=self._column_lane_counts(plans, straight_ids),
         )
         plans = [self._exact_levels(plan_, exact) for plan_ in plans]
+        self.forced_orders, self.forced_port_orders = _shared_stretch_orders(
+            [
+                plan_
+                for plan_ in plans
+                if plan_.edge.edge_id not in straight_ids
+            ],
+            exact,
+        )
 
         conflicts: List[StructureLaneConflict] = []
         vertical_lanes = self._assign_vertical_lanes(plans, conflicts)
@@ -835,6 +847,7 @@ class _Router:
         straight edge.
         """
 
+        moved_keys = self._moved_horizontal_keys(plans)
         endpoints_by_gate: Dict[
             Tuple[StructureChannelId, int], List[GateEndpoint]
         ] = {}
@@ -882,6 +895,10 @@ class _Router:
                     plan_.channels[position_],
                     self.layout.places[node_id_].column,
                 )
+                flows_down_ = (role_ == _SOURCE) == (face_ is Face.BOTTOM)
+                if (plan_.edge.edge_id, position_) in moved_keys:
+                    # A forced order moves the segment to the other half.
+                    goes_left_ = not goes_left_
                 endpoints_by_gate.setdefault(gate_, []).append(
                     GateEndpoint(
                         endpoint_key=(plan_.edge.edge_id, role_),
@@ -890,15 +907,56 @@ class _Router:
                         side=side_,
                         half=0 if goes_left_ else 1,
                         sort_key=(other_position_, plan_.index),
-                        flows_down=(
-                            (role_ == _SOURCE) == (face_ is Face.BOTTOM)
-                        ),
+                        flows_down=flows_down_,
                     )
                 )
         ports: Dict[EndpointKey, Port] = {}
         for endpoints_ in endpoints_by_gate.values():
             ports.update(number_gate_ports(endpoints_))
+        # A nested pair on a shared stretch that ends at one face: the port
+        # of the inner route stands on its side of the outer one.
+        for order_ in self.forced_port_orders:
+            inner_ = ports[order_.inner]
+            outer_ = ports[order_.outer]
+            if (inner_.slot > outer_.slot) != order_.inner_is_right:
+                ports[order_.inner] = replace(inner_, slot=outer_.slot)
+                ports[order_.outer] = replace(outer_, slot=inner_.slot)
         return ports
+
+    def _moved_horizontal_keys(
+        self, plans: List[_Plan]
+    ) -> Set[Tuple[str, int]]:
+        """
+        Return the horizontal segments that a forced order moves.
+
+        A forced order moves the inner segment to the half of the outer one.
+        """
+
+        plans_by_edge = {plan_.edge.edge_id: plan_ for plan_ in plans}
+
+        def goes_left(key: Tuple[str, int]) -> bool:
+            plan_ = plans_by_edge[key[0]]
+            position_ = key[1]
+            last_ = len(plan_.channels) - 1
+            entry_x_ = (
+                _center_x(self.estimate.node_rects[plan_.edge.source_id])
+                if position_ == 0
+                else plan_.levels[position_ - 1]
+            )
+            exit_x_ = (
+                _center_x(self.estimate.node_rects[plan_.edge.target_id])
+                if position_ == last_
+                else plan_.levels[position_ + 1]
+            )
+            return exit_x_ < entry_x_
+
+        return {
+            order_.inner
+            for channel_, orders_ in self.forced_orders.items()
+            if channel_.is_horizontal
+            for order_ in orders_
+            if goes_left(order_.inner) != goes_left(order_.outer)
+        }
 
     def _assign_horizontal_lanes(
         self,
@@ -996,7 +1054,9 @@ class _Router:
         result: Dict[Tuple[str, int], int] = {}
         for channel_, segments_ in segments_by_channel.items():
             lanes_, pairs_ = assign_lanes(
-                segments_, self.options.lane_conflict_priority
+                segments_,
+                self.options.lane_conflict_priority,
+                self.forced_orders.get(channel_, []),
             )
             result.update(lanes_)
             conflicts.extend(
@@ -1008,6 +1068,345 @@ class _Router:
                 for pair_ in pairs_
             )
         return result
+
+
+_Point = Tuple[float, float]
+
+
+@dataclass(frozen=True)
+class _ForcedPortOrder:
+    """
+    The port order of a nested pair on a face where its stretch ends.
+    """
+
+    inner: EndpointKey
+    outer: EndpointKey
+    # The port of the inner route stands right of the port of the outer one.
+    inner_is_right: bool
+
+
+def _shared_stretch_orders(
+    plans: List[_Plan], exact: StructureGeometry
+) -> Tuple[Dict[StructureChannelId, List[ForcedOrder]], List[_ForcedPortOrder]]:
+    """
+    Return the forced lane orders of the nested pairs on shared stretches.
+
+    This function is the only place of the rule for the stretches of two or
+    more channels. spec.md, section "Общий участок". A shared stretch is the
+    longest chain of channels that two routes pass one after another, in
+    the same direction or toward each other. A route is nested in the other
+    if at both ends of the stretch it turns off earlier and to the same
+    side. An end where both routes reach the same face of the same node sets
+    no condition. A nested route keeps its side on the whole stretch: in
+    each channel of the stretch, it takes the lane on that side of the
+    other route, and on a face where the stretch ends, its port stands on
+    that side.
+
+    The stretches of one channel follow the same rule in
+    lane_assignment._yield_to_nesting.
+    """
+
+    points = {plan_.index: _plan_points(plan_, exact) for plan_ in plans}
+    result: Dict[StructureChannelId, List[ForcedOrder]] = {}
+    port_orders: List[_ForcedPortOrder] = []
+    for first_index_, first_ in enumerate(plans):
+        for second_ in plans[first_index_ + 1 :]:
+            for run_ in _common_runs(first_.channels, second_.channels):
+                _add_stretch_orders(
+                    first_,
+                    second_,
+                    points[first_.index],
+                    points[second_.index],
+                    run_,
+                    result,
+                    port_orders,
+                )
+    return result, port_orders
+
+
+def _plan_points(plan: _Plan, exact: StructureGeometry) -> List[_Point]:
+    """
+    Return the polyline of a plan: the ports and one point per channel.
+
+    Point i + 1 starts the segment in channel i.
+    """
+
+    source = exact.node_rects[plan.edge.source_id]
+    target = exact.node_rects[plan.edge.target_id]
+    x = _center_x(source)
+    y = source.y if plan.source_face is Face.TOP else source.y + source.height
+    result = [(x, y)]
+    for channel_, level_ in zip(plan.channels, plan.levels):
+        if channel_.is_horizontal:
+            y = level_
+        else:
+            x = level_
+        result.append((x, y))
+    target_x = _center_x(target)
+    result.append((target_x, y))
+    result.append(
+        (
+            target_x,
+            target.y
+            if plan.target_face is Face.TOP
+            else target.y + target.height,
+        )
+    )
+    return result
+
+
+def _common_runs(
+    first: Tuple[StructureChannelId, ...],
+    second: Tuple[StructureChannelId, ...],
+) -> List[Tuple[int, int, int, int]]:
+    """
+    Return the maximal common runs of two or more channels.
+
+    A run is (start in first, start in second, length, step in second). The
+    step is 1 for the same direction and -1 for routes toward each other.
+    """
+
+    result = []
+    for first_start_ in range(len(first)):
+        for second_start_ in range(len(second)):
+            for step_ in (1, -1):
+                previous_ = second_start_ - step_
+                if (
+                    first_start_ > 0
+                    and 0 <= previous_ < len(second)
+                    and first[first_start_ - 1] == second[previous_]
+                ):
+                    continue
+                length_ = 0
+                while (
+                    first_start_ + length_ < len(first)
+                    and 0 <= second_start_ + step_ * length_ < len(second)
+                    and first[first_start_ + length_]
+                    == second[second_start_ + step_ * length_]
+                ):
+                    length_ += 1
+                if length_ >= 2:
+                    result.append((first_start_, second_start_, length_, step_))
+    return result
+
+
+def _add_stretch_orders(
+    first: _Plan,
+    second: _Plan,
+    first_points: List[_Point],
+    second_points: List[_Point],
+    run: Tuple[int, int, int, int],
+    result: Dict[StructureChannelId, List[ForcedOrder]],
+    port_orders: List[_ForcedPortOrder],
+) -> None:
+    first_start, second_start, length, step = run
+
+    # The routes run side by side only where their segments overlap. Trim
+    # the channels at the ends where the segments only touch.
+    def overlap(offset: int) -> float:
+        first_position_ = first_start + offset
+        second_position_ = second_start + step * offset
+        axis_ = 0 if first.channels[first_position_].is_horizontal else 1
+        first_span_ = sorted(
+            (
+                first_points[first_position_ + 1][axis_],
+                first_points[first_position_ + 2][axis_],
+            )
+        )
+        second_span_ = sorted(
+            (
+                second_points[second_position_ + 1][axis_],
+                second_points[second_position_ + 2][axis_],
+            )
+        )
+        return min(first_span_[1], second_span_[1]) - max(
+            first_span_[0], second_span_[0]
+        )
+
+    while length > 0 and overlap(0) <= 0:
+        first_start += 1
+        second_start += step
+        length -= 1
+    while length > 0 and overlap(length - 1) <= 0:
+        length -= 1
+    if length < 2:
+        return
+    first_end = first_start + length - 1
+    second_end = second_start + step * (length - 1)
+    # Each end: (is free, earlier route or None on a tie, side of the turn).
+    ends: List[Tuple[bool, Optional[_Plan], int]] = []
+    # The faces where the stretch ends: (first endpoint, second endpoint,
+    # travel direction of the first route at the face).
+    faces: List[Tuple[EndpointKey, EndpointKey, Tuple[int, int]]] = []
+    for at_finish_ in (False, True):
+        first_position_ = first_end if at_finish_ else first_start
+        second_position_ = second_end if at_finish_ else second_start
+        second_looks_up_ = at_finish_ == (step == 1)
+        # The travel direction of the first route in this channel.
+        direction_ = _direction(
+            first_points[first_position_ + 1], first_points[first_position_ + 2]
+        )
+        if direction_ == (0, 0):
+            return
+        first_end_ = _route_end(first_points, first_position_, at_finish_)
+        second_end_ = _route_end(
+            second_points, second_position_, second_looks_up_
+        )
+        if _same_face(
+            first,
+            first_position_,
+            at_finish_,
+            second,
+            second_position_,
+            second_looks_up_,
+        ):
+            ends.append((True, None, 0))
+            face_start_, face_end_ = (
+                (first_end_[0], first_end_[1])
+                if at_finish_
+                else (first_end_[1], first_end_[0])
+            )
+            faces.append(
+                (
+                    (first.edge.edge_id, _TARGET if at_finish_ else _SOURCE),
+                    (
+                        second.edge.edge_id,
+                        _TARGET if second_looks_up_ else _SOURCE,
+                    ),
+                    _direction(face_start_, face_end_),
+                )
+            )
+            continue
+        first_along_ = _dot(first_end_[0], direction_)
+        second_along_ = _dot(second_end_[0], direction_)
+        if first_along_ == second_along_:
+            ends.append((False, None, 0))
+            continue
+        # At the finish, the earlier turn is closer to the start.
+        first_is_earlier_ = (first_along_ < second_along_) == at_finish_
+        earlier_ = first_end_ if first_is_earlier_ else second_end_
+        ends.append(
+            (
+                False,
+                first if first_is_earlier_ else second,
+                _side(direction_, earlier_[0], earlier_[1]),
+            )
+        )
+    conditions = [end_ for end_ in ends if not end_[0]]
+    if len(conditions) == 0:
+        return
+    inners = {id(end_[1]) for end_ in conditions}
+    sides = {end_[2] for end_ in conditions}
+    if conditions[0][1] is None or len(inners) != 1 or len(sides) != 1:
+        return
+    inner = conditions[0][1]
+    side = conditions[0][2]
+    if side == 0:
+        return
+    for first_key_, second_key_, direction_ in faces:
+        # The right side of the travel direction, in screen coordinates.
+        inner_is_right_ = -direction_[1] * side > 0
+        inner_key_, outer_key_ = (
+            (first_key_, second_key_)
+            if inner is first
+            else (second_key_, first_key_)
+        )
+        port_orders.append(
+            _ForcedPortOrder(
+                inner=inner_key_,
+                outer=outer_key_,
+                inner_is_right=inner_is_right_,
+            )
+        )
+    for offset_ in range(length):
+        first_position_ = first_start + offset_
+        second_position_ = second_start + step * offset_
+        channel_ = first.channels[first_position_]
+        direction_ = _direction(
+            first_points[first_position_ + 1], first_points[first_position_ + 2]
+        )
+        if direction_ == (0, 0):
+            continue
+        # The right side of the travel direction, in screen coordinates.
+        normal_x_, normal_y_ = -direction_[1], direction_[0]
+        toward_larger_lane_ = (
+            normal_y_ if channel_.is_horizontal else normal_x_
+        ) * side > 0
+        first_key_ = (first.edge.edge_id, first_position_)
+        second_key_ = (second.edge.edge_id, second_position_)
+        inner_key_, outer_key_ = (
+            (first_key_, second_key_)
+            if inner is first
+            else (second_key_, first_key_)
+        )
+        result.setdefault(channel_, []).append(
+            ForcedOrder(
+                inner=inner_key_,
+                outer=outer_key_,
+                inner_is_later=toward_larger_lane_,
+            )
+        )
+
+
+def _route_end(
+    points: List[_Point], position: int, looks_up: bool
+) -> Tuple[_Point, _Point]:
+    """
+    Return the point where a route leaves a stretch and the next point.
+
+    looks_up: the route leaves toward its later channels.
+    """
+
+    if looks_up:
+        return points[position + 2], points[position + 3]
+    return points[position + 1], points[position]
+
+
+def _same_face(
+    first: _Plan,
+    first_position: int,
+    first_looks_up: bool,
+    second: _Plan,
+    second_position: int,
+    second_looks_up: bool,
+) -> bool:
+    def face(
+        plan: _Plan, position: int, looks_up: bool
+    ) -> Optional[Tuple[str, Face]]:
+        if looks_up and position == len(plan.channels) - 1:
+            return plan.edge.target_id, plan.target_face
+        if not looks_up and position == 0:
+            return plan.edge.source_id, plan.source_face
+        return None
+
+    first_face = face(first, first_position, first_looks_up)
+    return first_face is not None and first_face == face(
+        second, second_position, second_looks_up
+    )
+
+
+def _direction(start: _Point, end: _Point) -> Tuple[int, int]:
+    return (
+        (end[0] > start[0]) - (end[0] < start[0]),
+        (end[1] > start[1]) - (end[1] < start[1]),
+    )
+
+
+def _dot(point: _Point, direction: Tuple[int, int]) -> float:
+    return point[0] * direction[0] + point[1] * direction[1]
+
+
+def _side(direction: Tuple[int, int], end: _Point, after: _Point) -> int:
+    """
+    Return the side of a turn relative to the travel direction.
+
+    1 is the right side, -1 the left side, in screen coordinates.
+    """
+
+    turn_x = after[0] - end[0]
+    turn_y = after[1] - end[1]
+    cross = direction[0] * turn_y - direction[1] * turn_x
+    return (cross > 0) - (cross < 0)
 
 
 def _segment_end(route: StructureRoute, position: int) -> SegmentEnd:

@@ -509,6 +509,27 @@ MUTATIONS = (
         "            )\n",
     ),
     Mutation(
+        "ST1",
+        "shared stretches of two or more channels are not ordered",
+        STRUCTURE_ROUTING,
+        "    if length < 2:\n        return\n",
+        "    if True:\n        return\n",
+    ),
+    Mutation(
+        "ST2",
+        "port order at a shared face ignores the shared stretch rule",
+        STRUCTURE_ROUTING,
+        "if (inner_.slot > outer_.slot) != order_.inner_is_right:",
+        "if False:",
+    ),
+    Mutation(
+        "ST3",
+        "a shared stretch keeps the channels where the routes only touch",
+        STRUCTURE_ROUTING,
+        "while length > 0 and overlap(length - 1) <= 0:",
+        "while False:",
+    ),
+    Mutation(
         "CL1",
         "column lane count rule ignores the lane reuse between the sides",
         STRUCTURE_ROUTING,

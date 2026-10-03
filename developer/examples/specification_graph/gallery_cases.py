@@ -1132,6 +1132,44 @@ ACROSS_CONTAINERS_CASES: Tuple[GalleryCase, ...] = (
         ],
     ),
     _structure_case(
+        "Relation across a long column",
+        (
+            "L2 -> R2 connects two short columns with a long column C between "
+            "them. The short sections U and W stand next to C. The gaps of L, "
+            "C, and R lie at one height, but the space under U and W starts "
+            "lower, so the line cannot pass straight. It goes over the top "
+            "corridor. L3 -> R3 leaves the bottom face of L3 and goes under "
+            "the whole column C: the path with the fewest bends is very "
+            "long here. This is a temporary decision: a limit for long paths "
+            "is not defined yet."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "L1",
+                    "L2",
+                    "L3",
+                    ("U", ["U1"]),
+                    "C1",
+                    "C2",
+                    "C3",
+                    "C4",
+                    "C5",
+                    "C6",
+                    "C7",
+                    "C8",
+                    "C9",
+                    ("W", ["W1"]),
+                    "R1",
+                    "R2",
+                    "R3",
+                ],
+            )
+        ],
+        [("L2", "R2"), ("L3", "R3")],
+    ),
+    _structure_case(
         "Side of the exit",
         (
             "S1 -> B1 leaves the section S. Inside S, the way to the right "

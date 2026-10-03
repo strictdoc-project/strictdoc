@@ -403,6 +403,10 @@ class _Router:
         """
         Find the path with the fewest bends, then the shortest length.
 
+        The fewest bends win even over a much longer path, for example under
+        a whole long column. This is a temporary decision, see spec.md,
+        section "Путь по каналам".
+
         The path alternates horizontal and vertical channels. Each change of
         channel is a bend, except a through pass. Each port adds a bend where
         its vertical stub turns into the first or the last horizontal

@@ -51,7 +51,7 @@ class RoutingOptions:
     To change a decision, change the default here and update spec.md.
     """
 
-    lane_conflict_priority: LaneConflictPriority = LaneConflictPriority.ENTRY
+    lane_conflict_priority: LaneConflictPriority = LaneConflictPriority.EXIT
     skip_channel_choice: SkipChannelChoice = SkipChannelChoice.NEAR_TARGET
 
 

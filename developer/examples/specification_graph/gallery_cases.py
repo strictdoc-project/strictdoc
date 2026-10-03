@@ -157,22 +157,24 @@ LEVELS_CASES: Tuple[GalleryCase, ...] = (
         (
             "X -> D and Y -> C both go right in the channel below A, B, C, "
             "D. The segment of Y -> C lies inside the segment of X -> D, so "
-            "X -> D must cross one vertical of Y -> C. Entry priority: X -> D "
-            "stays above Y -> C and crosses the vertical into C."
+            "X -> D must cross one vertical of Y -> C. Exit priority: X -> D "
+            "stays below Y -> C and crosses the vertical out of Y, near the "
+            "source. Near the nodes the horizontal channel has room; near "
+            "the target the line can meet a crowded junction."
         ),
         ["A", "B", "C", "D", "X", "Y"],
         [("X", "A"), ("X", "D"), ("Y", "B"), ("Y", "C"), ("Y", "D")],
         rejected_alternative=RejectedAlternative(
             option_code=(
                 "RoutingOptions("
-                "lane_conflict_priority=LaneConflictPriority.EXIT)"
+                "lane_conflict_priority=LaneConflictPriority.ENTRY)"
             ),
             options=RoutingOptions(
-                lane_conflict_priority=LaneConflictPriority.EXIT
+                lane_conflict_priority=LaneConflictPriority.ENTRY
             ),
             description=(
-                "Exit priority: X -> D stays below Y -> C and crosses the "
-                "vertical out of Y."
+                "Entry priority: X -> D stays above Y -> C and crosses the "
+                "vertical into C, near the target."
             ),
         ),
     ),

@@ -209,6 +209,32 @@ def test_side_of_the_exit_follows_the_whole_path() -> None:
     assert route.channels[0].container_id == "S"
 
 
+def test_opposite_relations_take_the_same_channels() -> None:
+    """
+    Two opposite relations between the same places take the same channels.
+
+    Both paths have equal bends and length. The path with fewer channels
+    inside nested containers wins, and this rule does not depend on the
+    direction. The pair shares one whole stretch and does not cross.
+
+    Code: structure_routing._Router._best_path.
+    Fails if:
+    - the tie between paths of equal cost depends on the order of the
+      search queue.
+    """
+
+    normalized_graph, routing, _, paths = _result(
+        _case("Opposite relations between a node and a section")
+    )
+
+    forward_id = _edge_id(normalized_graph, "A1", "Y1")
+    backward_id = _edge_id(normalized_graph, "Y1", "A1")
+    assert routing.routes[backward_id].channels == tuple(
+        reversed(routing.routes[forward_id].channels)
+    )
+    assert crossing_count(paths[forward_id], paths[backward_id]) == 0
+
+
 def test_line_enters_the_outer_vertical_channel_of_a_section() -> None:
     """
     A line crosses a side face straight and turns in the outer vertical

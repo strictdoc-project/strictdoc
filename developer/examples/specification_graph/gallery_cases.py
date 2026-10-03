@@ -1026,6 +1026,19 @@ ACROSS_CONTAINERS_CASES: Tuple[GalleryCase, ...] = (
         [("S2", "B2"), ("A1", "S1")],
     ),
     _structure_case(
+        "Opposite relations between a node and a section",
+        (
+            "A1 -> Y1 and Y1 -> A1 have two paths of equal cost: through the "
+            "vertical channel of the document between A1 and L1, or through "
+            "the left vertical channel of L1. The path with fewer channels "
+            "inside nested containers wins, so both relations take the "
+            "channel of the document. Their common stretch is whole, and "
+            "Y1 -> A1 stays above A1 -> Y1 all along it without crossings."
+        ),
+        [("Doc", ["A1", ("L1", ["Y1"])])],
+        [("A1", "Y1"), ("Y1", "A1")],
+    ),
+    _structure_case(
         "Relation between two sections",
         (
             "S1 -> T2 leaves the section S and enters the section T. Both "

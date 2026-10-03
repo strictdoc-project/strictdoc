@@ -599,6 +599,13 @@ MUTATIONS = (
         "        return -math.inf + 0 * self._channel_size(",
     ),
     Mutation(
+        "XC8",
+        "paths of equal cost do not prefer the common container",
+        STRUCTURE_ROUTING,
+        "                        if channel_.container_id != common_id\n",
+        "                        if False\n",
+    ),
+    Mutation(
         "XC5",
         "the columns under a segment include the child it enters",
         STRUCTURE_ROUTING,

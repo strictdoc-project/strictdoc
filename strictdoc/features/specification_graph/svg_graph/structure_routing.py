@@ -132,16 +132,19 @@ class _Plan:
 @dataclass(order=True)
 class _SearchItem:
     """
-    An item of the path search queue, ordered by bends, length, and tie.
+    An item of the path search queue, ordered by bends, length, nested
+    channels, and tie.
 
     A done item is a complete path with the final segment to the target
     port. The search returns when it takes a done item, so the final segment
     counts in the order of the queue. is_through: the point came by a
-    through pass and keeps its height.
+    through pass and keeps its height. nested_channels: the channels of the
+    path that belong to containers inside the common container.
     """
 
     bends: int
     length: float
+    nested_channels: int
     tie: int
     is_done: bool = field(compare=False)
     channel: StructureChannelId = field(compare=False)
@@ -401,7 +404,8 @@ class _Router:
         ]
     ]:
         """
-        Find the path with the fewest bends, then the shortest length.
+        Find the path with the fewest bends, then the shortest length, then
+        the fewest channels inside nested containers.
 
         The fewest bends win even over a much longer path, for example under
         a whole long column. This is a temporary decision, see spec.md,
@@ -419,8 +423,20 @@ class _Router:
         follows from the columns it passes over, and the length gets the
         difference for both of its vertical ends. A point that comes by a
         through pass keeps its height.
+
+        The last rule keeps a line in the channels of the common container:
+        it enters a nested container as late as possible and leaves it as
+        early as possible. A path in one direction is the reverse of the
+        path in the other, so two opposite relations between the same places
+        take the same channels.
         """
 
+        common_id = next(
+            container_id_
+            for container_id_ in chain
+            if container_id_ is None
+            or self.normalized_graph.parent_ids[container_id_] not in chain
+        )
         start = self._port_channel(source_id, source_face)
         end = self._port_channel(target_id, target_face)
         source_x = _center_x(self.estimate.node_rects[source_id])
@@ -449,6 +465,11 @@ class _Router:
                 _SearchItem(
                     bends,
                     length,
+                    sum(
+                        1
+                        for channel_ in path
+                        if channel_.container_id != common_id
+                    ),
                     tie,
                     is_done,
                     channel,

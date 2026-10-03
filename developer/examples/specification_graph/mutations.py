@@ -587,16 +587,16 @@ MUTATIONS = (
         "XC4",
         "a parent line does not enter the outer vertical channel of a child",
         STRUCTURE_ROUTING,
-        "                    result.setdefault(child_vertical_, []).append(horizontal_)\n"
-        "                    result.setdefault(horizontal_, []).append(child_vertical_)\n",
-        "                    pass\n",
+        "                result.setdefault(child_vertical_, []).append(corridor_)\n"
+        "                result.setdefault(corridor_, []).append(child_vertical_)\n",
+        "",
     ),
     Mutation(
-        "XC6",
-        "a turn through a side face may lie above the vertical channel",
-        STRUCTURE_ROUTING,
-        "        return rect.y < y < rect.y + rect.height\n",
-        "        return True\n",
+        "XC7",
+        "a side entry ignores the top corridor of the section",
+        STRUCTURE_GEOMETRY,
+        "        return self.config.container_header_height + self._channel_size(",
+        "        return -math.inf + 0 * self._channel_size(",
     ),
     Mutation(
         "XC5",

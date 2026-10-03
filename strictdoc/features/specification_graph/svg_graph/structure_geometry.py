@@ -422,6 +422,19 @@ class _GeometryBuilder:
                 ),
                 config,
             )
+            # A line that enters the outer vertical channel of a child
+            # through its side face lies below the top corridor of the
+            # child: it never meets a lane of that corridor.
+            entry_floor_ = max(
+                (
+                    self._side_entry_floor(container_id, end_)
+                    for end_ in segment_.ends
+                ),
+                default=lowest_y_,
+            )
+            if through_y_ is not None and through_y_ < entry_floor_:
+                through_y_ = None
+            lowest_y_ = max(lowest_y_, entry_floor_)
             is_row_ = through_y_ is not None
             bases.append(
                 (
@@ -461,6 +474,30 @@ class _GeometryBuilder:
         )
         self.corridors[container_id] = corridor
         return corridor
+
+    def _side_entry_floor(
+        self, container_id: Optional[str], end: SegmentEnd
+    ) -> float:
+        """
+        Return the lowest top of a line that enters a child at this end.
+
+        For an end in the outer vertical channel of a child container, this
+        is the top of that channel: the header and the top corridor of the
+        child lie above it. The y counts from the top of the columns, where
+        the child stands. Other ends set no floor.
+        """
+
+        if not isinstance(end, LaneEnd):
+            return -math.inf
+        child_id = end.channel.container_id
+        if (
+            child_id == container_id
+            or self._child_column(container_id, child_id) is None
+        ):
+            return -math.inf
+        return self.config.container_header_height + self._channel_size(
+            StructureChannelId(ChannelKind.TOP_CORRIDOR, child_id)
+        )
 
     def _child_column(
         self, container_id: Optional[str], child_id: Optional[str]

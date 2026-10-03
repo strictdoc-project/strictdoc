@@ -243,6 +243,7 @@ class _Router:
                     vertical_lanes,
                     horizontal_lanes,
                     finished,
+                    self.normalized_graph.parent_ids,
                 ),
             )
             finished_levels_ = _finished_levels(
@@ -294,7 +295,9 @@ class _Router:
                 lanes=lanes_,
             )
             routes[edge_id_] = route_
-            bottom_segments.extend(_route_bottom_segments(route_))
+            bottom_segments.extend(
+                _route_bottom_segments(route_, self.normalized_graph.parent_ids)
+            )
             for channel_, lane_ in zip(plan_.channels, lanes_):
                 if channel_.kind is not ChannelKind.BOTTOM_CORRIDOR:
                     lane_counts[channel_] = max(
@@ -486,9 +489,7 @@ class _Router:
                 segment_y_ = self._segment_y(
                     item.channel, start_x, target_x, y, item.is_through
                 )
-                if segment_y_ is not None and self._entry_fits(
-                    item.path, segment_y_
-                ):
+                if segment_y_ is not None:
                     push(
                         item.bends + 1,
                         item.length
@@ -528,11 +529,7 @@ class _Router:
                     y,
                     item.is_through,
                 )
-                if (
-                    segment_y_ is None
-                    or not self._entry_fits(item.path, segment_y_)
-                    or not self._turn_fits(neighbor_, item.channel, segment_y_)
-                ):
+                if segment_y_ is None:
                     continue
                 length_ = item.length + abs(x - turn_[0]) + (segment_y_ - y)
                 next_point_ = (turn_[0], segment_y_)
@@ -749,40 +746,6 @@ class _Router:
         frame = self.estimate.node_rects[child_id]
         return frame.x if vertical.index == 0 else frame.x + frame.width
 
-    def _entry_fits(
-        self, path: Tuple[StructureChannelId, ...], y: float
-    ) -> bool:
-        """
-        Return True if the last horizontal segment of a path fits its entry.
-
-        The segment came from the vertical channel before it. If that
-        channel lies in another container, the height of the segment must
-        lie within it.
-        """
-
-        if len(path) < 2:
-            return True
-        return self._turn_fits(path[-2], path[-1], y)
-
-    def _turn_fits(
-        self,
-        vertical: StructureChannelId,
-        horizontal: StructureChannelId,
-        y: float,
-    ) -> bool:
-        """
-        Return True if a turn between the two channels can lie at height y.
-
-        A turn through a side face joins channels of two containers. It must
-        lie within the vertical channel: a line enters the outer vertical
-        channel of a container below its header and its top corridor.
-        """
-
-        if vertical.container_id == horizontal.container_id:
-            return True
-        rect = self.channel_rects[vertical]
-        return rect.y < y < rect.y + rect.height
-
     def _stub_length(
         self, node_id: str, face: Face, channel: StructureChannelId
     ) -> float:
@@ -990,8 +953,11 @@ class _Router:
                     _center_y(rects[channels[other_]])
                     for other_ in (position_ - 2, position_ + 2)
                     if 0 <= other_ <= last
-                    and channels[other_].kind
-                    in (ChannelKind.COLUMN, ChannelKind.TOP_CORRIDOR)
+                    and _is_lane_of_container_or_child(
+                        channels[other_],
+                        channel_.container_id,
+                        self.normalized_graph.parent_ids,
+                    )
                 ),
                 self.config,
             )
@@ -1372,6 +1338,7 @@ def _bottom_segments(
     vertical_lanes: Mapping[Tuple[str, int], int],
     horizontal_lanes: Mapping[Tuple[str, int], int],
     containers: Set[Optional[str]],
+    parent_ids: Mapping[str, Optional[str]],
 ) -> List[CorridorSegment]:
     """
     Return the segments in the bottom corridors of the containers.
@@ -1390,13 +1357,15 @@ def _bottom_segments(
         )
         result.extend(
             segment_
-            for segment_ in _route_bottom_segments(route_)
+            for segment_ in _route_bottom_segments(route_, parent_ids)
             if segment_.container_id in containers
         )
     return result
 
 
-def _route_bottom_segments(route: StructureRoute) -> List[CorridorSegment]:
+def _route_bottom_segments(
+    route: StructureRoute, parent_ids: Mapping[str, Optional[str]]
+) -> List[CorridorSegment]:
     return [
         CorridorSegment(
             key=(route.edge_id, position_),
@@ -1406,7 +1375,7 @@ def _route_bottom_segments(route: StructureRoute) -> List[CorridorSegment]:
                 _segment_end(route, position_ - 1),
                 _segment_end(route, position_ + 1),
             ),
-            through_lanes=_through_lanes(route, position_),
+            through_lanes=_through_lanes(route, position_, parent_ids),
         )
         for position_, (channel_, lane_) in enumerate(
             zip(route.channels, route.lanes)
@@ -1478,9 +1447,8 @@ def _side_face_links(
     A crossing of a side face joins a horizontal channel on one side with a
     vertical channel on the other side, in both directions: a horizontal
     channel of the container at its outer vertical channel with the
-    vertical channel of the parent next to the face, and a horizontal
-    channel of the parent at that vertical channel with the outer vertical
-    channel of the container.
+    vertical channel of the parent next to the face, and the space under the
+    columns of the parent with the outer vertical channel of the container.
     """
 
     result: Dict[StructureChannelId, List[StructureChannelId]] = {}
@@ -1505,30 +1473,61 @@ def _side_face_links(
                         continue
                     result.setdefault(parent_vertical_, []).append(horizontal_)
                     result.setdefault(horizontal_, []).append(parent_vertical_)
-                # A line of the parent crosses the face straight and turns
-                # in the outer vertical channel of the child.
-                for horizontal_ in layout.neighbor_channels(parent_vertical_):
-                    if not horizontal_.is_horizontal:
-                        continue
-                    result.setdefault(child_vertical_, []).append(horizontal_)
-                    result.setdefault(horizontal_, []).append(child_vertical_)
+                # A line under the columns of the parent crosses the face
+                # straight and turns in the outer vertical channel of the
+                # child. Only the space under the columns: its height can go
+                # down below the top corridor of the child, a lane of a
+                # column channel cannot.
+                corridor_ = StructureChannelId(
+                    ChannelKind.BOTTOM_CORRIDOR, container_id_
+                )
+                result.setdefault(child_vertical_, []).append(corridor_)
+                result.setdefault(corridor_, []).append(child_vertical_)
     return result
 
 
-def _through_lanes(route: StructureRoute, position: int) -> Tuple[LaneEnd, ...]:
+def _through_lanes(
+    route: StructureRoute,
+    position: int,
+    parent_ids: Mapping[str, Optional[str]],
+) -> Tuple[LaneEnd, ...]:
     """
-    Return the column channel lanes that a segment can continue straight.
+    Return the lanes that a segment under the columns can continue straight.
 
-    The candidates are the column channels on both sides of the segment,
-    across a vertical channel. The entry comes first.
+    The candidates are the column channels and top corridors on both sides
+    of the segment, across a vertical channel, in the same container or in
+    a child container. The entry comes first. A lane of the parent does not
+    count: the parent is placed later, so its lane height is not known yet.
     """
 
     return tuple(
         LaneEnd(channel=route.channels[other_], lane=route.lanes[other_])
         for other_ in (position - 2, position + 2)
         if 0 <= other_ < len(route.channels)
-        and route.channels[other_].kind
-        in (ChannelKind.COLUMN, ChannelKind.TOP_CORRIDOR)
+        and _is_lane_of_container_or_child(
+            route.channels[other_],
+            route.channels[position].container_id,
+            parent_ids,
+        )
+    )
+
+
+def _is_lane_of_container_or_child(
+    channel: StructureChannelId,
+    container_id: Optional[str],
+    parent_ids: Mapping[str, Optional[str]],
+) -> bool:
+    """
+    Return True for a lane channel of the container or of its child.
+    """
+
+    if channel.kind not in (ChannelKind.COLUMN, ChannelKind.TOP_CORRIDOR):
+        return False
+    if channel.container_id == container_id:
+        return True
+    return (
+        channel.container_id is not None
+        and parent_ids[channel.container_id] == container_id
     )
 
 

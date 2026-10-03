@@ -1078,6 +1078,60 @@ ACROSS_CONTAINERS_CASES: Tuple[GalleryCase, ...] = (
         ],
     ),
     _structure_case(
+        "Relations through two levels, a lane in the top corridor of L1",
+        (
+            'The case "Relations through two levels" where Y1 keeps one '
+            "relation, Y1 -> B1, and B2 and B3 stand under B1. The column of "
+            "B is long, so Y1 -> B1 cannot pass straight under B1 from the "
+            "gap under Y1. It goes up through the top corridor of L1 and "
+            "gives it a lane. A1 -> X1 still enters L1 straight from the "
+            "space under A1, at the top of the left vertical channel of L1, "
+            "right below that corridor."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    ("L1", [("L2", ["X1", "X2"]), "Y1", "Y2"]),
+                    "B1",
+                    "B2",
+                    "B3",
+                ],
+            )
+        ],
+        [("A1", "X1"), ("Y1", "B1")],
+    ),
+    _structure_case(
+        "Side entry below a top corridor with lanes",
+        (
+            "Y1 relates to A1, B1, and B2, so the top corridor of L1 has "
+            "three lanes. A1 -> X1 enters L1 straight from the space under "
+            "A1 and turns down in the left vertical channel of L1. The line "
+            "lies below the top corridor of L1, so it never meets its lanes, "
+            "however many there are."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    ("L1", [("L2", ["X1", "X2"]), "Y1"]),
+                    "B1",
+                    "B2",
+                ],
+            )
+        ],
+        [
+            ("A1", "X1"),
+            ("Y1", "A1"),
+            ("A1", "Y1"),
+            ("Y1", "B1"),
+            ("B1", "Y1"),
+            ("B2", "Y1"),
+        ],
+    ),
+    _structure_case(
         "Side of the exit",
         (
             "S1 -> B1 leaves the section S. Inside S, the way to the right "

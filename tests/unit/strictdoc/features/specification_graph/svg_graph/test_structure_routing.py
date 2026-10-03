@@ -26,6 +26,7 @@ from strictdoc.features.specification_graph.svg_graph.structure_geometry import 
 )
 from strictdoc.features.specification_graph.svg_graph.structure_layout import (
     ChannelKind,
+    StructureChannelId,
     compute_structure_layout,
 )
 from strictdoc.features.specification_graph.svg_graph.structure_paths import (
@@ -218,7 +219,7 @@ def test_line_enters_the_outer_vertical_channel_of_a_section() -> None:
     climb to the top corridor of L1 first.
 
     Code: structure_routing._side_face_links,
-    structure_routing._Router._turn_fits, structure_routing._Router._face_x.
+    structure_routing._Router._face_x.
     Fails if:
     - a horizontal channel of the parent does not link to the outer
       vertical channel of a child through the side face.
@@ -232,6 +233,31 @@ def test_line_enters_the_outer_vertical_channel_of_a_section() -> None:
     path = paths[_edge_id(normalized_graph, "A1", "X1")]
     heights = [point_.y for point_ in path]
     assert heights == sorted(heights)
+
+
+def test_side_entry_lies_below_the_top_corridor() -> None:
+    """
+    A line that enters a section through its side face into the outer
+    vertical channel lies below the top corridor of the section.
+
+    The top corridor of L1 has three lanes. The space under A1 alone would
+    put A1 -> X1 at the height of the lowest of them.
+
+    Code: structure_geometry._GeometryBuilder._side_entry_floor,
+    structure_geometry._GeometryBuilder._bottom_corridor.
+    Fails if:
+    - the height of a side entry ignores the top corridor of the section.
+    """
+
+    normalized_graph, _, geometry, paths = _result(
+        _case("Side entry below a top corridor with lanes")
+    )
+
+    corridor = geometry.channel_rect(
+        StructureChannelId(ChannelKind.TOP_CORRIDOR, "L1")
+    )
+    path = paths[_edge_id(normalized_graph, "A1", "X1")]
+    assert path[1].y >= corridor.y + corridor.height
 
 
 def test_bottom_segment_lies_below_the_columns_it_passes_over() -> None:
@@ -769,7 +795,8 @@ def _continues_a_column_lane(
     # Point i + 1 starts the segment in channel i.
     return any(
         0 <= other_ < len(route.channels)
-        and route.channels[other_].kind is ChannelKind.COLUMN
+        and route.channels[other_].kind
+        in (ChannelKind.COLUMN, ChannelKind.TOP_CORRIDOR)
         and points[other_ + 1].y == points[position + 1].y
         for other_ in (position - 2, position + 2)
     )

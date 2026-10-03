@@ -1328,7 +1328,11 @@ ONE_FACE_CASES: Tuple[GalleryCase, ...] = (
         "One face: relations out and in, an opposite line between",
         (
             "A1 -> S1 leaves the bottom face of A1 and S1 -> A1 enters it, "
-            "both on the right. S1 -> A2 does not run between them."
+            "both on the right. Both ends of the pair lie on shared faces, "
+            "so no end sets their order; the pair keeps the order of "
+            "right-hand traffic on the whole stretch, also at the ports of "
+            "A1 and S1, and does not cross. S1 -> A2 does not run between "
+            "them."
         ),
         [("Doc", ["A1", "A2", ("S", ["S1"]), "C1"])],
         [("A1", "S1"), ("S1", "A1"), ("S1", "A2")],

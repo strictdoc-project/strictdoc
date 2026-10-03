@@ -613,6 +613,34 @@ def test_routes_that_turn_off_to_different_sides_keep_their_sides() -> None:
         ), title_
 
 
+def test_pair_between_shared_faces_keeps_one_order() -> None:
+    """
+    A pair whose stretch ends on shared faces at both ends keeps one order
+    on the whole stretch, also at the ports of both faces.
+
+    A1 -> S1 and S1 -> A1 run from the bottom face of A1 to the top face of
+    S1. No end sets their order, so right-hand traffic sets it. On the face
+    of S1, several forced port orders meet; all of them hold.
+
+    Code: structure_stretches._nesting, gate_ports.number_gate_ports.
+    Fails if:
+    - a pair between shared faces gets no order.
+    - a later swap of ports breaks a forced port order applied before.
+    """
+
+    normalized_graph, _, _, paths = _result(
+        _case("One face: relations out and in, an opposite line between")
+    )
+
+    assert (
+        crossing_count(
+            paths[_edge_id(normalized_graph, "A1", "S1")],
+            paths[_edge_id(normalized_graph, "S1", "A1")],
+        )
+        == 0
+    )
+
+
 def test_foreign_line_does_not_split_a_ribbon() -> None:
     """
     A foreign line passes a ribbon from one side, if this costs no crossing.

@@ -325,6 +325,20 @@ MUTATIONS = (
         "        if True\n",
     ),
     Mutation(
+        "ST9",
+        "a pair between shared faces gets no order",
+        STRUCTURE_STRETCHES,
+        "        return first, 1, faces\n",
+        "        return None\n",
+    ),
+    Mutation(
+        "GP1",
+        "forced port orders are applied in one pass",
+        GATES,
+        "    for _ in range(len(forced) + 1):\n",
+        "    for _ in range(1):\n",
+    ),
+    Mutation(
         "R2",
         "lane priority inverted",
         LANES,

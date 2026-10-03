@@ -337,6 +337,12 @@ def _nesting(
     the side it turns to. Where they turn off to the same side, the route
     that turns off earlier lies on that side. The routes are nested if the
     conditions of both ends agree.
+
+    If both ends lie on shared faces, no end sets a condition. The two
+    routes still keep one order on the whole stretch, the order of
+    right-hand traffic: the first route lies on its right side. Otherwise
+    the order in each channel and on each face would be chosen apart, and
+    the routes could cross near a face.
     """
 
     first_start, second_start, length, step = run
@@ -405,9 +411,10 @@ def _nesting(
                 _side(direction_, earlier_[0], earlier_[1]),
             )
         )
-    if len(conditions) == 0 or any(
-        route_ is None or side_ == 0 for route_, side_ in conditions
-    ):
+    if len(conditions) == 0:
+        # Both ends lie on shared faces.
+        return first, 1, faces
+    if any(route_ is None or side_ == 0 for route_, side_ in conditions):
         return None
     # The side where the first route lies, from each condition.
     first_sides = {

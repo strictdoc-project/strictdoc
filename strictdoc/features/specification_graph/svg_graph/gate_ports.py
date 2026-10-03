@@ -146,14 +146,23 @@ def number_gate_ports(
                     slot_,
                     list_size=len(list_),
                 )
-    for order_ in forced:
-        if order_.inner not in ports or order_.outer not in ports:
-            continue
-        inner_ = ports[order_.inner]
-        outer_ = ports[order_.outer]
-        if (inner_.slot > outer_.slot) != order_.inner_is_right:
-            ports[order_.inner] = replace(inner_, slot=outer_.slot)
-            ports[order_.outer] = replace(outer_, slot=inner_.slot)
+    # A swap for one pair can break the order of a pair swapped before it,
+    # so the pairs are applied again until no port moves. Each pass that
+    # moves a port fixes at least one pair; contradicting orders stop after
+    # as many passes as there are pairs.
+    for _ in range(len(forced) + 1):
+        moved_ = False
+        for order_ in forced:
+            if order_.inner not in ports or order_.outer not in ports:
+                continue
+            inner_ = ports[order_.inner]
+            outer_ = ports[order_.outer]
+            if (inner_.slot > outer_.slot) != order_.inner_is_right:
+                ports[order_.inner] = replace(inner_, slot=outer_.slot)
+                ports[order_.outer] = replace(outer_, slot=inner_.slot)
+                moved_ = True
+        if not moved_:
+            break
     return ports
 
 

@@ -326,13 +326,19 @@ def _nesting(
 
     The side is 1 for the right of the travel direction of the first route,
     -1 for the left. Return None if the routes are not nested.
+
+    Each end of the stretch sets a condition: a route lies on one side of
+    the other. Where the routes turn off to different sides, each lies on
+    the side it turns to. Where they turn off to the same side, the route
+    that turns off earlier lies on that side. The routes are nested if the
+    conditions of both ends agree.
     """
 
     first_start, second_start, length, step = run
     first_end = first_start + length - 1
     second_end = second_start + step * (length - 1)
-    # Each end that sets a condition: (earlier route or None on a tie, side
-    # of its turn).
+    # Each end that sets a condition: (a route or None if the end sets no
+    # order, the side of the other route where this route lies).
     conditions: List[Tuple[Optional[PlannedRoute], int]] = []
     faces: List[_StretchFace] = []
     for at_finish_ in (False, True):
@@ -373,6 +379,13 @@ def _nesting(
                 )
             )
             continue
+        first_turn_ = _side(direction_, first_end_[0], first_end_[1])
+        second_turn_ = _side(direction_, second_end_[0], second_end_[1])
+        if first_turn_ != 0 and second_turn_ == -first_turn_:
+            # The routes turn off to different sides. In this order they
+            # do not cross at this end, wherever each of them turns.
+            conditions.append((first, first_turn_))
+            continue
         first_along_ = _dot(first_end_[0], direction_)
         second_along_ = _dot(second_end_[0], direction_)
         if first_along_ == second_along_:
@@ -387,19 +400,24 @@ def _nesting(
                 _side(direction_, earlier_[0], earlier_[1]),
             )
         )
-    if len(conditions) == 0:
-        return None
-    inner, side = conditions[0]
-    if (
-        inner is None
-        or side == 0
-        or any(
-            other_ is not inner or other_side_ != side
-            for other_, other_side_ in conditions
-        )
+    if len(conditions) == 0 or any(
+        route_ is None or side_ == 0 for route_, side_ in conditions
     ):
         return None
-    return inner, side, faces
+    # The side where the first route lies, from each condition.
+    first_sides = {
+        side_ if route_ is first else -side_ for route_, side_ in conditions
+    }
+    if len(first_sides) != 1:
+        return None
+    first_side = first_sides.pop()
+    # The inner route is the one that turns off earlier, if an end tells.
+    inner = first
+    for route_, _ in conditions:
+        if route_ is not None and route_ is not first:
+            inner = route_
+            break
+    return inner, first_side if inner is first else -first_side, faces
 
 
 def _route_end(

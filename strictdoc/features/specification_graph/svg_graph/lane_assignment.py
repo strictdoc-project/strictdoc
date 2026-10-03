@@ -106,7 +106,9 @@ def assign_lanes(
     result: Dict[SegmentKey, int] = {}
     conflicts: List[LaneConflictPair] = []
     lane_offset = 0
-    segments = _yield_to_nesting(_apply_forced_halves(segments, forced))
+    segments = _yield_to_nesting(
+        _apply_forced_halves(segments, forced, priority)
+    )
     # (earlier, later) -> the earlier segment takes the smaller lane.
     forced_pairs: Set[Tuple[SegmentKey, SegmentKey]] = {
         (order_.outer, order_.inner)
@@ -231,18 +233,40 @@ def _keep_ribbons(
 
 
 def _apply_forced_halves(
-    segments: List[LaneSegment], forced: Sequence[ForcedOrder]
+    segments: List[LaneSegment],
+    forced: Sequence[ForcedOrder],
+    priority: LaneConflictPriority,
 ) -> List[LaneSegment]:
     """
     Move the inner segment of each forced pair into the half of the outer.
+
+    The segments of the inner half that must lie on the same side of the
+    outer segment by their own ends move with it. Otherwise the half of the
+    inner segment would keep them on the other side of the outer segment,
+    and they would cross it.
     """
 
-    half_by_key = {segment_.key: segment_.half for segment_ in segments}
-    target_half = {
-        order_.inner: half_by_key[order_.outer]
-        for order_ in forced
-        if order_.inner in half_by_key and order_.outer in half_by_key
-    }
+    segment_by_key = {segment_.key: segment_ for segment_ in segments}
+    target_half: Dict[SegmentKey, int] = {}
+    for order_ in forced:
+        if order_.inner not in segment_by_key or (
+            order_.outer not in segment_by_key
+        ):
+            continue
+        inner_half_ = segment_by_key[order_.inner].half
+        outer_ = segment_by_key[order_.outer]
+        target_half[order_.inner] = outer_.half
+        if inner_half_ == outer_.half:
+            continue
+        # 1: the segment comes before the outer one, as an earlier lane.
+        inner_side_ = -1 if order_.inner_is_later else 1
+        for segment_ in segments:
+            if (
+                segment_.half == inner_half_
+                and segment_.key != order_.inner
+                and _ends_order(segment_, outer_, priority) == inner_side_
+            ):
+                target_half[segment_.key] = outer_.half
     return [
         replace(segment_, half=target_half[segment_.key])
         if segment_.key in target_half
@@ -344,6 +368,24 @@ def _coincident_order(first: LaneSegment, second: LaneSegment) -> int:
             ):
                 return -1 if first_member_.to_high_side else 1
     return 0
+
+
+def _ends_order(
+    first: LaneSegment, second: LaneSegment, priority: LaneConflictPriority
+) -> int:
+    """
+    Return the order that the ends of two segments require.
+
+    Return 1 if the first segment must take a lower lane, -1 for the
+    opposite, and 0 if the ends require no order or contradict each other.
+    """
+
+    coincident = _coincident_order(first, second)
+    if coincident != 0:
+        return coincident
+    conflicts: List[LaneConflictPair] = []
+    order = _pair_order(first, second, priority, conflicts)
+    return 0 if len(conflicts) > 0 else order
 
 
 def _pair_order(

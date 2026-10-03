@@ -1279,8 +1279,9 @@ ONE_FACE_CASES: Tuple[GalleryCase, ...] = (
         "One face: two relations out, an opposite line between",
         (
             "C2 -> S1 and C2 -> S2 leave the top face of C2 to the left. "
-            "S1 -> C1 goes the other way and lies between them where they "
-            "run together."
+            "S1 -> C1 goes the other way and turns up into C1, while both "
+            "lines of C2 come up from below. S1 -> C1 runs above both of "
+            "them, and the lines of C2 stay together."
         ),
         [("Doc", ["A1", ("S", ["S1", "S2"]), "C1", "C2"])],
         [("A1", "S1"), ("C2", "S1"), ("C2", "S2"), ("S1", "A1"), ("S1", "C1")],
@@ -1289,8 +1290,9 @@ ONE_FACE_CASES: Tuple[GalleryCase, ...] = (
         "One face: relations out and in, a line between",
         (
             "A1 -> S2 leaves the bottom face of A1 and S1 -> A1 enters it, "
-            "both on the right. A2 -> S2 lies between them where they run "
-            "together."
+            "both on the right. A2 -> S2 comes up from A2 below, while "
+            "A1 -> S2 turns up to A1. A2 -> S2 runs below the lines of A1 "
+            "and does not split them."
         ),
         [("Doc", ["A1", "A2", ("S", ["S1", "S2"]), "C1"])],
         [("A1", "S2"), ("A2", "S2"), ("S1", "A1")],
@@ -1299,8 +1301,7 @@ ONE_FACE_CASES: Tuple[GalleryCase, ...] = (
         "One face: relations out and in, an opposite line between",
         (
             "A1 -> S1 leaves the bottom face of A1 and S1 -> A1 enters it, "
-            "both on the right. S1 -> A2 lies between them where they run "
-            "together."
+            "both on the right. S1 -> A2 does not run between them."
         ),
         [("Doc", ["A1", "A2", ("S", ["S1"]), "C1"])],
         [("A1", "S1"), ("S1", "A1"), ("S1", "A2")],

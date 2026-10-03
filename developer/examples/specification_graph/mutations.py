@@ -570,6 +570,20 @@ MUTATIONS = (
         "        and False\n",
     ),
     Mutation(
+        "ST7",
+        "an end where the routes turn off to different sides sets no order",
+        STRUCTURE_STRETCHES,
+        "        if first_turn_ != 0 and second_turn_ == -first_turn_:\n",
+        "        if False:\n",
+    ),
+    Mutation(
+        "LO4",
+        "only the inner segment of a nested pair leaves its half",
+        LANES,
+        "                and _ends_order(segment_, outer_, priority) == inner_side_\n",
+        "                and False\n",
+    ),
+    Mutation(
         "ST3",
         "a shared stretch keeps the channels where the routes only touch",
         STRUCTURE_STRETCHES,

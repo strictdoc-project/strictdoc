@@ -521,6 +521,45 @@ def test_shared_stretch_of_one_channel_under_the_columns() -> None:
         ), title_
 
 
+def test_routes_that_turn_off_to_different_sides_keep_their_sides() -> None:
+    """
+    An end of a shared stretch where the routes turn off to different
+    sides sets their order: each route lies on the side it turns to.
+
+    A1 -> S2 and A2 -> S2 start in one column, so which one turns off
+    earlier is not known. A1 -> S2 turns up to A1, A2 -> S2 turns down to
+    A2, so A2 -> S2 lies below and the routes do not cross. With it,
+    S1 -> C1 lies above both lines of C2: the line C2 -> S2 moves with
+    C2 -> S1 to the side of S1 -> C1 that its own ends require.
+
+    Code: structure_stretches._nesting, lane_assignment._apply_forced_halves.
+    Fails if:
+    - an end where the routes turn off to different sides sets no order.
+    - only the inner segment of a nested pair leaves its half.
+    """
+
+    for title_, first_, second_ in (
+        (
+            "One face: relations out and in, a line between",
+            ("A1", "S2"),
+            ("A2", "S2"),
+        ),
+        (
+            "One face: two relations out, an opposite line between",
+            ("C2", "S2"),
+            ("S1", "C1"),
+        ),
+    ):
+        normalized_graph, _, _, paths = _result(_case(title_))
+        assert (
+            crossing_count(
+                paths[_edge_id(normalized_graph, *first_)],
+                paths[_edge_id(normalized_graph, *second_)],
+            )
+            == 0
+        ), title_
+
+
 def test_foreign_line_does_not_split_a_ribbon() -> None:
     """
     A foreign line passes a ribbon from one side, if this costs no crossing.
@@ -603,7 +642,11 @@ def test_segments_lie_on_the_lane_grid(case: GalleryCase) -> None:
 # One segment of a route in a channel: the start and the end of the
 # segment, the lane, and whether its two legs go to the high side (down or
 # right) or None if they go to different sides.
-_ChannelSegment = Tuple[Point, Point, int, Optional[bool]]
+# Start, end, lane, the side of both legs if they go to one side, and each
+# leg: (position along the channel, goes toward the high side).
+_ChannelSegment = Tuple[
+    Point, Point, int, Optional[bool], Tuple[Tuple[float, bool], ...]
+]
 
 
 @pytest.mark.parametrize(
@@ -614,9 +657,11 @@ def test_structure_routes_follow_right_hand_traffic(case: GalleryCase) -> None:
     In one channel, the lanes of both directions follow right-hand traffic.
 
     A horizontal lane that goes left lies above a lane that goes right. A
-    vertical lane that goes up lies right of a lane that goes down. Only a
-    segment nested in a segment of the other direction, in its channel or on
-    a shared stretch, may leave its half.
+    vertical lane that goes up lies right of a lane that goes down. A
+    segment may leave its half only where the ends require it: it is nested
+    in a segment of the other direction, in its channel or on a shared
+    stretch, or the order of right-hand traffic would make a leg of the
+    pair cross the other segment.
 
     Code: structure_routing._Router._assign_horizontal_lanes,
     structure_routing._Router._assign_vertical_lanes,
@@ -624,7 +669,7 @@ def test_structure_routes_follow_right_hand_traffic(case: GalleryCase) -> None:
     structure_stretches.shared_stretch_orders.
     Fails if:
     - the halves of a horizontal or a vertical channel are swapped.
-    - a segment that is not nested leaves its half.
+    - a segment leaves its half although the ends do not require it.
     """
 
     normalized_graph, routing, geometry, _ = _result(case)
@@ -645,16 +690,29 @@ def test_structure_routes_follow_right_hand_traffic(case: GalleryCase) -> None:
                 continue
             if channel_.is_horizontal:
                 goes_low_ = end_.x < start_.x
-                legs_ = {before_.y > start_.y, after_.y > end_.y}
+                leg_list_ = (
+                    (start_.x, before_.y > start_.y),
+                    (end_.x, after_.y > end_.y),
+                )
             else:
                 goes_low_ = end_.y < start_.y
-                legs_ = {before_.x > start_.x, after_.x > end_.x}
+                leg_list_ = (
+                    (start_.y, before_.x > start_.x),
+                    (end_.y, after_.x > end_.x),
+                )
+            legs_ = {goes_high_ for _, goes_high_ in leg_list_}
             if (route_.edge_id, index_) in stretch_inner_keys:
                 continue
             directions.setdefault(channel_, ([], []))[
                 0 if goes_low_ else 1
             ].append(
-                (start_, end_, lane_, legs_.pop() if len(legs_) == 1 else None)
+                (
+                    start_,
+                    end_,
+                    lane_,
+                    legs_.pop() if len(legs_) == 1 else None,
+                    leg_list_,
+                )
             )
     for channel_, (low_, high_) in directions.items():
         is_horizontal_ = channel_.is_horizontal  # type: ignore[attr-defined]
@@ -668,7 +726,9 @@ def test_structure_routes_follow_right_hand_traffic(case: GalleryCase) -> None:
                     else first_[2] > second_[2]
                 )
                 if not in_order_:
-                    assert any(
+                    assert _traffic_order_crosses(
+                        first_, second_, is_horizontal_
+                    ) or any(
                         _is_nested(first_, outer_, is_horizontal_)
                         for outer_ in high_
                     ) or any(
@@ -698,6 +758,35 @@ def _stretch_inner_keys(
         for orders_ in router.forced_orders.values()
         for order_ in orders_
     }
+
+
+def _traffic_order_crosses(
+    low: _ChannelSegment, high: _ChannelSegment, is_horizontal: bool
+) -> bool:
+    """
+    Return True if the order of right-hand traffic makes a leg of one
+    segment cross the other one.
+
+    low goes toward the low side of the channel, high toward the high side.
+    Right-hand traffic puts low on the low side of high in a horizontal
+    channel (above) and on the high side in a vertical channel (right).
+    """
+
+    def span(segment: _ChannelSegment) -> Tuple[float, float]:
+        start_, end_ = segment[0], segment[1]
+        values_ = (start_.x, end_.x) if is_horizontal else (start_.y, end_.y)
+        return min(values_), max(values_)
+
+    low_on_high_side = not is_horizontal
+    high_low, high_high = span(high)
+    low_low, low_high = span(low)
+    return any(
+        high_low < position_ < high_high and goes_high_ != low_on_high_side
+        for position_, goes_high_ in low[4]
+    ) or any(
+        low_low < position_ < low_high and goes_high_ == low_on_high_side
+        for position_, goes_high_ in high[4]
+    )
 
 
 def _is_nested(

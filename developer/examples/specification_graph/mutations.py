@@ -339,6 +339,13 @@ MUTATIONS = (
         "    for _ in range(1):\n",
     ),
     Mutation(
+        "ST10",
+        "a pair whose ends require different orders gets no order",
+        STRUCTURE_STRETCHES,
+        "        if step != 1:\n            return None\n",
+        "        return None\n",
+    ),
+    Mutation(
         "R2",
         "lane priority inverted",
         LANES,

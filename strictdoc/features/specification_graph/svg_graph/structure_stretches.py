@@ -343,6 +343,11 @@ def _nesting(
     right-hand traffic: the first route lies on its right side. Otherwise
     the order in each channel and on each face would be chosen apart, and
     the routes could cross near a face.
+
+    If the routes go the same way and the conditions of the two ends
+    contradict, one crossing is unavoidable. The routes keep the order of
+    the end where they come together on the whole stretch, and cross where
+    they part. They do not change their order in a channel in between.
     """
 
     first_start, second_start, length, step = run
@@ -421,8 +426,15 @@ def _nesting(
         side_ if route_ is first else -side_ for route_, side_ in conditions
     }
     if len(first_sides) != 1:
-        return None
-    first_side = first_sides.pop()
+        if step != 1:
+            return None
+        # Two conditions that contradict: the first one is the end where
+        # the routes come together.
+        route_, side_ = conditions[0]
+        first_side = side_ if route_ is first else -side_
+        conditions = [conditions[0]]
+    else:
+        first_side = first_sides.pop()
     # The inner route is the one that turns off earlier, if an end tells.
     inner = first
     for route_, _ in conditions:

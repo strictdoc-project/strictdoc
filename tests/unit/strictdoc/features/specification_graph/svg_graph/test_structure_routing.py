@@ -641,6 +641,44 @@ def test_pair_between_shared_faces_keeps_one_order() -> None:
     )
 
 
+def test_pair_that_must_cross_keeps_the_order_where_it_joins() -> None:
+    """
+    Two routes that go the same way and must cross keep the order of the
+    end where they come together, and cross where they part.
+
+    N1 -> T1, S3-1 -> T2, and N4 -> T3 come together in the top corridor
+    of Section 1 and part at the column of T1, T2, T3. In the corridor,
+    from the right of the travel direction (left): N4, S3-1, N1. After the
+    turn down, the right of the travel direction is the left side, so the
+    vertical channel holds them from left to right in the same order.
+
+    Code: structure_stretches._nesting.
+    Fails if:
+    - a pair whose ends require different orders gets no order.
+    """
+
+    normalized_graph, routing, _, _ = _result(
+        _case("Document tree from the sketch")
+    )
+
+    def vertical_lane(source_id: str, target_id: str) -> int:
+        route_ = routing.routes[
+            _edge_id(normalized_graph, source_id, target_id)
+        ]
+        return next(
+            lane_
+            for channel_, lane_ in zip(route_.channels, route_.lanes)
+            if channel_.kind is ChannelKind.VERTICAL
+            and channel_.container_id is None
+        )
+
+    assert (
+        vertical_lane("N4", "T3")
+        < vertical_lane("S3-1", "T2")
+        < vertical_lane("N1", "T1")
+    )
+
+
 def test_foreign_line_does_not_split_a_ribbon() -> None:
     """
     A foreign line passes a ribbon from one side, if this costs no crossing.

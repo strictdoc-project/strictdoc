@@ -330,7 +330,7 @@ def test_bottom_corridor_keeps_the_lane_order() -> None:
     )
 
     left = paths[_edge_id(normalized_graph, "C2", "A2")]
-    right = paths[_edge_id(normalized_graph, "B2", "C2")]
+    right = paths[_edge_id(normalized_graph, "A2", "C2")]
     assert right[1].y == left[1].y + geometry.config.lane_pitch
     corridor = next(
         channel_.rect
@@ -482,6 +482,43 @@ def test_shared_stretch_keeps_the_nested_route_inside() -> None:
     assert crossings(("C2", "A2"), ("A2", "R2")) == 0
     assert crossings(("C2", "A2"), ("L2", "C2")) == 0
     assert crossings(("C3", "A3"), ("C1", "C3")) == 1
+
+
+def test_shared_stretch_of_one_channel_under_the_columns() -> None:
+    """
+    A shared stretch of one channel under the columns follows the shared
+    stretch rule.
+
+    C2 -> A2 and B2 -> C2 run under the columns only; B2 -> C2 is nested.
+    A1 -> S1 and S1 -> A1 also share the vertical channel left of S, but
+    S1 -> A1 crosses it by a through pass, so only the space under A1 is
+    shared. S1 -> A1 goes on straight past the through pass and turns off
+    later, so A1 -> S1 is nested.
+
+    Code: structure_stretches._common_runs,
+    structure_stretches._trimmed_run, structure_stretches._route_end.
+    Fails if:
+    - a single common channel under the columns is not a stretch.
+    - a stretch trimmed to one channel under the columns is dropped.
+    - a through pass counts as the place where a route turns off.
+    """
+
+    for title_, first_, second_ in (
+        ("Nested pair under the columns", ("C2", "A2"), ("B2", "C2")),
+        (
+            "One face: two relations out, an opposite line between",
+            ("A1", "S1"),
+            ("S1", "A1"),
+        ),
+    ):
+        normalized_graph, _, _, paths = _result(_case(title_))
+        assert (
+            crossing_count(
+                paths[_edge_id(normalized_graph, *first_)],
+                paths[_edge_id(normalized_graph, *second_)],
+            )
+            == 0
+        ), title_
 
 
 def test_foreign_line_does_not_split_a_ribbon() -> None:

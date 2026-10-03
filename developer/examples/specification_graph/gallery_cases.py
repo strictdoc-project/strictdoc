@@ -700,10 +700,35 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
     _structure_case(
         "Lane order in the bottom corridor",
         (
-            "C2 -> A2 goes left and passes under the tall section T. "
-            "B2 -> C2 goes right and passes under short columns only. The "
-            "segments overlap. Right-hand traffic puts the segment that goes "
-            "left above, so B2 -> C2 lies below C2 -> A2."
+            "A2 -> C2 and C2 -> A2 both pass under the tall section T, so "
+            "both would lie just below it. The segments overlap. Right-hand "
+            "traffic puts the segment that goes left above, so A2 -> C2 lies "
+            "one lane below C2 -> A2."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    "A2",
+                    ("T", ["T1", "T2", "T3", "T4"]),
+                    "B1",
+                    "B2",
+                    ("U", ["U1"]),
+                    "C1",
+                    "C2",
+                ],
+            )
+        ],
+        [("C2", "A2"), ("A2", "C2")],
+    ),
+    _structure_case(
+        "Nested pair under the columns",
+        (
+            "C2 -> A2 and B2 -> C2 run under the columns only and share the "
+            "bottom face of C2. B2 -> C2 turns off earlier and up, so it is "
+            "nested and stays above C2 -> A2. Its port at C2 stands on the "
+            "same side, and the lines do not cross."
         ),
         [
             (
@@ -1388,6 +1413,7 @@ GALLERY_CHAPTERS: Tuple[GalleryChapter, ...] = (
         "Through pass under a short section",
         "Vertical lane at the height of a column gap",
         "Lane order in the bottom corridor",
+        "Nested pair under the columns",
         "Steps beside a pocket",
     ),
     _chapter(

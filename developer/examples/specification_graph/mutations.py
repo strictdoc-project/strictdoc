@@ -528,6 +528,27 @@ MUTATIONS = (
         "if False:",
     ),
     Mutation(
+        "ST4",
+        "a single common channel under the columns is not a stretch",
+        STRUCTURE_STRETCHES,
+        "                    and first[first_start_].kind is ChannelKind.BOTTOM_CORRIDOR\n",
+        "                    and False\n",
+    ),
+    Mutation(
+        "ST5",
+        "a stretch trimmed to one channel under the columns is dropped",
+        STRUCTURE_STRETCHES,
+        "    if length == 1 and (\n",
+        "    if False and (\n",
+    ),
+    Mutation(
+        "ST6",
+        "a through pass counts as the place where a route turns off",
+        STRUCTURE_STRETCHES,
+        "        and points[index + step] == points[index]\n",
+        "        and False\n",
+    ),
+    Mutation(
         "ST3",
         "a shared stretch keeps the channels where the routes only touch",
         STRUCTURE_STRETCHES,

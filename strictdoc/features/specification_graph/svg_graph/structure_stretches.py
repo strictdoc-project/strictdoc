@@ -27,6 +27,7 @@ from strictdoc.features.specification_graph.svg_graph.structure_geometry import 
     StructureGeometry,
 )
 from strictdoc.features.specification_graph.svg_graph.structure_layout import (
+    ChannelKind,
     StructureChannelId,
 )
 
@@ -71,7 +72,8 @@ def shared_stretch_orders(
     Return the forced lane orders of the nested pairs on shared stretches.
 
     This function is the only place of the rule for the stretches of two or
-    more channels. spec.md, section "Общий участок". A shared stretch is the
+    more channels, and for the stretches of one channel under the columns.
+    spec.md, section "Общий участок". A shared stretch is the
     longest chain of channels that two routes pass one after another, in
     the same direction or toward each other. A route is nested in the other
     if at both ends of the stretch it turns off earlier and to the same
@@ -81,8 +83,9 @@ def shared_stretch_orders(
     other route, and on a face where the stretch ends, its port stands on
     that side.
 
-    The stretches of one channel follow the same rule in
-    lane_assignment._yield_to_nesting.
+    The stretches of one channel with lanes follow the same rule in
+    lane_assignment._yield_to_nesting. Under the columns, the segments have
+    no lanes of their own, so this function serves those stretches too.
     """
 
     points = {plan_.index: _plan_points(plan_, exact) for plan_ in plans}
@@ -90,13 +93,24 @@ def shared_stretch_orders(
     port_orders: List[ForcedPortOrder] = []
     for first_index_, first_ in enumerate(plans):
         for second_ in plans[first_index_ + 1 :]:
+            first_points_ = points[first_.index]
+            second_points_ = points[second_.index]
+            # Different runs can trim to the same stretch of one channel
+            # under the columns. Each stretch counts once.
+            stretches_ = []
             for run_ in _common_runs(first_.channels, second_.channels):
+                trimmed_ = _trimmed_run(
+                    first_, first_points_, second_points_, run_
+                )
+                if trimmed_ is not None and trimmed_ not in stretches_:
+                    stretches_.append(trimmed_)
+            for stretch_ in stretches_:
                 _add_stretch_orders(
                     first_,
                     second_,
-                    points[first_.index],
-                    points[second_.index],
-                    run_,
+                    first_points_,
+                    second_points_,
+                    stretch_,
                     result,
                     port_orders,
                 )
@@ -143,6 +157,8 @@ def _common_runs(
 
     A run is (start in first, start in second, length, step in second). The
     step is 1 for the same direction and -1 for routes toward each other.
+    A single common channel under the columns is a run too, with both
+    steps: _trimmed_run picks the step by the travel directions.
     """
 
     result = []
@@ -164,7 +180,10 @@ def _common_runs(
                     == second[second_start_ + step_ * length_]
                 ):
                     length_ += 1
-                if length_ >= 2:
+                if length_ >= 2 or (
+                    length_ == 1
+                    and first[first_start_].kind is ChannelKind.BOTTOM_CORRIDOR
+                ):
                     result.append((first_start_, second_start_, length_, step_))
     return result
 
@@ -187,10 +206,7 @@ def _add_stretch_orders(
     result: Dict[StructureChannelId, List[ForcedOrder]],
     port_orders: List[ForcedPortOrder],
 ) -> None:
-    trimmed = _trimmed_run(first, first_points, second_points, run)
-    if trimmed is None:
-        return
-    nesting = _nesting(first, second, first_points, second_points, trimmed)
+    nesting = _nesting(first, second, first_points, second_points, run)
     if nesting is None:
         return
     inner, side, faces = nesting
@@ -208,7 +224,7 @@ def _add_stretch_orders(
                 inner_is_right=-direction_[1] * side > 0,
             )
         )
-    first_start, second_start, length, step = trimmed
+    first_start, second_start, length, step = run
     for offset_ in range(length):
         first_position_ = first_start + offset_
         second_position_ = second_start + step * offset_
@@ -250,7 +266,8 @@ def _trimmed_run(
     Return the run without the end channels where the segments only touch.
 
     The routes run side by side only where their segments overlap. Return
-    None if fewer than two channels remain.
+    None if fewer than two channels remain, unless the one channel left lies
+    under the columns.
     """
 
     first_start, second_start, length, step = run
@@ -281,6 +298,17 @@ def _trimmed_run(
         length -= 1
     while length > 0 and overlap(length - 1) <= 0:
         length -= 1
+    if length == 1 and (
+        first.channels[first_start].kind is ChannelKind.BOTTOM_CORRIDOR
+    ):
+        # One channel does not tell by itself whether the routes go the
+        # same way or toward each other: the travel directions do.
+        same_way = _direction(
+            first_points[first_start + 1], first_points[first_start + 2]
+        ) == _direction(
+            second_points[second_start + 1], second_points[second_start + 2]
+        )
+        return first_start, second_start, 1, 1 if same_way else -1
     if length < 2:
         return None
     return first_start, second_start, length, step
@@ -381,11 +409,19 @@ def _route_end(
     Return the point where a route leaves a stretch and the next point.
 
     looks_up: the route leaves toward its later channels.
+
+    A through pass is a segment of zero length: the route goes on straight
+    past it, so it leaves the stretch where it really turns.
     """
 
-    if looks_up:
-        return points[position + 2], points[position + 3]
-    return points[position + 1], points[position]
+    step = 1 if looks_up else -1
+    index = position + 2 if looks_up else position + 1
+    while (
+        0 <= index + 3 * step < len(points)
+        and points[index + step] == points[index]
+    ):
+        index += 2 * step
+    return points[index], points[index + step]
 
 
 def _same_face(

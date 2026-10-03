@@ -266,8 +266,9 @@ def test_side_entry_lies_below_the_top_corridor() -> None:
     A line that enters a section through its side face into the outer
     vertical channel lies below the top corridor of the section.
 
-    The top corridor of L1 has three lanes. The space under A1 alone would
-    put A1 -> X1 at the height of the lowest of them.
+    The top corridor of L1 has three lanes. A1 -> X1 is the only line
+    under A1, so the space under A1 alone would put it at the height of the
+    lowest lane.
 
     Code: structure_geometry._GeometryBuilder._side_entry_floor,
     structure_geometry._GeometryBuilder._bottom_corridor.
@@ -276,7 +277,7 @@ def test_side_entry_lies_below_the_top_corridor() -> None:
     """
 
     normalized_graph, _, geometry, paths = _result(
-        _case("Side entry below a top corridor with lanes")
+        _case("Side entry below a top corridor, one line under the node")
     )
 
     corridor = geometry.channel_rect(

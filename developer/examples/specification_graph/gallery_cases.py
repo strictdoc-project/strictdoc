@@ -1147,6 +1147,27 @@ ACROSS_CONTAINERS_CASES: Tuple[GalleryCase, ...] = (
         ],
     ),
     _structure_case(
+        "Side entry below a top corridor, one line under the node",
+        (
+            "Y1 relates to B1 and B2, so the top corridor of L1 has three "
+            "lanes. A1 -> X1 is the only line under A1. By the space under "
+            "A1 alone, it would lie at the height of the lowest lane of the "
+            "corridor. It enters L1 below the top corridor."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    ("L1", [("L2", ["X1", "X2"]), "Y1"]),
+                    "B1",
+                    "B2",
+                ],
+            )
+        ],
+        [("A1", "X1"), ("Y1", "B1"), ("B1", "Y1"), ("B2", "Y1")],
+    ),
+    _structure_case(
         "Relation across a long column",
         (
             "L2 -> R2 connects two short columns with a long column C between "
@@ -1217,6 +1238,60 @@ ACROSS_CONTAINERS_CASES: Tuple[GalleryCase, ...] = (
 )
 
 
+# Open question: lines from one face that are not a pair of a shared
+# stretch. A foreign line lies between them where they run together.
+ONE_FACE_CASES: Tuple[GalleryCase, ...] = (
+    _structure_case(
+        "One face: two relations out, a line between",
+        (
+            "C2 -> S1 and C2 -> S2 leave the top face of C2 to the left. "
+            "C1 -> S2 lies between them where they run together."
+        ),
+        [("Doc", ["A1", ("S", ["S1", "S2"]), "C1", "C2"])],
+        [("C1", "S2"), ("C2", "S1"), ("C2", "S2")],
+    ),
+    _structure_case(
+        "One face: two relations out, an opposite line between",
+        (
+            "C2 -> S1 and C2 -> S2 leave the top face of C2 to the left. "
+            "S1 -> C1 goes the other way and lies between them where they "
+            "run together."
+        ),
+        [("Doc", ["A1", ("S", ["S1", "S2"]), "C1", "C2"])],
+        [("A1", "S1"), ("C2", "S1"), ("C2", "S2"), ("S1", "A1"), ("S1", "C1")],
+    ),
+    _structure_case(
+        "One face: relations out and in, a line between",
+        (
+            "A1 -> S2 leaves the bottom face of A1 and S1 -> A1 enters it, "
+            "both on the right. A2 -> S2 lies between them where they run "
+            "together."
+        ),
+        [("Doc", ["A1", "A2", ("S", ["S1", "S2"]), "C1"])],
+        [("A1", "S2"), ("A2", "S2"), ("S1", "A1")],
+    ),
+    _structure_case(
+        "One face: relations out and in, an opposite line between",
+        (
+            "A1 -> S1 leaves the bottom face of A1 and S1 -> A1 enters it, "
+            "both on the right. S1 -> A2 lies between them where they run "
+            "together."
+        ),
+        [("Doc", ["A1", "A2", ("S", ["S1"]), "C1"])],
+        [("A1", "S1"), ("S1", "A1"), ("S1", "A2")],
+    ),
+    _structure_case(
+        "One face: two relations in, a line between",
+        (
+            "C1 -> E2 and S1 -> E2 enter the bottom face of E2 from the "
+            "left. Q1 -> S1 lies between them where they run together."
+        ),
+        [("Doc", ["A1", ("S", ["S1"]), "C1", ("Q", ["Q1"]), "E1", "E2"])],
+        [("C1", "E2"), ("Q1", "S1"), ("S1", "A1"), ("S1", "E1"), ("S1", "E2")],
+    ),
+)
+
+
 SERIALIZATION_CASES: Tuple[GalleryCase, ...] = (
     GalleryCase(
         title="Titles, relation types, and diagnostics",
@@ -1273,6 +1348,7 @@ _ALL_CASES: Tuple[GalleryCase, ...] = (
     SERIALIZATION_CASES
     + STRUCTURE_CASES
     + ACROSS_CONTAINERS_CASES
+    + ONE_FACE_CASES
     + LEVELS_CASES
     + EXTREME_GATE_CASES
 )
@@ -1317,6 +1393,10 @@ GALLERY_CHAPTERS: Tuple[GalleryChapter, ...] = (
     _chapter(
         "Structure: routes across containers",
         *(case_.title for case_ in ACROSS_CONTAINERS_CASES),
+    ),
+    _chapter(
+        "Structure: lines from one face (open question)",
+        *(case_.title for case_ in ONE_FACE_CASES),
     ),
     _chapter(
         "Levels: layout",

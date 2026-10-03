@@ -27,7 +27,6 @@ from strictdoc.features.specification_graph.svg_graph.structure_geometry import 
     StructureGeometry,
 )
 from strictdoc.features.specification_graph.svg_graph.structure_layout import (
-    ChannelKind,
     StructureChannelId,
 )
 
@@ -153,12 +152,13 @@ def _common_runs(
     second: Tuple[StructureChannelId, ...],
 ) -> List[Tuple[int, int, int, int]]:
     """
-    Return the maximal common runs of two or more channels.
+    Return the maximal common runs of channels.
 
     A run is (start in first, start in second, length, step in second). The
     step is 1 for the same direction and -1 for routes toward each other.
-    A single common channel under the columns is a run too, with both
-    steps: _trimmed_run picks the step by the travel directions.
+    A single common channel is a run with both steps: _trimmed_run picks
+    the step by the travel directions. A single channel inside a longer
+    run is no run of its own.
     """
 
     result = []
@@ -180,12 +180,19 @@ def _common_runs(
                     == second[second_start_ + step_ * length_]
                 ):
                     length_ += 1
-                if length_ >= 2 or (
-                    length_ == 1
-                    and first[first_start_].kind is ChannelKind.BOTTOM_CORRIDOR
-                ):
+                if length_ >= 1:
                     result.append((first_start_, second_start_, length_, step_))
-    return result
+    covered = {
+        (first_start_ + offset_, second_start_ + step_ * offset_)
+        for first_start_, second_start_, length_, step_ in result
+        if length_ >= 2
+        for offset_ in range(length_)
+    }
+    return [
+        run_
+        for run_ in result
+        if run_[2] >= 2 or (run_[0], run_[1]) not in covered
+    ]
 
 
 # A common run of channels: start in the first route, start in the second
@@ -298,9 +305,7 @@ def _trimmed_run(
         length -= 1
     while length > 0 and overlap(length - 1) <= 0:
         length -= 1
-    if length == 1 and (
-        first.channels[first_start].kind is ChannelKind.BOTTOM_CORRIDOR
-    ):
+    if length == 1:
         # One channel does not tell by itself whether the routes go the
         # same way or toward each other: the travel directions do.
         same_way = _direction(

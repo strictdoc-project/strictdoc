@@ -866,24 +866,21 @@ class _Router:
         "Порядок расчёта". The count is known before the lanes, so the
         heights of the columns are exact when the lanes need them.
 
-        A column channel has two halves by right-hand traffic: the segments
-        that go left and the segments that go right. In one half, the
-        segments to the left vertical channel overlap each other, and so do
-        the segments to the right one. A segment to the left and a segment
-        to the right do not overlap, because the ports of the left side of
-        a face stand left of the ports of the right side. So they share
-        lanes. A segment across the channel overlaps all segments of its
-        half:
+        The segments to the left vertical channel overlap each other, and
+        so do the segments to the right one. A segment to the left and a
+        segment to the right do not overlap, because the ports of the left
+        side of a face stand left of the ports of the right side. So they
+        share lanes, whatever their directions. A segment across the
+        channel overlaps all segments:
 
-            lanes = sum over the two halves of
-                    max(segments to the left, segments to the right)
+            lanes = max(segments to the left, segments to the right)
                     + segments across
 
         A test checks that the lane assignment gives the same count.
         """
 
-        # Channel -> half -> [to the left, to the right, across].
-        counts: Dict[StructureChannelId, Dict[int, List[int]]] = {}
+        # Channel -> [to the left, to the right, across].
+        counts: Dict[StructureChannelId, List[int]] = {}
         for plan_ in plans:
             if plan_.edge.edge_id in straight_ids:
                 continue
@@ -893,38 +890,32 @@ class _Router:
                 if channel_.kind is not ChannelKind.COLUMN:
                     continue
                 # The levels of the vertical channels are their x.
-                if 0 < position_ < last_:
-                    goes_left_ = (
-                        plan_.levels[position_ + 1]
-                        < plan_.levels[position_ - 1]
+                if position_ == 0 and last_ > 0:
+                    kind_ = (
+                        0
+                        if plan_.levels[1]
+                        < _center_x(
+                            self.estimate.node_rects[plan_.edge.source_id]
+                        )
+                        else 1
                     )
-                    kind_ = 2
-                elif position_ == 0 and last_ > 0:
-                    to_left_ = plan_.levels[1] < _center_x(
-                        self.estimate.node_rects[plan_.edge.source_id]
-                    )
-                    goes_left_ = to_left_
-                    kind_ = 0 if to_left_ else 1
                 elif position_ == last_ and last_ > 0:
-                    from_left_ = plan_.levels[last_ - 1] < _center_x(
-                        self.estimate.node_rects[plan_.edge.target_id]
+                    kind_ = (
+                        0
+                        if plan_.levels[last_ - 1]
+                        < _center_x(
+                            self.estimate.node_rects[plan_.edge.target_id]
+                        )
+                        else 1
                     )
-                    goes_left_ = not from_left_
-                    kind_ = 0 if from_left_ else 1
                 else:
-                    # From a port to a port of the same channel.
-                    goes_left_ = False
+                    # Across the channel, or from a port to a port of the
+                    # same channel.
                     kind_ = 2
-                half_ = 0 if goes_left_ else 1
-                counts.setdefault(channel_, {}).setdefault(half_, [0, 0, 0])[
-                    kind_
-                ] += 1
+                counts.setdefault(channel_, [0, 0, 0])[kind_] += 1
         return {
-            channel_: sum(
-                max(left_, right_) + across_
-                for left_, right_, across_ in halves_.values()
-            )
-            for channel_, halves_ in counts.items()
+            channel_: max(left_, right_) + across_
+            for channel_, (left_, right_, across_) in counts.items()
         }
 
     def _exact_levels(
@@ -1028,16 +1019,20 @@ class _Router:
                         # Right-hand traffic: up in the right half, down in
                         # the left half.
                         half=1 if exit_y_ < entry_y_ else 0,
+                        # The lanes of the horizontal channels are not known
+                        # yet: their levels stand for them.
                         members=(
                             CrossMember(
                                 position=(entry_y_, 0.0),
                                 to_high_side=entry_far_x_ > vertical_x_,
                                 is_entry=True,
+                                is_exact=False,
                             ),
                             CrossMember(
                                 position=(exit_y_, 0.0),
                                 to_high_side=exit_far_x_ > vertical_x_,
                                 is_entry=False,
+                                is_exact=False,
                             ),
                         ),
                         order_key=((entry_y_, 0.0), plan_.index),
@@ -1245,6 +1240,8 @@ class _Router:
                                 position=entry_,
                                 to_high_side=previous_y_ > channel_y_,
                                 is_entry=True,
+                                is_exact=(edge_id_, position_ - 1)
+                                in vertical_lanes,
                             )
                         )
                 if position_ == last_:
@@ -1269,6 +1266,8 @@ class _Router:
                                 position=exit_,
                                 to_high_side=next_y_ > channel_y_,
                                 is_entry=False,
+                                is_exact=(edge_id_, position_ + 1)
+                                in vertical_lanes,
                             )
                         )
                 segments_by_channel.setdefault(channels_[position_], []).append(
@@ -1282,6 +1281,12 @@ class _Router:
                         half=0 if exit_ < entry_ else 1,
                         members=tuple(members_),
                         order_key=(entry_, plan_.index),
+                        # Under the columns, the exact level of the plan is
+                        # the base height of the segment.
+                        base_level=channel_y_
+                        if channels_[position_].kind
+                        is ChannelKind.BOTTOM_CORRIDOR
+                        else None,
                     )
                 )
         return self._assign_channel_lanes(segments_by_channel, conflicts)

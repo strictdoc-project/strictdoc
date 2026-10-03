@@ -119,16 +119,15 @@ def _extreme_gate_case(
     side = "right" if goes_right else "left"
     if goes_right:
         rule = (
-            "The group is safe: the segments into U run left in the top "
-            "half, the segments out of L run right in the bottom half. Both "
-            "faces keep one rhythm, with equal slots on one vertical."
+            "The group is safe: the segments into U run left above, the "
+            "segments out of L run right below. Both faces keep one rhythm, "
+            "with equal slots on one vertical."
         )
     else:
         rule = (
-            "The group is unsafe: the segments into U run right in the "
-            "bottom half, the segments out of L run left in the top half. "
-            "The faces share one slot list, so each port skips the slots of "
-            "the other face."
+            "The group is unsafe: the segments into U run right below, the "
+            "segments out of L run left above. The faces share one slot "
+            "list, so each port skips the slots of the other face."
         )
     return _levels_case(
         f"Extreme gate, {side}: L sends {sent_count}, "
@@ -758,6 +757,32 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
         [("A2", "B1"), ("A3", "B1")],
     ),
     _structure_case(
+        "Lines to both sides share a lane",
+        (
+            "C2 -> A2 and C2 -> E2 leave the bottom face of C2, one to the "
+            "left and one to the right. In the channel between C2 and C3 "
+            "they do not overlap, so they share one lane, although they go "
+            "in different directions."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    "A2",
+                    ("S", ["S1", "S2"]),
+                    "C1",
+                    "C2",
+                    "C3",
+                    ("Q", ["Q1"]),
+                    "E1",
+                    "E2",
+                ],
+            )
+        ],
+        [("C2", "A2"), ("C2", "E2")],
+    ),
+    _structure_case(
         "Two relations into one node over a section",
         (
             "C2 -> A2 and C3 -> A2 pass under the section S and come up to "
@@ -1263,14 +1288,16 @@ ACROSS_CONTAINERS_CASES: Tuple[GalleryCase, ...] = (
 )
 
 
-# Open question: lines from one face that are not a pair of a shared
-# stretch. A foreign line lies between them where they run together.
+# Lines from one face of a node and a line of another node that runs next
+# to them.
 ONE_FACE_CASES: Tuple[GalleryCase, ...] = (
     _structure_case(
         "One face: two relations out, a line between",
         (
             "C2 -> S1 and C2 -> S2 leave the top face of C2 to the left. "
-            "C1 -> S2 lies between them where they run together."
+            "One crossing is unavoidable. C1 -> S2 runs above both lines of "
+            "C2 in the channel between C1 and C2 and crosses C2 -> S1 once, "
+            "where it turns down."
         ),
         [("Doc", ["A1", ("S", ["S1", "S2"]), "C1", "C2"])],
         [("C1", "S2"), ("C2", "S1"), ("C2", "S2")],
@@ -1310,7 +1337,9 @@ ONE_FACE_CASES: Tuple[GalleryCase, ...] = (
         "One face: two relations in, a line between",
         (
             "C1 -> E2 and S1 -> E2 enter the bottom face of E2 from the "
-            "left. Q1 -> S1 lies between them where they run together."
+            "left. Q1 -> S1 passes under C1 in its pocket. Its crossing with "
+            "C1 -> E2 is unavoidable and lies in the pocket, where there is "
+            "room."
         ),
         [("Doc", ["A1", ("S", ["S1"]), "C1", ("Q", ["Q1"]), "E1", "E2"])],
         [("C1", "E2"), ("Q1", "S1"), ("S1", "A1"), ("S1", "E1"), ("S1", "E2")],
@@ -1404,6 +1433,7 @@ GALLERY_CHAPTERS: Tuple[GalleryChapter, ...] = (
         "Fewest bends before the shortest length",
         "Fewest bends under a tall section",
         "Relations that turn together",
+        "Lines to both sides share a lane",
         "Two relations into one node over a section",
         "Relations inside one container",
         "Relations inside one container, more ports",

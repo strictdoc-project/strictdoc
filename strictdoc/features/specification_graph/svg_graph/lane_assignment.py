@@ -3,12 +3,12 @@ Lane assignment in one channel, shared by the layout modes.
 
 spec.md, section "Полосы в канале", defines the rules. A segment is the part
 of a route inside one channel. A constraint graph orders the overlapping
-segments of one half of the channel.
+segments of the channel.
 """
 
-from dataclasses import dataclass, replace
+from dataclasses import dataclass
 from enum import Enum
-from typing import Dict, FrozenSet, List, Sequence, Set, Tuple
+from typing import Dict, FrozenSet, List, Optional, Sequence, Set, Tuple
 
 
 class LaneConflictPriority(Enum):
@@ -47,6 +47,10 @@ class CrossMember:
     # channel.
     to_high_side: bool
     is_entry: bool
+    # The position is known exactly. A position that stands for a lane not
+    # known yet, for example the center of a channel, is not exact: two
+    # such positions can be equal while the lanes differ.
+    is_exact: bool = True
 
 
 @dataclass(frozen=True)
@@ -55,13 +59,19 @@ class LaneSegment:
     edge_id: str
     low: LanePosition
     high: LanePosition
-    # Half 0 comes first: the top half of a horizontal channel or the left
-    # half of a vertical channel.
+    # The direction of travel. 0: left in a horizontal channel, down in a
+    # vertical channel. Right-hand traffic puts a segment of direction 0
+    # above (left of) an overlapping segment of direction 1 if nothing else
+    # orders them.
     half: int
     # A segment that leaves the channel through its end, for example through
     # the side face of a container, has fewer members.
     members: Tuple[CrossMember, ...]
     order_key: Tuple[LanePosition, int]
+    # Under the columns: the highest y the segment may take, the base
+    # height. A segment that passes only under short columns has its base
+    # height in a pocket. None in other channels.
+    base_level: Optional[float] = None
 
 
 @dataclass(frozen=True)
@@ -69,8 +79,8 @@ class ForcedOrder:
     """
     The order of two segments of a nested pair on a shared stretch.
 
-    spec.md, section "Общий участок". The inner segment moves to the half of
-    the outer segment if the halves differ.
+    spec.md, section "Общий участок". This order wins over the ends of the
+    two segments and over the direction of travel.
     """
 
     inner: SegmentKey
@@ -97,18 +107,16 @@ def assign_lanes(
     """
     Assign lanes in one channel.
 
-    Within a half, a constraint graph orders the overlapping segments. The
-    longest path from the first lane gives each segment its lane, so segments
-    without overlap can share a lane. A forced order of a nested pair on a
-    shared stretch replaces the constraints of that pair.
+    A constraint graph orders the overlapping segments. Each order between
+    two segments has a reason, and the reasons have strengths; a weaker
+    order that contradicts the stronger ones is dropped. The direction of
+    travel is the weakest reason: it orders only two overlapping segments
+    of different directions whose ends set no order. The longest path from
+    the first lane gives each segment its lane, so any segments without
+    overlap can share a lane, whatever their directions.
     """
 
-    result: Dict[SegmentKey, int] = {}
     conflicts: List[LaneConflictPair] = []
-    lane_offset = 0
-    segments = _yield_to_nesting(
-        _apply_forced_halves(segments, forced, priority)
-    )
     # (earlier, later) -> the earlier segment takes the smaller lane.
     forced_pairs: Set[Tuple[SegmentKey, SegmentKey]] = {
         (order_.outer, order_.inner)
@@ -116,53 +124,45 @@ def assign_lanes(
         else (order_.inner, order_.outer)
         for order_ in forced
     }
-    for half_ in (0, 1):
-        half_segments_ = sorted(
-            (segment_ for segment_ in segments if segment_.half == half_),
-            key=lambda segment_: segment_.order_key,
-        )
-        before_: Dict[SegmentKey, Set[SegmentKey]] = {
-            segment_.key: set() for segment_ in half_segments_
-        }
-        # Pairs whose order costs no crossing: the votes contradict, so one
-        # crossing happens in either order, or there are no votes.
-        free_: Set[FrozenSet[SegmentKey]] = set()
-        # (strength, earlier, later): the earlier segment takes the smaller
-        # lane. A smaller strength is a stronger reason.
-        orders_: List[Tuple[int, SegmentKey, SegmentKey]] = []
-        for first_index_, first_ in enumerate(half_segments_):
-            for second_ in half_segments_[first_index_ + 1 :]:
-                coincident_ = _coincident_order(first_, second_)
-                if coincident_ != 0:
-                    order_, strength_ = coincident_, _COINCIDENT
-                elif (first_.key, second_.key) in forced_pairs:
-                    order_, strength_ = 1, _FORCED
-                elif (second_.key, first_.key) in forced_pairs:
-                    order_, strength_ = -1, _FORCED
-                else:
-                    conflict_count_ = len(conflicts)
-                    order_ = _pair_order(first_, second_, priority, conflicts)
-                    strength_ = _CROSSING
-                    if order_ == 0 or len(conflicts) > conflict_count_:
-                        free_.add(frozenset((first_.key, second_.key)))
-                        strength_ = _CONFLICT
-                if order_ == 1:
-                    orders_.append((strength_, first_.key, second_.key))
-                elif order_ == -1:
-                    orders_.append((strength_, second_.key, first_.key))
-        # A weaker order that contradicts the stronger ones already taken
-        # is dropped. A stable sort keeps the segment order within one
-        # strength.
-        for _, earlier_, later_ in sorted(orders_, key=lambda o_: o_[0]):
-            if not _comes_before(before_, later_, earlier_):
-                before_[later_].add(earlier_)
-        _keep_ribbons(half_segments_, before_, free_, forced_pairs)
-        half_lanes_ = _longest_path_lanes(half_segments_, before_)
-        for key_, lane_ in half_lanes_.items():
-            result[key_] = lane_offset + lane_
-        if len(half_lanes_) > 0:
-            lane_offset += max(half_lanes_.values()) + 1
-    return result, conflicts
+    segments = sorted(segments, key=lambda segment_: segment_.order_key)
+    before: Dict[SegmentKey, Set[SegmentKey]] = {
+        segment_.key: set() for segment_ in segments
+    }
+    # Pairs whose order costs no crossing: the votes contradict, so one
+    # crossing happens in either order, or there are no votes.
+    free: Set[FrozenSet[SegmentKey]] = set()
+    # (strength, earlier, later): the earlier segment takes the smaller
+    # lane. A smaller strength is a stronger reason.
+    orders: List[Tuple[int, SegmentKey, SegmentKey]] = []
+    for first_index_, first_ in enumerate(segments):
+        for second_ in segments[first_index_ + 1 :]:
+            coincident_ = _coincident_order(first_, second_)
+            if coincident_ != 0:
+                order_, strength_ = coincident_, _COINCIDENT
+            elif (first_.key, second_.key) in forced_pairs:
+                order_, strength_ = 1, _FORCED
+            elif (second_.key, first_.key) in forced_pairs:
+                order_, strength_ = -1, _FORCED
+            elif _base_order(first_, second_) != 0:
+                order_, strength_ = _base_order(first_, second_), _BASE
+            else:
+                conflict_count_ = len(conflicts)
+                order_ = _pair_order(first_, second_, priority, conflicts)
+                strength_ = _CROSSING
+                if order_ == 0 or len(conflicts) > conflict_count_:
+                    free.add(frozenset((first_.key, second_.key)))
+                    strength_ = _CONFLICT
+            if order_ == 1:
+                orders.append((strength_, first_.key, second_.key))
+            elif order_ == -1:
+                orders.append((strength_, second_.key, first_.key))
+    # A stable sort keeps the segment order within one strength.
+    for _, earlier_, later_ in sorted(orders, key=lambda order_: order_[0]):
+        if not _comes_before(before, later_, earlier_):
+            before[later_].add(earlier_)
+    _keep_ribbons(segments, before, free, forced_pairs)
+    _order_free_pairs_by_direction(segments, before)
+    return _longest_path_lanes(segments, before), conflicts
 
 
 def _keep_ribbons(
@@ -232,99 +232,91 @@ def _keep_ribbons(
                 place(foreign_, earlier_, later_, first=True)
 
 
-def _apply_forced_halves(
-    segments: List[LaneSegment],
-    forced: Sequence[ForcedOrder],
-    priority: LaneConflictPriority,
-) -> List[LaneSegment]:
+def _order_free_pairs_by_direction(
+    segments: List[LaneSegment], before: Dict[SegmentKey, Set[SegmentKey]]
+) -> None:
     """
-    Move the inner segment of each forced pair into the half of the outer.
+    Order by the direction of travel the overlapping segments of different
+    directions that are still free.
 
-    The segments of the inner half that must lie on the same side of the
-    outer segment by their own ends move with it. Otherwise the half of the
-    inner segment would keep them on the other side of the outer segment,
-    and they would cross it.
-    """
-
-    segment_by_key = {segment_.key: segment_ for segment_ in segments}
-    target_half: Dict[SegmentKey, int] = {}
-    for order_ in forced:
-        if order_.inner not in segment_by_key or (
-            order_.outer not in segment_by_key
-        ):
-            continue
-        inner_half_ = segment_by_key[order_.inner].half
-        outer_ = segment_by_key[order_.outer]
-        target_half[order_.inner] = outer_.half
-        if inner_half_ == outer_.half:
-            continue
-        # 1: the segment comes before the outer one, as an earlier lane.
-        inner_side_ = -1 if order_.inner_is_later else 1
-        for segment_ in segments:
-            if (
-                segment_.half == inner_half_
-                and segment_.key != order_.inner
-                and _ends_order(segment_, outer_, priority) == inner_side_
-            ):
-                target_half[segment_.key] = outer_.half
-    return [
-        replace(segment_, half=target_half[segment_.key])
-        if segment_.key in target_half
-        else segment_
-        for segment_ in segments
-    ]
-
-
-def _yield_to_nesting(segments: List[LaneSegment]) -> List[LaneSegment]:
-    """
-    Move a nested segment into the half of the segment around it.
-
-    spec.md, section "Общий участок": this is a shared stretch of one
-    channel. A segment is nested in an overlapping segment of the other
-    half if both of its members lie inside the outer segment and extend to
-    the same side. If the halves require the order that makes both members
-    cross the outer segment, the inner segment moves to the half of the
-    outer one. There, the constraint graph puts it on the side of its
-    members, and the two segments do not cross.
+    Right-hand traffic: the segment of the first half comes first, that is
+    the segment that goes left lies above, and the segment that goes up
+    lies right. An order that contradicts the orders already set is
+    skipped: the ends and the other reasons win.
     """
 
-    moved: Set[SegmentKey] = set()
-    for inner_ in segments:
-        if len(inner_.members) != 2:
-            continue
-        sides_ = {member_.to_high_side for member_ in inner_.members}
-        if len(sides_) != 1:
-            continue
-        # The members extend toward the high side: the inner segment must
-        # lie on the high side of the outer one, in the later half.
-        must_be_later_ = sides_.pop()
-        for outer_ in segments:
-            if (
-                outer_.half != inner_.half
-                and (outer_.half < inner_.half) != must_be_later_
-                and all(
-                    outer_.low < member_.position < outer_.high
-                    for member_ in inner_.members
-                )
-            ):
-                moved.add(inner_.key)
-                break
-    return [
-        replace(segment_, half=1 - segment_.half)
-        if segment_.key in moved
-        else segment_
-        for segment_ in segments
-    ]
+    for first_index_, first_ in enumerate(segments):
+        for second_ in segments[first_index_ + 1 :]:
+            if first_.half == second_.half or not _overlap(first_, second_):
+                continue
+            earlier_, later_ = (
+                (first_, second_)
+                if first_.half < second_.half
+                else (second_, first_)
+            )
+            if _comes_before(
+                before, later_.key, earlier_.key
+            ) or _comes_before(before, earlier_.key, later_.key):
+                continue
+            before[later_.key].add(earlier_.key)
 
 
 # The strength of a reason for the order of two segments, the strongest
-# first: two ends at the same position (the other order lays them on top of
-# each other), a nested pair on a shared stretch, the ends (the other order
-# adds a crossing), the priority of an unavoidable crossing.
+# first: two ends at the same exact position (the other order lays them on
+# top of each other), a nested pair on a shared stretch, the base heights
+# under the columns (see _base_order), the ends (the other order adds a
+# crossing), the priority of an unavoidable crossing.
 _COINCIDENT = 0
 _FORCED = 1
-_CROSSING = 2
-_CONFLICT = 3
+_BASE = 2
+_CROSSING = 3
+_CONFLICT = 4
+
+
+def _base_order(first: LaneSegment, second: LaneSegment) -> int:
+    """
+    Return the order of two overlapping segments under the columns by their
+    base heights.
+
+    The segment with the higher base height lies higher: return 1 if this
+    is the first segment, -1 for the second, 0 if the base heights are
+    equal or unknown. A pocket is empty space: every segment that fits into
+    it takes it and shortens its way.
+
+    The rule holds for segments whose two ends both go up, and for them it
+    never adds a crossing. If one segment lies inside the other along the
+    channel, the only order without a crossing puts the inner one higher,
+    and its base height is not lower, because it passes under a part of the
+    same columns. If the segments are shifted, one crossing is unavoidable
+    in either order; this order moves it into the pocket, where there is
+    room, even where the priority of the unavoidable crossing would choose
+    the other order.
+
+    A segment with an end that continues a lane straight, or with an end
+    that goes down in a vertical channel, is not ordered this way: there
+    the argument above does not hold.
+    """
+
+    if (
+        first.base_level is None
+        or second.base_level is None
+        or first.base_level == second.base_level
+        or not _ends_go_up(first)
+        or not _ends_go_up(second)
+        or not _overlap(first, second)
+    ):
+        return 0
+    return 1 if first.base_level < second.base_level else -1
+
+
+def _ends_go_up(segment: LaneSegment) -> bool:
+    """
+    Return True if both ends of a horizontal segment go up.
+    """
+
+    return len(segment.members) == 2 and not any(
+        member_.to_high_side for member_ in segment.members
+    )
 
 
 def _comes_before(
@@ -355,7 +347,11 @@ def _coincident_order(first: LaneSegment, second: LaneSegment) -> int:
 
     If the ends extend to different sides, the segment whose end extends
     toward the low side takes the lower lane: return 1 if this is the first
-    segment, -1 for the second. Return 0 if no ends coincide this way.
+    segment, -1 for the second, 0 if no ends coincide this way. The other
+    order lays the two ends on top of each other.
+
+    Only exact positions coincide. A position that stands for a lane not
+    known yet can be equal to another one while the lanes differ.
     """
 
     if not _overlap(first, second):
@@ -363,29 +359,13 @@ def _coincident_order(first: LaneSegment, second: LaneSegment) -> int:
     for first_member_ in first.members:
         for second_member_ in second.members:
             if (
-                first_member_.position == second_member_.position
+                first_member_.is_exact
+                and second_member_.is_exact
+                and first_member_.position == second_member_.position
                 and first_member_.to_high_side != second_member_.to_high_side
             ):
                 return -1 if first_member_.to_high_side else 1
     return 0
-
-
-def _ends_order(
-    first: LaneSegment, second: LaneSegment, priority: LaneConflictPriority
-) -> int:
-    """
-    Return the order that the ends of two segments require.
-
-    Return 1 if the first segment must take a lower lane, -1 for the
-    opposite, and 0 if the ends require no order or contradict each other.
-    """
-
-    coincident = _coincident_order(first, second)
-    if coincident != 0:
-        return coincident
-    conflicts: List[LaneConflictPair] = []
-    order = _pair_order(first, second, priority, conflicts)
-    return 0 if len(conflicts) > 0 else order
 
 
 def _pair_order(

@@ -1,4 +1,4 @@
-from typing import Tuple
+from typing import Optional, Tuple
 
 from strictdoc.features.specification_graph.svg_graph.lane_assignment import (
     CrossMember,
@@ -14,6 +14,8 @@ def _segment(
     high: float,
     members: Tuple[Tuple[float, bool, bool], ...],
     order: int,
+    base_level: Optional[float] = None,
+    is_exact: bool = True,
 ) -> LaneSegment:
     """
     Create a segment of the first half of a channel.
@@ -33,10 +35,12 @@ def _segment(
                 position=(position_, 0),
                 to_high_side=to_high_side_,
                 is_entry=is_entry_,
+                is_exact=is_exact,
             )
             for position_, to_high_side_, is_entry_ in members
         ),
         order_key=((order, 0), order),
+        base_level=base_level,
     )
 
 
@@ -90,3 +94,64 @@ def test_weaker_order_gives_way_in_a_cycle() -> None:
     )
 
     assert lanes[first.key] < lanes[second.key] < lanes[third.key]
+
+
+def test_segment_that_fits_a_pocket_lies_higher() -> None:
+    """
+    Under the columns, of two shifted segments whose ends go up, the one
+    with the higher base height lies higher.
+
+    A fits a pocket: its base height is 10, the base height of B is 30.
+    One crossing is unavoidable. The exit priority would put A below B;
+    the base heights put A above, so the crossing moves into the pocket.
+    If an end of A goes down, the base heights do not decide: the ends
+    put A below B without a crossing.
+
+    Code: lane_assignment._base_order, lane_assignment._ends_go_up.
+    Fails if:
+    - the base heights do not order the segments under the columns.
+    - a segment with an end that goes down is ordered by its base height.
+    """
+
+    first = _segment(
+        "A", 0, 50, ((0, False, False), (50, False, True)), 0, base_level=10
+    )
+    second = _segment(
+        "B", 20, 100, ((20, False, False), (100, False, True)), 1, 30
+    )
+    lanes, _ = assign_lanes([first, second], LaneConflictPriority.EXIT)
+    assert lanes[first.key] < lanes[second.key]
+
+    going_down = _segment(
+        "A", 0, 50, ((0, False, False), (50, True, True)), 0, base_level=10
+    )
+    lanes, _ = assign_lanes([going_down, second], LaneConflictPriority.EXIT)
+    assert lanes[going_down.key] > lanes[second.key]
+
+
+def test_stand_in_positions_do_not_coincide() -> None:
+    """
+    Ends at equal positions that stand for lanes not known yet set no
+    order.
+
+    The test of coincident ends with stand-in positions: at 0, the end of A
+    goes up and the end of B goes down, but the lanes behind these
+    positions are not known, so the ends need not lie on top of each
+    other. The end of A at 10 goes down inside B and decides: A lies below
+    B.
+
+    Code: lane_assignment._coincident_order.
+    Fails if:
+    - a position that stands for an unknown lane counts as exact.
+    """
+
+    first = _segment(
+        "A", 0, 10, ((0, False, True), (10, True, False)), 0, is_exact=False
+    )
+    second = _segment(
+        "B", 0, 20, ((0, True, True), (20, False, False)), 1, is_exact=False
+    )
+
+    lanes, _ = assign_lanes([first, second], LaneConflictPriority.EXIT)
+
+    assert lanes[first.key] > lanes[second.key]

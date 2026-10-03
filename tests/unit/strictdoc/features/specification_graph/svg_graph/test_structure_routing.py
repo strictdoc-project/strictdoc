@@ -38,6 +38,9 @@ from strictdoc.features.specification_graph.svg_graph.structure_routing import (
     _Router,
     compute_structure_routing,
 )
+from strictdoc.features.specification_graph.svg_graph.structure_stretches import (
+    _common_runs,
+)
 from tests.unit.strictdoc.features.specification_graph.svg_graph.geometry_checks import (
     crossing_count,
     geometry_problems,
@@ -426,6 +429,29 @@ def test_relations_that_turn_together_do_not_cross() -> None:
     assert crossing_count(paths[first], paths[second]) == 0
 
 
+def test_lines_without_overlap_share_a_lane() -> None:
+    """
+    Two segments without overlap share a lane, whatever their directions.
+
+    C2 -> A2 goes left and C2 -> E2 goes right in the channel between C2
+    and C3. The direction of travel orders only overlapping segments.
+
+    Code: lane_assignment.assign_lanes,
+    structure_routing._Router._column_lane_counts.
+    Fails if:
+    - segments of different directions never share a lane.
+    """
+
+    _, routing, _, _ = _result(_case("Lines to both sides share a lane"))
+
+    assert (
+        routing.lane_counts[
+            StructureChannelId(ChannelKind.COLUMN, "Doc", index=2, gap=1)
+        ]
+        == 1
+    )
+
+
 def test_nested_opposite_segment_does_not_make_a_loop() -> None:
     """
     A nested segment of the other direction leaves right-hand traffic
@@ -433,11 +459,13 @@ def test_nested_opposite_segment_does_not_make_a_loop() -> None:
 
     C2 -> A2 goes left over S inside A1 -> C1, which goes right. Both
     legs of C2 -> A2 go down. Right-hand traffic would put C2 -> A2 above
-    A1 -> C1, so both legs would cross A1 -> C1.
+    A1 -> C1, so both legs would cross A1 -> C1. The ends are a stronger
+    reason than the direction of travel.
 
-    Code: lane_assignment._yield_to_nesting.
+    Code: lane_assignment.assign_lanes,
+    lane_assignment._order_free_pairs_by_direction.
     Fails if:
-    - right-hand traffic puts the nested segment on the side of the loop.
+    - right-hand traffic wins over the ends of a pair.
     """
 
     normalized_graph, _, _, paths = _result(
@@ -462,13 +490,15 @@ def test_shared_stretch_keeps_the_nested_route_inside() -> None:
     A2, the vertical channel left of S, and the top corridor. C2 -> A2 turns
     off earlier, so it stays inside. The same holds for C2 -> A2 and
     L2 -> C2 at the top face of C2. C1 -> C3 and C3 -> A3 only touch in the
-    vertical channel left of C, so they share one channel only.
+    vertical channel left of C, so they share one channel only: the column
+    channel above C3. That stretch of one channel follows the same rule.
 
     Code: structure_stretches.shared_stretch_orders,
     gate_ports.number_gate_ports, lane_assignment.assign_lanes.
     Fails if:
     - the rule is not applied.
     - the port order at the shared face does not follow the rule.
+    - a stretch of one channel with lanes is not a stretch.
     """
 
     normalized_graph, _, _, paths = _result(_case("Steps beside a pocket"))
@@ -481,7 +511,30 @@ def test_shared_stretch_keeps_the_nested_route_inside() -> None:
 
     assert crossings(("C2", "A2"), ("A2", "R2")) == 0
     assert crossings(("C2", "A2"), ("L2", "C2")) == 0
-    assert crossings(("C3", "A3"), ("C1", "C3")) == 1
+    assert crossings(("C3", "A3"), ("C1", "C3")) == 0
+
+
+def test_channel_inside_a_longer_stretch_is_no_stretch_of_its_own() -> None:
+    """
+    Two routes that pass the same chain of channels have one shared stretch
+    over the whole chain, not also a stretch for each of its channels.
+
+    A separate stretch of one channel could order the pair against the
+    stretch of the whole chain.
+
+    Code: structure_stretches._common_runs.
+    Fails if:
+    - a single channel inside a longer stretch is a stretch of its own.
+    """
+
+    chain = (
+        StructureChannelId(ChannelKind.BOTTOM_CORRIDOR, "Doc"),
+        StructureChannelId(ChannelKind.VERTICAL, "Doc", 1),
+        StructureChannelId(ChannelKind.TOP_CORRIDOR, "S"),
+    )
+
+    assert _common_runs(chain, chain) == [(0, 0, 3, 1)]
+    assert _common_runs(chain, tuple(reversed(chain))) == [(0, 2, 3, -1)]
 
 
 def test_shared_stretch_of_one_channel_under_the_columns() -> None:
@@ -528,14 +581,14 @@ def test_routes_that_turn_off_to_different_sides_keep_their_sides() -> None:
 
     A1 -> S2 and A2 -> S2 start in one column, so which one turns off
     earlier is not known. A1 -> S2 turns up to A1, A2 -> S2 turns down to
-    A2, so A2 -> S2 lies below and the routes do not cross. With it,
-    S1 -> C1 lies above both lines of C2: the line C2 -> S2 moves with
-    C2 -> S1 to the side of S1 -> C1 that its own ends require.
+    A2, so A2 -> S2 lies below and the routes do not cross. In the other
+    case, S1 -> C1 lies above both lines of C2: each line of C2 lies on the
+    side of S1 -> C1 that its own ends require.
 
-    Code: structure_stretches._nesting, lane_assignment._apply_forced_halves.
+    Code: structure_stretches._nesting, lane_assignment.assign_lanes.
     Fails if:
     - an end where the routes turn off to different sides sets no order.
-    - only the inner segment of a nested pair leaves its half.
+    - the direction of travel wins over the ends of a pair.
     """
 
     for title_, first_, second_ in (
@@ -569,6 +622,11 @@ def test_foreign_line_does_not_split_a_ribbon() -> None:
     channel. It crosses both lines in either order, so it takes the side of
     the smaller lanes and the two lines of C2 stay together.
 
+    In "One face: two relations out, a line between", C2 -> S1 and
+    C2 -> S2 leave the top face of C2 to the left. C1 -> S2 crosses one of
+    them in either order, so it runs above both in the channel between C1
+    and C2.
+
     Code: lane_assignment._keep_ribbons.
     Fails if:
     - a foreign line with free orders stays between the lines of a ribbon.
@@ -591,6 +649,17 @@ def test_foreign_line_does_not_split_a_ribbon() -> None:
     ribbon = sorted((vertical_lane("C2", "A2"), vertical_lane("L2", "C2")))
     assert vertical_lane("C1", "C3") < ribbon[0]
     assert ribbon[1] - ribbon[0] == 1
+
+    normalized_graph, _, _, paths = _result(
+        _case("One face: two relations out, a line between")
+    )
+
+    def first_horizontal_y(source_id: str, target_id: str) -> float:
+        return paths[_edge_id(normalized_graph, source_id, target_id)][1].y
+
+    assert first_horizontal_y("C1", "S2") < min(
+        first_horizontal_y("C2", "S1"), first_horizontal_y("C2", "S2")
+    )
 
 
 def test_lane_order_decides_where_segments_under_the_columns_meet() -> None:
@@ -656,20 +725,19 @@ def test_structure_routes_follow_right_hand_traffic(case: GalleryCase) -> None:
     """
     In one channel, the lanes of both directions follow right-hand traffic.
 
-    A horizontal lane that goes left lies above a lane that goes right. A
-    vertical lane that goes up lies right of a lane that goes down. A
-    segment may leave its half only where the ends require it: it is nested
-    in a segment of the other direction, in its channel or on a shared
-    stretch, or the order of right-hand traffic would make a leg of the
-    pair cross the other segment.
+    Of two overlapping segments of different directions, a horizontal one
+    that goes left lies above the one that goes right, and a vertical one
+    that goes up lies right of the one that goes down. The other order is
+    allowed only where the ends require it: the segment is nested in the
+    other one, in its channel or on a shared stretch, or the order of
+    right-hand traffic would make a leg of the pair cross the other
+    segment. Segments without overlap share lanes in any order.
 
-    Code: structure_routing._Router._assign_horizontal_lanes,
-    structure_routing._Router._assign_vertical_lanes,
-    lane_assignment._yield_to_nesting,
+    Code: lane_assignment._order_free_pairs_by_direction,
     structure_stretches.shared_stretch_orders.
     Fails if:
-    - the halves of a horizontal or a vertical channel are swapped.
-    - a segment leaves its half although the ends do not require it.
+    - right-hand traffic is mirrored.
+    - right-hand traffic wins over the ends of a pair.
     """
 
     normalized_graph, routing, geometry, _ = _result(case)
@@ -718,6 +786,9 @@ def test_structure_routes_follow_right_hand_traffic(case: GalleryCase) -> None:
         is_horizontal_ = channel_.is_horizontal  # type: ignore[attr-defined]
         for first_ in low_:
             for second_ in high_:
+                if not _spans_overlap(first_, second_, is_horizontal_):
+                    # Segments without overlap may share a lane in any order.
+                    continue
                 # Left in the top half: smaller lanes. Up in the right half:
                 # larger lanes.
                 in_order_ = (
@@ -758,6 +829,19 @@ def _stretch_inner_keys(
         for orders_ in router.forced_orders.values()
         for order_ in orders_
     }
+
+
+def _spans_overlap(
+    first: _ChannelSegment, second: _ChannelSegment, is_horizontal: bool
+) -> bool:
+    def span(segment: _ChannelSegment) -> Tuple[float, float]:
+        start_, end_ = segment[0], segment[1]
+        values_ = (start_.x, end_.x) if is_horizontal else (start_.y, end_.y)
+        return min(values_), max(values_)
+
+    first_low, first_high = span(first)
+    second_low, second_high = span(second)
+    return first_low <= second_high and second_low <= first_high
 
 
 def _traffic_order_crosses(

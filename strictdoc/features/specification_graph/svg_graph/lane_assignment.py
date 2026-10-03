@@ -8,7 +8,7 @@ segments of the channel.
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Dict, FrozenSet, List, Optional, Sequence, Set, Tuple
+from typing import Dict, List, Optional, Sequence, Set, Tuple
 
 
 class LaneConflictPriority(Enum):
@@ -128,9 +128,6 @@ def assign_lanes(
     before: Dict[SegmentKey, Set[SegmentKey]] = {
         segment_.key: set() for segment_ in segments
     }
-    # Pairs whose order costs no crossing: the votes contradict, so one
-    # crossing happens in either order, or there are no votes.
-    free: Set[FrozenSet[SegmentKey]] = set()
     # (strength, earlier, later): the earlier segment takes the smaller
     # lane. A smaller strength is a stronger reason.
     orders: List[Tuple[int, SegmentKey, SegmentKey]] = []
@@ -149,8 +146,7 @@ def assign_lanes(
                 conflict_count_ = len(conflicts)
                 order_ = _pair_order(first_, second_, priority, conflicts)
                 strength_ = _CROSSING
-                if order_ == 0 or len(conflicts) > conflict_count_:
-                    free.add(frozenset((first_.key, second_.key)))
+                if len(conflicts) > conflict_count_:
                     strength_ = _CONFLICT
             if order_ == 1:
                 orders.append((strength_, first_.key, second_.key))
@@ -160,76 +156,8 @@ def assign_lanes(
     for _, earlier_, later_ in sorted(orders, key=lambda order_: order_[0]):
         if not _comes_before(before, later_, earlier_):
             before[later_].add(earlier_)
-    _keep_ribbons(segments, before, free, forced_pairs)
     _order_free_pairs_by_direction(segments, before)
     return _longest_path_lanes(segments, before), conflicts
-
-
-def _keep_ribbons(
-    segments: List[LaneSegment],
-    before: Dict[SegmentKey, Set[SegmentKey]],
-    free: Set[FrozenSet[SegmentKey]],
-    ribbon_pairs: Set[Tuple[SegmentKey, SegmentKey]],
-) -> None:
-    """
-    Move a foreign segment out of a ribbon if this costs no crossing.
-
-    This function is the only place of this rule. spec.md, section
-    "Ленты". A ribbon pair is a forced pair of a shared stretch: the
-    earlier segment, then the later one. A foreign segment that overlaps
-    both goes to one side of the pair. A free order (no votes, or
-    contradicting votes) can change without a new crossing. A fixed order
-    decides the side. If both orders are free, the foreign segment goes to
-    the side of the smaller lanes. If both orders are fixed and put the
-    segment between, it stays between.
-    """
-
-    by_key = {segment_.key: segment_ for segment_ in segments}
-
-    def relation(first: SegmentKey, second: SegmentKey) -> int:
-        if first in before[second]:
-            return 1
-        if second in before[first]:
-            return -1
-        return 0
-
-    def place(
-        foreign: SegmentKey, earlier: SegmentKey, later: SegmentKey, first: bool
-    ) -> None:
-        for member_ in (earlier, later):
-            before[foreign].discard(member_)
-            before[member_].discard(foreign)
-            if first:
-                before[member_].add(foreign)
-            else:
-                before[foreign].add(member_)
-
-    for earlier_, later_ in sorted(ribbon_pairs):
-        if earlier_ not in by_key or later_ not in by_key:
-            continue
-        for foreign_, segment_ in by_key.items():
-            if foreign_ in (earlier_, later_):
-                continue
-            if not (
-                _overlap(segment_, by_key[earlier_])
-                and _overlap(segment_, by_key[later_])
-            ):
-                continue
-            with_earlier_ = relation(earlier_, foreign_)
-            with_later_ = relation(foreign_, later_)
-            earlier_is_fixed_ = frozenset((earlier_, foreign_)) not in free
-            later_is_fixed_ = frozenset((foreign_, later_)) not in free
-            if earlier_is_fixed_ and with_earlier_ == 1:
-                if later_is_fixed_ and with_later_ == 1:
-                    # Both orders are fixed: the segment stays between.
-                    continue
-                place(foreign_, earlier_, later_, first=False)
-            elif earlier_is_fixed_ and with_earlier_ == -1:
-                place(foreign_, earlier_, later_, first=True)
-            elif later_is_fixed_ and with_later_ == -1:
-                place(foreign_, earlier_, later_, first=False)
-            else:
-                place(foreign_, earlier_, later_, first=True)
 
 
 def _order_free_pairs_by_direction(

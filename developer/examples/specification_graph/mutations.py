@@ -640,13 +640,6 @@ MUTATIONS = (
         "while False:",
     ),
     Mutation(
-        "RB1",
-        "a foreign line may split a ribbon",
-        LANES,
-        "    _keep_ribbons(segments, before, free, forced_pairs)\n",
-        "",
-    ),
-    Mutation(
         "GR1",
         "a vertical size is off the lane grid",
         GEOMETRY,

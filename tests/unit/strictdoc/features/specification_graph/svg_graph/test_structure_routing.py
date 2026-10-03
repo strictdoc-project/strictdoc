@@ -681,21 +681,23 @@ def test_pair_that_must_cross_keeps_the_order_where_it_joins() -> None:
 
 def test_foreign_line_does_not_split_a_ribbon() -> None:
     """
-    A foreign line passes a ribbon from one side, if this costs no crossing.
+    A foreign line passes two lines that run together from one side.
+
+    There is no separate rule for this: the foreign line shares a stretch
+    with each of the two lines, and each stretch keeps one order.
 
     C2 -> A2 and L2 -> C2 run side by side from the top face of C2 through
     the vertical channel left of C. C1 -> C3 goes down the same vertical
-    channel. It crosses both lines in either order, so it takes the side of
-    the smaller lanes and the two lines of C2 stay together.
+    channel and passes them from one side.
 
     In "One face: two relations out, a line between", C2 -> S1 and
     C2 -> S2 leave the top face of C2 to the left. C1 -> S2 crosses one of
-    them in either order, so it runs above both in the channel between C1
-    and C2.
+    them. It runs above both in the channel between C1 and C2, and left of
+    both in the vertical channel.
 
-    Code: lane_assignment._keep_ribbons.
+    Code: structure_stretches.shared_stretch_orders.
     Fails if:
-    - a foreign line with free orders stays between the lines of a ribbon.
+    - a foreign line stays between two lines that run together.
     """
 
     normalized_graph, routing, _, _ = _result(
@@ -723,8 +725,14 @@ def test_foreign_line_does_not_split_a_ribbon() -> None:
     def first_horizontal_y(source_id: str, target_id: str) -> float:
         return paths[_edge_id(normalized_graph, source_id, target_id)][1].y
 
+    def first_vertical_x(source_id: str, target_id: str) -> float:
+        return paths[_edge_id(normalized_graph, source_id, target_id)][2].x
+
     assert first_horizontal_y("C1", "S2") < min(
         first_horizontal_y("C2", "S1"), first_horizontal_y("C2", "S2")
+    )
+    assert first_vertical_x("C1", "S2") < min(
+        first_vertical_x("C2", "S1"), first_vertical_x("C2", "S2")
     )
 
 

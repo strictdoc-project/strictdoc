@@ -783,6 +783,18 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
         [("C2", "A2"), ("C2", "E2")],
     ),
     _structure_case(
+        "Ends at one point",
+        (
+            "A3 -> D1 leaves the top face of A3, and D3 -> A2 enters the "
+            "bottom face of A2 at the same x. D3 -> A2 lies above "
+            "A3 -> D1 in the channel between A2 and A3, or their verticals "
+            "would lie on top of each other. No weaker reason changes this "
+            "order."
+        ),
+        [("Doc", ["A1", "A2", "A3", ("S", ["S1", ("R", ["S2"])]), "D1", "D2", "D3"])],
+        [("A3", "D1"), ("D2", "A2"), ("D3", "A2"), ("S1", "A3"), ("S2", "A1")],
+    ),
+    _structure_case(
         "Two relations into one node over a section",
         (
             "C2 -> A2 and C3 -> A2 pass under the section S and come up to "
@@ -1438,6 +1450,7 @@ GALLERY_CHAPTERS: Tuple[GalleryChapter, ...] = (
         "Fewest bends under a tall section",
         "Relations that turn together",
         "Lines to both sides share a lane",
+        "Ends at one point",
         "Two relations into one node over a section",
         "Relations inside one container",
         "Relations inside one container, more ports",

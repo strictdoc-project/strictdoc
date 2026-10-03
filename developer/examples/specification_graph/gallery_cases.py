@@ -731,6 +731,17 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
         [("A2", "B1"), ("A3", "B1")],
     ),
     _structure_case(
+        "Two relations into one node over a section",
+        (
+            "C2 -> A2 and C3 -> A2 pass under the section S and come up to "
+            "A2 through the vertical channel left of S. The lanes in that "
+            "channel follow where the horizontal segments go next, so the "
+            "two relations nest and do not cross. C1 -> C3 goes around C2."
+        ),
+        [("Doc", ["A1", "A2", "A3", ("S", ["S1"]), "C1", "C2", "C3"])],
+        [("C2", "A2"), ("C3", "A2"), ("C1", "C3")],
+    ),
+    _structure_case(
         "Relations inside one container",
         (
             "All relations connect simple nodes of the document. A3 -> A2 "
@@ -1160,6 +1171,7 @@ GALLERY_CHAPTERS: Tuple[GalleryChapter, ...] = (
         "Fewest bends before the shortest length",
         "Fewest bends under a tall section",
         "Relations that turn together",
+        "Two relations into one node over a section",
         "Relations inside one container",
         "Relations inside one container, more ports",
     ),

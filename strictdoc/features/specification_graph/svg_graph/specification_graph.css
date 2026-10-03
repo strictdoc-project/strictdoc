@@ -120,3 +120,10 @@
   font-size: 8px;
   fill: rgba(20, 60, 160, 0.9);
 }
+
+/* Where a relation crosses a side face of a container frame. */
+.specification-graph-debug__pass-port {
+  fill: #fff;
+  stroke: rgba(220, 0, 140, 0.9);
+  stroke-width: 1.5;
+}

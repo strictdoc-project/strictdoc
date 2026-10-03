@@ -593,6 +593,20 @@ MUTATIONS = (
         "            finished_level_ = None\n",
     ),
     Mutation(
+        "SR3",
+        "far end of a horizontal segment seen from the wrong side",
+        STRUCTURE_ROUTING,
+        "other = position + 1 if seen_from == position - 1 else position - 1",
+        "other = position - 1 if seen_from == position - 1 else position + 1",
+    ),
+    Mutation(
+        "Z11",
+        "debug layer without the pass ports",
+        SERIALIZER,
+        "                pass_ports=_structure_pass_ports(edge_paths, geometry),\n",
+        "",
+    ),
+    Mutation(
         "CL1",
         "column lane count rule ignores the lane reuse between the sides",
         STRUCTURE_ROUTING,

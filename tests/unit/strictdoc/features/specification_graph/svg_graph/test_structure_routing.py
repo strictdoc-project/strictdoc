@@ -324,6 +324,33 @@ def test_through_pass_goes_straight_under_a_short_section() -> None:
         assert len(paths[edge_id_]) == 4
 
 
+def test_two_relations_into_one_node_nest() -> None:
+    """
+    Two relations into one node over a section nest in the vertical channel.
+
+    The lane order in a vertical channel uses the far end of each
+    horizontal segment next to it: the next vertical channel or the port.
+
+    Code: structure_routing._Router._horizontal_far_x,
+    structure_routing._Router._assign_vertical_lanes.
+    Fails if:
+    - the far end of a middle horizontal segment is seen from the wrong
+      side.
+    """
+
+    normalized_graph, _, _, paths = _result(
+        _case("Two relations into one node over a section")
+    )
+
+    assert (
+        crossing_count(
+            paths[_edge_id(normalized_graph, "C2", "A2")],
+            paths[_edge_id(normalized_graph, "C3", "A2")],
+        )
+        == 0
+    )
+
+
 def test_relations_that_turn_together_do_not_cross() -> None:
     """
     Two relations that climb one vertical channel and turn together nest.

@@ -219,6 +219,7 @@ def serialize_structure_svg(
                 ],
                 geometry.config,
                 segment_lines=tuple(geometry.bottom_segment_lines.values()),
+                pass_ports=_structure_pass_ports(edge_paths, geometry),
             )
         )
     elements.append(
@@ -361,6 +362,33 @@ class _DebugChannel:
     lane_count: int
 
 
+def _structure_pass_ports(
+    edge_paths: Mapping[str, Tuple[Point, ...]], geometry: StructureGeometry
+) -> Tuple[Tuple[str, Point], ...]:
+    """
+    Return the pass ports: where a relation crosses a side face of a frame.
+
+    A horizontal segment that crosses the left or the right edge of a
+    container frame, between the top and the bottom of the frame, passes
+    the frame there.
+    """
+
+    result: List[Tuple[str, Point]] = []
+    for edge_id_, path_ in edge_paths.items():
+        for start_, end_ in zip(path_, path_[1:]):
+            if start_.y != end_.y:
+                continue
+            low_, high_ = sorted((start_.x, end_.x))
+            for container_id_ in geometry.header_rects:
+                rect_ = geometry.node_rects[container_id_]
+                if not rect_.y < start_.y < rect_.y + rect_.height:
+                    continue
+                for face_x_ in (rect_.x, rect_.x + rect_.width):
+                    if low_ < face_x_ < high_:
+                        result.append((edge_id_, Point(face_x_, start_.y)))
+    return tuple(result)
+
+
 def _structure_channel_label(channel: StructureChannelId) -> str:
     """
     Return a short label of a channel for the debug layer.
@@ -386,6 +414,7 @@ def _render_debug_layer(
     channels: List[_DebugChannel],
     config: GeometryConfig,
     segment_lines: Tuple[Tuple[float, float, float], ...] = (),
+    pass_ports: Tuple[Tuple[str, Point], ...] = (),
 ) -> str:
     """
     Render the debug layer on top of the graph.
@@ -436,6 +465,12 @@ def _render_debug_layer(
             f'<line class="{CSS_PREFIX}-debug__lane" '
             f'x1="{_number(left_)}" y1="{_number(y_)}" '
             f'x2="{_number(right_)}" y2="{_number(y_)}"/>'
+        )
+    for edge_id_, point_ in pass_ports:
+        elements.append(
+            f'<circle class="{CSS_PREFIX}-debug__pass-port" '
+            f'data-debug-pass-port="{_escape(edge_id_)}" '
+            f'cx="{_number(point_.x)}" cy="{_number(point_.y)}" r="3"/>'
         )
     return f'<g class="{CSS_PREFIX}-debug">\n' + "\n".join(elements) + "\n</g>"
 

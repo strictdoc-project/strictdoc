@@ -212,6 +212,52 @@ def test_serializer_draws_containers_before_their_children() -> None:
         assert len(header_lines_) == (1 if is_composite_ else 0)
 
 
+def test_debug_layer_shows_the_pass_ports() -> None:
+    """
+    The debug layer marks each place where a relation crosses a side face.
+
+    S2 -> B2 leaves the section S through its right face, A1 -> S1 enters
+    it through its left face.
+
+    Code: svg_serializer._structure_pass_ports,
+    svg_serializer._render_debug_layer.
+    Fails if:
+    - the debug layer does not draw the pass ports.
+    - a pass port does not lie on the side face of the frame.
+    """
+
+    case = _case("Relations out of and into a section")
+    normalized_graph = normalize_graph(case.graph)
+    layout = compute_structure_layout(normalized_graph)
+    routing = compute_structure_routing(normalized_graph, layout)
+    geometry = compute_structure_geometry(
+        normalized_graph,
+        layout,
+        lane_counts=routing.lane_counts,
+        bottom_segments=routing.bottom_segments,
+    )
+    svg = serialize_structure_svg(
+        normalized_graph,
+        routing,
+        geometry,
+        compute_structure_edge_paths(routing, geometry),
+        debug=True,
+    )
+
+    root = ET.fromstring(svg)
+    ports = [
+        circle_
+        for circle_ in root.iter(f"{SVG_NAMESPACE}circle")
+        if "specification-graph-debug__pass-port"
+        in circle_.get("class", "").split(" ")
+    ]
+    section = geometry.node_rects["S"]
+    assert sorted(float(port_.get("cx", "")) for port_ in ports) == [
+        section.x,
+        section.x + section.width,
+    ]
+
+
 @pytest.mark.parametrize(
     "case", STRUCTURE_CASES, ids=[case_.title for case_ in STRUCTURE_CASES]
 )

@@ -41,6 +41,7 @@ from strictdoc.features.specification_graph.svg_graph.normalization import (
 )
 from strictdoc.features.specification_graph.svg_graph.structure_geometry import (
     StructureGeometry,
+    centered_lane_offset,
     compute_structure_geometry,
     corridor_segment_y,
 )
@@ -202,7 +203,7 @@ class _Router:
             self.config,
             lane_counts=self._column_lane_counts(plans, straight_ids),
         )
-        plans = [self._exact_levels(plan_, exact) for plan_ in plans]
+        plans = [self._exact_levels(plan_, exact, {}) for plan_ in plans]
         self.forced_orders, self.forced_port_orders = shared_stretch_orders(
             [
                 plan_
@@ -212,12 +213,62 @@ class _Router:
             exact,
         )
 
+        # Containers inside out: a layer of containers of one depth at a
+        # time. When a layer is done, its sizes and the heights of its pass
+        # ports are final, and the next layer gets them exact.
         conflicts: List[StructureLaneConflict] = []
-        vertical_lanes = self._assign_vertical_lanes(plans, conflicts)
-        ports = self._assign_ports(plans, vertical_lanes, straight_ids)
-        horizontal_lanes = self._assign_horizontal_lanes(
-            plans, ports, straight_ids, vertical_lanes, conflicts
-        )
+        column_counts = self._column_lane_counts(plans, straight_ids)
+        vertical_lanes: Dict[Tuple[str, int], int] = {}
+        ports: Dict[EndpointKey, Port] = {}
+        horizontal_lanes: Dict[Tuple[str, int], int] = {}
+        finished: Set[Optional[str]] = set()
+        for layer_ in self._layers():
+            layer_geometry_ = compute_structure_geometry(
+                self.normalized_graph,
+                self.layout,
+                self.config,
+                lane_counts={
+                    **column_counts,
+                    **_lane_counts(
+                        plans,
+                        straight_ids,
+                        vertical_lanes,
+                        horizontal_lanes,
+                        finished,
+                    ),
+                },
+                bottom_segments=_bottom_segments(
+                    plans,
+                    straight_ids,
+                    vertical_lanes,
+                    horizontal_lanes,
+                    finished,
+                ),
+            )
+            finished_levels_ = _finished_levels(
+                plans, straight_ids, horizontal_lanes, finished, layer_geometry_
+            )
+            plans = [
+                self._exact_levels(plan_, layer_geometry_, finished_levels_)
+                for plan_ in plans
+            ]
+            vertical_lanes.update(
+                self._assign_vertical_lanes(plans, conflicts, layer_)
+            )
+            ports.update(
+                self._assign_ports(plans, vertical_lanes, straight_ids, layer_)
+            )
+            horizontal_lanes.update(
+                self._assign_horizontal_lanes(
+                    plans,
+                    ports,
+                    straight_ids,
+                    vertical_lanes,
+                    conflicts,
+                    layer_,
+                )
+            )
+            finished |= layer_
 
         routes: Dict[str, StructureRoute] = {}
         lane_counts: Dict[StructureChannelId, int] = {}
@@ -243,23 +294,9 @@ class _Router:
                 lanes=lanes_,
             )
             routes[edge_id_] = route_
-            for position_, (channel_, lane_) in enumerate(
-                zip(plan_.channels, lanes_)
-            ):
-                if channel_.kind is ChannelKind.BOTTOM_CORRIDOR:
-                    bottom_segments.append(
-                        CorridorSegment(
-                            key=(edge_id_, position_),
-                            container_id=channel_.container_id,
-                            lane=lane_,
-                            ends=(
-                                _segment_end(route_, position_ - 1),
-                                _segment_end(route_, position_ + 1),
-                            ),
-                            through_lanes=_through_lanes(route_, position_),
-                        )
-                    )
-                else:
+            bottom_segments.extend(_route_bottom_segments(route_))
+            for channel_, lane_ in zip(plan_.channels, lanes_):
+                if channel_.kind is not ChannelKind.BOTTOM_CORRIDOR:
                     lane_counts[channel_] = max(
                         lane_counts.get(channel_, 0), lane_ + 1
                     )
@@ -494,7 +531,12 @@ class _Router:
                     closed_levels_,
                 )
                 for through_ in self._through_passes(
-                    item.channel, x, neighbor_, segment_y_, chain
+                    item.channel,
+                    x,
+                    neighbor_,
+                    segment_y_,
+                    chain,
+                    item.is_through,
                 ):
                     if through_ not in item.path:
                         push(
@@ -516,6 +558,7 @@ class _Router:
         vertical: StructureChannelId,
         y: float,
         chain: FrozenSet[Optional[str]],
+        is_through: bool,
     ) -> List[StructureChannelId]:
         """
         Return the channels that a horizontal line enters by a through pass.
@@ -533,6 +576,11 @@ class _Router:
         - in both cases, in the space under the column (the bottom
           corridor), if the columns it passes over end at least the
           clearance above.
+
+        A through pass keeps the height of a lane. A segment under the
+        columns that came by a turn has no lane of its own, so it does not
+        continue by a through pass, and the bottom corridor of a child
+        container is not a target: it has no lane to keep.
 
         In the route, the through pass is a vertical segment of zero length,
         so the channels still alternate.
@@ -558,14 +606,24 @@ class _Router:
                 for gap_ in range(len(column.node_ids) - 1)
             )
         elif column.node_ids[0] in chain:
-            # The channels of the container at the facing side face. Its own
-            # bottom corridor has no fixed height, like the space under the
-            # column.
+            # The channels of the container at the facing side face that
+            # have lanes.
             candidates.extend(
                 horizontal_
                 for horizontal_ in self.side_face_links.get(vertical, [])
                 if horizontal_.container_id == column.node_ids[0]
+                and horizontal_.kind is not ChannelKind.BOTTOM_CORRIDOR
             )
+        if channel.kind is ChannelKind.BOTTOM_CORRIDOR:
+            # A segment under the columns continues straight only with the
+            # height of a lane it came with, and only into a lane.
+            if not is_through:
+                return []
+            candidates = [
+                candidate_
+                for candidate_ in candidates
+                if candidate_.kind is not ChannelKind.BOTTOM_CORRIDOR
+            ]
         result = [
             candidate_
             for candidate_ in candidates
@@ -576,6 +634,25 @@ class _Router:
             )
         ]
         return result
+
+    def _layers(self) -> List[FrozenSet[Optional[str]]]:
+        """
+        Return the containers by depth, the deepest layer first.
+        """
+
+        depths: Dict[Optional[str], int] = {None: 0}
+        for node_ in self.normalized_graph.nodes:
+            if node_.node_id in self.composite_ids:
+                parent_id_ = self.normalized_graph.parent_ids[node_.node_id]
+                depths[node_.node_id] = depths[parent_id_] + 1
+        return [
+            frozenset(
+                container_id_
+                for container_id_, depth_ in depths.items()
+                if depth_ == depth
+            )
+            for depth in sorted(set(depths.values()), reverse=True)
+        ]
 
     def _chain(
         self, source_id: str, target_id: str
@@ -783,14 +860,20 @@ class _Router:
             for channel_, halves_ in counts.items()
         }
 
-    def _exact_levels(self, plan: _Plan, exact: StructureGeometry) -> _Plan:
+    def _exact_levels(
+        self,
+        plan: _Plan,
+        exact: StructureGeometry,
+        finished_levels: Mapping[Tuple[str, int], float],
+    ) -> _Plan:
         """
         Return the plan with the levels of the exact column heights.
 
         A segment under the columns takes the level of a column channel that
         it continues across a vertical channel, if that level fits under the
         columns. The geometry follows the same rule, see
-        CorridorSegment.through_lanes.
+        CorridorSegment.through_lanes. A segment of a finished container
+        keeps the exact height of its lane: the height of its pass port.
         """
 
         rects = {
@@ -802,6 +885,12 @@ class _Router:
         levels = list(plan.levels)
         for position_, channel_ in enumerate(channels):
             if not channel_.is_horizontal:
+                continue
+            finished_level_ = finished_levels.get(
+                (plan.edge.edge_id, position_)
+            )
+            if finished_level_ is not None:
+                levels[position_] = finished_level_
                 continue
             if channel_.kind is not ChannelKind.BOTTOM_CORRIDOR:
                 levels[position_] = _center_y(rects[channel_])
@@ -842,12 +931,15 @@ class _Router:
         self,
         plans: List[_Plan],
         conflicts: List[StructureLaneConflict],
+        layer: FrozenSet[Optional[str]],
     ) -> Dict[Tuple[str, int], int]:
         segments_by_channel: Dict[StructureChannelId, List[LaneSegment]] = {}
         for plan_ in plans:
             channels_ = plan_.channels
             for position_ in range(1, len(channels_), 2):
                 channel_ = channels_[position_]
+                if channel_.container_id not in layer:
+                    continue
                 vertical_x_ = plan_.levels[position_]
                 entry_y_ = plan_.levels[position_ - 1]
                 exit_y_ = plan_.levels[position_ + 1]
@@ -908,9 +1000,11 @@ class _Router:
         vertical_lanes: Dict[Tuple[str, int], int],
     ) -> Tuple[float, float]:
         channel = plan.channels[position]
+        # The lanes of a parent vertical channel are not known yet when a
+        # child container is done: its center stands for them.
         return (
             _center_x(self.channel_rects[channel]),
-            vertical_lanes[(plan.edge.edge_id, position)],
+            vertical_lanes.get((plan.edge.edge_id, position), 0),
         )
 
     def _assign_ports(
@@ -918,6 +1012,7 @@ class _Router:
         plans: List[_Plan],
         vertical_lanes: Dict[Tuple[str, int], int],
         straight_ids: Set[str],
+        layer: FrozenSet[Optional[str]],
     ) -> Dict[EndpointKey, Port]:
         """
         Collect the endpoints of each gate and number the ports.
@@ -971,6 +1066,8 @@ class _Router:
                     plan_.channels[position_],
                     self.layout.places[node_id_].column,
                 )
+                if gate_[0].container_id not in layer:
+                    continue
                 flows_down_ = (role_ == _SOURCE) == (face_ is Face.BOTTOM)
                 if (plan_.edge.edge_id, position_) in moved_keys:
                     # A forced order moves the segment to the other half.
@@ -1038,6 +1135,7 @@ class _Router:
         straight_ids: Set[str],
         vertical_lanes: Dict[Tuple[str, int], int],
         conflicts: List[StructureLaneConflict],
+        layer: FrozenSet[Optional[str]],
     ) -> Dict[Tuple[str, int], int]:
         segments_by_channel: Dict[StructureChannelId, List[LaneSegment]] = {}
         for plan_ in plans:
@@ -1047,6 +1145,8 @@ class _Router:
             channels_ = plan_.channels
             last_ = len(channels_) - 1
             for position_ in range(0, len(channels_), 2):
+                if channels_[position_].container_id not in layer:
+                    continue
                 channel_y_ = plan_.levels[position_]
                 # A through pass has no perpendicular member: the segment
                 # leaves the channel straight.
@@ -1141,6 +1241,132 @@ class _Router:
                 for pair_ in pairs_
             )
         return result
+
+
+def _plan_lanes(
+    plan: _Plan,
+    vertical_lanes: Mapping[Tuple[str, int], int],
+    horizontal_lanes: Mapping[Tuple[str, int], int],
+) -> Tuple[int, ...]:
+    """
+    Return the lanes of a plan; a lane not assigned yet is 0.
+    """
+
+    return tuple(
+        (vertical_lanes if position_ % 2 == 1 else horizontal_lanes).get(
+            (plan.edge.edge_id, position_), 0
+        )
+        for position_ in range(len(plan.channels))
+    )
+
+
+def _lane_counts(
+    plans: List[_Plan],
+    straight_ids: Set[str],
+    vertical_lanes: Mapping[Tuple[str, int], int],
+    horizontal_lanes: Mapping[Tuple[str, int], int],
+    containers: Set[Optional[str]],
+) -> Dict[StructureChannelId, int]:
+    """
+    Return the lane counts of the channels of the containers.
+
+    The bottom corridor places its segments by itself, so it has no count.
+    """
+
+    result: Dict[StructureChannelId, int] = {}
+    for plan_ in plans:
+        if plan_.edge.edge_id in straight_ids:
+            continue
+        lanes_ = _plan_lanes(plan_, vertical_lanes, horizontal_lanes)
+        for channel_, lane_ in zip(plan_.channels, lanes_):
+            if (
+                channel_.container_id in containers
+                and channel_.kind is not ChannelKind.BOTTOM_CORRIDOR
+            ):
+                result[channel_] = max(result.get(channel_, 0), lane_ + 1)
+    return result
+
+
+def _bottom_segments(
+    plans: List[_Plan],
+    straight_ids: Set[str],
+    vertical_lanes: Mapping[Tuple[str, int], int],
+    horizontal_lanes: Mapping[Tuple[str, int], int],
+    containers: Set[Optional[str]],
+) -> List[CorridorSegment]:
+    """
+    Return the segments in the bottom corridors of the containers.
+    """
+
+    result: List[CorridorSegment] = []
+    for plan_ in plans:
+        if plan_.edge.edge_id in straight_ids:
+            continue
+        route_ = StructureRoute(
+            edge_id=plan_.edge.edge_id,
+            source_port=Port(plan_.edge.source_id, plan_.source_face, 0),
+            target_port=Port(plan_.edge.target_id, plan_.target_face, 0),
+            channels=plan_.channels,
+            lanes=_plan_lanes(plan_, vertical_lanes, horizontal_lanes),
+        )
+        result.extend(
+            segment_
+            for segment_ in _route_bottom_segments(route_)
+            if segment_.container_id in containers
+        )
+    return result
+
+
+def _route_bottom_segments(route: StructureRoute) -> List[CorridorSegment]:
+    return [
+        CorridorSegment(
+            key=(route.edge_id, position_),
+            container_id=channel_.container_id,
+            lane=lane_,
+            ends=(
+                _segment_end(route, position_ - 1),
+                _segment_end(route, position_ + 1),
+            ),
+            through_lanes=_through_lanes(route, position_),
+        )
+        for position_, (channel_, lane_) in enumerate(
+            zip(route.channels, route.lanes)
+        )
+        if channel_.kind is ChannelKind.BOTTOM_CORRIDOR
+    ]
+
+
+def _finished_levels(
+    plans: List[_Plan],
+    straight_ids: Set[str],
+    horizontal_lanes: Mapping[Tuple[str, int], int],
+    containers: Set[Optional[str]],
+    geometry: StructureGeometry,
+) -> Dict[Tuple[str, int], float]:
+    """
+    Return the exact height of each horizontal segment of the containers.
+    """
+
+    result: Dict[Tuple[str, int], float] = {}
+    for plan_ in plans:
+        if plan_.edge.edge_id in straight_ids:
+            continue
+        for position_ in range(0, len(plan_.channels), 2):
+            channel_ = plan_.channels[position_]
+            key_ = (plan_.edge.edge_id, position_)
+            if channel_.container_id not in containers:
+                continue
+            if channel_.kind is ChannelKind.BOTTOM_CORRIDOR:
+                result[key_] = geometry.bottom_segment_lines[key_][2]
+                continue
+            rect_ = geometry.channel_rect(channel_)
+            result[key_] = rect_.y + centered_lane_offset(
+                rect_.height,
+                geometry.lane_counts[channel_],
+                horizontal_lanes[key_],
+                geometry.config,
+            )
+    return result
 
 
 def _segment_end(route: StructureRoute, position: int) -> SegmentEnd:

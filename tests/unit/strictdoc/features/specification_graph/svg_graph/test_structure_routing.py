@@ -185,6 +185,56 @@ def test_relation_enters_a_section_straight() -> None:
     assert len(paths[_edge_id(normalized_graph, "S1", "T2")]) == 4
 
 
+def test_side_of_the_exit_follows_the_whole_path() -> None:
+    """
+    One path search over the channels of the chain chooses the exit side.
+
+    S1 -> B1 leaves the section S through its top corridor to the right
+    and reaches B1 at once. The way down under the tall section Q would be
+    much longer.
+
+    Code: structure_routing._Router._best_path,
+    structure_routing._Router._through_passes.
+    Fails if:
+    - a segment under the columns continues straight into the space
+      under another column, so the search undercounts the bends of a long
+      path.
+    """
+
+    normalized_graph, routing, _, _ = _result(_case("Side of the exit"))
+
+    route = routing.routes[_edge_id(normalized_graph, "S1", "B1")]
+    assert route.channels[0].kind is ChannelKind.TOP_CORRIDOR
+    assert route.channels[0].container_id == "S"
+
+
+def test_parent_lanes_follow_the_exact_pass_ports() -> None:
+    """
+    A parent orders its lanes by the exact heights of the pass ports.
+
+    N1 -> T1 and N4 -> T3 leave Section 1 through its left face into one
+    vertical channel of the root and both turn down. Section 1 is done
+    before the root, so the root knows that N1 -> T1 leaves lower. Its lane
+    lies closer to the face, and the corners nest.
+
+    Code: structure_routing._Router.route, structure_routing._finished_levels.
+    Fails if:
+    - the parent takes the middle of a child channel instead of the exact
+      height of the pass port.
+    """
+
+    normalized_graph, _, _, paths = _result(
+        _case("Document tree from the sketch")
+    )
+
+    lower = paths[_edge_id(normalized_graph, "N1", "T1")]
+    upper = paths[_edge_id(normalized_graph, "N4", "T3")]
+    # Point 1 is in the top corridor of Section 1, point 2 in the vertical
+    # channel of the root: the pass port lies between them.
+    assert lower[1].y > upper[1].y
+    assert lower[2].x > upper[2].x
+
+
 def test_bottom_segment_lies_below_the_columns_it_passes_over() -> None:
     """
     A segment in the bottom corridor lies the clearance below the columns

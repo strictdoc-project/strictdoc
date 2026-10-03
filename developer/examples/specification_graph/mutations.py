@@ -576,6 +576,23 @@ MUTATIONS = (
         "        )",
     ),
     Mutation(
+        "XC3",
+        "a segment under the columns continues straight without a lane",
+        STRUCTURE_ROUTING,
+        "        if channel.kind is ChannelKind.BOTTOM_CORRIDOR:\n"
+        "            # A segment under the columns",
+        "        if False:\n            # A segment under the columns",
+    ),
+    Mutation(
+        "IO1",
+        "the parent takes the middle of a child channel for a pass port",
+        STRUCTURE_ROUTING,
+        "            finished_level_ = finished_levels.get(\n"
+        "                (plan.edge.edge_id, position_)\n"
+        "            )\n",
+        "            finished_level_ = None\n",
+    ),
+    Mutation(
         "CL1",
         "column lane count rule ignores the lane reuse between the sides",
         STRUCTURE_ROUTING,
@@ -586,8 +603,8 @@ MUTATIONS = (
         "CL2",
         "vertical directions from the estimate instead of the exact heights",
         STRUCTURE_ROUTING,
-        "plans = [self._exact_levels(plan_, exact) for plan_ in plans]",
-        "pass",
+        "self._exact_levels(plan_, layer_geometry_, finished_levels_)",
+        "plan_",
     ),
     Mutation(
         "TP3",

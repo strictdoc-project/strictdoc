@@ -1021,6 +1021,57 @@ ACROSS_CONTAINERS_CASES: Tuple[GalleryCase, ...] = (
         [("Doc", [("S", ["S1", "S2"]), "A1", ("T", ["T1", "T2"])])],
         [("S1", "T2")],
     ),
+    _structure_case(
+        "Relations through two levels",
+        (
+            "X2 -> B1 leaves the section L2 and then the section L1. "
+            "A1 -> X1 enters both sections. X1 -> Y1 and Y2 -> Y1 stay "
+            "inside L1 and widen its channels, so the pass ports of L2 move. "
+            "The sections are computed inside out: the pass ports of L2 are "
+            "exact when L1 places its lanes."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    ("L1", [("L2", ["X1", "X2"]), "Y1", "Y2"]),
+                    "B1",
+                ],
+            )
+        ],
+        [("X2", "B1"), ("A1", "X1"), ("X1", "Y1"), ("Y2", "Y1")],
+    ),
+    _structure_case(
+        "Side of the exit",
+        (
+            "S1 -> B1 leaves the section S. Inside S, the way to the right "
+            "face passes the tall section Q. Outside S, B1 lies on the "
+            "right. One path search over the channels of S and of the "
+            "document chooses the side by the whole path."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    ("S", ["S1", ("Q", ["Q1", "Q2", "Q3"])]),
+                    "B1",
+                ],
+            )
+        ],
+        [("S1", "B1")],
+    ),
+    _structure_case(
+        "Several relations through one face",
+        (
+            "S1 -> B1, S2 -> B2, and S3 -> B3 leave the section S through "
+            "its right face. The pass ports stand at the heights of the "
+            "lanes inside S, so their order follows the lanes."
+        ),
+        [("Doc", [("S", ["S1", "S2", "S3"]), "B1", "B2", "B3"])],
+        [("S1", "B1"), ("S2", "B2"), ("S3", "B3")],
+    ),
 )
 
 

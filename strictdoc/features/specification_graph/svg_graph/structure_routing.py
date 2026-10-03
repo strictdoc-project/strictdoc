@@ -475,11 +475,20 @@ class _Router:
                 continue
             visited.add(state)
             x, y = item.point
+            # Where the segment in this channel starts for the columns under
+            # it: a line from a child container starts at its side face.
+            start_x = (
+                self._face_x(item.path[-2], item.channel)
+                if len(item.path) >= 2
+                else x
+            )
             if item.channel == end:
                 segment_y_ = self._segment_y(
-                    item.channel, x, target_x, y, item.is_through
+                    item.channel, start_x, target_x, y, item.is_through
                 )
-                if segment_y_ is not None:
+                if segment_y_ is not None and self._entry_fits(
+                    item.path, segment_y_
+                ):
                     push(
                         item.bends + 1,
                         item.length
@@ -513,9 +522,17 @@ class _Router:
                 # The segment in this horizontal channel ends at the
                 # vertical channel: by a turn or by a through pass.
                 segment_y_ = self._segment_y(
-                    item.channel, x, turn_[0], y, item.is_through
+                    item.channel,
+                    start_x,
+                    self._face_x(neighbor_, item.channel, turn_[0]),
+                    y,
+                    item.is_through,
                 )
-                if segment_y_ is None:
+                if (
+                    segment_y_ is None
+                    or not self._entry_fits(item.path, segment_y_)
+                    or not self._turn_fits(neighbor_, item.channel, segment_y_)
+                ):
                     continue
                 length_ = item.length + abs(x - turn_[0]) + (segment_y_ - y)
                 next_point_ = (turn_[0], segment_y_)
@@ -691,10 +708,9 @@ class _Router:
         """
         Return the channels that touch a channel, within the chain.
 
-        The channels of one container touch as in the layout. A horizontal
-        channel of a container that touches its outer vertical channel also
-        touches the vertical channel of the parent next to that side face:
-        the relation leaves or enters the container there.
+        The channels of one container touch as in the layout. A crossing of
+        a side face also joins a horizontal channel on one side of the face
+        with a vertical channel on the other side, see _side_face_links.
         """
 
         return [
@@ -703,6 +719,69 @@ class _Router:
             + self.side_face_links.get(channel, [])
             if neighbor_.container_id in chain
         ]
+
+    def _face_x(
+        self,
+        vertical: StructureChannelId,
+        horizontal: StructureChannelId,
+        x: Optional[float] = None,
+    ) -> float:
+        """
+        Return where a horizontal segment meets a vertical channel.
+
+        If the vertical channel lies in a child container, the segment
+        enters the child through its side face: the columns under the
+        segment end at that face.
+        """
+
+        rect = self.channel_rects[vertical]
+        if x is None:
+            x = _center_x(rect)
+        if vertical.container_id == horizontal.container_id:
+            return x
+        child_id = vertical.container_id
+        if (
+            child_id is None
+            or self.normalized_graph.parent_ids[child_id]
+            != horizontal.container_id
+        ):
+            return x
+        frame = self.estimate.node_rects[child_id]
+        return frame.x if vertical.index == 0 else frame.x + frame.width
+
+    def _entry_fits(
+        self, path: Tuple[StructureChannelId, ...], y: float
+    ) -> bool:
+        """
+        Return True if the last horizontal segment of a path fits its entry.
+
+        The segment came from the vertical channel before it. If that
+        channel lies in another container, the height of the segment must
+        lie within it.
+        """
+
+        if len(path) < 2:
+            return True
+        return self._turn_fits(path[-2], path[-1], y)
+
+    def _turn_fits(
+        self,
+        vertical: StructureChannelId,
+        horizontal: StructureChannelId,
+        y: float,
+    ) -> bool:
+        """
+        Return True if a turn between the two channels can lie at height y.
+
+        A turn through a side face joins channels of two containers. It must
+        lie within the vertical channel: a line enters the outer vertical
+        channel of a container below its header and its top corridor.
+        """
+
+        if vertical.container_id == horizontal.container_id:
+            return True
+        rect = self.channel_rects[vertical]
+        return rect.y < y < rect.y + rect.height
 
     def _stub_length(
         self, node_id: str, face: Face, channel: StructureChannelId
@@ -1396,9 +1475,12 @@ def _side_face_links(
     """
     Link the channels of each container with its parent at the side faces.
 
-    A horizontal channel that touches the outer vertical channel of a
-    container links to the vertical channel of the parent next to that side
-    face, in both directions.
+    A crossing of a side face joins a horizontal channel on one side with a
+    vertical channel on the other side, in both directions: a horizontal
+    channel of the container at its outer vertical channel with the
+    vertical channel of the parent next to the face, and a horizontal
+    channel of the parent at that vertical channel with the outer vertical
+    channel of the container.
     """
 
     result: Dict[StructureChannelId, List[StructureChannelId]] = {}
@@ -1423,6 +1505,13 @@ def _side_face_links(
                         continue
                     result.setdefault(parent_vertical_, []).append(horizontal_)
                     result.setdefault(horizontal_, []).append(parent_vertical_)
+                # A line of the parent crosses the face straight and turns
+                # in the outer vertical channel of the child.
+                for horizontal_ in layout.neighbor_channels(parent_vertical_):
+                    if not horizontal_.is_horizontal:
+                        continue
+                    result.setdefault(child_vertical_, []).append(horizontal_)
+                    result.setdefault(horizontal_, []).append(child_vertical_)
     return result
 
 

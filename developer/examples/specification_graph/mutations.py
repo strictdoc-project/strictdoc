@@ -584,13 +584,27 @@ MUTATIONS = (
         "        if False:\n            # A segment under the columns",
     ),
     Mutation(
-        "IO1",
-        "the parent takes the middle of a child channel for a pass port",
+        "XC4",
+        "a parent line does not enter the outer vertical channel of a child",
         STRUCTURE_ROUTING,
-        "            finished_level_ = finished_levels.get(\n"
-        "                (plan.edge.edge_id, position_)\n"
-        "            )\n",
-        "            finished_level_ = None\n",
+        "                    result.setdefault(child_vertical_, []).append(horizontal_)\n"
+        "                    result.setdefault(horizontal_, []).append(child_vertical_)\n",
+        "                    pass\n",
+    ),
+    Mutation(
+        "XC6",
+        "a turn through a side face may lie above the vertical channel",
+        STRUCTURE_ROUTING,
+        "        return rect.y < y < rect.y + rect.height\n",
+        "        return True\n",
+    ),
+    Mutation(
+        "XC5",
+        "the columns under a segment include the child it enters",
+        STRUCTURE_ROUTING,
+        "        frame = self.estimate.node_rects[child_id]\n"
+        "        return frame.x if vertical.index == 0 else frame.x + frame.width\n",
+        "        return x\n",
     ),
     Mutation(
         "SR3",
@@ -612,13 +626,6 @@ MUTATIONS = (
         STRUCTURE_ROUTING,
         "max(left_, right_) + across_",
         "left_ + right_ + across_",
-    ),
-    Mutation(
-        "CL2",
-        "vertical directions from the estimate instead of the exact heights",
-        STRUCTURE_ROUTING,
-        "self._exact_levels(plan_, layer_geometry_, finished_levels_)",
-        "plan_",
     ),
     Mutation(
         "TP3",

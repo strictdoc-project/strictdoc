@@ -1054,6 +1054,30 @@ ACROSS_CONTAINERS_CASES: Tuple[GalleryCase, ...] = (
         [("X2", "B1"), ("A1", "X1"), ("X1", "Y1"), ("Y2", "Y1")],
     ),
     _structure_case(
+        "Relations through two levels, and out of the outer section",
+        (
+            'The case "Relations through two levels" with Y1 -> B1: a '
+            "relation from the outer section L1 to B1 outside."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    ("L1", [("L2", ["X1", "X2"]), "Y1", "Y2"]),
+                    "B1",
+                ],
+            )
+        ],
+        [
+            ("X2", "B1"),
+            ("A1", "X1"),
+            ("X1", "Y1"),
+            ("Y2", "Y1"),
+            ("Y1", "B1"),
+        ],
+    ),
+    _structure_case(
         "Side of the exit",
         (
             "S1 -> B1 leaves the section S. Inside S, the way to the right "

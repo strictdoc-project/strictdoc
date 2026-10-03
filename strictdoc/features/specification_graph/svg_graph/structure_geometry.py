@@ -375,10 +375,20 @@ class _GeometryBuilder:
 
         def end_x(end: SegmentEnd) -> float:
             if isinstance(end, LaneEnd) and end.channel not in verticals:
+                child_column_ = self._child_column(
+                    container_id, end.channel.container_id
+                )
+                if child_column_ is not None:
+                    # The segment enters the outer vertical channel of a
+                    # child container through its side face: the columns
+                    # under the segment end at the face.
+                    child_left_, child_right_, _ = column_spans[child_column_]
+                    return (
+                        child_left_ if end.channel.index == 0 else child_right_
+                    )
                 # The segment leaves the container through a side face: the
                 # lane lies in the parent next to that face.
-                assert container_id is not None
-                own_column_ = self.layout.places[container_id].column
+                own_column_ = self._own_column(container_id)
                 return 0.0 if end.channel.index == own_column_ else area_width
             if isinstance(end, LaneEnd):
                 return verticals[end.channel] + centered_lane_offset(
@@ -451,6 +461,29 @@ class _GeometryBuilder:
         )
         self.corridors[container_id] = corridor
         return corridor
+
+    def _child_column(
+        self, container_id: Optional[str], child_id: Optional[str]
+    ) -> Optional[int]:
+        """
+        Return the column of a child container, or None if it is no child.
+        """
+
+        for index_, column_ in enumerate(self.layout.columns[container_id]):
+            if column_.is_composite and column_.node_ids[0] == child_id:
+                return index_
+        return None
+
+    def _own_column(self, container_id: Optional[str]) -> int:
+        """
+        Return the column of a container in its parent.
+        """
+
+        for columns_ in self.layout.columns.values():
+            for index_, column_ in enumerate(columns_):
+                if column_.is_composite and column_.node_ids[0] == container_id:
+                    return index_
+        raise AssertionError(container_id)
 
     def _through_lane_y(
         self,

@@ -208,31 +208,30 @@ def test_side_of_the_exit_follows_the_whole_path() -> None:
     assert route.channels[0].container_id == "S"
 
 
-def test_parent_lanes_follow_the_exact_pass_ports() -> None:
+def test_line_enters_the_outer_vertical_channel_of_a_section() -> None:
     """
-    A parent orders its lanes by the exact heights of the pass ports.
+    A line crosses a side face straight and turns in the outer vertical
+    channel of the section behind it.
 
-    N1 -> T1 and N4 -> T3 leave Section 1 through its left face into one
-    vertical channel of the root and both turn down. Section 1 is done
-    before the root, so the root knows that N1 -> T1 leaves lower. Its lane
-    lies closer to the face, and the corners nest.
+    A1 -> X1 goes from the space under A1 into the section L1 at the same
+    height and turns down in the left vertical channel of L1. It does not
+    climb to the top corridor of L1 first.
 
-    Code: structure_routing._Router.route, structure_routing._finished_levels.
+    Code: structure_routing._side_face_links,
+    structure_routing._Router._turn_fits, structure_routing._Router._face_x.
     Fails if:
-    - the parent takes the middle of a child channel instead of the exact
-      height of the pass port.
+    - a horizontal channel of the parent does not link to the outer
+      vertical channel of a child through the side face.
+    - the columns under the segment include the child it enters.
     """
 
     normalized_graph, _, _, paths = _result(
-        _case("Document tree from the sketch")
+        _case("Relations through two levels")
     )
 
-    lower = paths[_edge_id(normalized_graph, "N1", "T1")]
-    upper = paths[_edge_id(normalized_graph, "N4", "T3")]
-    # Point 1 is in the top corridor of Section 1, point 2 in the vertical
-    # channel of the root: the pass port lies between them.
-    assert lower[1].y > upper[1].y
-    assert lower[2].x > upper[2].x
+    path = paths[_edge_id(normalized_graph, "A1", "X1")]
+    heights = [point_.y for point_ in path]
+    assert heights == sorted(heights)
 
 
 def test_bottom_segment_lies_below_the_columns_it_passes_over() -> None:
@@ -640,6 +639,8 @@ def test_structure_route_invariants(case: GalleryCase) -> None:
     Fails if:
     - a route passes through a node or through a container that does not
       hold its endpoints.
+    - a route crosses the top or the bottom edge of a container frame, or
+      crosses a side face at the height of the header.
     - two routes share or touch a segment, or a bend lies on another route.
     - the last segment is shorter than the lane clearance.
     """
@@ -667,6 +668,23 @@ def test_structure_route_invariants(case: GalleryCase) -> None:
         )
         == []
     )
+    for container_id_, header_ in geometry.header_rects.items():
+        frame_ = geometry.node_rects[container_id_]
+        for path_ in paths.values():
+            for start_, end_ in zip(path_, path_[1:]):
+                if start_.x == end_.x and frame_.x < start_.x < (
+                    frame_.x + frame_.width
+                ):
+                    low_, high_ = sorted((start_.y, end_.y))
+                    for edge_y_ in (frame_.y, frame_.y + frame_.height):
+                        assert not low_ < edge_y_ < high_
+                if start_.y == end_.y and frame_.y < start_.y < (
+                    frame_.y + frame_.height
+                ):
+                    low_, high_ = sorted((start_.x, end_.x))
+                    for face_x_ in (frame_.x, frame_.x + frame_.width):
+                        if low_ < face_x_ < high_:
+                            assert start_.y > header_.y + header_.height
     clearance = geometry.config.lane_clearance
     for route_ in routing.routes.values():
         path_ = paths[route_.edge_id]

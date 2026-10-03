@@ -125,21 +125,35 @@ def assign_lanes(
         # Pairs whose order costs no crossing: the votes contradict, so one
         # crossing happens in either order, or there are no votes.
         free_: Set[FrozenSet[SegmentKey]] = set()
+        # (strength, earlier, later): the earlier segment takes the smaller
+        # lane. A smaller strength is a stronger reason.
+        orders_: List[Tuple[int, SegmentKey, SegmentKey]] = []
         for first_index_, first_ in enumerate(half_segments_):
             for second_ in half_segments_[first_index_ + 1 :]:
-                if (first_.key, second_.key) in forced_pairs:
-                    order_ = 1
+                coincident_ = _coincident_order(first_, second_)
+                if coincident_ != 0:
+                    order_, strength_ = coincident_, _COINCIDENT
+                elif (first_.key, second_.key) in forced_pairs:
+                    order_, strength_ = 1, _FORCED
                 elif (second_.key, first_.key) in forced_pairs:
-                    order_ = -1
+                    order_, strength_ = -1, _FORCED
                 else:
                     conflict_count_ = len(conflicts)
                     order_ = _pair_order(first_, second_, priority, conflicts)
+                    strength_ = _CROSSING
                     if order_ == 0 or len(conflicts) > conflict_count_:
                         free_.add(frozenset((first_.key, second_.key)))
+                        strength_ = _CONFLICT
                 if order_ == 1:
-                    before_[second_.key].add(first_.key)
+                    orders_.append((strength_, first_.key, second_.key))
                 elif order_ == -1:
-                    before_[first_.key].add(second_.key)
+                    orders_.append((strength_, second_.key, first_.key))
+        # A weaker order that contradicts the stronger ones already taken
+        # is dropped. A stable sort keeps the segment order within one
+        # strength.
+        for _, earlier_, later_ in sorted(orders_, key=lambda o_: o_[0]):
+            if not _comes_before(before_, later_, earlier_):
+                before_[later_].add(earlier_)
         _keep_ribbons(half_segments_, before_, free_, forced_pairs)
         half_lanes_ = _longest_path_lanes(half_segments_, before_)
         for key_, lane_ in half_lanes_.items():
@@ -277,6 +291,59 @@ def _yield_to_nesting(segments: List[LaneSegment]) -> List[LaneSegment]:
         else segment_
         for segment_ in segments
     ]
+
+
+# The strength of a reason for the order of two segments, the strongest
+# first: two ends at the same position (the other order lays them on top of
+# each other), a nested pair on a shared stretch, the ends (the other order
+# adds a crossing), the priority of an unavoidable crossing.
+_COINCIDENT = 0
+_FORCED = 1
+_CROSSING = 2
+_CONFLICT = 3
+
+
+def _comes_before(
+    before: Dict[SegmentKey, Set[SegmentKey]],
+    first: SegmentKey,
+    second: SegmentKey,
+) -> bool:
+    """
+    Return True if the orders already set put the first segment before the
+    second one.
+    """
+
+    stack = [second]
+    seen: Set[SegmentKey] = set()
+    while len(stack) > 0:
+        key_ = stack.pop()
+        if key_ == first:
+            return True
+        if key_ not in seen:
+            seen.add(key_)
+            stack.extend(before[key_])
+    return False
+
+
+def _coincident_order(first: LaneSegment, second: LaneSegment) -> int:
+    """
+    Return the order of two segments with ends at the same position.
+
+    If the ends extend to different sides, the segment whose end extends
+    toward the low side takes the lower lane: return 1 if this is the first
+    segment, -1 for the second. Return 0 if no ends coincide this way.
+    """
+
+    if not _overlap(first, second):
+        return 0
+    for first_member_ in first.members:
+        for second_member_ in second.members:
+            if (
+                first_member_.position == second_member_.position
+                and first_member_.to_high_side != second_member_.to_high_side
+            ):
+                return -1 if first_member_.to_high_side else 1
+    return 0
 
 
 def _pair_order(

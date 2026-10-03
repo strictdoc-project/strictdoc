@@ -269,6 +269,27 @@ MUTATIONS = (
         "and False",
     ),
     Mutation(
+        "LO1",
+        "ends at the same position set no order",
+        LANES,
+        "                if coincident_ != 0:\n",
+        "                if False:\n",
+    ),
+    Mutation(
+        "LO2",
+        "the orders of a channel are not taken by strength",
+        LANES,
+        "sorted(orders_, key=lambda o_: o_[0])",
+        "orders_",
+    ),
+    Mutation(
+        "LO3",
+        "an order that closes a cycle is not dropped",
+        LANES,
+        "            if not _comes_before(before_, later_, earlier_):\n",
+        "            if True:\n",
+    ),
+    Mutation(
         "R2",
         "lane priority inverted",
         LANES,

@@ -43,6 +43,9 @@ class GalleryCase:
     description: str
     graph: Graph
     rejected_alternative: Optional[RejectedAlternative] = None
+    # A case with a known problem: the invariant tests that it breaks until
+    # the problem is fixed. The tests expect these to fail.
+    broken_invariants: Tuple[str, ...] = ()
 
 
 def _levels_case(
@@ -547,6 +550,7 @@ def _structure_case(
     root: Sequence[StructureSpec],
     edges: Sequence[Tuple[str, str]] = (),
     titles: Optional[Dict[str, str]] = None,
+    broken_invariants: Tuple[str, ...] = (),
 ) -> GalleryCase:
     """
     Create a structure mode case.
@@ -570,6 +574,7 @@ def _structure_case(
                 for source_id_, target_id_ in edges
             ),
         ),
+        broken_invariants=broken_invariants,
     )
 
 
@@ -943,6 +948,34 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
             )
         ],
         [("D1", "S1"), ("Q1", "S2"), ("Q2", "A2")],
+    ),
+    _structure_case(
+        "Two lines into a section at one point",
+        (
+            "Known problem. A3 -> S3 comes from under S and goes up to S3. "
+            "D1 -> S2 comes from the pocket under D1 and goes down to S2. "
+            "Both enter S through its right face and use one lane of the "
+            "right vertical channel of S: computed first, S sees their "
+            "verticals at different heights (312 to 456 and 176 to 224). "
+            "Then the rule of ends at one point puts the line that goes up "
+            "above the line that goes down, and D1 -> S2 moves below "
+            "A3 -> S3. There its end goes up instead of down, and the two "
+            "verticals lie on top of each other. Diagnosis: under the "
+            "columns the side an end goes to depends on the height of its "
+            "segment, but the rules take it from the base height as if it "
+            "were fixed. In the pocket, the verticals would not meet."
+        ),
+        [
+            (
+                "Doc",
+                ["A1", "A2", "A3", ("S", ["S1", ("SR", ["S2", "S3"])]), "D1"],
+            )
+        ],
+        [("A1", "D1"), ("A3", "S3"), ("D1", "S2"), ("S1", "A1"), ("S2", "S1")],
+        broken_invariants=(
+            "test_structure_routes_follow_right_hand_traffic",
+            "test_structure_route_invariants",
+        ),
     ),
     _structure_case(
         "Steps beside a pocket",
@@ -1524,6 +1557,7 @@ GALLERY_CHAPTERS: Tuple[GalleryChapter, ...] = (
         "Nested pair under the columns",
         "Pocket between two sections",
         "Line from a section into a pocket",
+        "Two lines into a section at one point",
         "Steps beside a pocket",
     ),
     _chapter(

@@ -1,4 +1,4 @@
-from typing import Dict, List, Mapping, Optional, Tuple
+from typing import Any, Dict, List, Mapping, Optional, Tuple
 
 import pytest
 
@@ -50,6 +50,29 @@ from tests.unit.strictdoc.features.specification_graph.svg_graph.geometry_checks
 STRUCTURE_CASES = [
     case_ for case_ in GALLERY_CASES if case_.graph.mode is LayoutMode.STRUCTURE
 ]
+
+
+def _invariant_cases(test_name: str) -> List[Any]:
+    """
+    Return the structure cases for an invariant test.
+
+    A case with a known problem that breaks this invariant is expected to
+    fail. The mark is strict: when the problem is fixed, the test fails
+    until the case drops the invariant from its broken ones.
+    """
+
+    return [
+        pytest.param(
+            case_,
+            id=case_.title,
+            marks=pytest.mark.xfail(
+                strict=True, reason="known problem, see the case description"
+            )
+            if test_name in case_.broken_invariants
+            else (),
+        )
+        for case_ in STRUCTURE_CASES
+    ]
 
 
 def _case(title: str) -> GalleryCase:
@@ -818,7 +841,7 @@ _ChannelSegment = Tuple[
 
 
 @pytest.mark.parametrize(
-    "case", STRUCTURE_CASES, ids=[case_.title for case_ in STRUCTURE_CASES]
+    "case", _invariant_cases("test_structure_routes_follow_right_hand_traffic")
 )
 def test_structure_routes_follow_right_hand_traffic(case: GalleryCase) -> None:
     """
@@ -990,7 +1013,7 @@ def _is_nested(
 
 
 @pytest.mark.parametrize(
-    "case", STRUCTURE_CASES, ids=[case_.title for case_ in STRUCTURE_CASES]
+    "case", _invariant_cases("test_structure_route_invariants")
 )
 def test_structure_route_invariants(case: GalleryCase) -> None:
     """

@@ -885,6 +885,41 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
         ],
     ),
     _structure_case(
+        "Pocket between two sections",
+        (
+            "Known problem. Q1 -> S3 leaves the section Q through its left "
+            "face and enters the section S through its right face. Between "
+            "them it passes under D1 only, so it should lie in the pocket "
+            "under D1, above S1 -> E2. It lies below S1 -> E2 instead. "
+            "Diagnosis: when the lanes are assigned, the base height of the "
+            "segment is counted from the inner vertical channels of Q and "
+            "S, not from their side faces, so the two sections count as "
+            "columns the segment passes under, and the base height falls "
+            "below S. The pocket rule then compares this wrong height. The "
+            "route search already counts from the side faces. Counting from "
+            "the faces in the lane stage alone is not enough: then a "
+            "segment can still be moved below the height its section was "
+            "computed for, and its vertical inside the section grows onto "
+            "another one."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    "A2",
+                    "A3",
+                    ("S", ["S1", ("SR", ["S2", "S3"])]),
+                    "D1",
+                    ("Q", ["Q1", ("QR", ["Q2"])]),
+                    "E1",
+                    "E2",
+                ],
+            )
+        ],
+        [("D1", "A2"), ("E1", "Q1"), ("E2", "Q1"), ("Q1", "S3"), ("S1", "E2")],
+    ),
+    _structure_case(
         "Steps beside a pocket",
         (
             "The case with more ports, with four nodes in the columns C and "
@@ -1462,6 +1497,7 @@ GALLERY_CHAPTERS: Tuple[GalleryChapter, ...] = (
         "Vertical lane at the height of a column gap",
         "Lane order in the bottom corridor",
         "Nested pair under the columns",
+        "Pocket between two sections",
         "Steps beside a pocket",
     ),
     _chapter(

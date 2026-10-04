@@ -352,14 +352,14 @@ class _Router:
                 is_straight_candidate=True,
             )
 
-        best: Optional[Tuple[Tuple[int, float, int], _Plan]] = None
-        for face_rank_, (source_face_, target_face_) in enumerate(
-            (
-                (Face.TOP, Face.TOP),
-                (Face.TOP, Face.BOTTOM),
-                (Face.BOTTOM, Face.TOP),
-                (Face.BOTTOM, Face.BOTTOM),
-            )
+        # The faces of the source and of the target, then the plan. The
+        # face pairs come with the top faces first.
+        candidates: List[Tuple[int, float, Face, Face, _Plan]] = []
+        for source_face_, target_face_ in (
+            (Face.TOP, Face.TOP),
+            (Face.TOP, Face.BOTTOM),
+            (Face.BOTTOM, Face.TOP),
+            (Face.BOTTOM, Face.BOTTOM),
         ):
             path_ = self._best_path(
                 source_id, source_face_, target_id, target_face_, chain
@@ -367,10 +367,12 @@ class _Router:
             if path_ is None:
                 continue
             (bends_, length_), channels_, levels_ = path_
-            cost_ = (bends_, length_, face_rank_)
-            if best is None or cost_ < best[0]:
-                best = (
-                    cost_,
+            candidates.append(
+                (
+                    bends_,
+                    length_,
+                    source_face_,
+                    target_face_,
                     _Plan(
                         index=index,
                         edge=edge,
@@ -381,8 +383,61 @@ class _Router:
                         is_straight_candidate=False,
                     ),
                 )
-        assert best is not None
-        return best[1]
+            )
+        assert len(candidates) > 0
+        return self._best_candidate(source_id, target_id, candidates)
+
+    def _best_candidate(
+        self,
+        source_id: str,
+        target_id: str,
+        candidates: List[Tuple[int, float, Face, Face, _Plan]],
+    ) -> _Plan:
+        """
+        Choose the path of a relation among the paths of the face pairs.
+
+        spec.md, section "Путь по каналам". The fewest bends win. Then a
+        path is longer only if it is longer by two node heights or more: a
+        smaller difference counts as equal. Then the faces that look toward
+        each other win: a target below the source takes the bottom face of
+        the source and the top face of the target, a target above takes the
+        opposite faces. The line goes where it has to go and does not open
+        a channel on the other side for one turn. A target at the same
+        height has no such side. The length in pixels decides next, and the
+        top faces win the last tie.
+        """
+
+        fewest_bends = min(candidate_[0] for candidate_ in candidates)
+        candidates = [
+            candidate_
+            for candidate_ in candidates
+            if candidate_[0] == fewest_bends
+        ]
+        shortest = min(candidate_[1] for candidate_ in candidates)
+        candidates = [
+            candidate_
+            for candidate_ in candidates
+            if candidate_[1] < shortest + 2 * self.config.node_height
+        ]
+        source_y = _center_y(self.estimate.node_rects[source_id])
+        target_y = _center_y(self.estimate.node_rects[target_id])
+        facing: Optional[Tuple[Face, Face]] = None
+        if target_y > source_y:
+            facing = (Face.BOTTOM, Face.TOP)
+        elif target_y < source_y:
+            facing = (Face.TOP, Face.BOTTOM)
+
+        def away(candidate: Tuple[int, float, Face, Face, _Plan]) -> int:
+            if facing is None:
+                return 0
+            return int(candidate[2] is not facing[0]) + int(
+                candidate[3] is not facing[1]
+            )
+
+        # min keeps the first of equal candidates: the top faces.
+        return min(
+            candidates, key=lambda candidate_: (away(candidate_), candidate_[1])
+        )[4]
 
     def _port_channel(self, node_id: str, face: Face) -> StructureChannelId:
         if face is Face.TOP:

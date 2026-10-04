@@ -922,21 +922,12 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
     _structure_case(
         "Line from a section into a pocket",
         (
-            "Q1 -> S2 leaves the section Q through its top corridor, goes "
-            "down the vertical channel between D1 and Q into the pocket "
-            "under D1, and enters the section S. Q2 -> A2 goes down the "
-            "same vertical channel and passes under S. Here they take "
-            "different lanes of that channel, and nothing overlaps. With "
-            "the base height counted from the side faces of the sections "
-            '(the fix for "Pocket between two sections"), this graph '
-            "breaks. First, the lane order under the columns puts "
-            "Q1 -> S2 below Q2 -> A2: the end of Q1 -> S2 that goes down "
-            "inside S to S2 counts as if it went down across the whole "
-            "space under the columns. Second, the lanes of the vertical "
-            "channel are assigned before the heights under the columns, for "
-            "the base height of Q1 -> S2 in the pocket, so its vertical "
-            "shares a lane with the vertical of Q2 -> A2. When Q1 -> S2 "
-            "moves down, its vertical grows and lies on the other one."
+            "S2 lies lower than Q1, so Q1 -> S2 leaves the bottom face of Q1 "
+            "into the free space under Q1, goes out of the left face of Q "
+            "into the vertical channel between D1 and Q, up into the pocket "
+            "under D1, and enters the section S. Q2 -> A2 goes down the same "
+            "vertical channel and passes under S. The two verticals take "
+            "different lanes of that channel."
         ),
         [
             (
@@ -1375,13 +1366,13 @@ ONE_FACE_CASES: Tuple[GalleryCase, ...] = (
     _structure_case(
         "One face: two relations out, a line between",
         (
-            "C2 -> S1 and C2 -> S2 leave the top face of C2 to the left. "
-            "One crossing is unavoidable. C1 -> S2 runs above both lines of "
-            "C2 in the channel between C1 and C2 and crosses C2 -> S1 once, "
-            "where it turns down."
+            "C3 -> S1 and C3 -> S2 leave the top face of C3 to the left: "
+            "both targets lie higher. One crossing is unavoidable. "
+            "C2 -> S2 runs above both lines of C3 in the channel between C2 "
+            "and C3 and crosses C3 -> S1 once, where it turns down into S2."
         ),
-        [("Doc", ["A1", ("S", ["S1", "S2"]), "C1", "C2"])],
-        [("C1", "S2"), ("C2", "S1"), ("C2", "S2")],
+        [("Doc", ["A1", ("S", ["S1", "S2"]), "C1", "C2", "C3"])],
+        [("C2", "S2"), ("C3", "S1"), ("C3", "S2")],
     ),
     _structure_case(
         "One face: two relations out, an opposite line between",

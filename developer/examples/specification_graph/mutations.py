@@ -346,6 +346,27 @@ MUTATIONS = (
         "        return None\n",
     ),
     Mutation(
+        "FC1",
+        "the faces toward the target do not win a near tie",
+        STRUCTURE_ROUTING,
+        "            if facing is None:\n                return 0\n",
+        "            return 0\n",
+    ),
+    Mutation(
+        "FC2",
+        "a few pixels of length decide over the faces",
+        STRUCTURE_ROUTING,
+        "            if candidate_[1] < shortest + 2 * self.config.node_height\n",
+        "            if candidate_[1] == shortest\n",
+    ),
+    Mutation(
+        "FC3",
+        "nodes at one height prefer some faces",
+        STRUCTURE_ROUTING,
+        "        elif target_y < source_y:\n",
+        "        else:\n",
+    ),
+    Mutation(
         "R2",
         "lane priority inverted",
         LANES,

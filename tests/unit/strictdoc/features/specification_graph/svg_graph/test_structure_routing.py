@@ -317,6 +317,30 @@ def test_bottom_segment_lies_below_the_columns_it_passes_over() -> None:
         assert path_[1].y == column_.y + column_.height + clearance
 
 
+def test_face_toward_the_target_wins_a_near_tie() -> None:
+    """
+    Of two paths with equal bends and lengths within two node heights, the
+    path from the faces that look toward each other wins.
+
+    S2 lies below Q1. The path of Q1 -> S2 from the top face of Q1 is 48
+    pixels shorter than the path from the bottom face, less than two node
+    heights, so the bottom face wins: the line goes down into the free
+    space under Q1 and does not open the top corridor of Q for one turn.
+
+    Code: structure_routing._Router._best_candidate.
+    Fails if:
+    - the faces toward the target do not win a near tie.
+    - a few pixels of length decide over the faces.
+    """
+
+    normalized_graph, routing, _, _ = _result(
+        _case("Line from a section into a pocket")
+    )
+
+    route = routing.routes[_edge_id(normalized_graph, "Q1", "S2")]
+    assert route.source_port.face is Face.BOTTOM
+
+
 def test_bottom_corridor_keeps_the_lane_order() -> None:
     """
     Of two overlapping segments in the bottom corridor, the larger lane lies
@@ -690,10 +714,10 @@ def test_foreign_line_does_not_split_a_ribbon() -> None:
     the vertical channel left of C. C1 -> C3 goes down the same vertical
     channel and passes them from one side.
 
-    In "One face: two relations out, a line between", C2 -> S1 and
-    C2 -> S2 leave the top face of C2 to the left. C1 -> S2 crosses one of
-    them. It runs above both in the channel between C1 and C2, and left of
-    both in the vertical channel.
+    In "One face: two relations out, a line between", C3 -> S1 and
+    C3 -> S2 leave the top face of C3 to the left. C2 -> S2 crosses one of
+    them. It runs above both in the channel between C2 and C3, and on one
+    side of both in the vertical channel.
 
     Code: structure_stretches.shared_stretch_orders.
     Fails if:
@@ -728,12 +752,13 @@ def test_foreign_line_does_not_split_a_ribbon() -> None:
     def first_vertical_x(source_id: str, target_id: str) -> float:
         return paths[_edge_id(normalized_graph, source_id, target_id)][2].x
 
-    assert first_horizontal_y("C1", "S2") < min(
-        first_horizontal_y("C2", "S1"), first_horizontal_y("C2", "S2")
+    assert first_horizontal_y("C2", "S2") < min(
+        first_horizontal_y("C3", "S1"), first_horizontal_y("C3", "S2")
     )
-    assert first_vertical_x("C1", "S2") < min(
-        first_vertical_x("C2", "S1"), first_vertical_x("C2", "S2")
+    ribbon_x = sorted(
+        (first_vertical_x("C3", "S1"), first_vertical_x("C3", "S2"))
     )
+    assert not ribbon_x[0] < first_vertical_x("C2", "S2") < ribbon_x[1]
 
 
 def test_lane_order_decides_where_segments_under_the_columns_meet() -> None:

@@ -802,13 +802,15 @@ class _Router:
         vertical: StructureChannelId,
         horizontal: StructureChannelId,
         x: Optional[float] = None,
+        frames: Optional[Mapping[str, Rect]] = None,
     ) -> float:
         """
         Return where a horizontal segment meets a vertical channel.
 
         If the vertical channel lies in a child container, the segment
         enters the child through its side face: the columns under the
-        segment end at that face.
+        segment end at that face. The frames of the containers come from
+        the estimate unless given.
         """
 
         rect = self.channel_rects[vertical]
@@ -823,7 +825,9 @@ class _Router:
             != horizontal.container_id
         ):
             return x
-        frame = self.estimate.node_rects[child_id]
+        frame = (
+            self.estimate.node_rects if frames is None else frames
+        )[child_id]
         return frame.x if vertical.index == 0 else frame.x + frame.width
 
     def _stub_length(
@@ -987,6 +991,11 @@ class _Router:
         columns. The geometry follows the same rule, see
         CorridorSegment.through_lanes. A segment of a finished container
         keeps the exact height of its lane: the height of its pass port.
+
+        All levels come from the exact geometry: the x of a vertical channel
+        as well, so that the columns under a segment are measured against
+        the same frames. A segment that enters a child container ends at its
+        side face: the child is no column the segment passes under.
         """
 
         rects = {
@@ -995,7 +1004,10 @@ class _Router:
         spans = _column_spans(self.layout, exact)
         channels = plan.channels
         last = len(channels) - 1
-        levels = list(plan.levels)
+        levels = [
+            level_ if channel_.is_horizontal else _center_x(rects[channel_])
+            for channel_, level_ in zip(channels, plan.levels)
+        ]
         for position_, channel_ in enumerate(channels):
             if not channel_.is_horizontal:
                 continue
@@ -1011,10 +1023,20 @@ class _Router:
             ends_x_ = (
                 _center_x(exact.node_rects[plan.edge.source_id])
                 if position_ == 0
-                else levels[position_ - 1],
+                else self._face_x(
+                    channels[position_ - 1],
+                    channel_,
+                    levels[position_ - 1],
+                    exact.node_rects,
+                ),
                 _center_x(exact.node_rects[plan.edge.target_id])
                 if position_ == last
-                else levels[position_ + 1],
+                else self._face_x(
+                    channels[position_ + 1],
+                    channel_,
+                    levels[position_ + 1],
+                    exact.node_rects,
+                ),
             )
             lowest_y_, through_y_ = corridor_segment_y(
                 spans[channel_.container_id],

@@ -414,12 +414,16 @@ class _GeometryBuilder:
                 column_spans,
                 low_,
                 high_,
-                (
+                [
                     self._through_lane_y(
                         container_id, through_.channel, through_.lane
                     )
                     for through_ in segment_.through_lanes
-                ),
+                ]
+                + [
+                    self._child_segment_y(container_id, key_)
+                    for key_ in segment_.through_segments
+                ],
                 config,
             )
             # A line that enters the outer vertical channel of a child
@@ -556,6 +560,35 @@ class _GeometryBuilder:
             + self._channel_size(top_corridor)
             + self._column_lane_y(channel, lane)
         )
+
+    def _child_segment_y(
+        self, container_id: Optional[str], key: Tuple[str, int]
+    ) -> float:
+        """
+        Return the y of a segment under the columns of a child container.
+
+        The y counts from the top of the columns of the container. A child
+        container stands at the top of its column, and the child is placed
+        first.
+        """
+
+        for column_ in self.layout.columns[container_id]:
+            if not column_.is_composite:
+                continue
+            child_id_ = column_.node_ids[0]
+            corridor_ = self._bottom_corridor(
+                child_id_, self.layout.columns[child_id_]
+            )
+            if key in corridor_.lines:
+                top_corridor_ = StructureChannelId(
+                    ChannelKind.TOP_CORRIDOR, child_id_
+                )
+                return (
+                    self.config.container_header_height
+                    + self._channel_size(top_corridor_)
+                    + corridor_.lines[key][2]
+                )
+        raise AssertionError(f"{key} lies under no child of {container_id}")
 
     def _column_lane_y(self, channel: StructureChannelId, lane: int) -> float:
         """

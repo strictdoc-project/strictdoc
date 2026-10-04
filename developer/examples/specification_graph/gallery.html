@@ -4394,8 +4394,8 @@ B2 -&gt; C2 (parent)</pre>
 <path class="specification-graph-edge__hit-area" d="M 1456 208 L 1456 192 L 1384 192 L 1384 176 L 1064 176 L 1064 192"/>
 </g>
 <g class="specification-graph-edge specification-graph-edge--type-1" data-edge-id="edge-4" data-source-id="Q1" data-target-id="S3" data-relation-type="parent" data-debug-lanes="bottom_corridor:Q:0:0=0 vertical:Doc:3:0=0 bottom_corridor:Doc:0:0=0 vertical:S:2:0=0 column:SR:0:0=0" data-debug-ports="Q1:bottom:-1 S3:top:1">
-<path class="specification-graph-edge__line" d="M 1016 248 L 1016 264 L 912 264 L 912 184 L 688 184 L 688 320 L 584 320 L 584 336" marker-end="url(#case-20-result-arrow-1)"/>
-<path class="specification-graph-edge__hit-area" d="M 1016 248 L 1016 264 L 912 264 L 912 184 L 688 184 L 688 320 L 584 320 L 584 336"/>
+<path class="specification-graph-edge__line" d="M 1016 248 L 1016 264 L 688 264 L 688 320 L 584 320 L 584 336" marker-end="url(#case-20-result-arrow-1)"/>
+<path class="specification-graph-edge__hit-area" d="M 1016 248 L 1016 264 L 688 264 L 688 320 L 584 320 L 584 336"/>
 </g>
 <g class="specification-graph-edge specification-graph-edge--type-1" data-edge-id="edge-5" data-source-id="S1" data-target-id="E2" data-relation-type="parent" data-debug-lanes="top_corridor:S:0:0=0 vertical:Doc:2:0=0 bottom_corridor:Doc:0:0=1" data-debug-ports="S1:top:1 E2:bottom:-1">
 <path class="specification-graph-edge__line" d="M 376 184 L 376 168 L 720 168 L 720 376 L 1472 376 L 1472 264" marker-end="url(#case-20-result-arrow-1)"/>
@@ -4489,13 +4489,13 @@ B2 -&gt; C2 (parent)</pre>
 <text class="specification-graph-debug__label" x="282" y="248">P0</text>
 <rect class="specification-graph-debug__channel" data-debug-channel="P0" x="952" y="248" width="160" height="88"/>
 <text class="specification-graph-debug__label" x="954" y="256">P0</text>
-<line class="specification-graph-debug__lane" x1="704" y1="184" x2="912" y2="184"/>
+<line class="specification-graph-debug__lane" x1="704" y1="264" x2="912" y2="264"/>
 <line class="specification-graph-debug__lane" x1="720" y1="376" x2="1472" y2="376"/>
 <line class="specification-graph-debug__lane" x1="928" y1="264" x2="1016" y2="264"/>
 <circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-2" cx="1368" cy="168" r="3"/>
 <circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-3" cx="1368" cy="176" r="3"/>
+<circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-4" cx="704" cy="264" r="3"/>
 <circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-4" cx="928" cy="264" r="3"/>
-<circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-4" cx="704" cy="184" r="3"/>
 <circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-4" cx="672" cy="320" r="3"/>
 <circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-5" cx="704" cy="168" r="3"/>
 </g>
@@ -4556,7 +4556,7 @@ S1 -&gt; E2 (parent)</pre>
 <section id="line-from-a-section-into-a-pocket">
 <h2>Line from a section into a pocket</h2>
 <div><span class="badge">mode: structure</span></div>
-<p class="description">S2 lies lower than Q1, so Q1 -&gt; S2 leaves the bottom face of Q1 into the free space under Q1, goes out of the left face of Q into the vertical channel between D1 and Q, up into the pocket under D1, and enters the section S. Q2 -&gt; A2 goes down the same vertical channel and passes under S. The two verticals take different lanes of that channel.</p>
+<p class="description">S2 lies lower than Q1, so Q1 -&gt; S2 leaves the bottom face of Q1 into the free space under Q1. It goes straight out of the left face of Q and through the pocket under D1 to the face of S: the pocket is deep enough for its height under Q1. Q2 -&gt; A2 goes down the vertical channel between D1 and Q and passes under S.</p>
 <div class="preview">
 <figure>
 <h3>Generator result</h3>
@@ -4653,8 +4653,8 @@ S1 -&gt; E2 (parent)</pre>
 <path class="specification-graph-edge__hit-area" d="M 792 160 L 792 176 L 712 176 L 712 160 L 368 160 L 368 176"/>
 </g>
 <g class="specification-graph-edge specification-graph-edge--type-1" data-edge-id="edge-2" data-source-id="Q1" data-target-id="S2" data-relation-type="parent" data-debug-lanes="bottom_corridor:Q:0:0=0 vertical:Doc:3:0=1 bottom_corridor:Doc:0:0=1 vertical:S:2:0=0 top_corridor:SR:0:0=0" data-debug-ports="Q1:bottom:-1 S2:top:1">
-<path class="specification-graph-edge__line" d="M 1016 224 L 1016 240 L 912 240 L 912 184 L 680 184 L 680 232 L 576 232 L 576 248" marker-end="url(#case-21-result-arrow-1)"/>
-<path class="specification-graph-edge__hit-area" d="M 1016 224 L 1016 240 L 912 240 L 912 184 L 680 184 L 680 232 L 576 232 L 576 248"/>
+<path class="specification-graph-edge__line" d="M 1016 224 L 1016 240 L 680 240 L 680 232 L 576 232 L 576 248" marker-end="url(#case-21-result-arrow-1)"/>
+<path class="specification-graph-edge__hit-area" d="M 1016 224 L 1016 240 L 680 240 L 680 232 L 576 232 L 576 248"/>
 </g>
 <g class="specification-graph-edge specification-graph-edge--type-1" data-edge-id="edge-3" data-source-id="Q2" data-target-id="A2" data-relation-type="parent" data-debug-lanes="column:QR:0:0=0 vertical:Q:1:0=0 bottom_corridor:Q:0:0=1 vertical:Doc:3:0=0 bottom_corridor:Doc:0:0=2" data-debug-ports="Q2:bottom:-1 A2:bottom:1">
 <path class="specification-graph-edge__line" d="M 1232 288 L 1232 304 L 904 304 L 904 368 L 160 368 L 160 240" marker-end="url(#case-21-result-arrow-1)"/>
@@ -4739,13 +4739,13 @@ S1 -&gt; E2 (parent)</pre>
 <rect class="specification-graph-debug__channel" data-debug-channel="P0" x="952" y="224" width="160" height="176"/>
 <text class="specification-graph-debug__label" x="954" y="232">P0</text>
 <line class="specification-graph-debug__lane" x1="712" y1="176" x2="792" y2="176"/>
-<line class="specification-graph-debug__lane" x1="696" y1="184" x2="912" y2="184"/>
+<line class="specification-graph-debug__lane" x1="696" y1="240" x2="912" y2="240"/>
 <line class="specification-graph-debug__lane" x1="160" y1="368" x2="904" y2="368"/>
 <line class="specification-graph-debug__lane" x1="928" y1="240" x2="1016" y2="240"/>
 <line class="specification-graph-debug__lane" x1="928" y1="304" x2="1128" y2="304"/>
 <circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-1" cx="696" cy="160" r="3"/>
+<circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-2" cx="696" cy="240" r="3"/>
 <circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-2" cx="928" cy="240" r="3"/>
-<circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-2" cx="696" cy="184" r="3"/>
 <circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-2" cx="664" cy="232" r="3"/>
 <circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-3" cx="928" cy="304" r="3"/>
 <circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-3" cx="1144" cy="304" r="3"/>

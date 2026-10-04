@@ -921,11 +921,10 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
         "Line from a section into a pocket",
         (
             "S2 lies lower than Q1, so Q1 -> S2 leaves the bottom face of Q1 "
-            "into the free space under Q1, goes out of the left face of Q "
-            "into the vertical channel between D1 and Q, up into the pocket "
-            "under D1, and enters the section S. Q2 -> A2 goes down the same "
-            "vertical channel and passes under S. The two verticals take "
-            "different lanes of that channel."
+            "into the free space under Q1. It goes straight out of the left "
+            "face of Q and through the pocket under D1 to the face of S: the "
+            "pocket is deep enough for its height under Q1. Q2 -> A2 goes "
+            "down the vertical channel between D1 and Q and passes under S."
         ),
         [
             (

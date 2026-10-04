@@ -425,6 +425,33 @@ def test_lines_into_a_section_at_one_point_do_not_overlap() -> None:
     )
 
 
+def test_line_crosses_the_face_of_a_section_straight() -> None:
+    """
+    A line under the columns that leaves a section through its side face
+    goes on straight under the columns outside, at the height of its
+    segment in the section, if that height fits there.
+
+    Q1 -> S2 lies under Q1 at its height in Q and keeps it under D1 up to
+    the face of S: the pocket under D1 is deep enough. No step at the face
+    of Q.
+
+    Code: structure_geometry._GeometryBuilder._child_segment_y,
+    structure_routing._through_segments.
+    Fails if:
+    - the segment outside a section does not continue the segment inside.
+    """
+
+    normalized_graph, _, geometry, paths = _result(
+        _case("Line from a section into a pocket")
+    )
+
+    path = paths[_edge_id(normalized_graph, "Q1", "S2")]
+    face_of_s = geometry.node_rects["S"]
+    # From the port of Q1 down, then one horizontal up to the face of S.
+    assert path[1].y == path[2].y
+    assert path[2].x <= face_of_s.x + face_of_s.width
+
+
 def test_bottom_corridor_keeps_the_lane_order() -> None:
     """
     Of two overlapping segments in the bottom corridor, the larger lane lies
@@ -1126,8 +1153,9 @@ def test_bottom_corridor_invariants(case: GalleryCase) -> None:
     """
     Invariants of the segments under the columns on every structure case.
 
-    A segment that continues a column channel lane straight belongs to the
-    row of that lane. The other segments form the corridor.
+    A segment that continues a lane straight, or a segment under the
+    columns of a section across its side face, belongs to a row. The other
+    segments form the corridor.
 
     Code: structure_geometry._GeometryBuilder._bottom_corridor,
     structure_geometry._free_y.
@@ -1143,7 +1171,7 @@ def test_bottom_corridor_invariants(case: GalleryCase) -> None:
     config = geometry.config
     lines = geometry.bottom_segment_lines
     in_corridor = {
-        segment_.key: not _continues_a_column_lane(
+        segment_.key: not _belongs_to_a_row(
             routing, geometry, segment_.key
         )
         for segment_ in routing.bottom_segments
@@ -1176,19 +1204,38 @@ def test_bottom_corridor_invariants(case: GalleryCase) -> None:
                 assert other_y_ > y_
 
 
-def _continues_a_column_lane(
+def _belongs_to_a_row(
     routing: StructureRouting,
     geometry: StructureGeometry,
     key: Tuple[str, int],
 ) -> bool:
+    """
+    Return True if a segment under the columns belongs to a row.
+
+    The segment continues straight, at the same height, a column channel
+    lane, a top corridor lane, or a segment under the columns of a section
+    across its side face.
+    """
+
     edge_id, position = key
     route = routing.routes[edge_id]
     points = route_channel_points(route, geometry)
+    container_id = route.channels[position].container_id
+
+    def continues(other: int) -> bool:
+        channel_ = route.channels[other]
+        return channel_.kind in (
+            ChannelKind.COLUMN,
+            ChannelKind.TOP_CORRIDOR,
+        ) or (
+            channel_.kind is ChannelKind.BOTTOM_CORRIDOR
+            and channel_.container_id != container_id
+        )
+
     # Point i + 1 starts the segment in channel i.
     return any(
         0 <= other_ < len(route.channels)
-        and route.channels[other_].kind
-        in (ChannelKind.COLUMN, ChannelKind.TOP_CORRIDOR)
+        and continues(other_)
         and points[other_ + 1].y == points[position + 1].y
         for other_ in (position - 2, position + 2)
     )

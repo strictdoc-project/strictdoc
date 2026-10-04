@@ -403,6 +403,15 @@ MUTATIONS = (
         "                else levels[position_ + 1],\n",
     ),
     Mutation(
+        "XC10",
+        "the segment outside a section does not continue the segment inside",
+        STRUCTURE_GEOMETRY,
+        "                + [\n"
+        "                    self._child_segment_y(container_id, key_)\n",
+        "                + [\n"
+        "                    0.0 * self._child_segment_y(container_id, key_)\n",
+    ),
+    Mutation(
         "R2",
         "lane priority inverted",
         LANES,

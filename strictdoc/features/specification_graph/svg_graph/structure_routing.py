@@ -1492,6 +1492,7 @@ def _route_bottom_segments(
                 _segment_end(route, position_ + 1),
             ),
             through_lanes=_through_lanes(route, position_, parent_ids),
+            through_segments=_through_segments(route, position_, parent_ids),
         )
         for position_, (channel_, lane_) in enumerate(
             zip(route.channels, route.lanes)
@@ -1625,6 +1626,41 @@ def _through_lanes(
             route.channels[position].container_id,
             parent_ids,
         )
+    )
+
+
+def _through_segments(
+    route: StructureRoute,
+    position: int,
+    parent_ids: Mapping[str, Optional[str]],
+) -> Tuple[Tuple[str, int], ...]:
+    """
+    Return the segments under the columns of a child container that a
+    segment under the columns can continue straight across the side face of
+    the child, the entry first.
+    """
+
+    return tuple(
+        (route.edge_id, other_)
+        for other_ in (position - 2, position + 2)
+        if 0 <= other_ < len(route.channels)
+        and _is_corridor_of_child(
+            route.channels[other_],
+            route.channels[position].container_id,
+            parent_ids,
+        )
+    )
+
+
+def _is_corridor_of_child(
+    channel: StructureChannelId,
+    container_id: Optional[str],
+    parent_ids: Mapping[str, Optional[str]],
+) -> bool:
+    return (
+        channel.kind is ChannelKind.BOTTOM_CORRIDOR
+        and channel.container_id is not None
+        and parent_ids[channel.container_id] == container_id
     )
 
 

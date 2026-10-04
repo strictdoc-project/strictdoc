@@ -95,6 +95,11 @@ class CorridorSegment:
     # segment passes over. Otherwise, the base height lies the clearance
     # below these columns.
     through_lanes: Tuple[LaneEnd, ...] = ()
+    # The segments under the columns of a child container that the segment
+    # can continue straight across the side face of the child. The child is
+    # placed first, so the segment takes the height of the child segment if
+    # it fits under the columns the segment passes over.
+    through_segments: Tuple[Tuple[str, int], ...] = ()
 
 
 @dataclass(frozen=True)

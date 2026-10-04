@@ -920,6 +920,40 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
         [("D1", "A2"), ("E1", "Q1"), ("E2", "Q1"), ("Q1", "S3"), ("S1", "E2")],
     ),
     _structure_case(
+        "Line from a section into a pocket",
+        (
+            "Q1 -> S2 leaves the section Q through its top corridor, goes "
+            "down the vertical channel between D1 and Q into the pocket "
+            "under D1, and enters the section S. Q2 -> A2 goes down the "
+            "same vertical channel and passes under S. Here they take "
+            "different lanes of that channel, and nothing overlaps. With "
+            "the base height counted from the side faces of the sections "
+            '(the fix for "Pocket between two sections"), this graph '
+            "breaks. First, the lane order under the columns puts "
+            "Q1 -> S2 below Q2 -> A2: the end of Q1 -> S2 that goes down "
+            "inside S to S2 counts as if it went down across the whole "
+            "space under the columns. Second, the lanes of the vertical "
+            "channel are assigned before the heights under the columns, for "
+            "the base height of Q1 -> S2 in the pocket, so its vertical "
+            "shares a lane with the vertical of Q2 -> A2. When Q1 -> S2 "
+            "moves down, its vertical grows and lies on the other one."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    "A2",
+                    ("S", ["S1", ("SR", ["S2"])]),
+                    "D1",
+                    ("Q", ["Q1", ("QR", ["Q2", "Q3"])]),
+                    "E1",
+                ],
+            )
+        ],
+        [("D1", "S1"), ("Q1", "S2"), ("Q2", "A2")],
+    ),
+    _structure_case(
         "Steps beside a pocket",
         (
             "The case with more ports, with four nodes in the columns C and "
@@ -1498,6 +1532,7 @@ GALLERY_CHAPTERS: Tuple[GalleryChapter, ...] = (
         "Lane order in the bottom corridor",
         "Nested pair under the columns",
         "Pocket between two sections",
+        "Line from a section into a pocket",
         "Steps beside a pocket",
     ),
     _chapter(

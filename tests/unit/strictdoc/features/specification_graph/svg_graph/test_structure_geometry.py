@@ -182,6 +182,7 @@ def test_serializer_draws_containers_before_their_children() -> None:
         layout,
         lane_counts=routing.lane_counts,
         bottom_segments=routing.bottom_segments,
+        side_entries=routing.side_entries,
     )
     svg = serialize_structure_svg(
         normalized_graph,
@@ -235,6 +236,7 @@ def test_debug_layer_shows_the_pass_ports() -> None:
         layout,
         lane_counts=routing.lane_counts,
         bottom_segments=routing.bottom_segments,
+        side_entries=routing.side_entries,
     )
     svg = serialize_structure_svg(
         normalized_graph,

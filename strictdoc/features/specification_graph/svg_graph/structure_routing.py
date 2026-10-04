@@ -87,6 +87,10 @@ class StructureRouting:
     # bottom_segments.
     lane_counts: Mapping[StructureChannelId, int]
     bottom_segments: Tuple[CorridorSegment, ...]
+    # Column channel -> the child containers that a line from this channel
+    # enters through a side face. The geometry keeps these lanes opposite
+    # the outer vertical channel of the child.
+    side_entries: Mapping[StructureChannelId, Tuple[str, ...]]
     conflicts: Tuple[StructureLaneConflict, ...]
     # Relations this stage does not route yet: relations across containers
     # and relations with a composite node.
@@ -201,13 +205,19 @@ class _Router:
                 plans.append(plan_)
 
         straight_ids = self._straight_ids(plans)
+        side_entries = _column_side_entries(
+            plans, self.normalized_graph.parent_ids
+        )
         # The heights of the columns are exact from here on: the lane count
-        # of each column channel follows from the routes alone.
+        # of each column channel follows from the routes alone. Only a side
+        # entry from a column channel can still grow it, when the top
+        # corridor of the child gets its lanes.
         exact = compute_structure_geometry(
             self.normalized_graph,
             self.layout,
             self.config,
             lane_counts=self._column_lane_counts(plans, straight_ids),
+            side_entries=side_entries,
         )
         plans = [self._exact_levels(plan_, exact, {}) for plan_ in plans]
         self.forced_orders, self.forced_port_orders = shared_stretch_orders(
@@ -251,6 +261,7 @@ class _Router:
                     finished,
                     self.normalized_graph.parent_ids,
                 ),
+                side_entries=side_entries,
             )
             finished_levels_ = _finished_levels(
                 plans, straight_ids, horizontal_lanes, finished, layer_geometry_
@@ -313,6 +324,7 @@ class _Router:
             routes=routes,
             lane_counts=lane_counts,
             bottom_segments=tuple(bottom_segments),
+            side_entries=side_entries,
             conflicts=tuple(conflicts),
             unrouted_edge_ids=tuple(unrouted),
         )
@@ -845,22 +857,36 @@ class _Router:
         Return True if a segment at the height y can enter the vertical
         channel.
 
-        A segment under the columns that enters the outer vertical channel
-        of a child container crosses its side face. The face ends at the
-        bottom of the child: a segment that lies lower, because it passes
-        under taller columns, would cross the bottom face instead.
+        A segment in a horizontal channel of the parent that enters the
+        outer vertical channel of a child container crosses its side face
+        opposite that vertical channel, within its height:
+
+        - not below its bottom: a segment that lies lower, because it passes
+          under taller columns, would lie opposite the bottom corridor of
+          the child;
+        - for a column channel, not above its top: the lane of a column
+          channel has a fixed height, and above the top it would lie
+          opposite the top corridor of the child. A segment under the
+          columns has no such limit: the geometry lowers it below the top
+          corridor, see structure_geometry._side_entry_floor.
+
+        A line that does not fit reaches the top or the bottom corridor of
+        the child through the vertical channel of the parent.
         """
 
         if (
-            horizontal.kind is not ChannelKind.BOTTOM_CORRIDOR
+            horizontal.kind
+            not in (ChannelKind.BOTTOM_CORRIDOR, ChannelKind.COLUMN)
             or vertical.container_id == horizontal.container_id
             or vertical.container_id is None
             or self.normalized_graph.parent_ids[vertical.container_id]
             != horizontal.container_id
         ):
             return True
-        frame = self.estimate.node_rects[vertical.container_id]
-        return y < frame.y + frame.height
+        rect = self.channel_rects[vertical]
+        if horizontal.kind is ChannelKind.COLUMN and y < rect.y:
+            return False
+        return y < rect.y + rect.height
 
     def _stub_length(
         self, node_id: str, face: Face, channel: StructureChannelId
@@ -1593,8 +1619,10 @@ def _side_face_links(
     A crossing of a side face joins a horizontal channel on one side with a
     vertical channel on the other side, in both directions: a horizontal
     channel of the container at its outer vertical channel with the
-    vertical channel of the parent next to the face, and the space under the
-    columns of the parent with the outer vertical channel of the container.
+    vertical channel of the parent next to the face, and a horizontal
+    channel of the parent with the outer vertical channel of the container:
+    the space under the columns and the column channels of the column
+    beside the face. _Router._fits_side_face checks the height.
     """
 
     result: Dict[StructureChannelId, List[StructureChannelId]] = {}
@@ -1619,17 +1647,51 @@ def _side_face_links(
                         continue
                     result.setdefault(parent_vertical_, []).append(horizontal_)
                     result.setdefault(horizontal_, []).append(parent_vertical_)
-                # A line under the columns of the parent crosses the face
-                # straight and turns in the outer vertical channel of the
-                # child. Only the space under the columns: its height can go
-                # down below the top corridor of the child, a lane of a
-                # column channel cannot.
-                corridor_ = StructureChannelId(
-                    ChannelKind.BOTTOM_CORRIDOR, container_id_
-                )
-                result.setdefault(child_vertical_, []).append(corridor_)
-                result.setdefault(corridor_, []).append(child_vertical_)
+                # A line in a horizontal channel of the parent crosses the
+                # face straight and turns in the outer vertical channel of
+                # the child: from the space under the columns or from a
+                # column channel of the column beside the face.
+                for horizontal_ in [
+                    StructureChannelId(
+                        ChannelKind.BOTTOM_CORRIDOR, container_id_
+                    )
+                ] + [
+                    channel_
+                    for channel_ in layout.neighbor_channels(parent_vertical_)
+                    if channel_.kind is ChannelKind.COLUMN
+                ]:
+                    result.setdefault(child_vertical_, []).append(horizontal_)
+                    result.setdefault(horizontal_, []).append(child_vertical_)
     return result
+
+
+def _column_side_entries(
+    plans: List[_Plan], parent_ids: Mapping[str, Optional[str]]
+) -> Dict[StructureChannelId, Tuple[str, ...]]:
+    """
+    Return the child containers that the lines of each column channel enter
+    through a side face, in either direction.
+    """
+
+    result: Dict[StructureChannelId, Set[str]] = {}
+    for plan_ in plans:
+        for first_, second_ in zip(plan_.channels, plan_.channels[1:]):
+            for horizontal_, vertical_ in ((first_, second_), (second_, first_)):
+                if (
+                    horizontal_.kind is ChannelKind.COLUMN
+                    and vertical_.kind is ChannelKind.VERTICAL
+                    and vertical_.container_id is not None
+                    and vertical_.container_id != horizontal_.container_id
+                    and parent_ids[vertical_.container_id]
+                    == horizontal_.container_id
+                ):
+                    result.setdefault(horizontal_, set()).add(
+                        vertical_.container_id
+                    )
+    return {
+        channel_: tuple(sorted(children_))
+        for channel_, children_ in result.items()
+    }
 
 
 def _through_lanes(

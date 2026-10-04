@@ -86,7 +86,16 @@ def compute_structure_geometry(
     config: Optional[GeometryConfig] = None,
     lane_counts: Optional[Mapping[StructureChannelId, int]] = None,
     bottom_segments: Sequence[CorridorSegment] = (),
+    side_entries: Optional[Mapping[StructureChannelId, Sequence[str]]] = None,
 ) -> StructureGeometry:
+    """
+    Return the geometry of the structure mode.
+
+    side_entries maps a column channel to the child containers that a line
+    from this channel enters through a side face, into the outer vertical
+    channel of the child.
+    """
+
     if config is None:
         config = GeometryConfig()
     return _GeometryBuilder(
@@ -95,6 +104,7 @@ def compute_structure_geometry(
         config,
         {} if lane_counts is None else lane_counts,
         bottom_segments,
+        {} if side_entries is None else side_entries,
     ).build()
 
 
@@ -178,10 +188,14 @@ class _GeometryBuilder:
         config: GeometryConfig,
         lane_counts: Mapping[StructureChannelId, int],
         bottom_segments: Sequence[CorridorSegment],
+        side_entries: Mapping[StructureChannelId, Sequence[str]],
     ) -> None:
         self.layout: StructureLayout = layout
         self.config: GeometryConfig = config
         self.lane_counts: Mapping[StructureChannelId, int] = lane_counts
+        self.side_entries: Mapping[StructureChannelId, Sequence[str]] = (
+            side_entries
+        )
         self.bottom_segments: Dict[Optional[str], List[CorridorSegment]] = {}
         for segment_ in bottom_segments:
             self.bottom_segments.setdefault(segment_.container_id, []).append(
@@ -247,9 +261,47 @@ class _GeometryBuilder:
 
     def _channel_size(self, channel_id: StructureChannelId) -> float:
         lane_count = self.lane_counts.get(channel_id, 0)
+        if channel_id.kind is ChannelKind.COLUMN:
+            return max(
+                horizontal_channel_size(lane_count, self.config),
+                self._side_entry_size(channel_id, lane_count),
+            )
         if channel_id.is_horizontal:
             return horizontal_channel_size(lane_count, self.config)
         return vertical_channel_size(lane_count, self.config)
+
+    def _side_entry_size(
+        self, channel: StructureChannelId, lane_count: int
+    ) -> float:
+        """
+        Return the size of a column channel that puts its lanes not above
+        the outer vertical channels of the children its lines enter.
+
+        spec.md, section "Проходные порты". A line from a column channel
+        enters a child container through its side face only opposite the
+        outer vertical channel of the child, below its header and its top
+        corridor. The top corridor can get more lanes than the path search
+        expected, so the channel grows until its top lane lies there and the
+        nodes under it move down. The rule holds for all lanes of the
+        channel: the lane of each line is not known when the parent is
+        sized.
+        Both heights count from the top of the columns.
+        """
+
+        children = self.side_entries.get(channel, ())
+        if len(children) == 0:
+            return 0
+        lowest_top = max(
+            self.config.container_header_height
+            + self._channel_size(
+                StructureChannelId(ChannelKind.TOP_CORRIDOR, child_id_)
+            )
+            for child_id_ in children
+        )
+        return (
+            2 * (lowest_top - self._column_channel_top(channel))
+            + (lane_count - 1) * self.config.lane_pitch
+        )
 
     def _size(self, node_id: str) -> Tuple[float, float]:
         """
@@ -595,8 +647,23 @@ class _GeometryBuilder:
         Return the y of a column channel lane from the top of the columns.
         """
 
-        config = self.config
-        above = sum(
+        assert not self.layout.columns[channel.container_id][
+            channel.index
+        ].is_composite
+        return self._column_channel_top(channel) + centered_lane_offset(
+            self._channel_size(channel),
+            self.lane_counts[channel],
+            lane,
+            self.config,
+        )
+
+    def _column_channel_top(self, channel: StructureChannelId) -> float:
+        """
+        Return the y of the top of a column channel from the top of the
+        columns.
+        """
+
+        return (channel.gap + 1) * self.config.node_height + sum(
             self._channel_size(
                 StructureChannelId(
                     ChannelKind.COLUMN,
@@ -606,19 +673,6 @@ class _GeometryBuilder:
                 )
             )
             for gap_ in range(channel.gap)
-        )
-        assert not self.layout.columns[channel.container_id][
-            channel.index
-        ].is_composite
-        return (
-            (channel.gap + 1) * config.node_height
-            + above
-            + centered_lane_offset(
-                self._channel_size(channel),
-                self.lane_counts[channel],
-                lane,
-                config,
-            )
         )
 
     def _place_area(

@@ -96,6 +96,7 @@ def _result(
         layout,
         lane_counts=routing.lane_counts,
         bottom_segments=routing.bottom_segments,
+        side_entries=routing.side_entries,
     )
     return (
         normalized_graph,
@@ -286,6 +287,122 @@ def test_line_enters_the_outer_vertical_channel_of_a_section() -> None:
     path = paths[_edge_id(normalized_graph, "A1", "X1")]
     heights = [point_.y for point_ in path]
     assert heights == sorted(heights)
+
+
+def test_line_enters_a_section_from_a_column_channel() -> None:
+    """
+    A line from a column channel of the parent crosses a side face straight
+    into the outer vertical channel of the section, and a line from that
+    vertical channel leaves into the column channel the same way.
+
+    A1 -> X2 goes from the column channel between A1 and A2 into the left
+    vertical channel of L1 and down to L2. X2 -> A1 takes the same channels
+    in the opposite direction. Neither climbs to the top corridor of L1.
+
+    Code: structure_routing._side_face_links,
+    structure_routing._Router._fits_side_face.
+    Fails if:
+    - a column channel of the parent does not link to the outer vertical
+      channel of a child through the side face.
+    - the height check rejects a lane within the vertical channel.
+    """
+
+    normalized_graph, routing, _, _ = _result(
+        _case("Side entry from a column channel")
+    )
+
+    column_channel = StructureChannelId(ChannelKind.COLUMN, "Doc", 0, 0)
+    vertical = StructureChannelId(ChannelKind.VERTICAL, "L1", 0)
+    for source_id_, target_id_ in (("A1", "X2"), ("X2", "A1")):
+        channels_ = routing.routes[
+            _edge_id(normalized_graph, source_id_, target_id_)
+        ].channels
+        assert len(channels_) == 3
+        assert column_channel in channels_
+        assert channels_[1] == vertical
+
+
+def test_side_entry_fits_the_height_of_the_vertical_channel() -> None:
+    """
+    A segment of the parent enters the outer vertical channel of a section
+    through its side face only within the height of that vertical channel.
+
+    - A lane of a column channel above the top of the vertical channel would
+      lie opposite the top corridor of the section.
+    - A segment under the columns may lie higher: the geometry lowers it.
+    - Below the bottom of the vertical channel, a segment would lie opposite
+      the bottom corridor of the section, although still above the bottom
+      of its frame.
+
+    Code: structure_routing._Router._fits_side_face.
+    Fails if:
+    - the check ignores the top of the vertical channel for a column
+      channel.
+    - the check takes the bottom of the frame instead of the bottom of the
+      vertical channel.
+    """
+
+    normalized_graph = normalize_graph(
+        _case("Side entry from a column channel").graph
+    )
+    layout = compute_structure_layout(normalized_graph)
+    router = _Router(
+        normalized_graph,
+        layout,
+        compute_structure_geometry(normalized_graph, layout),
+        GeometryConfig(),
+        RoutingOptions(),
+    )
+    column_channel = StructureChannelId(ChannelKind.COLUMN, "Doc", 0, 0)
+    corridor = StructureChannelId(ChannelKind.BOTTOM_CORRIDOR, "Doc")
+    vertical = StructureChannelId(ChannelKind.VERTICAL, "L1", 0)
+    rect = router.channel_rects[vertical]
+    frame = router.estimate.node_rects["L1"]
+    bottom = rect.y + rect.height
+    assert bottom < frame.y + frame.height
+
+    assert router._fits_side_face(column_channel, vertical, rect.y)
+    assert not router._fits_side_face(column_channel, vertical, rect.y - 1)
+    assert router._fits_side_face(corridor, vertical, rect.y - 1)
+    for horizontal_ in (column_channel, corridor):
+        assert router._fits_side_face(horizontal_, vertical, bottom - 1)
+        assert not router._fits_side_face(horizontal_, vertical, bottom)
+
+
+def test_side_entry_from_a_column_channel_lies_below_the_top_corridor() -> (
+    None
+):
+    """
+    A lane of a column channel that enters a section through its side face
+    lies opposite the outer vertical channel of the section, even when the
+    top corridor of the section gets more lanes than the path search
+    expected.
+
+    The top corridor of L1 has two lanes. A1 -> X2 enters L1 from the column
+    channel between A1 and A2. By the nodes of its column alone, the lane
+    would lie above the top of the left vertical channel of L1.
+
+    Code: structure_geometry._GeometryBuilder._side_entry_size,
+    structure_routing._column_side_entries.
+    Fails if:
+    - the column channel does not grow for a side entry.
+    """
+
+    normalized_graph, _, geometry, paths = _result(
+        _case("Side entry from a column channel below a full top corridor")
+    )
+
+    vertical = geometry.channel_rect(
+        StructureChannelId(ChannelKind.VERTICAL, "L1", 0)
+    )
+    frame = geometry.node_rects["L1"]
+    path = paths[_edge_id(normalized_graph, "A1", "X2")]
+    crossing_y = next(
+        start_.y
+        for start_, end_ in zip(path, path[1:])
+        if start_.y == end_.y and start_.x < frame.x < end_.x
+    )
+    assert vertical.y <= crossing_y <= vertical.y + vertical.height
 
 
 def test_side_entry_lies_below_the_top_corridor() -> None:

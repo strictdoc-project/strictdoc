@@ -1307,6 +1307,44 @@ ACROSS_CONTAINERS_CASES: Tuple[GalleryCase, ...] = (
         [("A1", "X1"), ("Y1", "B1"), ("B1", "Y1"), ("B2", "Y1")],
     ),
     _structure_case(
+        "Side entry from a column channel",
+        (
+            "A1 -> X2 leaves the bottom face of A1 into the column channel "
+            "between A1 and A2. The lane lies below the top of the left "
+            "vertical channel of L1, so the line crosses the left face of L1 "
+            "straight, turns down in that vertical channel and enters L2. It "
+            "does not climb to the top corridor of L1. X2 -> A1 takes the "
+            "same channels in the opposite direction and leaves L1 into the "
+            "same column channel."
+        ),
+        [("Doc", ["A1", "A2", ("L1", [("L2", ["X1", "X2"])])])],
+        [("A1", "X2"), ("X2", "A1")],
+    ),
+    _structure_case(
+        "Side entry from a column channel below a full top corridor",
+        (
+            "Y1 relates to E1 and E2, so the top corridor of L1 has two "
+            "lanes and the left vertical channel of L1 starts lower than the "
+            "path search expected. A1 -> X2 enters L1 from the column channel "
+            "between A1 and A2 through the left face of L1. The column "
+            "channel grows and A2 moves down, so the line crosses the face "
+            "opposite the vertical channel, not opposite the top corridor."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    "A2",
+                    ("L1", [("L2", ["X1", "X2"]), "Y1"]),
+                    "E1",
+                    "E2",
+                ],
+            )
+        ],
+        [("A1", "X2"), ("Y1", "E1"), ("E1", "Y1"), ("E2", "Y1")],
+    ),
+    _structure_case(
         "Relation across a long column",
         (
             "L2 -> R2 connects two short columns with a long column C between "

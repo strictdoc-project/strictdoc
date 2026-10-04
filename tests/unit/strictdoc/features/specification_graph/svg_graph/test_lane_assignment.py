@@ -98,19 +98,20 @@ def test_weaker_order_gives_way_in_a_cycle() -> None:
 
 def test_segment_that_fits_a_pocket_lies_higher() -> None:
     """
-    Under the columns, of two shifted segments whose ends go up, the one
-    with the higher base height lies higher.
+    Under the columns, of two overlapping segments, the one with the
+    higher base height lies higher.
 
     A fits a pocket: its base height is 10, the base height of B is 30.
     One crossing is unavoidable. The exit priority would put A below B;
     the base heights put A above, so the crossing moves into the pocket.
-    If an end of A goes down, the base heights do not decide: the ends
-    put A below B without a crossing.
+    The base heights decide even if an end of A goes down: that side is
+    known only at the base height of A. Two ends at one point do not
+    change the order either.
 
-    Code: lane_assignment._base_order, lane_assignment._ends_go_up.
+    Code: lane_assignment._base_order, lane_assignment.assign_lanes.
     Fails if:
     - the base heights do not order the segments under the columns.
-    - a segment with an end that goes down is ordered by its base height.
+    - two ends at one point win over the base heights.
     """
 
     first = _segment(
@@ -123,10 +124,10 @@ def test_segment_that_fits_a_pocket_lies_higher() -> None:
     assert lanes[first.key] < lanes[second.key]
 
     going_down = _segment(
-        "A", 0, 50, ((0, False, False), (50, True, True)), 0, base_level=10
+        "A", 20, 50, ((20, True, False), (50, True, True)), 0, base_level=10
     )
     lanes, _ = assign_lanes([going_down, second], LaneConflictPriority.EXIT)
-    assert lanes[going_down.key] > lanes[second.key]
+    assert lanes[going_down.key] < lanes[second.key]
 
 
 def test_stand_in_positions_do_not_coincide() -> None:

@@ -272,8 +272,8 @@ MUTATIONS = (
         "LO1",
         "ends at the same position set no order",
         LANES,
-        "            if coincident_ != 0:\n",
-        "            if False:\n",
+        "            elif coincident_ != 0:\n",
+        "            elif False:\n",
     ),
     Mutation(
         "LO2",
@@ -293,14 +293,27 @@ MUTATIONS = (
         "LO5",
         "the base heights do not order the segments under the columns",
         LANES,
-        "            elif _base_order(first_, second_) != 0:\n",
-        "            elif False:\n",
+        "            if base_ != 0:\n",
+        "            if False:\n",
     ),
     Mutation(
         "LO6",
-        "a segment with an end that goes down is ordered by its base height",
+        "two ends at one point win over the base heights",
         LANES,
-        "        or not _ends_go_up(first)\n        or not _ends_go_up(second)\n",
+        "            if base_ != 0:\n"
+        "                order_, strength_ = base_, _BASE\n"
+        "            elif coincident_ != 0:\n"
+        "                order_, strength_ = coincident_, _COINCIDENT\n",
+        "            if coincident_ != 0:\n"
+        "                order_, strength_ = coincident_, _COINCIDENT\n"
+        "            elif base_ != 0:\n"
+        "                order_, strength_ = base_, _BASE\n",
+    ),
+    Mutation(
+        "LO7",
+        "a row is ordered by a base height",
+        STRUCTURE_ROUTING,
+        "                        and (edge_id_, position_) not in self.row_keys\n",
         "",
     ),
     Mutation(
@@ -365,6 +378,29 @@ MUTATIONS = (
         STRUCTURE_ROUTING,
         "        elif target_y < source_y:\n",
         "        else:\n",
+    ),
+    Mutation(
+        "XC9",
+        "the base height of a segment counts the sections it enters",
+        STRUCTURE_ROUTING,
+        "                else self._face_x(\n"
+        "                    channels[position_ - 1],\n"
+        "                    channel_,\n"
+        "                    levels[position_ - 1],\n"
+        "                    exact.node_rects,\n"
+        "                ),\n"
+        "                _center_x(exact.node_rects[plan.edge.target_id])\n"
+        "                if position_ == last\n"
+        "                else self._face_x(\n"
+        "                    channels[position_ + 1],\n"
+        "                    channel_,\n"
+        "                    levels[position_ + 1],\n"
+        "                    exact.node_rects,\n"
+        "                ),\n",
+        "                else levels[position_ - 1],\n"
+        "                _center_x(exact.node_rects[plan.edge.target_id])\n"
+        "                if position_ == last\n"
+        "                else levels[position_ + 1],\n",
     ),
     Mutation(
         "R2",
@@ -508,8 +544,8 @@ MUTATIONS = (
         "SR1",
         "structure path cost compares the length before the bends",
         STRUCTURE_ROUTING,
-        "cost_ = (bends_, length_, face_rank_)",
-        "cost_ = (0, length_, face_rank_)",
+        "            if candidate_[0] == fewest_bends\n",
+        "            if True\n",
     ),
     Mutation(
         "SR2",
@@ -728,7 +764,9 @@ MUTATIONS = (
         "XC5",
         "the columns under a segment include the child it enters",
         STRUCTURE_ROUTING,
-        "        frame = self.estimate.node_rects[child_id]\n"
+        "        frame = (\n"
+        "            self.estimate.node_rects if frames is None else frames\n"
+        "        )[child_id]\n"
         "        return frame.x if vertical.index == 0 else frame.x + frame.width\n",
         "        return x\n",
     ),

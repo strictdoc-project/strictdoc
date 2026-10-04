@@ -133,15 +133,16 @@ def assign_lanes(
     orders: List[Tuple[int, SegmentKey, SegmentKey]] = []
     for first_index_, first_ in enumerate(segments):
         for second_ in segments[first_index_ + 1 :]:
+            base_ = _base_order(first_, second_)
             coincident_ = _coincident_order(first_, second_)
-            if coincident_ != 0:
+            if base_ != 0:
+                order_, strength_ = base_, _BASE
+            elif coincident_ != 0:
                 order_, strength_ = coincident_, _COINCIDENT
             elif (first_.key, second_.key) in forced_pairs:
                 order_, strength_ = 1, _FORCED
             elif (second_.key, first_.key) in forced_pairs:
                 order_, strength_ = -1, _FORCED
-            elif _base_order(first_, second_) != 0:
-                order_, strength_ = _base_order(first_, second_), _BASE
             else:
                 conflict_count_ = len(conflicts)
                 order_ = _pair_order(first_, second_, priority, conflicts)
@@ -190,13 +191,13 @@ def _order_free_pairs_by_direction(
 
 
 # The strength of a reason for the order of two segments, the strongest
-# first: two ends at the same exact position (the other order lays them on
-# top of each other), a nested pair on a shared stretch, the base heights
-# under the columns (see _base_order), the ends (the other order adds a
-# crossing), the priority of an unavoidable crossing.
-_COINCIDENT = 0
-_FORCED = 1
-_BASE = 2
+# first: the base heights under the columns (see _base_order), two ends at
+# the same exact position (the other order lays them on top of each
+# other), a nested pair on a shared stretch, the ends (the other order adds
+# a crossing), the priority of an unavoidable crossing.
+_BASE = 0
+_COINCIDENT = 1
+_FORCED = 2
 _CROSSING = 3
 _CONFLICT = 4
 
@@ -211,40 +212,24 @@ def _base_order(first: LaneSegment, second: LaneSegment) -> int:
     equal or unknown. A pocket is empty space: every segment that fits into
     it takes it and shortens its way.
 
-    The rule holds for segments whose two ends both go up, and for them it
-    never adds a crossing. If one segment lies inside the other along the
-    channel, the only order without a crossing puts the inner one higher,
-    and its base height is not lower, because it passes under a part of the
-    same columns. If the segments are shifted, one crossing is unavoidable
-    in either order; this order moves it into the pocket, where there is
-    room, even where the priority of the unavoidable crossing would choose
-    the other order.
-
-    A segment with an end that continues a lane straight, or with an end
-    that goes down in a vertical channel, is not ordered this way: there
-    the argument above does not hold.
+    Under the columns a segment lies at its base height unless another
+    segment pushes it down by less than a lane pitch. So the heights, not
+    a choice, decide which of two segments lies higher, and this order is
+    the strongest one. The ends of a segment go up or down relative to its
+    base height only: the side of an end is not known at another height,
+    so no order that counts on the sides of the ends can put the segments
+    the other way round. A row, a segment that continues a lane straight,
+    keeps the height of that lane and has no base height here.
     """
 
     if (
         first.base_level is None
         or second.base_level is None
         or first.base_level == second.base_level
-        or not _ends_go_up(first)
-        or not _ends_go_up(second)
         or not _overlap(first, second)
     ):
         return 0
     return 1 if first.base_level < second.base_level else -1
-
-
-def _ends_go_up(segment: LaneSegment) -> bool:
-    """
-    Return True if both ends of a horizontal segment go up.
-    """
-
-    return len(segment.members) == 2 and not any(
-        member_.to_high_side for member_ in segment.members
-    )
 
 
 def _comes_before(

@@ -42,6 +42,7 @@ from strictdoc.features.specification_graph.svg_graph.structure_stretches import
     _common_runs,
 )
 from tests.unit.strictdoc.features.specification_graph.svg_graph.geometry_checks import (
+    _collinear_contact,
     crossing_count,
     geometry_problems,
     off_grid_segments,
@@ -362,6 +363,66 @@ def test_face_toward_the_target_wins_a_near_tie() -> None:
 
     route = routing.routes[_edge_id(normalized_graph, "Q1", "S2")]
     assert route.source_port.face is Face.BOTTOM
+
+
+def test_segment_between_two_sections_uses_the_pocket() -> None:
+    """
+    A segment under the columns that enters a section at each end passes
+    under the columns between the two side faces only.
+
+    Q1 -> S3 runs from the left face of Q to the right face of S, under D1
+    only. Its base height lies in the pocket under D1, so it lies above
+    S1 -> E2, which passes under Q and the column of E1 and E2.
+
+    Code: structure_routing._Router._exact_levels,
+    structure_routing._Router._face_x, lane_assignment._base_order.
+    Fails if:
+    - the base height of a segment counts the sections it enters as
+      columns it passes under.
+    - an order of a shared stretch wins over the base heights.
+    """
+
+    normalized_graph, _, _, paths = _result(
+        _case("Pocket between two sections")
+    )
+
+    def bottom_y(source_id: str, target_id: str) -> float:
+        return max(
+            point_.y
+            for point_ in paths[_edge_id(normalized_graph, source_id, target_id)]
+        )
+
+    assert bottom_y("Q1", "S3") < bottom_y("S1", "E2")
+
+
+def test_lines_into_a_section_at_one_point_do_not_overlap() -> None:
+    """
+    Two lines that enter a section at one point keep the order of their
+    base heights, and their verticals do not meet.
+
+    D1 -> S2 lies in the pocket under D1 and goes down to S2. A3 -> S3
+    comes from under S and goes up to S3. Both use one lane of the right
+    vertical channel of S. The rule of ends at one point would put the
+    line that goes up above the other one; under the columns the base
+    heights win, because the side of an end is known only at the base
+    height.
+
+    Code: lane_assignment._base_order, lane_assignment.assign_lanes.
+    Fails if:
+    - two ends at one point win over the base heights.
+    """
+
+    normalized_graph, _, _, paths = _result(
+        _case("Two lines into a section at one point")
+    )
+    first = paths[_edge_id(normalized_graph, "A3", "S3")]
+    second = paths[_edge_id(normalized_graph, "D1", "S2")]
+
+    assert not any(
+        _collinear_contact(first_segment_, second_segment_)
+        for first_segment_ in zip(first, first[1:])
+        for second_segment_ in zip(second, second[1:])
+    )
 
 
 def test_bottom_corridor_keeps_the_lane_order() -> None:

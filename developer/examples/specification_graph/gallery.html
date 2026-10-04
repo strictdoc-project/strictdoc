@@ -4279,7 +4279,7 @@ B2 -&gt; C2 (parent)</pre>
 <section id="pocket-between-two-sections">
 <h2>Pocket between two sections</h2>
 <div><span class="badge">mode: structure</span></div>
-<p class="description">Known problem. Q1 -&gt; S3 leaves the section Q through its left face and enters the section S through its right face. Between them it passes under D1 only, so it should lie in the pocket under D1, above S1 -&gt; E2. It lies below S1 -&gt; E2 instead. Diagnosis: when the lanes are assigned, the base height of the segment is counted from the inner vertical channels of Q and S, not from their side faces, so the two sections count as columns the segment passes under, and the base height falls below S. The pocket rule then compares this wrong height. The route search already counts from the side faces. Counting from the faces in the lane stage alone is not enough: then a segment can still be moved below the height its section was computed for, and its vertical inside the section grows onto another one.</p>
+<p class="description">Q1 -&gt; S3 leaves the section Q through its left face and enters the section S through its right face. Between the two side faces it passes under D1 only: the sections are no columns it passes under. So it lies in the pocket under D1, above S1 -&gt; E2, which passes under Q and the column of E1 and E2. The vertical of S1 -&gt; E2 that goes up to S1 crosses it; S1 -&gt; E2 cannot pass higher.</p>
 <div class="preview">
 <figure>
 <h3>Generator result</h3>
@@ -4393,11 +4393,11 @@ B2 -&gt; C2 (parent)</pre>
 <path class="specification-graph-edge__line" d="M 1456 208 L 1456 192 L 1384 192 L 1384 176 L 1064 176 L 1064 192" marker-end="url(#case-20-result-arrow-1)"/>
 <path class="specification-graph-edge__hit-area" d="M 1456 208 L 1456 192 L 1384 192 L 1384 176 L 1064 176 L 1064 192"/>
 </g>
-<g class="specification-graph-edge specification-graph-edge--type-1" data-edge-id="edge-4" data-source-id="Q1" data-target-id="S3" data-relation-type="parent" data-debug-lanes="bottom_corridor:Q:0:0=0 vertical:Doc:3:0=0 bottom_corridor:Doc:0:0=1 vertical:S:2:0=0 column:SR:0:0=0" data-debug-ports="Q1:bottom:-1 S3:top:1">
-<path class="specification-graph-edge__line" d="M 1016 248 L 1016 264 L 912 264 L 912 384 L 688 384 L 688 320 L 584 320 L 584 336" marker-end="url(#case-20-result-arrow-1)"/>
-<path class="specification-graph-edge__hit-area" d="M 1016 248 L 1016 264 L 912 264 L 912 384 L 688 384 L 688 320 L 584 320 L 584 336"/>
+<g class="specification-graph-edge specification-graph-edge--type-1" data-edge-id="edge-4" data-source-id="Q1" data-target-id="S3" data-relation-type="parent" data-debug-lanes="bottom_corridor:Q:0:0=0 vertical:Doc:3:0=0 bottom_corridor:Doc:0:0=0 vertical:S:2:0=0 column:SR:0:0=0" data-debug-ports="Q1:bottom:-1 S3:top:1">
+<path class="specification-graph-edge__line" d="M 1016 248 L 1016 264 L 912 264 L 912 184 L 688 184 L 688 320 L 584 320 L 584 336" marker-end="url(#case-20-result-arrow-1)"/>
+<path class="specification-graph-edge__hit-area" d="M 1016 248 L 1016 264 L 912 264 L 912 184 L 688 184 L 688 320 L 584 320 L 584 336"/>
 </g>
-<g class="specification-graph-edge specification-graph-edge--type-1" data-edge-id="edge-5" data-source-id="S1" data-target-id="E2" data-relation-type="parent" data-debug-lanes="top_corridor:S:0:0=0 vertical:Doc:2:0=0 bottom_corridor:Doc:0:0=0" data-debug-ports="S1:top:1 E2:bottom:-1">
+<g class="specification-graph-edge specification-graph-edge--type-1" data-edge-id="edge-5" data-source-id="S1" data-target-id="E2" data-relation-type="parent" data-debug-lanes="top_corridor:S:0:0=0 vertical:Doc:2:0=0 bottom_corridor:Doc:0:0=1" data-debug-ports="S1:top:1 E2:bottom:-1">
 <path class="specification-graph-edge__line" d="M 376 184 L 376 168 L 720 168 L 720 376 L 1472 376 L 1472 264" marker-end="url(#case-20-result-arrow-1)"/>
 <path class="specification-graph-edge__hit-area" d="M 376 184 L 376 168 L 720 168 L 720 376 L 1472 376 L 1472 264"/>
 </g>
@@ -4489,13 +4489,13 @@ B2 -&gt; C2 (parent)</pre>
 <text class="specification-graph-debug__label" x="282" y="248">P0</text>
 <rect class="specification-graph-debug__channel" data-debug-channel="P0" x="952" y="248" width="160" height="88"/>
 <text class="specification-graph-debug__label" x="954" y="256">P0</text>
+<line class="specification-graph-debug__lane" x1="704" y1="184" x2="912" y2="184"/>
 <line class="specification-graph-debug__lane" x1="720" y1="376" x2="1472" y2="376"/>
-<line class="specification-graph-debug__lane" x1="704" y1="384" x2="912" y2="384"/>
 <line class="specification-graph-debug__lane" x1="928" y1="264" x2="1016" y2="264"/>
 <circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-2" cx="1368" cy="168" r="3"/>
 <circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-3" cx="1368" cy="176" r="3"/>
 <circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-4" cx="928" cy="264" r="3"/>
-<circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-4" cx="704" cy="384" r="3"/>
+<circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-4" cx="704" cy="184" r="3"/>
 <circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-4" cx="672" cy="320" r="3"/>
 <circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-5" cx="704" cy="168" r="3"/>
 </g>
@@ -4801,11 +4801,11 @@ Q2 -&gt; A2 (parent)</pre>
 <section id="two-lines-into-a-section-at-one-point">
 <h2>Two lines into a section at one point</h2>
 <div><span class="badge">mode: structure</span></div>
-<p class="description">Known problem. A3 -&gt; S3 comes from under S and goes up to S3. D1 -&gt; S2 comes from the pocket under D1 and goes down to S2. Both enter S through its right face and use one lane of the right vertical channel of S: computed first, S sees their verticals at different heights (312 to 456 and 176 to 224). Then the rule of ends at one point puts the line that goes up above the line that goes down, and D1 -&gt; S2 moves below A3 -&gt; S3. There its end goes up instead of down, and the two verticals lie on top of each other. Diagnosis: under the columns the side an end goes to depends on the height of its segment, but the rules take it from the base height as if it were fixed. In the pocket, the verticals would not meet.</p>
+<p class="description">A3 -&gt; S3 comes from under S and goes up to S3. D1 -&gt; S2 comes from the pocket under D1 and goes down to S2. Both enter S through its right face at one point and use one lane of the right vertical channel of S. The base heights keep D1 -&gt; S2 in the pocket, above A3 -&gt; S3, so the two verticals do not meet. Known problem: A3 -&gt; S3 passes under the whole section S, so its height lies below S, and its vertical enters S through the bottom face. The route search lets a line enter the side of a section from under that same section.</p>
 <div class="preview">
 <figure>
 <h3>Generator result</h3>
-<svg xmlns="http://www.w3.org/2000/svg" id="case-22-result" class="specification-graph" width="960" height="504" viewBox="0 0 960 504">
+<svg xmlns="http://www.w3.org/2000/svg" id="case-22-result" class="specification-graph" width="960" height="496" viewBox="0 0 960 496">
 <defs>
 <style>
 #case-22-result .specification-graph-edge--type-0 .specification-graph-edge__line { stroke: #c00000; }
@@ -4817,7 +4817,7 @@ Q2 -&gt; A2 (parent)</pre>
 </defs>
 <g class="specification-graph-nodes">
 <g class="specification-graph-node specification-graph-node--composite" data-node-id="Doc" data-node-details="[]">
-<rect class="specification-graph-node__box" rx="4" x="40" y="40" width="880" height="448"/>
+<rect class="specification-graph-node__box" rx="4" x="40" y="40" width="880" height="440"/>
 <line class="specification-graph-node__header-line" x1="40" y1="80" x2="920" y2="80"/>
 <foreignObject class="specification-graph-node__title-box" x="40" y="40" width="880" height="40"><div xmlns="http://www.w3.org/1999/xhtml" class="specification-graph-node__title specification-graph-node__title--container"><span class="specification-graph-node__title-text">Doc</span></div></foreignObject>
 <title>Doc</title>
@@ -4875,13 +4875,13 @@ Q2 -&gt; A2 (parent)</pre>
 <path class="specification-graph-edge__line" d="M 160 112 L 160 96 L 800 96 L 800 112" marker-end="url(#case-22-result-arrow-0)"/>
 <path class="specification-graph-edge__hit-area" d="M 160 112 L 160 96 L 800 96 L 800 112"/>
 </g>
-<g class="specification-graph-edge specification-graph-edge--type-1" data-edge-id="edge-2" data-source-id="A3" data-target-id="S3" data-relation-type="parent" data-debug-lanes="bottom_corridor:Doc:0:0=0 vertical:S:2:0=0 column:SR:0:0=0" data-debug-ports="A3:bottom:1 S3:top:1">
+<g class="specification-graph-edge specification-graph-edge--type-1" data-edge-id="edge-2" data-source-id="A3" data-target-id="S3" data-relation-type="parent" data-debug-lanes="bottom_corridor:Doc:0:0=1 vertical:S:2:0=0 column:SR:0:0=0" data-debug-ports="A3:bottom:1 S3:top:1">
 <path class="specification-graph-edge__line" d="M 160 336 L 160 464 L 696 464 L 696 328 L 592 328 L 592 344" marker-end="url(#case-22-result-arrow-1)"/>
 <path class="specification-graph-edge__hit-area" d="M 160 336 L 160 464 L 696 464 L 696 328 L 592 328 L 592 344"/>
 </g>
-<g class="specification-graph-edge specification-graph-edge--type-0" data-edge-id="edge-3" data-source-id="D1" data-target-id="S2" data-relation-type="parent" data-cycle-id="cycle-1" data-debug-lanes="bottom_corridor:Doc:0:0=1 vertical:S:2:0=0 top_corridor:SR:0:0=0" data-debug-ports="D1:bottom:-1 S2:top:1">
-<path class="specification-graph-edge__line" d="M 800 168 L 800 472 L 696 472 L 696 240 L 592 240 L 592 256" marker-end="url(#case-22-result-arrow-0)"/>
-<path class="specification-graph-edge__hit-area" d="M 800 168 L 800 472 L 696 472 L 696 240 L 592 240 L 592 256"/>
+<g class="specification-graph-edge specification-graph-edge--type-0" data-edge-id="edge-3" data-source-id="D1" data-target-id="S2" data-relation-type="parent" data-cycle-id="cycle-1" data-debug-lanes="bottom_corridor:Doc:0:0=0 vertical:S:2:0=0 top_corridor:SR:0:0=0" data-debug-ports="D1:bottom:-1 S2:top:1">
+<path class="specification-graph-edge__line" d="M 800 168 L 800 184 L 696 184 L 696 240 L 592 240 L 592 256" marker-end="url(#case-22-result-arrow-0)"/>
+<path class="specification-graph-edge__hit-area" d="M 800 168 L 800 184 L 696 184 L 696 240 L 592 240 L 592 256"/>
 </g>
 <g class="specification-graph-edge specification-graph-edge--type-0" data-edge-id="edge-4" data-source-id="S1" data-target-id="A1" data-relation-type="parent" data-cycle-id="cycle-1" data-debug-lanes="top_corridor:S:0:0=0 vertical:Doc:1:0=0 column:Doc:0:0=0" data-debug-ports="S1:top:-1 A1:bottom:1">
 <path class="specification-graph-edge__line" d="M 344 184 L 344 168 L 240 168 L 240 184 L 160 184 L 160 168" marker-end="url(#case-22-result-arrow-0)"/>
@@ -4896,7 +4896,7 @@ Q2 -&gt; A2 (parent)</pre>
 <rect class="specification-graph-debug__channel" data-debug-channel="T" x="40" y="80" width="880" height="32"/>
 <text class="specification-graph-debug__label" x="42" y="88">T</text>
 <line class="specification-graph-debug__lane" x1="40" y1="96" x2="920" y2="96"/>
-<rect class="specification-graph-debug__channel" data-debug-channel="B" x="40" y="448" width="880" height="40"/>
+<rect class="specification-graph-debug__channel" data-debug-channel="B" x="40" y="448" width="880" height="32"/>
 <text class="specification-graph-debug__label" x="42" y="456">B</text>
 <rect class="specification-graph-debug__channel" data-debug-channel="V0" x="40" y="112" width="24" height="336"/>
 <text class="specification-graph-debug__label" x="42" y="120">V0</text>
@@ -4943,10 +4943,11 @@ Q2 -&gt; A2 (parent)</pre>
 <text class="specification-graph-debug__label" x="738" y="176">P2</text>
 <rect class="specification-graph-debug__channel" data-debug-channel="P0" x="280" y="240" width="160" height="184"/>
 <text class="specification-graph-debug__label" x="282" y="248">P0</text>
+<line class="specification-graph-debug__lane" x1="712" y1="184" x2="800" y2="184"/>
 <line class="specification-graph-debug__lane" x1="160" y1="464" x2="712" y2="464"/>
-<line class="specification-graph-debug__lane" x1="712" y1="472" x2="800" y2="472"/>
 <line class="specification-graph-debug__lane" x1="376" y1="328" x2="456" y2="328"/>
 <circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-2" cx="680" cy="328" r="3"/>
+<circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-3" cx="712" cy="184" r="3"/>
 <circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-3" cx="680" cy="240" r="3"/>
 <circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-4" cx="256" cy="168" r="3"/>
 <circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-5" cx="472" cy="328" r="3"/>

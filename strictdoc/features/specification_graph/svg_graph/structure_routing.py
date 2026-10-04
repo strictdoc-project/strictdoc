@@ -174,6 +174,9 @@ class _Router:
         # The forced orders of the nested pairs on shared stretches.
         self.forced_orders: Dict[StructureChannelId, List[ForcedOrder]] = {}
         self.forced_port_orders: List[ForcedPortOrder] = []
+        # Segments under the columns that continue a lane straight: rows.
+        # They keep the height of that lane. See _exact_levels.
+        self.row_keys: Set[Tuple[str, int]] = set()
         self.composite_ids: Set[str] = {
             node_.node_id
             for node_ in normalized_graph.nodes
@@ -1055,6 +1058,10 @@ class _Router:
                 self.config,
             )
             levels[position_] = lowest_y_ if through_y_ is None else through_y_
+            if through_y_ is None:
+                self.row_keys.discard((plan.edge.edge_id, position_))
+            else:
+                self.row_keys.add((plan.edge.edge_id, position_))
         return _Plan(
             index=plan.index,
             edge=plan.edge,
@@ -1359,10 +1366,12 @@ class _Router:
                         members=tuple(members_),
                         order_key=(entry_, plan_.index),
                         # Under the columns, the exact level of the plan is
-                        # the base height of the segment.
+                        # the base height of the segment. A row keeps the
+                        # height of its lane and has no base height.
                         base_level=channel_y_
                         if channels_[position_].kind
                         is ChannelKind.BOTTOM_CORRIDOR
+                        and (edge_id_, position_) not in self.row_keys
                         else None,
                     )
                 )

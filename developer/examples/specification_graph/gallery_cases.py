@@ -892,20 +892,13 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
     _structure_case(
         "Pocket between two sections",
         (
-            "Known problem. Q1 -> S3 leaves the section Q through its left "
-            "face and enters the section S through its right face. Between "
-            "them it passes under D1 only, so it should lie in the pocket "
-            "under D1, above S1 -> E2. It lies below S1 -> E2 instead. "
-            "Diagnosis: when the lanes are assigned, the base height of the "
-            "segment is counted from the inner vertical channels of Q and "
-            "S, not from their side faces, so the two sections count as "
-            "columns the segment passes under, and the base height falls "
-            "below S. The pocket rule then compares this wrong height. The "
-            "route search already counts from the side faces. Counting from "
-            "the faces in the lane stage alone is not enough: then a "
-            "segment can still be moved below the height its section was "
-            "computed for, and its vertical inside the section grows onto "
-            "another one."
+            "Q1 -> S3 leaves the section Q through its left face and enters "
+            "the section S through its right face. Between the two side "
+            "faces it passes under D1 only: the sections are no columns it "
+            "passes under. So it lies in the pocket under D1, above "
+            "S1 -> E2, which passes under Q and the column of E1 and E2. "
+            "The vertical of S1 -> E2 that goes up to S1 crosses it; "
+            "S1 -> E2 cannot pass higher."
         ),
         [
             (
@@ -952,18 +945,15 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
     _structure_case(
         "Two lines into a section at one point",
         (
-            "Known problem. A3 -> S3 comes from under S and goes up to S3. "
-            "D1 -> S2 comes from the pocket under D1 and goes down to S2. "
-            "Both enter S through its right face and use one lane of the "
-            "right vertical channel of S: computed first, S sees their "
-            "verticals at different heights (312 to 456 and 176 to 224). "
-            "Then the rule of ends at one point puts the line that goes up "
-            "above the line that goes down, and D1 -> S2 moves below "
-            "A3 -> S3. There its end goes up instead of down, and the two "
-            "verticals lie on top of each other. Diagnosis: under the "
-            "columns the side an end goes to depends on the height of its "
-            "segment, but the rules take it from the base height as if it "
-            "were fixed. In the pocket, the verticals would not meet."
+            "A3 -> S3 comes from under S and goes up to S3. D1 -> S2 comes "
+            "from the pocket under D1 and goes down to S2. Both enter S "
+            "through its right face at one point and use one lane of the "
+            "right vertical channel of S. The base heights keep D1 -> S2 in "
+            "the pocket, above A3 -> S3, so the two verticals do not meet. "
+            "Known problem: A3 -> S3 passes under the whole section S, so "
+            "its height lies below S, and its vertical enters S through "
+            "the bottom face. The route search lets a line enter the side "
+            "of a section from under that same section."
         ),
         [
             (
@@ -972,10 +962,7 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
             )
         ],
         [("A1", "D1"), ("A3", "S3"), ("D1", "S2"), ("S1", "A1"), ("S2", "S1")],
-        broken_invariants=(
-            "test_structure_routes_follow_right_hand_traffic",
-            "test_structure_route_invariants",
-        ),
+        broken_invariants=("test_structure_route_invariants",),
     ),
     _structure_case(
         "Steps beside a pocket",

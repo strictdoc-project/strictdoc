@@ -1345,6 +1345,30 @@ ACROSS_CONTAINERS_CASES: Tuple[GalleryCase, ...] = (
         [("A1", "X2"), ("Y1", "E1"), ("E1", "Y1"), ("E2", "Y1")],
     ),
     _structure_case(
+        "Two lines cross a side face at one point",
+        (
+            "Known problem. A2 -> S1 enters S from the column channel "
+            "between A2 and A3, at the height of its lane (256), and turns "
+            "down in the left vertical channel of S. S1 -> A3 leaves the "
+            "pocket under S1 through the same left face of S, at the height "
+            "the pocket gives it (256), and turns down in the vertical "
+            "channel of Doc left of S. Both lines cross the left face of S "
+            "at one point and lie on top of each other from x 240 to 272. "
+            "The nodes of the column of A2 set the height of the lane, and S "
+            "sets the height of the line that leaves it before Doc is "
+            "placed: neither knows the other. Without S1 -> D1, S1 -> D2, "
+            "A1 or SR, the lines do not overlap."
+        ),
+        [
+            (
+                "Doc",
+                ["A1", "A2", "A3", ("S", ["S1", ("SR", ["S2"])]), "D1", "D2"],
+            )
+        ],
+        [("A2", "S1"), ("S1", "A3"), ("S1", "D1"), ("S1", "D2")],
+        broken_invariants=("test_structure_route_invariants",),
+    ),
+    _structure_case(
         "Relation across a long column",
         (
             "L2 -> R2 connects two short columns with a long column C between "

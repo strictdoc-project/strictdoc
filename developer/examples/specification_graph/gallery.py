@@ -10,6 +10,7 @@ input, and the result of every implemented generator stage.
 """
 
 import html
+import itertools
 import os
 import re
 from typing import Dict, List
@@ -54,6 +55,10 @@ from strictdoc.features.specification_graph.svg_graph.structure_routing import (
 from strictdoc.features.specification_graph.svg_graph.svg_serializer import (
     serialize_levels_svg,
     serialize_structure_svg,
+)
+from tests.unit.strictdoc.features.specification_graph.svg_graph.geometry_checks import (
+    _collinear_contact,
+    crossing_count,
 )
 
 OUTPUT_FILE_NAME = "gallery.html"
@@ -391,10 +396,25 @@ def _render_structure(index: int, normalized_graph: NormalizedGraph) -> str:
         if len(unrouted) > 0
         else ""
     )
+    paths = list(edge_paths.values())
+    crossings = sum(
+        crossing_count(first_, second_)
+        for first_, second_ in itertools.combinations(paths, 2)
+    )
+    overlaps = sum(
+        1
+        for first_, second_ in itertools.combinations(paths, 2)
+        if any(
+            _collinear_contact(first_segment_, second_segment_)
+            for first_segment_ in zip(first_, first_[1:])
+            for second_segment_ in zip(second_, second_[1:])
+        )
+    )
     return f"""<div class="preview">
 <figure>
 <h3>Generator result</h3>
 {svg}
+<p class="note">Crossings: {crossings}. Overlaps: {overlaps}.</p>
 </figure>
 {note}
 </div>"""

@@ -945,14 +945,13 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
         "Two lines into a section at one point",
         (
             "A3 -> S3 comes from under S and goes up to S3. D1 -> S2 comes "
-            "from the pocket under D1 and goes down to S2. Both enter S "
-            "through its right face at one point and use one lane of the "
-            "right vertical channel of S. The base heights keep D1 -> S2 in "
-            "the pocket, above A3 -> S3, so the two verticals do not meet. "
-            "Known problem: A3 -> S3 passes under the whole section S, so "
-            "its height lies below S, and its vertical enters S through "
-            "the bottom face. The route search lets a line enter the side "
-            "of a section from under that same section."
+            "from the pocket under D1 and goes down to S2. The base heights "
+            "keep D1 -> S2 in the pocket, above A3 -> S3, so their verticals "
+            "do not meet. A route that passes under the whole section S "
+            "would lie below its side face and could not enter S from the "
+            "side, so A3 -> S3 goes down the vertical channel between A and "
+            "S and enters S through its left face, into the space under the "
+            "columns of S."
         ),
         [
             (
@@ -961,7 +960,6 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
             )
         ],
         [("A1", "D1"), ("A3", "S3"), ("D1", "S2"), ("S1", "A1"), ("S2", "S1")],
-        broken_invariants=("test_structure_route_invariants",),
     ),
     _structure_case(
         "Steps beside a pocket",
@@ -1442,6 +1440,120 @@ ONE_FACE_CASES: Tuple[GalleryCase, ...] = (
 )
 
 
+# Large graphs where many situations of the structure mode meet. They show
+# how the rules work together under load.
+STRESS_CASES: Tuple[GalleryCase, ...] = (
+    _structure_case(
+        "Stress: staircase of columns and pockets",
+        (
+            "Columns of different heights: five nodes, one node, a section "
+            "with a nested section, two nodes, one node, a second section "
+            "with a nested section, three nodes, one node. Pockets of "
+            "different depths lie under the short columns. 36 relations "
+            "connect all parts, also through the pockets and across the "
+            "sections."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    "A2",
+                    "A3",
+                    "A4",
+                    "A5",
+                    "D1",
+                    ("S", ["S1", "S2", ("SR", ["S3", "S4"])]),
+                    "E1",
+                    "E2",
+                    "F1",
+                    ("Q", ["Q1", ("QR", ["Q2", "Q3", "Q4"])]),
+                    "G1",
+                    "G2",
+                    "G3",
+                    "H1",
+                ],
+            )
+        ],
+        [
+            ("D1", "F1"), ("F1", "H1"), ("A5", "G3"), ("E2", "D1"),
+            ("H1", "A4"), ("S4", "F1"), ("Q4", "D1"), ("F1", "S3"),
+            ("G3", "E2"), ("Q2", "G1"), ("Q2", "H1"), ("Q4", "G2"),
+            ("S1", "D1"), ("Q4", "Q3"), ("H1", "G3"), ("D1", "A4"),
+            ("Q2", "S4"), ("A5", "A3"), ("G1", "A2"), ("G3", "F1"),
+            ("Q2", "G3"), ("H1", "D1"), ("G3", "A1"), ("Q4", "A3"),
+            ("A2", "H1"), ("S1", "S2"), ("Q2", "E1"), ("Q2", "G2"),
+            ("S1", "Q4"), ("S2", "S4"), ("Q3", "A1"), ("A3", "Q2"),
+            ("H1", "S3"), ("Q1", "G1"), ("A3", "S3"), ("E1", "S2"),
+        ],
+        broken_invariants=("test_column_lane_count_rule_matches_the_lanes",),
+    ),
+    _structure_case(
+        "Stress: three levels of sections",
+        (
+            "The section S holds a section that holds a third one. The "
+            "section Q holds one nested section. 22 relations run through "
+            "all levels and between nodes of different sections."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    "A2",
+                    ("S", ["S1", ("SR", ["S2", ("SX", ["S3", "S4"])]), "S5"]),
+                    "D1",
+                    ("Q", ["Q1", ("QR", ["Q2", "Q3"])]),
+                    "E1",
+                    "E2",
+                ],
+            )
+        ],
+        [
+            ("S3", "Q2"), ("Q3", "S4"), ("S2", "Q1"), ("A1", "S3"),
+            ("S4", "E2"), ("D1", "S5"), ("Q2", "S1"), ("E1", "S3"),
+            ("Q2", "S3"), ("E1", "S4"), ("E2", "E1"), ("E1", "Q3"),
+            ("Q1", "A1"), ("D1", "S2"), ("Q3", "A1"), ("S1", "A2"),
+            ("S4", "D1"), ("S2", "S5"), ("Q1", "A2"), ("Q2", "S2"),
+            ("A1", "E1"), ("S3", "S1"),
+        ],
+    ),
+    _structure_case(
+        "Stress: one node with many relations",
+        (
+            "N1 stands alone in its column between two sections. It sends "
+            "eight relations and receives seven, to and from nodes in all "
+            "columns, so both of its faces carry many ports."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    "A2",
+                    "A3",
+                    "D1",
+                    ("S", ["S1", "S2"]),
+                    "N1",
+                    ("Q", ["Q1", "Q2"]),
+                    "E1",
+                    "E2",
+                    "E3",
+                    "F1",
+                ],
+            )
+        ],
+        [
+            ("N1", "A1"), ("N1", "A2"), ("N1", "A3"), ("N1", "D1"),
+            ("N1", "S1"), ("N1", "S2"), ("N1", "Q1"), ("N1", "Q2"),
+            ("D1", "N1"), ("S1", "N1"), ("S2", "N1"), ("Q1", "N1"),
+            ("Q2", "N1"), ("E1", "N1"), ("E2", "N1"), ("A1", "E3"),
+            ("S2", "F1"), ("Q1", "A2"),
+        ],
+    ),
+)
+
+
 SERIALIZATION_CASES: Tuple[GalleryCase, ...] = (
     GalleryCase(
         title="Titles, relation types, and diagnostics",
@@ -1499,6 +1611,7 @@ _ALL_CASES: Tuple[GalleryCase, ...] = (
     + STRUCTURE_CASES
     + ACROSS_CONTAINERS_CASES
     + ONE_FACE_CASES
+    + STRESS_CASES
     + LEVELS_CASES
     + EXTREME_GATE_CASES
 )
@@ -1553,6 +1666,10 @@ GALLERY_CHAPTERS: Tuple[GalleryChapter, ...] = (
     _chapter(
         "Structure: lines from one face (open question)",
         *(case_.title for case_ in ONE_FACE_CASES),
+    ),
+    _chapter(
+        "Structure: stress",
+        *(case_.title for case_ in STRESS_CASES),
     ),
     _chapter(
         "Levels: layout",

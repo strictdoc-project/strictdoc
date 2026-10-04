@@ -612,7 +612,9 @@ class _Router:
                     y,
                     item.is_through,
                 )
-                if segment_y_ is None:
+                if segment_y_ is None or not self._fits_side_face(
+                    item.channel, neighbor_, segment_y_
+                ):
                     continue
                 length_ = item.length + abs(x - turn_[0]) + (segment_y_ - y)
                 next_point_ = (turn_[0], segment_y_)
@@ -832,6 +834,33 @@ class _Router:
             self.estimate.node_rects if frames is None else frames
         )[child_id]
         return frame.x if vertical.index == 0 else frame.x + frame.width
+
+    def _fits_side_face(
+        self,
+        horizontal: StructureChannelId,
+        vertical: StructureChannelId,
+        y: float,
+    ) -> bool:
+        """
+        Return True if a segment at the height y can enter the vertical
+        channel.
+
+        A segment under the columns that enters the outer vertical channel
+        of a child container crosses its side face. The face ends at the
+        bottom of the child: a segment that lies lower, because it passes
+        under taller columns, would cross the bottom face instead.
+        """
+
+        if (
+            horizontal.kind is not ChannelKind.BOTTOM_CORRIDOR
+            or vertical.container_id == horizontal.container_id
+            or vertical.container_id is None
+            or self.normalized_graph.parent_ids[vertical.container_id]
+            != horizontal.container_id
+        ):
+            return True
+        frame = self.estimate.node_rects[vertical.container_id]
+        return y < frame.y + frame.height
 
     def _stub_length(
         self, node_id: str, face: Face, channel: StructureChannelId

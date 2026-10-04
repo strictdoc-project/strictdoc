@@ -412,6 +412,13 @@ MUTATIONS = (
         "                    0.0 * self._child_segment_y(container_id, key_)\n",
     ),
     Mutation(
+        "XC11",
+        "a segment under the columns enters a section below its side face",
+        STRUCTURE_ROUTING,
+        "        return y < frame.y + frame.height\n",
+        "        return True\n",
+    ),
+    Mutation(
         "R2",
         "lane priority inverted",
         LANES,

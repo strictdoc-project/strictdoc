@@ -1046,6 +1046,14 @@ def _traffic_order_crosses(
     low_on_high_side = not is_horizontal
     high_low, high_high = span(high)
     low_low, low_high = span(low)
+    # Two legs at one point that go to different sides: the order of
+    # right-hand traffic would lay them on top of each other.
+    if any(
+        low_position_ == high_position_ and low_goes_ != high_goes_
+        for low_position_, low_goes_ in low[4]
+        for high_position_, high_goes_ in high[4]
+    ):
+        return True
     return any(
         high_low < position_ < high_high and goes_high_ != low_on_high_side
         for position_, goes_high_ in low[4]
@@ -1242,7 +1250,7 @@ def _belongs_to_a_row(
 
 
 @pytest.mark.parametrize(
-    "case", STRUCTURE_CASES, ids=[case_.title for case_ in STRUCTURE_CASES]
+    "case", _invariant_cases("test_column_lane_count_rule_matches_the_lanes")
 )
 def test_column_lane_count_rule_matches_the_lanes(case: GalleryCase) -> None:
     """

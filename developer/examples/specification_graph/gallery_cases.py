@@ -846,6 +846,60 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
         [("C2", "A2"), ("C3", "A2"), ("C1", "C3")],
     ),
     _structure_case(
+        "Many ports on one face",
+        (
+            "N1 relates to each node of the column A, in both directions. "
+            "Eight lines leave the left half of the top face of N1: the "
+            "list does not fit the half with the usual port pitch of 16, so "
+            "it takes the minimum pitch of 8. Three lines come to the left "
+            "half of the bottom face with the usual pitch. A4 -> N1 and "
+            "A5 -> N1 come to the bottom face under S and cross N1 -> A5 "
+            "and N1 -> A6, which go down the vertical channel left of S."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    "A2",
+                    "A3",
+                    "A4",
+                    "A5",
+                    "A6",
+                    ("S", ["S1"]),
+                    "N1",
+                    "N2",
+                ],
+            )
+        ],
+        [("N1", f"A{index_}") for index_ in range(1, 7)]
+        + [(f"A{index_}", "N1") for index_ in range(2, 7)],
+    ),
+    _structure_case(
+        "Ports overflow a half of a face",
+        (
+            "Known problem. N1 stands at the bottom of a tall column and "
+            "relates to the eleven nodes of the column A above it. Ten "
+            "lines leave the left half of the top face of N1. With the "
+            "minimum pitch of 8, the outermost port stands on the corner of "
+            "N1, closer than the margin of 8. The levels mode handles such "
+            "a list with two more steps: it moves the center of the gate to "
+            "the other side, and then widens the column. The structure mode "
+            "does not do these steps yet."
+        ),
+        [
+            (
+                "Doc",
+                [f"A{index_}" for index_ in range(1, 12)]
+                + [("S", ["S1"])]
+                + [f"K{index_}" for index_ in range(1, 12)]
+                + ["N1"],
+            )
+        ],
+        [("N1", f"A{index_}") for index_ in range(1, 12)],
+        broken_invariants=("test_structure_route_invariants",),
+    ),
+    _structure_case(
         "Relations inside one container",
         (
             "All relations connect simple nodes of the document. A3 -> A2 "
@@ -1994,6 +2048,8 @@ GALLERY_CHAPTERS: Tuple[GalleryChapter, ...] = (
         "Two relations into one node over a section",
         "Relations inside one container",
         "Relations inside one container, more ports",
+        "Many ports on one face",
+        "Ports overflow a half of a face",
     ),
     _chapter(
         "Structure: space under the columns",

@@ -949,6 +949,35 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
         [("D1", "S1"), ("Q1", "S2"), ("Q2", "A2")],
     ),
     _structure_case(
+        "Pockets at the edges of containers",
+        (
+            "The short column of S4 and S5 stands at the right face of S, "
+            "the short column of D1 and D2 at the right edge of the root. "
+            "Both pockets border the outer vertical channel. A3 -> D2, "
+            "S3 -> D2 and S5 -> D2 come up to the bottom face of D2 through "
+            "the pocket of the root, nested. S3 -> D2 goes straight at the "
+            "height of the gap between S2 and S3, through the pocket of S "
+            "and out of the right faces of SR and S. A3 -> S5 enters S under "
+            "SR and comes up to S5 through the pocket of S. It crosses "
+            "S3 -> D2 once: the path over the top of S, into the gap "
+            "between S4 and S5, has six bends instead of four."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    "A2",
+                    "A3",
+                    ("S", [("SR", ["S1", "S2", "S3"]), "S4", "S5"]),
+                    "D1",
+                    "D2",
+                ],
+            )
+        ],
+        [("A3", "S5"), ("S5", "D2"), ("A3", "D2"), ("S3", "D2")],
+    ),
+    _structure_case(
         "Two lines into a section at one point",
         (
             "A3 -> S3 comes from under S and goes up to S3. D1 -> S2 comes "
@@ -1723,6 +1752,7 @@ GALLERY_CHAPTERS: Tuple[GalleryChapter, ...] = (
         "Nested pair under the columns",
         "Pocket between two sections",
         "Line from a section into a pocket",
+        "Pockets at the edges of containers",
         "Two lines into a section at one point",
         "Steps beside a pocket",
     ),

@@ -27,6 +27,7 @@ from strictdoc.features.specification_graph.svg_graph.structure_geometry import 
     StructureGeometry,
 )
 from strictdoc.features.specification_graph.svg_graph.structure_layout import (
+    ChannelKind,
     StructureChannelId,
 )
 
@@ -348,6 +349,10 @@ def _nesting(
     contradict, one crossing is unavoidable. The routes keep the order of
     the end where they come together on the whole stretch, and cross where
     they part. They do not change their order in a channel in between.
+
+    Under the columns the heights can already set the order, see
+    _fixed_side. Then this order holds on the whole stretch, and the ends
+    do not change it.
     """
 
     first_start, second_start, length, step = run
@@ -416,6 +421,9 @@ def _nesting(
                 _side(direction_, earlier_[0], earlier_[1]),
             )
         )
+    fixed_side = _fixed_side(first, first_points, second_points, run)
+    if fixed_side is not None:
+        return first, fixed_side, faces
     if len(conditions) == 0:
         # Both ends lie on shared faces.
         return first, 1, faces
@@ -442,6 +450,45 @@ def _nesting(
             inner = route_
             break
     return inner, first_side if inner is first else -first_side, faces
+
+
+def _fixed_side(
+    first: PlannedRoute,
+    first_points: List[_Point],
+    second_points: List[_Point],
+    run: _Run,
+) -> Optional[int]:
+    """
+    Return the side of the first route that the heights under the columns
+    set, or None.
+
+    spec.md, section "Общий участок". Under the columns a segment lies at a
+    height that the stretch cannot change: a row keeps the height of its
+    lane, a corridor segment lies at its base height unless a neighbor
+    pushes it down. If the two segments of the stretch in such a channel lie
+    at different heights, the order in that channel is set, and a stretch
+    keeps one order. The first such channel of the stretch decides.
+    """
+
+    first_start, second_start, length, step = run
+    for offset_ in range(length):
+        first_position_ = first_start + offset_
+        second_position_ = second_start + step * offset_
+        if (
+            first.channels[first_position_].kind
+            is not ChannelKind.BOTTOM_CORRIDOR
+        ):
+            continue
+        first_y_ = first_points[first_position_ + 1][1]
+        second_y_ = second_points[second_position_ + 1][1]
+        direction_ = _direction(
+            first_points[first_position_ + 1], first_points[first_position_ + 2]
+        )
+        if first_y_ == second_y_ or direction_[0] == 0:
+            continue
+        # The right side of a route that goes right is below it.
+        return 1 if (first_y_ - second_y_) * direction_[0] > 0 else -1
+    return None
 
 
 def _route_end(

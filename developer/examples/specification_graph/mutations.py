@@ -366,6 +366,13 @@ MUTATIONS = (
         "        return None\n",
     ),
     Mutation(
+        "ST11",
+        "the ends of a stretch decide against the heights under the columns",
+        STRUCTURE_STRETCHES,
+        "    fixed_side = _fixed_side(first, first_points, second_points, run)\n",
+        "    fixed_side = None\n",
+    ),
+    Mutation(
         "FC1",
         "the faces toward the target do not win a near tie",
         STRUCTURE_ROUTING,

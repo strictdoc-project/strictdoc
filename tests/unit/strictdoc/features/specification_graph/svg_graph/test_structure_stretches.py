@@ -89,3 +89,65 @@ def test_pair_between_shared_faces_keeps_the_order_of_traffic() -> None:
     assert inner is forward
     assert side == 1
     assert len(faces) == 2
+
+
+def test_heights_under_the_columns_set_the_order_of_a_stretch() -> None:
+    """
+    Different heights of the two segments under the columns set the order
+    of the whole stretch, against the order that the ends ask for.
+
+    N -> X and N -> Y leave the bottom face of N and share three channels:
+    the space under the columns, a vertical channel, and a column channel.
+    At the end, N -> X turns up and N -> Y turns down, so the ends ask for
+    N -> X above. Under the columns N -> Y lies at 50 and N -> X at 80:
+    there N -> Y is above, and the heights cannot change. The stretch keeps
+    N -> X below, on the right side of its travel to the right.
+
+    Code: structure_stretches._fixed_side.
+    Fails if:
+    - the ends decide against the heights under the columns.
+    """
+
+    corridor = StructureChannelId(ChannelKind.BOTTOM_CORRIDOR, "Doc")
+    vertical = StructureChannelId(ChannelKind.VERTICAL, "Doc", 1)
+    column_channel = StructureChannelId(ChannelKind.COLUMN, "Doc", 1, 0)
+    channels = (corridor, vertical, column_channel)
+    lower = _Route(
+        index=0,
+        edge=_edge("edge-1", "N", "X"),
+        source_face=Face.BOTTOM,
+        target_face=Face.BOTTOM,
+        channels=channels,
+        levels=(80, 100, 20),
+    )
+    upper = _Route(
+        index=1,
+        edge=_edge("edge-2", "N", "Y"),
+        source_face=Face.BOTTOM,
+        target_face=Face.TOP,
+        channels=channels,
+        levels=(50, 110, 30),
+    )
+    # The port of the source, one point per channel, then the target.
+    lower_points: List[Tuple[float, float]] = [
+        (0, 0),
+        (0, 80),
+        (100, 80),
+        (100, 20),
+        (150, 20),
+        (150, 10),
+    ]
+    upper_points: List[Tuple[float, float]] = [
+        (10, 0),
+        (10, 50),
+        (110, 50),
+        (110, 30),
+        (160, 30),
+        (160, 40),
+    ]
+
+    nesting = _nesting(lower, upper, lower_points, upper_points, (0, 0, 3, 1))
+
+    assert nesting is not None
+    inner, side, _ = nesting
+    assert (side if inner is lower else -side) == 1

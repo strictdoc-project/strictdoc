@@ -1115,6 +1115,32 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
         [("A3", "S4"), ("S4", "A4")],
     ),
     _structure_case(
+        "Two sections leave into one pocket at one height",
+        (
+            "The sections S and Q have the same columns, so the gaps "
+            "between S1 and S2 and between Q1 and Q2 lie at one height. "
+            "S1 -> D1 and Q1 -> D1 leave these gaps straight through the "
+            "facing side faces into the pocket under D1, toward each other "
+            "on one lane, and come up to the bottom face of D1. Their "
+            "segments end at their ports and do not overlap. S1 -> Q2 takes "
+            "the next lane of both gaps and crosses the pocket straight, "
+            "below them."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    ("S", ["S1", "S2"]),
+                    "D1",
+                    ("Q", ["Q1", "Q2"]),
+                    "E1",
+                ],
+            )
+        ],
+        [("S1", "D1"), ("Q1", "D1"), ("S1", "Q2"), ("A1", "E1")],
+    ),
+    _structure_case(
         "Two lines into a section at one point",
         (
             "A3 -> S3 comes from under S and goes up to S3. D1 -> S2 comes "
@@ -1894,6 +1920,7 @@ GALLERY_CHAPTERS: Tuple[GalleryChapter, ...] = (
         "Many lines in one pocket",
         "Tall section between two pockets",
         "Line from a column gap into the pocket of a section",
+        "Two sections leave into one pocket at one height",
         "Two lines into a section at one point",
         "Steps beside a pocket",
     ),

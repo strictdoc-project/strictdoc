@@ -1313,6 +1313,21 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
         [("B1", "A1"), ("C1", "B2"), ("D1", "D"), ("E2", "E1")],
     ),
     _structure_case(
+        "Simple nodes in the root",
+        (
+            "The root has no frame and no header, and simple nodes stand in "
+            "it directly. Z1 has no relation and stands in the block above "
+            "the row, with the block separator under it. A1 -> E1 takes the "
+            "top corridor of the root, E2 -> A2 the bottom corridor under "
+            "S. A2 -> S2 comes from the pocket under A2 and enters the gap "
+            "between S1 and S2 with a small step. S1 -> E1 leaves the top "
+            "corridor of S, goes down to the gap between E1 and E2 and up "
+            "to E1."
+        ),
+        ["Z1", "A1", "A2", ("S", ["S1", "S2"]), "E1", "E2"],
+        [("A1", "E1"), ("E2", "A2"), ("A2", "S2"), ("S1", "E1")],
+    ),
+    _structure_case(
         "Root without relations",
         (
             "No document relates to another document. All documents stand "
@@ -1964,6 +1979,7 @@ GALLERY_CHAPTERS: Tuple[GalleryChapter, ...] = (
         "Document tree from the sketch",
         "Columns of different height",
         "Root with connected and unconnected documents",
+        "Simple nodes in the root",
         "Root without relations",
         "Deep nesting",
         "Long container titles",

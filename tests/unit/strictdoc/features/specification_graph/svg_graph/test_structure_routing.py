@@ -508,6 +508,49 @@ def test_gate_halves_follow_right_hand_traffic(
     assert mismatches == []
 
 
+@pytest.mark.parametrize(
+    "case", STRUCTURE_CASES, ids=lambda case_: case_.title
+)
+def test_gate_port_side_agrees_with_the_segment_direction(
+    case: GalleryCase, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """
+    The side of a port and the direction of its horizontal segment agree:
+    a source port on the left side sends its segment left, a target port on
+    the left side receives a segment that goes right.
+
+    The side comes from the vertical channel where the line turns, the
+    direction from the two ends of the segment. Both use the estimate.
+    Taking one end from the exact geometry, where the nodes stand elsewhere,
+    gives a wrong direction for some segments.
+
+    Code: structure_routing._Router._goes_left.
+    Fails if:
+    - the direction compares a position of the estimate with a position of
+      the exact geometry.
+    """
+
+    mismatches: List[Tuple[str, int]] = []
+
+    def capture(
+        endpoints: List[GateEndpoint], forced: Any = ()
+    ) -> Dict[Any, Any]:
+        for endpoint_ in endpoints:
+            if endpoint_.side == 0:
+                continue
+            goes_left_ = (endpoint_.side < 0) == (
+                endpoint_.endpoint_key[1] == 0
+            )
+            if endpoint_.half != (0 if goes_left_ else 1):
+                mismatches.append(endpoint_.endpoint_key)
+        return number_gate_ports(endpoints, forced)
+
+    monkeypatch.setattr(structure_routing, "number_gate_ports", capture)
+    _result(case)
+
+    assert mismatches == []
+
+
 def test_side_entry_lies_below_the_top_corridor() -> None:
     """
     A line that enters a section through its side face into the outer

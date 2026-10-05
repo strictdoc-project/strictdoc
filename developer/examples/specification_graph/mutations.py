@@ -359,6 +359,13 @@ MUTATIONS = (
         "    for _ in range(1):\n",
     ),
     Mutation(
+        "GP3",
+        "the direction of a segment takes an end from the exact geometry",
+        STRUCTURE_ROUTING,
+        "            else _center_x(self.channel_rects[plan.channels[position - 1]])\n",
+        "            else plan.levels[position - 1]\n",
+    ),
+    Mutation(
         "GP2",
         "a forced order moves the half that a gate expects",
         STRUCTURE_ROUTING,

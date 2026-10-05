@@ -1299,18 +1299,22 @@ class _Router:
     def _goes_left(self, plan: _Plan, position: int) -> bool:
         """
         Return True if the horizontal segment at the position goes left.
+
+        Both ends come from the estimate, as the other positions of the
+        ports and the lanes: the levels of a plan come from the exact
+        geometry, where the nodes stand elsewhere.
         """
 
         last = len(plan.channels) - 1
         entry_x = (
             _center_x(self.estimate.node_rects[plan.edge.source_id])
             if position == 0
-            else plan.levels[position - 1]
+            else _center_x(self.channel_rects[plan.channels[position - 1]])
         )
         exit_x = (
             _center_x(self.estimate.node_rects[plan.edge.target_id])
             if position == last
-            else plan.levels[position + 1]
+            else _center_x(self.channel_rects[plan.channels[position + 1]])
         )
         return exit_x < entry_x
 

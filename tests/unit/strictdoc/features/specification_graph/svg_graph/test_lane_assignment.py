@@ -1,5 +1,7 @@
 from typing import Optional, Tuple
 
+import pytest
+
 from strictdoc.features.specification_graph.svg_graph.lane_assignment import (
     CrossMember,
     LaneConflictPriority,
@@ -156,3 +158,37 @@ def test_stand_in_positions_do_not_coincide() -> None:
     lanes, _ = assign_lanes([first, second], LaneConflictPriority.EXIT)
 
     assert lanes[first.key] > lanes[second.key]
+
+
+@pytest.mark.parametrize(
+    "priority", [LaneConflictPriority.ENTRY, LaneConflictPriority.EXIT]
+)
+def test_unavoidable_crossing_takes_the_order_with_fewer_lanes(
+    priority: LaneConflictPriority,
+) -> None:
+    """
+    An unavoidable crossing takes the order that gives the channel fewer
+    lanes, whatever the priority of the crossing.
+
+    X crosses the channel from 0 to 100. L runs from a port at 40 to the
+    left end at 10, and its two ends ask for opposite orders against X: one
+    crossing is unavoidable in either order. R runs from 90 to a port at
+    60, and both of its ends go up inside X: R lies above X. L and R do not
+    overlap. With X above L, the three segments take three lanes. With L
+    above X, L shares the lane of R, and the channel takes two lanes.
+
+    Code: lane_assignment._fewer_lanes_reversed.
+    Fails if:
+    - the priority of an unavoidable crossing decides against the lane
+      count.
+    """
+
+    across = _segment("X", 0, 100, ((0, False, True), (100, True, False)), 0)
+    left = _segment("L", 10, 40, ((40, False, True), (10, True, False)), 1)
+    right = _segment("R", 60, 90, ((90, False, True), (60, False, False)), 2)
+
+    lanes, _ = assign_lanes([across, left, right], priority)
+
+    assert lanes[left.key] == lanes[right.key]
+    assert lanes[right.key] < lanes[across.key]
+    assert max(lanes.values()) == 1

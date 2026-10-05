@@ -279,8 +279,8 @@ MUTATIONS = (
         "LO2",
         "the orders of a channel are not taken by strength",
         LANES,
-        "sorted(orders, key=lambda order_: order_[0])",
-        "orders",
+        "        orders, key=lambda order_: order_[0]\n",
+        "        orders, key=lambda order_: 0\n",
     ),
     Mutation(
         "LO3",
@@ -308,6 +308,13 @@ MUTATIONS = (
         "                order_, strength_ = coincident_, _COINCIDENT\n"
         "            elif base_ != 0:\n"
         "                order_, strength_ = base_, _BASE\n",
+    ),
+    Mutation(
+        "LO8",
+        "an unavoidable crossing ignores the lane count",
+        LANES,
+        "        if strength_ == _CONFLICT and _fewer_lanes_reversed(\n",
+        "        if False and _fewer_lanes_reversed(\n",
     ),
     Mutation(
         "LO7",
@@ -793,9 +800,9 @@ MUTATIONS = (
         "XC4",
         "a parent line does not enter the outer vertical channel of a child",
         STRUCTURE_ROUTING,
-        "                result.setdefault(child_vertical_, []).append(corridor_)\n"
-        "                result.setdefault(corridor_, []).append(child_vertical_)\n",
-        "",
+        "                    result.setdefault(child_vertical_, []).append(horizontal_)\n"
+        "                    result.setdefault(horizontal_, []).append(child_vertical_)\n",
+        "                    pass\n",
     ),
     Mutation(
         "XC7",

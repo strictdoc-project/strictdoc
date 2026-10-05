@@ -1547,7 +1547,6 @@ STRESS_CASES: Tuple[GalleryCase, ...] = (
             ("S1", "Q4"), ("S2", "S4"), ("Q3", "A1"), ("A3", "Q2"),
             ("H1", "S3"), ("Q1", "G1"), ("A3", "S3"), ("E1", "S2"),
         ],
-        broken_invariants=("test_column_lane_count_rule_matches_the_lanes",),
     ),
     _structure_case(
         "Stress: three levels of sections",

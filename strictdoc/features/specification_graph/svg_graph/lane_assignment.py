@@ -154,11 +154,49 @@ def assign_lanes(
             elif order_ == -1:
                 orders.append((strength_, second_.key, first_.key))
     # A stable sort keeps the segment order within one strength.
-    for _, earlier_, later_ in sorted(orders, key=lambda order_: order_[0]):
+    for strength_, first_key_, second_key_ in sorted(
+        orders, key=lambda order_: order_[0]
+    ):
+        earlier_, later_ = first_key_, second_key_
+        if strength_ == _CONFLICT and _fewer_lanes_reversed(
+            segments, before, earlier_, later_
+        ):
+            earlier_, later_ = later_, earlier_
         if not _comes_before(before, later_, earlier_):
             before[later_].add(earlier_)
     _order_free_pairs_by_direction(segments, before)
     return _longest_path_lanes(segments, before), conflicts
+
+
+def _fewer_lanes_reversed(
+    segments: List[LaneSegment],
+    before: Dict[SegmentKey, Set[SegmentKey]],
+    earlier: SegmentKey,
+    later: SegmentKey,
+) -> bool:
+    """
+    Return True if the reversed order of an unavoidable crossing gives the
+    channel fewer lanes.
+
+    Both orders of an unavoidable crossing give one crossing. The order that
+    needs fewer lanes lets segments without overlap keep sharing a lane: a
+    segment to the left vertical channel and a segment to the right one, as
+    the lane count of a column channel expects. The priority of the
+    crossing decides only between orders with equal lane counts. A pair
+    that the orders already set put in one order keeps it.
+    """
+
+    if _comes_before(before, earlier, later) or _comes_before(
+        before, later, earlier
+    ):
+        return False
+
+    def lane_count(first: SegmentKey, second: SegmentKey) -> int:
+        trial_ = {key_: set(keys_) for key_, keys_ in before.items()}
+        trial_[second].add(first)
+        return max(_longest_path_lanes(segments, trial_).values()) + 1
+
+    return lane_count(later, earlier) < lane_count(earlier, later)
 
 
 def _order_free_pairs_by_direction(
@@ -194,7 +232,8 @@ def _order_free_pairs_by_direction(
 # first: the base heights under the columns (see _base_order), two ends at
 # the same exact position (the other order lays them on top of each
 # other), a nested pair on a shared stretch, the ends (the other order adds
-# a crossing), the priority of an unavoidable crossing.
+# a crossing), an unavoidable crossing (the order with fewer lanes, then
+# its priority).
 _BASE = 0
 _COINCIDENT = 1
 _FORCED = 2

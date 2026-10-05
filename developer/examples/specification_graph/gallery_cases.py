@@ -1591,6 +1591,32 @@ ACROSS_CONTAINERS_CASES: Tuple[GalleryCase, ...] = (
         [("A2", "S1"), ("S1", "A3"), ("S1", "D1"), ("S1", "D2")],
     ),
     _structure_case(
+        "Three levels of sections",
+        (
+            "S holds S1 and SR, SR holds S2 and SX, SX holds S3 and S4. "
+            "A1 -> S3 goes down to the third level through the top "
+            "corridors of S, SR and SX. S4 -> E2 leaves the gap between S3 "
+            "and S4, goes up the right vertical channel of SR to its top "
+            "corridor, leaves SR and S and comes down into the pocket under "
+            "E2. S1 -> S4 passes under SR and comes up to S4 through the "
+            "gap between S3 and S4. S3 -> S2 takes the same gap to the left "
+            "and comes up to S2 under the columns of SR."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    "A2",
+                    ("S", ["S1", ("SR", ["S2", ("SX", ["S3", "S4"])])]),
+                    "E1",
+                    "E2",
+                ],
+            )
+        ],
+        [("A1", "S3"), ("S4", "E2"), ("S1", "S4"), ("S3", "S2")],
+    ),
+    _structure_case(
         "Relation across a long column",
         (
             "L2 -> R2 connects two short columns with a long column C between "

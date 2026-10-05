@@ -22,6 +22,7 @@ from strictdoc.features.specification_graph.svg_graph.normalization import (
 )
 from strictdoc.features.specification_graph.svg_graph.structure_geometry import (
     StructureGeometry,
+    centered_lane_offset,
     compute_structure_geometry,
 )
 from strictdoc.features.specification_graph.svg_graph.structure_layout import (
@@ -403,6 +404,49 @@ def test_side_entry_from_a_column_channel_lies_below_the_top_corridor() -> (
         if start_.y == end_.y and start_.x < frame.x < end_.x
     )
     assert vertical.y <= crossing_y <= vertical.y + vertical.height
+
+
+def test_line_leaves_a_section_off_the_lanes_that_enter_it() -> None:
+    """
+    A corridor segment that leaves a section through its side face does not
+    cross the face at the height of a lane of a column channel of the
+    parent that enters the section through the same face.
+
+    A2 -> S1 enters S from the column channel between A2 and A3. S1 -> A3
+    leaves the pocket under S1 through the same face. By the pocket alone,
+    it would cross the face at the height of the lane of A2 -> S1.
+
+    Code: structure_geometry._GeometryBuilder._face_entry_lanes,
+    structure_geometry._GeometryBuilder._bottom_corridor.
+    Fails if:
+    - a corridor segment that leaves through a side face ignores the lanes
+      of the column channel that enter through that face.
+    """
+
+    normalized_graph, routing, geometry, paths = _result(
+        _case("Two lines cross a side face at one point")
+    )
+
+    channel = StructureChannelId(ChannelKind.COLUMN, "Doc", 0, 1)
+    rect = geometry.channel_rect(channel)
+    lane_heights = [
+        rect.y
+        + centered_lane_offset(
+            rect.height, routing.lane_counts[channel], lane_, geometry.config
+        )
+        for lane_ in range(routing.lane_counts[channel])
+    ]
+    face_x = geometry.node_rects["S"].x
+    path = paths[_edge_id(normalized_graph, "S1", "A3")]
+    crossing_y = next(
+        start_.y
+        for start_, end_ in zip(path, path[1:])
+        if start_.y == end_.y and end_.x < face_x < start_.x
+    )
+    assert all(
+        abs(crossing_y - lane_y_) >= geometry.config.lane_pitch
+        for lane_y_ in lane_heights
+    )
 
 
 def test_side_entry_lies_below_the_top_corridor() -> None:

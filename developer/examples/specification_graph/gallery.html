@@ -7165,7 +7165,7 @@ E2 -&gt; Y1 (parent)</pre>
 <section id="two-lines-cross-a-side-face-at-one-point">
 <h2>Two lines cross a side face at one point</h2>
 <div><span class="badge">mode: structure</span></div>
-<p class="description">Known problem. A2 -&gt; S1 enters S from the column channel between A2 and A3, at the height of its lane (256), and turns down in the left vertical channel of S. S1 -&gt; A3 leaves the pocket under S1 through the same left face of S, at the height the pocket gives it (256), and turns down in the vertical channel of Doc left of S. Both lines cross the left face of S at one point and lie on top of each other from x 240 to 272. The nodes of the column of A2 set the height of the lane, and S sets the height of the line that leaves it before Doc is placed: neither knows the other. Without S1 -&gt; D1, S1 -&gt; D2, A1 or SR, the lines do not overlap.</p>
+<p class="description">A2 -&gt; S1 enters S from the column channel between A2 and A3, at the height of its lane (256), and turns down in the left vertical channel of S. S1 -&gt; A3 leaves the pocket under S1 through the same left face of S. By the pocket alone, it would cross the face at 256 too, and the two lines would lie on top of each other. S is placed before Doc, so the lane of A2 -&gt; S1 is not known yet: S1 -&gt; A3 keeps one lane pitch from both lanes of the column channel and leaves at 272. Known problem: S1 -&gt; A3 still crosses A2 -&gt; S1, because the port of A2 -&gt; S1 on S1 stands right of the port of S1 -&gt; A3. The ray map will put A2 -&gt; S1 left.</p>
 <div class="preview">
 <figure>
 <h3>Generator result</h3>
@@ -7236,12 +7236,12 @@ E2 -&gt; Y1 (parent)</pre>
 </g>
 <g class="specification-graph-edges">
 <g class="specification-graph-edge specification-graph-edge--type-1" data-edge-id="edge-1" data-source-id="A2" data-target-id="S1" data-relation-type="parent" data-debug-lanes="column:Doc:0:1=0 vertical:S:0:0=0 bottom_corridor:S:0:0=1" data-debug-ports="A2:bottom:1 S1:bottom:-1">
-<path class="specification-graph-edge__line" d="M 160 240 L 160 256 L 272 256 L 272 264 L 352 264 L 352 240" marker-end="url(#case-34-result-arrow-1)"/>
-<path class="specification-graph-edge__hit-area" d="M 160 240 L 160 256 L 272 256 L 272 264 L 352 264 L 352 240"/>
+<path class="specification-graph-edge__line" d="M 160 240 L 160 256 L 272 256 L 272 280 L 352 280 L 352 240" marker-end="url(#case-34-result-arrow-1)"/>
+<path class="specification-graph-edge__hit-area" d="M 160 240 L 160 256 L 272 256 L 272 280 L 352 280 L 352 240"/>
 </g>
 <g class="specification-graph-edge specification-graph-edge--type-1" data-edge-id="edge-2" data-source-id="S1" data-target-id="A3" data-relation-type="parent" data-debug-lanes="bottom_corridor:S:0:0=0 vertical:Doc:1:0=0 column:Doc:0:1=1" data-debug-ports="S1:bottom:-2 A3:top:2">
-<path class="specification-graph-edge__line" d="M 336 240 L 336 256 L 240 256 L 240 264 L 176 264 L 176 280" marker-end="url(#case-34-result-arrow-1)"/>
-<path class="specification-graph-edge__hit-area" d="M 336 240 L 336 256 L 240 256 L 240 264 L 176 264 L 176 280"/>
+<path class="specification-graph-edge__line" d="M 336 240 L 336 272 L 240 272 L 240 264 L 176 264 L 176 280" marker-end="url(#case-34-result-arrow-1)"/>
+<path class="specification-graph-edge__hit-area" d="M 336 240 L 336 272 L 240 272 L 240 264 L 176 264 L 176 280"/>
 </g>
 <g class="specification-graph-edge specification-graph-edge--type-1" data-edge-id="edge-3" data-source-id="S1" data-target-id="D1" data-relation-type="parent" data-debug-lanes="top_corridor:S:0:0=0 vertical:Doc:2:0=1 column:Doc:2:0=0" data-debug-ports="S1:top:1 D1:bottom:-1">
 <path class="specification-graph-edge__line" d="M 384 184 L 384 160 L 728 160 L 728 176 L 808 176 L 808 160" marker-end="url(#case-34-result-arrow-1)"/>
@@ -7305,10 +7305,10 @@ E2 -&gt; Y1 (parent)</pre>
 <text class="specification-graph-debug__label" x="746" y="264">P2</text>
 <rect class="specification-graph-debug__channel" data-debug-channel="P0" x="288" y="240" width="160" height="88"/>
 <text class="specification-graph-debug__label" x="290" y="248">P0</text>
-<line class="specification-graph-debug__lane" x1="256" y1="256" x2="336" y2="256"/>
-<line class="specification-graph-debug__lane" x1="272" y1="264" x2="352" y2="264"/>
+<line class="specification-graph-debug__lane" x1="256" y1="272" x2="336" y2="272"/>
+<line class="specification-graph-debug__lane" x1="272" y1="280" x2="352" y2="280"/>
 <circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-1" cx="256" cy="256" r="3"/>
-<circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-2" cx="256" cy="256" r="3"/>
+<circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-2" cx="256" cy="272" r="3"/>
 <circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-3" cx="704" cy="160" r="3"/>
 <circle class="specification-graph-debug__pass-port" data-debug-pass-port="edge-4" cx="704" cy="168" r="3"/>
 </g>
@@ -7317,7 +7317,7 @@ E2 -&gt; Y1 (parent)</pre>
 </g>
 </svg>
 
-<p class="note">Crossings: 0. Overlaps: 1.</p>
+<p class="note">Crossings: 1. Overlaps: 0.</p>
 </figure>
 
 </div>

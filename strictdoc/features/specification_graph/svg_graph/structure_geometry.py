@@ -401,6 +401,10 @@ class _GeometryBuilder:
         decides where two segments meet, and segments of different rows
         keep their own heights. The corridor size below the tallest column
         fits the lowest segment.
+
+        A corridor segment that leaves through a side face also keeps one
+        lane pitch from the lanes of a column channel of the parent that
+        enters through the same face, see _face_entry_lanes.
         """
 
         if container_id in self.corridors:
@@ -502,6 +506,7 @@ class _GeometryBuilder:
                 )
             )
 
+        face_lanes = self._face_entry_lanes(container_id, area_width)
         lines: Dict[Tuple[str, int], Tuple[float, float, float]] = {}
         placed: List[Tuple[float, float, float]] = []
         corridor_placed: List[Tuple[float, float, float]] = []
@@ -513,7 +518,13 @@ class _GeometryBuilder:
                 for placed_low_, placed_high_, placed_y_ in corridor_placed:
                     if not (high_ < placed_low_ or placed_high_ < low_):
                         y_ = max(y_, placed_y_ + config.lane_pitch)
-            y_ = _free_y(y_, low_, high_, placed, config.lane_pitch)
+            y_ = _free_y(
+                y_,
+                low_,
+                high_,
+                placed if is_row_ else placed + face_lanes,
+                config.lane_pitch,
+            )
             if not is_row_:
                 corridor_placed.append((low_, high_, y_))
             placed.append((low_, high_, y_))
@@ -530,6 +541,45 @@ class _GeometryBuilder:
         )
         self.corridors[container_id] = corridor
         return corridor
+
+    def _face_entry_lanes(
+        self, container_id: Optional[str], area_width: float
+    ) -> List[Tuple[float, float, float]]:
+        """
+        Return the lanes of the column channels of the parent that enter a
+        container through its side faces, as points on the faces.
+
+        spec.md, section "Проходные порты". A line from such a lane crosses
+        the face at the height of the lane. A corridor segment of the
+        container that leaves through the same face at that height would
+        cross the face at the same point, and the two lines would lie on
+        top of each other. All lanes of the channel count: the container is
+        placed before its parent, so the lane of each line is not known
+        yet. The coordinates are local, as in _bottom_corridor: x 0 or
+        area_width at the left or the right face, y from the top of the
+        columns of the container.
+        """
+
+        if container_id is None:
+            return []
+        own_column = None
+        result: List[Tuple[float, float, float]] = []
+        for channel_, children_ in self.side_entries.items():
+            if container_id not in children_:
+                continue
+            if own_column is None:
+                own_column = self._own_column(container_id)
+            face_x_ = 0.0 if channel_.index < own_column else area_width
+            columns_top_ = self.config.container_header_height + (
+                self._channel_size(
+                    StructureChannelId(ChannelKind.TOP_CORRIDOR, container_id)
+                )
+            )
+            result.extend(
+                (face_x_, face_x_, self._column_lane_y(channel_, lane_) - columns_top_)
+                for lane_ in range(self.lane_counts.get(channel_, 0))
+            )
+        return result
 
     def _side_entry_floor(
         self, container_id: Optional[str], end: SegmentEnd

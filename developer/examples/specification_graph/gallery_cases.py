@@ -1347,17 +1347,17 @@ ACROSS_CONTAINERS_CASES: Tuple[GalleryCase, ...] = (
     _structure_case(
         "Two lines cross a side face at one point",
         (
-            "Known problem. A2 -> S1 enters S from the column channel "
-            "between A2 and A3, at the height of its lane (256), and turns "
-            "down in the left vertical channel of S. S1 -> A3 leaves the "
-            "pocket under S1 through the same left face of S, at the height "
-            "the pocket gives it (256), and turns down in the vertical "
-            "channel of Doc left of S. Both lines cross the left face of S "
-            "at one point and lie on top of each other from x 240 to 272. "
-            "The nodes of the column of A2 set the height of the lane, and S "
-            "sets the height of the line that leaves it before Doc is "
-            "placed: neither knows the other. Without S1 -> D1, S1 -> D2, "
-            "A1 or SR, the lines do not overlap."
+            "A2 -> S1 enters S from the column channel between A2 and A3, at "
+            "the height of its lane (256), and turns down in the left "
+            "vertical channel of S. S1 -> A3 leaves the pocket under S1 "
+            "through the same left face of S. By the pocket alone, it would "
+            "cross the face at 256 too, and the two lines would lie on top "
+            "of each other. S is placed before Doc, so the lane of A2 -> S1 "
+            "is not known yet: S1 -> A3 keeps one lane pitch from both lanes "
+            "of the column channel and leaves at 272. Known problem: "
+            "S1 -> A3 still crosses A2 -> S1, because the port of A2 -> S1 on "
+            "S1 stands right of the port of S1 -> A3. The ray map will put "
+            "A2 -> S1 left."
         ),
         [
             (
@@ -1366,7 +1366,6 @@ ACROSS_CONTAINERS_CASES: Tuple[GalleryCase, ...] = (
             )
         ],
         [("A2", "S1"), ("S1", "A3"), ("S1", "D1"), ("S1", "D2")],
-        broken_invariants=("test_structure_route_invariants",),
     ),
     _structure_case(
         "Relation across a long column",

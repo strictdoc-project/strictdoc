@@ -440,6 +440,13 @@ MUTATIONS = (
         "        return y < rect.y + rect.height + 24\n",
     ),
     Mutation(
+        "XC16",
+        "a segment leaves a section at the height of a lane that enters it",
+        STRUCTURE_GEOMETRY,
+        "                placed if is_row_ else placed + face_lanes,\n",
+        "                placed,\n",
+    ),
+    Mutation(
         "XC15",
         "a column channel does not grow for a side entry",
         STRUCTURE_GEOMETRY,

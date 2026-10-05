@@ -1006,6 +1006,46 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
         [("A3", "S5"), ("S5", "D2"), ("A3", "D2"), ("S3", "D2")],
     ),
     _structure_case(
+        "Many lines in one pocket",
+        (
+            "D1 stands alone between the tall sections S and Q, so a deep "
+            "pocket lies under it. S3 -> Q3 and Q2 -> S2 cross the pocket "
+            "straight at the heights of their gaps. D1 -> A4 and D1 -> E4 go "
+            "down through the pocket and under S and Q, and cross both of "
+            "them: two bends and a length of 1152, against four bends and "
+            "680 over the top corridor without the crossings. The fewest "
+            "bends win. A3 -> D1 and E3 -> D1 come to the top face of D1 "
+            "over the top corridor. A4 -> E4 passes under everything."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    "A2",
+                    "A3",
+                    "A4",
+                    ("S", ["S1", "S2", "S3"]),
+                    "D1",
+                    ("Q", ["Q1", "Q2", "Q3"]),
+                    "E1",
+                    "E2",
+                    "E3",
+                    "E4",
+                ],
+            )
+        ],
+        [
+            ("A3", "D1"),
+            ("E3", "D1"),
+            ("D1", "A4"),
+            ("D1", "E4"),
+            ("S3", "Q3"),
+            ("Q2", "S2"),
+            ("A4", "E4"),
+        ],
+    ),
+    _structure_case(
         "Two lines into a section at one point",
         (
             "A3 -> S3 comes from under S and goes up to S3. D1 -> S2 comes "
@@ -1782,6 +1822,7 @@ GALLERY_CHAPTERS: Tuple[GalleryChapter, ...] = (
         "Pocket between two sections",
         "Line from a section into a pocket",
         "Pockets at the edges of containers",
+        "Many lines in one pocket",
         "Two lines into a section at one point",
         "Steps beside a pocket",
     ),

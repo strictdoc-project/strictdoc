@@ -310,6 +310,14 @@ MUTATIONS = (
         "                order_, strength_ = base_, _BASE\n",
     ),
     Mutation(
+        "LO9",
+        "a vertical lane takes no end of a finished container as exact",
+        STRUCTURE_ROUTING,
+        "                                is_exact=(plan_.edge.edge_id, position_ - 1)\n"
+        "                                in finished_levels,\n",
+        "                                is_exact=False,\n",
+    ),
+    Mutation(
         "LO8",
         "an unavoidable crossing ignores the lane count",
         LANES,

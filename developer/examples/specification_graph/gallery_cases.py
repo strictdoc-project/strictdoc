@@ -1617,6 +1617,29 @@ ACROSS_CONTAINERS_CASES: Tuple[GalleryCase, ...] = (
         [("A1", "S3"), ("S4", "E2"), ("S1", "S4"), ("S3", "S2")],
     ),
     _structure_case(
+        "Relations between cousins",
+        (
+            "The sections SA and SB stand side by side in S, so their "
+            "children are cousins: their common container is S. S1 -> S3, "
+            "S1 -> S4, S4 -> S2 and S2 -> S4 cross the vertical channel "
+            "between SA and SB. The lanes of SA and SB lie on one grid, so "
+            "a line that comes from the left and a line that leaves to the "
+            "right meet the vertical channel at one height: S1 -> S3 and "
+            "A1 -> S3 at the top corridors, S1 -> S4 and S4 -> S2 at the "
+            "gaps. The line from the left takes the left lane of the "
+            "vertical channel, so their segments do not lie on top of each "
+            "other."
+        ),
+        [("Doc", ["A1", ("S", [("SA", ["S1", "S2"]), ("SB", ["S3", "S4"])]), "E1"])],
+        [
+            ("S1", "S3"),
+            ("S1", "S4"),
+            ("S4", "S2"),
+            ("S2", "S4"),
+            ("A1", "S3"),
+        ],
+    ),
+    _structure_case(
         "Relation across a long column",
         (
             "L2 -> R2 connects two short columns with a long column C between "

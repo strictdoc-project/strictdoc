@@ -271,7 +271,9 @@ class _Router:
                 for plan_ in plans
             ]
             vertical_lanes.update(
-                self._assign_vertical_lanes(plans, conflicts, layer_)
+                self._assign_vertical_lanes(
+                    plans, conflicts, layer_, finished_levels_
+                )
             )
             ports.update(
                 self._assign_ports(plans, vertical_lanes, straight_ids, layer_)
@@ -1132,6 +1134,7 @@ class _Router:
         plans: List[_Plan],
         conflicts: List[StructureLaneConflict],
         layer: FrozenSet[Optional[str]],
+        finished_levels: Mapping[Tuple[str, int], float],
     ) -> Dict[Tuple[str, int], int]:
         segments_by_channel: Dict[StructureChannelId, List[LaneSegment]] = {}
         for plan_ in plans:
@@ -1158,20 +1161,23 @@ class _Router:
                         # Right-hand traffic: up in the right half, down in
                         # the left half.
                         half=1 if exit_y_ < entry_y_ else 0,
-                        # The lanes of the horizontal channels are not known
-                        # yet: their levels stand for them.
+                        # The levels stand for the lanes of the horizontal
+                        # channels. The level of a finished container is the
+                        # exact height of its lane, the others are not exact.
                         members=(
                             CrossMember(
                                 position=(entry_y_, 0.0),
                                 to_high_side=entry_far_x_ > vertical_x_,
                                 is_entry=True,
-                                is_exact=False,
+                                is_exact=(plan_.edge.edge_id, position_ - 1)
+                                in finished_levels,
                             ),
                             CrossMember(
                                 position=(exit_y_, 0.0),
                                 to_high_side=exit_far_x_ > vertical_x_,
                                 is_entry=False,
-                                is_exact=False,
+                                is_exact=(plan_.edge.edge_id, position_ + 1)
+                                in finished_levels,
                             ),
                         ),
                         order_key=((entry_y_, 0.0), plan_.index),

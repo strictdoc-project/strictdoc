@@ -1225,7 +1225,6 @@ class _Router:
         straight edge.
         """
 
-        moved_keys = self._moved_horizontal_keys(plans)
         endpoints_by_gate: Dict[
             Tuple[StructureChannelId, int], List[GateEndpoint]
         ] = {}
@@ -1273,9 +1272,14 @@ class _Router:
                 if gate_[0].container_id not in layer:
                     continue
                 flows_down_ = (role_ == _SOURCE) == (face_ is Face.BOTTOM)
-                if (plan_.edge.edge_id, position_) in moved_keys:
-                    # A forced order moves the segment to the other half.
-                    goes_left_ = not goes_left_
+                # The half is the prediction of right-hand traffic: left in
+                # the top half, right in the bottom half. The gate uses it
+                # only to decide whether the ports of its two faces may stand
+                # on one vertical. A forced order of a shared stretch does
+                # not change the predicted half: the lane assignment does
+                # not keep halves, so a changed half can tell the gate that
+                # two verticals never meet while the lanes put them on top
+                # of each other.
                 endpoints_by_gate.setdefault(gate_, []).append(
                     GateEndpoint(
                         endpoint_key=(plan_.edge.edge_id, role_),
@@ -1291,28 +1295,6 @@ class _Router:
         for endpoints_ in endpoints_by_gate.values():
             ports.update(number_gate_ports(endpoints_, self.forced_port_orders))
         return ports
-
-    def _moved_horizontal_keys(
-        self, plans: List[_Plan]
-    ) -> Set[Tuple[str, int]]:
-        """
-        Return the horizontal segments that a forced order moves.
-
-        A forced order moves the inner segment to the half of the outer one.
-        """
-
-        plans_by_edge = {plan_.edge.edge_id: plan_ for plan_ in plans}
-
-        def goes_left(key: Tuple[str, int]) -> bool:
-            return self._goes_left(plans_by_edge[key[0]], key[1])
-
-        return {
-            order_.inner
-            for channel_, orders_ in self.forced_orders.items()
-            if channel_.is_horizontal
-            for order_ in orders_
-            if goes_left(order_.inner) != goes_left(order_.outer)
-        }
 
     def _goes_left(self, plan: _Plan, position: int) -> bool:
         """

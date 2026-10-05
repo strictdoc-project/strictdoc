@@ -6,7 +6,12 @@ from developer.examples.specification_graph.gallery_cases import (
     GALLERY_CASES,
     GalleryCase,
 )
-from strictdoc.features.specification_graph.svg_graph.gate_ports import Face
+from strictdoc.features.specification_graph.svg_graph import structure_routing
+from strictdoc.features.specification_graph.svg_graph.gate_ports import (
+    Face,
+    GateEndpoint,
+    number_gate_ports,
+)
 from strictdoc.features.specification_graph.svg_graph.levels_geometry import (
     GeometryConfig,
     Point,
@@ -447,6 +452,60 @@ def test_line_leaves_a_section_off_the_lanes_that_enter_it() -> None:
         abs(crossing_y - lane_y_) >= geometry.config.lane_pitch
         for lane_y_ in lane_heights
     )
+
+
+@pytest.mark.parametrize(
+    "case", STRUCTURE_CASES, ids=lambda case_: case_.title
+)
+def test_gate_halves_follow_right_hand_traffic(
+    case: GalleryCase, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """
+    The half of the channel that a gate expects for each port follows the
+    direction of its horizontal segment: left in the top half, right in the
+    bottom half. A forced order of a shared stretch does not change it.
+
+    The gate decides by the halves whether the ports of its two faces may
+    stand on one vertical. The lane assignment does not keep halves, so a
+    half changed by a forced order can put two ports on one vertical whose
+    lines then cross twice, as G3 -> A1 and G3 -> E2 once did in "Stress:
+    staircase of columns and pockets".
+
+    Code: structure_routing._Router._assign_ports.
+    Fails if:
+    - a forced order changes the half that a gate expects.
+    """
+
+    # The halves that the gates of one layer get, and the directions of the
+    # plans of that layer.
+    expected: Dict[Tuple[str, int], int] = {}
+    mismatches: List[Tuple[str, int]] = []
+    assign_ports = _Router._assign_ports
+
+    def capture_ports(router: _Router, plans: Any, *args: Any) -> Any:
+        expected.clear()
+        for plan_ in plans:
+            last_ = len(plan_.channels) - 1
+            for role_, position_ in ((0, 0), (1, last_)):
+                goes_left_ = router._goes_left(plan_, position_)
+                expected[(plan_.edge.edge_id, role_)] = 0 if goes_left_ else 1
+        return assign_ports(router, plans, *args)
+
+    def capture_endpoints(
+        endpoints: List[GateEndpoint], forced: Any = ()
+    ) -> Dict[Any, Any]:
+        mismatches.extend(
+            endpoint_.endpoint_key
+            for endpoint_ in endpoints
+            if endpoint_.half != expected[endpoint_.endpoint_key]
+        )
+        return number_gate_ports(endpoints, forced)
+
+    monkeypatch.setattr(_Router, "_assign_ports", capture_ports)
+    monkeypatch.setattr(structure_routing, "number_gate_ports", capture_endpoints)
+    _result(case)
+
+    assert mismatches == []
 
 
 def test_side_entry_lies_below_the_top_corridor() -> None:

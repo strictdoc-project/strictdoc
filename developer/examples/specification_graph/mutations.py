@@ -359,6 +359,18 @@ MUTATIONS = (
         "    for _ in range(1):\n",
     ),
     Mutation(
+        "GP2",
+        "a forced order moves the half that a gate expects",
+        STRUCTURE_ROUTING,
+        "                        half=0 if goes_left_ else 1,\n",
+        "                        half=(0 if goes_left_ else 1)\n"
+        "                        ^ any(\n"
+        "                            order_.inner == (plan_.edge.edge_id, position_)\n"
+        "                            for orders_ in self.forced_orders.values()\n"
+        "                            for order_ in orders_\n"
+        "                        ),\n",
+    ),
+    Mutation(
         "ST10",
         "a pair whose ends require different orders gets no order",
         STRUCTURE_STRETCHES,

@@ -900,6 +900,26 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
         broken_invariants=("test_structure_route_invariants",),
     ),
     _structure_case(
+        "Opposite pairs within a bundle",
+        (
+            "E1 sends a bundle to A1, A2 and A3 over the top corridor. A1 "
+            "and A2 answer with A1 -> E1 and A2 -> E1. Each opposite line "
+            "lies next to its pair inside the bundle, and the ports on the "
+            "top face of E1 follow the same order, so nothing crosses. "
+            "A3 -> E2 and E2 -> A3 pass under S, nested."
+        ),
+        [("Doc", ["A1", "A2", "A3", ("S", ["S1"]), "E1", "E2", "E3"])],
+        [
+            ("E1", "A1"),
+            ("E1", "A2"),
+            ("E1", "A3"),
+            ("A2", "E1"),
+            ("A1", "E1"),
+            ("A3", "E2"),
+            ("E2", "A3"),
+        ],
+    ),
+    _structure_case(
         "Relations inside one container",
         (
             "All relations connect simple nodes of the document. A3 -> A2 "
@@ -2050,6 +2070,7 @@ GALLERY_CHAPTERS: Tuple[GalleryChapter, ...] = (
         "Relations inside one container, more ports",
         "Many ports on one face",
         "Ports overflow a half of a face",
+        "Opposite pairs within a bundle",
     ),
     _chapter(
         "Structure: space under the columns",

@@ -647,6 +647,34 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
         [("A2", "B1"), ("A2", "C1")],
     ),
     _structure_case(
+        "Staircase of sections",
+        (
+            "The sections S, Q and U hold one, two and three nodes and "
+            "stand in a row: a staircase. Each line under the columns lies "
+            "the clearance below the tallest column it passes over: "
+            "A2 -> Q2 under S, A2 -> U3 under S and Q, E4 -> A2 under the "
+            "whole staircase. The three lines meet the bottom face of A2 "
+            "nested, the deepest one outside."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    "A2",
+                    ("S", ["S1"]),
+                    ("Q", ["Q1", "Q2"]),
+                    ("U", ["U1", "U2", "U3"]),
+                    "E1",
+                    "E2",
+                    "E3",
+                    "E4",
+                ],
+            )
+        ],
+        [("A2", "S1"), ("A2", "Q2"), ("A2", "U3"), ("E4", "A2")],
+    ),
+    _structure_case(
         "Through pass under a short section",
         (
             "A3 -> B3 goes along the gap under A3, crosses the vertical "
@@ -1746,6 +1774,7 @@ GALLERY_CHAPTERS: Tuple[GalleryChapter, ...] = (
     _chapter(
         "Structure: space under the columns",
         "Bottom corridor follows the columns",
+        "Staircase of sections",
         "Through pass under a short section",
         "Vertical lane at the height of a column gap",
         "Lane order in the bottom corridor",

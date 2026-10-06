@@ -1,6 +1,6 @@
 """
 Bundle verification tests for the PyInstaller-frozen StrictDoc executable.
-Test IDs (BT-*) match docs/TEST_PLAN.md. `-m smoke` selects the CI subset.
+Test IDs (BT-*) match tests/bundle/TEST_PLAN.md. `-m smoke` selects the CI subset.
 """
 import json
 import os

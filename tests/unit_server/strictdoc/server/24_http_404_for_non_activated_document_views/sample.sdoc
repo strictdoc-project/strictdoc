@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Sample document
+
+[REQUIREMENT]
+TITLE: Requirement 1
+STATEMENT: System shall do 1.
+
+[REQUIREMENT]
+TITLE: Requirement 2
+STATEMENT: System shall do 2.

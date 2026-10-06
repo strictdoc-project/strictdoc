@@ -148,7 +148,11 @@ jobs:
       - uses: actions/download-artifact@v8
         with:
           path: bundles
+          pattern: strictdoc-*
           merge-multiple: true
+          # The bundles were uploaded as plain .zip files (archive: false).
+          # Without this, the action unpacks them and there is no .zip to attach.
+          skip-decompress: true
 
       - name: Attach the bundles to the release
         env:
@@ -161,4 +165,8 @@ jobs:
             gh release create "$TAG" --title "StrictDoc $TAG" --verify-tag \
               --notes "Self-contained StrictDoc bundles built with PyInstaller. Unzip and run strictdoc (strictdoc.exe on Windows); no Python installation is needed. HTML2PDF export needs Google Chrome installed."
           fi
-          gh release upload "$TAG" bundles/*.zip --clobber
+          mapfile -t zips < <(find bundles -type f -name 'strictdoc-*.zip')
+          if [ "${#zips[@]}" -ne 3 ]; then
+            echo "Expected 3 bundle zips, found ${#zips[@]}:"; find bundles -type f; exit 1
+          fi
+          gh release upload "$TAG" "${zips[@]}" --clobber

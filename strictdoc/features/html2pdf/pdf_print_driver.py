@@ -3,11 +3,19 @@
 """
 
 import os.path
-from subprocess import CalledProcessError, CompletedProcess, TimeoutExpired, run
+import sys
+from subprocess import (
+    PIPE,
+    CalledProcessError,
+    CompletedProcess,
+    TimeoutExpired,
+    run,
+)
 from typing import List, Tuple
 
 from html2pdf4doc.main import HPDExitCode
 
+from strictdoc import environment
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.features.html2pdf.pdf_postprocessor import PDFPostprocessor
 from strictdoc.helpers.frozen import get_html2pdf4doc_command
@@ -16,9 +24,19 @@ from strictdoc.helpers.user_cache_dir import get_user_cache_dir
 
 
 class PDFPrintDriverException(Exception):
+    CHROME_NOT_FOUND_MESSAGE = (
+        "HTML2PDF: Chrome/Chromium not found. Install Google Chrome, or pass "
+        "--chrome-binary PATH or set HTML2PDF4DOC_CHROME_BINARY."
+    )
+    CHROMEDRIVER_DOWNLOAD_FAILED_MESSAGE = (
+        "HTML2PDF: could not download ChromeDriver (no network connection?). "
+        "Connect to the internet once so that it gets cached, or pass "
+        "--chromedriver PATH."
+    )
+
     def __init__(self, exception: Exception):
-        super().__init__()
         self.exception: Exception = exception
+        super().__init__(self.get_server_user_message())
 
     def get_server_user_message(self) -> str:
         """
@@ -26,7 +44,10 @@ class PDFPrintDriverException(Exception):
         """
 
         if self.is_could_not_detect_chrome():
-            return "HTML2PDF could not detect an existing Chrome installation."
+            return self.CHROME_NOT_FOUND_MESSAGE
+
+        if self.is_chromedriver_download_error():
+            return self.CHROMEDRIVER_DOWNLOAD_FAILED_MESSAGE
 
         if self.is_timeout_error():
             return "HTML2PDF timeout error."
@@ -34,7 +55,32 @@ class PDFPrintDriverException(Exception):
         if self.is_js_success_timeout():
             return "HTML2PDF.js success timeout error."
 
+        # The last line of html2pdf4doc's stderr is usually the exception
+        # message, e.g. "RuntimeError: ...". A frozen binary's bootloader
+        # adds a "[PYI-<pid>:ERROR] Failed to execute script" line after it.
+        stderr_lines = [
+            line_
+            for line_ in self.get_stderr().splitlines()
+            if len(line_.strip()) > 0 and not line_.startswith("[PYI-")
+        ]
+        if len(stderr_lines) > 0:
+            return f"HTML2PDF internal error: {stderr_lines[-1].strip()}"
         return "HTML2PDF internal error."
+
+    def get_stderr(self) -> str:
+        if isinstance(self.exception, CalledProcessError) and isinstance(
+            self.exception.stderr, str
+        ):
+            return self.exception.stderr
+        return ""
+
+    def is_chromedriver_download_error(self) -> bool:
+        stderr = self.get_stderr()
+        return (
+            "GET request failed" in stderr
+            or "Could not download" in stderr
+            or "requests.exceptions.ConnectionError" in stderr
+        )
 
     def is_timeout_error(self) -> bool:
         return isinstance(self.exception, TimeoutExpired)
@@ -110,11 +156,25 @@ class PDFPrintDriver:
             "PDFPrintDriver: printing HTML to PDF using HTML2PDF and Chrome Driver"
         ):
             try:
-                _: CompletedProcess[bytes] = run(
+                # stdout goes straight to the console. stderr is captured so
+                # that a failure is reported as one clear message instead of
+                # html2pdf4doc's traceback (shown with --debug).
+                completed_process: CompletedProcess[str] = run(
                     cmd,
-                    capture_output=False,
-                    check=True,
+                    stderr=PIPE,
+                    encoding="utf-8",
+                    errors="replace",
+                    check=False,
                 )
+                if completed_process.returncode != 0:
+                    if environment.is_debug_mode:
+                        sys.stderr.write(completed_process.stderr)
+                    raise CalledProcessError(
+                        completed_process.returncode,
+                        cmd,
+                        stderr=completed_process.stderr,
+                    )
+                sys.stderr.write(completed_process.stderr)
                 PDFPostprocessor.rewrite_cross_document_links(
                     path_to_input_root=path_to_input_root,
                     paths_to_print=paths_to_print,

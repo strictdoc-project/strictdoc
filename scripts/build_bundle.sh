@@ -148,7 +148,31 @@ log "Checking $EXE"
 "$EXE" version
 
 log "Zipping"
-(cd dist && "$VENV_PY" -m zipfile -c "$NAME.zip" "$NAME")
+# Like "zip -ry": symlinks (e.g. the numpy/scipy .libs on Linux) are stored as
+# symlinks rather than duplicated, and Unix permissions are kept. Windows
+# bundles contain no symlinks. Python is used because Git Bash has no zip.
+(cd dist && "$VENV_PY" - "$NAME" <<'PY'
+import os
+import stat
+import sys
+import zipfile
+
+name = sys.argv[1]
+with zipfile.ZipFile(f"{name}.zip", "w", zipfile.ZIP_DEFLATED) as zf:
+    for dirpath, dirnames, filenames in os.walk(name):
+        dirnames.sort()
+        for entry in sorted(dirnames) + sorted(filenames):
+            path = os.path.join(dirpath, entry)
+            arcname = path.replace(os.sep, "/")
+            if os.path.islink(path):
+                info = zipfile.ZipInfo(arcname)
+                info.create_system = 3  # Unix, so that unzip honors the mode
+                info.external_attr = (stat.S_IFLNK | 0o777) << 16
+                zf.writestr(info, os.readlink(path))
+            elif os.path.isfile(path):
+                zf.write(path, arcname)
+PY
+)
 
 log "Done"
 echo "bundle: $ROOT/dist/$NAME"

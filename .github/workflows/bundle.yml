@@ -14,10 +14,6 @@ on:
   push:
     tags:
       - "v*"
-    branches:
-      # Temporary, until this workflow is on the default branch (GitHub only
-      # allows workflow_dispatch for workflows on the default branch).
-      - "feat/pyinstaller-bundle"
   pull_request:
     paths:
       - "scripts/build_bundle.sh"

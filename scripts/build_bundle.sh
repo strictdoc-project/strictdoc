@@ -16,8 +16,8 @@
 #
 # Environment variables:
 #   PYTHON         Python for the build venv, 3.10 or newer. With uv this is
-#                  a version request or interpreter path (default: 3.12,
-#                  downloaded by uv if needed). With pip it is the
+#                  a version request or interpreter path (default: a
+#                  uv-managed CPython 3.12, downloaded by uv if needed). With pip it is the
 #                  interpreter to run (default: python3, or python).
 #   BUILD_VENV     Venv directory (default: build/bundle-venv). Recreated on
 #                  every run so that the build starts clean.
@@ -79,8 +79,11 @@ fi
 PYTHON="${PYTHON:-}"
 if [ -z "$PYTHON" ]; then
   if [ "$USE_UV" = 1 ]; then
-    # uv downloads this exact CPython if it is not installed.
+    # A uv-managed CPython (python-build-standalone), downloaded if needed,
+    # so every platform builds with the same kind of interpreter (one that
+    # includes tkinter for the launcher) regardless of what is installed.
     PYTHON=3.12
+    export UV_PYTHON_PREFERENCE="${UV_PYTHON_PREFERENCE:-only-managed}"
   elif command -v python3 >/dev/null 2>&1 && python3 -c "" >/dev/null 2>&1; then
     PYTHON=python3
   else

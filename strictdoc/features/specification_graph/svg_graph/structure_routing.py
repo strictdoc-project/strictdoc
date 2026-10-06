@@ -5,9 +5,9 @@ Stage 3 selects the channels of each route. Stage 4 assigns the lanes of the
 vertical channels, the port slots, and the lanes of the horizontal channels.
 spec.md, section "Маршруты" of the structure mode, defines the rules.
 
-This module routes the relations between simple nodes of one container.
-The relations across containers and the relations with a composite node
-are not routed yet.
+This module routes the relations between simple nodes, inside one
+container and across containers. The relations with a composite node are
+not routed yet.
 """
 
 import heapq
@@ -96,8 +96,8 @@ class StructureRouting:
     # The geometry widens the columns and moves the gate centers by them.
     gate_port_lists: Mapping[StructureGate, Tuple[int, int]]
     conflicts: Tuple[StructureLaneConflict, ...]
-    # Relations this stage does not route yet: relations across containers
-    # and relations with a composite node.
+    # Relations this stage does not route yet: relations with a composite
+    # node.
     unrouted_edge_ids: Tuple[str, ...]
 
 

@@ -7,6 +7,7 @@ import pytest
 from developer.examples.specification_graph.gallery_cases import (
     GALLERY_CASES,
     GalleryCase,
+    _structure_case,
 )
 from strictdoc.features.specification_graph.svg_graph.levels_geometry import (
     GeometryConfig,
@@ -24,6 +25,9 @@ from strictdoc.features.specification_graph.svg_graph.structure_geometry import 
 )
 from strictdoc.features.specification_graph.svg_graph.structure_layout import (
     ChannelKind,
+    CorridorSegment,
+    LaneEnd,
+    StructureChannelId,
     compute_structure_layout,
 )
 from strictdoc.features.specification_graph.svg_graph.structure_paths import (
@@ -231,6 +235,70 @@ def test_column_widens_when_both_sides_overflow() -> None:
     port_xs = [path_[0].x for path_ in paths.values()]
     assert min(port_xs) >= rect.x + config.port_margin
     assert max(port_xs) <= rect.x + rect.width - config.port_margin
+
+
+def test_corridor_segment_stays_below_a_segment_with_a_smaller_lane() -> (
+    None
+):
+    """
+    A segment of the corridor lies below every overlapping corridor segment
+    with a smaller lane, even where the lane pitch alone would let it stay
+    higher.
+
+    X, Y and Z have one base height and the lanes 0, 1 and 2. X overlaps Y,
+    Y overlaps Z, X and Z do not overlap. Y moves one pitch below X. Z
+    overlaps only Y, and its base height is one pitch above Y: the lane
+    pitch alone would keep Z there, above Y. The lane order puts Z below
+    Y.
+
+    Code: structure_geometry._GeometryBuilder._bottom_corridor.
+    Fails if:
+    - a corridor segment ignores the lane order of the segments it
+      overlaps.
+    """
+
+    # S and Q have one height, so all three segments pass under columns of
+    # that height and get one base height.
+    graph = _structure_case(
+        "Three segments of the corridor",
+        "",
+        [("Doc", ["A1", ("S", ["S1"]), "B1", ("Q", ["Q1"]), "C1"])],
+        [("A1", "C1")],
+    ).graph
+    normalized_graph = normalize_graph(graph)
+    layout = compute_structure_layout(normalized_graph)
+    columns = layout.columns["Doc"]
+    verticals = [
+        StructureChannelId(ChannelKind.VERTICAL, "Doc", index_)
+        for index_ in range(len(columns) + 1)
+    ]
+
+    def segment(name: str, lane: int, first: int, last: int) -> (
+        CorridorSegment
+    ):
+        return CorridorSegment(
+            key=(name, 0),
+            container_id="Doc",
+            lane=lane,
+            ends=(LaneEnd(verticals[first], 0), LaneEnd(verticals[last], 0)),
+        )
+
+    geometry = compute_structure_geometry(
+        normalized_graph,
+        layout,
+        lane_counts=dict.fromkeys(verticals, 1),
+        bottom_segments=(
+            segment("X", 0, 0, 2),
+            segment("Y", 1, 1, 4),
+            segment("Z", 2, 3, 5),
+        ),
+    )
+    lines = geometry.bottom_segment_lines
+    pitch = geometry.config.lane_pitch
+
+    assert geometry.node_rects["S"].height == geometry.node_rects["Q"].height
+    assert lines[("Y", 0)][2] == lines[("X", 0)][2] + pitch
+    assert lines[("Z", 0)][2] == lines[("Y", 0)][2] + pitch
 
 
 def test_serializer_draws_containers_before_their_children() -> None:

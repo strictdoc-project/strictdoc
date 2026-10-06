@@ -619,6 +619,13 @@ MUTATIONS = (
         "        if True:",
     ),
     Mutation(
+        "L8",
+        "the structure layout accepts any mode",
+        STRUCTURE_LAYOUT,
+        "    if normalized_graph.mode is not LayoutMode.STRUCTURE:\n",
+        "    if False:\n",
+    ),
+    Mutation(
         "L2",
         "relation inside a root child connects the child",
         STRUCTURE_LAYOUT,
@@ -1105,11 +1112,24 @@ def _run_tests() -> List[str]:
         env={**os.environ, "PYTHONDONTWRITEBYTECODE": "1"},
     )
     failed_tests = {
-        re.sub(r"\[.*", "", line_.split("::")[-1].split(" ")[0])
+        _test_id(line_.split(" ")[1])
         for line_ in result.stdout.splitlines()
         if line_.startswith("FAILED")
     }
     return sorted(failed_tests)
+
+
+def _test_id(node_id: str) -> str:
+    """
+    Return the file name and the test name of a pytest node ID.
+
+    Tests of different files can share a name, so the file is part of the
+    ID. The parameters of a parametrized test are dropped.
+    """
+
+    path_, _, name_ = node_id.partition("::")
+    test_name_ = re.sub(r"\[.*", "", name_)
+    return f"{os.path.basename(path_)}::{test_name_}"
 
 
 def _all_test_names() -> List[str]:
@@ -1122,7 +1142,10 @@ def _all_test_names() -> List[str]:
             os.path.join(tests_directory, file_name_), encoding="utf-8"
         ) as test_file_:
             test_names.extend(
-                re.findall(r"^def (test_\w+)", test_file_.read(), re.MULTILINE)
+                f"{file_name_}::{test_name_}"
+                for test_name_ in re.findall(
+                    r"^def (test_\w+)", test_file_.read(), re.MULTILINE
+                )
             )
     return test_names
 

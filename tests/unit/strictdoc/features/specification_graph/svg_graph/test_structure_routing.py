@@ -610,6 +610,91 @@ def test_vertical_lane_ends_take_the_side_of_the_drawing(
     assert wrong == []
 
 
+@pytest.mark.parametrize(
+    "case", STRUCTURE_CASES, ids=lambda case_: case_.title
+)
+def test_horizontal_lane_halves_follow_the_direction_of_the_drawing(
+    case: GalleryCase, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """
+    The half of each horizontal segment, as the lane assignment sees it,
+    follows the direction of the segment in the drawing: right-hand
+    traffic. A segment that goes left lies in the top half, one that goes
+    right in the bottom half.
+
+    Code: structure_routing._Router._assign_horizontal_lanes.
+    Fails if:
+    - the halves of the horizontal channels are swapped.
+    """
+
+    halves: Dict[Tuple[str, int], int] = {}
+    assign = structure_routing.assign_lanes
+
+    def capture(segments: Any, *args: Any) -> Any:
+        for segment_ in segments:
+            halves[segment_.key] = segment_.half
+        return assign(segments, *args)
+
+    monkeypatch.setattr(structure_routing, "assign_lanes", capture)
+    _, routing, geometry, _ = _result(case)
+
+    wrong: List[Tuple[str, int]] = []
+    for route_ in routing.routes.values():
+        points_ = route_channel_points(route_, geometry)
+        for position_ in range(0, len(route_.channels), 2):
+            key_ = (route_.edge_id, position_)
+            if key_ not in halves:
+                continue
+            start_, end_ = points_[position_ + 1], points_[position_ + 2]
+            if start_.x == end_.x:
+                continue
+            if halves[key_] != (0 if end_.x < start_.x else 1):
+                wrong.append(key_)
+    assert wrong == []
+
+
+def test_row_has_no_base_height_in_the_lane_order() -> None:
+    """
+    A row, a segment under the columns that continues a lane straight,
+    keeps the height of its lane. The lane assignment does not order it by
+    a base height against the corridor segments.
+
+    A3 -> B3 and A4 -> B4 pass under the short section S straight at the
+    heights of their gaps.
+
+    Code: structure_routing._Router._assign_horizontal_lanes,
+    lane_assignment._base_order.
+    Fails if:
+    - a row gets a base height in the lane assignment.
+    """
+
+    normalized_graph = normalize_graph(
+        _case("Through pass under a short section").graph
+    )
+    layout = compute_structure_layout(normalized_graph)
+    router = _Router(
+        normalized_graph,
+        layout,
+        compute_structure_geometry(normalized_graph, layout),
+        GeometryConfig(),
+        RoutingOptions(),
+    )
+    base_levels: Dict[Tuple[str, int], Optional[float]] = {}
+    assign = structure_routing.assign_lanes
+
+    def capture(segments: Any, *args: Any) -> Any:
+        for segment_ in segments:
+            base_levels[segment_.key] = segment_.base_level
+        return assign(segments, *args)
+
+    with pytest.MonkeyPatch.context() as monkeypatch_:
+        monkeypatch_.setattr(structure_routing, "assign_lanes", capture)
+        router.route()
+
+    assert len(router.row_keys) > 0
+    assert all(base_levels[key_] is None for key_ in router.row_keys)
+
+
 def test_side_entry_lies_below_the_top_corridor() -> None:
     """
     A line that enters a section through its side face into the outer

@@ -71,9 +71,9 @@ def shared_stretch_orders(
     """
     Return the forced lane orders of the nested pairs on shared stretches.
 
-    This function is the only place of the rule for the stretches of two or
-    more channels, and for the stretches of one channel under the columns.
-    spec.md, section "Общий участок". A shared stretch is the
+    This function is the only place of the rule for the shared stretches,
+    of one channel or more, in any channel. spec.md, section "Общий
+    участок". A shared stretch is the
     longest chain of channels that two routes pass one after another, in
     the same direction or toward each other. A route is nested in the other
     if at both ends of the stretch it turns off earlier and to the same
@@ -82,10 +82,6 @@ def shared_stretch_orders(
     each channel of the stretch, it takes the lane on that side of the
     other route, and on a face where the stretch ends, its port stands on
     that side.
-
-    The stretches of one channel with lanes follow the same rule in
-    lane_assignment._yield_to_nesting. Under the columns, the segments have
-    no lanes of their own, so this function serves those stretches too.
     """
 
     points = {plan_.index: _plan_points(plan_, exact) for plan_ in plans}
@@ -274,8 +270,7 @@ def _trimmed_run(
     Return the run without the end channels where the segments only touch.
 
     The routes run side by side only where their segments overlap. Return
-    None if fewer than two channels remain, unless the one channel left lies
-    under the columns.
+    None if no channel remains.
     """
 
     first_start, second_start, length, step = run

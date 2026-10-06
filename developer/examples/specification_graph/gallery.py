@@ -393,8 +393,7 @@ def _render_structure(index: int, normalized_graph: NormalizedGraph) -> str:
     )
     unrouted = ", ".join(html.escape(id_) for id_ in routing.unrouted_edge_ids)
     note = (
-        "<p>Not routed yet (relations across containers or with a "
-        f"section): {unrouted}.</p>"
+        f"<p>Not routed yet (relations with a section): {unrouted}.</p>"
         if len(unrouted) > 0
         else ""
     )

@@ -126,15 +126,18 @@ RULES: Tuple[Rule, ...] = (
     Rule(
         "LO5",
         "Pocket first",
-        "Under the columns, of two overlapping segments whose ends both go "
-        "up, the one with the higher base height lies higher. A pocket is "
-        "empty space for every line that fits.",
+        "Under the columns, of two overlapping segments, the one with the "
+        "higher base height lies higher. A pocket is empty space for every "
+        "line that fits. A row keeps the height of its lane and has no base "
+        "height.",
     ),
     Rule(
         "LO6",
-        "Pocket rule only for ends that go up",
-        "A segment under the columns with an end that continues straight "
-        "or goes down is not ordered by its base height.",
+        "Base heights before ends at one point",
+        "The base heights under the columns are the strongest reason for "
+        "the order of two segments, stronger than two ends at one point: "
+        "under the columns the heights, not a choice, decide which segment "
+        "lies higher.",
     ),
     Rule(
         "TR1",

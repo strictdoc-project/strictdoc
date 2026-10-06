@@ -12,6 +12,7 @@ from strictdoc.core.project_config import ProjectConfig
 from strictdoc.features.html2pdf.pdf_postprocessor import PDFPostprocessor
 from strictdoc.helpers.frozen import get_html2pdf4doc_command
 from strictdoc.helpers.timing import measure_performance
+from strictdoc.helpers.user_cache_dir import get_user_cache_dir
 
 
 class PDFPrintDriverException(Exception):
@@ -60,8 +61,14 @@ class PDFPrintDriver:
         path_to_input_root: str,
     ) -> None:
         assert isinstance(paths_to_print, list), paths_to_print
+        # The ChromeDriver only depends on the installed Chrome, so unless the
+        # project config sets a cache folder, keep it in the per-user cache
+        # instead of downloading it again for every output folder.
         path_to_html2pdf4doc_cache = os.path.join(
-            project_config.get_path_to_cache_dir(), "html2pdf"
+            get_user_cache_dir()
+            if project_config.is_default_dir_for_sdoc_cache
+            else project_config.get_path_to_cache_dir(),
+            "html2pdf",
         )
         cmd: List[str] = [
             # Using sys.executable instead of "python" is important because

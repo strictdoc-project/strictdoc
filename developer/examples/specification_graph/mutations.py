@@ -310,6 +310,13 @@ MUTATIONS = (
         "                order_, strength_ = base_, _BASE\n",
     ),
     Mutation(
+        "LO10",
+        "the side of a vertical lane end takes the channel from the layer",
+        STRUCTURE_ROUTING,
+        "                vertical_x_ = _center_x(self.channel_rects[channel_])\n",
+        "                vertical_x_ = plan_.levels[position_]\n",
+    ),
+    Mutation(
         "LO9",
         "a vertical lane takes no end of a finished container as exact",
         STRUCTURE_ROUTING,

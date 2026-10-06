@@ -552,6 +552,64 @@ def test_gate_port_side_agrees_with_the_segment_direction(
     assert mismatches == []
 
 
+@pytest.mark.parametrize(
+    "case", STRUCTURE_CASES, ids=lambda case_: case_.title
+)
+def test_vertical_lane_ends_take_the_side_of_the_drawing(
+    case: GalleryCase, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """
+    The side of each end of a vertical segment, as the lane assignment sees
+    it, is the side where the horizontal segment at that end goes in the
+    drawing.
+
+    The side compares the far end of the horizontal segment with the
+    vertical channel. Both positions come from the estimate. Taking the
+    vertical channel from the geometry of a layer, where the nodes stand
+    elsewhere, gives a wrong side for some ends.
+
+    Code: structure_routing._Router._assign_vertical_lanes.
+    Fails if:
+    - the side compares a position of the estimate with a position of the
+      geometry of a layer.
+    """
+
+    sides: Dict[Tuple[str, int], Tuple[bool, bool]] = {}
+    assign = structure_routing.assign_lanes
+
+    def capture(segments: Any, *args: Any) -> Any:
+        for segment_ in segments:
+            # The vertical segments stand at the odd positions of a route.
+            if segment_.key[1] % 2 == 1:
+                entry_, exit_ = segment_.members
+                sides[segment_.key] = (
+                    entry_.to_high_side,
+                    exit_.to_high_side,
+                )
+        return assign(segments, *args)
+
+    monkeypatch.setattr(structure_routing, "assign_lanes", capture)
+    _, routing, geometry, _ = _result(case)
+
+    wrong: List[Tuple[str, int]] = []
+    for route_ in routing.routes.values():
+        points_ = route_channel_points(route_, geometry)
+        for position_ in range(1, len(route_.channels), 2):
+            key_ = (route_.edge_id, position_)
+            if key_ not in sides:
+                continue
+            vertical_x_ = points_[position_ + 1].x
+            for far_x_, to_high_side_ in (
+                (points_[position_].x, sides[key_][0]),
+                (points_[position_ + 3].x, sides[key_][1]),
+            ):
+                if far_x_ != vertical_x_ and (far_x_ > vertical_x_) != (
+                    to_high_side_
+                ):
+                    wrong.append(key_)
+    assert wrong == []
+
+
 def test_side_entry_lies_below_the_top_corridor() -> None:
     """
     A line that enters a section through its side face into the outer

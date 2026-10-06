@@ -1153,7 +1153,12 @@ class _Router:
                 channel_ = channels_[position_]
                 if channel_.container_id not in layer:
                     continue
-                vertical_x_ = plan_.levels[position_]
+                # The side of each end compares the far end of the
+                # horizontal segment with the vertical channel. Both come
+                # from the estimate, see _horizontal_far_x: the levels of a
+                # plan come from the geometry of the layer, where the nodes
+                # stand elsewhere.
+                vertical_x_ = _center_x(self.channel_rects[channel_])
                 entry_y_ = plan_.levels[position_ - 1]
                 exit_y_ = plan_.levels[position_ + 1]
                 entry_far_x_ = self._horizontal_far_x(

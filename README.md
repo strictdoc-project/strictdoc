@@ -45,11 +45,12 @@ To call it as plain `strictdoc`, add the folder to `PATH`.
 
 HTML2PDF export (`--formats html2pdf`) needs Google Chrome installed; the
 bundle does not include it. StrictDoc detects the installed Chrome and, on
-the first PDF export, downloads the matching ChromeDriver into its cache:
-`_cache/<version>/html2pdf/` inside the output folder (`--output-dir`,
-default `output`), or under `dir_for_sdoc_cache` if the project config sets
-it. That download needs internet access. Offline, or with Chrome in an unusual location, pass
-the paths explicitly:
+the first PDF export, downloads the matching ChromeDriver into a per-user
+cache: `$XDG_CACHE_HOME/strictdoc` or `~/.cache/strictdoc` on Linux,
+`%LOCALAPPDATA%\strictdoc\cache` on Windows, `~/Library/Caches/strictdoc` on
+macOS. If the project config sets `dir_for_sdoc_cache`, that folder is used
+instead. The download needs internet access once. Offline, or with Chrome in
+an unusual location, pass the paths explicitly:
 
 ```bash
 strictdoc export my_docs --formats html2pdf \
@@ -69,6 +70,10 @@ run the build script, then the smoke tests against the result:
 scripts/build_bundle.sh                # or: scripts/build_bundle.sh 1.2.3
 scripts/smoke_bundle.sh dist/strictdoc-<version>-<platform>/strictdoc
 ```
+
+`tests/bundle/run_bundle_tests.sh <exe> smoke|full|lit|all` runs a deeper
+pytest suite against a bundle (see `tests/bundle/TEST_PLAN.md`); it needs
+`pytest playwright openpyxl pypdf` on the test machine, not in the bundle.
 
 The build script uses `uv` when it is installed (dependencies pinned by
 `uv.lock`, CPython 3.12) and falls back to `python3 -m venv` and pip. The

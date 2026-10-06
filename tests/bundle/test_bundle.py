@@ -16,10 +16,15 @@ import zipfile
 from pathlib import Path
 
 import pytest
-
 from conftest import (
-    FEATURES, IS_WINDOWS, REPO_ROOT, copy_fixture, free_port, have_chrome,
-    pdf_pages, pdf_text,
+    FEATURES,
+    IS_WINDOWS,
+    REPO_ROOT,
+    copy_fixture,
+    free_port,
+    have_chrome,
+    pdf_pages,
+    pdf_text,
 )
 
 VERSION_RE = re.compile(r"^\d+\.\d+\.\d+", re.M)
@@ -291,7 +296,7 @@ def test_conv_02c_excel_import_with_relations_then_reexport(sd, work):
 
 
 def test_conv_03_excel_round_trip(sd, work):
-    """export --formats excel --fields uid,title,statement, convert back, compare."""
+    """Export --formats excel --fields uid,title,statement, convert back, compare."""
     src = FEATURES / "excel" / "export" / "01_basic_excel_export" / "input.sdoc"
     orig = src.read_text(encoding="utf-8")
     (work / "in").mkdir()

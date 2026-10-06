@@ -19,12 +19,14 @@ def get_user_cache_dir() -> str:
         base = os.environ.get("LOCALAPPDATA") or os.path.join(
             os.path.expanduser("~"), "AppData", "Local"
         )
-        return os.path.join(base, "strictdoc", "cache")
-    if sys.platform == "darwin":
-        return os.path.join(
+        path_to_cache_dir = os.path.join(base, "strictdoc", "cache")
+    elif sys.platform == "darwin":
+        path_to_cache_dir = os.path.join(
             os.path.expanduser("~"), "Library", "Caches", "strictdoc"
         )
-    base = os.environ.get("XDG_CACHE_HOME") or os.path.join(
-        os.path.expanduser("~"), ".cache"
-    )
-    return os.path.join(base, "strictdoc")
+    else:
+        base = os.environ.get("XDG_CACHE_HOME") or os.path.join(
+            os.path.expanduser("~"), ".cache"
+        )
+        path_to_cache_dir = os.path.join(base, "strictdoc")
+    return path_to_cache_dir

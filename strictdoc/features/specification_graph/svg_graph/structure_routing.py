@@ -903,8 +903,21 @@ class _Router:
     def _stub_length(
         self, node_id: str, face: Face, channel: StructureChannelId
     ) -> float:
+        """
+        Return the length from the face of the node to the height of its
+        channel.
+
+        In the bottom corridor, the length is signed: a face below the
+        lowest height of the corridor gives a negative length. With the
+        segment height that the search adds later, the line goes from the
+        face down to its segment and does not climb to the corridor height
+        first.
+        """
+
         rect = self.estimate.node_rects[node_id]
         face_y = rect.y if face is Face.TOP else rect.y + rect.height
+        if channel.kind is ChannelKind.BOTTOM_CORRIDOR:
+            return self._channel_y(channel) - face_y
         return abs(face_y - self._channel_y(channel))
 
     def _turn_point(

@@ -329,6 +329,54 @@ def test_line_enters_a_section_from_a_column_channel() -> None:
         assert channels_[1] == vertical
 
 
+def test_path_under_the_columns_goes_down_from_the_faces() -> None:
+    """
+    The length of a path under the columns goes from the bottom faces down
+    to the segment.
+
+    A4 and E4 lie in pockets below the shortest column of the container.
+    The path A4[bottom] - E4[bottom] goes down from each face to the
+    segment under the columns between them, and along the segment.
+
+    Code: structure_routing._Router._stub_length.
+    Fails if:
+    - the length from a face below the lowest height of the bottom
+      corridor goes up to that height and back down.
+    """
+
+    normalized_graph = normalize_graph(
+        _case("Many lines in one pocket").graph
+    )
+    layout = compute_structure_layout(normalized_graph)
+    router = _Router(
+        normalized_graph,
+        layout,
+        compute_structure_geometry(normalized_graph, layout),
+        GeometryConfig(),
+        RoutingOptions(),
+    )
+    corridor = StructureChannelId(ChannelKind.BOTTOM_CORRIDOR, "Doc")
+    first = router.estimate.node_rects["A4"]
+    second = router.estimate.node_rects["E4"]
+    assert first.y + first.height > router._channel_y(corridor)
+
+    path = router._best_path(
+        "A4", Face.BOTTOM, "E4", Face.BOTTOM, router._chain("A4", "E4")
+    )
+    assert path is not None
+    (bends, length), channels, levels = path
+    assert bends == 2
+    assert channels == (corridor,)
+    segment_y = levels[0]
+    assert length == (
+        abs(
+            (second.x + second.width / 2) - (first.x + first.width / 2)
+        )
+        + (segment_y - (first.y + first.height))
+        + (segment_y - (second.y + second.height))
+    )
+
+
 def test_side_entry_fits_the_height_of_the_vertical_channel() -> None:
     """
     A segment of the parent enters the outer vertical channel of a section

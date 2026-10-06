@@ -509,6 +509,13 @@ MUTATIONS = (
         "                placed,\n",
     ),
     Mutation(
+        "XC17",
+        "a path under the columns climbs from a low face to the corridor",
+        STRUCTURE_ROUTING,
+        "            return self._channel_y(channel) - face_y\n",
+        "            return abs(self._channel_y(channel) - face_y)\n",
+    ),
+    Mutation(
         "XC15",
         "a column channel does not grow for a side entry",
         STRUCTURE_GEOMETRY,

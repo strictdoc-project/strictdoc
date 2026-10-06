@@ -12,7 +12,8 @@
 #   2. export --formats html, then check the HTML pages and assets exist
 #   3. server: fetch the index, every document page and their CSS/JS assets
 #   4. export --formats html2pdf, then check the PDFs (needs Google Chrome)
-#   5. convert --input-format=excel for .xls and .xlsx, then diff the result
+#   5. convert --input-format=excel for .xls and .xlsx, diff the result, and
+#      export the imported document to HTML
 #   6. (SMOKE_FULL=1) export StrictDoc's own documentation, which also covers
 #      the project config, a custom statistics generator, tree map, and
 #      source file traceability
@@ -168,7 +169,13 @@ rm -rf out-xls out-xlsx
 diff --strip-trailing-cr out-xls/input.sdoc "$EXCEL/expected/expected.sdoc"
 "$EXE" convert "$EXCEL/input.xlsx" out-xlsx/ --input-format=excel
 diff --strip-trailing-cr out-xlsx/input.sdoc "$EXCEL/expected_xslx/expected.sdoc"
-pass "excel import (.xls, .xlsx)"
+# The imported document (with a Parent relation from the PARENT column) must
+# export, which is the point of importing it.
+rm -rf out-xlsx-html
+"$EXE" export out-xlsx --formats html --output-dir out-xlsx-html
+grep -q "A-1" out-xlsx-html/html/out-xlsx/input.html \
+  || fail "imported Excel document did not export"
+pass "excel import (.xls, .xlsx) + export of the imported doc"
 
 #
 # 6. StrictDoc's own documentation.

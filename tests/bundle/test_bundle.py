@@ -282,11 +282,9 @@ def test_conv_02b_excel_import_then_reexport_html(sd, work):
     _reexport_html(sd, work, sdoc)
 
 
-@pytest.mark.xfail(strict=True, reason=(
-    "UPSTREAM (also fails with pip-installed strictdoc 0.30.1): the basic Excel "
-    "importer writes 'RELATIONS: - TYPE: Parent' but does not register the "
-    "Parent relation in the generated [GRAMMAR], so the imported .sdoc fails "
-    "to export: 'Semantic error: Requirement relation type/role is not registered: Parent.'"))
+# U1 (fixed on this branch): the Excel importer now declares the Parent
+# relation in the generated grammar, so the imported document exports.
+@pytest.mark.smoke
 def test_conv_02c_excel_import_with_relations_then_reexport(sd, work):
     sdoc = _excel_import_and_check(sd, work, "01_import_basic_e2e")
     _reexport_html(sd, work, sdoc)
@@ -313,10 +311,7 @@ def test_conv_03_excel_round_trip(sd, work):
     assert list((work / "html2" / "html").rglob("*.html"))
 
 
-@pytest.mark.xfail(strict=True, reason=(
-    "UPSTREAM U1 (same with pip strictdoc): default Excel export writes a PARENT "
-    "column; importing it back yields 'RELATIONS: Parent' without a grammar "
-    "relation, so the round-tripped .sdoc does not export."))
+# U1 (fixed on this branch): the default Excel round trip works.
 def test_conv_03b_excel_round_trip_default_fields(sd, work):
     src = FEATURES / "excel" / "export" / "01_basic_excel_export" / "input.sdoc"
     (work / "in").mkdir()

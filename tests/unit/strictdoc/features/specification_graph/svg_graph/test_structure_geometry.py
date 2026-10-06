@@ -20,6 +20,7 @@ from strictdoc.features.specification_graph.svg_graph.normalization import (
 from strictdoc.features.specification_graph.svg_graph.structure_geometry import (
     StructureGeometry,
     compute_structure_geometry,
+    gate_port_offset,
 )
 from strictdoc.features.specification_graph.svg_graph.structure_layout import (
     ChannelKind,
@@ -163,6 +164,75 @@ def test_block_without_row_is_close_to_a_square() -> None:
     assert (geometry.width, geometry.height) == (520, 696)
 
 
+def test_gate_center_moves_when_one_side_overflows() -> None:
+    """
+    If the ports of one side of a gate do not fit their half of the face
+    even at the minimum pitch, the center of the gate moves toward the
+    other side by the missing width.
+
+    Ten ports on the left side of a face of width 160 need 80 at the
+    minimum pitch of 8, the half has 72 after the margin. The center moves
+    right by 8, and the outermost port keeps the margin from the corner.
+
+    Code: structure_geometry.gate_port_offset.
+    Fails if:
+    - the center of the gate stays in the middle of the face.
+    """
+
+    config = GeometryConfig()
+    width = config.node_width
+
+    outermost = gate_port_offset(-10, 10, width, (10, 0), config)
+    straight = gate_port_offset(0, 0, width, (10, 0), config)
+
+    assert outermost == -(width / 2 - config.port_margin)
+    assert straight == 10 * config.min_port_pitch - (
+        width / 2 - config.port_margin
+    )
+
+
+def test_column_widens_when_both_sides_overflow() -> None:
+    """
+    If both sides of a gate overflow, all nodes of the column get the width
+    that holds both lists at the minimum pitch with the margin at each
+    corner, and the ports stay inside the face.
+
+    Ten lines leave each half of the top face of N1.
+
+    Code: structure_geometry._GeometryBuilder._column_width.
+    Fails if:
+    - the column keeps the node width.
+    - the nodes of one column get different widths.
+    """
+
+    case = _case("Ports overflow both halves of a face")
+    normalized_graph = normalize_graph(case.graph)
+    layout = compute_structure_layout(normalized_graph)
+    routing = compute_structure_routing(normalized_graph, layout)
+    geometry = compute_structure_geometry(
+        normalized_graph,
+        layout,
+        lane_counts=routing.lane_counts,
+        bottom_segments=routing.bottom_segments,
+        side_entries=routing.side_entries,
+        gate_port_lists=routing.gate_port_lists,
+    )
+    config = geometry.config
+    paths = compute_structure_edge_paths(routing, geometry)
+
+    rect = geometry.node_rects["N1"]
+    assert rect.width == 20 * config.min_port_pitch + 2 * config.port_margin
+    assert {
+        geometry.node_rects[node_id_].width
+        for node_id_ in layout.columns["Doc"][
+            layout.places["N1"].column
+        ].node_ids
+    } == {rect.width}
+    port_xs = [path_[0].x for path_ in paths.values()]
+    assert min(port_xs) >= rect.x + config.port_margin
+    assert max(port_xs) <= rect.x + rect.width - config.port_margin
+
+
 def test_serializer_draws_containers_before_their_children() -> None:
     """
     A container is a frame with a header line, drawn before its children.
@@ -183,6 +253,7 @@ def test_serializer_draws_containers_before_their_children() -> None:
         lane_counts=routing.lane_counts,
         bottom_segments=routing.bottom_segments,
         side_entries=routing.side_entries,
+        gate_port_lists=routing.gate_port_lists,
     )
     svg = serialize_structure_svg(
         normalized_graph,
@@ -237,6 +308,7 @@ def test_debug_layer_shows_the_pass_ports() -> None:
         lane_counts=routing.lane_counts,
         bottom_segments=routing.bottom_segments,
         side_entries=routing.side_entries,
+        gate_port_lists=routing.gate_port_lists,
     )
     svg = serialize_structure_svg(
         normalized_graph,

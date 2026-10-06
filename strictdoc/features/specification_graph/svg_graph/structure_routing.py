@@ -40,6 +40,7 @@ from strictdoc.features.specification_graph.svg_graph.normalization import (
     NormalizedGraph,
 )
 from strictdoc.features.specification_graph.svg_graph.structure_geometry import (
+    StructureGate,
     StructureGeometry,
     centered_lane_offset,
     compute_structure_geometry,
@@ -91,6 +92,9 @@ class StructureRouting:
     # enters through a side face. The geometry keeps these lanes opposite
     # the outer vertical channel of the child.
     side_entries: Mapping[StructureChannelId, Tuple[str, ...]]
+    # The longest port list on the left and on the right side of each gate.
+    # The geometry widens the columns and moves the gate centers by them.
+    gate_port_lists: Mapping[StructureGate, Tuple[int, int]]
     conflicts: Tuple[StructureLaneConflict, ...]
     # Relations this stage does not route yet: relations across containers
     # and relations with a composite node.
@@ -262,6 +266,9 @@ class _Router:
                     self.normalized_graph.parent_ids,
                 ),
                 side_entries=side_entries,
+                gate_port_lists=_gate_port_lists(
+                    ports, self.layout, self.composite_ids
+                ),
             )
             finished_levels_ = _finished_levels(
                 plans, straight_ids, horizontal_lanes, finished, layer_geometry_
@@ -327,6 +334,9 @@ class _Router:
             lane_counts=lane_counts,
             bottom_segments=tuple(bottom_segments),
             side_entries=side_entries,
+            gate_port_lists=_gate_port_lists(
+                ports, self.layout, self.composite_ids
+            ),
             conflicts=tuple(conflicts),
             unrouted_edge_ids=tuple(unrouted),
         )
@@ -1654,6 +1664,35 @@ def _side_face_links(
                 ]:
                     result.setdefault(child_vertical_, []).append(horizontal_)
                     result.setdefault(horizontal_, []).append(child_vertical_)
+    return result
+
+
+def _gate_port_lists(
+    ports: Mapping[EndpointKey, Port],
+    layout: StructureLayout,
+    composite_ids: Set[str],
+) -> Dict[StructureGate, Tuple[int, int]]:
+    """
+    Return the longest port list on the left and on the right side of each
+    gate of the simple nodes.
+    """
+
+    result: Dict[StructureGate, Tuple[int, int]] = {}
+    for port_ in ports.values():
+        if port_.slot == 0 or port_.node_id in composite_ids:
+            continue
+        gate_ = (
+            layout.channel_above(port_.node_id)
+            if port_.face is Face.TOP
+            else layout.channel_below(port_.node_id),
+            layout.places[port_.node_id].column,
+        )
+        left_, right_ = result.get(gate_, (0, 0))
+        if port_.slot < 0:
+            left_ = max(left_, port_.list_size)
+        else:
+            right_ = max(right_, port_.list_size)
+        result[gate_] = (left_, right_)
     return result
 
 

@@ -17,7 +17,6 @@ from strictdoc.features.specification_graph.svg_graph.levels_geometry import (
 from strictdoc.features.specification_graph.svg_graph.structure_geometry import (
     StructureGeometry,
     centered_lane_offset,
-    port_offset,
 )
 from strictdoc.features.specification_graph.svg_graph.structure_layout import (
     ChannelKind,
@@ -120,6 +119,8 @@ def _port_point(port: Port, geometry: StructureGeometry) -> Point:
     return Point(
         x=rect.x
         + rect.width / 2
-        + port_offset(port.slot, port.list_size, rect.width, geometry.config),
+        + geometry.port_offset(
+            port.node_id, port.face, port.slot, port.list_size
+        ),
         y=rect.y if port.face is Face.TOP else rect.y + rect.height,
     )

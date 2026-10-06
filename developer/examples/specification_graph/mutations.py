@@ -374,6 +374,20 @@ MUTATIONS = (
         "            else plan.levels[position - 1]\n",
     ),
     Mutation(
+        "GP4",
+        "the gate center stays in the middle of the face",
+        STRUCTURE_GEOMETRY,
+        "    center_offset = 0.0\n    if left_needed > half_width:\n",
+        "    center_offset = 0.0\n    if False:\n",
+    ),
+    Mutation(
+        "GP5",
+        "the column keeps the node width when both sides overflow",
+        STRUCTURE_GEOMETRY,
+        "            width = max(\n                width,\n                grid_ceil(\n",
+        "            width = min(\n                width,\n                grid_ceil(\n",
+    ),
+    Mutation(
         "GP2",
         "a forced order moves the half that a gate expects",
         STRUCTURE_ROUTING,

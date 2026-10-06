@@ -103,6 +103,7 @@ def _result(
         lane_counts=routing.lane_counts,
         bottom_segments=routing.bottom_segments,
         side_entries=routing.side_entries,
+        gate_port_lists=routing.gate_port_lists,
     )
     return (
         normalized_graph,

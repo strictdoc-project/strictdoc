@@ -14,9 +14,11 @@ import math
 from dataclasses import dataclass
 from typing import Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
+from strictdoc.features.specification_graph.svg_graph.gate_ports import Face
 from strictdoc.features.specification_graph.svg_graph.levels_geometry import (
     GeometryConfig,
     Rect,
+    grid_ceil,
     horizontal_channel_size,
     port_list_pitch,
     vertical_channel_size,
@@ -36,6 +38,11 @@ from strictdoc.features.specification_graph.svg_graph.structure_layout import (
 
 # Left, right, and bottom of a column.
 ColumnSpan = Tuple[float, float, float]
+
+# A gate of the structure mode: a horizontal channel and a column of its
+# container. The faces of the gate are the node faces of the column that
+# open into the channel.
+StructureGate = Tuple[StructureChannelId, int]
 
 
 @dataclass(frozen=True)
@@ -71,12 +78,32 @@ class StructureGeometry:
     # Left x, right x, and y of each segment in a bottom corridor, by the
     # segment key.
     bottom_segment_lines: Mapping[Tuple[str, int], Tuple[float, float, float]]
+    # The longest port list on the left and on the right side of each gate.
+    gate_port_lists: Mapping[StructureGate, Tuple[int, int]]
+    # The gate of each face of a simple node.
+    face_gates: Mapping[Tuple[str, Face], StructureGate]
 
     def channel_rect(self, channel_id: StructureChannelId) -> Rect:
         return next(
             channel_.rect
             for channel_ in self.channels
             if channel_.channel_id == channel_id
+        )
+
+    def port_offset(
+        self, node_id: str, face: Face, slot: int, list_size: int
+    ) -> float:
+        """
+        Return the offset of a port from the center of its node face.
+        """
+
+        gate = self.face_gates.get((node_id, face))
+        return gate_port_offset(
+            slot,
+            list_size,
+            self.node_rects[node_id].width,
+            self.gate_port_lists.get(gate, (0, 0)) if gate else (0, 0),
+            self.config,
         )
 
 
@@ -87,13 +114,15 @@ def compute_structure_geometry(
     lane_counts: Optional[Mapping[StructureChannelId, int]] = None,
     bottom_segments: Sequence[CorridorSegment] = (),
     side_entries: Optional[Mapping[StructureChannelId, Sequence[str]]] = None,
+    gate_port_lists: Optional[Mapping[StructureGate, Tuple[int, int]]] = None,
 ) -> StructureGeometry:
     """
     Return the geometry of the structure mode.
 
     side_entries maps a column channel to the child containers that a line
     from this channel enters through a side face, into the outer vertical
-    channel of the child.
+    channel of the child. gate_port_lists gives the longest port list on
+    the left and on the right side of each gate whose ports are known.
     """
 
     if config is None:
@@ -105,6 +134,7 @@ def compute_structure_geometry(
         {} if lane_counts is None else lane_counts,
         bottom_segments,
         {} if side_entries is None else side_entries,
+        {} if gate_port_lists is None else gate_port_lists,
     ).build()
 
 
@@ -166,18 +196,40 @@ def centered_lane_offset(
     )
 
 
-def port_offset(
-    slot: int, list_size: int, node_width: float, config: GeometryConfig
+def gate_port_offset(
+    slot: int,
+    list_size: int,
+    node_width: float,
+    list_sizes: Tuple[int, int],
+    config: GeometryConfig,
 ) -> float:
     """
     Return the offset of a port from the center of its node face.
+
+    spec.md, section "Шаг портов и переполнение грани". list_sizes are the
+    longest port lists on the left and on the right side of the gate. The
+    center of the gate stays in the middle of the face while both sides fit
+    at the minimum port pitch. If one side does not fit, the center moves
+    toward the other side by the missing width. Both faces of a gate move
+    it the same way, so a straight edge stays straight. The width of the
+    column lets the other side still fit, see
+    _GeometryBuilder._column_width.
     """
 
+    half_width = node_width / 2 - config.port_margin
+    left_needed = list_sizes[0] * config.min_port_pitch
+    right_needed = list_sizes[1] * config.min_port_pitch
+    center_offset = 0.0
+    if left_needed > half_width:
+        center_offset = left_needed - half_width
+    elif right_needed > half_width:
+        center_offset = half_width - right_needed
     if slot == 0:
-        return 0
-    return slot * port_list_pitch(
-        list_size, node_width / 2 - config.port_margin, config
+        return center_offset
+    side_width = (
+        half_width + center_offset if slot < 0 else half_width - center_offset
     )
+    return center_offset + slot * port_list_pitch(list_size, side_width, config)
 
 
 class _GeometryBuilder:
@@ -189,6 +241,7 @@ class _GeometryBuilder:
         lane_counts: Mapping[StructureChannelId, int],
         bottom_segments: Sequence[CorridorSegment],
         side_entries: Mapping[StructureChannelId, Sequence[str]],
+        gate_port_lists: Mapping[StructureGate, Tuple[int, int]],
     ) -> None:
         self.layout: StructureLayout = layout
         self.config: GeometryConfig = config
@@ -196,6 +249,10 @@ class _GeometryBuilder:
         self.side_entries: Mapping[StructureChannelId, Sequence[str]] = (
             side_entries
         )
+        self.gate_port_lists: Mapping[StructureGate, Tuple[int, int]] = (
+            gate_port_lists
+        )
+        self.face_gates: Dict[Tuple[str, Face], StructureGate] = {}
         self.bottom_segments: Dict[Optional[str], List[CorridorSegment]] = {}
         for segment_ in bottom_segments:
             self.bottom_segments.setdefault(segment_.container_id, []).append(
@@ -257,6 +314,8 @@ class _GeometryBuilder:
             bottom_pockets=tuple(self.bottom_pockets),
             lane_counts=dict(self.lane_counts),
             bottom_segment_lines=self.bottom_segment_lines,
+            gate_port_lists=self.gate_port_lists,
+            face_gates=self.face_gates,
         )
 
     def _channel_size(self, channel_id: StructureChannelId) -> float:
@@ -311,7 +370,13 @@ class _GeometryBuilder:
         if node_id in self.sizes:
             return self.sizes[node_id]
         if not self.is_composite[node_id]:
-            size = (self.config.node_width, self.config.node_height)
+            place = self.layout.places.get(node_id)
+            size = (
+                self.config.node_width
+                if place is None
+                else self._column_width(place.container_id, place.column),
+                self.config.node_height,
+            )
         else:
             area_width, area_height = self._area_size(
                 node_id, self.layout.columns[node_id]
@@ -332,7 +397,7 @@ class _GeometryBuilder:
         if column.is_composite:
             return self._size(column.node_ids[0])
         return (
-            self.config.node_width,
+            self._column_width(container_id, column_index),
             len(column.node_ids) * self.config.node_height
             + sum(
                 self._channel_size(
@@ -343,6 +408,37 @@ class _GeometryBuilder:
                 for gap_ in range(len(column.node_ids) - 1)
             ),
         )
+
+    def _column_width(
+        self, container_id: Optional[str], column_index: int
+    ) -> float:
+        """
+        Return the width of a column of simple nodes.
+
+        spec.md, section "Шаг портов и переполнение грани". A gate needs room
+        for the longest list on each side at the minimum port pitch. If the
+        node width is not enough even with a moved gate center, all nodes of
+        the column get wider.
+        """
+
+        width = self.config.node_width
+        for (channel_, column_), (left_, right_) in (
+            self.gate_port_lists.items()
+        ):
+            if (
+                channel_.container_id != container_id
+                or column_ != column_index
+            ):
+                continue
+            width = max(
+                width,
+                grid_ceil(
+                    (left_ + right_) * self.config.min_port_pitch
+                    + 2 * self.config.port_margin,
+                    self.config,
+                ),
+            )
+        return width
 
     def _area_size(
         self,
@@ -454,11 +550,19 @@ class _GeometryBuilder:
                     config,
                 )
             node_width_, _ = self._size(end.node_id)
-            left_, _, _ = column_spans[self.layout.places[end.node_id].column]
+            place_ = self.layout.places[end.node_id]
+            left_, _, _ = column_spans[place_.column]
+            gate_ = (self.layout.channel_below(end.node_id), place_.column)
             return (
                 left_
                 + node_width_ / 2
-                + port_offset(end.slot, end.list_size, node_width_, config)
+                + gate_port_offset(
+                    end.slot,
+                    end.list_size,
+                    node_width_,
+                    self.gate_port_lists.get(gate_, (0, 0)),
+                    config,
+                )
             )
 
         # (segment, low x, high x, base height, the segment is in a row).
@@ -826,7 +930,12 @@ class _GeometryBuilder:
                 self.channels.append(
                     StructureChannel(
                         gap_channel_,
-                        Rect(left, y, self.config.node_width, gap_size_),
+                        Rect(
+                            left,
+                            y,
+                            self._column_width(container_id, column_index),
+                            gap_size_,
+                        ),
                     )
                 )
                 y += gap_size_
@@ -837,6 +946,16 @@ class _GeometryBuilder:
         width, height = self._size(node_id)
         self.node_rects[node_id] = Rect(left, top, width, height)
         if not self.is_composite[node_id]:
+            place = self.layout.places.get(node_id)
+            if place is not None:
+                self.face_gates[(node_id, Face.TOP)] = (
+                    self.layout.channel_above(node_id),
+                    place.column,
+                )
+                self.face_gates[(node_id, Face.BOTTOM)] = (
+                    self.layout.channel_below(node_id),
+                    place.column,
+                )
             return
         header_height = self.config.container_header_height
         self.header_rects[node_id] = Rect(left, top, width, header_height)

@@ -878,14 +878,13 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
     _structure_case(
         "Ports overflow a half of a face",
         (
-            "Known problem. N1 stands at the bottom of a tall column and "
-            "relates to the eleven nodes of the column A above it. Ten "
-            "lines leave the left half of the top face of N1. With the "
-            "minimum pitch of 8, the outermost port stands on the corner of "
-            "N1, closer than the margin of 8. The levels mode handles such "
-            "a list with two more steps: it moves the center of the gate to "
-            "the other side, and then widens the column. The structure mode "
-            "does not do these steps yet."
+            "N1 stands at the bottom of a tall column and relates to the "
+            "eleven nodes of the column A above it. Ten lines leave the left "
+            "half of the top face of N1. Even with the minimum pitch of 8, "
+            "they do not fit the half: the outermost port would stand on the "
+            "corner of N1. The center of the gate moves right by the missing "
+            "width, so the outermost port keeps the margin of 8 from the "
+            "corner. The right half has room for the moved center."
         ),
         [
             (
@@ -897,7 +896,29 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
             )
         ],
         [("N1", f"A{index_}") for index_ in range(1, 12)],
-        broken_invariants=("test_structure_route_invariants",),
+    ),
+    _structure_case(
+        "Ports overflow both halves of a face",
+        (
+            "N1 stands at the bottom of a tall column and relates to the "
+            "eleven nodes of the column A on the left and the eleven nodes "
+            "of the column E on the right. Ten lines leave each half of the "
+            "top face of N1. Moving the center of the gate does not help, "
+            "so the column widens: all its nodes get the width that holds "
+            "both lists at the minimum pitch with the margin at each corner."
+        ),
+        [
+            (
+                "Doc",
+                [f"A{index_}" for index_ in range(1, 12)]
+                + [("S", ["S1"])]
+                + [f"K{index_}" for index_ in range(1, 12)]
+                + ["N1", ("Q", ["Q1"])]
+                + [f"E{index_}" for index_ in range(1, 12)],
+            )
+        ],
+        [("N1", f"A{index_}") for index_ in range(1, 12)]
+        + [("N1", f"E{index_}") for index_ in range(1, 12)],
     ),
     _structure_case(
         "Opposite pairs within a bundle",
@@ -2070,6 +2091,7 @@ GALLERY_CHAPTERS: Tuple[GalleryChapter, ...] = (
         "Relations inside one container, more ports",
         "Many ports on one face",
         "Ports overflow a half of a face",
+        "Ports overflow both halves of a face",
         "Opposite pairs within a bundle",
     ),
     _chapter(

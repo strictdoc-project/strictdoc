@@ -417,6 +417,7 @@ def _route(graph: GraphData, svg_id: str = "") -> Tuple[PathsData, str]:
         lane_counts=routing.lane_counts,
         bottom_segments=routing.bottom_segments,
         side_entries=routing.side_entries,
+        gate_port_lists=routing.gate_port_lists,
     )
     edge_paths = compute_structure_edge_paths(routing, geometry)
     paths = {

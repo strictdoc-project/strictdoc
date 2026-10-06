@@ -1,0 +1,164 @@
+# Build self-contained StrictDoc bundles with PyInstaller (no Python needed
+# to run them), smoke-test the bundled executable, and publish the zips.
+#
+# - workflow_dispatch, and pull requests that touch the bundle: build + smoke
+#   test, zips uploaded as workflow artifacts.
+# - tag push v*: the same, then the zips are attached to a GitHub Release for
+#   that tag (created if it does not exist).
+#
+# The build and the smoke tests are plain scripts that also run locally:
+#   scripts/build_bundle.sh, scripts/smoke_bundle.sh
+name: Bundle (PyInstaller)
+
+on:
+  push:
+    tags:
+      - "v*"
+  pull_request:
+    paths:
+      - "scripts/build_bundle.sh"
+      - "scripts/smoke_bundle.sh"
+      - "scripts/strictdoc.spec"
+      - "tests/bundle/**"
+      - "developer/pyinstaller_hooks/**"
+      - "strictdoc/helpers/frozen.py"
+      - "strictdoc/helpers/parallelizer.py"
+      - "strictdoc/cli/main.py"
+      - "strictdoc/features/html2pdf/pdf_print_driver.py"
+      - "pyproject.toml"
+      - "uv.lock"
+      - ".github/workflows/bundle.yml"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version string for the bundle name (default: strictdoc/__init__.py)"
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: bundle-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Bundle – ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    defaults:
+      run:
+        # Git Bash on Windows.
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v10.2.0
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+
+      - name: Determine the bundle version
+        id: version
+        env:
+          INPUT_VERSION: ${{ github.event.inputs.version }}
+        run: |
+          if [ "${GITHUB_REF_TYPE}" = tag ]; then
+            version="${GITHUB_REF_NAME#v}"
+          elif [ -n "${INPUT_VERSION}" ]; then
+            version="${INPUT_VERSION}"
+          else
+            version="$(sed -n 's/^__version__ *= *"\(.*\)"/\1/p' strictdoc/__init__.py)"
+          fi
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          echo "Bundle version: ${version}"
+
+      - name: Build the bundle
+        id: build
+        run: |
+          bash scripts/build_bundle.sh "${{ steps.version.outputs.version }}"
+
+      - name: Show the installed Chrome
+        run: |
+          case "$RUNNER_OS" in
+            Linux) google-chrome --version ;;
+            macOS) "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" --version ;;
+            Windows) powershell -NoProfile -Command \
+              "(Get-Item 'C:\Program Files\Google\Chrome\Application\chrome.exe').VersionInfo.ProductVersion" ;;
+          esac
+
+      - name: Smoke-test the bundled executable
+        env:
+          SMOKE_FULL: "1"
+        run: |
+          bash scripts/smoke_bundle.sh "${{ steps.build.outputs.exe }}"
+
+      # The deeper suite in tests/bundle (pytest + a Playwright crawl of the
+      # server). It needs Python test packages on the runner, never in the
+      # bundle; the tests run the bundle with a clean PATH and environment.
+      - name: Set up the bundle test suite
+        run: |
+          uv venv --quiet --python 3.12 build/test-venv
+          if [ "$RUNNER_OS" = Windows ]; then
+            py="$PWD/build/test-venv/Scripts/python.exe"
+          else
+            py="$PWD/build/test-venv/bin/python"
+          fi
+          uv pip install --python "$py" \
+            pytest==8.4.2 playwright==1.62.0 openpyxl==3.1.5 pypdf==6.16.1
+          if [ "$RUNNER_OS" = Linux ]; then
+            "$py" -m playwright install --with-deps chromium
+          else
+            "$py" -m playwright install chromium
+          fi
+          echo "BUNDLE_TEST_PYTHON=$py" >> "$GITHUB_ENV"
+
+      - name: Bundle test suite, smoke tier
+        run: |
+          bash tests/bundle/run_bundle_tests.sh "${{ steps.build.outputs.exe }}" smoke
+
+      - name: Upload the bundle test results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: bundle-test-results-${{ matrix.os }}
+          path: build/bundle_test_results
+          if-no-files-found: ignore
+
+      - name: Upload the bundle
+        uses: actions/upload-artifact@v7
+        with:
+          path: ${{ steps.build.outputs.zip }}
+          archive: false
+          if-no-files-found: error
+
+  release:
+    name: Publish GitHub Release
+    if: github.ref_type == 'tag'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          path: bundles
+          merge-multiple: true
+
+      - name: Attach the bundles to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          ls -l bundles
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
+            gh release create "$TAG" --title "StrictDoc $TAG" --verify-tag \
+              --notes "Self-contained StrictDoc bundles built with PyInstaller. Unzip and run strictdoc (strictdoc.exe on Windows); no Python installation is needed. HTML2PDF export needs Google Chrome installed."
+          fi
+          gh release upload "$TAG" bundles/*.zip --clobber

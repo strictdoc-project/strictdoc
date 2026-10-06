@@ -6,3 +6,8 @@ RUN: %diff %T/input.sdoc %S/expected/expected.sdoc
 RUN: %mkdir %T_xlsx
 RUN: %strictdoc convert %S/input.xlsx %T_xlsx/
 RUN: %diff %T_xlsx/input.sdoc %S/expected_xslx/expected.sdoc
+
+# The PARENT column becomes a Parent relation, which the generated grammar
+# declares, so the imported document exports.
+RUN: %strictdoc export %T_xlsx --output-dir %T_html | filecheck %s --check-prefix=CHECK-EXPORT
+CHECK-EXPORT: Export completed.

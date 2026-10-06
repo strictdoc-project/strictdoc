@@ -17,6 +17,8 @@ __pycache__
 /tests/unit_server/**/output/
 /tests/screencast/output/
 /tests/screencast/temp/
+# Created when the bundle tests run with a relative STRICTDOC_CACHE_DIR.
+/tests/bundle/Output/
 
 ### LIT/FileCheck integration tests' artifacts. ###
 /tests/integration/**/[Oo]utput/**

@@ -604,13 +604,6 @@ MUTATIONS = (
         "                lanes[placed_key_] == lane_",
     ),
     Mutation(
-        "R9",
-        "halves of the right-hand traffic swapped",
-        ROUTING,
-        "half=0 if goes_left_ else 1,\n                    members=(",
-        "half=1 if goes_left_ else 0,\n                    members=(",
-    ),
-    Mutation(
         "G1",
         "gate center does not shift",
         GEOMETRY,

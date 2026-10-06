@@ -449,7 +449,13 @@ def _assign_horizontal_lanes(
                     low=min(entry_, exit_),
                     high=max(entry_, exit_),
                     # Right-hand traffic: left in the top half, right in the
-                    # bottom half.
+                    # bottom half. This is the weakest reason of the order:
+                    # it orders two overlapping segments only if their ends
+                    # do not. Each segment here ends at its own port, so
+                    # the ends order every pair: an end inside the other
+                    # segment (lane_assignment._pair_order) or two ends at
+                    # one point (lane_assignment._coincident_order). The
+                    # rule stays for ends that do not order a pair.
                     half=0 if goes_left_ else 1,
                     members=(
                         CrossMember(

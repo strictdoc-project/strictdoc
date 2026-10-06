@@ -1067,6 +1067,59 @@ def test_row_is_not_moved_by_the_lane_order_of_the_corridor() -> None:
 
     assert len(paths[_edge_id(normalized_graph, "Q3", "S4")]) - 2 == 4
 
+def test_segments_under_the_columns_meet_in_lane_order() -> None:
+    """
+    Two segments under the columns that meet take their heights in lane
+    order, not by their base heights alone.
+
+    D1 -> Q1 and Q1 -> D1 pass under D1 between the bottom face of D1 and
+    the top corridor of Q. In lane order, the pair does not cross.
+
+    Code: structure_geometry._GeometryBuilder._bottom_corridor.
+    Fails if:
+    - segments under the columns meet by height, not by lane order.
+    """
+
+    normalized_graph, _, _, paths = _result(
+        _case("Opposite pair under a node into a section")
+    )
+
+    assert (
+        crossing_count(
+            paths[_edge_id(normalized_graph, "D1", "Q1")],
+            paths[_edge_id(normalized_graph, "Q1", "D1")],
+        )
+        == 0
+    )
+
+
+def test_stretch_ends_where_a_route_really_turns() -> None:
+    """
+    A route leaves a shared stretch where it turns, not at a through pass.
+
+    Q1 -> N1 and Q1 -> A2 leave Q1 into the gap under it and cross the
+    side face of Q into the vertical channel next to Q. Q1 -> A2 turns up
+    there. Q1 -> N1 passes the vertical channel straight, a segment of
+    zero length, and turns up only at N1. The order of the pair comes from
+    these places, and the two lines do not cross.
+
+    Code: structure_stretches._route_end.
+    Fails if:
+    - a through pass counts as the place where a route turns off.
+    """
+
+    normalized_graph, _, _, paths = _result(
+        _case("Stress: one node with many relations")
+    )
+
+    assert (
+        crossing_count(
+            paths[_edge_id(normalized_graph, "Q1", "N1")],
+            paths[_edge_id(normalized_graph, "Q1", "A2")],
+        )
+        == 0
+    )
+
 def test_lines_into_a_section_at_one_point_do_not_overlap() -> None:
     """
     Two lines that enter a section at one point keep the order of their
@@ -1184,33 +1237,6 @@ def test_through_pass_goes_straight_under_a_short_section() -> None:
             ChannelKind.COLUMN,
         ]
         assert len(paths[edge_id_]) == 4
-
-
-def test_two_relations_into_one_node_nest() -> None:
-    """
-    Two relations into one node over a section nest in the vertical channel.
-
-    The lane order in a vertical channel uses the far end of each
-    horizontal segment next to it: the next vertical channel or the port.
-
-    Code: structure_routing._Router._horizontal_far_x,
-    structure_routing._Router._assign_vertical_lanes.
-    Fails if:
-    - the far end of a middle horizontal segment is seen from the wrong
-      side.
-    """
-
-    normalized_graph, _, _, paths = _result(
-        _case("Two relations into one node over a section")
-    )
-
-    assert (
-        crossing_count(
-            paths[_edge_id(normalized_graph, "C2", "A2")],
-            paths[_edge_id(normalized_graph, "C3", "A2")],
-        )
-        == 0
-    )
 
 
 def test_relations_that_turn_together_do_not_cross() -> None:

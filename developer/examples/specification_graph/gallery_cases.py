@@ -1356,6 +1356,20 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
         [("A3", "Q1"), ("E3", "E1"), ("S2", "E2"), ("S3", "E2")],
     ),
     _structure_case(
+        "Opposite pair under a node into a section",
+        (
+            "D1 -> Q1 and Q1 -> D1 run between the bottom face of D1 and "
+            "the top corridor of Q, through the space under D1 and the "
+            "vertical channel between D1 and Q. Under D1, the two segments "
+            "take their heights in lane order, and the pair does not cross. "
+            "By height alone, D1 -> Q1 would continue its lane of the top "
+            "corridor straight, Q1 -> D1 would lie below it, and the two "
+            "lines would cross twice."
+        ),
+        [("Doc", ["A1", ("S", ["S1"]), "D1", ("Q", ["Q1"])])],
+        [("A1", "Q1"), ("D1", "Q1"), ("Q1", "D1")],
+    ),
+    _structure_case(
         "Steps beside a pocket",
         (
             "The case with more ports, with four nodes in the columns C and "
@@ -2191,6 +2205,7 @@ GALLERY_CHAPTERS: Tuple[GalleryChapter, ...] = (
         "Short step into the pocket of a section",
         "Lines on both sides of a vertical channel at one height",
         "Rows from a section into a column gap",
+        "Opposite pair under a node into a section",
     ),
     _chapter(
         "Structure: routes across containers",

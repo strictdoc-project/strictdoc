@@ -557,11 +557,7 @@ def test_srv_02_full_crawl_strictdoc_docs(sd, work, results_dir):
     s = Server(sd, proj, work).wait(600)
     try:
         ignore = os.environ.get("BUNDLE_TEST_CRAWL_IGNORE_CONSOLE")
-        extra = ["--forms", "--max-pages", os.environ.get("BUNDLE_TEST_MAX_PAGES", "250"),
-                 # UPSTREAM U4 (same with pip strictdoc): free-text search results
-                 # render document images with document-relative "_assets/x.png"
-                 # URLs, which 404 when resolved against /search.
-                 "--known-upstream", r"/search\?\S* \S+/_assets/"]
+        extra = ["--forms", "--max-pages", os.environ.get("BUNDLE_TEST_MAX_PAGES", "250")]
         if ignore:
             extra += ["--ignore-console", ignore]
         rc, data, out = _crawl(s, results_dir, "full", *extra)

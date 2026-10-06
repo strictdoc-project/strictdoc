@@ -5409,6 +5409,10 @@ def create_main_router(
             response_or_none = generate_document()
             if response_or_none is not None:
                 return response_or_none
+            # Nothing was generated, e.g. for a -TABLE/-TRACE/-DEEP-TRACE
+            # view of a screen that the project config does not enable.
+            if not os.path.isfile(full_path_to_document):
+                return _error_response(HTTP_STATUS_NOT_FOUND)
             return FileResponse(
                 full_path_to_document,
                 media_type="text/html",

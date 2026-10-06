@@ -653,6 +653,58 @@ def test_horizontal_lane_halves_follow_the_direction_of_the_drawing(
     assert wrong == []
 
 
+@pytest.mark.parametrize(
+    "case",
+    _invariant_cases(
+        "test_vertical_lane_halves_follow_the_direction_of_the_drawing"
+    ),
+)
+def test_vertical_lane_halves_follow_the_direction_of_the_drawing(
+    case: GalleryCase, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """
+    The half of each vertical segment, as the lane assignment sees it,
+    follows the direction of the segment in the drawing: right-hand
+    traffic. A segment that goes up lies in the right half, one that goes
+    down in the left half.
+
+    The lane assignment takes the direction from the heights of a layer.
+    Where the heights change after the layer, the direction in the drawing
+    can be the other one: a known problem, spec.md, section 19, debt [?2].
+
+    Code: structure_routing._Router._assign_vertical_lanes.
+    Fails if:
+    - the halves of the vertical channels are swapped.
+    - the direction of a vertical segment changes after its lane is
+      assigned.
+    """
+
+    halves: Dict[Tuple[str, int], int] = {}
+    assign = structure_routing.assign_lanes
+
+    def capture(segments: Any, *args: Any) -> Any:
+        for segment_ in segments:
+            halves[segment_.key] = segment_.half
+        return assign(segments, *args)
+
+    monkeypatch.setattr(structure_routing, "assign_lanes", capture)
+    _, routing, geometry, _ = _result(case)
+
+    wrong: List[Tuple[str, int]] = []
+    for route_ in routing.routes.values():
+        points_ = route_channel_points(route_, geometry)
+        for position_ in range(1, len(route_.channels), 2):
+            key_ = (route_.edge_id, position_)
+            if key_ not in halves:
+                continue
+            start_, end_ = points_[position_ + 1], points_[position_ + 2]
+            if start_.y == end_.y:
+                continue
+            if halves[key_] != (1 if end_.y < start_.y else 0):
+                wrong.append(key_)
+    assert wrong == []
+
+
 def test_row_has_no_base_height_in_the_lane_order() -> None:
     """
     A row, a segment under the columns that continues a lane straight,

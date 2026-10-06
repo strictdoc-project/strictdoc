@@ -1055,6 +1055,9 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
             "face of Q and through the pocket under D1 to the face of S: the "
             "pocket is deep enough for its height under Q1. Q2 -> A2 goes "
             "down the vertical channel between D1 and Q and passes under S."
+            " Known problem: the lane assignment takes the direction of a "
+            "short vertical step of Q1 -> S2 from the heights of a layer, "
+            "and in the drawing the step goes the other way."
         ),
         [
             (
@@ -1070,6 +1073,9 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
             )
         ],
         [("D1", "S1"), ("Q1", "S2"), ("Q2", "A2")],
+        broken_invariants=(
+            "test_vertical_lane_halves_follow_the_direction_of_the_drawing",
+        ),
     ),
     _structure_case(
         "Pockets at the edges of containers",
@@ -1691,6 +1697,10 @@ ACROSS_CONTAINERS_CASES: Tuple[GalleryCase, ...] = (
             "S1 -> A3 still crosses A2 -> S1, because the port of A2 -> S1 on "
             "S1 stands right of the port of S1 -> A3. The ray map will put "
             "A2 -> S1 left."
+            " Known problem: the lane assignment takes the direction of the "
+            "vertical segment of A2 -> S1 in the left vertical channel of S "
+            "from the heights of the layer of S, and in the drawing it goes "
+            "the other way."
         ),
         [
             (
@@ -1699,6 +1709,9 @@ ACROSS_CONTAINERS_CASES: Tuple[GalleryCase, ...] = (
             )
         ],
         [("A2", "S1"), ("S1", "A3"), ("S1", "D1"), ("S1", "D2")],
+        broken_invariants=(
+            "test_vertical_lane_halves_follow_the_direction_of_the_drawing",
+        ),
     ),
     _structure_case(
         "Three levels of sections",
@@ -1936,6 +1949,10 @@ STRESS_CASES: Tuple[GalleryCase, ...] = (
             "The section S holds a section that holds a third one. The "
             "section Q holds one nested section. 22 relations run through "
             "all levels and between nodes of different sections."
+            " Known problem: the lane assignment takes the direction of the "
+            "short vertical steps of S2 -> Q1, Q2 -> S1 and Q2 -> S2 from "
+            "the heights of a layer, and in the drawing they go the other "
+            "way."
         ),
         [
             (
@@ -1959,6 +1976,9 @@ STRESS_CASES: Tuple[GalleryCase, ...] = (
             ("S4", "D1"), ("S2", "S5"), ("Q1", "A2"), ("Q2", "S2"),
             ("A1", "E1"), ("S3", "S1"),
         ],
+        broken_invariants=(
+            "test_vertical_lane_halves_follow_the_direction_of_the_drawing",
+        ),
     ),
     _structure_case(
         "Stress: one node with many relations",

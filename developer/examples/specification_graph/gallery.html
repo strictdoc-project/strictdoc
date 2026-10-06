@@ -6457,7 +6457,7 @@ S1 -&gt; E2 (parent)</pre>
 <section id="line-from-a-section-into-a-pocket">
 <h2>Line from a section into a pocket</h2>
 <div><span class="badge">mode: structure</span></div>
-<p class="description">S2 lies lower than Q1, so Q1 -&gt; S2 leaves the bottom face of Q1 into the free space under Q1. It goes straight out of the left face of Q and through the pocket under D1 to the face of S: the pocket is deep enough for its height under Q1. Q2 -&gt; A2 goes down the vertical channel between D1 and Q and passes under S.</p>
+<p class="description">S2 lies lower than Q1, so Q1 -&gt; S2 leaves the bottom face of Q1 into the free space under Q1. It goes straight out of the left face of Q and through the pocket under D1 to the face of S: the pocket is deep enough for its height under Q1. Q2 -&gt; A2 goes down the vertical channel between D1 and Q and passes under S. Known problem: the lane assignment takes the direction of a short vertical step of Q1 -&gt; S2 from the heights of a layer, and in the drawing the step goes the other way.</p>
 <div class="preview">
 <figure>
 <h3>Generator result</h3>
@@ -10421,7 +10421,7 @@ E2 -&gt; Y1 (parent)</pre>
 <section id="two-lines-cross-a-side-face-at-one-point">
 <h2>Two lines cross a side face at one point</h2>
 <div><span class="badge">mode: structure</span></div>
-<p class="description">A2 -&gt; S1 enters S from the column channel between A2 and A3, at the height of its lane (256), and turns down in the left vertical channel of S. S1 -&gt; A3 leaves the pocket under S1 through the same left face of S. By the pocket alone, it would cross the face at 256 too, and the two lines would lie on top of each other. S is placed before Doc, so the lane of A2 -&gt; S1 is not known yet: S1 -&gt; A3 keeps one lane pitch from both lanes of the column channel and leaves at 272. Known problem: S1 -&gt; A3 still crosses A2 -&gt; S1, because the port of A2 -&gt; S1 on S1 stands right of the port of S1 -&gt; A3. The ray map will put A2 -&gt; S1 left.</p>
+<p class="description">A2 -&gt; S1 enters S from the column channel between A2 and A3, at the height of its lane (256), and turns down in the left vertical channel of S. S1 -&gt; A3 leaves the pocket under S1 through the same left face of S. By the pocket alone, it would cross the face at 256 too, and the two lines would lie on top of each other. S is placed before Doc, so the lane of A2 -&gt; S1 is not known yet: S1 -&gt; A3 keeps one lane pitch from both lanes of the column channel and leaves at 272. Known problem: S1 -&gt; A3 still crosses A2 -&gt; S1, because the port of A2 -&gt; S1 on S1 stands right of the port of S1 -&gt; A3. The ray map will put A2 -&gt; S1 left. Known problem: the lane assignment takes the direction of the vertical segment of A2 -&gt; S1 in the left vertical channel of S from the heights of the layer of S, and in the drawing it goes the other way.</p>
 <div class="preview">
 <figure>
 <h3>Generator result</h3>
@@ -13129,7 +13129,7 @@ E1 -&gt; S2 (parent)</pre>
 <section id="stress-three-levels-of-sections">
 <h2>Stress: three levels of sections</h2>
 <div><span class="badge">mode: structure</span></div>
-<p class="description">The section S holds a section that holds a third one. The section Q holds one nested section. 22 relations run through all levels and between nodes of different sections.</p>
+<p class="description">The section S holds a section that holds a third one. The section Q holds one nested section. 22 relations run through all levels and between nodes of different sections. Known problem: the lane assignment takes the direction of the short vertical steps of S2 -&gt; Q1, Q2 -&gt; S1 and Q2 -&gt; S2 from the heights of a layer, and in the drawing they go the other way.</p>
 <div class="preview">
 <figure>
 <h3>Generator result</h3>

@@ -224,13 +224,11 @@ class _Router:
             side_entries=side_entries,
         )
         plans = [self._exact_levels(plan_, exact, {}) for plan_ in plans]
+        stretch_plans = [
+            plan_ for plan_ in plans if plan_.edge.edge_id not in straight_ids
+        ]
         self.forced_orders, self.forced_port_orders = shared_stretch_orders(
-            [
-                plan_
-                for plan_ in plans
-                if plan_.edge.edge_id not in straight_ids
-            ],
-            exact,
+            stretch_plans, exact
         )
 
         # Containers inside out: a layer of containers of one depth at a
@@ -297,6 +295,52 @@ class _Router:
             )
             finished |= layer_
 
+        draft = self._routing(
+            plans,
+            unrouted,
+            straight_ids,
+            side_entries,
+            vertical_lanes,
+            horizontal_lanes,
+            ports,
+            conflicts,
+        )
+        final_conflicts: List[StructureLaneConflict] = []
+        vertical_lanes = self._final_vertical_lanes(
+            stretch_plans,
+            plans,
+            straight_ids,
+            horizontal_lanes,
+            draft,
+            final_conflicts,
+        )
+        return self._routing(
+            plans,
+            unrouted,
+            straight_ids,
+            side_entries,
+            vertical_lanes,
+            horizontal_lanes,
+            ports,
+            [
+                conflict_
+                for conflict_ in conflicts
+                if conflict_.channel.is_horizontal
+            ]
+            + final_conflicts,
+        )
+
+    def _routing(
+        self,
+        plans: List[_Plan],
+        unrouted: List[str],
+        straight_ids: Set[str],
+        side_entries: Mapping[StructureChannelId, Tuple[str, ...]],
+        vertical_lanes: Mapping[Tuple[str, int], int],
+        horizontal_lanes: Mapping[Tuple[str, int], int],
+        ports: Mapping[EndpointKey, Port],
+        conflicts: List[StructureLaneConflict],
+    ) -> StructureRouting:
         routes: Dict[str, StructureRoute] = {}
         lane_counts: Dict[StructureChannelId, int] = {}
         bottom_segments: List[CorridorSegment] = []
@@ -339,6 +383,89 @@ class _Router:
             ),
             conflicts=tuple(conflicts),
             unrouted_edge_ids=tuple(unrouted),
+        )
+
+
+    def _final_vertical_lanes(
+        self,
+        stretch_plans: List[_Plan],
+        plans: List[_Plan],
+        straight_ids: Set[str],
+        horizontal_lanes: Mapping[Tuple[str, int], int],
+        draft: StructureRouting,
+        conflicts: List[StructureLaneConflict],
+    ) -> Dict[Tuple[str, int], int]:
+        """
+        Return the lanes of the vertical channels by the final heights.
+
+        spec.md, section "Полосы и порядок расчёта". A layer orders the
+        lanes of a vertical channel by the heights it knows. A short step of
+        a line between two horizontal segments can go the other way in the
+        drawing. Two lines with ends on opposite sides of the vertical
+        channel then lie on top of each other or cross. When the horizontal
+        lanes of all layers are known, the heights of all horizontal
+        segments are final. The channels, the ports and the horizontal
+        lanes stay, and the lanes of the vertical channels are assigned
+        again by these heights.
+
+        A nested pair keeps the order of its shared stretch. The direction
+        of a step decides the side of the inner line in the vertical
+        channel. Where the step goes the other way in the drawing than on
+        the shared stretch, or where the shared stretch saw no step, the
+        order of the pair there follows the step in the drawing. A step
+        that is straight in the drawing keeps the order of the stretch.
+        """
+
+        final = compute_structure_geometry(
+            self.normalized_graph,
+            self.layout,
+            self.config,
+            lane_counts=draft.lane_counts,
+            bottom_segments=draft.bottom_segments,
+            side_entries=draft.side_entries,
+            gate_port_lists=draft.gate_port_lists,
+        )
+        containers: Set[Optional[str]] = {None} | self.composite_ids
+        final_levels = _finished_levels(
+            plans, straight_ids, horizontal_lanes, containers, final
+        )
+        rects = {
+            channel_.channel_id: channel_.rect for channel_ in final.channels
+        }
+        final_plans = [
+            _Plan(
+                index=plan_.index,
+                edge=plan_.edge,
+                source_face=plan_.source_face,
+                target_face=plan_.target_face,
+                channels=plan_.channels,
+                levels=tuple(
+                    final_levels.get((plan_.edge.edge_id, position_), level_)
+                    if channel_.is_horizontal
+                    else _center_x(rects[channel_])
+                    for position_, (channel_, level_) in enumerate(
+                        zip(plan_.channels, plan_.levels)
+                    )
+                ),
+                is_straight_candidate=plan_.is_straight_candidate,
+            )
+            for plan_ in plans
+        ]
+        turned = _turned_steps(stretch_plans, final_plans)
+        if len(turned) > 0:
+            final_orders, _ = shared_stretch_orders(
+                [
+                    plan_
+                    for plan_ in final_plans
+                    if plan_.edge.edge_id not in straight_ids
+                ],
+                final,
+            )
+            self.forced_orders = _with_turned_steps(
+                self.forced_orders, final_orders, turned
+            )
+        return self._assign_vertical_lanes(
+            final_plans, conflicts, frozenset(containers), final_levels
         )
 
     # Stage 3: the channels of each route.
@@ -1477,6 +1604,68 @@ class _Router:
                 for pair_ in pairs_
             )
         return result
+
+
+def _turned_steps(
+    stretch_plans: List[_Plan], final_plans: List[_Plan]
+) -> Set[Tuple[str, int]]:
+    """
+    Return the vertical segments whose step goes another way in the
+    drawing than on the shared stretches.
+
+    A step goes down, up, or straight: from the horizontal segment before
+    the vertical one to the segment after it. A step that is straight in
+    the drawing is not in the result.
+    """
+
+    def direction(plan: _Plan, position: int) -> int:
+        before = plan.levels[position - 1]
+        after = plan.levels[position + 1]
+        return (after > before) - (after < before)
+
+    stretch_by_edge = {plan_.edge.edge_id: plan_ for plan_ in stretch_plans}
+    result: Set[Tuple[str, int]] = set()
+    for plan_ in final_plans:
+        stretch_plan_ = stretch_by_edge.get(plan_.edge.edge_id)
+        if stretch_plan_ is None:
+            continue
+        for position_ in range(1, len(plan_.channels) - 1, 2):
+            final_direction_ = direction(plan_, position_)
+            if final_direction_ != 0 and final_direction_ != direction(
+                stretch_plan_, position_
+            ):
+                result.add((plan_.edge.edge_id, position_))
+    return result
+
+
+def _with_turned_steps(
+    stretch_orders: Mapping[StructureChannelId, List[ForcedOrder]],
+    final_orders: Mapping[StructureChannelId, List[ForcedOrder]],
+    turned: Set[Tuple[str, int]],
+) -> Dict[StructureChannelId, List[ForcedOrder]]:
+    """
+    Return the orders of the shared stretches with the orders of the turned
+    steps taken from the final geometry.
+    """
+
+    result = {
+        channel_: [
+            order_
+            for order_ in orders_
+            if channel_.is_horizontal
+            or (order_.inner not in turned and order_.outer not in turned)
+        ]
+        for channel_, orders_ in stretch_orders.items()
+    }
+    for channel_, orders_ in final_orders.items():
+        if channel_.is_horizontal:
+            continue
+        result.setdefault(channel_, []).extend(
+            order_
+            for order_ in orders_
+            if order_.inner in turned or order_.outer in turned
+        )
+    return result
 
 
 def _plan_lanes(

@@ -716,11 +716,12 @@ def test_vertical_lane_halves_follow_the_direction_of_the_drawing(
     traffic. A segment that goes up lies in the right half, one that goes
     down in the left half.
 
-    The lane assignment takes the direction from the heights of a layer.
-    Where the heights change after the layer, the direction in the drawing
-    can be the other one: a known problem, spec.md, section 19, debt [?2].
+    The lanes of the vertical channels are assigned by the final heights
+    of the horizontal segments, so the direction is the one of the
+    drawing.
 
-    Code: structure_routing._Router._assign_vertical_lanes.
+    Code: structure_routing._Router._assign_vertical_lanes,
+    structure_routing._Router._final_vertical_lanes.
     Fails if:
     - the halves of the vertical channels are swapped.
     - the direction of a vertical segment changes after its lane is
@@ -752,6 +753,128 @@ def test_vertical_lane_halves_follow_the_direction_of_the_drawing(
                 wrong.append(key_)
     assert wrong == []
 
+
+def test_vertical_lanes_follow_the_final_heights() -> None:
+    """
+    The order of the lanes in a vertical channel follows the final heights
+    of the horizontal segments on both sides.
+
+    S2 -> Q1 steps down by one lane pitch from the space under D1 into the
+    pocket under Q1, to the height where S2 -> Q2 passes under D1. With
+    the right lane, the segment of S2 -> Q1 in the pocket starts right of
+    the end of S2 -> Q2 under D1, and the two segments do not meet. The
+    estimate gives this step the other direction.
+
+    Code: structure_routing._Router._final_vertical_lanes.
+    Fails if:
+    - the lanes of the vertical channels stay as the layers assign them.
+    """
+
+    normalized_graph, routing, _, paths = _result(
+        _case("Short step into the pocket of a section")
+    )
+
+    first_id = _edge_id(normalized_graph, "S2", "Q1")
+    second_id = _edge_id(normalized_graph, "S2", "Q2")
+    vertical = StructureChannelId(ChannelKind.VERTICAL, "Doc", 3)
+
+    def vertical_lane(edge_id: str) -> int:
+        route_ = routing.routes[edge_id]
+        return route_.lanes[route_.channels.index(vertical)]
+
+    assert vertical_lane(first_id) > vertical_lane(second_id)
+    assert not any(
+        _collinear_contact(first_segment_, second_segment_)
+        for first_segment_ in zip(paths[first_id], paths[first_id][1:])
+        for second_segment_ in zip(paths[second_id], paths[second_id][1:])
+    )
+
+
+def test_lines_on_both_sides_of_a_vertical_channel_do_not_meet() -> None:
+    """
+    Two lines with segments at one height on opposite sides of a vertical
+    channel take the lanes on their own sides.
+
+    A2 -> Q2 turns right under S and E1 -> A3 turns left into the gap
+    between A2 and A3, at one height. The lane of A2 -> Q2 lies right of
+    the lane of E1 -> A3, so the two segments do not meet.
+
+    Code: structure_routing._Router._horizontal_far_x,
+    structure_routing._Router._assign_vertical_lanes.
+    Fails if:
+    - the far end of a middle horizontal segment is seen from the wrong
+      side.
+    """
+
+    normalized_graph, routing, _, paths = _result(
+        _case("Lines on both sides of a vertical channel at one height")
+    )
+
+    first_id = _edge_id(normalized_graph, "A2", "Q2")
+    second_id = _edge_id(normalized_graph, "E1", "A3")
+    vertical = StructureChannelId(ChannelKind.VERTICAL, "Doc", 1)
+
+    def vertical_lane(edge_id: str) -> int:
+        route_ = routing.routes[edge_id]
+        return route_.lanes[route_.channels.index(vertical)]
+
+    assert vertical_lane(first_id) > vertical_lane(second_id)
+    assert not any(
+        _collinear_contact(first_segment_, second_segment_)
+        for first_segment_ in zip(paths[first_id], paths[first_id][1:])
+        for second_segment_ in zip(paths[second_id], paths[second_id][1:])
+    )
+
+def test_lines_at_different_final_heights_share_a_vertical_lane() -> None:
+    """
+    Two lines that cross a vertical channel at different final heights
+    share its lane.
+
+    Q1 -> D1 leaves the gap between Q1 and Q2 into the pocket under D1,
+    and S1 -> Q2 crosses the pocket below it into the next lane of the same
+    gap. Both cross the vertical channel between D1 and Q straight, at two
+    heights one lane pitch apart. By the heights of the layer, their
+    segments in this channel overlap.
+
+    Code: structure_routing._Router._final_vertical_lanes.
+    Fails if:
+    - the lanes of a vertical channel take the heights of a layer.
+    """
+
+    _, routing, _, _ = _result(
+        _case("Two sections leave into one pocket at one height")
+    )
+
+    vertical = StructureChannelId(ChannelKind.VERTICAL, "Doc", 3)
+    assert routing.lane_counts[vertical] == 1
+
+def test_turned_step_takes_the_order_of_the_drawing() -> None:
+    """
+    A nested pair takes the order of the drawing at a step that goes the
+    other way in the drawing than on its shared stretch.
+
+    The step of S2 -> Q1 in a vertical channel goes up on the shared
+    stretch with Q1 -> A2 and down in the drawing. With the order of the
+    stretch, the two lines cross twice.
+
+    Code: structure_routing._turned_steps,
+    structure_routing._with_turned_steps.
+    Fails if:
+    - a nested pair keeps the order of its shared stretch at a step that
+      goes the other way in the drawing.
+    """
+
+    normalized_graph, _, _, paths = _result(
+        _case("Stress: three levels of sections")
+    )
+
+    assert (
+        crossing_count(
+            paths[_edge_id(normalized_graph, "S2", "Q1")],
+            paths[_edge_id(normalized_graph, "Q1", "A2")],
+        )
+        == 0
+    )
 
 def test_row_has_no_base_height_in_the_lane_order() -> None:
     """
@@ -1266,9 +1389,10 @@ def test_pair_that_must_cross_keeps_the_order_where_it_joins() -> None:
     turn down, the right of the travel direction is the left side, so the
     vertical channel holds them from left to right in the same order.
 
-    Code: structure_stretches._nesting.
+    Code: structure_stretches._nesting, structure_routing._turned_steps.
     Fails if:
     - a pair whose ends require different orders gets no order.
+    - a step that is straight in the drawing drops the order of the pair.
     """
 
     normalized_graph, routing, _, _ = _result(

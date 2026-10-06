@@ -1055,9 +1055,6 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
             "face of Q and through the pocket under D1 to the face of S: the "
             "pocket is deep enough for its height under Q1. Q2 -> A2 goes "
             "down the vertical channel between D1 and Q and passes under S."
-            " Known problem: the lane assignment takes the direction of a "
-            "short vertical step of Q1 -> S2 from the heights of a layer, "
-            "and in the drawing the step goes the other way."
         ),
         [
             (
@@ -1073,9 +1070,6 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
             )
         ],
         [("D1", "S1"), ("Q1", "S2"), ("Q2", "A2")],
-        broken_invariants=(
-            "test_vertical_lane_halves_follow_the_direction_of_the_drawing",
-        ),
     ),
     _structure_case(
         "Pockets at the edges of containers",
@@ -1284,6 +1278,58 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
             )
         ],
         [("A1", "D1"), ("A3", "S3"), ("D1", "S2"), ("S1", "A1"), ("S2", "S1")],
+    ),
+    _structure_case(
+        "Short step into the pocket of a section",
+        (
+            "S2 -> Q1 and S2 -> Q2 leave S together and pass under D1. In "
+            "the vertical channel between D1 and Q, S2 -> Q1 steps down by "
+            "one lane pitch into the pocket under Q1, to the height where "
+            "S2 -> Q2 passes under D1. S2 -> Q1 takes the right lane of the "
+            "two, so their segments at this height do not meet. The "
+            "estimate gives this step the other direction: the lanes of the "
+            "vertical channels follow the final heights."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    ("S", ["S1", "S2"]),
+                    "D1",
+                    ("Q", ["Q1", ("QR", ["Q2"])]),
+                ],
+            )
+        ],
+        [("A1", "Q1"), ("S2", "Q1"), ("S2", "Q2")],
+    ),
+    _structure_case(
+        "Lines on both sides of a vertical channel at one height",
+        (
+            "A2 -> Q2 leaves the gap between A2 and A3 into the vertical "
+            "channel between A and S and turns right under S. E1 -> A3 "
+            "comes down the same vertical channel from the top corridor and "
+            "turns left into the gap, toward A3. Their segments next to the "
+            "vertical channel lie at one height, on opposite sides. "
+            "A2 -> Q2 takes the right lane, E1 -> A3 the left one, so the "
+            "two segments do not meet."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    "A2",
+                    "A3",
+                    ("S", ["S1"]),
+                    "D1",
+                    ("Q", ["Q1", ("QR", ["Q2"])]),
+                    "E1",
+                    "E2",
+                ],
+            )
+        ],
+        [("A2", "Q2"), ("E1", "A3")],
     ),
     _structure_case(
         "Steps beside a pocket",
@@ -1697,10 +1743,6 @@ ACROSS_CONTAINERS_CASES: Tuple[GalleryCase, ...] = (
             "S1 -> A3 still crosses A2 -> S1, because the port of A2 -> S1 on "
             "S1 stands right of the port of S1 -> A3. The ray map will put "
             "A2 -> S1 left."
-            " Known problem: the lane assignment takes the direction of the "
-            "vertical segment of A2 -> S1 in the left vertical channel of S "
-            "from the heights of the layer of S, and in the drawing it goes "
-            "the other way."
         ),
         [
             (
@@ -1709,9 +1751,6 @@ ACROSS_CONTAINERS_CASES: Tuple[GalleryCase, ...] = (
             )
         ],
         [("A2", "S1"), ("S1", "A3"), ("S1", "D1"), ("S1", "D2")],
-        broken_invariants=(
-            "test_vertical_lane_halves_follow_the_direction_of_the_drawing",
-        ),
     ),
     _structure_case(
         "Three levels of sections",
@@ -1949,10 +1988,6 @@ STRESS_CASES: Tuple[GalleryCase, ...] = (
             "The section S holds a section that holds a third one. The "
             "section Q holds one nested section. 22 relations run through "
             "all levels and between nodes of different sections."
-            " Known problem: the lane assignment takes the direction of the "
-            "short vertical steps of S2 -> Q1, Q2 -> S1 and Q2 -> S2 from "
-            "the heights of a layer, and in the drawing they go the other "
-            "way."
         ),
         [
             (
@@ -1976,9 +2011,6 @@ STRESS_CASES: Tuple[GalleryCase, ...] = (
             ("S4", "D1"), ("S2", "S5"), ("Q1", "A2"), ("Q2", "S2"),
             ("A1", "E1"), ("S3", "S1"),
         ],
-        broken_invariants=(
-            "test_vertical_lane_halves_follow_the_direction_of_the_drawing",
-        ),
     ),
     _structure_case(
         "Stress: one node with many relations",
@@ -2132,6 +2164,8 @@ GALLERY_CHAPTERS: Tuple[GalleryChapter, ...] = (
         "Pockets inside a section",
         "Two lines into a section at one point",
         "Steps beside a pocket",
+        "Short step into the pocket of a section",
+        "Lines on both sides of a vertical channel at one height",
     ),
     _chapter(
         "Structure: routes across containers",

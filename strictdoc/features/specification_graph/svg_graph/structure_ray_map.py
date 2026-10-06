@@ -12,7 +12,7 @@ The map records which end is the source.
 import math
 from dataclasses import dataclass
 from enum import Enum
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Mapping, Optional, Tuple
 
 from strictdoc.features.specification_graph.svg_graph.gate_ports import Face
 from strictdoc.features.specification_graph.svg_graph.levels_geometry import (
@@ -189,7 +189,9 @@ def _relation_rays(
     )
 
 
-def _is_first(node_id: str, other_id: str, rects: Dict[str, Rect]) -> bool:
+def _is_first(
+    node_id: str, other_id: str, rects: Mapping[str, Rect]
+) -> bool:
     """
     Return True if the node is the first end: it lies left of the other
     end, or above it if the two have one x.
@@ -261,7 +263,7 @@ def _is_blocked(
     second_column: int,
     container_id: Optional[str],
     layout: StructureLayout,
-    rects: Dict[str, Rect],
+    rects: Mapping[str, Rect],
 ) -> bool:
     """
     Return True if a column between the two columns reaches down to the

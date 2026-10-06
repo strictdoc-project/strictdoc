@@ -1332,6 +1332,30 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
         [("A2", "Q2"), ("E1", "A3")],
     ),
     _structure_case(
+        "Rows from a section into a column gap",
+        (
+            "S2 -> E2 and S3 -> E2 leave S through its right face, pass "
+            "under Q and continue straight into the gap between E2 and E3, "
+            "each at the height of its lane in the gap. The base height of "
+            "each segment counts Q, the column it passes under, and not the "
+            "section S it leaves."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A3",
+                    ("S", ["S1", ("SR", ["S2", "S3"])]),
+                    ("Q", ["Q1"]),
+                    "E1",
+                    "E2",
+                    "E3",
+                ],
+            )
+        ],
+        [("A3", "Q1"), ("E3", "E1"), ("S2", "E2"), ("S3", "E2")],
+    ),
+    _structure_case(
         "Steps beside a pocket",
         (
             "The case with more ports, with four nodes in the columns C and "
@@ -2166,6 +2190,7 @@ GALLERY_CHAPTERS: Tuple[GalleryChapter, ...] = (
         "Steps beside a pocket",
         "Short step into the pocket of a section",
         "Lines on both sides of a vertical channel at one height",
+        "Rows from a section into a column gap",
     ),
     _chapter(
         "Structure: routes across containers",

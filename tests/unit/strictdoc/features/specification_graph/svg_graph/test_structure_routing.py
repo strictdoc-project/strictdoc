@@ -1007,8 +1007,6 @@ def test_segment_between_two_sections_uses_the_pocket() -> None:
     Code: structure_routing._Router._exact_levels,
     structure_routing._Router._face_x, lane_assignment._base_order.
     Fails if:
-    - the base height of a segment counts the sections it enters as
-      columns it passes under.
     - an order of a shared stretch wins over the base heights.
     """
 
@@ -1024,6 +1022,50 @@ def test_segment_between_two_sections_uses_the_pocket() -> None:
 
     assert bottom_y("Q1", "S3") < bottom_y("S1", "E2")
 
+
+def test_rows_from_a_section_keep_the_heights_of_their_lanes() -> None:
+    """
+    Segments under the columns that leave a section continue straight into
+    a column gap.
+
+    S2 -> E2 and S3 -> E2 leave S through its right face, pass under Q and
+    enter the gap between E2 and E3 at the heights of their lanes there.
+    Each line has four bends: no step on the way.
+
+    Code: structure_routing._Router._exact_levels,
+    structure_routing._Router._face_x.
+    Fails if:
+    - the base height of a segment counts the sections it enters as
+      columns it passes under.
+    """
+
+    normalized_graph, _, _, paths = _result(
+        _case("Rows from a section into a column gap")
+    )
+
+    for source_id_ in ("S2", "S3"):
+        path_ = paths[_edge_id(normalized_graph, source_id_, "E2")]
+        assert len(path_) - 2 == 4
+
+
+def test_row_is_not_moved_by_the_lane_order_of_the_corridor() -> None:
+    """
+    A row, a segment under the columns that continues a lane straight,
+    keeps its height against the corridor segments with smaller lanes.
+
+    Q3 -> S4 leaves Q at the height of its lane and passes under the
+    columns straight, so it has four bends.
+
+    Code: structure_geometry._GeometryBuilder._bottom_corridor.
+    Fails if:
+    - the lane order of the corridor segments moves the rows.
+    """
+
+    normalized_graph, _, _, paths = _result(
+        _case("Stress: three levels of sections")
+    )
+
+    assert len(paths[_edge_id(normalized_graph, "Q3", "S4")]) - 2 == 4
 
 def test_lines_into_a_section_at_one_point_do_not_overlap() -> None:
     """

@@ -8,7 +8,7 @@
 #   smoke  fast CI subset (pytest -m smoke): version/help, html export,
 #          excel import + content check + re-export, html2pdf (if Chrome),
 #          server boot + headless-browser crawl with one form.        ~2-3 min
-#   full   every BT-* test in tests/bundle/test_bundle.py (all CLI commands,
+#   full   every BT-* test in tests/bundle/test_bundle*.py (all CLI commands,
 #          every export format, reqif/excel round-trips, full server crawl
 #          with forms, html2pdf offline/no-chrome cases, bundle checks).
 #   lit    upstream integration suite (tests/integration, 550+ tests) with
@@ -58,7 +58,7 @@ rc=0
 run_pytest() {
   local name="$1"; shift
   (cd "$HERE" && "$PY" -m pytest -c "$HERE/pytest.ini" --rootdir "$HERE" \
-     --junitxml "$RESULTS/$name.junit.xml" -rA -v "$@" "$HERE/test_bundle.py") \
+     --junitxml "$RESULTS/$name.junit.xml" -rA -v "$@" "$HERE/test_bundle.py" "$HERE/test_bundle_excel_server.py") \
      2>&1 | tee "$RESULTS/$name.log"
   local r=${PIPESTATUS[0]}; [ "$r" -ne 0 ] && rc=1
 }

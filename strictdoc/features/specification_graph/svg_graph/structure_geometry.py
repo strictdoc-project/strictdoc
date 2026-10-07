@@ -142,7 +142,6 @@ class StructureGeometry:
             self.config,
         )
 
-
     def face_y(self, node_id: str, face: Face) -> float:
         return face_y(self.node_rects, self.header_rects, node_id, face)
 
@@ -480,13 +479,11 @@ class _GeometryBuilder:
         """
 
         width = self.config.node_width
-        for (channel_, column_), (left_, right_) in (
-            self.gate_port_lists.items()
-        ):
-            if (
-                channel_.container_id != container_id
-                or column_ != column_index
-            ):
+        for (channel_, column_), (
+            left_,
+            right_,
+        ) in self.gate_port_lists.items():
+            if channel_.container_id != container_id or column_ != column_index:
                 continue
             width = max(
                 width,
@@ -738,7 +735,11 @@ class _GeometryBuilder:
                 )
             )
             result.extend(
-                (face_x_, face_x_, self._column_lane_y(channel_, lane_) - columns_top_)
+                (
+                    face_x_,
+                    face_x_,
+                    self._column_lane_y(channel_, lane_) - columns_top_,
+                )
                 for lane_ in range(self.lane_counts.get(channel_, 0))
             )
         return result

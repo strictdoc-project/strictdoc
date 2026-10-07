@@ -221,9 +221,9 @@ def _order_free_pairs_by_direction(
                 if first_.half < second_.half
                 else (second_, first_)
             )
-            if _comes_before(
-                before, later_.key, earlier_.key
-            ) or _comes_before(before, earlier_.key, later_.key):
+            if _comes_before(before, later_.key, earlier_.key) or _comes_before(
+                before, earlier_.key, later_.key
+            ):
                 continue
             before[later_.key].add(earlier_.key)
 

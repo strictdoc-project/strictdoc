@@ -189,9 +189,7 @@ def _relation_rays(
     )
 
 
-def _is_first(
-    node_id: str, other_id: str, rects: Mapping[str, Rect]
-) -> bool:
+def _is_first(node_id: str, other_id: str, rects: Mapping[str, Rect]) -> bool:
     """
     Return True if the node is the first end: it lies left of the other
     end, or above it if the two have one x.
@@ -295,7 +293,9 @@ def _ray(node_id: str, point: Tuple[float, float], rect: Rect) -> Ray:
         dx=dx,
         dy=dy,
         distance=math.hypot(dx, dy),
-        angle=math.degrees(math.atan2(dy, abs(dx))) if dx != 0 or dy != 0 else 0.0,
+        angle=math.degrees(math.atan2(dy, abs(dx)))
+        if dx != 0 or dy != 0
+        else 0.0,
         face=Face.TOP if point[1] < rect.y else Face.BOTTOM,
     )
 

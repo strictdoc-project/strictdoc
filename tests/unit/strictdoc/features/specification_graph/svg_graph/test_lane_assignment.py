@@ -91,9 +91,7 @@ def test_weaker_order_gives_way_in_a_cycle() -> None:
     second = _segment("B", 0, 100, ((0, True, True), (100, True, False)), 2)
     third = _segment("C", 20, 80, ((20, True, True), (80, True, False)), 0)
 
-    lanes, _ = assign_lanes(
-        [first, second, third], LaneConflictPriority.EXIT
-    )
+    lanes, _ = assign_lanes([first, second, third], LaneConflictPriority.EXIT)
 
     assert lanes[first.key] < lanes[second.key] < lanes[third.key]
 

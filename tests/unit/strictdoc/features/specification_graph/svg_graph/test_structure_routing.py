@@ -444,9 +444,7 @@ def test_path_under_the_columns_goes_down_from_the_faces() -> None:
       corridor goes up to that height and back down.
     """
 
-    normalized_graph = normalize_graph(
-        _case("Many lines in one pocket").graph
-    )
+    normalized_graph = normalize_graph(_case("Many lines in one pocket").graph)
     layout = compute_structure_layout(normalized_graph)
     router = _Router(
         normalized_graph,
@@ -469,9 +467,7 @@ def test_path_under_the_columns_goes_down_from_the_faces() -> None:
     assert channels == (corridor,)
     segment_y = levels[0]
     assert length == (
-        abs(
-            (second.x + second.width / 2) - (first.x + first.width / 2)
-        )
+        abs((second.x + second.width / 2) - (first.x + first.width / 2))
         + (segment_y - (first.y + first.height))
         + (segment_y - (second.y + second.height))
     )
@@ -524,9 +520,7 @@ def test_side_entry_fits_the_height_of_the_vertical_channel() -> None:
         assert not router._fits_side_face(horizontal_, vertical, bottom)
 
 
-def test_side_entry_from_a_column_channel_lies_below_the_top_corridor() -> (
-    None
-):
+def test_side_entry_from_a_column_channel_lies_below_the_top_corridor() -> None:
     """
     A lane of a column channel that enters a section through its side face
     lies opposite the outer vertical channel of the section, even when the
@@ -603,9 +597,7 @@ def test_line_leaves_a_section_off_the_lanes_that_enter_it() -> None:
     )
 
 
-@pytest.mark.parametrize(
-    "case", STRUCTURE_CASES, ids=lambda case_: case_.title
-)
+@pytest.mark.parametrize("case", STRUCTURE_CASES, ids=lambda case_: case_.title)
 def test_gate_halves_follow_right_hand_traffic(
     case: GalleryCase, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -651,15 +643,15 @@ def test_gate_halves_follow_right_hand_traffic(
         return number_gate_ports(endpoints, forced)
 
     monkeypatch.setattr(_Router, "_assign_ports", capture_ports)
-    monkeypatch.setattr(structure_routing, "number_gate_ports", capture_endpoints)
+    monkeypatch.setattr(
+        structure_routing, "number_gate_ports", capture_endpoints
+    )
     _result(case)
 
     assert mismatches == []
 
 
-@pytest.mark.parametrize(
-    "case", STRUCTURE_CASES, ids=lambda case_: case_.title
-)
+@pytest.mark.parametrize("case", STRUCTURE_CASES, ids=lambda case_: case_.title)
 def test_gate_port_side_agrees_with_the_segment_direction(
     case: GalleryCase, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -700,9 +692,7 @@ def test_gate_port_side_agrees_with_the_segment_direction(
     assert mismatches == []
 
 
-@pytest.mark.parametrize(
-    "case", STRUCTURE_CASES, ids=lambda case_: case_.title
-)
+@pytest.mark.parametrize("case", STRUCTURE_CASES, ids=lambda case_: case_.title)
 def test_vertical_lane_ends_take_the_side_of_the_drawing(
     case: GalleryCase, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -758,9 +748,7 @@ def test_vertical_lane_ends_take_the_side_of_the_drawing(
     assert wrong == []
 
 
-@pytest.mark.parametrize(
-    "case", STRUCTURE_CASES, ids=lambda case_: case_.title
-)
+@pytest.mark.parametrize("case", STRUCTURE_CASES, ids=lambda case_: case_.title)
 def test_horizontal_lane_halves_follow_the_direction_of_the_drawing(
     case: GalleryCase, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -990,7 +978,9 @@ def test_segment_between_two_sections_uses_the_pocket() -> None:
     def bottom_y(source_id: str, target_id: str) -> float:
         return max(
             point_.y
-            for point_ in paths[_edge_id(normalized_graph, source_id, target_id)]
+            for point_ in paths[
+                _edge_id(normalized_graph, source_id, target_id)
+            ]
         )
 
     assert bottom_y("Q1", "S3") < bottom_y("S1", "E2")
@@ -1748,14 +1738,16 @@ def test_structure_routes_follow_right_hand_traffic(case: GalleryCase) -> None:
                     else first_[2] > second_[2]
                 )
                 if not in_order_:
-                    assert _traffic_order_crosses(
-                        first_, second_, is_horizontal_
-                    ) or any(
-                        _is_nested(first_, outer_, is_horizontal_)
-                        for outer_ in high_
-                    ) or any(
-                        _is_nested(second_, outer_, is_horizontal_)
-                        for outer_ in low_
+                    assert (
+                        _traffic_order_crosses(first_, second_, is_horizontal_)
+                        or any(
+                            _is_nested(first_, outer_, is_horizontal_)
+                            for outer_ in high_
+                        )
+                        or any(
+                            _is_nested(second_, outer_, is_horizontal_)
+                            for outer_ in low_
+                        )
                     )
 
 
@@ -1946,9 +1938,7 @@ def test_bottom_corridor_invariants(case: GalleryCase) -> None:
     config = geometry.config
     lines = geometry.bottom_segment_lines
     in_corridor = {
-        segment_.key: not _belongs_to_a_row(
-            routing, geometry, segment_.key
-        )
+        segment_.key: not _belongs_to_a_row(routing, geometry, segment_.key)
         for segment_ in routing.bottom_segments
     }
     for segment_ in routing.bottom_segments:

@@ -512,7 +512,8 @@ def _gallery_graphs() -> List[GraphData]:
         {
             "tree": [item(node_) for node_ in case_.graph.root],
             "edges": [
-                [edge_.source_id, edge_.target_id] for edge_ in case_.graph.edges
+                [edge_.source_id, edge_.target_id]
+                for edge_ in case_.graph.edges
             ],
         }
         for case_ in GALLERY_CASES

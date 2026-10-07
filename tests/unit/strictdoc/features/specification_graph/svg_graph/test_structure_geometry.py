@@ -237,9 +237,7 @@ def test_column_widens_when_both_sides_overflow() -> None:
     assert max(port_xs) <= rect.x + rect.width - config.port_margin
 
 
-def test_corridor_segment_stays_below_a_segment_with_a_smaller_lane() -> (
-    None
-):
+def test_corridor_segment_stays_below_a_segment_with_a_smaller_lane() -> None:
     """
     A segment of the corridor lies below every overlapping corridor segment
     with a smaller lane, even where the lane pitch alone would let it stay
@@ -273,9 +271,7 @@ def test_corridor_segment_stays_below_a_segment_with_a_smaller_lane() -> (
         for index_ in range(len(columns) + 1)
     ]
 
-    def segment(name: str, lane: int, first: int, last: int) -> (
-        CorridorSegment
-    ):
+    def segment(name: str, lane: int, first: int, last: int) -> CorridorSegment:
         return CorridorSegment(
             key=(name, 0),
             container_id="Doc",

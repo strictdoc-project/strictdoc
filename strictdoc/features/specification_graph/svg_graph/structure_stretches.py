@@ -151,7 +151,6 @@ def plan_points(plan: PlannedRoute, exact: StructureGeometry) -> List[_Point]:
     return result
 
 
-
 def _end_x(exact: StructureGeometry, node_id: str) -> float:
     """
     Return the x of the ports of an end: the center of a node, the left
@@ -162,6 +161,7 @@ def _end_x(exact: StructureGeometry, node_id: str) -> float:
     if node_id in exact.header_rects:
         return rect.x + exact.config.port_margin + exact.config.port_pitch
     return _center_x(rect)
+
 
 def _common_runs(
     first: Tuple[StructureChannelId, ...],

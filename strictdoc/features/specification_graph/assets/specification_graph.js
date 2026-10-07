@@ -223,7 +223,14 @@
         }
         event.preventDefault();
         if (node.dataset.nodeLink !== undefined) {
-          window.open(node.dataset.nodeLink, "_blank");
+          // Chrome opens a new window when a link opens during a Shift+click,
+          // even by a script. Out of the click handler, the link opens in a
+          // new tab; the user activation of the click is still valid there.
+          const link = document.createElement("a");
+          link.href = node.dataset.nodeLink;
+          link.target = "_blank";
+          link.rel = "noopener";
+          setTimeout(() => link.click(), 0);
         }
       });
     });

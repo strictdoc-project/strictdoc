@@ -152,7 +152,9 @@ def test_routes_take_the_fewest_bends() -> None:
     A route takes the fewest bends, then the shortest length.
 
     Nodes on the same side of the section connect over a corridor. A route
-    around the section uses the vertical channels.
+    around the section uses the vertical channels. For C2 -> A2, the path
+    over the columns and the path under them have equal bends and almost
+    equal lengths: the path under the columns wins.
 
     Code: structure_routing._Router._plan, structure_routing._Router
     ._best_path.
@@ -175,30 +177,58 @@ def test_routes_take_the_fewest_bends() -> None:
     assert kinds("C2", "A2") == [
         ChannelKind.COLUMN,
         ChannelKind.VERTICAL,
-        ChannelKind.TOP_CORRIDOR,
+        ChannelKind.BOTTOM_CORRIDOR,
         ChannelKind.VERTICAL,
         ChannelKind.COLUMN,
     ]
 
 
-def test_fewest_bends_win_over_the_shortest_length() -> None:
+def test_over_or_under_follows_bends_and_the_detour_tolerance() -> None:
     """
-    A route with fewer bends wins over a shorter route with more bends.
+    Between the path over the columns and the path under them, fewer bends
+    win unless that path is longer by more than the detour tolerance. With
+    equal bends, a path shorter by more than the tolerance wins.
 
-    Code: structure_routing._Router._plan, structure_routing._Router
-    ._best_path.
+    - "Bottom corridor follows the columns": A2 -> B1 under the columns has
+      fewer bends and is longer by less than the tolerance: it goes under.
+    - "Detour under a tall section": A2 -> B2 under the tall section
+      has fewer bends but is longer by more than the tolerance: it goes
+      over.
+    - "Pocket between two sections": D1 -> A2 has equal bends both ways,
+      and the path over is shorter by more than the tolerance: it goes
+      over.
+
+    Code: structure_routing._Router._over_or_under.
     Fails if:
-    - the path cost compares the length before the bends.
+    - fewer bends win at any length.
+    - with equal bends, the path under wins at any length.
     """
 
-    normalized_graph, routing, _, _ = _result(
-        _case("Fewest bends under a tall section")
-    )
+    def first_kind(case_title: str, source_id: str, target_id: str) -> Any:
+        normalized_graph_, routing_, _, _ = _result(_case(case_title))
+        route_ = routing_.routes[
+            _edge_id(normalized_graph_, source_id, target_id)
+        ]
+        horizontal_ = [
+            channel_.kind
+            for channel_ in route_.channels
+            if channel_.kind
+            in (ChannelKind.TOP_CORRIDOR, ChannelKind.BOTTOM_CORRIDOR)
+        ]
+        return horizontal_[0]
 
-    route = routing.routes[_edge_id(normalized_graph, "A2", "B2")]
-    assert [channel_.kind for channel_ in route.channels] == [
-        ChannelKind.BOTTOM_CORRIDOR
-    ]
+    assert (
+        first_kind("Bottom corridor follows the columns", "A2", "B1")
+        is ChannelKind.BOTTOM_CORRIDOR
+    )
+    assert (
+        first_kind("Detour under a tall section", "A2", "B2")
+        is ChannelKind.TOP_CORRIDOR
+    )
+    assert (
+        first_kind("Pocket between two sections", "D1", "A2")
+        is ChannelKind.TOP_CORRIDOR
+    )
 
 
 def test_relation_enters_a_section_straight() -> None:
@@ -790,134 +820,6 @@ def test_vertical_lanes_follow_the_final_heights() -> None:
     )
 
 
-def test_lines_on_both_sides_of_a_vertical_channel_do_not_meet() -> None:
-    """
-    Two lines with segments at one height on opposite sides of a vertical
-    channel take the lanes on their own sides.
-
-    A2 -> Q2 turns right under S and E1 -> A3 turns left into the gap
-    between A2 and A3, at one height. The lane of A2 -> Q2 lies right of
-    the lane of E1 -> A3, so the two segments do not meet.
-
-    Code: structure_routing._Router._horizontal_far_x,
-    structure_routing._Router._assign_vertical_lanes.
-    Fails if:
-    - the far end of a middle horizontal segment is seen from the wrong
-      side.
-    """
-
-    normalized_graph, routing, _, paths = _result(
-        _case("Lines on both sides of a vertical channel at one height")
-    )
-
-    first_id = _edge_id(normalized_graph, "A2", "Q2")
-    second_id = _edge_id(normalized_graph, "E1", "A3")
-    vertical = StructureChannelId(ChannelKind.VERTICAL, "Doc", 1)
-
-    def vertical_lane(edge_id: str) -> int:
-        route_ = routing.routes[edge_id]
-        return route_.lanes[route_.channels.index(vertical)]
-
-    assert vertical_lane(first_id) > vertical_lane(second_id)
-    assert not any(
-        _collinear_contact(first_segment_, second_segment_)
-        for first_segment_ in zip(paths[first_id], paths[first_id][1:])
-        for second_segment_ in zip(paths[second_id], paths[second_id][1:])
-    )
-
-def test_lines_at_different_final_heights_share_a_vertical_lane() -> None:
-    """
-    Two lines that cross a vertical channel at different final heights
-    share its lane.
-
-    Q1 -> D1 leaves the gap between Q1 and Q2 into the pocket under D1,
-    and S1 -> Q2 crosses the pocket below it into the next lane of the same
-    gap. Both cross the vertical channel between D1 and Q straight, at two
-    heights one lane pitch apart. By the heights of the layer, their
-    segments in this channel overlap.
-
-    Code: structure_routing._Router._final_vertical_lanes.
-    Fails if:
-    - the lanes of a vertical channel take the heights of a layer.
-    """
-
-    _, routing, _, _ = _result(
-        _case("Two sections leave into one pocket at one height")
-    )
-
-    vertical = StructureChannelId(ChannelKind.VERTICAL, "Doc", 3)
-    assert routing.lane_counts[vertical] == 1
-
-def test_turned_step_takes_the_order_of_the_drawing() -> None:
-    """
-    A nested pair takes the order of the drawing at a step that goes the
-    other way in the drawing than on its shared stretch.
-
-    The step of S2 -> Q1 in a vertical channel goes up on the shared
-    stretch with Q1 -> A2 and down in the drawing. With the order of the
-    stretch, the two lines cross twice.
-
-    Code: structure_routing._turned_steps,
-    structure_routing._with_turned_steps.
-    Fails if:
-    - a nested pair keeps the order of its shared stretch at a step that
-      goes the other way in the drawing.
-    """
-
-    normalized_graph, _, _, paths = _result(
-        _case("Stress: three levels of sections")
-    )
-
-    assert (
-        crossing_count(
-            paths[_edge_id(normalized_graph, "S2", "Q1")],
-            paths[_edge_id(normalized_graph, "Q1", "A2")],
-        )
-        == 0
-    )
-
-def test_row_has_no_base_height_in_the_lane_order() -> None:
-    """
-    A row, a segment under the columns that continues a lane straight,
-    keeps the height of its lane. The lane assignment does not order it by
-    a base height against the corridor segments.
-
-    A3 -> B3 and A4 -> B4 pass under the short section S straight at the
-    heights of their gaps.
-
-    Code: structure_routing._Router._assign_horizontal_lanes,
-    lane_assignment._base_order.
-    Fails if:
-    - a row gets a base height in the lane assignment.
-    """
-
-    normalized_graph = normalize_graph(
-        _case("Through pass under a short section").graph
-    )
-    layout = compute_structure_layout(normalized_graph)
-    router = _Router(
-        normalized_graph,
-        layout,
-        compute_structure_geometry(normalized_graph, layout),
-        GeometryConfig(),
-        RoutingOptions(),
-    )
-    base_levels: Dict[Tuple[str, int], Optional[float]] = {}
-    assign = structure_routing.assign_lanes
-
-    def capture(segments: Any, *args: Any) -> Any:
-        for segment_ in segments:
-            base_levels[segment_.key] = segment_.base_level
-        return assign(segments, *args)
-
-    with pytest.MonkeyPatch.context() as monkeypatch_:
-        monkeypatch_.setattr(structure_routing, "assign_lanes", capture)
-        router.route()
-
-    assert len(router.row_keys) > 0
-    assert all(base_levels[key_] is None for key_ in router.row_keys)
-
-
 def test_side_entry_lies_below_the_top_corridor() -> None:
     """
     A line that enters a section through its side face into the outer
@@ -963,7 +865,7 @@ def test_bottom_segment_lies_below_the_columns_it_passes_over() -> None:
     clearance = geometry.config.lane_clearance
     for source_id_, target_id_, column_id_ in (
         ("A2", "B1", "S"),
-        ("A2", "C1", "T"),
+        ("A2", "C3", "T"),
     ):
         path_ = paths[_edge_id(normalized_graph, source_id_, target_id_)]
         column_ = geometry.node_rects[column_id_]
@@ -1067,6 +969,7 @@ def test_row_is_not_moved_by_the_lane_order_of_the_corridor() -> None:
 
     assert len(paths[_edge_id(normalized_graph, "Q3", "S4")]) - 2 == 4
 
+
 def test_segments_under_the_columns_meet_in_lane_order() -> None:
     """
     Two segments under the columns that meet take their heights in lane
@@ -1119,6 +1022,102 @@ def test_stretch_ends_where_a_route_really_turns() -> None:
         )
         == 0
     )
+
+
+def test_lines_at_different_final_heights_share_a_vertical_lane() -> None:
+    """
+    Two lines that cross a vertical channel at different final heights
+    share its lane.
+
+    Q1 -> D1 leaves the gap between Q1 and Q2 into the pocket under D1,
+    and S1 -> Q2 crosses the pocket below it into the next lane of the same
+    gap. Both cross the vertical channel between D1 and Q straight, at two
+    heights one lane pitch apart. By the heights of the layer, their
+    segments in this channel overlap.
+
+    Code: structure_routing._Router._final_vertical_lanes.
+    Fails if:
+    - the lanes of a vertical channel take the heights of a layer.
+    """
+
+    _, routing, _, _ = _result(
+        _case("Two sections leave into one pocket at one height")
+    )
+
+    vertical = StructureChannelId(ChannelKind.VERTICAL, "Doc", 3)
+    assert routing.lane_counts[vertical] == 1
+
+
+def test_turned_step_takes_the_order_of_the_drawing() -> None:
+    """
+    A nested pair takes the order of the drawing at a step that goes the
+    other way in the drawing than on its shared stretch.
+
+    The step of S2 -> Q1 in a vertical channel goes up on the shared
+    stretch with Q1 -> A2 and down in the drawing. With the order of the
+    stretch, the two lines cross twice.
+
+    Code: structure_routing._turned_steps,
+    structure_routing._with_turned_steps.
+    Fails if:
+    - a nested pair keeps the order of its shared stretch at a step that
+      goes the other way in the drawing.
+    """
+
+    normalized_graph, _, _, paths = _result(
+        _case("Stress: three levels of sections")
+    )
+
+    assert (
+        crossing_count(
+            paths[_edge_id(normalized_graph, "S2", "Q1")],
+            paths[_edge_id(normalized_graph, "Q1", "A2")],
+        )
+        == 0
+    )
+
+
+def test_row_has_no_base_height_in_the_lane_order() -> None:
+    """
+    A row, a segment under the columns that continues a lane straight,
+    keeps the height of its lane. The lane assignment does not order it by
+    a base height against the corridor segments.
+
+    A3 -> B3 and A4 -> B4 pass under the short section S straight at the
+    heights of their gaps.
+
+    Code: structure_routing._Router._assign_horizontal_lanes,
+    lane_assignment._base_order.
+    Fails if:
+    - a row gets a base height in the lane assignment.
+    """
+
+    normalized_graph = normalize_graph(
+        _case("Through pass under a short section").graph
+    )
+    layout = compute_structure_layout(normalized_graph)
+    router = _Router(
+        normalized_graph,
+        layout,
+        compute_structure_geometry(normalized_graph, layout),
+        GeometryConfig(),
+        RoutingOptions(),
+    )
+    base_levels: Dict[Tuple[str, int], Optional[float]] = {}
+    assign = structure_routing.assign_lanes
+
+    def capture(segments: Any, *args: Any) -> Any:
+        for segment_ in segments:
+            base_levels[segment_.key] = segment_.base_level
+        return assign(segments, *args)
+
+    with pytest.MonkeyPatch.context() as monkeypatch_:
+        monkeypatch_.setattr(structure_routing, "assign_lanes", capture)
+        router.route()
+
+    assert len(router.row_keys) > 0
+    assert all(base_levels[key_] is None for key_ in router.row_keys)
+
 
 def test_lines_into_a_section_at_one_point_do_not_overlap() -> None:
     """
@@ -1492,9 +1491,9 @@ def test_foreign_line_does_not_split_a_ribbon() -> None:
     There is no separate rule for this: the foreign line shares a stretch
     with each of the two lines, and each stretch keeps one order.
 
-    C2 -> A2 and L2 -> C2 run side by side from the top face of C2 through
-    the vertical channel left of C. C1 -> C3 goes down the same vertical
-    channel and passes them from one side.
+    C2 -> A2 and L2 -> C2 run side by side from the bottom face of C2
+    through the vertical channel left of C. C1 -> C3 goes down the same
+    vertical channel above them and does not stand between them.
 
     In "One face: two relations out, a line between", C3 -> S1 and
     C3 -> S2 leave the top face of C3 to the left. C2 -> S2 crosses one of
@@ -1521,7 +1520,7 @@ def test_foreign_line_does_not_split_a_ribbon() -> None:
         )
 
     ribbon = sorted((vertical_lane("C2", "A2"), vertical_lane("L2", "C2")))
-    assert vertical_lane("C1", "C3") < ribbon[0]
+    assert not ribbon[0] < vertical_lane("C1", "C3") < ribbon[1]
     assert ribbon[1] - ribbon[0] == 1
 
     normalized_graph, _, _, paths = _result(

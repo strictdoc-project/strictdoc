@@ -69,6 +69,9 @@ class GeometryConfig:
     # Containers (structure mode).
     # Height of the header strip: two lines of the title and the padding.
     container_header_pitches: int = 5
+    # A path over the columns and a path under them: the path with fewer
+    # bends loses if it is longer than the other one by more than this.
+    detour_tolerance_pitches: int = 32
 
     # SVG.
     # Empty border around the graph.
@@ -111,6 +114,10 @@ class GeometryConfig:
     @property
     def container_header_height(self) -> float:
         return self.container_header_pitches * self.lane_pitch
+
+    @property
+    def detour_tolerance(self) -> float:
+        return self.detour_tolerance_pitches * self.lane_pitch
 
     @property
     def margin(self) -> float:

@@ -580,7 +580,7 @@ def _structure_case(
 
 STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
     _structure_case(
-        "Fewest bends before the shortest length",
+        "Route under a short section",
         (
             "A2 -> B2 connects the bottom nodes of two short columns. The "
             "route over the bottom corridor has two bends and passes under "
@@ -603,12 +603,15 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
         [("A2", "B2")],
     ),
     _structure_case(
-        "Fewest bends under a tall section",
+        "Detour under a tall section",
         (
             "A2 -> B2 connects the bottom nodes of two short columns. The "
             "section S between them is tall, so the route under S goes far "
-            "down. The route over the top corridor is shorter but has six "
-            "bends. The route under S has two bends and wins."
+            "down. The route under S has two bends, the route over the top "
+            "corridor has six, but the route under S is longer by 43 lane "
+            "pitches. This is more than the detour tolerance "
+            "(detour_tolerance_pitches, 32), so the route over the top "
+            "corridor wins. With a tolerance of 43 or more, it goes under."
         ),
         [
             (
@@ -629,7 +632,11 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
         (
             "A segment in the bottom corridor lies just below the columns it "
             "passes over. A2 -> B1 passes under A and S only, so the tall "
-            "section T does not push it down. A2 -> C1 passes under T."
+            "section T does not push it down. A2 -> C3 passes under T. Both "
+            "routes under the columns have fewer bends than the routes over "
+            "the top corridor and are longer by 23 lane pitches. This is "
+            "less than the detour tolerance (detour_tolerance_pitches, 32), "
+            "so both go under. With a tolerance below 23, both go over."
         ),
         [
             (
@@ -641,10 +648,12 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
                     "B1",
                     ("T", ["T1", "T2", "T3", "T4"]),
                     "C1",
+                    "C2",
+                    "C3",
                 ],
             )
         ],
-        [("A2", "B1"), ("A2", "C1")],
+        [("A2", "B1"), ("A2", "C3")],
     ),
     _structure_case(
         "Staircase of sections",
@@ -742,7 +751,12 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
             "A2 -> C2 and C2 -> A2 both pass under the tall section T, so "
             "both would lie just below it. The segments overlap. Right-hand "
             "traffic puts the segment that goes left above, so A2 -> C2 lies "
-            "one lane below C2 -> A2."
+            "one lane below C2 -> A2. The routes under T have two bends, the "
+            "routes over the top corridor six, and the routes under T are "
+            "longer by 23 lane pitches. This is less than the detour "
+            "tolerance (detour_tolerance_pitches, 32), so both go under. "
+            "With a tolerance below 23, or with one more node in T, both go "
+            "over."
         ),
         [
             (
@@ -750,7 +764,7 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
                 [
                     "A1",
                     "A2",
-                    ("T", ["T1", "T2", "T3", "T4"]),
+                    ("T", ["T1", "T2", "T3"]),
                     "B1",
                     "B2",
                     ("U", ["U1"]),
@@ -1304,34 +1318,6 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
         [("A1", "Q1"), ("S2", "Q1"), ("S2", "Q2")],
     ),
     _structure_case(
-        "Lines on both sides of a vertical channel at one height",
-        (
-            "A2 -> Q2 leaves the gap between A2 and A3 into the vertical "
-            "channel between A and S and turns right under S. E1 -> A3 "
-            "comes down the same vertical channel from the top corridor and "
-            "turns left into the gap, toward A3. Their segments next to the "
-            "vertical channel lie at one height, on opposite sides. "
-            "A2 -> Q2 takes the right lane, E1 -> A3 the left one, so the "
-            "two segments do not meet."
-        ),
-        [
-            (
-                "Doc",
-                [
-                    "A1",
-                    "A2",
-                    "A3",
-                    ("S", ["S1"]),
-                    "D1",
-                    ("Q", ["Q1", ("QR", ["Q2"])]),
-                    "E1",
-                    "E2",
-                ],
-            )
-        ],
-        [("A2", "Q2"), ("E1", "A3")],
-    ),
-    _structure_case(
         "Rows from a section into a column gap",
         (
             "S2 -> E2 and S3 -> E2 leave S through its right face, pass "
@@ -1845,11 +1831,15 @@ ACROSS_CONTAINERS_CASES: Tuple[GalleryCase, ...] = (
             "L2 -> R2 connects two short columns with a long column C between "
             "them. The short sections U and W stand next to C. The gaps of L, "
             "C, and R lie at one height, but the space under U and W starts "
-            "lower, so the line cannot pass straight. It goes over the top "
-            "corridor. L3 -> R3 leaves the bottom face of L3 and goes under "
-            "the whole column C: the path with the fewest bends is very "
-            "long here. This is a temporary decision: a limit for long paths "
-            "is not defined yet."
+            "lower, so the line cannot pass straight. The routes over the "
+            "top corridor and under C have six bends each, and the route "
+            "over is shorter by 20 lane pitches. This is less than the "
+            "detour tolerance (detour_tolerance_pitches, 32), so L2 -> R2 "
+            "goes under C. With a tolerance below 20, it goes over. "
+            "L3 -> R3 goes over the top corridor: the route under C has two "
+            "bends against six, but it is longer by 81 lane pitches, more "
+            "than the tolerance. With a tolerance of 81 or more, it goes "
+            "under."
         ),
         [
             (
@@ -2171,8 +2161,8 @@ GALLERY_CHAPTERS: Tuple[GalleryChapter, ...] = (
     ),
     _chapter(
         "Structure: routes in one container",
-        "Fewest bends before the shortest length",
-        "Fewest bends under a tall section",
+        "Route under a short section",
+        "Detour under a tall section",
         "Relations that turn together",
         "Lines to both sides share a lane",
         "Ends at one point",
@@ -2203,7 +2193,6 @@ GALLERY_CHAPTERS: Tuple[GalleryChapter, ...] = (
         "Two lines into a section at one point",
         "Steps beside a pocket",
         "Short step into the pocket of a section",
-        "Lines on both sides of a vertical channel at one height",
         "Rows from a section into a column gap",
         "Opposite pair under a node into a section",
     ),

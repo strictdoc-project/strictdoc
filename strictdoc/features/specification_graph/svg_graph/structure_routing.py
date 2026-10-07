@@ -559,8 +559,14 @@ class _Router:
         a channel on the other side for one turn. A target at the same
         height has no such side. The length in pixels decides next, and the
         top faces win the last tie.
+
+        If the winner is the path over the columns or the path under them,
+        and the columns close the straight line at both ends, the two
+        paths compete by bends and the detour tolerance, see
+        _over_or_under.
         """
 
+        all_candidates = candidates
         fewest_bends = min(candidate_[0] for candidate_ in candidates)
         candidates = [
             candidate_
@@ -589,9 +595,90 @@ class _Router:
             )
 
         # min keeps the first of equal candidates: the top faces.
-        return min(
+        best = min(
             candidates, key=lambda candidate_: (away(candidate_), candidate_[1])
-        )[4]
+        )
+        if best[2] is best[3] and self._is_closed_at_both_ends(
+            source_id, target_id
+        ):
+            return self._over_or_under(all_candidates, best)[4]
+        return best[4]
+
+    def _over_or_under(
+        self,
+        candidates: List[Tuple[int, float, Face, Face, _Plan]],
+        best: Tuple[int, float, Face, Face, _Plan],
+    ) -> Tuple[int, float, Face, Face, _Plan]:
+        """
+        Choose between the path over the columns and the path under them.
+
+        spec.md, section "Карта лучей": fewer bends win, unless that path
+        is longer than the other one by more than the detour tolerance.
+        With equal bends, a path shorter by more than the tolerance wins.
+        Otherwise the path under the columns wins.
+        """
+
+        over = next(
+            (
+                candidate_
+                for candidate_ in candidates
+                if candidate_[2] is Face.TOP and candidate_[3] is Face.TOP
+            ),
+            None,
+        )
+        under = next(
+            (
+                candidate_
+                for candidate_ in candidates
+                if candidate_[2] is Face.BOTTOM
+                and candidate_[3] is Face.BOTTOM
+            ),
+            None,
+        )
+        if over is None or under is None:
+            return best
+        tolerance = self.config.detour_tolerance
+        if over[0] != under[0]:
+            fewer, other = (over, under) if over[0] < under[0] else (under, over)
+            return other if fewer[1] - other[1] > tolerance else fewer
+        if abs(over[1] - under[1]) > tolerance:
+            return over if over[1] < under[1] else under
+        return under
+
+    def _is_closed_at_both_ends(self, source_id: str, target_id: str) -> bool:
+        """
+        Return True if the two ends stand in one container and a column
+        between them closes the straight line at the height of each end.
+
+        The columns stand at the top of the container, so a column closes a
+        height between its top and its bottom.
+        """
+
+        source_place = self.layout.places[source_id]
+        target_place = self.layout.places[target_id]
+        if source_place.container_id != target_place.container_id:
+            return False
+        rects = self.estimate.node_rects
+        low, high = sorted((source_place.column, target_place.column))
+        spans = [
+            (
+                min(rects[node_id_].y for node_id_ in column_.node_ids),
+                max(
+                    rects[node_id_].y + rects[node_id_].height
+                    for node_id_ in column_.node_ids
+                ),
+            )
+            for column_ in self.layout.columns[source_place.container_id][
+                low + 1 : high
+            ]
+        ]
+        return all(
+            any(
+                top_ <= _center_y(rects[end_]) <= bottom_
+                for top_, bottom_ in spans
+            )
+            for end_ in (source_id, target_id)
+        )
 
     def _port_channel(self, node_id: str, face: Face) -> StructureChannelId:
         if face is Face.TOP:
@@ -615,10 +702,6 @@ class _Router:
         """
         Find the path with the fewest bends, then the shortest length, then
         the fewest channels inside nested containers.
-
-        The fewest bends win even over a much longer path, for example under
-        a whole long column. This is a temporary decision, see spec.md,
-        section "Путь по каналам".
 
         The path alternates horizontal and vertical channels. Each change of
         channel is a bend, except a through pass. Each port adds a bend where

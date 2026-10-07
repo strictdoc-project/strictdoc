@@ -9,6 +9,17 @@
     const nodes = [...graph.querySelectorAll(`.${PREFIX}-node`)];
     const edges = [...graph.querySelectorAll(`.${PREFIX}-edge`)];
     const nodesById = new Map(nodes.map((node) => [node.dataset.nodeId, node]));
+    // The generator keeps <title> for the SVG without this script: it is the
+    // only way to see a cut title there. On the screen, the Shift panel shows
+    // the full title, and the native tooltip of <title> would cover it, so
+    // the title moves to an attribute.
+    nodes.forEach((node) => {
+      const title = node.querySelector(":scope > title");
+      if (title !== null) {
+        node.dataset.nodeTitle = title.textContent;
+        title.remove();
+      }
+    });
     const edgesByNodeId = new Map();
     edges.forEach((edge) => {
       [edge.dataset.sourceId, edge.dataset.targetId].forEach((nodeId) => {
@@ -145,7 +156,7 @@
         return;
       }
       const details = JSON.parse(node.dataset.nodeDetails ?? "[]");
-      const rows = [["Title", node.querySelector("title")?.textContent], ...details]
+      const rows = [["Title", node.dataset.nodeTitle], ...details]
         .filter(([, value]) => value !== null && value !== undefined && value !== "");
       infoTable.replaceChildren();
       rows.forEach(([name, value]) => {

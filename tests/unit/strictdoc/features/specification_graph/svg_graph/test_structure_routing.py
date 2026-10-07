@@ -953,7 +953,8 @@ def test_face_toward_the_target_wins_a_near_tie() -> None:
     heights, so the bottom face wins: the line goes down into the free
     space under Q1 and does not open the top corridor of Q for one turn.
 
-    Code: structure_routing._Router._best_candidate.
+    Code: structure_routing._Router._chain_plan,
+    structure_routing._Router._away_from_facing.
     Fails if:
     - the faces toward the target do not win a near tie.
     - a few pixels of length decide over the faces.

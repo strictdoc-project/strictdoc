@@ -554,7 +554,15 @@ MUTATIONS = (
         "XC24",
         "at a tie, the path over the columns comes first",
         STRUCTURE_ROUTING,
+        "                if candidate_[0] == fewest_bends\n"
+        "            ),\n"
+        "            key=lambda candidate_: (\n"
+        "                away(candidate_[2]),\n"
         "                not _is_under(candidate_[2]),\n",
+        "                if candidate_[0] == fewest_bends\n"
+        "            ),\n"
+        "            key=lambda candidate_: (\n"
+        "                away(candidate_[2]),\n"
         "                _is_under(candidate_[2]),\n",
     ),
     Mutation(
@@ -743,8 +751,8 @@ MUTATIONS = (
         "SR1",
         "structure path cost compares the length before the bends",
         STRUCTURE_ROUTING,
-        "            if candidate_[0] == fewest_bends\n",
-        "            if True\n",
+        "            if candidate_[0] == fewest_bends\n        ]\n",
+        "            if True\n        ]\n",
     ),
     Mutation(
         "SR2",

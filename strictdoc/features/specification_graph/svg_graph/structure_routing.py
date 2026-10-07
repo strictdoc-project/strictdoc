@@ -13,7 +13,17 @@ not routed yet.
 import heapq
 import itertools
 from dataclasses import dataclass, field
-from typing import Dict, FrozenSet, List, Mapping, Optional, Set, Tuple
+from typing import (
+    AbstractSet,
+    Callable,
+    Dict,
+    FrozenSet,
+    List,
+    Mapping,
+    Optional,
+    Set,
+    Tuple,
+)
 
 from strictdoc.features.specification_graph.svg_graph.gate_ports import (
     EndpointKey,
@@ -490,7 +500,6 @@ class _Router:
             return None
         source_place = self.layout.places[source_id]
         target_place = self.layout.places[target_id]
-        chain = self._chain(source_id, target_id)
 
         if (
             source_place.container_id == target_place.container_id
@@ -514,98 +523,9 @@ class _Router:
                 is_straight_candidate=True,
             )
 
-        if (
-            source_place.container_id == target_place.container_id
-            and source_place.column != target_place.column
-        ):
+        if source_place.container_id == target_place.container_id:
             return self._shape_plan(index, edge)
-
-        # The faces of the source and of the target, then the plan. The
-        # face pairs come with the top faces first.
-        candidates: List[Tuple[int, float, Face, Face, _Plan]] = []
-        for source_face_, target_face_ in (
-            (Face.TOP, Face.TOP),
-            (Face.TOP, Face.BOTTOM),
-            (Face.BOTTOM, Face.TOP),
-            (Face.BOTTOM, Face.BOTTOM),
-        ):
-            path_ = self._best_path(
-                source_id, source_face_, target_id, target_face_, chain
-            )
-            if path_ is None:
-                continue
-            (bends_, length_), channels_, levels_ = path_
-            candidates.append(
-                (
-                    bends_,
-                    length_,
-                    source_face_,
-                    target_face_,
-                    _Plan(
-                        index=index,
-                        edge=edge,
-                        source_face=source_face_,
-                        target_face=target_face_,
-                        channels=channels_,
-                        levels=levels_,
-                        is_straight_candidate=False,
-                    ),
-                )
-            )
-        assert len(candidates) > 0
-        return self._best_candidate(source_id, target_id, candidates)
-
-    def _best_candidate(
-        self,
-        source_id: str,
-        target_id: str,
-        candidates: List[Tuple[int, float, Face, Face, _Plan]],
-    ) -> _Plan:
-        """
-        Choose the path of a relation among the paths of the face pairs.
-
-        spec.md, section "Путь по каналам". The fewest bends win. Then a
-        path is longer only if it is longer by two node heights or more: a
-        smaller difference counts as equal. Then the faces that look toward
-        each other win: a target below the source takes the bottom face of
-        the source and the top face of the target, a target above takes the
-        opposite faces. The line goes where it has to go and does not open
-        a channel on the other side for one turn. A target at the same
-        height has no such side. The length in pixels decides next, and the
-        top faces win the last tie.
-        """
-
-        fewest_bends = min(candidate_[0] for candidate_ in candidates)
-        candidates = [
-            candidate_
-            for candidate_ in candidates
-            if candidate_[0] == fewest_bends
-        ]
-        shortest = min(candidate_[1] for candidate_ in candidates)
-        candidates = [
-            candidate_
-            for candidate_ in candidates
-            if candidate_[1] < shortest + 2 * self.config.node_height
-        ]
-        source_y = _center_y(self.estimate.node_rects[source_id])
-        target_y = _center_y(self.estimate.node_rects[target_id])
-        facing: Optional[Tuple[Face, Face]] = None
-        if target_y > source_y:
-            facing = (Face.BOTTOM, Face.TOP)
-        elif target_y < source_y:
-            facing = (Face.TOP, Face.BOTTOM)
-
-        def away(candidate: Tuple[int, float, Face, Face, _Plan]) -> int:
-            if facing is None:
-                return 0
-            return int(candidate[2] is not facing[0]) + int(
-                candidate[3] is not facing[1]
-            )
-
-        # min keeps the first of equal candidates: the top faces.
-        return min(
-            candidates, key=lambda candidate_: (away(candidate_), candidate_[1])
-        )[4]
+        return self._chain_plan(index, edge)
 
     def _shape_plan(self, index: int, edge: NormalizedEdge) -> _Plan:
         """
@@ -648,8 +568,7 @@ class _Router:
                 corridor,
             )
 
-        candidates: List[Tuple[int, float, _Plan]] = []
-        seen: Set[Tuple[Face, Face, Tuple[StructureChannelId, ...]]] = set()
+        sequences: List[Tuple[Face, Face, Tuple[StructureChannelId, ...]]] = []
         for corridor_kind_, source_face_, target_face_ in itertools.product(
             (ChannelKind.TOP_CORRIDOR, ChannelKind.BOTTOM_CORRIDOR),
             (Face.TOP, Face.BOTTOM),
@@ -660,49 +579,80 @@ class _Router:
                 (source_place.column, source_place.column + 1),
                 (target_place.column, target_place.column + 1),
             ):
-                sequence_ = (
-                    leg(source_id, source_face_, source_vertical_, corridor_)
-                    + tuple(
-                        reversed(
-                            leg(
-                                target_id,
-                                target_face_,
-                                target_vertical_,
-                                corridor_,
-                            )
-                        )
-                    )[1:]
-                )
-                key_ = (source_face_, target_face_, sequence_)
-                if len(set(sequence_)) != len(sequence_) or key_ in seen:
-                    continue
-                seen.add(key_)
-                path_ = self._best_path(
-                    source_id,
-                    source_face_,
-                    target_id,
-                    target_face_,
-                    chain,
-                    sequence_,
-                )
-                if path_ is None:
-                    continue
-                (bends_, length_), channels_, levels_ = path_
-                candidates.append(
+                sequences.append(
                     (
-                        bends_,
-                        length_,
-                        _Plan(
-                            index=index,
-                            edge=edge,
-                            source_face=source_face_,
-                            target_face=target_face_,
-                            channels=channels_,
-                            levels=levels_,
-                            is_straight_candidate=False,
+                        source_face_,
+                        target_face_,
+                        leg(
+                            source_id, source_face_, source_vertical_, corridor_
+                        )
+                        + tuple(
+                            reversed(
+                                leg(
+                                    target_id,
+                                    target_face_,
+                                    target_vertical_,
+                                    corridor_,
+                                )
+                            )
+                        )[1:],
+                    )
+                )
+        if source_place.column == target_place.column:
+            # Two nodes of one column: from the channel next to each end
+            # through a vertical channel beside the column.
+            for source_face_, target_face_, vertical_ in itertools.product(
+                (Face.TOP, Face.BOTTOM),
+                (Face.TOP, Face.BOTTOM),
+                (source_place.column, source_place.column + 1),
+            ):
+                sequences.append(
+                    (
+                        source_face_,
+                        target_face_,
+                        (
+                            self._port_channel(source_id, source_face_),
+                            StructureChannelId(
+                                ChannelKind.VERTICAL, container_id, vertical_
+                            ),
+                            self._port_channel(target_id, target_face_),
                         ),
                     )
                 )
+
+        candidates: List[Tuple[int, float, _Plan]] = []
+        seen: Set[Tuple[Face, Face, Tuple[StructureChannelId, ...]]] = set()
+        for source_face_, target_face_, sequence_ in sequences:
+            key_ = (source_face_, target_face_, sequence_)
+            if len(set(sequence_)) != len(sequence_) or key_ in seen:
+                continue
+            seen.add(key_)
+            path_ = self._best_path(
+                source_id,
+                source_face_,
+                target_id,
+                target_face_,
+                chain,
+                sequence_,
+            )
+            if path_ is None:
+                continue
+            (bends_, length_), channels_, levels_ = path_
+            candidates.append(
+                (
+                    bends_,
+                    length_,
+                    _Plan(
+                        index=index,
+                        edge=edge,
+                        source_face=source_face_,
+                        target_face=target_face_,
+                        channels=channels_,
+                        levels=levels_,
+                        is_straight_candidate=False,
+                    ),
+                )
+            )
         assert len(candidates) > 0
         shortest = min(candidate_[1] for candidate_ in candidates)
         candidates = [
@@ -711,6 +661,7 @@ class _Router:
             if candidate_[1] <= shortest + self.config.detour_tolerance
         ]
         fewest_bends = min(candidate_[0] for candidate_ in candidates)
+        away = self._away_from_facing(source_id, target_id)
         best = sorted(
             (
                 candidate_
@@ -718,6 +669,7 @@ class _Router:
                 if candidate_[0] == fewest_bends
             ),
             key=lambda candidate_: (
+                away(candidate_[2]),
                 not _is_under(candidate_[2]),
                 candidate_[1],
             ),
@@ -725,6 +677,206 @@ class _Router:
         if len(best) > 1:
             self.ties[edge.edge_id] = [candidate_[2] for candidate_ in best]
         return best[0][2]
+
+    def _chain_plan(self, index: int, edge: NormalizedEdge) -> _Plan:
+        """
+        Return the plan of a relation whose ends lie in different
+        containers.
+
+        spec.md, section "Связи через боковые грани". The path is a chain
+        of legs, one in each container on the chain, joined at the side
+        faces. The search runs on the channels of the structure only, see
+        _structural_channels. The shapes of the common container come from
+        three searches for each pair of faces: free, without the space under
+        the columns of the common container, and without its top corridor.
+
+        The fewest bends win. A path longer by less than two node heights
+        counts as equal. Of equal paths, the faces that look toward each
+        other come first, then the path under the columns, then the shorter
+        one. More than one such path is a tie, see _resolve_ties.
+        """
+
+        source_id = edge.source_id
+        target_id = edge.target_id
+        chain = self._chain(source_id, target_id)
+        common_id = next(
+            container_id_
+            for container_id_ in chain
+            if container_id_ is None
+            or self.normalized_graph.parent_ids[container_id_] not in chain
+        )
+        structural = self._structural_channels(source_id, target_id, chain)
+        corridors = (
+            StructureChannelId(ChannelKind.BOTTOM_CORRIDOR, common_id),
+            StructureChannelId(ChannelKind.TOP_CORRIDOR, common_id),
+        )
+        candidates: List[Tuple[int, float, _Plan]] = []
+        seen: Set[Tuple[Face, Face, Tuple[StructureChannelId, ...]]] = set()
+        for banned_, source_face_, target_face_ in itertools.product(
+            (None,) + corridors,
+            (Face.TOP, Face.BOTTOM),
+            (Face.TOP, Face.BOTTOM),
+        ):
+            allowed_ = structural - {banned_}
+            if (
+                self._port_channel(source_id, source_face_) not in allowed_
+                or self._port_channel(target_id, target_face_) not in allowed_
+            ):
+                continue
+            path_ = self._best_path(
+                source_id,
+                source_face_,
+                target_id,
+                target_face_,
+                chain,
+                allowed=allowed_,
+            )
+            if path_ is None:
+                continue
+            (bends_, length_), channels_, levels_ = path_
+            key_ = (source_face_, target_face_, channels_)
+            if key_ in seen:
+                continue
+            seen.add(key_)
+            candidates.append(
+                (
+                    bends_,
+                    length_,
+                    _Plan(
+                        index=index,
+                        edge=edge,
+                        source_face=source_face_,
+                        target_face=target_face_,
+                        channels=channels_,
+                        levels=levels_,
+                        is_straight_candidate=False,
+                    ),
+                )
+            )
+        assert len(candidates) > 0
+        fewest_bends = min(candidate_[0] for candidate_ in candidates)
+        candidates = [
+            candidate_
+            for candidate_ in candidates
+            if candidate_[0] == fewest_bends
+        ]
+        shortest = min(candidate_[1] for candidate_ in candidates)
+        away = self._away_from_facing(source_id, target_id)
+        best = sorted(
+            (
+                candidate_
+                for candidate_ in candidates
+                if candidate_[1] < shortest + 2 * self.config.node_height
+            ),
+            key=lambda candidate_: (
+                away(candidate_[2]),
+                not _is_under(candidate_[2]),
+                candidate_[1],
+            ),
+        )
+        if len(best) > 1:
+            self.ties[edge.edge_id] = [candidate_[2] for candidate_ in best]
+        return best[0][2]
+
+    def _away_from_facing(
+        self, source_id: str, target_id: str
+    ) -> Callable[[_Plan], int]:
+        """
+        Return how many faces of a plan look away from the other end.
+
+        A target below the source looks toward it with its top face, and
+        the source with its bottom face; a target above, the opposite. Ends
+        at the same height have no such faces.
+        """
+
+        source_y = _center_y(self.estimate.node_rects[source_id])
+        target_y = _center_y(self.estimate.node_rects[target_id])
+        facing: Optional[Tuple[Face, Face]] = None
+        if target_y > source_y:
+            facing = (Face.BOTTOM, Face.TOP)
+        elif target_y < source_y:
+            facing = (Face.TOP, Face.BOTTOM)
+
+        def away(plan: _Plan) -> int:
+            if facing is None:
+                return 0
+            return int(plan.source_face is not facing[0]) + int(
+                plan.target_face is not facing[1]
+            )
+
+        return away
+
+    def _structural_channels(
+        self, source_id: str, target_id: str, chain: FrozenSet[Optional[str]]
+    ) -> Set[StructureChannelId]:
+        """
+        Return the channels a relation through side faces may take.
+
+        In each container on the chain: its top corridor, the space under
+        its columns, its outer vertical channels and the column channels of
+        its outer columns. Beside each end: the channels above and below
+        it and the vertical channels beside its column. Beside each section
+        on the chain: the vertical channels beside its column and the
+        column channels of the columns next to it. A line turns only next
+        to its own ends and to the faces it crosses.
+        """
+
+        layout = self.layout
+        result: Set[StructureChannelId] = set()
+
+        def add_verticals(container_id: Optional[str], column: int) -> None:
+            for index_ in (column, column + 1):
+                result.add(
+                    StructureChannelId(ChannelKind.VERTICAL, container_id, index_)
+                )
+
+        def add_gaps(container_id: Optional[str], column: int) -> None:
+            columns_ = layout.columns[container_id]
+            if not 0 <= column < len(columns_) or columns_[column].is_composite:
+                return
+            for gap_ in range(len(columns_[column].node_ids) - 1):
+                result.add(
+                    StructureChannelId(
+                        ChannelKind.COLUMN, container_id, column, gap_
+                    )
+                )
+
+        for container_id_ in chain:
+            column_count_ = len(layout.columns[container_id_])
+            result.add(
+                StructureChannelId(ChannelKind.TOP_CORRIDOR, container_id_)
+            )
+            result.add(
+                StructureChannelId(ChannelKind.BOTTOM_CORRIDOR, container_id_)
+            )
+            result.add(
+                StructureChannelId(ChannelKind.VERTICAL, container_id_, 0)
+            )
+            result.add(
+                StructureChannelId(
+                    ChannelKind.VERTICAL, container_id_, column_count_
+                )
+            )
+            add_gaps(container_id_, 0)
+            add_gaps(container_id_, column_count_ - 1)
+        for node_id_ in (source_id, target_id):
+            place_ = layout.places[node_id_]
+            add_verticals(place_.container_id, place_.column)
+            result.add(layout.channel_above(node_id_))
+            result.add(layout.channel_below(node_id_))
+        for container_id_ in chain:
+            if container_id_ is None:
+                continue
+            section_place_ = layout.places.get(container_id_)
+            if (
+                section_place_ is None
+                or section_place_.container_id not in chain
+            ):
+                continue
+            add_verticals(section_place_.container_id, section_place_.column)
+            add_gaps(section_place_.container_id, section_place_.column - 1)
+            add_gaps(section_place_.container_id, section_place_.column + 1)
+        return result
 
     def _resolve_ties(self, plans: List[_Plan]) -> List[_Plan]:
         """
@@ -779,6 +931,7 @@ class _Router:
         target_face: Face,
         chain: FrozenSet[Optional[str]],
         sequence: Optional[Tuple[StructureChannelId, ...]] = None,
+        allowed: Optional[AbstractSet[StructureChannelId]] = None,
     ) -> Optional[
         Tuple[
             Tuple[int, float],
@@ -810,7 +963,8 @@ class _Router:
         take the same channels.
 
         With a sequence of channels, the path takes exactly these channels:
-        the search only measures it, see _shape_plan.
+        the search only measures it, see _shape_plan. With a set of allowed
+        channels, the path turns only into these channels, see _chain_plan.
         """
 
         common_id = next(
@@ -914,6 +1068,8 @@ class _Router:
                     )
                 continue
             for neighbor_ in self._neighbors(item.channel, chain):
+                if allowed is not None and neighbor_ not in allowed:
+                    continue
                 if sequence is not None and (
                     len(item.path) >= len(sequence)
                     or neighbor_ != sequence[len(item.path)]

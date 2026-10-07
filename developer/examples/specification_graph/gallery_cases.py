@@ -2024,6 +2024,63 @@ ONE_FACE_CASES: Tuple[GalleryCase, ...] = (
 # how the rules work together under load.
 STRESS_CASES: Tuple[GalleryCase, ...] = (
     _structure_case(
+        "Stress: all kinds of relations",
+        (
+            "Every kind of relation in one document: neighbors and other "
+            "nodes of one column; relations between two columns over the "
+            "columns, under them and by a straight pass; relations through "
+            "one, two and three side faces; relations of sections from "
+            "outside, on the top face of the frame; relations of sections "
+            "with their descendants, on the header line; an opposite pair."
+        ),
+        [
+            (
+                "Doc",
+                [
+                    "A1",
+                    "A2",
+                    "A3",
+                    "A4",
+                    ("S", ["S1", "S2", ("SR", ["SR1", "SR2"]), "S3"]),
+                    "B1",
+                    "B2",
+                    ("Q", ["Q1", ("QR", ["QR1", "QR2"]), "Q2"]),
+                    "C1",
+                    "C2",
+                    "C3",
+                ],
+            )
+        ],
+        [
+            # Neighbors and other nodes of one column.
+            ("A1", "A2"),
+            ("A1", "A3"),
+            ("C3", "C1"),
+            # Two columns of one container: over, under, a pass.
+            ("A2", "B2"),
+            ("A4", "C3"),
+            ("B1", "C2"),
+            ("A3", "B2"),
+            # Through one, two and three side faces.
+            ("S1", "B1"),
+            ("A4", "SR1"),
+            ("SR2", "QR1"),
+            ("QR2", "A2"),
+            # Sections from outside.
+            ("A1", "S"),
+            ("S", "Q"),
+            ("QR", "C1"),
+            ("B2", "SR"),
+            # Sections with their descendants.
+            ("S2", "S"),
+            ("S", "SR1"),
+            ("QR2", "Q"),
+            ("Q", "Q1"),
+            # An opposite pair.
+            ("C2", "B1"),
+        ],
+    ),
+    _structure_case(
         "Stress: staircase of columns and pockets",
         (
             "Columns of different heights: five nodes, one node, a section "

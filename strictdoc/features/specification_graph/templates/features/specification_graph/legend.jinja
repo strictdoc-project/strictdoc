@@ -1,0 +1,23 @@
+<aside class="specification-graph-legend" aria-label="Legend" data-testid="specification-graph-legend">
+  <ul>
+    {%- for type_id, style in view.rendered_graph.relation_styles.items() -%}
+    <li data-relation-type="{{ type_id }}">
+      <svg width="32" height="10" viewBox="0 0 32 10" aria-hidden="true">
+        <line x1="1" y1="5" x2="31" y2="5" stroke="{{ style.color }}" stroke-width="2"
+          {%- if style.dash is not none %} stroke-dasharray="{{ style.dash }}"{% endif %}/>
+      </svg>
+      {{ style.label }}
+    </li>
+    {%- endfor -%}
+  </ul>
+  {%- if view.rendered_graph.diagnostics | length > 0 -%}
+  <details class="specification-graph-legend__diagnostics">
+    <summary>Diagnostics: {{ view.rendered_graph.diagnostics | length }}</summary>
+    <ul>
+      {%- for diagnostic in view.rendered_graph.diagnostics -%}
+      <li data-diagnostic-kind="{{ diagnostic.kind.value }}">{{ diagnostic.message }}</li>
+      {%- endfor -%}
+    </ul>
+  </details>
+  {%- endif -%}
+</aside>

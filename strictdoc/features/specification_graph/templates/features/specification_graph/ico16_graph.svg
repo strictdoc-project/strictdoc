@@ -1,0 +1,35 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  class="svg_icon"
+  viewBox="0 0 16 16"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="butt"
+  stroke-linejoin="round"
+>
+  <rect
+    width="5"
+    height="5"
+    x="5.5"
+    y="1"
+    rx="1"
+    ry="1" />
+  <rect
+    width="5"
+    height="5"
+    x="1"
+    y="10"
+    rx="1"
+    ry="1" />
+  <rect
+    width="5"
+    height="5"
+    x="10"
+    y="10"
+    rx="1"
+    ry="1" />
+  <path d="M3.5,10 8,6 12.5,10"/>
+
+
+</svg>

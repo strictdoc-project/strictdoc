@@ -1,0 +1,27 @@
+{% extends "components/modal/index.jinja" %}
+{%- block modal_container %}
+      <div data-testid="specification-graph-tips-content">
+        <h3>Specification graph tips</h3>
+        <p>
+          The <b>Documents</b> view shows one node per document. An arrow goes
+          from a document to its parent document: a node of the first
+          document relates to a node of the second one.
+        </p>
+        <p>
+          The <b>Nodes</b> view shows the documents and the sections as frames
+          and the requirements as nodes. An arrow goes from a node to its
+          parent node.
+        </p>
+        <p>Point at a node or a relation to highlight its relations.</p>
+        <p>
+          Hold <kbd>Shift</kbd> while pointing at a node to see its data.
+          <kbd>Shift</kbd>+<kbd>Click</kbd> opens the node in a new tab. For a
+          frame, use its title.
+        </p>
+        <ul>
+          <li>Mouse wheel: zoom.</li>
+          <li><kbd>Space</kbd> + drag: move the graph.</li>
+          <li><kbd>0</kbd>: scale 100%. <kbd>F</kbd>: fit the graph to the view.</li>
+        </ul>
+      </div>
+{%- endblock modal_container %}

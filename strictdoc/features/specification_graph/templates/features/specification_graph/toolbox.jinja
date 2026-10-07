@@ -1,0 +1,19 @@
+<div class="specification-graph-toolbox" aria-label="Graph controls" data-testid="specification-graph-toolbox">
+  <label class="specification-graph-toolbox__view">
+    View
+    <select data-specification-graph-view-select data-testid="specification-graph-view-select">
+      {%- for view in view_object.views -%}
+      <option value="{{ view.view_id }}">{{ view.label }}</option>
+      {%- endfor -%}
+    </select>
+  </label>
+  <button type="button" class="action_button" data-graph-action="zoom-in" aria-label="Zoom in" title="Zoom in">+</button>
+  <button type="button" class="action_button" data-graph-action="zoom-out" aria-label="Zoom out" title="Zoom out">−</button>
+  <output class="specification-graph-toolbox__zoom" aria-live="polite">100%</output>
+  <button type="button" class="action_button" data-graph-action="reset" title="Scale 100%">1:1 <kbd>0</kbd></button>
+  <button type="button" class="action_button" data-graph-action="fit" title="Fit to view">Fit <kbd>F</kbd></button>
+  <label class="specification-graph-toolbox__debug">
+    <input type="checkbox" data-graph-routing-debug>
+    Routing debug
+  </label>
+</div>

@@ -1,0 +1,75 @@
+{% set template_type = 'Specification graph' %}
+
+{% extends "base.jinja.html" %}
+
+{% block head_css %}
+  {{ super() }}
+  <link rel="stylesheet" href="{{ view_object.render_static_url('specification_graph_screen.css') }}"/>
+  {{ view_object.graph_style }}
+{% endblock head_css %}
+
+{% block head_scripts %}
+  {{ super() }}
+  {%- if view_object.project_config.is_running_on_server -%}
+  <script type="module">
+    import hotwiredTurbo from "./{{ view_object.render_static_url('turbo.min.js') }}";
+  </script>
+  {%- endif -%}
+  <script src="{{ view_object.render_static_url('modal.js') }}"></script>
+  <script src="{{ view_object.render_static_url('specification_graph.js') }}" defer></script>
+{% endblock head_scripts %}
+
+{% block title %}
+  {{ view_object.project_config.project_title }} - {{ template_type }}
+{% endblock title %}
+
+{% block viewtype %}specification-graph{% endblock viewtype %}
+
+{% block layout_nav %}
+  {% include "_shared/nav.jinja.html" %}
+{% endblock layout_nav %}
+
+{% block header_content %}
+  {%- with
+    header__pagetype=template_type,
+    header__last="features/specification_graph/header__actions.jinja"
+  -%}
+    {% include "components/header/index.jinja" %}
+  {%- endwith -%}
+{% endblock header_content %}
+
+{% block main_content %}
+  <div class="main specification-graph-screen" data-testid="specification-graph-root">
+    {% include "features/specification_graph/toolbox.jinja" %}
+    {%- for view in view_object.views -%}
+    <section
+      class="specification-graph-view"
+      data-specification-graph-view="{{ view.view_id }}"
+      data-testid="specification-graph-view-{{ view.view_id }}"
+      {%- if not loop.first %} hidden{% endif %}
+    >
+      <div class="specification-graph-viewport">
+        {%- if view.error is not none -%}
+        <p class="specification-graph-error" data-testid="specification-graph-error">
+          The graph cannot be built: {{ view.error }}
+        </p>
+        {%- else -%}
+        {{ view.svg }}
+        {%- endif -%}
+      </div>
+      {%- if view.rendered_graph is not none -%}
+      {% include "features/specification_graph/legend.jinja" %}
+      {%- endif -%}
+    </section>
+    {%- endfor -%}
+    <div class="specification-graph-info-panel" data-testid="specification-graph-info-panel" hidden>
+      <dl class="specification-graph-info-table"></dl>
+      <div class="specification-graph-info-panel__tip">
+        <kbd>Shift</kbd>+<kbd>Click</kbd> opens the node in a new tab.
+      </div>
+    </div>
+    <template id="specification-graph-tips-modal-template">
+      {% include "features/specification_graph/tips.jinja" %}
+    </template>
+  </div>
+{% endblock main_content %}

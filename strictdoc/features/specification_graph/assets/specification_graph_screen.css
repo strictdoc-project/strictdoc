@@ -1,0 +1,175 @@
+.specification-graph-screen {
+  display: flex;
+  flex-direction: column;
+  gap: var(--base-rhythm);
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.specification-graph-toolbox {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--base-rhythm);
+}
+
+.specification-graph-toolbox__view {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--base-rhythm) / 2);
+}
+
+.specification-graph-toolbox__zoom {
+  min-width: 4em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.specification-graph-toolbox__debug {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--base-rhythm) / 2);
+  margin-left: auto;
+  font-size: var(--font-size-sm);
+}
+
+/* The view fills the rest of the screen; the graph moves inside it. */
+.specification-graph-view {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 400px;
+}
+
+.specification-graph-view[hidden] {
+  display: none;
+}
+
+.specification-graph-viewport {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-contrast);
+}
+
+.specification-graph-viewport > svg.specification-graph {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  user-select: none;
+}
+
+.specification-graph-error {
+  margin: var(--base-rhythm);
+  color: var(--color-danger, #c00000);
+}
+
+/* The legend stays in the top left corner of the view. */
+.specification-graph-legend {
+  position: absolute;
+  top: var(--base-rhythm);
+  left: var(--base-rhythm);
+  max-width: 320px;
+  max-height: 50%;
+  overflow: auto;
+  padding: calc(var(--base-rhythm) / 2) var(--base-rhythm);
+  border: 1px solid var(--color-border);
+  border-radius: calc(var(--base-rhythm) / 2);
+  background: var(--color-bg-main);
+  font-size: var(--font-size-sm);
+}
+
+.specification-graph-legend ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.specification-graph-legend li {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--base-rhythm) / 2);
+}
+
+.specification-graph-legend__diagnostics ul {
+  padding-left: var(--base-rhythm);
+  list-style: disc;
+}
+
+.specification-graph-legend__diagnostics li {
+  display: list-item;
+}
+
+/* Highlight of the active node or relation. */
+svg.specification-graph .specification-graph-edge__line {
+  transition: opacity 0.1s;
+}
+
+svg.specification-graph.has-highlight .specification-graph-edge:not(.is-highlighted) .specification-graph-edge__line {
+  opacity: 0.15;
+}
+
+svg.specification-graph .specification-graph-edge.is-highlighted .specification-graph-edge__line {
+  stroke-width: 3;
+}
+
+svg.specification-graph .specification-graph-node.is-highlighted > .specification-graph-node__box {
+  stroke: #2563eb;
+  stroke-width: 2;
+}
+
+svg.specification-graph .specification-graph-debug {
+  display: none;
+}
+
+svg.specification-graph.show-routing-debug .specification-graph-debug {
+  display: inline;
+}
+
+svg.specification-graph.is-pan-ready {
+  cursor: grab;
+}
+
+svg.specification-graph.is-panning {
+  cursor: grabbing;
+}
+
+.specification-graph-info-panel {
+  position: fixed;
+  z-index: 1000;
+  width: 300px;
+  padding: var(--base-rhythm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--base-rhythm);
+  background: var(--color-bg-main);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
+  color: var(--color-fg-main);
+  font-size: var(--font-size-sm);
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.specification-graph-info-panel__tip {
+  margin-top: var(--base-rhythm);
+  padding-top: var(--base-rhythm);
+  border-top: 1px solid var(--color-border);
+  font-size: var(--font-size-xxsm);
+}
+
+.specification-graph-info-table {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: calc(var(--base-rhythm) / 2) var(--base-rhythm);
+  margin: 0;
+}
+
+.specification-graph-info-table dt {
+  font-weight: 600;
+}
+
+.specification-graph-info-table dd {
+  min-width: 0;
+  margin: 0;
+  overflow-wrap: anywhere;
+}

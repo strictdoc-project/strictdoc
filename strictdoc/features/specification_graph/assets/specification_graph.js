@@ -51,6 +51,9 @@
     let selectedNodeId = null;
     let selectedEdge = null;
     let pressPoint = null;
+    // The last pointer move over a node: Shift pressed without a move shows
+    // the panel at once.
+    let lastNodeMove = null;
 
     const viewportSize = () => {
       const bounds = graph.getBoundingClientRect();
@@ -196,9 +199,13 @@
           activeNodeId = null;
           refreshHighlights();
         }
+        if (lastNodeMove?.node === node) {
+          lastNodeMove = null;
+        }
         hideInfoPanel();
       });
       node.addEventListener("pointermove", (event) => {
+        lastNodeMove = {node, event};
         if (event.shiftKey && !spacePressed && isTitleEvent(node, event)) {
           showInfoPanel(node, event);
         } else {
@@ -305,6 +312,19 @@
     graph.addEventListener("pointerup", stopPanning);
     graph.addEventListener("pointercancel", stopPanning);
 
+    const setShiftPressed = (pressed) => {
+      if (
+        pressed &&
+        lastNodeMove !== null &&
+        !spacePressed &&
+        isTitleEvent(lastNodeMove.node, lastNodeMove.event)
+      ) {
+        showInfoPanel(lastNodeMove.node, lastNodeMove.event);
+      } else {
+        hideInfoPanel();
+      }
+    };
+
     const setSpacePressed = (pressed) => {
       spacePressed = pressed;
       graph.classList.toggle("is-pan-ready", pressed);
@@ -328,6 +348,7 @@
       fitView,
       zoomStep,
       setSpacePressed,
+      setShiftPressed,
       hideInfoPanel,
       setRoutingDebug: (enabled) => {
         graph.classList.toggle("show-routing-debug", enabled);
@@ -405,7 +426,9 @@
       if (active === null || isEditable() || document.querySelector("[data-js-modal]")) {
         return;
       }
-      if (event.key === " ") {
+      if (event.key === "Shift") {
+        active.setShiftPressed(true);
+      } else if (event.key === " ") {
         event.preventDefault();
         active.setSpacePressed(true);
       } else if (event.key === "0") {
@@ -415,7 +438,9 @@
       }
     });
     document.addEventListener("keyup", (event) => {
-      if (event.key === " ") {
+      if (event.key === "Shift") {
+        active?.setShiftPressed(false);
+      } else if (event.key === " ") {
         active?.setSpacePressed(false);
       }
     });

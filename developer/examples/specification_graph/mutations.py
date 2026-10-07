@@ -451,7 +451,7 @@ MUTATIONS = (
         "                    levels[position_ - 1],\n"
         "                    exact.node_rects,\n"
         "                ),\n"
-        "                _center_x(exact.node_rects[plan.edge.target_id])\n"
+        "                self._end_x(plan.edge.target_id, exact.node_rects)\n"
         "                if position_ == last\n"
         "                else self._face_x(\n"
         "                    channels[position_ + 1],\n"
@@ -460,7 +460,7 @@ MUTATIONS = (
         "                    exact.node_rects,\n"
         "                ),\n",
         "                else levels[position_ - 1],\n"
-        "                _center_x(exact.node_rects[plan.edge.target_id])\n"
+        "                self._end_x(plan.edge.target_id, exact.node_rects)\n"
         "                if position_ == last\n"
         "                else levels[position_ + 1],\n",
     ),
@@ -964,16 +964,20 @@ MUTATIONS = (
         "XC8",
         "paths of equal cost do not prefer the common container",
         STRUCTURE_ROUTING,
-        "                        if channel_.container_id != common_id\n",
-        "                        if False\n",
+        "                    nested,\n"
+        "                    tie,\n"
+        "                    _SearchItem(\n",
+        "                    0,\n"
+        "                    tie,\n"
+        "                    _SearchItem(\n",
     ),
     Mutation(
         "XC5",
         "the columns under a segment include the child it enters",
         STRUCTURE_ROUTING,
-        "        frame = (\n"
-        "            self.estimate.node_rects if frames is None else frames\n"
-        "        )[child_id]\n"
+        "        frame = (self.estimate.node_rects if frames is None else frames)[\n"
+        "            child_id\n"
+        "        ]\n"
         "        return frame.x if vertical.index == 0 else frame.x + frame.width\n",
         "        return x\n",
     ),

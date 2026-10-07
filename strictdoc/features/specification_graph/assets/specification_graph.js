@@ -120,15 +120,15 @@
     };
 
     // Highlight: the relations of a node, or one relation, and the nodes
-    // at their ends. The other relations fade. The hover shows over the
-    // selection; when the pointer leaves, the selection shows again.
+    // at their ends. The other relations fade. A selection stays as it is
+    // while the pointer moves; without a selection, the hover shows.
     const refreshHighlights = () => {
       graph
         .querySelectorAll(".is-highlighted, .is-selected")
         .forEach((element) => {
           element.classList.remove("is-highlighted", "is-selected");
         });
-      const isHover = activeNodeId !== null || activeEdge !== null;
+      const isHover = selectedNodeId === null && selectedEdge === null;
       const nodeId = isHover ? activeNodeId : selectedNodeId;
       const edge = isHover ? activeEdge : selectedEdge;
       const highlightedEdges = edge !== null
@@ -411,7 +411,11 @@
     debugToggle?.addEventListener("change", () => {
       active?.setRoutingDebug(debugToggle.checked);
     });
-    select?.addEventListener("change", activateView);
+    select?.addEventListener("change", () => {
+      activateView();
+      // Keys go to the graph, not to the select: Space pans the graph.
+      select.blur();
+    });
 
     const isEditable = () => {
       const element = document.activeElement;

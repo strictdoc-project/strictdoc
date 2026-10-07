@@ -33,8 +33,13 @@
     let panStart = null;
     let spacePressed = false;
     let onZoomChange = () => {};
+    // Hover highlight, shown while the pointer is on a node or a relation.
     let activeNodeId = null;
     let activeEdge = null;
+    // Selection, kept until a click elsewhere.
+    let selectedNodeId = null;
+    let selectedEdge = null;
+    let pressPoint = null;
 
     const viewportSize = () => {
       const bounds = graph.getBoundingClientRect();
@@ -100,27 +105,34 @@
       );
     };
 
-    // Highlight: the relations of the active node, or the active relation,
-    // and the nodes at their ends. The other relations fade.
+    // Highlight: the relations of a node, or one relation, and the nodes
+    // at their ends. The other relations fade. The hover shows over the
+    // selection; when the pointer leaves, the selection shows again.
     const refreshHighlights = () => {
       graph
-        .querySelectorAll(".is-highlighted")
-        .forEach((element) => element.classList.remove("is-highlighted"));
-      const highlightedEdges = activeEdge !== null
-        ? [activeEdge]
-        : edgesByNodeId.get(activeNodeId) ?? [];
-      if (activeNodeId !== null) {
-        nodesById.get(activeNodeId)?.classList.add("is-highlighted");
+        .querySelectorAll(".is-highlighted, .is-selected")
+        .forEach((element) => {
+          element.classList.remove("is-highlighted", "is-selected");
+        });
+      const isHover = activeNodeId !== null || activeEdge !== null;
+      const nodeId = isHover ? activeNodeId : selectedNodeId;
+      const edge = isHover ? activeEdge : selectedEdge;
+      const highlightedEdges = edge !== null
+        ? [edge]
+        : edgesByNodeId.get(nodeId) ?? [];
+      if (nodeId !== null) {
+        nodesById.get(nodeId)?.classList.add("is-highlighted");
       }
-      highlightedEdges.forEach((edge) => {
-        edge.classList.add("is-highlighted");
-        nodesById.get(edge.dataset.sourceId)?.classList.add("is-highlighted");
-        nodesById.get(edge.dataset.targetId)?.classList.add("is-highlighted");
+      highlightedEdges.forEach((edge_) => {
+        edge_.classList.add("is-highlighted");
+        nodesById.get(edge_.dataset.sourceId)?.classList.add("is-highlighted");
+        nodesById.get(edge_.dataset.targetId)?.classList.add("is-highlighted");
       });
-      graph.classList.toggle(
-        "has-highlight",
-        activeNodeId !== null || activeEdge !== null,
-      );
+      if (selectedNodeId !== null) {
+        nodesById.get(selectedNodeId)?.classList.add("is-selected");
+      }
+      selectedEdge?.classList.add("is-selected");
+      graph.classList.toggle("has-highlight", nodeId !== null || edge !== null);
     };
 
     const hideInfoPanel = () => {
@@ -203,6 +215,31 @@
           refreshHighlights();
         }
       });
+    });
+
+    // A click on a node or a relation selects it; a click on the free space,
+    // or on a frame outside its title, clears the selection. A press that
+    // moves the pointer before the release is a drag, not a click.
+    graph.addEventListener("pointerdown", (event) => {
+      pressPoint = {x: event.clientX, y: event.clientY};
+    });
+    graph.addEventListener("click", (event) => {
+      if (event.shiftKey || spacePressed) {
+        return;
+      }
+      if (
+        pressPoint !== null &&
+        Math.hypot(event.clientX - pressPoint.x, event.clientY - pressPoint.y) > 4
+      ) {
+        return;
+      }
+      const edge = event.target.closest(`.${PREFIX}-edge`);
+      const node = event.target.closest(`.${PREFIX}-node`);
+      selectedEdge = edge;
+      selectedNodeId = edge === null && node !== null && isTitleEvent(node, event)
+        ? node.dataset.nodeId
+        : null;
+      refreshHighlights();
     });
 
     graph.addEventListener("wheel", (event) => {

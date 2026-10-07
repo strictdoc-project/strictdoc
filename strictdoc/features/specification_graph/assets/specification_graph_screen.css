@@ -119,6 +119,15 @@ svg.specification-graph .specification-graph-node.is-highlighted > .specificatio
   stroke-width: 2;
 }
 
+svg.specification-graph .specification-graph-node.is-selected > .specification-graph-node__box {
+  stroke: #2563eb;
+  stroke-width: 3;
+}
+
+svg.specification-graph .specification-graph-edge.is-selected .specification-graph-edge__line {
+  stroke-width: 4;
+}
+
 svg.specification-graph .specification-graph-debug {
   display: none;
 }

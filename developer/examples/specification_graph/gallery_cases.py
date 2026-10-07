@@ -805,9 +805,13 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
         (
             "A2 -> B1 and A3 -> B1 both climb in the vertical channel left of "
             "the section S and turn right into the top corridor. The lanes "
-            "nest, so the two relations do not cross."
+            "nest, so the two relations do not cross. A3 stands in the "
+            "middle of its column and S is two nodes tall, so the path of "
+            "A3 -> B1 under S needs six bends against four over it. With A3 "
+            "at the bottom of its column, both paths have four bends, and "
+            "the path under the columns wins the tie."
         ),
-        [("Doc", ["A1", "A2", "A3", ("S", ["S1"]), "B1", "B2"])],
+        [("Doc", ["A1", "A2", "A3", "A4", ("S", ["S1", "S2"]), "B1", "B2"])],
         [("A2", "B1"), ("A3", "B1")],
     ),
     _structure_case(

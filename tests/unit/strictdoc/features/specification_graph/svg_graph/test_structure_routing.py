@@ -157,7 +157,7 @@ def test_over_or_under_tie_takes_fewer_crossings() -> None:
     N1 -> A2: both paths have four bends. The path under the columns
     crosses S2 -> F1, the path over the columns does not.
 
-    Code: structure_routing._Router._resolve_over_under_ties.
+    Code: structure_routing._Router._resolve_ties.
     Fails if:
     - a tie of the over or under rule always takes the path under.
     - a tie takes the path with more crossings.
@@ -184,6 +184,38 @@ def test_over_or_under_tie_takes_fewer_crossings() -> None:
         ChannelKind.TOP_CORRIDOR
     )
     assert first_corridor(OverUnderTie.UNDER) is ChannelKind.BOTTOM_CORRIDOR
+
+
+def test_shapes_are_measured_along_their_own_channels() -> None:
+    """
+    Each shape of a relation in one container is measured along its own
+    channels, so the tie between shapes has real alternatives.
+
+    L2 -> C2 has shapes over and under the columns with six bends each.
+    The shape over crosses fewer paths and wins: L2 -> C2 goes over the
+    columns and does not cross C3 -> A3 under them.
+
+    Code: structure_routing._Router._shape_plan,
+    structure_routing._Router._best_path.
+    Fails if:
+    - the search ignores the channels of a shape.
+    """
+
+    normalized_graph, routing, _, paths = _result(
+        _case("Steps beside a pocket")
+    )
+
+    l2_c2 = _edge_id(normalized_graph, "L2", "C2")
+    assert any(
+        channel_.kind is ChannelKind.TOP_CORRIDOR
+        for channel_ in routing.routes[l2_c2].channels
+    )
+    assert (
+        crossing_count(
+            paths[l2_c2], paths[_edge_id(normalized_graph, "C3", "A3")]
+        )
+        == 0
+    )
 
 
 def test_routes_take_the_fewest_bends() -> None:
@@ -237,10 +269,9 @@ def test_over_or_under_follows_bends_and_the_detour_tolerance() -> None:
       ways, and the path over is shorter by more than the tolerance: it
       goes over.
 
-    Code: structure_routing._Router._over_or_under.
+    Code: structure_routing._Router._shape_plan.
     Fails if:
     - fewer bends win at any length.
-    - with equal bends, the path under wins at any length.
     """
 
     def first_kind(case_title: str, source_id: str, target_id: str) -> Any:
@@ -2019,7 +2050,7 @@ def test_column_lane_count_rule_matches_the_lanes(case: GalleryCase) -> None:
         )
         if plan_ is not None
     ]
-    plans = router._resolve_over_under_ties(plans)
+    plans = router._resolve_ties(plans)
     expected = router._column_lane_counts(plans, router._straight_ids(plans))
     routing = compute_structure_routing(normalized_graph, layout)
     assert expected == {

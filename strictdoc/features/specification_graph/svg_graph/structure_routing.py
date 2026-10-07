@@ -11,6 +11,7 @@ not routed yet.
 """
 
 import heapq
+import itertools
 from dataclasses import dataclass, field
 from typing import Dict, FrozenSet, List, Mapping, Optional, Set, Tuple
 
@@ -184,9 +185,9 @@ class _Router:
         # The forced orders of the nested pairs on shared stretches.
         self.forced_orders: Dict[StructureChannelId, List[ForcedOrder]] = {}
         self.forced_port_orders: List[ForcedPortOrder] = []
-        # Relation -> (the path under the columns, the path over them): a tie
-        # of the over or under rule, see _resolve_over_under_ties.
-        self.over_under_ties: Dict[str, Tuple[_Plan, _Plan]] = {}
+        # Relation -> the tied shapes of a relation in one container, the
+        # preferred one first, see _shape_plan and _resolve_ties.
+        self.ties: Dict[str, List[_Plan]] = {}
         # Segments under the columns that continue a lane straight: rows.
         # They keep the height of that lane. See _exact_levels.
         self.row_keys: Set[Tuple[str, int]] = set()
@@ -213,7 +214,7 @@ class _Router:
             else:
                 plans.append(plan_)
         if self.options.over_under_tie is OverUnderTie.FEWER_CROSSINGS:
-            plans = self._resolve_over_under_ties(plans)
+            plans = self._resolve_ties(plans)
 
         straight_ids = self._straight_ids(plans)
         side_entries = _column_side_entries(
@@ -513,6 +514,12 @@ class _Router:
                 is_straight_candidate=True,
             )
 
+        if (
+            source_place.container_id == target_place.container_id
+            and source_place.column != target_place.column
+        ):
+            return self._shape_plan(index, edge)
+
         # The faces of the source and of the target, then the plan. The
         # face pairs come with the top faces first.
         candidates: List[Tuple[int, float, Face, Face, _Plan]] = []
@@ -566,14 +573,8 @@ class _Router:
         a channel on the other side for one turn. A target at the same
         height has no such side. The length in pixels decides next, and the
         top faces win the last tie.
-
-        If the winner is the path over the columns or the path under them,
-        and the columns close the straight line at both ends, the two
-        paths compete by bends and the detour tolerance, see
-        _over_or_under.
         """
 
-        all_candidates = candidates
         fewest_bends = min(candidate_[0] for candidate_ in candidates)
         candidates = [
             candidate_
@@ -602,69 +603,140 @@ class _Router:
             )
 
         # min keeps the first of equal candidates: the top faces.
-        best = min(
+        return min(
             candidates, key=lambda candidate_: (away(candidate_), candidate_[1])
-        )
-        if best[2] is best[3] and self._is_closed_at_both_ends(
-            source_id, target_id
-        ):
-            return self._over_or_under(all_candidates, best)[4]
-        return best[4]
+        )[4]
 
-    def _over_or_under(
-        self,
-        candidates: List[Tuple[int, float, Face, Face, _Plan]],
-        best: Tuple[int, float, Face, Face, _Plan],
-    ) -> Tuple[int, float, Face, Face, _Plan]:
+    def _shape_plan(self, index: int, edge: NormalizedEdge) -> _Plan:
         """
-        Choose between the path over the columns and the path under them.
+        Return the plan of a relation between two columns of one container.
 
-        spec.md, section "Карта лучей": fewer bends win, unless that path
-        is longer than the other one by more than the detour tolerance.
-        With equal bends, a path shorter by more than the tolerance wins.
-        Otherwise the path under the columns wins.
+        spec.md, section "Путь по каналам". The path is a shape of the
+        structure. From a face of each end, the path takes the channel next
+        to that face. If this is not the corridor of the shape, the path
+        turns into a vertical channel beside the column of the end and goes
+        to the top corridor or to the space under the columns. A node at
+        the top of its column reaches the top corridor from its top face
+        directly, a node at the bottom of its column reaches the space under
+        the columns from its bottom face. The candidates are both corridors,
+        all faces and both vertical channels beside each column. The search
+        measures each shape along its channels: bends, length, through
+        passes.
+
+        A path longer than the shortest one by more than the detour
+        tolerance is out. Of the rest, the fewest bends win. Of equal
+        bends, the path under the columns comes first, then the shorter
+        one. More than one such path is a tie, see _resolve_ties.
         """
 
-        over = next(
-            (
-                candidate_
-                for candidate_ in candidates
-                if candidate_[2] is Face.TOP and candidate_[3] is Face.TOP
-            ),
-            None,
-        )
-        under = next(
-            (
-                candidate_
-                for candidate_ in candidates
-                if candidate_[2] is Face.BOTTOM
-                and candidate_[3] is Face.BOTTOM
-            ),
-            None,
-        )
-        if over is None or under is None:
-            return best
-        tolerance = self.config.detour_tolerance
-        if over[0] != under[0]:
-            fewer, other = (
-                (over, under) if over[0] < under[0] else (under, over)
+        source_id = edge.source_id
+        target_id = edge.target_id
+        source_place = self.layout.places[source_id]
+        target_place = self.layout.places[target_id]
+        container_id = source_place.container_id
+        chain = self._chain(source_id, target_id)
+
+        def leg(
+            node_id: str, face: Face, vertical: int, corridor: StructureChannelId
+        ) -> Tuple[StructureChannelId, ...]:
+            first = self._port_channel(node_id, face)
+            if first == corridor:
+                return (first,)
+            return (
+                first,
+                StructureChannelId(ChannelKind.VERTICAL, container_id, vertical),
+                corridor,
             )
-            return other if fewer[1] - other[1] > tolerance else fewer
-        if abs(over[1] - under[1]) > tolerance:
-            return over if over[1] < under[1] else under
-        self.over_under_ties[under[4].edge.edge_id] = (under[4], over[4])
-        return under
 
-    def _resolve_over_under_ties(self, plans: List[_Plan]) -> List[_Plan]:
+        candidates: List[Tuple[int, float, _Plan]] = []
+        seen: Set[Tuple[Face, Face, Tuple[StructureChannelId, ...]]] = set()
+        for corridor_kind_, source_face_, target_face_ in itertools.product(
+            (ChannelKind.TOP_CORRIDOR, ChannelKind.BOTTOM_CORRIDOR),
+            (Face.TOP, Face.BOTTOM),
+            (Face.TOP, Face.BOTTOM),
+        ):
+            corridor_ = StructureChannelId(corridor_kind_, container_id)
+            for source_vertical_, target_vertical_ in itertools.product(
+                (source_place.column, source_place.column + 1),
+                (target_place.column, target_place.column + 1),
+            ):
+                sequence_ = (
+                    leg(source_id, source_face_, source_vertical_, corridor_)
+                    + tuple(
+                        reversed(
+                            leg(
+                                target_id,
+                                target_face_,
+                                target_vertical_,
+                                corridor_,
+                            )
+                        )
+                    )[1:]
+                )
+                key_ = (source_face_, target_face_, sequence_)
+                if len(set(sequence_)) != len(sequence_) or key_ in seen:
+                    continue
+                seen.add(key_)
+                path_ = self._best_path(
+                    source_id,
+                    source_face_,
+                    target_id,
+                    target_face_,
+                    chain,
+                    sequence_,
+                )
+                if path_ is None:
+                    continue
+                (bends_, length_), channels_, levels_ = path_
+                candidates.append(
+                    (
+                        bends_,
+                        length_,
+                        _Plan(
+                            index=index,
+                            edge=edge,
+                            source_face=source_face_,
+                            target_face=target_face_,
+                            channels=channels_,
+                            levels=levels_,
+                            is_straight_candidate=False,
+                        ),
+                    )
+                )
+        assert len(candidates) > 0
+        shortest = min(candidate_[1] for candidate_ in candidates)
+        candidates = [
+            candidate_
+            for candidate_ in candidates
+            if candidate_[1] <= shortest + self.config.detour_tolerance
+        ]
+        fewest_bends = min(candidate_[0] for candidate_ in candidates)
+        best = sorted(
+            (
+                candidate_
+                for candidate_ in candidates
+                if candidate_[0] == fewest_bends
+            ),
+            key=lambda candidate_: (
+                not _is_under(candidate_[2]),
+                candidate_[1],
+            ),
+        )
+        if len(best) > 1:
+            self.ties[edge.edge_id] = [candidate_[2] for candidate_ in best]
+        return best[0][2]
+
+    def _resolve_ties(self, plans: List[_Plan]) -> List[_Plan]:
         """
-        Resolve the ties of the over or under rule by crossings.
+        Resolve the ties of the shapes by crossings.
 
-        spec.md, section "Карта лучей". Each tied relation takes the path
-        that crosses fewer paths of the other relations, and the path under
-        the columns if both cross equally many. The paths run along the
-        middle of their channels: the lanes are not known yet. All ties are
-        resolved against the same paths of the other relations, so the
-        result does not depend on the order of the relations.
+        spec.md, section "Путь по каналам". Each tied relation takes the
+        shape that crosses fewer paths of the other relations; of equal
+        crossings, the preferred one: under the columns, then shorter. The
+        paths run along the middle of their channels: the lanes are not
+        known yet. All ties are resolved against the same paths of the other
+        relations, so the result does not depend on the order of the
+        relations.
         """
 
         points = {
@@ -682,50 +754,17 @@ class _Router:
 
         result: List[_Plan] = []
         for plan_ in plans:
-            tie_ = self.over_under_ties.get(plan_.edge.edge_id)
-            if tie_ is None:
+            tied_ = self.ties.get(plan_.edge.edge_id)
+            if tied_ is None:
                 result.append(plan_)
                 continue
-            under_, over_ = tie_
             result.append(
-                over_ if crossings(over_) < crossings(under_) else under_
+                min(
+                    enumerate(tied_),
+                    key=lambda item_: (crossings(item_[1]), item_[0]),
+                )[1]
             )
         return result
-
-    def _is_closed_at_both_ends(self, source_id: str, target_id: str) -> bool:
-        """
-        Return True if the two ends stand in one container and a column
-        between them closes the straight line at the height of each end.
-
-        The columns stand at the top of the container, so a column closes a
-        height between its top and its bottom.
-        """
-
-        source_place = self.layout.places[source_id]
-        target_place = self.layout.places[target_id]
-        if source_place.container_id != target_place.container_id:
-            return False
-        rects = self.estimate.node_rects
-        low, high = sorted((source_place.column, target_place.column))
-        spans = [
-            (
-                min(rects[node_id_].y for node_id_ in column_.node_ids),
-                max(
-                    rects[node_id_].y + rects[node_id_].height
-                    for node_id_ in column_.node_ids
-                ),
-            )
-            for column_ in self.layout.columns[source_place.container_id][
-                low + 1 : high
-            ]
-        ]
-        return all(
-            any(
-                top_ <= _center_y(rects[end_]) <= bottom_
-                for top_, bottom_ in spans
-            )
-            for end_ in (source_id, target_id)
-        )
 
     def _port_channel(self, node_id: str, face: Face) -> StructureChannelId:
         if face is Face.TOP:
@@ -739,6 +778,7 @@ class _Router:
         target_id: str,
         target_face: Face,
         chain: FrozenSet[Optional[str]],
+        sequence: Optional[Tuple[StructureChannelId, ...]] = None,
     ) -> Optional[
         Tuple[
             Tuple[int, float],
@@ -768,6 +808,9 @@ class _Router:
         early as possible. A path in one direction is the reverse of the
         path in the other, so two opposite relations between the same places
         take the same channels.
+
+        With a sequence of channels, the path takes exactly these channels:
+        the search only measures it, see _shape_plan.
         """
 
         common_id = next(
@@ -849,7 +892,9 @@ class _Router:
                 if len(item.path) >= 2
                 else x
             )
-            if item.channel == end:
+            if item.channel == end and (
+                sequence is None or len(item.path) == len(sequence)
+            ):
                 segment_y_ = self._segment_y(
                     item.channel, start_x, target_x, y, item.is_through
                 )
@@ -869,6 +914,11 @@ class _Router:
                     )
                 continue
             for neighbor_ in self._neighbors(item.channel, chain):
+                if sequence is not None and (
+                    len(item.path) >= len(sequence)
+                    or neighbor_ != sequence[len(item.path)]
+                ):
+                    continue
                 if neighbor_ in item.path:
                     continue
                 turn_ = self._turn_point(item.channel, neighbor_)
@@ -918,7 +968,11 @@ class _Router:
                     chain,
                     item.is_through,
                 ):
-                    if through_ not in item.path:
+                    if through_ not in item.path and (
+                        sequence is None
+                        or len(item.path) + 1 < len(sequence)
+                        and through_ == sequence[len(item.path) + 1]
+                    ):
                         push(
                             item.bends,
                             length_,
@@ -1735,6 +1789,16 @@ class _Router:
             )
         return result
 
+
+def _is_under(plan: _Plan) -> bool:
+    """
+    Return True if a plan passes the space under the columns.
+    """
+
+    return any(
+        channel_.kind is ChannelKind.BOTTOM_CORRIDOR
+        for channel_ in plan.channels
+    )
 
 def _perpendicular_crossings(
     first: List[Tuple[float, float]], second: List[Tuple[float, float]]

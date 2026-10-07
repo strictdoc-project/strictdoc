@@ -84,7 +84,7 @@ def shared_stretch_orders(
     that side.
     """
 
-    points = {plan_.index: _plan_points(plan_, exact) for plan_ in plans}
+    points = {plan_.index: plan_points(plan_, exact) for plan_ in plans}
     result: Dict[StructureChannelId, List[ForcedOrder]] = {}
     port_orders: List[ForcedPortOrder] = []
     for first_index_, first_ in enumerate(plans):
@@ -113,7 +113,7 @@ def shared_stretch_orders(
     return result, port_orders
 
 
-def _plan_points(plan: PlannedRoute, exact: StructureGeometry) -> List[_Point]:
+def plan_points(plan: PlannedRoute, exact: StructureGeometry) -> List[_Point]:
     """
     Return the polyline of a plan: the ports and one point per channel.
 

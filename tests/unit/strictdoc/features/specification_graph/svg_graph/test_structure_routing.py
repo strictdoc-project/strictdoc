@@ -18,6 +18,7 @@ from strictdoc.features.specification_graph.svg_graph.levels_geometry import (
     Rect,
 )
 from strictdoc.features.specification_graph.svg_graph.levels_routing import (
+    OverUnderTie,
     RoutingOptions,
 )
 from strictdoc.features.specification_graph.svg_graph.model import LayoutMode
@@ -147,6 +148,44 @@ def test_neighbors_in_one_column_are_straight() -> None:
         assert len(paths[route_.edge_id]) == 2
 
 
+def test_over_or_under_tie_takes_fewer_crossings() -> None:
+    """
+    When the path over the columns and the path under them have equal
+    bends and close lengths, the path that crosses fewer paths of the other
+    relations wins. The option UNDER always takes the path under.
+
+    N1 -> A2: both paths have four bends. The path under the columns
+    crosses S2 -> F1, the path over the columns does not.
+
+    Code: structure_routing._Router._resolve_over_under_ties.
+    Fails if:
+    - a tie of the over or under rule always takes the path under.
+    - a tie takes the path with more crossings.
+    """
+
+    normalized_graph = normalize_graph(
+        _case("Stress: one node with many relations").graph
+    )
+    layout = compute_structure_layout(normalized_graph)
+    edge_id = _edge_id(normalized_graph, "N1", "A2")
+
+    def first_corridor(tie: OverUnderTie) -> ChannelKind:
+        routing_ = compute_structure_routing(
+            normalized_graph, layout, options=RoutingOptions(over_under_tie=tie)
+        )
+        return next(
+            channel_.kind
+            for channel_ in routing_.routes[edge_id].channels
+            if channel_.kind
+            in (ChannelKind.TOP_CORRIDOR, ChannelKind.BOTTOM_CORRIDOR)
+        )
+
+    assert first_corridor(OverUnderTie.FEWER_CROSSINGS) is (
+        ChannelKind.TOP_CORRIDOR
+    )
+    assert first_corridor(OverUnderTie.UNDER) is ChannelKind.BOTTOM_CORRIDOR
+
+
 def test_routes_take_the_fewest_bends() -> None:
     """
     A route takes the fewest bends, then the shortest length.
@@ -194,9 +233,9 @@ def test_over_or_under_follows_bends_and_the_detour_tolerance() -> None:
     - "Detour under a tall section": A2 -> B2 under the tall section
       has fewer bends but is longer by more than the tolerance: it goes
       over.
-    - "Pocket between two sections": D1 -> A2 has equal bends both ways,
-      and the path over is shorter by more than the tolerance: it goes
-      over.
+    - "Tall section between two pockets": B1 -> D1 has two bends both
+      ways, and the path over is shorter by more than the tolerance: it
+      goes over.
 
     Code: structure_routing._Router._over_or_under.
     Fails if:
@@ -226,7 +265,7 @@ def test_over_or_under_follows_bends_and_the_detour_tolerance() -> None:
         is ChannelKind.TOP_CORRIDOR
     )
     assert (
-        first_kind("Pocket between two sections", "D1", "A2")
+        first_kind("Tall section between two pockets", "B1", "D1")
         is ChannelKind.TOP_CORRIDOR
     )
 
@@ -1980,6 +2019,7 @@ def test_column_lane_count_rule_matches_the_lanes(case: GalleryCase) -> None:
         )
         if plan_ is not None
     ]
+    plans = router._resolve_over_under_ties(plans)
     expected = router._column_lane_counts(plans, router._straight_ids(plans))
     routing = compute_structure_routing(normalized_graph, layout)
     assert expected == {

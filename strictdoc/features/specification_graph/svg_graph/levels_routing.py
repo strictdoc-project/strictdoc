@@ -42,6 +42,20 @@ class SkipChannelChoice(Enum):
     NEAR_TARGET = "near_target"
 
 
+class OverUnderTie(Enum):
+    """
+    The structure mode: which path wins when the path over the columns and
+    the path under them have equal bends and close lengths.
+
+    FEWER_CROSSINGS takes the path that crosses fewer paths of the other
+    relations, and the path under the columns if both cross equally many.
+    UNDER always takes the path under the columns.
+    """
+
+    FEWER_CROSSINGS = "fewer_crossings"
+    UNDER = "under"
+
+
 @dataclass(frozen=True)
 class RoutingOptions:
     """
@@ -53,6 +67,7 @@ class RoutingOptions:
 
     lane_conflict_priority: LaneConflictPriority = LaneConflictPriority.EXIT
     skip_channel_choice: SkipChannelChoice = SkipChannelChoice.NEAR_TARGET
+    over_under_tie: OverUnderTie = OverUnderTie.FEWER_CROSSINGS
 
 
 class Orientation(Enum):

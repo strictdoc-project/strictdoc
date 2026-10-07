@@ -33,6 +33,7 @@ from strictdoc.features.specification_graph.svg_graph.levels_geometry import (
     Rect,
 )
 from strictdoc.features.specification_graph.svg_graph.levels_routing import (
+    OverUnderTie,
     RoutingOptions,
 )
 from strictdoc.features.specification_graph.svg_graph.normalization import (
@@ -56,6 +57,7 @@ from strictdoc.features.specification_graph.svg_graph.structure_layout import (
     StructureLayout,
 )
 from strictdoc.features.specification_graph.svg_graph.structure_stretches import (
+    plan_points,
     shared_stretch_orders,
 )
 
@@ -182,6 +184,9 @@ class _Router:
         # The forced orders of the nested pairs on shared stretches.
         self.forced_orders: Dict[StructureChannelId, List[ForcedOrder]] = {}
         self.forced_port_orders: List[ForcedPortOrder] = []
+        # Relation -> (the path under the columns, the path over them): a tie
+        # of the over or under rule, see _resolve_over_under_ties.
+        self.over_under_ties: Dict[str, Tuple[_Plan, _Plan]] = {}
         # Segments under the columns that continue a lane straight: rows.
         # They keep the height of that lane. See _exact_levels.
         self.row_keys: Set[Tuple[str, int]] = set()
@@ -207,6 +212,8 @@ class _Router:
                 unrouted.append(edge_.edge_id)
             else:
                 plans.append(plan_)
+        if self.options.over_under_tie is OverUnderTie.FEWER_CROSSINGS:
+            plans = self._resolve_over_under_ties(plans)
 
         straight_ids = self._straight_ids(plans)
         side_entries = _column_side_entries(
@@ -639,11 +646,51 @@ class _Router:
             return best
         tolerance = self.config.detour_tolerance
         if over[0] != under[0]:
-            fewer, other = (over, under) if over[0] < under[0] else (under, over)
+            fewer, other = (
+                (over, under) if over[0] < under[0] else (under, over)
+            )
             return other if fewer[1] - other[1] > tolerance else fewer
         if abs(over[1] - under[1]) > tolerance:
             return over if over[1] < under[1] else under
+        self.over_under_ties[under[4].edge.edge_id] = (under[4], over[4])
         return under
+
+    def _resolve_over_under_ties(self, plans: List[_Plan]) -> List[_Plan]:
+        """
+        Resolve the ties of the over or under rule by crossings.
+
+        spec.md, section "Карта лучей". Each tied relation takes the path
+        that crosses fewer paths of the other relations, and the path under
+        the columns if both cross equally many. The paths run along the
+        middle of their channels: the lanes are not known yet. All ties are
+        resolved against the same paths of the other relations, so the
+        result does not depend on the order of the relations.
+        """
+
+        points = {
+            plan_.edge.edge_id: plan_points(plan_, self.estimate)
+            for plan_ in plans
+        }
+
+        def crossings(plan: _Plan) -> int:
+            own = plan_points(plan, self.estimate)
+            return sum(
+                _perpendicular_crossings(own, other_)
+                for edge_id_, other_ in points.items()
+                if edge_id_ != plan.edge.edge_id
+            )
+
+        result: List[_Plan] = []
+        for plan_ in plans:
+            tie_ = self.over_under_ties.get(plan_.edge.edge_id)
+            if tie_ is None:
+                result.append(plan_)
+                continue
+            under_, over_ = tie_
+            result.append(
+                over_ if crossings(over_) < crossings(under_) else under_
+            )
+        return result
 
     def _is_closed_at_both_ends(self, source_id: str, target_id: str) -> bool:
         """
@@ -1688,6 +1735,35 @@ class _Router:
             )
         return result
 
+
+def _perpendicular_crossings(
+    first: List[Tuple[float, float]], second: List[Tuple[float, float]]
+) -> int:
+    """
+    Return the number of points where a horizontal segment of one polyline
+    crosses a vertical segment of the other inside both segments.
+    """
+
+    result = 0
+    for first_start_, first_end_ in zip(first, first[1:]):
+        for second_start_, second_end_ in zip(second, second[1:]):
+            for (h_start_, h_end_), (v_start_, v_end_) in (
+                ((first_start_, first_end_), (second_start_, second_end_)),
+                ((second_start_, second_end_), (first_start_, first_end_)),
+            ):
+                if h_start_[1] != h_end_[1] or v_start_[0] != v_end_[0]:
+                    continue
+                x_, y_ = v_start_[0], h_start_[1]
+                if (
+                    min(h_start_[0], h_end_[0])
+                    < x_
+                    < max(h_start_[0], h_end_[0])
+                    and min(v_start_[1], v_end_[1])
+                    < y_
+                    < max(v_start_[1], v_end_[1])
+                ):
+                    result += 1
+    return result
 
 def _turned_steps(
     stretch_plans: List[_Plan], final_plans: List[_Plan]

@@ -572,6 +572,20 @@ MUTATIONS = (
         "        return True or all(\n            any(\n                top_ <= _center_y",
     ),
     Mutation(
+        "XC26",
+        "a tie of the over or under rule always takes the path under",
+        STRUCTURE_ROUTING,
+        "        if self.options.over_under_tie is OverUnderTie.FEWER_CROSSINGS:\n",
+        "        if False:\n",
+    ),
+    Mutation(
+        "XC27",
+        "a tie takes the path with more crossings",
+        STRUCTURE_ROUTING,
+        "                over_ if crossings(over_) < crossings(under_) else under_\n",
+        "                over_ if crossings(over_) > crossings(under_) else under_\n",
+    ),
+    Mutation(
         "XC15",
         "a column channel does not grow for a side entry",
         STRUCTURE_GEOMETRY,

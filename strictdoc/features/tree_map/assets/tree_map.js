@@ -290,7 +290,10 @@
     linkElement.href = url;
     linkElement.target = "_blank";
     linkElement.rel = "noopener";
-    linkElement.click();
+    // Chrome opens a new window when a link opens during a Shift+click,
+    // even by a script. Out of the click handler, the link opens in a new
+    // tab; the user activation of the click is still valid there.
+    setTimeout(() => linkElement.click(), 0);
   }
 
   function createNodeAction(node, kind) {

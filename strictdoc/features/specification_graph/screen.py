@@ -42,6 +42,7 @@ def render_specification_graph_screen(
         _render_view(
             view_id="documents",
             label="Documents",
+            debug=project_config.specification_graph_debug,
             build_graph=lambda: build_documents_graph(
                 traceability_index, link_renderer
             ),
@@ -49,6 +50,7 @@ def render_specification_graph_screen(
         _render_view(
             view_id="nodes",
             label="Nodes",
+            debug=project_config.specification_graph_debug,
             build_graph=lambda: build_nodes_graph(
                 traceability_index, link_renderer
             ),
@@ -71,7 +73,11 @@ def render_specification_graph_screen(
 
 
 def _render_view(
-    *, view_id: str, label: str, build_graph: Callable[[], Graph]
+    *,
+    view_id: str,
+    label: str,
+    debug: bool,
+    build_graph: Callable[[], Graph],
 ) -> SpecificationGraphView:
     """
     Render one view. An invalid graph model gives a view with the error
@@ -80,7 +86,7 @@ def _render_view(
 
     try:
         rendered_graph = render_graph(
-            build_graph(), svg_id=f"specification-graph-{view_id}", debug=True
+            build_graph(), svg_id=f"specification-graph-{view_id}", debug=debug
         )
     except GraphModelError as exception_:
         print(  # noqa: T201

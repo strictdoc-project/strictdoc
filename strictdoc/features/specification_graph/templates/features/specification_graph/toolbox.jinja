@@ -12,8 +12,10 @@
   <output class="specification-graph-toolbox__zoom" aria-live="polite">100%</output>
   <button type="button" class="action_button" data-graph-action="reset" title="Scale 100%">1:1 <kbd>0</kbd></button>
   <button type="button" class="action_button" data-graph-action="fit" title="Fit to view">Fit <kbd>F</kbd></button>
+  {%- if view_object.project_config.specification_graph_debug -%}
   <label class="specification-graph-toolbox__debug">
     <input type="checkbox" data-graph-routing-debug>
     Routing debug
   </label>
+  {%- endif -%}
 </div>

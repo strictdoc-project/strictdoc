@@ -215,6 +215,7 @@ class ProjectConfig:
             str
         ] = ProjectConfigDefault.DEFAULT_SECTION_BEHAVIOR,
         statistics_generator: Optional[str] = None,
+        specification_graph_debug: bool = False,
         document_line_width: Optional[int] = None,
         # Logo path can be set in the project config to customize the launcher's appearance for a specific project.
         launcher_logo_path: Optional[str] = None,
@@ -497,6 +498,13 @@ class ProjectConfig:
         self.section_behavior: Optional[str] = section_behavior
 
         self.statistics_generator: Optional[str] = statistics_generator
+
+        assert isinstance(specification_graph_debug, bool), (
+            "config: specification_graph_debug: "
+            f"must be a True/False value: {specification_graph_debug}."
+        )
+        # The specification graph screen draws the routing debug layer.
+        self.specification_graph_debug: bool = specification_graph_debug
 
         if document_line_width is not None:
             assert isinstance(document_line_width, int), document_line_width
@@ -1407,6 +1415,7 @@ class ProjectConfigLoader:
 
         section_behavior: str = ProjectConfigDefault.DEFAULT_SECTION_BEHAVIOR
         statistics_generator: Optional[str] = None
+        specification_graph_debug: bool = False
         document_line_width: Optional[int] = None
 
         if "project" in config_dict:
@@ -1423,6 +1432,10 @@ class ProjectConfigLoader:
 
             statistics_generator = project_content.get(
                 "statistics_generator", statistics_generator
+            )
+
+            specification_graph_debug = project_content.get(
+                "specification_graph_debug", specification_graph_debug
             )
 
             include_doc_paths = project_content.get(
@@ -1577,6 +1590,7 @@ class ProjectConfigLoader:
             html2pdf_disable_ssl_check=html2pdf_disable_ssl_check,
             section_behavior=section_behavior,
             statistics_generator=statistics_generator,
+            specification_graph_debug=specification_graph_debug,
             document_line_width=document_line_width,
             _config_last_update=config_last_update,
         )

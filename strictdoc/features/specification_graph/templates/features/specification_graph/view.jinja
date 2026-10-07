@@ -1,0 +1,17 @@
+<div class="specification-graph-viewport">
+  {%- if view.pending_version is not none -%}
+  <div class="specification-graph-preloader" data-testid="specification-graph-preloader">
+    <div class="specification-graph-preloader__spinner" aria-hidden="true"></div>
+    <p>Building the graph. It will appear here when it is ready.</p>
+  </div>
+  {%- elif view.error is not none -%}
+  <p class="specification-graph-error" data-testid="specification-graph-error">
+    The graph cannot be built: {{ view.error }}
+  </p>
+  {%- else -%}
+  {{ view.svg }}
+  {%- endif -%}
+</div>
+{%- if view.rendered_graph is not none -%}
+{% include "features/specification_graph/legend.jinja" %}
+{%- endif -%}

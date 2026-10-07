@@ -465,6 +465,33 @@
       active?.hideInfoPanel();
     });
 
+    // A view that the server builds in the background shows a preloader.
+    // The data of the view is ready when its file has the version of the
+    // page; until then, the file is missing or older.
+    const PENDING_RETRY_MS = 2000;
+    const loadPendingView = async (view) => {
+      try {
+        const response = await fetch(view.dataset.pendingUrl, {cache: "no-store"});
+        if (response.ok) {
+          const data = await response.json();
+          if (data.version === view.dataset.pendingVersion) {
+            view.innerHTML = data.html;
+            delete view.dataset.pendingVersion;
+            if (!view.hidden) {
+              activateView();
+            }
+            return;
+          }
+        }
+      } catch {
+        // The server is busy or restarting: try again.
+      }
+      setTimeout(() => loadPendingView(view), PENDING_RETRY_MS);
+    };
+    views
+      .filter((view) => view.dataset.pendingVersion !== undefined)
+      .forEach(loadPendingView);
+
     if (select) {
       activateView();
     }

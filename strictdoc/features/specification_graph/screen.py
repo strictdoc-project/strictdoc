@@ -9,6 +9,12 @@ from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
+from strictdoc.features.specification_graph.background import (
+    NODES_DATA_FILENAME,
+    NODES_VIEW_BUILDER,
+    NODES_VIEW_ID,
+    NODES_VIEW_LABEL,
+)
 from strictdoc.features.specification_graph.relations import (
     build_documents_graph,
     build_nodes_graph,
@@ -38,8 +44,31 @@ def render_specification_graph_screen(
         root_path="",
         static_path=project_config.dir_for_sdoc_assets,
     )
+    nodes_view: SpecificationGraphView
+    if project_config.is_running_on_server:
+        # The server builds the nodes view in the background; the screen
+        # loads it when it is ready.
+        nodes_view = SpecificationGraphView(
+            view_id=NODES_VIEW_ID,
+            label=NODES_VIEW_LABEL,
+            pending_version=NODES_VIEW_BUILDER.start(
+                project_config=project_config,
+                traceability_index=traceability_index,
+                html_templates=html_templates,
+            ),
+            pending_url=NODES_DATA_FILENAME,
+        )
+    else:
+        nodes_view = render_view(
+            view_id=NODES_VIEW_ID,
+            label=NODES_VIEW_LABEL,
+            debug=project_config.specification_graph_debug,
+            build_graph=lambda: build_nodes_graph(
+                traceability_index, link_renderer
+            ),
+        )
     views: List[SpecificationGraphView] = [
-        _render_view(
+        render_view(
             view_id="documents",
             label="Documents",
             debug=project_config.specification_graph_debug,
@@ -47,14 +76,7 @@ def render_specification_graph_screen(
                 traceability_index, link_renderer
             ),
         ),
-        _render_view(
-            view_id="nodes",
-            label="Nodes",
-            debug=project_config.specification_graph_debug,
-            build_graph=lambda: build_nodes_graph(
-                traceability_index, link_renderer
-            ),
-        ),
+        nodes_view,
     ]
     view_object = SpecificationGraphViewObject(
         traceability_index=traceability_index,
@@ -72,7 +94,7 @@ def render_specification_graph_screen(
         output_file.write(document_content)
 
 
-def _render_view(
+def render_view(
     *,
     view_id: str,
     label: str,

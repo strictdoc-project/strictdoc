@@ -46,20 +46,13 @@
       class="specification-graph-view"
       data-specification-graph-view="{{ view.view_id }}"
       data-testid="specification-graph-view-{{ view.view_id }}"
+      {%- if view.pending_version is not none %}
+      data-pending-version="{{ view.pending_version }}"
+      data-pending-url="{{ view_object.render_url(view.pending_url) }}"
+      {%- endif %}
       {%- if not loop.first %} hidden{% endif %}
     >
-      <div class="specification-graph-viewport">
-        {%- if view.error is not none -%}
-        <p class="specification-graph-error" data-testid="specification-graph-error">
-          The graph cannot be built: {{ view.error }}
-        </p>
-        {%- else -%}
-        {{ view.svg }}
-        {%- endif -%}
-      </div>
-      {%- if view.rendered_graph is not none -%}
-      {% include "features/specification_graph/legend.jinja" %}
-      {%- endif -%}
+      {% include "features/specification_graph/view.jinja" %}
     </section>
     {%- endfor -%}
     <div class="specification-graph-info-panel" data-testid="specification-graph-info-panel" hidden>

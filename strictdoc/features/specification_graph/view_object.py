@@ -28,6 +28,10 @@ class SpecificationGraphView:
     label: str
     rendered_graph: Optional[RenderedGraph] = None
     error: Optional[str] = None
+    # A view that the server builds in the background: the version of the
+    # traceability index it is built for and the URL of its data.
+    pending_version: Optional[str] = None
+    pending_url: Optional[str] = None
 
     @property
     def svg(self) -> Markup:

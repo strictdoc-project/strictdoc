@@ -1,4 +1,7 @@
 from strictdoc.core.feature import Feature, FeatureContext
+from strictdoc.features.specification_graph.background import (
+    NODES_VIEW_BUILDER,
+)
 from strictdoc.features.specification_graph.screen import (
     render_specification_graph_screen,
 )
@@ -21,6 +24,13 @@ class SpecificationGraphFeature(Feature):
     @staticmethod
     def supports_server() -> bool:
         return True
+
+    def on_server_start(self, context: FeatureContext) -> None:
+        NODES_VIEW_BUILDER.start(
+            project_config=context.project_config,
+            traceability_index=context.traceability_index,
+            html_templates=context.html_templates,
+        )
 
     def screen_filename(self) -> str:
         return "specification_graph.html"

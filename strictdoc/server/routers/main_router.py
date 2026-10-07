@@ -344,6 +344,15 @@ def create_main_router(
         export_output_html_root=project_config.export_output_html_root,
     )
 
+    for feature_ in project_config.get_features():
+        feature_.on_server_start(
+            FeatureContext(
+                project_config=project_config,
+                traceability_index=export_action.traceability_index,
+                html_templates=html_templates,
+            )
+        )
+
     sdoc_writer = SDWriter(project_config)
 
     def write_document_to_file(document: SDocDocument) -> None:

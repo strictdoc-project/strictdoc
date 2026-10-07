@@ -56,6 +56,15 @@ class Feature(ABC):
     def supports_server() -> bool:
         raise NotImplementedError
 
+    def on_server_start(self, context: FeatureContext) -> None:  # noqa: ARG002
+        """
+        Called once when the server starts, for an activated Feature, after
+        the traceability index is built. A Feature can start background work
+        here, so that its screen is ready when it is requested. Does nothing
+        by default.
+        """
+        return
+
     def screen_filename(self) -> str:
         """
         Only called if supports_server() is True. The

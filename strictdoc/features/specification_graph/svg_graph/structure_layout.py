@@ -7,7 +7,16 @@ no pixel geometry. spec.md, section "Режим «структура»", defines
 
 from dataclasses import dataclass
 from enum import Enum
-from typing import Dict, List, Mapping, Optional, Set, Tuple, Union
+from typing import (
+    Dict,
+    List,
+    Mapping,
+    NamedTuple,
+    Optional,
+    Set,
+    Tuple,
+    Union,
+)
 
 from strictdoc.features.specification_graph.svg_graph.model import (
     GraphNode,
@@ -30,20 +39,27 @@ class ChannelKind(Enum):
     # Between the block of the unconnected root children and the row.
     BLOCK_SEPARATOR = "block_separator"
 
+    # The members are singletons: the identity hash is valid and runs in C.
+    # The path search hashes channel IDs millions of times.
+    __hash__ = object.__hash__
 
-@dataclass(frozen=True)
-class StructureChannelId:
+
+class StructureChannelId(NamedTuple):
     """
     A channel of a container. The container ID None is the root.
 
     VERTICAL: index is the channel number, 0 is left of the first column.
     COLUMN: index is the column number, gap is the gap number, 0 is below
     the first node of the column.
+
+    A named tuple, not a dataclass: the path search compares and hashes
+    channel IDs millions of times, and a tuple does it in C.
     """
 
     kind: ChannelKind
     container_id: Optional[str]
-    index: int = 0
+    # The field hides the method tuple.index, which no code uses.
+    index: int = 0  # type: ignore[assignment]
     gap: int = 0
 
     @property

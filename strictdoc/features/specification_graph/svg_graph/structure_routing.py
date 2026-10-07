@@ -150,11 +150,11 @@ class _Plan:
     is_straight_candidate: bool
 
 
-@dataclass(order=True)
+@dataclass
 class _SearchItem:
     """
-    An item of the path search queue, ordered by bends, length, nested
-    channels, and tie.
+    An item of the path search queue. The queue orders the items by bends,
+    length, nested channels, and tie.
 
     A done item is a complete path with the final segment to the target
     port. The search returns when it takes a done item, so the final segment
@@ -213,6 +213,17 @@ class _Router:
         self.column_spans: Dict[
             Optional[str], List[Tuple[float, float, float]]
         ] = _column_spans(layout, estimate)
+        # The path search asks the same questions about the estimate many
+        # times. The estimate does not change, so the answers are cached.
+        self._neighbors_cache: Dict[
+            Tuple[StructureChannelId, FrozenSet[Optional[str]]],
+            List[StructureChannelId],
+        ] = {}
+        self._channel_y_cache: Dict[StructureChannelId, float] = {}
+        self._segment_y_cache: Dict[
+            Tuple[StructureChannelId, float, float, float, bool],
+            Optional[float],
+        ] = {}
 
     def route(self) -> StructureRouting:
         plans: List[_Plan] = []
@@ -403,7 +414,6 @@ class _Router:
             unrouted_edge_ids=tuple(unrouted),
         )
 
-
     def _final_vertical_lanes(
         self,
         stretch_plans: List[_Plan],
@@ -570,14 +580,19 @@ class _Router:
         chain = self._chain(source_id, target_id)
 
         def leg(
-            node_id: str, face: Face, vertical: int, corridor: StructureChannelId
+            node_id: str,
+            face: Face,
+            vertical: int,
+            corridor: StructureChannelId,
         ) -> Tuple[StructureChannelId, ...]:
             first = self._port_channel(node_id, face)
             if first == corridor:
                 return (first,)
             return (
                 first,
-                StructureChannelId(ChannelKind.VERTICAL, container_id, vertical),
+                StructureChannelId(
+                    ChannelKind.VERTICAL, container_id, vertical
+                ),
                 corridor,
             )
 
@@ -840,7 +855,9 @@ class _Router:
         def add_verticals(container_id: Optional[str], column: int) -> None:
             for index_ in (column, column + 1):
                 result.add(
-                    StructureChannelId(ChannelKind.VERTICAL, container_id, index_)
+                    StructureChannelId(
+                        ChannelKind.VERTICAL, container_id, index_
+                    )
                 )
 
         def add_gaps(container_id: Optional[str], column: int) -> None:
@@ -909,12 +926,14 @@ class _Router:
         """
 
         points = {
-            plan_.edge.edge_id: plan_points(plan_, self.estimate)
+            plan_.edge.edge_id: _axis_segments(
+                plan_points(plan_, self.estimate)
+            )
             for plan_ in plans
         }
 
         def crossings(plan: _Plan) -> int:
-            own = plan_points(plan, self.estimate)
+            own = _axis_segments(plan_points(plan, self.estimate))
             return sum(
                 _perpendicular_crossings(own, other_)
                 for edge_id_, other_ in points.items()
@@ -1025,7 +1044,7 @@ class _Router:
             source_id, source_face, start
         ) + self._stub_length(target_id, target_face, end)
 
-        queue: List[_SearchItem] = []
+        queue: List[Tuple[int, float, int, int, _SearchItem]] = []
         tie = 0
 
         def push(
@@ -1037,25 +1056,30 @@ class _Router:
             is_through: bool,
             path: Tuple[StructureChannelId, ...],
             levels: Tuple[float, ...],
+            nested: int,
         ) -> None:
             nonlocal tie
+            # The heap compares the leading numbers in C. The tie is unique,
+            # so the comparison never reaches the item.
             heapq.heappush(
                 queue,
-                _SearchItem(
+                (
                     bends,
                     length,
-                    sum(
-                        1
-                        for channel_ in path
-                        if channel_.container_id != common_id
-                    ),
+                    nested,
                     tie,
-                    is_done,
-                    channel,
-                    point,
-                    is_through,
-                    path,
-                    levels,
+                    _SearchItem(
+                        bends,
+                        length,
+                        nested,
+                        tie,
+                        is_done,
+                        channel,
+                        point,
+                        is_through,
+                        path,
+                        levels,
+                    ),
                 ),
             )
             tie += 1
@@ -1069,12 +1093,13 @@ class _Router:
             False,
             (start,),
             (start_point[1],),
+            int(start.container_id != common_id),
         )
         visited: Set[Tuple[StructureChannelId, Tuple[float, float], bool]] = (
             set()
         )
         while len(queue) > 0:
-            item = heapq.heappop(queue)
+            item = heapq.heappop(queue)[-1]
             if item.is_done:
                 return (item.bends, item.length), item.path, item.levels
             state = (item.channel, item.point, item.is_through)
@@ -1108,6 +1133,7 @@ class _Router:
                         item.is_through,
                         item.path,
                         item.levels[:-1] + (segment_y_,),
+                        item.nested_channels,
                     )
                 continue
             for neighbor_ in self._neighbors(item.channel, chain):
@@ -1120,6 +1146,9 @@ class _Router:
                     continue
                 if neighbor_ in item.path:
                     continue
+                nested_ = item.nested_channels + int(
+                    neighbor_.container_id != common_id
+                )
                 turn_ = self._turn_point(item.channel, neighbor_)
                 if not item.channel.is_horizontal:
                     push(
@@ -1131,6 +1160,7 @@ class _Router:
                         False,
                         item.path + (neighbor_,),
                         item.levels + (turn_[1],),
+                        nested_,
                     )
                     continue
                 # The segment in this horizontal channel ends at the
@@ -1158,6 +1188,7 @@ class _Router:
                     False,
                     item.path + (neighbor_,),
                     closed_levels_,
+                    nested_,
                 )
                 for through_ in self._through_passes(
                     item.channel,
@@ -1181,6 +1212,7 @@ class _Router:
                             True,
                             item.path + (neighbor_, through_),
                             closed_levels_ + (segment_y_,),
+                            nested_ + int(through_.container_id != common_id),
                         )
         return None
 
@@ -1339,12 +1371,17 @@ class _Router:
         with a vertical channel on the other side, see _side_face_links.
         """
 
-        return [
-            neighbor_
-            for neighbor_ in self.layout.neighbor_channels(channel)
-            + self.side_face_links.get(channel, [])
-            if neighbor_.container_id in chain
-        ]
+        key = (channel, chain)
+        cached = self._neighbors_cache.get(key)
+        if cached is None:
+            cached = [
+                neighbor_
+                for neighbor_ in self.layout.neighbor_channels(channel)
+                + self.side_face_links.get(channel, [])
+                if neighbor_.container_id in chain
+            ]
+            self._neighbors_cache[key] = cached
+        return cached
 
     def _face_x(
         self,
@@ -1374,9 +1411,9 @@ class _Router:
             != horizontal.container_id
         ):
             return x
-        frame = (
-            self.estimate.node_rects if frames is None else frames
-        )[child_id]
+        frame = (self.estimate.node_rects if frames is None else frames)[
+            child_id
+        ]
         return frame.x if vertical.index == 0 else frame.x + frame.width
 
     def _fits_side_face(
@@ -1458,15 +1495,22 @@ class _Router:
         take: the clearance below the shortest column.
         """
 
-        if channel.kind is not ChannelKind.BOTTOM_CORRIDOR:
-            return _center_y(self.channel_rects[channel])
-        return (
-            min(
-                bottom_
-                for _, _, bottom_ in self.column_spans[channel.container_id]
-            )
-            + self.config.lane_clearance
-        )
+        cached = self._channel_y_cache.get(channel)
+        if cached is None:
+            if channel.kind is not ChannelKind.BOTTOM_CORRIDOR:
+                cached = _center_y(self.channel_rects[channel])
+            else:
+                cached = (
+                    min(
+                        bottom_
+                        for _, _, bottom_ in self.column_spans[
+                            channel.container_id
+                        ]
+                    )
+                    + self.config.lane_clearance
+                )
+            self._channel_y_cache[channel] = cached
+        return cached
 
     def _segment_y(
         self,
@@ -1486,7 +1530,10 @@ class _Router:
         """
 
         if channel.kind is not ChannelKind.BOTTOM_CORRIDOR:
-            return _center_y(self.channel_rects[channel])
+            return self._channel_y(channel)
+        key = (channel, first_x, second_x, y, is_through)
+        if key in self._segment_y_cache:
+            return self._segment_y_cache[key]
         lowest_y, through_y = corridor_segment_y(
             self.column_spans[channel.container_id],
             min(first_x, second_x),
@@ -1494,7 +1541,9 @@ class _Router:
             (y,) if is_through else (),
             self.config,
         )
-        return through_y if is_through else lowest_y
+        result = through_y if is_through else lowest_y
+        self._segment_y_cache[key] = result
+        return result
 
     # Stage 4: lanes and ports.
 
@@ -2041,6 +2090,7 @@ def _looks_down(face: Face) -> bool:
 
     return face is not Face.TOP
 
+
 def _is_under(plan: _Plan) -> bool:
     """
     Return True if a plan passes the space under the columns.
@@ -2051,8 +2101,9 @@ def _is_under(plan: _Plan) -> bool:
         for channel_ in plan.channels
     )
 
+
 def _perpendicular_crossings(
-    first: List[Tuple[float, float]], second: List[Tuple[float, float]]
+    first: "_AxisSegments", second: "_AxisSegments"
 ) -> int:
     """
     Return the number of points where a horizontal segment of one polyline
@@ -2060,25 +2111,38 @@ def _perpendicular_crossings(
     """
 
     result = 0
-    for first_start_, first_end_ in zip(first, first[1:]):
-        for second_start_, second_end_ in zip(second, second[1:]):
-            for (h_start_, h_end_), (v_start_, v_end_) in (
-                ((first_start_, first_end_), (second_start_, second_end_)),
-                ((second_start_, second_end_), (first_start_, first_end_)),
-            ):
-                if h_start_[1] != h_end_[1] or v_start_[0] != v_end_[0]:
-                    continue
-                x_, y_ = v_start_[0], h_start_[1]
-                if (
-                    min(h_start_[0], h_end_[0])
-                    < x_
-                    < max(h_start_[0], h_end_[0])
-                    and min(v_start_[1], v_end_[1])
-                    < y_
-                    < max(v_start_[1], v_end_[1])
-                ):
+    for horizontals_, verticals_ in (
+        (first[0], second[1]),
+        (second[0], first[1]),
+    ):
+        for y_, left_, right_ in horizontals_:
+            for x_, top_, bottom_ in verticals_:
+                if left_ < x_ < right_ and top_ < y_ < bottom_:
                     result += 1
     return result
+
+
+# The horizontal segments of a polyline as (y, left, right) and the vertical
+# ones as (x, top, bottom).
+_AxisSegments = Tuple[
+    List[Tuple[float, float, float]], List[Tuple[float, float, float]]
+]
+
+
+def _axis_segments(points: List[Tuple[float, float]]) -> _AxisSegments:
+    horizontals: List[Tuple[float, float, float]] = []
+    verticals: List[Tuple[float, float, float]] = []
+    for (start_x_, start_y_), (end_x_, end_y_) in zip(points, points[1:]):
+        if start_y_ == end_y_:
+            horizontals.append(
+                (start_y_, min(start_x_, end_x_), max(start_x_, end_x_))
+            )
+        if start_x_ == end_x_:
+            verticals.append(
+                (start_x_, min(start_y_, end_y_), max(start_y_, end_y_))
+            )
+    return horizontals, verticals
+
 
 def _turned_steps(
     stretch_plans: List[_Plan], final_plans: List[_Plan]
@@ -2388,7 +2452,10 @@ def _column_side_entries(
     result: Dict[StructureChannelId, Set[str]] = {}
     for plan_ in plans:
         for first_, second_ in zip(plan_.channels, plan_.channels[1:]):
-            for horizontal_, vertical_ in ((first_, second_), (second_, first_)):
+            for horizontal_, vertical_ in (
+                (first_, second_),
+                (second_, first_),
+            ):
                 if (
                     horizontal_.kind is ChannelKind.COLUMN
                     and vertical_.kind is ChannelKind.VERTICAL

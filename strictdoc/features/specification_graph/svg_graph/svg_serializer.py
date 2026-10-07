@@ -9,7 +9,7 @@ defines the markup.
 import html
 import json
 from dataclasses import dataclass
-from typing import Dict, List, Mapping, Set, Tuple
+from typing import Dict, List, Mapping, Optional, Set, Tuple
 
 from strictdoc.features.specification_graph.svg_graph.levels_geometry import (
     GeometryConfig,
@@ -27,6 +27,7 @@ from strictdoc.features.specification_graph.svg_graph.levels_structure import (
 from strictdoc.features.specification_graph.svg_graph.model import (
     DANGER_RELATION_TYPE,
     DEFAULT_RELATION_TYPE,
+    SECONDARY_RELATION_TYPE,
     WARNING_RELATION_TYPE,
     GraphNode,
     RelationStyle,
@@ -158,12 +159,13 @@ def serialize_structure_svg(
     """
     Serialize the structure mode result.
 
-    The SVG has the relations that the routing routes. The routing does not
-    route all relations of the structure mode yet.
+    The SVG has the relations that the routing routes.
     """
 
     style_types = {
-        edge_.edge_id: structure_style_relation_type(edge_)
+        edge_.edge_id: structure_style_relation_type(
+            edge_, normalized_graph.parent_ids
+        )
         for edge_ in normalized_graph.edges
     }
     type_indexes = {
@@ -275,15 +277,32 @@ def _structure_debug_attributes(
     return result
 
 
-def structure_style_relation_type(edge: NormalizedEdge) -> str:
+def structure_style_relation_type(
+    edge: NormalizedEdge, parent_ids: Mapping[str, Optional[str]]
+) -> str:
     """
     Return the type that gives an edge of the structure mode its style.
 
-    A cycle relation is danger. The other relations keep the input type.
+    A cycle relation is danger. A relation of a section with its descendant
+    is secondary: spec.md, section "Связи композитной ноды". The other
+    relations keep the input type.
     """
 
     if edge.cycle_id is not None:
         return DANGER_RELATION_TYPE
+
+    def is_ancestor(container_id: str, node_id: str) -> bool:
+        parent_id = parent_ids[node_id]
+        while parent_id is not None:
+            if parent_id == container_id:
+                return True
+            parent_id = parent_ids[parent_id]
+        return False
+
+    if is_ancestor(edge.source_id, edge.target_id) or is_ancestor(
+        edge.target_id, edge.source_id
+    ):
+        return SECONDARY_RELATION_TYPE
     return edge.relation_type
 
 

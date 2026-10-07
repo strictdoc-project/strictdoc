@@ -95,8 +95,44 @@ class StructureGeometry:
     ) -> float:
         """
         Return the offset of a port from the center of its node face.
+
+        The ports of a section stand from the left of its frame, at the
+        header: slot 1 is the leftmost one. spec.md, section "Связи
+        композитной ноды".
         """
 
+        if node_id in self.header_rects:
+            rect = self.node_rects[node_id]
+            first_x = rect.x + self.config.port_margin
+            if face is Face.HEADER:
+                # The leftmost port on the header line is not closer to the
+                # left face than the first lane of the left vertical channel.
+                vertical = self.channel_rect(
+                    StructureChannelId(ChannelKind.VERTICAL, node_id, 0)
+                )
+                first_x = max(
+                    first_x,
+                    vertical.x
+                    + centered_lane_offset(
+                        vertical.width,
+                        max(
+                            1,
+                            self.lane_counts.get(
+                                StructureChannelId(
+                                    ChannelKind.VERTICAL, node_id, 0
+                                ),
+                                0,
+                            ),
+                        ),
+                        0,
+                        self.config,
+                    ),
+                )
+            return (
+                first_x
+                - (rect.x + rect.width / 2)
+                + (slot - 1) * self.config.port_pitch
+            )
         gate = self.face_gates.get((node_id, face))
         return gate_port_offset(
             slot,
@@ -105,6 +141,28 @@ class StructureGeometry:
             self.gate_port_lists.get(gate, (0, 0)) if gate else (0, 0),
             self.config,
         )
+
+
+    def face_y(self, node_id: str, face: Face) -> float:
+        return face_y(self.node_rects, self.header_rects, node_id, face)
+
+
+def face_y(
+    node_rects: Mapping[str, Rect],
+    header_rects: Mapping[str, Rect],
+    node_id: str,
+    face: Face,
+) -> float:
+    """
+    Return the height of a face: the top or the bottom of a node, or the
+    bottom line of the header of a section.
+    """
+
+    if face is Face.HEADER:
+        header = header_rects[node_id]
+        return header.y + header.height
+    rect = node_rects[node_id]
+    return rect.y if face is Face.TOP else rect.y + rect.height
 
 
 def compute_structure_geometry(

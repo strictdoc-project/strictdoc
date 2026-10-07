@@ -8,7 +8,6 @@ The stage does not search for routes.
 from typing import Dict, List, Tuple
 
 from strictdoc.features.specification_graph.svg_graph.gate_ports import (
-    Face,
     Port,
 )
 from strictdoc.features.specification_graph.svg_graph.levels_geometry import (
@@ -122,5 +121,5 @@ def _port_point(port: Port, geometry: StructureGeometry) -> Point:
         + geometry.port_offset(
             port.node_id, port.face, port.slot, port.list_size
         ),
-        y=rect.y if port.face is Face.TOP else rect.y + rect.height,
+        y=geometry.face_y(port.node_id, port.face),
     )

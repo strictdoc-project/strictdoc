@@ -13,6 +13,10 @@ from typing import Dict, List, Sequence, Tuple
 class Face(Enum):
     TOP = "top"
     BOTTOM = "bottom"
+    # The bottom line of the header of a section: the ports of the
+    # relations of the section with its descendants. A line leaves it
+    # downward, as from a bottom face.
+    HEADER = "header"
 
 
 @dataclass(frozen=True)
@@ -122,7 +126,7 @@ def number_gate_ports(
             key=_order_key,
         )
         upper_ = [
-            endpoint_ for endpoint_ in group_ if endpoint_.face is Face.BOTTOM
+            endpoint_ for endpoint_ in group_ if endpoint_.face is not Face.TOP
         ]
         lower_ = [
             endpoint_ for endpoint_ in group_ if endpoint_.face is Face.TOP

@@ -1565,6 +1565,59 @@ STRUCTURE_CASES: Tuple[GalleryCase, ...] = (
 )
 
 
+SECTION_RELATION_CASES: Tuple[GalleryCase, ...] = (
+    _structure_case(
+        "Relations of a node with a section",
+        (
+            "A relation from outside ends on the top face of the frame of a "
+            "section, in its left part at the header. A2 -> S leaves the "
+            "bottom face of A2, climbs the vertical channel between A and S "
+            "and enters the top face of S from the top corridor of the "
+            "document. S -> B1 leaves the top face of S next to it and goes "
+            "along the top corridor to B1."
+        ),
+        [("Doc", ["A1", "A2", ("S", ["S1", "S2"]), "B1"])],
+        [("A2", "S"), ("S", "B1")],
+    ),
+    _structure_case(
+        "Relation of two sections",
+        (
+            "S -> Q connects the top faces of the frames of two sections: "
+            "both ports stand in the left part of the frame, at the header, "
+            "and the line runs in the top corridor of the document."
+        ),
+        [("Doc", [("S", ["S1"]), "A1", ("Q", ["Q1"])])],
+        [("S", "Q")],
+    ),
+    _structure_case(
+        "Relations of a section with its descendants",
+        (
+            "A relation of a section with its descendant ends on the bottom "
+            "line of the header of the section and is secondary. The ports "
+            "on the line stand from left to right; the leftmost port is not "
+            "closer to the left face than the first lane of the left "
+            "vertical channel. S -> S2 goes straight down that lane. S1 -> S "
+            "comes up from the top face of S1. R2 -> S leaves the section R "
+            "through its left face and climbs the vertical channel of S."
+        ),
+        [("Doc", ["A1", ("S", ["S1", "S2", ("R", ["R1", "R2"])])])],
+        [("S1", "S"), ("R2", "S"), ("S", "S2")],
+    ),
+    _structure_case(
+        "Relations of sections through side faces",
+        (
+            "R1 -> S leaves the nested section R and the section Q through "
+            "their top corridors and side faces and enters the top face of "
+            "S from the top corridor of the document. A1 -> R enters Q "
+            "through its left face and reaches the top face of R in the top "
+            "corridor of Q. The two lines cross once: the crossing is "
+            "unavoidable."
+        ),
+        [("Doc", [("S", ["S1"]), "A1", ("Q", ["Q1", ("R", ["R1"])])])],
+        [("R1", "S"), ("A1", "R")],
+    ),
+)
+
 ACROSS_CONTAINERS_CASES: Tuple[GalleryCase, ...] = (
     _structure_case(
         "Relations out of and into a section",
@@ -2136,6 +2189,7 @@ _ALL_CASES: Tuple[GalleryCase, ...] = (
     SERIALIZATION_CASES
     + STRUCTURE_CASES
     + ACROSS_CONTAINERS_CASES
+    + SECTION_RELATION_CASES
     + ONE_FACE_CASES
     + STRESS_CASES
     + LEVELS_CASES
@@ -2203,6 +2257,10 @@ GALLERY_CHAPTERS: Tuple[GalleryChapter, ...] = (
     _chapter(
         "Structure: routes across containers",
         *(case_.title for case_ in ACROSS_CONTAINERS_CASES),
+    ),
+    _chapter(
+        "Structure: relations of sections",
+        *(case_.title for case_ in SECTION_RELATION_CASES),
     ),
     _chapter(
         "Structure: lines from one face (open question)",

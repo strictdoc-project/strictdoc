@@ -491,18 +491,31 @@ class _Router:
     def _plan(self, index: int, edge: NormalizedEdge) -> Optional[_Plan]:
         source_id = edge.source_id
         target_id = edge.target_id
-        if (
-            source_id in self.composite_ids
-            or target_id in self.composite_ids
-            or source_id not in self.layout.places
-            or target_id not in self.layout.places
+        # A section of the block of the root has no place in the row, but
+        # a relation with its descendant runs inside it.
+        if any(
+            node_id_ not in self.layout.places
+            and not (
+                node_id_ in self.composite_ids
+                and self._is_ancestor(node_id_, other_id_)
+            )
+            for node_id_, other_id_ in (
+                (source_id, target_id),
+                (target_id, source_id),
+            )
         ):
             return None
+        if source_id not in self.layout.places or (
+            target_id not in self.layout.places
+        ):
+            return self._chain_plan(index, edge)
         source_place = self.layout.places[source_id]
         target_place = self.layout.places[target_id]
 
         if (
-            source_place.container_id == target_place.container_id
+            source_id not in self.composite_ids
+            and target_id not in self.composite_ids
+            and source_place.container_id == target_place.container_id
             and source_place.column == target_place.column
             and abs(source_place.row - target_place.row) == 1
         ):
@@ -571,8 +584,8 @@ class _Router:
         sequences: List[Tuple[Face, Face, Tuple[StructureChannelId, ...]]] = []
         for corridor_kind_, source_face_, target_face_ in itertools.product(
             (ChannelKind.TOP_CORRIDOR, ChannelKind.BOTTOM_CORRIDOR),
-            (Face.TOP, Face.BOTTOM),
-            (Face.TOP, Face.BOTTOM),
+            self._end_faces(source_id, target_id),
+            self._end_faces(target_id, source_id),
         ):
             corridor_ = StructureChannelId(corridor_kind_, container_id)
             for source_vertical_, target_vertical_ in itertools.product(
@@ -602,8 +615,8 @@ class _Router:
             # Two nodes of one column: from the channel next to each end
             # through a vertical channel beside the column.
             for source_face_, target_face_, vertical_ in itertools.product(
-                (Face.TOP, Face.BOTTOM),
-                (Face.TOP, Face.BOTTOM),
+                self._end_faces(source_id, target_id),
+                self._end_faces(target_id, source_id),
                 (source_place.column, source_place.column + 1),
             ):
                 sequences.append(
@@ -714,8 +727,8 @@ class _Router:
         seen: Set[Tuple[Face, Face, Tuple[StructureChannelId, ...]]] = set()
         for banned_, source_face_, target_face_ in itertools.product(
             (None,) + corridors,
-            (Face.TOP, Face.BOTTOM),
-            (Face.TOP, Face.BOTTOM),
+            self._end_faces(source_id, target_id),
+            self._end_faces(target_id, source_id),
         ):
             allowed_ = structural - {banned_}
             if (
@@ -800,9 +813,9 @@ class _Router:
         def away(plan: _Plan) -> int:
             if facing is None:
                 return 0
-            return int(plan.source_face is not facing[0]) + int(
-                plan.target_face is not facing[1]
-            )
+            return int(
+                _looks_down(plan.source_face) != _looks_down(facing[0])
+            ) + int(_looks_down(plan.target_face) != _looks_down(facing[1]))
 
         return away
 
@@ -859,11 +872,15 @@ class _Router:
             )
             add_gaps(container_id_, 0)
             add_gaps(container_id_, column_count_ - 1)
-        for node_id_ in (source_id, target_id):
-            place_ = layout.places[node_id_]
-            add_verticals(place_.container_id, place_.column)
-            result.add(layout.channel_above(node_id_))
-            result.add(layout.channel_below(node_id_))
+        for node_id_, other_id_ in (
+            (source_id, target_id),
+            (target_id, source_id),
+        ):
+            place_ = layout.places.get(node_id_)
+            if place_ is not None and place_.container_id in chain:
+                add_verticals(place_.container_id, place_.column)
+            for face_ in self._end_faces(node_id_, other_id_):
+                result.add(self._port_channel(node_id_, face_))
         for container_id_ in chain:
             if container_id_ is None:
                 continue
@@ -918,7 +935,33 @@ class _Router:
             )
         return result
 
+    def _end_faces(self, node_id: str, other_id: str) -> Tuple[Face, ...]:
+        """
+        Return the faces a relation may use at one of its ends.
+
+        spec.md, section "Связи композитной ноды". A simple node has its top
+        and its bottom face. A section takes a relation from outside on the
+        top face of its frame, and a relation with its descendant on the
+        bottom line of its header.
+        """
+
+        if node_id not in self.composite_ids:
+            return (Face.TOP, Face.BOTTOM)
+        if self._is_ancestor(node_id, other_id):
+            return (Face.HEADER,)
+        return (Face.TOP,)
+
+    def _is_ancestor(self, container_id: str, node_id: str) -> bool:
+        parent_id = self.normalized_graph.parent_ids[node_id]
+        while parent_id is not None:
+            if parent_id == container_id:
+                return True
+            parent_id = self.normalized_graph.parent_ids[parent_id]
+        return False
+
     def _port_channel(self, node_id: str, face: Face) -> StructureChannelId:
+        if face is Face.HEADER:
+            return StructureChannelId(ChannelKind.TOP_CORRIDOR, node_id)
         if face is Face.TOP:
             return self.layout.channel_above(node_id)
         return self.layout.channel_below(node_id)
@@ -975,8 +1018,8 @@ class _Router:
         )
         start = self._port_channel(source_id, source_face)
         end = self._port_channel(target_id, target_face)
-        source_x = _center_x(self.estimate.node_rects[source_id])
-        target_x = _center_x(self.estimate.node_rects[target_id])
+        source_x = self._end_x(source_id)
+        target_x = self._end_x(target_id)
         start_point = (source_x, self._channel_y(start))
         stubs_length = self._stub_length(
             source_id, source_face, start
@@ -1265,6 +1308,16 @@ class _Router:
 
         source_containers = containers(source_id)
         target_containers = containers(target_id)
+        # A relation of a section with its descendant runs inside the
+        # section: the section is the common container.
+        if source_id in self.composite_ids and self._is_ancestor(
+            source_id, target_id
+        ):
+            source_containers.insert(0, source_id)
+        if target_id in self.composite_ids and self._is_ancestor(
+            target_id, source_id
+        ):
+            target_containers.insert(0, target_id)
         common = next(
             container_id_
             for container_id_ in source_containers
@@ -1381,8 +1434,7 @@ class _Router:
         first.
         """
 
-        rect = self.estimate.node_rects[node_id]
-        face_y = rect.y if face is Face.TOP else rect.y + rect.height
+        face_y = self.estimate.face_y(node_id, face)
         if channel.kind is ChannelKind.BOTTOM_CORRIDOR:
             return self._channel_y(channel) - face_y
         return abs(face_y - self._channel_y(channel))
@@ -1571,7 +1623,7 @@ class _Router:
                 levels[position_] = _center_y(rects[channel_])
                 continue
             ends_x_ = (
-                _center_x(exact.node_rects[plan.edge.source_id])
+                self._end_x(plan.edge.source_id, exact.node_rects)
                 if position_ == 0
                 else self._face_x(
                     channels[position_ - 1],
@@ -1579,7 +1631,7 @@ class _Router:
                     levels[position_ - 1],
                     exact.node_rects,
                 ),
-                _center_x(exact.node_rects[plan.edge.target_id])
+                self._end_x(plan.edge.target_id, exact.node_rects)
                 if position_ == last
                 else self._face_x(
                     channels[position_ + 1],
@@ -1692,9 +1744,9 @@ class _Router:
 
         channels = plan.channels
         if position == 0:
-            return _center_x(self.estimate.node_rects[plan.edge.source_id])
+            return self._end_x(plan.edge.source_id)
         if position == len(channels) - 1:
-            return _center_x(self.estimate.node_rects[plan.edge.target_id])
+            return self._end_x(plan.edge.target_id)
         other = position + 1 if seen_from == position - 1 else position - 1
         return _center_x(self.channel_rects[channels[other]])
 
@@ -1747,10 +1799,10 @@ class _Router:
                     plan_.edge.source_id,
                 ),
             ):
-                own_x_ = _center_x(self.estimate.node_rects[node_id_])
+                own_x_ = self._end_x(node_id_)
                 if len(plan_.channels) == 1:
                     other_position_ = (
-                        _center_x(self.estimate.node_rects[other_id_]),
+                        self._end_x(other_id_),
                         0.0,
                     )
                 else:
@@ -1766,13 +1818,16 @@ class _Router:
                 else:
                     side_ = 1
                 goes_left_ = self._goes_left(plan_, position_)
+                # The header line of a section is a gate of its own.
                 gate_ = (
                     plan_.channels[position_],
-                    self.layout.places[node_id_].column,
+                    -1
+                    if face_ is Face.HEADER
+                    else self.layout.places[node_id_].column,
                 )
                 if gate_[0].container_id not in layer:
                     continue
-                flows_down_ = (role_ == _SOURCE) == (face_ is Face.BOTTOM)
+                flows_down_ = (role_ == _SOURCE) == _looks_down(face_)
                 # The half is the prediction of right-hand traffic: left in
                 # the top half, right in the bottom half. The gate uses it
                 # only to decide whether the ports of its two faces may stand
@@ -1794,8 +1849,40 @@ class _Router:
                 )
         ports: Dict[EndpointKey, Port] = {}
         for endpoints_ in endpoints_by_gate.values():
-            ports.update(number_gate_ports(endpoints_, self.forced_port_orders))
+            numbered_ = number_gate_ports(endpoints_, self.forced_port_orders)
+            # The ports of a section stand from the left of the face, in the
+            # order of the gate: slot 1 is the leftmost one.
+            section_keys_ = sorted(
+                (
+                    key_
+                    for key_, port_ in numbered_.items()
+                    if port_.node_id in self.composite_ids
+                ),
+                key=lambda key_: numbered_[key_].slot,
+            )
+            for rank_, key_ in enumerate(section_keys_):
+                numbered_[key_] = Port(
+                    numbered_[key_].node_id,
+                    numbered_[key_].face,
+                    rank_ + 1,
+                    len(section_keys_),
+                )
+            ports.update(numbered_)
         return ports
+
+    def _end_x(
+        self, node_id: str, rects: Optional[Mapping[str, Rect]] = None
+    ) -> float:
+        """
+        Return the x of the ports of an end: the center of a node, the left
+        part of a section at its header. The frames come from the estimate
+        unless given.
+        """
+
+        rect = (self.estimate.node_rects if rects is None else rects)[node_id]
+        if node_id in self.composite_ids:
+            return rect.x + self.config.port_margin + self.config.port_pitch
+        return _center_x(rect)
 
     def _goes_left(self, plan: _Plan, position: int) -> bool:
         """
@@ -1808,12 +1895,12 @@ class _Router:
 
         last = len(plan.channels) - 1
         entry_x = (
-            _center_x(self.estimate.node_rects[plan.edge.source_id])
+            self._end_x(plan.edge.source_id)
             if position == 0
             else _center_x(self.channel_rects[plan.channels[position - 1]])
         )
         exit_x = (
-            _center_x(self.estimate.node_rects[plan.edge.target_id])
+            self._end_x(plan.edge.target_id)
             if position == last
             else _center_x(self.channel_rects[plan.channels[position + 1]])
         )
@@ -1920,7 +2007,7 @@ class _Router:
         return self._assign_channel_lanes(segments_by_channel, conflicts)
 
     def _port_position(self, port: Port, node_id: str) -> Tuple[float, float]:
-        return (_center_x(self.estimate.node_rects[node_id]), port.slot)
+        return (self._end_x(node_id), port.slot)
 
     def _assign_channel_lanes(
         self,
@@ -1945,6 +2032,14 @@ class _Router:
             )
         return result
 
+
+def _looks_down(face: Face) -> bool:
+    """
+    Return True if a line leaves the face downward: a bottom face or the
+    header line of a section.
+    """
+
+    return face is not Face.TOP
 
 def _is_under(plan: _Plan) -> bool:
     """

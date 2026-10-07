@@ -1915,9 +1915,7 @@ def test_structure_route_invariants(case: GalleryCase) -> None:
             (route_.target_port, path_[-1]),
         ):
             rect_ = geometry.node_rects[port_.node_id]
-            assert point_.y == (
-                rect_.y if port_.face is Face.TOP else rect_.y + rect_.height
-            )
+            assert point_.y == geometry.face_y(port_.node_id, port_.face)
             assert rect_.x < point_.x < rect_.x + rect_.width
         last_ = abs(path_[-1].x - path_[-2].x) + abs(path_[-1].y - path_[-2].y)
         assert last_ >= clearance - 1e-9

@@ -25,6 +25,7 @@ from strictdoc.features.specification_graph.svg_graph.normalization import (
 )
 from strictdoc.features.specification_graph.svg_graph.structure_geometry import (
     StructureGeometry,
+    face_y,
 )
 from strictdoc.features.specification_graph.svg_graph.structure_layout import (
     ChannelKind,
@@ -120,10 +121,13 @@ def plan_points(plan: PlannedRoute, exact: StructureGeometry) -> List[_Point]:
     Point i + 1 starts the segment in channel i.
     """
 
-    source = exact.node_rects[plan.edge.source_id]
-    target = exact.node_rects[plan.edge.target_id]
-    x = _center_x(source)
-    y = source.y if plan.source_face is Face.TOP else source.y + source.height
+    x = _end_x(exact, plan.edge.source_id)
+    y = face_y(
+        exact.node_rects,
+        exact.header_rects,
+        plan.edge.source_id,
+        plan.source_face,
+    )
     result = [(x, y)]
     for channel_, level_ in zip(plan.channels, plan.levels):
         if channel_.is_horizontal:
@@ -131,18 +135,33 @@ def plan_points(plan: PlannedRoute, exact: StructureGeometry) -> List[_Point]:
         else:
             x = level_
         result.append((x, y))
-    target_x = _center_x(target)
+    target_x = _end_x(exact, plan.edge.target_id)
     result.append((target_x, y))
     result.append(
         (
             target_x,
-            target.y
-            if plan.target_face is Face.TOP
-            else target.y + target.height,
+            face_y(
+                exact.node_rects,
+                exact.header_rects,
+                plan.edge.target_id,
+                plan.target_face,
+            ),
         )
     )
     return result
 
+
+
+def _end_x(exact: StructureGeometry, node_id: str) -> float:
+    """
+    Return the x of the ports of an end: the center of a node, the left
+    part of a section at its header.
+    """
+
+    rect = exact.node_rects[node_id]
+    if node_id in exact.header_rects:
+        return rect.x + exact.config.port_margin + exact.config.port_pitch
+    return _center_x(rect)
 
 def _common_runs(
     first: Tuple[StructureChannelId, ...],

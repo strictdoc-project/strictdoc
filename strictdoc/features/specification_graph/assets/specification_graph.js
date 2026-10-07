@@ -120,8 +120,10 @@
     };
 
     // Highlight: the relations of a node, or one relation, and the nodes
-    // at their ends. The other relations fade. A selection stays as it is
-    // while the pointer moves; without a selection, the hover shows.
+    // at their ends. A selection stays as it is while the pointer moves;
+    // without a selection, the hover shows. Only a selection fades the
+    // other relations: on a large graph the pointer is almost always over
+    // something, and a fade on each hover makes the screen flicker.
     const refreshHighlights = () => {
       graph
         .querySelectorAll(".is-highlighted, .is-selected")
@@ -146,7 +148,10 @@
         nodesById.get(selectedNodeId)?.classList.add("is-selected");
       }
       selectedEdge?.classList.add("is-selected");
-      graph.classList.toggle("has-highlight", nodeId !== null || edge !== null);
+      graph.classList.toggle(
+        "has-highlight",
+        !isHover && (nodeId !== null || edge !== null),
+      );
     };
 
     const hideInfoPanel = () => {

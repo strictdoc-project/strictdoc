@@ -1,3 +1,419 @@
+
+/*
+From html4css1.css
+Default cascading style sheet for the HTML output of Docutils.
+*/
+
+/* used to remove borders from tables and images */
+sdoc-autogen .borderless,
+sdoc-autogen table.borderless td,
+sdoc-autogen table.borderless th {
+  border: 0 }
+
+sdoc-autogen table.borderless td,
+sdoc-autogen table.borderless th {
+  /* Override padding for "table.docutils td" with "! important".
+     The right padding separates the table cells. */
+
+  /* DEV: We have overwritten the table padding, so we don't need these overrides: */
+  /* padding: 0 0.5em 0 0 ! important */
+}
+
+sdoc-autogen .first {
+  /* Override more specific margin styles with "! important". */
+  margin-top: 0 ! important }
+
+sdoc-autogen .last,
+sdoc-autogen .with-subtitle {
+  margin-bottom: 0 ! important }
+
+sdoc-autogen .hidden {
+  display: none }
+
+sdoc-autogen .subscript {
+  vertical-align: sub;
+  font-size: smaller }
+
+sdoc-autogen .superscript {
+  vertical-align: super;
+  font-size: smaller }
+
+sdoc-autogen a.toc-backref {
+  text-decoration: none ;
+  color: black }
+
+sdoc-autogen blockquote.epigraph {
+  margin: 2em 5em ; }
+
+sdoc-autogen dl.docutils dd {
+  margin-bottom: 0.5em }
+
+sdoc-autogen object[type="image/svg+xml"],
+sdoc-autogen object[type="application/x-shockwave-flash"] {
+  overflow: hidden;
+}
+
+sdoc-autogen div.abstract {
+  margin: 2em 5em }
+
+sdoc-autogen div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
+
+sdoc-autogen div.admonition,
+sdoc-autogen div.attention,
+sdoc-autogen div.caution,
+sdoc-autogen div.danger,
+sdoc-autogen div.error,
+sdoc-autogen div.hint,
+sdoc-autogen div.important,
+sdoc-autogen div.note,
+sdoc-autogen div.tip,
+sdoc-autogen div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+
+sdoc-autogen div.admonition p.admonition-title,
+sdoc-autogen div.hint p.admonition-title,
+sdoc-autogen div.important p.admonition-title,
+sdoc-autogen div.note p.admonition-title,
+sdoc-autogen div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
+
+sdoc-autogen div.attention p.admonition-title,
+sdoc-autogen div.caution p.admonition-title,
+sdoc-autogen div.danger p.admonition-title,
+sdoc-autogen div.error p.admonition-title,
+sdoc-autogen div.warning p.admonition-title,
+sdoc-autogen .code .error {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+
+/* Uncomment (and remove this text!) to get reduced vertical space in
+   compound paragraphs.
+sdoc-autogen div.compound .compound-first,
+sdoc-autogen div.compound .compound-middle {
+  margin-bottom: 0.5em }
+
+sdoc-autogen div.compound .compound-last,
+sdoc-autogen div.compound .compound-middle {
+  margin-top: 0.5em }
+*/
+
+sdoc-autogen div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+sdoc-autogen div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
+
+sdoc-autogen div.figure {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+sdoc-autogen div.footer,
+sdoc-autogen div.header {
+  clear: both;
+  font-size: smaller }
+
+sdoc-autogen div.line-block {
+  display: block ;
+  margin-top: 1em ;
+  margin-bottom: 1em }
+
+sdoc-autogen div.line-block div.line-block {
+  margin-top: 0 ;
+  margin-bottom: 0 ;
+  margin-left: 1.5em }
+
+sdoc-autogen div.sidebar {
+  margin: 0 0 0.5em 1em ;
+  border: medium outset ;
+  padding: 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+sdoc-autogen div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+sdoc-autogen div.system-messages {
+  margin: 5em }
+
+sdoc-autogen div.system-messages h1 {
+  color: red }
+
+sdoc-autogen div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+sdoc-autogen div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+sdoc-autogen div.topic {
+  margin: 2em }
+
+sdoc-autogen h1.section-subtitle,
+sdoc-autogen h2.section-subtitle,
+sdoc-autogen h3.section-subtitle,
+sdoc-autogen h4.section-subtitle,
+sdoc-autogen h5.section-subtitle,
+sdoc-autogen h6.section-subtitle {
+  margin-top: 0.4em }
+
+sdoc-autogen h1.title {
+  text-align: center }
+
+sdoc-autogen h2.subtitle {
+  text-align: center }
+
+sdoc-autogen hr.docutils {
+  width: 75% }
+
+sdoc-autogen img.align-left,
+sdoc-autogen .figure.align-left,
+sdoc-autogen object.align-left,
+sdoc-autogen table.align-left {
+  clear: left ;
+  float: left ;
+  margin-right: 1em }
+
+sdoc-autogen img.align-right,
+sdoc-autogen .figure.align-right,
+sdoc-autogen object.align-right,
+sdoc-autogen table.align-right {
+  clear: right ;
+  float: right ;
+  margin-left: 1em }
+
+sdoc-autogen img.align-center,
+sdoc-autogen .figure.align-center,
+sdoc-autogen object.align-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+sdoc-autogen table.align-center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+sdoc-autogen .align-left {
+  text-align: left }
+
+sdoc-autogen .align-center {
+  clear: both ;
+  text-align: center }
+
+sdoc-autogen .align-right {
+  text-align: right }
+
+/* reset inner alignment in figures */
+sdoc-autogen div.align-right {
+  text-align: inherit }
+
+/* div.align-center * { */
+/*   text-align: left } */
+
+sdoc-autogen .align-top    {
+  vertical-align: top }
+
+sdoc-autogen .align-middle {
+  vertical-align: middle }
+
+sdoc-autogen .align-bottom {
+  vertical-align: bottom }
+
+sdoc-autogen ol.simple,
+sdoc-autogen ul.simple {
+  margin-bottom: 1em }
+
+sdoc-autogen ol.arabic {
+  list-style: decimal }
+
+sdoc-autogen ol.loweralpha {
+  list-style: lower-alpha }
+
+sdoc-autogen ol.upperalpha {
+  list-style: upper-alpha }
+
+sdoc-autogen ol.lowerroman {
+  list-style: lower-roman }
+
+sdoc-autogen ol.upperroman {
+  list-style: upper-roman }
+
+sdoc-autogen p.attribution {
+  text-align: right ;
+  margin-left: 50% }
+
+sdoc-autogen p.caption {
+  font-style: italic }
+
+sdoc-autogen p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+sdoc-autogen p.label {
+  white-space: nowrap }
+
+sdoc-autogen p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
+
+sdoc-autogen p.sidebar-title {
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
+
+sdoc-autogen p.sidebar-subtitle {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+sdoc-autogen pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font: inherit }
+
+/* sdoc-autogen pre.literal-block,
+sdoc-autogen pre.doctest-block,
+sdoc-autogen pre.math,
+sdoc-autogen pre.code {
+  margin-left: 2em ;
+  margin-right: 2em } */
+
+sdoc-autogen pre.code .ln { color: gray; } /* line numbers */
+sdoc-autogen pre.code,
+sdoc-autogen code { background-color: #eeeeee }
+sdoc-autogen pre.code .comment,
+sdoc-autogen code .comment { color: #5C6576 }
+sdoc-autogen pre.code .keyword,
+sdoc-autogen code .keyword { color: #3B0D06; font-weight: bold }
+sdoc-autogen pre.code .literal.string,
+sdoc-autogen code .literal.string { color: #0C5404 }
+sdoc-autogen pre.code .name.builtin,
+sdoc-autogen code .name.builtin { color: #352B84 }
+sdoc-autogen pre.code .deleted,
+sdoc-autogen code .deleted { background-color: #DEB0A1}
+sdoc-autogen pre.code .inserted,
+sdoc-autogen code .inserted { background-color: #A3D289}
+
+sdoc-autogen span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+sdoc-autogen span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+sdoc-autogen span.interpreted {
+  font-family: sans-serif }
+
+sdoc-autogen span.option {
+  white-space: nowrap }
+
+sdoc-autogen span.pre {
+  white-space: pre }
+
+sdoc-autogen span.problematic,
+sdoc-autogen pre.problematic {
+  color: red }
+
+sdoc-autogen span.section-subtitle {
+  /* font-size relative to parent (h1..h6 element) */
+  font-size: 80% }
+
+sdoc-autogen table.citation {
+  border-left: solid 1px gray;
+  margin-left: 1px }
+
+sdoc-autogen table.docinfo {
+  margin: 2em 4em }
+
+sdoc-autogen table.docutils {
+  margin-top: 0.5em ;
+  margin-bottom: 0.5em }
+
+sdoc-autogen table.footnote {
+  border-left: solid 1px black;
+  margin-left: 1px }
+
+sdoc-autogen table.docutils td,
+sdoc-autogen table.docutils th,
+sdoc-autogen table.docinfo td,
+sdoc-autogen table.docinfo th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+sdoc-autogen table.docutils th.field-name,
+sdoc-autogen table.docinfo th.docinfo-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap ;
+  /* DEV: th has background color */
+  /* padding-left: 0; */
+}
+
+/* "booktabs" style (no vertical lines) */
+sdoc-autogen table.docutils.booktabs {
+  border: 0px;
+  border-top: 2px solid;
+  border-bottom: 2px solid;
+  border-collapse: collapse;
+}
+sdoc-autogen table.docutils.booktabs * {
+  border: 0px;
+}
+sdoc-autogen table.docutils.booktabs th {
+  border-bottom: thin solid;
+  text-align: left;
+}
+
+sdoc-autogen h1 tt.docutils,
+sdoc-autogen h2 tt.docutils,
+sdoc-autogen h3 tt.docutils,
+sdoc-autogen h4 tt.docutils,
+sdoc-autogen h5 tt.docutils,
+sdoc-autogen h6 tt.docutils {
+  font-size: 100% }
+
+sdoc-autogen ul.auto-toc {
+  list-style-type: none }
+
+/* Remove styles inherited from our elements with the same names  */
+
+sdoc-autogen div.footer,
+sdoc-autogen div.header {
+  display: block;
+  align-items: initial;
+  justify-content: initial;
+  height: initial;
+  padding: initial;
+  column-gap: initial;
+  background-color: initial;
+  color: initial;
+  font-size: initial;
+}
+
+/* ***************
+  Generated Style Overrides
+  *************** */
+
 /* A wrapper for styling the markup generated by MarkupRenderer. */
 
 sdoc-autogen {
@@ -25,13 +441,14 @@ sdoc-autogen a:visited {
 
 /* Table */
 
+sdoc-autogen table.docutils,
 sdoc-autogen table {
   border-collapse: collapse;
   margin: var(--base-padding) 0;
 
   /*** add scroll for wide tables */
   /* issue#1370 https://css-tricks.com/preventing-a-grid-blowout/ */
-  /* border: 1px solid #ccc; */
+
   border: none;
   display: block;
   overflow-x: auto;
@@ -107,6 +524,9 @@ sdoc-autogen blockquote {
   ```unknownlang
  */
 sdoc-autogen pre:has(>code:only-child),
+sdoc-autogen pre.literal-block,
+sdoc-autogen pre.doctest-block,
+sdoc-autogen pre.math,
 sdoc-autogen pre.code {
   margin:   var(--code-font-size) 0;
   padding:  calc(var(--code-font-size)*1)
@@ -150,6 +570,9 @@ sdoc-autogen pre.code {
     calc((100cqi - 3 * var(--code-font-size) - 2px) / (80 * 0.6)),
     var(--code-font-size)
   );
+
+  /* allows the block to flow around images with standard docutils alignment classes */
+  display: flow-root;
 }
 /* "pre > code" generated by the Markdown renderer is the same as an inline
     <code> element, so we'll reset it here: */
@@ -179,6 +602,27 @@ sdoc-autogen tt.literal {
   word-wrap: break-word;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
+}
+
+sdoc-autogen pre.doctest-block {
+  background-color: var(--color-fg-main);
+  color: var(--color-bg-main);
+  border: none;
+  border-radius: 4px;
+  position: relative;
+}
+
+sdoc-autogen pre.doctest-block::before {
+  content: "doctest";
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  color: var(--color-fg-main);
+  background-color: var(--color-bg-contrast);
+  font-size: xx-small;
+  line-height: 1;
+  padding: 4px 6px;
+  border-radius: 4px;
 }
 
 /* ul */
@@ -238,6 +682,7 @@ sdoc-autogen > *:last-child {
 /* admonition by RST */
 /* "attention", "caution", "danger", "error", "hint", "important", "note", "tip", "warning" */
 
+sdoc-autogen div.admonition,
 sdoc-autogen .admonition {
   display: block;
   overflow: hidden;
@@ -248,6 +693,13 @@ sdoc-autogen .admonition {
   color: var(--color-fg-main);
 }
 
+sdoc-autogen .admonition:has(.last) {
+  /* Usually, the “admonition” section uses .last in its last paragraph.
+  The last margin is zeroed in .last, so we compensate for that. */
+  padding-bottom: var(--autogen-v-rhythm);
+}
+
+sdoc-autogen div.admonition p.admonition-title,
 sdoc-autogen .admonition .admonition-title {
   margin: 0;
   padding-top: calc(0.5 * var(--base-rhythm));
@@ -316,6 +768,47 @@ sdoc-autogen .admonition.hint {
   color: DarkSlateBlue;
 }
 
-sdoc-autogen .admonition.tip {
+compoundsdoc-autogen .admonition.tip {
   color: MediumSlateBlue;
+}
+
+/* field-list */
+
+sdoc-autogen table.docutils.field-list {
+  width: 100%;
+  margin-block: 1rem;
+  border: 0;
+  background-color: transparent;
+  /* border-collapse: separate;
+  border-spacing: 0 0.5rem; */
+}
+
+sdoc-autogen table.docutils.field-list th,
+sdoc-autogen table.docutils.field-list td {
+  border: 1px solid var(--color-border);
+  border-left: 0;
+  border-right: 0;
+  padding: var(--base-rhythm) 0;
+  vertical-align: top;
+  background-color: transparent;
+}
+
+sdoc-autogen table.docutils.field-list th.field-name {
+  width: 25%;
+  padding-right: 1rem;
+  font-weight: 600;
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+
+sdoc-autogen table.docutils.field-list td.field-body {
+  width: 75%;
+}
+
+sdoc-autogen table.docutils.field-list td.field-body > :first-child {
+  margin-top: 0;
+}
+
+sdoc-autogen table.docutils.field-list td.field-body > :last-child {
+  margin-bottom: 0;
 }

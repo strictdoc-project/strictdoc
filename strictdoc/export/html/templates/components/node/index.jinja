@@ -26,7 +26,8 @@
     {% if sdoc_entity.is_content_node() %}
       node-view="{{ sdoc_entity.get_requirement_style_mode() }}"
     {%- endif -%}
-    {%- if node_type_string is not none %}{# and node_type_string != 'TEXT' #}
+    {%- if node_type_string is not none %}
+      node-type="{{ node_type_string }}"
       show-node-type-name="{{ node_type_string }}{% if not is_editable %} (READ-ONLY){% endif %}"
     {%- endif %}
     data-included-document="{{ is_included }}"

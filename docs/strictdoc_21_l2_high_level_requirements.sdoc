@@ -991,7 +991,8 @@ UID: SDOC-SRS-161
 STATUS: Active
 TITLE: Clone node from existing node
 STATEMENT: >>>
-StrictDoc shall support cloning nodes from existing nodes.
+StrictDoc shall support cloning regular, non-composite document nodes from
+existing nodes.
 <<<
 RATIONALE: >>>
 Simplifies the creation of similar nodes.

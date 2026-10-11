@@ -611,6 +611,13 @@ def create_main_router(
         reference_node = export_action.traceability_index.get_node_by_mid(
             MID(reference_mid)
         )
+        if not export_action.traceability_index.is_node_clone_supported(
+            reference_node
+        ):
+            raise HTTPException(
+                status_code=403,
+                detail="Cloning is not supported for this node kind.",
+            )
         reference_requirement: SDocNode = assert_cast(reference_node, SDocNode)
         if not export_action.traceability_index.can_clone_node(
             reference_requirement

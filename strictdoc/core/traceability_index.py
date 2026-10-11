@@ -157,9 +157,16 @@ class TraceabilityIndex:
 
         return not node.is_managed_by_source_code()
 
+    @staticmethod
+    def is_node_clone_supported(
+        node: Union[SDocDocument, SDocNode],
+    ) -> bool:
+        assert isinstance(node, (SDocDocument, SDocNode)), node
+        return isinstance(node, SDocNode) and not node.is_composite
+
     def can_clone_node(self, node: Union[SDocDocument, SDocNode]) -> bool:
         assert isinstance(node, (SDocDocument, SDocNode)), node
-        if isinstance(node, SDocDocument):
+        if not self.is_node_clone_supported(node):
             return False
 
         return self.can_delete_node(node)

@@ -33,12 +33,20 @@ class Test(E2ECase):
 
             # Assert clone button exists on Requirement
             self.assert_element_present(
-                "//*[@data-testid='node-requirement']//*[@data-testid='node-clone-action']",
+                "//*[@node-type='REQUIREMENT']"
+                "//*[@data-testid='node-clone-action']",
                 by=By.XPATH,
             )
             # Assert clone button does not exist on Section
+            section_xpath = "//sdoc-node[@node-type='SECTION']"
+            self.assert_element_present(section_xpath, by=By.XPATH)
             self.assert_element_not_present(
-                "//*[@data-testid='node-section']//*[@data-testid='node-clone-action']",
+                f"{section_xpath}//*[@data-testid='node-clone-action']",
+                by=By.XPATH,
+            )
+            self.assert_element_not_present(
+                f"{section_xpath}"
+                "//*[@data-testid='node-clone-action-disabled']",
                 by=By.XPATH,
             )
 

@@ -821,6 +821,11 @@ class DocumentScreenViewObject:
     def can_delete_node(self, node: Union[SDocDocument, SDocNode]) -> bool:
         return self.traceability_index.can_delete_node(node)
 
+    def is_node_clone_supported(
+        self, node: Union[SDocDocument, SDocNode]
+    ) -> bool:
+        return self.traceability_index.is_node_clone_supported(node)
+
     def can_clone_node(self, node: Union[SDocDocument, SDocNode]) -> bool:
         return self.traceability_index.can_clone_node(node)
 

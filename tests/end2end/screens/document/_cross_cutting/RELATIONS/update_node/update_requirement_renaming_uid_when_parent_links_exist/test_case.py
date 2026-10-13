@@ -75,7 +75,13 @@ class Test(E2ECase):
                 "Either provide a parent UID, or "
                 "delete the parent requirement relations."
             )
-            form_edit_requirement.do_form_submit_and_catch_error(
+
+            # A single validation response contains both errors.
+            # (Check the second error without submitting the form again.
+            # On a slow CI runner, the test may click Restore before the
+            # repeated request finishes. Its late response would replace the
+            # restored UID with the rejected empty value.)
+            form_edit_requirement.assert_error(
                 "Not supported yet: "
                 "Renaming a requirement UID when the requirement has parent "
                 "requirement relations. For now, manually delete the relations,"

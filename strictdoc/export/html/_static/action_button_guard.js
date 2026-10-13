@@ -37,4 +37,17 @@
   document.addEventListener('turbo:submit-end', resetPending);
   document.addEventListener('turbo:frame-render', resetPending);
 
+  // Clear stale validation errors from a form as soon as it is resubmitted,
+  // rather than leaving them on screen until the new response arrives.
+  document.addEventListener('turbo:submit-start', function (event) {
+    const form = event.target;
+    if (!(form instanceof HTMLFormElement)) return;
+    form.querySelectorAll('sdoc-form-error').forEach(function (errorEl) {
+      errorEl.remove();
+    });
+    form.querySelectorAll('[errors]').forEach(function (fieldEl) {
+      fieldEl.removeAttribute('errors');
+    });
+  });
+
 })();

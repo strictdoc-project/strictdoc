@@ -50,6 +50,29 @@ releases:
 <<<
 
 [[SECTION]]
+MID: 94dfec2aad924748bc13f9dff81965ca
+TITLE: 0.30.2 (2026-10-09)
+
+[TEXT]
+MID: 8d060217bc674e388837e81626726d0b
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) HTML export now includes default styles for Docutils output, based on
+Docutils' ``html4css1.css``. RST options such as ``:align: center`` on
+images and figures now take effect.
+
+2\) Fixed: table headers in HTML export no longer break words in the
+middle. Header text wraps only at natural break points, so a column no
+longer shrinks to one or two characters wide.
+
+3\) Fixed: when several error messages appear at once, the notification
+toast now stacks them in a column, so each message stays readable.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 8a13de7253c14afb8dfc95f88948b22f
 TITLE: 0.30.1 (2026-09-15)
 

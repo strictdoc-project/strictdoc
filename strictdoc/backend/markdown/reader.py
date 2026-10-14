@@ -27,6 +27,7 @@ from strictdoc.backend.sdoc.models.document_config import (
 )
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
+from strictdoc.backend.sdoc.models.model import RequirementFieldName
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
@@ -939,7 +940,14 @@ class SDMarkdownReader:
         if len(title) > 0:
             parsed_field_names.append("TITLE")
 
-        has_duplicates = len(set(parsed_field_names)) != len(parsed_field_names)
+        non_repeatable_field_names = [
+            field_name_
+            for field_name_ in parsed_field_names
+            if field_name_ != RequirementFieldName.COMMENT
+        ]
+        has_duplicates = len(set(non_repeatable_field_names)) != len(
+            non_repeatable_field_names
+        )
         has_mid_or_uid = (
             "MID" in parsed_field_names or "UID" in parsed_field_names
         )

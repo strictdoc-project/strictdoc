@@ -50,6 +50,21 @@ releases:
 <<<
 
 [[SECTION]]
+MID: 33ce12749be74f1091dc746a622e422d
+TITLE: Unreleased
+
+[TEXT]
+MID: 92064a8742504513a4a3cf44ba94089b
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) The Document screen no longer offers or accepts Clone for sections and
+other composite nodes. Users can still clone regular document nodes.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 94dfec2aad924748bc13f9dff81965ca
 TITLE: 0.30.2 (2026-10-09)
 

@@ -479,4 +479,5 @@
   });
   // @relation(SDOC-LLR-214, scope=range_end)
 
+  installTableEditor();
 })();

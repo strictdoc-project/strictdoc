@@ -3,6 +3,7 @@
 {% block head_css %}
   {{ super() }}
   <link rel="stylesheet" href="{{ view_object.render_static_url('media_zoom.css') }}"/>
+  <link rel="stylesheet" href="{{ view_object.render_static_url('rst_table_editor.css') }}"/>
   {%- if view_object.is_running_on_server %}
   <link rel="stylesheet" href="{{ view_object.render_static_url('move_node_tree.css') }}"/>
   {%- endif %}
@@ -53,6 +54,7 @@
   {% if not view_object.has_included_document() %}
   <script src="{{ view_object.render_static_url('draggable_list.js') }}"></script>
   {% endif %}
+  <script src="{{ view_object.render_static_url('rst_table_editor.js') }}"></script>
   <script src="{{ view_object.render_static_url('editable_field.js') }}"></script>
   <script src="{{ view_object.render_static_url('deletable_field.js') }}"></script>
   <script src="{{ view_object.render_static_url('movable_field.js') }}"></script>

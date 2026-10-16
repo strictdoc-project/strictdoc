@@ -1079,6 +1079,215 @@ class RSTTableEditor {
     }
 }
 
+function insertTextAtCursor(target, text) {
+  const selection = window.getSelection();
+
+  if (!selection || !selection.rangeCount) {
+    target.focus();
+    document.execCommand("insertText", false, text);
+    return;
+  }
+
+  const range = selection.getRangeAt(0);
+
+  if (!target.contains(range.startContainer)) {
+    target.focus();
+    document.execCommand("insertText", false, text);
+    return;
+  }
+
+  range.deleteContents();
+
+  const textNode = document.createTextNode(text);
+  range.insertNode(textNode);
+
+  // Place the cursor immediately after the inserted text.
+  range.setStartAfter(textNode);
+  range.collapse(true);
+
+  selection.removeAllRanges();
+  selection.addRange(range);
+
+  target.focus();
+}
+
+function addStatementIcons() {
+  const target = document.querySelector(
+    'sdoc-contenteditable[data-field-label="STATEMENT"]'
+  );
+
+  if (!target) {
+    console.warn("STATEMENT field not found.");
+    return;
+  }
+
+  // Prevent duplicate toolbars.
+  if (document.querySelector(".statement-icon-toolbar")) {
+    return;
+  }
+
+  const toolbar = document.createElement("div");
+  toolbar.className = "statement-icon-toolbar";
+
+  Object.assign(toolbar.style, {
+    position: "fixed",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    gap: "6px",
+    zIndex: "512"
+  });
+
+  let savedRange = null;
+
+  target.addEventListener("mouseup", saveCursor);
+  target.addEventListener("keyup", saveCursor);
+
+  function saveCursor() {
+    const selection = window.getSelection();
+
+    if (selection && selection.rangeCount > 0) {
+      const range = selection.getRangeAt(0);
+
+      if (target.contains(range.startContainer)) {
+        savedRange = range.cloneRange();
+      }
+    }
+  }
+
+  const actions = [
+  {
+    icon: "▦",
+    title: "Insert a table here",
+    run: () => {
+      const text = "\n\n+-----------+-----------+\n"+
+                       "|  header1  |  header2  |\n"+
+                       "+===========+===========+\n"+
+                       "|   data1   |   data2   |\n"+
+                       "+-----------+-----------+\n\n";
+
+      target.focus();
+      const selection = window.getSelection();
+      if (savedRange && target.contains(savedRange.startContainer)) {
+        selection.removeAllRanges();
+        selection.addRange(savedRange);
+
+        const range = selection.getRangeAt(0);
+        range.deleteContents();
+
+        const textNode = document.createTextNode(text);
+        range.insertNode(textNode);
+
+        range.setStartAfter(textNode);
+        range.collapse(true);
+
+        selection.removeAllRanges();
+        selection.addRange(range);
+
+        savedRange = range.cloneRange();
+
+        target.dispatchEvent(new InputEvent("input", {
+          bubbles: true,
+          inputType: "insertText",
+          data: text
+        }));
+      } else {
+        console.warn("No saved cursor position. Place the cursor in the statement first.");
+      }
+    }
+  }/*,
+  {
+    icon: "⚡",
+    title: "Action 2",
+    run: () => console.log("Action 2", target.innerText)
+  },
+  {
+    icon: "⟳",
+    title: "Action 3",
+    run: () => console.log("Action 3", target.innerText)
+  }*/
+  ];
+
+  actions.forEach(({ icon, title, run }) => {
+    const button = document.createElement("button");
+
+    button.type = "button";
+    button.textContent = icon;
+    button.title = title;
+    button.setAttribute("aria-label", title);
+
+    Object.assign(button.style, {
+      width: "28px",
+      height: "28px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "0",
+      border: "1px solid #d0d0d0",
+      borderRadius: "6px",
+      background: "#fff",
+      color: "#333",
+      fontSize: "15px",
+      cursor: "pointer",
+      boxShadow: "0 1px 3px rgba(0,0,0,0.12)"
+    });
+
+    button.addEventListener("mouseenter", () => {
+      button.style.background = "#f0f0f0";
+    });
+
+    button.addEventListener("mouseleave", () => {
+      button.style.background = "#fff";
+    });
+
+    button.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      run();
+    });
+
+    toolbar.appendChild(button);
+  });
+
+  document.body.appendChild(toolbar);
+
+  function updatePosition() {
+    if (!target.isConnected) {
+      toolbar.remove();
+      return;
+    }
+
+    const rect = target.getBoundingClientRect();
+
+    Object.assign(toolbar.style, {
+      left: `${Math.max(0, rect.left - toolbar.offsetWidth - 8)}px`,
+      top: `${Math.max(0, rect.top)}px`
+    });
+  }
+
+  // Initial positioning.
+  updatePosition();
+
+  // Keep aligned during scrolling and resizing.
+  window.addEventListener("scroll", updatePosition, true);
+  window.addEventListener("resize", updatePosition);
+
+  // Track changes to the target's size.
+  const resizeObserver = new ResizeObserver(updatePosition);
+  resizeObserver.observe(target);
+
+  // Return a cleanup function.
+  return function removeStatementIcons() {
+    window.removeEventListener("scroll", updatePosition, true);
+    window.removeEventListener("resize", updatePosition);
+    resizeObserver.disconnect();
+    toolbar.remove();
+  };
+}
+
+// Create the icons.
+const removeStatementIcons = addStatementIcons();
+
 /**
  * Install the RST table editor for StrictDoc editable fields.
  * A MutationObserver handles dynamically inserted fields, while
@@ -1131,6 +1340,10 @@ function installTableEditor() {
                     node.querySelector(SEL_RST_EDITABLE)
                 ) {
                     scanForEditableFields(node);
+                    const input = document.getElementById("document_markup");
+                    if (input && input.value === "RST") {
+                      addStatementIcons();
+                    }
                 }
             }
         }

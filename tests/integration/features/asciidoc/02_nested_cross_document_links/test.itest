@@ -1,0 +1,23 @@
+#
+# Every source document has a standalone page. Links choose an anchor in the
+# same page and a relative .adoc path for another source directory.
+#
+
+RUN: %strictdoc export --formats=asciidoc --output-dir %T %S
+
+RUN: %check_exists --file %T/asciidoc/input.adoc
+RUN: %check_exists --file %T/asciidoc/nested/spec.adoc
+RUN: %cat %T/asciidoc/input.adoc | filecheck %s --dump-input=fail --check-prefix CHECK-ROOT
+RUN: %cat %T/asciidoc/nested/spec.adoc | filecheck %s --dump-input=fail --check-prefix CHECK-NESTED
+
+CHECK-ROOT: = Root document
+CHECK-ROOT: [[DOC-ROOT]]
+CHECK-ROOT: xref:nested/spec.adoc#DOC-NEST[Nested document]
+CHECK-ROOT-SAME: xref:nested/spec.adoc#REQ-NEST[Nested requirement]
+
+CHECK-NESTED: = Nested document
+CHECK-NESTED: [[DOC-NEST]]
+CHECK-NESTED: xref:../input.adoc#DOC-ROOT[Root document]
+CHECK-NESTED-SAME: xref:../input.adoc#ROOT-SECTION[Root section]
+CHECK-NESTED: [[REQ-NEST]]
+CHECK-NESTED: == Nested requirement

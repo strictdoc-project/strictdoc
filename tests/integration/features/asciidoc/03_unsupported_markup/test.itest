@@ -1,0 +1,8 @@
+#
+# The exporter stops when it cannot convert a source construct. The diagnostic
+# identifies the file, node, and source field instead of publishing lossy text.
+#
+
+RUN: %expect_exit 1 %strictdoc export --formats=asciidoc --output-dir %T %S/input.sdoc | filecheck %s --dump-input=fail
+
+CHECK: error: {{.*}}input.sdoc{{.*}}REQ-MARKUP{{.*}}STATEMENT{{.*}}unsupported

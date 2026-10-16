@@ -1,0 +1,9 @@
+[DOCUMENT]
+TITLE: Image asset
+
+[TEXT]
+STATEMENT: >>>
+.. image:: diagram%20space.svg
+   :alt: Requirement diagram
+   :width: 64
+<<<

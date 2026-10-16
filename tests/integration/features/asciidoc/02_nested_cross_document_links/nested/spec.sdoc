@@ -1,0 +1,15 @@
+[DOCUMENT]
+TITLE: Nested document
+UID: DOC-NEST
+
+[TEXT]
+STATEMENT: >>>
+Return to [LINK: DOC-ROOT] and [LINK: ROOT-SECTION].
+<<<
+
+[REQUIREMENT]
+UID: REQ-NEST
+TITLE: Nested requirement
+STATEMENT: >>>
+The system shall retain the nested directory.
+<<<

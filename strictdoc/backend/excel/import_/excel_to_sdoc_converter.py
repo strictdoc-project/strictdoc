@@ -15,6 +15,7 @@ from strictdoc.backend.sdoc.models.document_grammar import (
 from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElement,
     GrammarElementFieldString,
+    GrammarElementRelationParent,
 )
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
@@ -146,7 +147,9 @@ class ExcelToSDocConverter:
             column_types=column_types,
         )
         document = ExcelToSDocConverter.create_document(
-            title, extra_header_pairs
+            title,
+            extra_header_pairs,
+            has_parent_column=parent_column_idx is not None,
         )
         for i in range(header_row_idx + 1, sheet.nrows):
             row_values = sheet.row_values(i)
@@ -159,7 +162,9 @@ class ExcelToSDocConverter:
 
     @staticmethod
     def create_document(
-        title: Optional[str], extra_header_pairs: List[Tuple[int, str]]
+        title: Optional[str],
+        extra_header_pairs: List[Tuple[int, str]],
+        has_parent_column: bool = False,
     ) -> SDocDocument:
         document_config = DocumentConfig.default_config(None)
         document_title = title if title else "<No title>"
@@ -201,6 +206,16 @@ class ExcelToSDocConverter:
             fields=fields,
             relations=[],
         )
+        # The nodes get Parent relations from the parent column, so the
+        # grammar has to declare that relation type.
+        if has_parent_column:
+            requirements_element.relations = [
+                GrammarElementRelationParent(
+                    parent=requirements_element,
+                    relation_type="Parent",
+                    relation_role=None,
+                )
+            ]
         elements = [requirements_element]
         grammar = DocumentGrammar(parent=document, elements=elements)
         document.grammar = grammar

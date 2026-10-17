@@ -50,6 +50,24 @@ releases:
 <<<
 
 [[SECTION]]
+MID: ede60c27c5584bf49e5e87c4370cea53
+TITLE: Unreleased
+
+[TEXT]
+MID: a6175c2086b74fdeaec18fabb08bae68
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) Fixed: the server and HTML export no longer fail on every page with
+``TemplateNotFound`` after a run stops while it compiles the HTML templates.
+StrictDoc now checks that the compiled template cache is complete and up to
+date, and compiles it again if it is not. This also fixes the PyInstaller
+bundle, which never refreshed this cache.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 94dfec2aad924748bc13f9dff81965ca
 TITLE: 0.30.2 (2026-10-09)
 

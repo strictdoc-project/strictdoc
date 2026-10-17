@@ -28,6 +28,7 @@ from strictdoc.helpers.exception import (
     ExceptionInfo,
     StrictDocChildProcessException,
 )
+from strictdoc.helpers.frozen import run_frozen_helper_command_if_requested
 from strictdoc.helpers.parallelizer import Parallelizer
 from strictdoc.helpers.timing import SimpleNominalExit, measure_performance
 
@@ -58,6 +59,15 @@ COMMAND_REGISTRY: Dict[str, Any] = create_command_registry()
 
 
 def _main() -> None:
+    # A frozen binary must call multiprocessing.freeze_support() before
+    # parsing arguments: on Windows, "spawn" worker processes re-run this
+    # executable with multiprocessing's own arguments, which StrictDoc's
+    # parser would reject.
+    # https://github.com/pyinstaller/pyinstaller/issues/7438
+    if getattr(sys, "frozen", False):  # pragma: no cover
+        multiprocessing.freeze_support()
+        run_frozen_helper_command_if_requested()
+
     # The parser can raise when no arguments or incorrect arguments are provided.
     try:
         parser = SDocArgsParser.create_sdoc_args_parser(COMMAND_REGISTRY)
@@ -73,12 +83,6 @@ def _main() -> None:
 
     if os.environ.get("STRICTDOC_ENV") == "test":
         environment.is_test_env = True
-
-    # Ensure that multiprocessing.freeze_support() is called in a frozen
-    # application
-    # https://github.com/pyinstaller/pyinstaller/issues/7438
-    if getattr(sys, "frozen", False):  # pragma: no cover
-        multiprocessing.freeze_support()
 
     # This is crucial for a good performance on macOS. Linux uses 'fork' by default.
     # Changed in version 3.8: On macOS, the spawn start method is now the default.

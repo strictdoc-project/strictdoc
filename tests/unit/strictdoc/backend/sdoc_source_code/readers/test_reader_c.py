@@ -2,6 +2,8 @@
 @relation(SDOC-SRS-146, scope=file)
 """
 
+import pytest
+
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
     SourceFileTraceabilityInfo,
 )
@@ -690,3 +692,169 @@ SomeType *some_function_declaration(void);
     assert info.functions[0].display_name == "some_function"
     assert info.functions[1].display_name == "some_function_double_pointer"
     assert info.functions[2].display_name == "some_function_declaration"
+
+
+def test_105_function_with_attribute_macro_prefix():
+    """
+    Ensure that the reader detects functions with an attribute-like macro
+    prefix, for example "MY_ATTR void g(void)".
+
+    https://github.com/strictdoc-project/strictdoc/issues/3239
+    """
+
+    input_string = b"""\
+#define MY_ATTR
+/** @relation(REQ-A, scope=function) */
+int f(int a) { return a; }
+/** @relation(REQ-B, scope=function) */
+MY_ATTR void g(void) { }
+/** @relation(REQ-C, scope=function) */
+static MY_ATTR void h(void) { }
+/** @relation(REQ-D, scope=function) */
+MY_ATTR const uint8_t * k(void) { return 0; }
+"""
+
+    reader = SourceFileTraceabilityReader_C()
+
+    for file_path_ in ("foo.c", "foo.cpp"):
+        info: SourceFileTraceabilityInfo = reader.read(
+            input_string, file_path=file_path_
+        )
+
+        assert isinstance(info, SourceFileTraceabilityInfo)
+        assert [marker_.reqs for marker_ in info.markers] == [
+            ["REQ-A"],
+            ["REQ-B"],
+            ["REQ-C"],
+            ["REQ-D"],
+        ]
+        assert [function_.display_name for function_ in info.functions] == [
+            "f",
+            "g",
+            "h",
+            "k",
+        ]
+        assert info.markers[1].ng_range_line_begin == 4
+        assert info.markers[1].ng_range_line_end == 5
+
+
+def test_106_function_with_misparsed_macro_prefix():
+    """
+    Ensure that the reader detects functions when tree-sitter puts the macros
+    before a function into separate sibling nodes.
+
+    https://github.com/strictdoc-project/strictdoc/issues/3239
+    """
+
+    input_string = b"""\
+/** @relation(REQ-A, scope=function) */
+MY_ATTR struct foo a(void) { }
+/** @relation(REQ-B, scope=function) */
+A1 A2 void b(void) { }
+/** @relation(REQ-C, scope=function) */
+A1 A2 A3 void c(void) { }
+/** @relation(REQ-D, scope=function) */
+MY_ATTR(".text") void d(void) { }
+/** @relation(REQ-E, scope=function) */
+MY_ATTR(".text")
+void e(void) { }
+/** @relation(REQ-F, scope=function) */
+A1 A2 void f(void);
+"""
+
+    reader = SourceFileTraceabilityReader_C()
+
+    info: SourceFileTraceabilityInfo = reader.read(
+        input_string, file_path="foo.c"
+    )
+
+    assert isinstance(info, SourceFileTraceabilityInfo)
+    assert [marker_.reqs for marker_ in info.markers] == [
+        ["REQ-A"],
+        ["REQ-B"],
+        ["REQ-C"],
+        ["REQ-D"],
+        ["REQ-E"],
+        ["REQ-F"],
+    ]
+    assert [
+        (function_.display_name, function_.line_begin, function_.line_end)
+        for function_ in info.functions
+    ] == [
+        ("a", 1, 2),
+        ("b", 3, 4),
+        ("c", 5, 6),
+        ("d", 7, 8),
+        ("e", 9, 11),
+        ("f", 12, 13),
+    ]
+
+    # The function code includes the macro prefix.
+    function_e = info.functions[4]
+    assert function_e.code_byte_range is not None
+    assert (
+        input_string[
+            function_e.code_byte_range.start : function_e.code_byte_range.end
+        ]
+        == b'MY_ATTR(".text")\nvoid e(void) { }'
+    )
+
+
+def test_107_warning_for_scope_function_marker_without_function(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """
+    Ensure that the reader warns about a scope=function marker without a
+    function.
+
+    The C++ grammar cannot recover from 'static MY_ATTR(".text")': it reads
+    the rest of the line as an unterminated string, so no function node exists.
+
+    https://github.com/strictdoc-project/strictdoc/issues/3239
+    """
+
+    input_string = b"""\
+/** @relation(REQ-A, scope=function) */
+static MY_ATTR(".text") void a(void) { }
+"""
+
+    reader = SourceFileTraceabilityReader_C()
+
+    info: SourceFileTraceabilityInfo = reader.read(
+        input_string, file_path="foo.cpp"
+    )
+
+    assert isinstance(info, SourceFileTraceabilityInfo)
+    assert len(info.markers) == 0
+    assert capsys.readouterr().out == (
+        "warning: C/C++ source reader: foo.cpp:1: "
+        "skipping a scope=function marker for REQ-A: "
+        "no function found directly below the comment.\n"
+    )
+
+
+def test_108_no_warning_for_scope_function_marker_with_function(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """
+    Ensure that the reader prints no warning when each scope=function marker
+    has a function definition or declaration below it.
+    """
+
+    input_string = b"""\
+/** @relation(REQ-A, scope=function) */
+void a(void) { }
+
+/** @relation(REQ-B, scope=function) */
+void b(void);
+"""
+
+    reader = SourceFileTraceabilityReader_C()
+
+    info: SourceFileTraceabilityInfo = reader.read(
+        input_string, file_path="foo.c"
+    )
+
+    assert isinstance(info, SourceFileTraceabilityInfo)
+    assert len(info.markers) == 2
+    assert capsys.readouterr().out == ""

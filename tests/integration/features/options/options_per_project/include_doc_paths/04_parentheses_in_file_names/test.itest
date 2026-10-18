@@ -1,0 +1,22 @@
+# Verify that the include_doc_paths filter finds documents with parentheses in
+# their file and folder names.
+# https://github.com/strictdoc-project/strictdoc/issues/3235
+
+RUN: %strictdoc --debug export %S --output-dir %T --no-parallelization | filecheck %s --dump-input=fail
+
+CHECK-NOT: Export to HTML: Document 3
+CHECK: Export to HTML: Document 1
+CHECK-NOT: Export to HTML: Document 3
+CHECK: Export to HTML: Document 2
+CHECK-NOT: Export to HTML: Document 3
+
+RUN: %check_exists --file          "%T/html/04_parentheses_in_file_names/docs/input(1).html"
+RUN: %check_exists --file          "%T/html/04_parentheses_in_file_names/docs/sub(2)/input.html"
+RUN: %check_exists --file --invert "%T/html/04_parentheses_in_file_names/other/input(3).html"
+
+RUN: %cat "%T/html/index.html" | filecheck %s --dump-input=fail --check-prefix=CHECK-PROJECT-TREE
+CHECK-PROJECT-TREE-NOT: Document 3
+CHECK-PROJECT-TREE: Document 2
+CHECK-PROJECT-TREE-NOT: Document 3
+CHECK-PROJECT-TREE: Document 1
+CHECK-PROJECT-TREE-NOT: Document 3

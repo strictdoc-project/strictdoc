@@ -111,88 +111,8 @@ willing to develop it themselves.
 <<<
 
 [[SECTION]]
-MID: f1e3c17829fd4eebbd390fceaeb95619
-UID: SECTION-DP-Project-milestones
-TITLE: Project milestones
-
-[TEXT]
-MID: fd9294fdd2b546de993f649767371394
-STATEMENT: >>>
-The work is loosely organized in quarters which are maintained as
-`GitHub milestones <https://github.com/strictdoc-project/strictdoc/milestones>`_,
-such as 2025-Q1, 2025-Q2, etc.
-
-.. list-table::
-   :header-rows: 1
-   :widths: 15 85
-
-   * - **Quarter**
-     - **Planned / accomplished work**
-
-   * - 2019-Q2
-     - Pre-StrictDoc development in a fork of Doorstop.
-   * - 2019-Q3
-     - StrictDoc, first prototype. Markdown-based C++ program. Custom requirements metadata in YAML.
-   * - 2020-Q1
-     - The second prototype of StrictDoc based on RST/Sphinx. Using Sphinx extensions to manage meta information. First integration tests.
-   * - 2020-Q2
-     - StrictDoc created on GitHub. The code still uses RST for parsing requirements meta information and PySide for GUI.
-   * - 2020-Q3
-     - The RST parsing is replaced with a TextX-based DSL, new StrictDoc grammar is created. The PySide is replaced with a simple export to HTML using Jinja templates. Export to Sphinx HTML/PDF is introduced.
-   * - 2020-Q4
-     - Improvements in the styles of HTML/PDF exports. First Table, Traceability, and Deep Traceability screens.
-   * - 2021-Q1
-     - Excel export. The first implementation for forward and reverse traceability between SDoc and source files.
-   * - 2021-Q2
-     - Further work on the SDoc-source traceability.
-   * - 2021-Q3
-     - Further work on the SDoc-source traceability. Tree cycles detection, validations. MathJax support.
-   * - 2021-Q4
-     - Improvements of the traceability index generation and validation. Initial implementation of ReqIF. First support of custom grammars.
-   * - 2022-Q1
-     - Further work on ReqIF and custom grammars. Document fragments feature.
-   * - 2022-Q2
-     - Excel conversion improvements. Improvements of how meta information is displayed in HTML export.
-   * - 2022-Q3
-     - No work in this quarter.
-   * - 2022-Q4
-     - Installation using PyInstaller. The first prototype of a Web-based interface. First end-to-end Web tests using SeleniumBase. Improvements of the ReqIF support.
-   * - 2023-Q1
-     - Improvements of the Web-based interface towards first release. Improvements of the ReqIF support.
-   * - 2023-Q2
-     - Further stabilization of the Web interface. RST markup stability improvements. Work on StrictDoc's own requirements traceability.
-   * - 2023-Q3
-     - Anchors and incoming links. Improvements of the ReqIF interface. Work on StrictDoc's own requirements traceability. Mermaid diagramming tool. Reverse parent / child links. Project statistics screen. Performance improvements.
-   * - 2023-Q4
-     - Requirements relations and roles. UI improvements and stabilization. Further ReqIF work. Search engine and requirements filters. Project tree Diff/Changelog screens. Basic Git operations.
-   * - 2024-Q1
-     - Experimental SPDX support. JSON export. Custom views (static HTML). Basic traceability matrix screen.
-   * - 2024-Q2
-     - Includable/composable documents. FREETEXT-to-TEXT migration. ReqIF improvements.
-   * - 2024-Q3
-     - HTML2PDF improvements. ReqIF roundtrip for RELATION/ROLE. Consistent automatic escaping of Jinja templates. Passthrough->export command migration.
-   * - 2024-Q4
-     - Connecting requirements to functions (C, Python) and classes (Python) in source code. Support the linking in both directions independently: from requirements to source using RELATION/File and from source to requirements using @relation markers. LINK to documents.
-   * - 2025-Q1
-     - Connecting requirements to source code – further work. StrictDoc containerized in Docker. JUnit XML report generation.
-   * - 2025-Q2
-     - Gcov coverage justification report. SDoc node VERSIONs. External links.
-   * - 2025-Q3
-     - Static HTML search. Testing large documentation trees (100+ documents). Tree map visualization. Initial work for Ada support.
-   * - 2025-Q4
-     - Python file for StrictDoc configuration instead of TOML. Requirement validations and node constraints. Reading SDoc nodes from source files, e.g., ``SPDX-*`` identifiers.
-   * - 2026-Q1
-     - Parse Rust code. Preparing the server for concurrent use. WHAT-WHY-HOW tutorial. Markdown support. Static HTML search on server.
-   * - 2026-Q2
-     - Further Markdown work. Parse C macros. Table screen editing. Rust's cargo-nextest. Drag-and-drop image upload (WIP).
-   * - 2026-Q3
-     - Further Markdown work. Drag-and-drop image upload (WIP). Nix flake, migrate from Tox to uv. Lazy loading of documents. Moving nodes between sections/documents. Performance improvements for large documents.
-<<<
-
-[[/SECTION]]
-
-[[SECTION]]
 MID: bf9f3f05501140da8d35cde39493c72f
+UID: SECTION-DP-Roadmap-diagram
 TITLE: Roadmap diagram
 
 [TEXT]

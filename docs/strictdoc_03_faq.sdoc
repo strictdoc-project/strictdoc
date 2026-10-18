@@ -362,11 +362,11 @@ TITLE: How long has the StrictDoc project been around?
 [TEXT]
 MID: 47d60404cf574aebb8c83795589c4137
 STATEMENT: >>>
-.. note::
+The Development Plan contains the current roadmap:
+[LINK: SECTION-DP-Roadmap-diagram].
 
-    The complete list of the project milestones is maintained in the Development Plan: [LINK: SECTION-DP-Project-milestones].
-
-Below is a brief chronology of the early development of StrictDoc.
+Below is a brief chronology of StrictDoc's early years of development until the
+end of 2022.
 
 ----
 
@@ -387,7 +387,7 @@ Markdown-based C++ program. Custom requirements metadata in YAML.
 **2020 – January**
 
 StrictDoc, second generation: RST/Sphinx-based Python program. Using Sphinx
-extensions to manage meta information.
+extensions to manage meta information. First integration tests.
 
 **2020 – May**
 
@@ -404,7 +404,52 @@ document data model which is called "grammar".
 **2020 – July**
 
 The custom RST parser was replaced with a TextX-based DSL. Since then, StrictDoc
-has been using TextX for parsing SDoc files.
+has been using TextX for parsing SDoc files. The new StrictDoc grammar was
+created. A simple export to HTML with Jinja templates replaced the PySide GUI.
+Export to Sphinx HTML/PDF was introduced.
+
+**2020 – Q4**
+
+Improvements in the styles of HTML/PDF exports. First Table, Traceability, and
+Deep Traceability screens.
+
+**2021 – Q1**
+
+Excel export. The first implementation of forward and reverse traceability
+between SDoc and source files.
+
+**2021 – Q2**
+
+Further work on the SDoc-source traceability.
+
+**2021 – Q3**
+
+Further work on the SDoc-source traceability. Tree cycles detection,
+validations. MathJax support.
+
+**2021 – Q4**
+
+Improvements of the traceability index generation and validation. Initial
+implementation of ReqIF. First support of custom grammars.
+
+**2022 – Q1**
+
+Further work on ReqIF and custom grammars. Document fragments feature.
+
+**2022 – Q2**
+
+Excel conversion improvements. Improvements of how meta information is
+displayed in HTML export.
+
+**2022 – Q3**
+
+No work in this quarter.
+
+**2022 – Q4**
+
+Installation using PyInstaller. The first prototype of a Web-based interface.
+First end-to-end Web tests using SeleniumBase. Improvements of the ReqIF
+support.
 <<<
 
 [[/SECTION]]

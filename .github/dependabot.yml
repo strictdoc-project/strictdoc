@@ -19,6 +19,9 @@ updates:
       - dependency-type: development
     ignore:
       - dependency-name: filecheck
+      # FIXME: Ignored until the itests are migrated to LIT's native shell
+      # syntax.
+      - dependency-name: lit
     groups:
       python-packages:
         patterns: ["*"]

@@ -1051,33 +1051,34 @@ def release(context, test_pypi=False, username=None, password=None):
     env_user = os.environ.get("TWINE_USERNAME")
     env_pass = os.environ.get("TWINE_PASSWORD")
 
-    assert not ((username or password) and (env_user or env_pass)), (
-        username,
-        password,
-        env_user,
-        env_pass,
+    # The credentials come from one of three sources:
+    # 1) --username and --password,
+    # 2) TWINE_USERNAME and TWINE_PASSWORD (GitHub release workflow),
+    # 3) the strictdoc_release or strictdoc_test section of ~/.pypirc.
+    has_cli_credentials = bool(username or password)
+    has_env_credentials = bool(env_user or env_pass)
+    assert not (has_cli_credentials and has_env_credentials), (
+        "Provide credentials either with --username/--password or with "
+        "TWINE_USERNAME/TWINE_PASSWORD, not both."
     )
-    assert (username and password) or (env_user and env_pass), (
-        username,
-        password,
-        env_user,
-        env_pass,
-    )
-    if env_user:
-        assert env_user == "__token__"
+    if has_cli_credentials:
+        assert username and password, (
+            "Both --username and --password must be provided."
+        )
+    if has_env_credentials:
+        assert env_user and env_pass, (
+            "Both TWINE_USERNAME and TWINE_PASSWORD must be set."
+        )
+        assert env_user == "__token__", env_user
 
     repository_argument_or_none = ""
-    if username is not None and password is not None:
+    if not has_cli_credentials and not has_env_credentials:
         repository_argument_or_none = (
-            ""
-            if username
-            else (
-                "--repository strictdoc_test"
-                if test_pypi
-                else "--repository strictdoc_release"
-            )
+            "--repository strictdoc_test"
+            if test_pypi
+            else "--repository strictdoc_release"
         )
-    user_password = f"-u{username} -p{password}" if username is not None else ""
+    user_password = f"-u{username} -p{password}" if has_cli_credentials else ""
 
     run_invoke(
         context,

@@ -51,7 +51,7 @@ releases:
 
 [[SECTION]]
 MID: ffb0cef8fbd34da9bf36ac1f33a37f45
-TITLE: Unreleased
+TITLE: 0.30.3 (2026-10-18)
 
 [TEXT]
 MID: 0d5238ce9f5b4c1c954c1a3576a123ca
@@ -59,22 +59,34 @@ STATEMENT: >>>
 This release contains the following enhancements:
 
 1\) Fixed: Markdown documents now accept several ``COMMENT`` fields in one
-node, like SDoc documents. Before, the Markdown reader reported a duplicate
-field error.
+node, as SDoc documents do. Before, the Markdown reader reported a
+duplicate field error.
 
 2\) Fixed: the ``include_doc_paths`` and ``exclude_doc_paths`` wildcards now
-match file and folder names with parentheses, for example, ``input(1).sdoc``.
-Before, a project with ``include_doc_paths``, such as a project created with
-``strictdoc new``, skipped these documents without a warning. The same fix
-applies to the source file filters and to ``.gitignore`` patterns. A user
-reported this in #3235.
+match file and folder names with parentheses, for example ``input(1).sdoc``.
+The source file filters and the ``.gitignore`` patterns now also match
+names with parentheses. Before, StrictDoc skipped documents with
+parentheses in the path without a warning if the project set
+``include_doc_paths``. Projects created with ``strictdoc new`` set
+``include_doc_paths`` by default.
 
 3\) Fixed: the C/C++ source reader now reads ``scope=function`` markers on
-functions that start with macros, for example ``MY_ATTR void foo(void)``
-or ``MY_SECTION(".text") void foo(void)``. When the reader finds no
-function directly below a ``scope=function`` marker, it now prints a
-warning with the file and line of the marker. Before, the reader skipped
-such markers without a warning.
+functions that start with macros. Examples of such functions are
+``MY_ATTR void foo(void)`` and ``MY_SECTION(".text") void foo(void)``.
+Before, the reader skipped markers on macro-prefixed functions without a
+warning. The reader now prints a warning if no function is directly below
+a ``scope=function`` marker. The warning shows the file and line of the
+marker.
+
+4\) Fixed: the ReqIF importer now reads Parent relations between nodes of
+different types, for example a REQUIREMENT that traces to a NEED. Before,
+the ReqIF importer failed with a ``KeyError``.
+
+5\) Fixed: StrictDoc now loads a document that the Excel importer creates
+from a sheet with a parent column. The Excel importer now declares the
+Parent relation in the document grammar. Before, StrictDoc could not load
+the document and reported "Requirement relation type/role is not
+registered: Parent".
 <<<
 
 [[/SECTION]]

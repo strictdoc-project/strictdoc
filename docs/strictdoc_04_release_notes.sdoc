@@ -50,6 +50,29 @@ releases:
 <<<
 
 [[SECTION]]
+MID: ffb0cef8fbd34da9bf36ac1f33a37f45
+TITLE: Unreleased
+
+[TEXT]
+MID: 0d5238ce9f5b4c1c954c1a3576a123ca
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) Fixed: Markdown documents now accept several ``COMMENT`` fields in one
+node, like SDoc documents. Before, the Markdown reader reported a duplicate
+field error.
+
+2\) Fixed: the ``include_doc_paths`` and ``exclude_doc_paths`` wildcards now
+match file and folder names with parentheses, for example, ``input(1).sdoc``.
+Before, a project with ``include_doc_paths``, such as a project created with
+``strictdoc new``, skipped these documents without a warning. The same fix
+applies to the source file filters and to ``.gitignore`` patterns. A user
+reported this in #3235.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 94dfec2aad924748bc13f9dff81965ca
 TITLE: 0.30.2 (2026-10-09)
 

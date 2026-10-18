@@ -245,6 +245,35 @@ def test_case_22_mask_with_underscore():
     assert path_filter.match("_foobar.sdoc")
 
 
+def test_case_23_wildcards_match_parentheses_in_paths():
+    """
+    Verify that the wildcards match file and folder names with parentheses.
+
+    https://github.com/strictdoc-project/strictdoc/issues/3235
+    """
+    for mask_ in ("/docs/", "docs/**", "docs/*.sdoc", "**.sdoc"):
+        path_filter = PathFilter([mask_], positive_or_negative=True)
+
+        # POSITIVE
+        assert path_filter.match("docs/input(1).sdoc"), mask_
+        assert path_filter.match("docs/(input.sdoc"), mask_
+        assert path_filter.match("docs/input).sdoc"), mask_
+
+    path_filter = PathFilter(["docs/**/*.sdoc"], positive_or_negative=True)
+
+    # POSITIVE
+    assert path_filter.match("docs/sub(1)/input(1).sdoc")
+
+    # NEGATIVE
+    assert not path_filter.match("docs/input(1).sdoc")
+
+    path_filter = PathFilter(["docs/*.sdoc"], positive_or_negative=True)
+
+    # NEGATIVE
+    assert not path_filter.match("docs/sub(1)/input(1).sdoc")
+    assert not path_filter.match("docs\\input(1).sdoc")
+
+
 def test_case_40_root_slash():
     mask = "/build"
     path_filter = PathFilter([mask], positive_or_negative=False)

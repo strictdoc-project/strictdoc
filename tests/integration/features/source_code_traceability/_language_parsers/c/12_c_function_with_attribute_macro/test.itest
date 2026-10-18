@@ -1,0 +1,27 @@
+# @relation(SDOC-SRS-146, SDOC-SRS-137, scope=file)
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s
+CHECK: warning: C/C++ source reader: {{.*}}file.c:34: skipping a scope=function marker for REQ-2: no function found directly below the comment.
+CHECK: Export completed.
+
+RUN: %check_exists --file "%T/html/_source_files/file.c.html"
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: <a{{.*}}href="../_source_files/file.c.html#REQ-1#4#11">
+CHECK-HTML: file.c, <i>lines: 4-11</i>, function hello_world
+CHECK-HTML: <a{{.*}}href="../_source_files/file.c.html#REQ-1#22#29">
+CHECK-HTML: file.c, <i>lines: 22-29</i>, function hello_world_3
+CHECK-HTML: <a{{.*}}href="../_source_files/file.c.html#REQ-2#13#20">
+CHECK-HTML: file.c, <i>lines: 13-20</i>, function hello_world_2
+CHECK-HTML-NOT: function hello_world_4
+
+RUN: %cat %T/html/_source_files/file.c.html | filecheck %s --check-prefix CHECK-SOURCE-FILE
+CHECK-SOURCE-FILE: href="../_source_files/file.c.html#REQ-1#4#11"
+CHECK-SOURCE-FILE: <b>[ 4-11 ]</b>
+CHECK-SOURCE-FILE: file.c, function hello_world
+CHECK-SOURCE-FILE: href="../_source_files/file.c.html#REQ-2#13#20"
+CHECK-SOURCE-FILE: <b>[ 13-20 ]</b>
+CHECK-SOURCE-FILE: file.c, function hello_world_2
+CHECK-SOURCE-FILE: href="../_source_files/file.c.html#REQ-1#22#29"
+CHECK-SOURCE-FILE: <b>[ 22-29 ]</b>
+CHECK-SOURCE-FILE: file.c, function hello_world_3

@@ -68,6 +68,13 @@ Before, a project with ``include_doc_paths``, such as a project created with
 ``strictdoc new``, skipped these documents without a warning. The same fix
 applies to the source file filters and to ``.gitignore`` patterns. A user
 reported this in #3235.
+
+3\) Fixed: the C/C++ source reader now reads ``scope=function`` markers on
+functions that start with macros, for example ``MY_ATTR void foo(void)``
+or ``MY_SECTION(".text") void foo(void)``. When the reader finds no
+function directly below a ``scope=function`` marker, it now prints a
+warning with the file and line of the marker. Before, the reader skipped
+such markers without a warning.
 <<<
 
 [[/SECTION]]

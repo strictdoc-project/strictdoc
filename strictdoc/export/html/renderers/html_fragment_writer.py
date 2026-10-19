@@ -7,5 +7,6 @@ class HTMLFragmentWriter:
         return Markup(text_fragment)
 
     @staticmethod
-    def write_anchor_link(title: str, href: str) -> str:
-        return f'<a href="{href}">🔗&nbsp;{title}</a>'
+    def write_anchor_link(title: str, href: str, with_icon: bool = True) -> str:
+        icon = "🔗&nbsp;" if with_icon else ""
+        return f'<a href="{href}">{icon}{title}</a>'

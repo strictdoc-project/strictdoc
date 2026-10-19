@@ -132,9 +132,12 @@ class RSTWriter:
                 # referenced, but you must give the link an explicit title,
                 # using this syntax: :ref:`Link title <label-name>`.
                 # https://www.sphinx-doc.org/en/master/usage/restructuredtext/roles.html
-                node_display_title = node_or_none.get_display_title(
-                    include_toc_number=False
-                )
+                if part.title is not None:
+                    node_display_title = part.title
+                else:
+                    node_display_title = node_or_none.get_display_title(
+                        include_toc_number=False
+                    )
                 output += f":ref:`{node_display_title} <{part.link}>`"
             elif isinstance(part, Anchor):
                 output += f".. _{part.value}:\n"

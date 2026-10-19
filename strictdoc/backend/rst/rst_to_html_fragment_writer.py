@@ -286,7 +286,8 @@ class RstToHtmlFragmentWriter:
         return html, None
 
     @staticmethod
-    def write_anchor_link(title: str, href: str) -> str:
+    def write_anchor_link(title: str, href: str, with_icon: bool = True) -> str:
+        icon = "🔗&nbsp;" if with_icon else ""
         return f"""\
-:rawhtml:`<a href="{href}">🔗&nbsp;{title}</a>`\
+:rawhtml:`<a href="{href}">{icon}{title}</a>`\
 """

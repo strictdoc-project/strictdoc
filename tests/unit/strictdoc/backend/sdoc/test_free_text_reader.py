@@ -202,3 +202,32 @@ Hello world [LINK: FOO] Part
     assert document.parts[0] == "Hello world "
     assert document.parts[1].link == "FOO"
     assert document.parts[2] == " Part\n"
+
+
+def test_022_link_with_title():
+    free_text_input = """
+Hello [LINK: unit, units] and [LINK: FOO, "a, b [c]"].
+""".lstrip()
+
+    reader = SDFreeTextReader()
+
+    document = reader.read(free_text_input)
+    assert isinstance(document, FreeTextContainer)
+
+    assert document.parts[0] == "Hello "
+    assert document.parts[1].link == "unit"
+    assert document.parts[1].title == "units"
+    assert document.parts[2] == " and "
+    assert document.parts[3].link == "FOO"
+    assert document.parts[3].title == "a, b [c]"
+    assert document.parts[4] == ".\n"
+
+
+def test_023_link_without_title_has_no_title():
+    free_text_input = "[LINK: FOO]\n"
+
+    reader = SDFreeTextReader()
+
+    document = reader.read(free_text_input)
+    assert document.parts[0].link == "FOO"
+    assert document.parts[0].title is None

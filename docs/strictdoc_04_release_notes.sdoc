@@ -50,6 +50,25 @@ releases:
 <<<
 
 [[SECTION]]
+MID: b8b2939ac85c4300b5f8e96675f3d196
+TITLE: Unreleased
+
+[TEXT]
+MID: 055adfedc6964887bb8caa55b42837f8
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) The LINK tag now has an optional link title:
+``[LINK: <UID>, <link title>]``. The link shows the link title instead of
+the title of the linked node or anchor. A link with a link title has no 🔗
+prefix. As a result, the link reads as part of a sentence. For example,
+links to the glossary anchor ``unit`` can show ``unit``, ``units``, or
+``Unit``. Before, each form needed a separate anchor.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: ffb0cef8fbd34da9bf36ac1f33a37f45
 TITLE: 0.30.3 (2026-10-18)
 

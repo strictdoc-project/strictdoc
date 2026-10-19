@@ -190,7 +190,6 @@ class MarkdownToHtmlFragmentWriter:
         )
 
     @staticmethod
-    def write_anchor_link(title: str, href: str) -> str:
-        return (
-            f'<a href="{escape(href, quote=True)}">🔗&nbsp;{escape(title)}</a>'
-        )
+    def write_anchor_link(title: str, href: str, with_icon: bool = True) -> str:
+        icon = "🔗&nbsp;" if with_icon else ""
+        return f'<a href="{escape(href, quote=True)}">{icon}{escape(title)}</a>'

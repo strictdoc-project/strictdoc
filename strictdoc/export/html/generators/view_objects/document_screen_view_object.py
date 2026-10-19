@@ -397,16 +397,23 @@ class DocumentScreenViewObject:
                     # Dangling or not-yet-complete while the user is still
                     # typing: degrade gracefully instead of crashing this
                     # ad hoc, possibly unsaved render.
-                    output_parts.append(str(escape(f"[LINK: {part.link}]")))
+                    output_parts.append(str(escape(part.get_source_value())))
                 else:
                     href = self.link_renderer.render_node_link(
                         linkable_node, self.document, self.document_type
                     )
-                    output_parts.append(
-                        HTMLFragmentWriter.write_anchor_link(
-                            linkable_node.get_display_title(), href
+                    if part.title is not None:
+                        output_parts.append(
+                            HTMLFragmentWriter.write_anchor_link(
+                                str(escape(part.title)), href, with_icon=False
+                            )
                         )
-                    )
+                    else:
+                        output_parts.append(
+                            HTMLFragmentWriter.write_anchor_link(
+                                linkable_node.get_display_title(), href
+                            )
+                        )
             else:
                 # An Anchor can only be produced here by SDFreeTextReader
                 # parsing a raw, not-yet-saved value in isolation (where

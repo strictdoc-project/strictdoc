@@ -1,0 +1,30 @@
+[DOCUMENT]
+TITLE: Link with custom title
+
+[[SECTION]]
+TITLE: Glossary
+
+[TEXT]
+STATEMENT: >>>
+[ANCHOR: unit, Unit]
+
+A unit is a single item.
+<<<
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Requirement title
+STATEMENT: >>>
+The system shall do X.
+<<<
+
+[[/SECTION]]
+
+[TEXT]
+STATEMENT: >>>
+Several [LINK: unit, units] are linked here.
+
+A [LINK: REQ-1, "custom title, with comma"] links to a node.
+
+A [LINK: REQ-1] keeps the node title.
+<<<

@@ -1,0 +1,26 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[[SECTION]]
+TITLE: Chapter 1
+
+[TEXT]
+STATEMENT: >>>
+Here's the chapter 1 with anchor:
+
+[ANCHOR: ANCHOR_1, Anchor ABC]
+
+Some other text.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+TITLE: Chapter 2
+
+[TEXT]
+STATEMENT: >>>
+See [LINK: ANCHOR_1, the custom title] for more details.
+<<<
+
+[[/SECTION]]

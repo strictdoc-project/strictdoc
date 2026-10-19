@@ -11,3 +11,10 @@ def test_write_anchor_link():
         result
         == '<a href="../requirements/REQ-001.html#REQ-001">🔗&nbsp;REQ-001</a>'
     )
+
+
+def test_write_anchor_link_without_icon():
+    result = HTMLFragmentWriter.write_anchor_link(
+        "units", "../glossary.html#unit", with_icon=False
+    )
+    assert result == '<a href="../glossary.html#unit">units</a>'

@@ -34,9 +34,7 @@ class DocumentCustomMetadataKeyValuePair:
             if isinstance(part, str):
                 text += part
             elif isinstance(part, InlineLink):
-                text += "[LINK: "
-                text += part.link
-                text += "]"
+                text += part.get_source_value()
             else:
                 raise NotImplementedError(part)  # pragma: no cover
         return text

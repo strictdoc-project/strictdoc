@@ -1,0 +1,14 @@
+#
+# @relation(SDOC-SRS-149, scope=file)
+#
+# A LINK with a custom title renders that title without the link icon.
+# A LINK without a title renders the linked node's title with the icon.
+#
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Export completed.
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: Several <a href="#unit">units</a> are linked here.
+CHECK-HTML: A <a href="#REQ-1">custom title, with comma</a> links to a node.
+CHECK-HTML: A <a href="#REQ-1">🔗&nbsp;1.1. Requirement title</a> keeps the node title.

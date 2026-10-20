@@ -50,7 +50,6 @@ releases:
 <<<
 
 [[SECTION]]
-
 MID: ede60c27c5584bf49e5e87c4370cea53
 TITLE: Unreleased
 
@@ -69,7 +68,6 @@ bundle, which never refreshed this cache.
 [[/SECTION]]
 
 [[SECTION]]
-
 MID: b8b2939ac85c4300b5f8e96675f3d196
 TITLE: Unreleased
 
@@ -126,7 +124,6 @@ from a sheet with a parent column. The Excel importer now declares the
 Parent relation in the document grammar. Before, StrictDoc could not load
 the document and reported "Requirement relation type/role is not
 registered: Parent".
-
 <<<
 
 [[/SECTION]]

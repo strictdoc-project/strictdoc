@@ -606,11 +606,26 @@ class P01_ReqIFToSDocConverter:
                     )
                 )
 
+                # The parent can be a node of another grammar element, whose
+                # spec type has its own ReqIF.ForeignID attribute definition.
+                parent_spec_object_type = (
+                    reqif_bundle.lookup.get_spec_type_by_ref(
+                        parent_spec_object_parent.spec_object_type
+                    )
+                )
+                parent_foreign_key_id = next(
+                    definition_ref
+                    for definition_ref, attribute_definition in (
+                        parent_spec_object_type.attribute_map.items()
+                    )
+                    if attribute_definition.long_name == "ReqIF.ForeignID"
+                )
+
                 parent_refs.append(
                     ParentReqReference(
                         requirement,
                         parent_spec_object_parent.attribute_map[
-                            foreign_key_id_or_none
+                            parent_foreign_key_id
                         ].value,
                         role=relation_role,
                     )

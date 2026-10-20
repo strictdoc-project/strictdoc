@@ -1,0 +1,12 @@
+#
+# Verify that [LINK: uid, title] in a Markdown requirement STATEMENT is
+# rendered as a hyperlink with the custom title and without the link icon.
+#
+
+RUN: %strictdoc export %S --formats=html --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Export completed.
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+
+CHECK-HTML: data-uid="REQ-A"
+CHECK-HTML: See also <a href="{{.*}}">the other requirement</a>.

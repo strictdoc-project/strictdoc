@@ -187,6 +187,50 @@ def test_54_exclude_paths():
         assert len(subfolder.subfolder_trees) == 0
 
 
+def test_55_include_paths_with_parentheses_in_filenames():
+    """
+    Verify that parentheses in file and folder names have no effect on the
+    inclusion of files.
+
+    This test ensures a proper fix for the issue reported in:
+    https://github.com/strictdoc-project/strictdoc/issues/3235
+    """
+
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        path_to_file1 = os.path.join(tmp_dir, "docs", "input(1).sdoc")
+        path_to_file2 = os.path.join(tmp_dir, "docs", "sub(2)", "input.sdoc")
+
+        Path(path_to_file2).parent.mkdir(parents=True, exist_ok=True)
+
+        Path(path_to_file1).touch()
+        Path(path_to_file2).touch()
+
+        file_tree = FileFinder.find_files_with_extensions(
+            root_path=tmp_dir,
+            ignored_dirs=[],
+            extensions=[".sdoc"],
+            include_paths=["/docs/"],
+            exclude_paths=[],
+        )
+
+        assert isinstance(file_tree, FileTree)
+        assert isinstance(file_tree.root_folder_or_file, Folder)
+
+        folder: Folder = file_tree.root_folder_or_file
+        assert len(folder.subfolder_trees) == 1, folder.subfolder_trees
+
+        docs_folder = folder.subfolder_trees[0]
+        assert docs_folder.full_path == os.path.join(tmp_dir, "docs")
+        assert len(docs_folder.files) == 1
+        assert docs_folder.files[0].full_path == path_to_file1
+
+        assert len(docs_folder.subfolder_trees) == 1
+        subfolder = docs_folder.subfolder_trees[0]
+        assert subfolder.full_path == os.path.join(tmp_dir, "docs", "sub(2)")
+        assert len(subfolder.files) == 1
+        assert subfolder.files[0].full_path == path_to_file2
+
+
 def test_60_find_directories_with_include_paths_and_windows_separators():
     """
     Verify that the find_directories method correctly handles include paths with

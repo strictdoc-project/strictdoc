@@ -28,7 +28,7 @@ NormalString[noskipws]:
 ;
 
 InlineLink[noskipws]:
-  '[LINK: ' value = /{REGEX_UID}/ ']'
+  '[LINK: ' value = /{REGEX_UID}/ (', ' title = AnchorTitle)? ']'
 ;
 
 Anchor[noskipws]:

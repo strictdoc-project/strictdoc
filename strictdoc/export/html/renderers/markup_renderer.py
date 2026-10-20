@@ -205,9 +205,14 @@ class MarkupRenderer:
                 href = self.link_renderer.render_node_link(
                     linkable_node, self.context_document, document_type
                 )
-                parts_output += fragment_writer.write_anchor_link(
-                    linkable_node.get_display_title(), href
-                )
+                if part.title is not None:
+                    parts_output += fragment_writer.write_anchor_link(
+                        part.title, href, with_icon=False
+                    )
+                else:
+                    parts_output += fragment_writer.write_anchor_link(
+                        linkable_node.get_display_title(), href
+                    )
             elif isinstance(part, Anchor):
                 parts_output += self.template_anchor.render(
                     anchor=part,

@@ -1,0 +1,5 @@
+RUN: %strictdoc export %S --output-dir Output/
+RUN: %cat "Output/html/13_metadata_link_with_custom_title/input.html" | filecheck %s --dump-input=fail
+
+CHECK: OWNER:
+CHECK: <a href="#REQ-1">Owner</a>

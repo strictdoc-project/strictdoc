@@ -971,12 +971,14 @@ MID: 992a734673884c4a89ada5cb1fd640c4
 UID: SDOC-LLR-211
 TITLE: Asset directory resolution
 STATEMENT: >>>
-StrictDoc shall associate a local _assets directory with every document to store assets.
+StrictDoc shall associate a local _assets directory with every document to store
+assets.
 
 Documents shall reference assets via relative paths.
 <<<
 RATIONALE: >>>
-- The local assets directory preserves compatibility with standard relative paths.
+- The local assets directory preserves compatibility with standard relative
+  paths.
 <<<
 
 [REQUIREMENT]
@@ -984,9 +986,12 @@ MID: da0c32fb66434bcd80d959613a35a446
 UID: SDOC-LLR-212
 TITLE: Asset Exporting
 STATEMENT: >>>
-When exporting, StrictDoc shall copy the contents of the Local Asset Directories to the output folder.
+When exporting, StrictDoc shall copy the contents of the Local Asset Directories
+to the output folder.
 
-The directory structure of the assets within the output folder shall mirror their relative structure in the source project tree to preserve relative path integrity.
+The directory structure of the assets within the output folder shall mirror
+their relative structure in the source project tree to preserve relative path
+integrity.
 <<<
 
 [[SECTION]]
@@ -1017,7 +1022,8 @@ UID: SDOC-LLR-214
 STATUS: Active
 TITLE: Image upload
 STATEMENT: >>>
-The Web Editor shall support image upload in multi-line text fields via paste and drag-and-drop:
+The Web Editor shall support image upload in multi-line text fields via paste
+and drag-and-drop:
 
 1. Intercept `drop` and `paste` events and prevent default browser behaviour.
 2. Accept the supported image formats defined in [LINK: SDOC-LLR-218]. Validate both the filename extension and MIME type before starting the upload.
@@ -1039,11 +1045,15 @@ The Web Editor shall support image upload in multi-line text fields via paste an
    For documents configured to use HTML or Markdown markup, always insert a
    direct reference to each uploaded file.
 
-6. On failure, remove the upload placeholder and show a dismissible notification that identifies the affected files and reports the error.
-7. When an upload overwrites an image already referenced in the edited field, do not insert another image reference. Show a dismissible notification that identifies the updated file.
+6. On failure, remove the upload placeholder and show a dismissible notification
+   that identifies the affected files and reports the error.
+7. When an upload overwrites an image already referenced in the edited field, do
+   not insert another image reference. Show a dismissible notification that
+   identifies the updated file.
 <<<
 RATIONALE: >>>
-Supports standard editor interactions and removes manual file handling, improving usability and reducing potential for user errors.
+Supports standard editor interactions and removes manual file handling,
+improving usability and reducing potential for user errors.
 <<<
 
 [REQUIREMENT]
@@ -1051,18 +1061,26 @@ MID: 7cdd7a0838fc4212a43b336eba5ccde8
 UID: SDOC-LLR-215
 TITLE: Asset upload endpoint
 STATEMENT: >>>
-The StrictDoc web server shall provide an ``/actions/document/upload_asset`` endpoint that accepts image uploads and stores them in a node-specific subfolder.
+The StrictDoc web server shall provide an ``/actions/document/upload_asset``
+endpoint that accepts image uploads and stores them in a node-specific
+subfolder.
 
 The endpoint shall:
 
-1. Accept only the supported image formats defined in [LINK: SDOC-LLR-218], and reject unsupported files before creating directories or writing file contents. Reject uploads for read-only nodes (i.e. autogen).
+1. Accept only the supported image formats defined in [LINK: SDOC-LLR-218], and
+   reject unsupported files before creating directories or writing file
+   contents. Reject uploads for read-only nodes (i.e. autogen).
 2. Sanitize the filename by replacing spaces with underscores.
 3. Validate the requirement MIDs formally
-4. Use the provided Document MID to resolve the correct document relative ``_assets`` directory.
-5. Determine the exact target subfolder based on the Asset Path Resolution Strategy (see [LINK: SDOC-LLR-213]).
-6. Store the file in the target folder, and overwrite any existing image file with the same name.
+4. Use the provided Document MID to resolve the correct document relative
+   ``_assets`` directory.
+5. Determine the exact target subfolder based on the Asset Path Resolution
+   Strategy (see [LINK: SDOC-LLR-213]).
+6. Store the file in the target folder, and overwrite any existing image file
+   with the same name.
 7. Sync the assets to the web server so it can be served immediately.
-8. When successful, return HTTP 200 with the stored filename expressed as relative paths.
+8. When successful, return HTTP 200 with the stored filename expressed as
+   relative paths.
 9. When unsuccessful, return an error response.
 <<<
 RATIONALE: >>>
@@ -1078,22 +1096,34 @@ MID: 27981746203042b299b216295b6a7588
 UID: SDOC-LLR-213
 TITLE: Asset path resolution strategy
 STATEMENT: >>>
-When storing an uploaded asset, the system shall determine the correct node-specific subfolder within the document local ``_assets`` directory based on the following strategy:
+When storing an uploaded asset, the system shall determine the correct
+node-specific subfolder within the document local ``_assets`` directory based on
+the following strategy:
 
-- If the node has a permanent MID, or if MIDs are explicitly enabled in the document options, the subfolder shall be ``_assets/<MID>/``. (This allows uploads for not-yet-existing requirements when MIDs are enabled).
+- If the node has a permanent MID, or if MIDs are explicitly enabled in the
+  document options, the subfolder shall be ``_assets/<MID>/``. (This allows
+  uploads for not-yet-existing requirements when MIDs are enabled).
 
-- Otherwise, if the node exists and has a UID, the subfolder shall be ``_assets/<UID>/``.
+- Otherwise, if the node exists and has a UID, the subfolder shall be
+  ``_assets/<UID>/``.
 
-- Otherwise, if the node exists but lacks both a permanent MID and UID, the asset shall be stored in the document local ``_assets/`` directory.
+- Otherwise, if the node exists but lacks both a permanent MID and UID, the
+  asset shall be stored in the document local ``_assets/`` directory.
 
-- If the node does not yet exist and MIDs are disabled, the upload shall be rejected.
+- If the node does not yet exist and MIDs are disabled, the upload shall be
+  rejected.
 <<<
 RATIONALE: >>>
-Defines a consistent storage model that prevents image filename collisions between requirements.
+Defines a consistent storage model that prevents image filename collisions
+between requirements.
 
-- Prioritizing the MID over the UID ensures asset paths remain stable even if a requirement's human-readable UID is changed later.
+- Prioritizing the MID over the UID ensures asset paths remain stable even if a
+  requirement's human-readable UID is changed later.
 
-- When MIDs are disabled, the asset storage path depends entirely on the node's UID, which is only established after the node is created. Therefore, image upload attempts at node creation time must be rejected to prevent orphaned files.
+- When MIDs are disabled, the asset storage path depends entirely on the node's
+  UID, which is only established after the node is created. Therefore, image
+  upload attempts at node creation time must be rejected to prevent orphaned
+  files.
 <<<
 
 [REQUIREMENT]
@@ -1101,9 +1131,13 @@ MID: 3157ce3de267437c8e083455fc2b1b87
 UID: SDOC-LLR-216
 TITLE: Support for wildcard image directive generation
 STATEMENT: >>>
-The ``/actions/document/upload_asset`` endpoint shall detect pairs of files that share the same filename stem and differ only by file extension. The files may be uploaded in a single operation or in separate operations to the same node-specific assets location.
+The ``/actions/document/upload_asset`` endpoint shall detect pairs of files that
+share the same filename stem and differ only by file extension. The files may be
+uploaded in a single operation or in separate operations to the same
+node-specific assets location.
 
-If such a pair consists of one raster image and one vector image, as classified in [LINK: SDOC-LLR-218], the system shall:
+If such a pair consists of one raster image and one vector image, as classified
+in [LINK: SDOC-LLR-218], the system shall:
 
 - Store both files in the requirement-specific assets location.
 - Return the wildcard filename
@@ -1112,7 +1146,6 @@ If such a pair consists of one raster image and one vector image, as classified 
   markup as defined in [LINK: SDOC-LLR-214].
 
 If no such pair is detected, the system shall treat each file independently.
-
 <<<
 RATIONALE: >>>
 The wildcard lets Sphinx select the vector image for HTML output and the raster
@@ -1125,9 +1158,11 @@ MID: 82dd31e22ccf44bd8b6b924ae9591b0c
 UID: SDOC-LLR-217
 TITLE: Orphaned asset cleanup
 STATEMENT: >>>
-StrictDoc shall provide a CLI command ``strictdoc manage assets`` to identify and remove orphaned assets.
+StrictDoc shall provide a CLI command ``strictdoc manage assets`` to identify
+and remove orphaned assets.
 
-An asset file shall be considered orphaned if it is an image file, and not referenced by any requirement.
+An asset file shall be considered orphaned if it is an image file, and not
+referenced by any requirement.
 
 The command shall:
 
@@ -1144,7 +1179,8 @@ The command shall recognize ``_assets`` references with no path prefix or a
 ``./`` prefix.
 <<<
 RATIONALE: >>>
-Prevents accumulation of orphaned assets. This would for instance happen if requirement creation is aborted after already having uploaded images.
+Prevents accumulation of orphaned assets. This would for instance happen if
+requirement creation is aborted after already having uploaded images.
 <<<
 
 [[/SECTION]]

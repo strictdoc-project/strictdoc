@@ -50,6 +50,7 @@ releases:
 <<<
 
 [[SECTION]]
+
 MID: ede60c27c5584bf49e5e87c4370cea53
 TITLE: Unreleased
 
@@ -63,6 +64,69 @@ This release contains the following enhancements:
 StrictDoc now checks that the compiled template cache is complete and up to
 date, and compiles it again if it is not. This also fixes the PyInstaller
 bundle, which never refreshed this cache.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+
+MID: b8b2939ac85c4300b5f8e96675f3d196
+TITLE: Unreleased
+
+[TEXT]
+MID: 055adfedc6964887bb8caa55b42837f8
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) The LINK tag now has an optional link title:
+``[LINK: <UID>, <link title>]``. The link shows the link title instead of
+the title of the linked node or anchor. A link with a link title has no 🔗
+prefix. As a result, the link reads as part of a sentence. For example,
+links to the glossary anchor ``unit`` can show ``unit``, ``units``, or
+``Unit``. Before, each form needed a separate anchor.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: ffb0cef8fbd34da9bf36ac1f33a37f45
+TITLE: 0.30.3 (2026-10-18)
+
+[TEXT]
+MID: 0d5238ce9f5b4c1c954c1a3576a123ca
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) Fixed: Markdown documents now accept several ``COMMENT`` fields in one
+node, as SDoc documents do. Before, the Markdown reader reported a
+duplicate field error.
+
+2\) Fixed: the ``include_doc_paths`` and ``exclude_doc_paths`` wildcards now
+match file and folder names with parentheses, for example ``input(1).sdoc``.
+The source file filters and the ``.gitignore`` patterns now also match
+names with parentheses. Before, StrictDoc skipped documents with
+parentheses in the path without a warning if the project set
+``include_doc_paths``. Projects created with ``strictdoc new`` set
+``include_doc_paths`` by default.
+
+3\) Fixed: the C/C++ source reader now reads ``scope=function`` markers on
+functions that start with macros. Examples of such functions are
+``MY_ATTR void foo(void)`` and ``MY_SECTION(".text") void foo(void)``.
+Before, the reader skipped markers on macro-prefixed functions without a
+warning. The reader now prints a warning if no function is directly below
+a ``scope=function`` marker. The warning shows the file and line of the
+marker.
+
+4\) Fixed: the ReqIF importer now reads Parent relations between nodes of
+different types, for example a REQUIREMENT that traces to a NEED. Before,
+the ReqIF importer failed with a ``KeyError``.
+
+5\) Fixed: StrictDoc now loads a document that the Excel importer creates
+from a sheet with a parent column. The Excel importer now declares the
+Parent relation in the document grammar. Before, StrictDoc could not load
+the document and reported "Requirement relation type/role is not
+registered: Parent".
+
 <<<
 
 [[/SECTION]]

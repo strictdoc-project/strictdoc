@@ -1,10 +1,11 @@
 ---
 name: technical-writing-guide
 description: |
-  Rules and DO/AVOID examples for writing terse, well-structured technical
-  documentation: BLUF, sentence case, active voice, concise wording, and
-  structure over prose. Use when writing or editing technical docs,
-  READMEs, specs, or reviewing text for clarity and conciseness.
+  Rules and DO/AVOID examples for writing short, well-structured technical
+  documentation: BLUF, topic sentences, short paragraphs, sentence case,
+  active voice, consistent terminology, concise wording, and structure
+  over prose. Use when writing or editing technical docs, READMEs, specs,
+  or reviewing text for clarity and conciseness.
 ---
 
 # technical-writing-guide

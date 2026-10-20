@@ -124,9 +124,7 @@ class SDocNodeField:
             if isinstance(part, str):
                 text += part
             elif isinstance(part, InlineLink):
-                text += "[LINK: "
-                text += part.link
-                text += "]"
+                text += part.get_source_value()
             elif isinstance(part, Anchor):
                 text += "[ANCHOR: "
                 text += part.value

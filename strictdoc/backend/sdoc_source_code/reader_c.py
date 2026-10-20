@@ -2,7 +2,7 @@
 @relation(SDOC-SRS-142, SDOC-SRS-146, scope=file)
 """
 
-from typing import Final, List, Optional, Sequence
+from typing import Final, List, Optional, Sequence, Tuple
 
 import tree_sitter_c
 import tree_sitter_cpp
@@ -108,6 +108,11 @@ class SourceFileTraceabilityReader_C:
 
         traceability_info = SourceFileTraceabilityInfo([])
 
+        # Start bytes of the comments that the reader attached to functions.
+        function_comment_start_bytes: set[int] = set()
+        # All scope=function markers with the start bytes of their comments.
+        function_scope_markers: List[Tuple[int, LanguageItemMarker]] = []
+
         nodes = traverse_tree(tree)
 
         source_node: Optional[SourceNode]
@@ -206,14 +211,19 @@ class SourceFileTraceabilityReader_C:
                     if specifier_node_.text == b"static":
                         function_attributes.add(FunctionAttribute.STATIC)
 
+                function_start_node = self._find_function_start_node(node_)
+
                 source_node = None
                 language_item_markers = []
                 function_comment_node = None
                 if (
-                    node_.prev_sibling is not None
-                    and node_.prev_sibling.type == "comment"
+                    function_start_node.prev_sibling is not None
+                    and function_start_node.prev_sibling.type == "comment"
                 ):
-                    function_comment_node = node_.prev_sibling
+                    function_comment_node = function_start_node.prev_sibling
+                    function_comment_start_bytes.add(
+                        function_comment_node.start_byte
+                    )
                     assert function_comment_node.text is not None, node_.text
                     function_comment_text = function_comment_node.text.decode(
                         "utf8"
@@ -253,9 +263,11 @@ class SourceFileTraceabilityReader_C:
                     display_name=function_display_name,
                     line_begin=function_comment_node.start_point[0] + 1
                     if function_comment_node is not None
-                    else node_.range.start_point[0] + 1,
+                    else function_start_node.range.start_point[0] + 1,
                     line_end=node_.range.end_point[0] + 1,
-                    code_byte_range=ByteRange.create_from_ts_node(node_),
+                    code_byte_range=ByteRange.create_from_ts_nodes(
+                        function_start_node, node_
+                    ),
                     child_functions=[],
                     markers=language_item_markers,
                     attributes=function_attributes,
@@ -329,6 +341,8 @@ class SourceFileTraceabilityReader_C:
                         f"{'::'.join(parent_names)}::{function_display_name}"
                     )
 
+                function_start_node = self._find_function_start_node(node_)
+
                 source_node = None
                 language_item_markers = []
                 function_comment_node = None
@@ -338,12 +352,15 @@ class SourceFileTraceabilityReader_C:
                 # considered a function comment only if it there are no empty
                 # lines between the comment and function.
                 if (
-                    node_.prev_sibling is not None
-                    and node_.prev_sibling.type == "comment"
-                    and (node_.prev_sibling.end_point[0] + 1)
-                    == node_.start_point[0]
+                    function_start_node.prev_sibling is not None
+                    and function_start_node.prev_sibling.type == "comment"
+                    and (function_start_node.prev_sibling.end_point[0] + 1)
+                    == function_start_node.start_point[0]
                 ):
-                    function_comment_node = node_.prev_sibling
+                    function_comment_node = function_start_node.prev_sibling
+                    function_comment_start_bytes.add(
+                        function_comment_node.start_byte
+                    )
                     assert function_comment_node.text is not None, node_.text
                     function_comment_text = function_comment_node.text.decode(
                         "utf8"
@@ -381,9 +398,11 @@ class SourceFileTraceabilityReader_C:
                     display_name=function_display_name,
                     line_begin=function_comment_node.start_point[0] + 1
                     if function_comment_node is not None
-                    else node_.range.start_point[0] + 1,
+                    else function_start_node.range.start_point[0] + 1,
                     line_end=node_.range.end_point[0] + 1,
-                    code_byte_range=ByteRange.create_from_ts_node(node_),
+                    code_byte_range=ByteRange.create_from_ts_nodes(
+                        function_start_node, node_
+                    ),
                     child_functions=[],
                     markers=language_item_markers,
                     attributes={FunctionAttribute.DEFINITION},
@@ -434,10 +453,23 @@ class SourceFileTraceabilityReader_C:
                         line_marker_ := marker_
                     ):
                         line_marker_processor(line_marker_, parse_context)
+                    elif (
+                        isinstance(marker_, LanguageItemMarker)
+                        and marker_.scope == RangeMarkerType.FUNCTION
+                    ):
+                        function_scope_markers.append(
+                            (node_.start_byte, marker_)
+                        )
                     else:
                         pass
             else:
                 pass
+
+        self._warn_about_unattached_function_markers(
+            function_scope_markers,
+            function_comment_start_bytes,
+            parse_context.filename,
+        )
 
         source_file_traceability_info_processor(
             traceability_info, parse_context
@@ -509,6 +541,77 @@ class SourceFileTraceabilityReader_C:
             )
 
         return None
+
+    @staticmethod
+    def _find_function_start_node(node: Node) -> Node:
+        """
+        Find the first node of a function, including a misparsed macro prefix.
+
+        For 'MY_ATTR(".text") void foo(void) { }', tree-sitter can put the
+        macro into sibling nodes before the function. The function comment
+        is above these nodes.
+        """
+        function_start_node = node
+        while (
+            (previous_node := function_start_node.prev_sibling) is not None
+            and SourceFileTraceabilityReader_C._is_misparsed_macro_prefix_node(
+                previous_node, function_start_node
+            )
+        ):
+            function_start_node = previous_node
+        return function_start_node
+
+    @staticmethod
+    def _is_misparsed_macro_prefix_node(node: Node, next_node: Node) -> bool:
+        """
+        Check if a node is a misparsed macro prefix of the next node.
+
+        A prefix node is an ERROR node, or a declaration or an expression
+        statement that ends with a missing ";" and has no function declarator.
+        It is on one line, on or directly above the first line of next_node.
+        """
+        if node.start_point[0] != node.end_point[0]:
+            return False
+        if node.end_point[0] + 1 < next_node.start_point[0]:
+            return False
+
+        if node.type == "ERROR":
+            return True
+
+        if node.type in ("declaration", "expression_statement"):
+            return (
+                node.child_count > 0
+                and node.children[-1].is_missing
+                and SourceFileTraceabilityReader_C._find_function_declarator_node(
+                    node
+                )
+                is None
+            )
+
+        return False
+
+    @staticmethod
+    def _warn_about_unattached_function_markers(
+        function_scope_markers: List[Tuple[int, LanguageItemMarker]],
+        function_comment_start_bytes: set[int],
+        filename: Optional[str],
+    ) -> None:
+        """
+        Print a warning for each scope=function marker without a function.
+
+        This happens when a blank line separates the comment from the
+        function, or when tree-sitter cannot parse the function.
+        """
+        for comment_start_byte_, marker_ in function_scope_markers:
+            if comment_start_byte_ in function_comment_start_bytes:
+                continue
+            print(  # noqa: T201
+                "warning: C/C++ source reader: "
+                f"{filename}:{marker_.ng_source_line_begin}: "
+                "skipping a scope=function marker for "
+                f"{', '.join(marker_.reqs)}: "
+                "no function found directly below the comment."
+            )
 
     @staticmethod
     def get_node_ns(node: Node) -> Sequence[str]:

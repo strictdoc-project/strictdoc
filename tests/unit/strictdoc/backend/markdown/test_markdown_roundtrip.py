@@ -1313,3 +1313,29 @@ This is a sample root-level text statement.
     assert isinstance(section, SDocNode)
     assert section.node_type == "SECTION"
     assert section.reserved_title == "Example section"
+
+
+def test_033_roundtrip_multiple_comments_roundtrip():
+    input_markdown = """\
+# Document title
+
+## Requirement title
+
+**UID**: REQ-1
+
+**Statement**: System shall do X.
+
+**Comment**: First comment.
+
+**Comment**: Second comment.
+"""
+
+    document, _ = _assert_markdown_roundtrip(input_markdown)
+
+    requirement = document.section_contents[0]
+    assert isinstance(requirement, SDocNode)
+    comment_fields = requirement.ordered_fields_lookup["COMMENT"]
+    assert [field_.get_text_value() for field_ in comment_fields] == [
+        "First comment.",
+        "Second comment.",
+    ]

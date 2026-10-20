@@ -2568,6 +2568,20 @@ Example:
 
 The following link references a section: [LINK: SDOC_UG_LINKS_AND_ANCHORS].
 
+A LINK tag has an optional link title: ``[LINK: <UID>, <link title>]``. The
+link shows the link title instead of the title of the linked node or anchor.
+A link with a link title has no 🔗 prefix. As a result, the link reads as part
+of a sentence.
+
+An unquoted link title cannot contain ``,`` or ``]``. Enclose a link title with
+these characters in double quotes. An ``[ANCHOR: ...]`` title follows the same
+rule.
+
+Example:
+
+This sentence contains a
+[LINK: SDOC_UG_LINKS_AND_ANCHORS, link with a custom title].
+
 .. note::
 
     Adding a LINK tag only works when it is placed in multiline fields written with ``>>>...<<<``. Single-line fields do not support RST syntax or tags such as ``[LINK:...]``. See also: [LINK: SECTION-UG-Single-vs-multiline-fields].

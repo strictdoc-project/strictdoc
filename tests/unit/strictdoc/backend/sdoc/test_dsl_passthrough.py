@@ -287,6 +287,34 @@ STATEMENT: >>>
     assert input_sdoc == output
 
 
+def test_023_link_with_title(default_project_config):
+    input_sdoc = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[REQUIREMENT]
+UID: unit
+STATEMENT: >>>
+This is a statement.
+<<<
+
+[TEXT]
+STATEMENT: >>>
+[LINK: unit, units] and [LINK: unit, "Unit, singular"].
+<<<
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input_sdoc)
+    assert isinstance(document, SDocDocument)
+
+    writer = SDWriter(default_project_config)
+    output = writer.write(document)
+
+    assert input_sdoc == output
+
+
 def test_030_multiline_statement(default_project_config):
     input_sdoc = """
 [DOCUMENT]

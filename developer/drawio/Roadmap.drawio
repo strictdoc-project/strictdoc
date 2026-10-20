@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.2.5 Chrome/138.0.7204.251 Electron/37.6.1 Safari/537.36">
   <diagram name="Roadmap" id="QL4QDE5GQBR7DcBM7GMb">
-    <mxGraphModel dx="3611" dy="4143" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="3300" math="0" shadow="0">
+    <mxGraphModel dx="4182" dy="4522" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="3300" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <object label="Background" id="e4xbaoC47YMUbLc9hft--7">
@@ -525,8 +525,8 @@
         <mxCell id="S7qylqRdD8e5_p44ZXv2-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;div&gt;Table screen: Content filters and content editing&lt;/div&gt;" vertex="1">
           <mxGeometry height="70" width="230" x="1460" y="900" as="geometry" />
         </mxCell>
-        <mxCell id="m9XbbClwqRoo2d-S99YS-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;div&gt;Editable web: Readonly content for autogen fields&lt;/div&gt;" vertex="1">
-          <mxGeometry height="70" width="800" x="1510" y="990" as="geometry" />
+        <mxCell id="m9XbbClwqRoo2d-S99YS-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#647687;strokeColor=#314354;fontColor=#ffffff;" value="&lt;div&gt;Editable web: Readonly content for autogen fields&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="170" x="1510" y="990" as="geometry" />
         </mxCell>
         <mxCell id="m9XbbClwqRoo2d-S99YS-2" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;div&gt;TK-based launcher GUI&lt;/div&gt;" vertex="1">
           <mxGeometry height="70" width="280" x="1220" y="1170" as="geometry" />
@@ -537,23 +537,20 @@
         <mxCell id="avZaHCUyBh2S1JCu4Szq-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;div&gt;Markdown:&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;Grammar, LINK/ANCHOR, parsing corner cases&lt;/span&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="70" width="220" x="1520" y="1080" as="geometry" />
         </mxCell>
-        <mxCell id="rtCiIeL7m7KNmv-1_1vX-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" value="&lt;div&gt;Stabilization 2026 Q3: Major performance improvements (focus: POSIX), AI skills for software development and technical writing, Nix flake, migrate from Tox to uv, flaky tests fixes&lt;/div&gt;" vertex="1">
+        <mxCell id="rtCiIeL7m7KNmv-1_1vX-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;strokeColor=#82b366;fillColor=#d5e8d4;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" value="&lt;div&gt;Stabilization 2026 Q3: Major performance improvements (focus: POSIX), AI skills for software development and technical writing, Nix flake, migrate from Tox to uv, flaky tests fixes&lt;/div&gt;" vertex="1">
           <mxGeometry height="70" width="460" x="1690" y="1440" as="geometry" />
         </mxCell>
-        <mxCell id="rtCiIeL7m7KNmv-1_1vX-2" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;div&gt;Build documentation with unresolved relations&lt;/div&gt;" vertex="1">
-          <mxGeometry height="70" width="700" x="1610" y="1170" as="geometry" />
+        <mxCell id="rtCiIeL7m7KNmv-1_1vX-2" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#647687;strokeColor=#314354;fontColor=#ffffff;" value="&lt;div&gt;Build documentation with unresolved relations&lt;/div&gt;" vertex="1">
+          <mxGeometry height="70" width="220" x="1610" y="1170" as="geometry" />
         </mxCell>
         <mxCell id="rtCiIeL7m7KNmv-1_1vX-4" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;div&gt;Browsing very large documentation trees - Lazy loading&lt;/div&gt;" vertex="1">
           <mxGeometry height="70" width="370" x="1530" y="1350" as="geometry" />
         </mxCell>
-        <mxCell id="rtCiIeL7m7KNmv-1_1vX-6" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;" value="&lt;div&gt;Read/write SPDX JSON-LD&lt;/div&gt;" vertex="1">
-          <mxGeometry height="70" width="260" x="2360" y="990" as="geometry" />
-        </mxCell>
         <mxCell id="0pcIbbVFq0l88sWlPEwm-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" value="&lt;div&gt;MVP: Format and Feature abstractions for fine-grained Python API&lt;/div&gt;" vertex="1">
           <mxGeometry height="70" width="150" x="1710" y="900" as="geometry" />
         </mxCell>
-        <mxCell id="XVpcCsqV4PskCUVZw08P-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;span style=&quot;color: rgb(51, 51, 51);&quot;&gt;Committing to Git from UI and resolving conflicts&lt;/span&gt;" vertex="1">
-          <mxGeometry height="70" width="410" x="1910" y="1350" as="geometry" />
+        <mxCell id="XVpcCsqV4PskCUVZw08P-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#647687;strokeColor=#314354;fontColor=#ffffff;" value="&lt;span style=&quot;color: light-dark(rgb(255, 255, 255), rgb(255, 255, 255));&quot;&gt;Committing to Git from UI and resolving conflicts&lt;/span&gt;" vertex="1">
+          <mxGeometry height="70" width="240" x="1910" y="1350" as="geometry" />
         </mxCell>
         <mxCell id="a3R-OEbMNWrBenF-9u9M-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" value="Move node to another document" vertex="1">
           <mxGeometry height="70" width="60" x="1880" y="1080" as="geometry" />
@@ -567,11 +564,11 @@
         <mxCell id="B8qJVDq6c8O8GEGYHyqU-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" value="Markdown/&lt;div&gt;Pygments/&lt;/div&gt;&lt;div&gt;code blocks&lt;/div&gt;" vertex="1">
           <mxGeometry height="70" width="90" x="2000" y="900" as="geometry" />
         </mxCell>
-        <mxCell id="RslivZbRlXHfHyVq7ABO-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" value="&lt;div&gt;Stabilization 2026 Q4&lt;/div&gt;" vertex="1">
+        <mxCell id="RslivZbRlXHfHyVq7ABO-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" value="&lt;div&gt;Stabilization 2026 Q4&lt;/div&gt;&lt;div&gt;Flaky test fixes&lt;/div&gt;" vertex="1">
           <mxGeometry height="70" width="460" x="2170" y="1440" as="geometry" />
         </mxCell>
         <mxCell id="RslivZbRlXHfHyVq7ABO-2" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;span style=&quot;color: rgb(51, 51, 51);&quot;&gt;Specification graph SVG visualization&lt;/span&gt;" vertex="1">
-          <mxGeometry height="70" width="150" x="2110" y="1260" as="geometry" />
+          <mxGeometry height="70" width="240" x="2110" y="1260" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

@@ -1003,3 +1003,30 @@ Section body text.
         f"Location: test.md:{section_heading_line}:{error.col}"
         in error.to_print_message()
     )
+
+
+def test_037_markdown_reader_accepts_multiple_comment_fields():
+    markdown_content = """\
+# Document title
+
+## Requirement title
+
+**UID**: REQ-1
+
+**Statement**: System shall do X.
+
+**Comment**: First comment.
+
+**Comment**: Second comment.
+"""
+
+    reader = SDMarkdownReader()
+    document = reader.read(markdown_content, file_path=None)
+    requirement = document.section_contents[0]
+    assert isinstance(requirement, SDocNode)
+    assert requirement.node_type == "REQUIREMENT"
+    comment_fields = requirement.ordered_fields_lookup["COMMENT"]
+    assert [field_.get_text_value() for field_ in comment_fields] == [
+        "First comment.",
+        "Second comment.",
+    ]

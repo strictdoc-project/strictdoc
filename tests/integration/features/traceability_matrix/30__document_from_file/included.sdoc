@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Included doc
+
+[REQUIREMENT]
+UID: REQ-002
+TITLE: Included requirement title
+STATEMENT: Included requirement statement
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-001

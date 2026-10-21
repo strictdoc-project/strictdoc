@@ -371,13 +371,13 @@
 
     const isSingle = editable.dataset.fieldType === 'singleline';
     const hidden = editable.nextElementSibling;
+    const clipboardText = (event.clipboardData || window.clipboardData).getData('text');
 
     // @relation(SDOC-LLR-214, scope=range_start)
     // For multiline, we also handle copy paste of images here.
     if (!isSingle && await handleImagePaste(editable, event)) return;
     // @relation(SDOC-LLR-214, scope=range_end)
 
-    const clipboardText = (event.clipboardData || window.clipboardData).getData('text');
     const text = isSingle ? filterSingleLine(clipboardText) : clipboardText;
 
     const selection = window.getSelection();

@@ -143,7 +143,8 @@ class MultiprocessingParallelizer(Parallelizer):
         multiprocessing.forkserver import main; ...'"). The Python docs
         confirm "spawn"/"forkserver" generally cannot be used with frozen
         executables on POSIX and that "fork" may work there instead. So
-        frozen binaries keep the "fork" default regardless of `dynamic`.
+        frozen binaries keep the "fork" default regardless of `dynamic`
+        (on Windows, which has no "fork", they use "spawn").
         """
         process_number: int = multiprocessing.cpu_count()
 
@@ -158,7 +159,14 @@ class MultiprocessingParallelizer(Parallelizer):
             process_number = 2
 
         if environment.is_binary_dist:
-            start_method = "fork"
+            # Windows has no "fork". There, a frozen binary uses "spawn",
+            # which works because main() calls freeze_support() before
+            # parsing arguments.
+            start_method = (
+                "fork"
+                if "fork" in multiprocessing.get_all_start_methods()
+                else "spawn"
+            )
         elif dynamic:
             start_method = (
                 "forkserver"

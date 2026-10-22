@@ -1553,6 +1553,29 @@ language's specifics.
 <<<
 
 [REQUIREMENT]
+MID: d05facdceeff41a6957c395768e4929b
+UID: SDOC-SRS-208
+STATUS: Active
+TITLE: Language-aware parsing of Ada code
+STATEMENT: >>>
+StrictDoc shall support parsing the Ada source files (.ads, .adb, .ada) which
+includes:
+
+- Recognizing subprogram declarations and subprogram bodies.
+- Recognizing @relation markers in the "--" comments: scope=function markers
+  above subprograms, scope=file markers, range markers and line markers.
+- Linking a subprogram body to the requirements of its declaration, for
+  example in a .ads/.adb pair, as for C/C++ declarations and definitions.
+- Matching subprogram names case-insensitively.
+- Not creating a link if a name matches more than one subprogram, for example
+  overloaded subprograms.
+<<<
+RATIONALE: >>>
+Ada language has to be handled with a dedicated parser because of this
+language's specifics.
+<<<
+
+[REQUIREMENT]
 MID: 9183080f1358485f9bacdcda0635109
 UID: SDOC-SRS-148
 STATUS: Active

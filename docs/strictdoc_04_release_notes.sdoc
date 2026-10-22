@@ -50,6 +50,26 @@ releases:
 <<<
 
 [[SECTION]]
+MID: f2e5968b55404cfcbcaa0312ee7807b3
+TITLE: Unreleased
+
+[TEXT]
+MID: 079f99831d5c450685a9dd50ce83e5f7
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) Ada support was added to the tracing to source files feature in StrictDoc.
+The parser reads ``.ads``, ``.adb`` and ``.ada`` files and recognizes
+subprogram declarations and bodies, so the @relation marker can be used on
+subprograms. A subprogram body is linked to the requirements of its
+declaration, as for C function declarations and definitions. Thanks to
+@briot for the tree-sitter-ada grammar and to @haxtibal. See
+`#2345 <https://github.com/strictdoc-project/strictdoc/issues/2345>`_.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: b8b2939ac85c4300b5f8e96675f3d196
 TITLE: 0.30.4 (2026-10-22)
 

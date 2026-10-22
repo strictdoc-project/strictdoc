@@ -1,0 +1,25 @@
+# @relation(SDOC-SRS-208, SDOC-SRS-137, scope=file)
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Export completed.
+
+RUN: %check_exists --file "%T/html/_source_files/file.adb.html"
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: <a{{.*}}href="../_source_files/file.adb.html#REQ-1#2#5">
+CHECK-HTML: file.adb, <i>lines: 2-5</i>, function Hello.Hello_World_1
+CHECK-HTML: <a{{.*}}href="../_source_files/file.adb.html#REQ-1#12#13">
+CHECK-HTML: file.adb, <i>lines: 12-13</i>, function Hello.Hello_World_1
+CHECK-HTML: <a{{.*}}href="../_source_files/file.adb.html#REQ-2#7#10">
+CHECK-HTML: file.adb, <i>lines: 7-10</i>, function Hello.Hello_World_2
+CHECK-HTML: <a{{.*}}href="../_source_files/file.adb.html#REQ-2#15#19">
+CHECK-HTML: file.adb, <i>lines: 15-19</i>, function Hello.Hello_World_2
+
+RUN: %cat %T/html/_source_files/file.adb.html | filecheck %s --dump-input=fail --check-prefix CHECK-FILE-ADB
+CHECK-FILE-ADB: 2 - 5 | function Hello.Hello_World_1()
+CHECK-FILE-ADB: 7 - 10 | function Hello.Hello_World_2()
+CHECK-FILE-ADB: 12 - 13 | function Hello.Hello_World_1()
+CHECK-FILE-ADB: 15 - 19 | function Hello.Hello_World_2()
+
+RUN: %cat %T/html/source_coverage.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-COVERAGE
+CHECK-SOURCE-COVERAGE: 88.2

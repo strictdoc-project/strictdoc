@@ -1,0 +1,25 @@
+# @relation(SDOC-SRS-208, SDOC-SRS-137, SDOC-SRS-145, scope=file)
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Export completed.
+
+RUN: %check_exists --file "%T/html/_source_files/file.adb.html"
+RUN: %check_exists --file "%T/html/_source_files/file2.adb.html"
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: <a{{.*}}href="../_source_files/file.adb.html#REQ-1#1#31">
+CHECK-HTML: <a{{.*}}href="../_source_files/file.adb.html#REQ-1#1#31">
+CHECK-HTML: <a{{.*}}href="../_source_files/file.adb.html#REQ-1#4#9">
+CHECK-HTML: <a{{.*}}href="../_source_files/file.adb.html#REQ-1#26#27">
+CHECK-HTML: <a{{.*}}href="../_source_files/file2.adb.html#REQ-1#1#6">
+
+RUN: %cat %T/html/_source_files/file.adb.html | filecheck %s --dump-input=fail --check-prefix CHECK-FILE-ADB
+CHECK-FILE-ADB: 1 - 31 | entire file
+CHECK-FILE-ADB: 4 - 9 | function Hello.Foo()
+CHECK-FILE-ADB: 11 - 16 | range
+CHECK-FILE-ADB: 20 - 30 | function Hello.Long_Function_Name()
+CHECK-FILE-ADB: 24 - 28 | range
+CHECK-FILE-ADB: 26 - 27 | line
+
+RUN: %cat %T/html/source_coverage.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-COVERAGE
+CHECK-SOURCE-COVERAGE: 100.0

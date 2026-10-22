@@ -14,6 +14,7 @@ class SourceFileType(Enum):
     PYTHON = [".py"]
     C = [".h", ".c"]
     CPP = [".cpp", ".cc"]
+    ADA = [".adb", ".ads", ".ada"]
     TEX = [".tex"]
     # Is there an idiomatic file extension for Jinja templates?
     # https://stackoverflow.com/questions/29590931/is-there-an-idiomatic-file-extension-for-jinja-templates
@@ -38,6 +39,9 @@ class SourceFileType(Enum):
         for enum_value in SourceFileType.CPP.value:
             if path_to_file.endswith(enum_value):
                 return cls.CPP
+        for enum_value in SourceFileType.ADA.value:
+            if path_to_file.endswith(enum_value):
+                return cls.ADA
         if path_to_file.endswith(".tex"):
             return cls.TEX
         if path_to_file.endswith(".toml"):
@@ -103,6 +107,9 @@ class SourceFile:
 
     def is_cpp_file(self) -> bool:
         return self.file_type == SourceFileType.CPP
+
+    def is_ada_file(self) -> bool:
+        return self.file_type == SourceFileType.ADA
 
     def is_tex_file(self) -> bool:
         return self.file_type == SourceFileType.TEX

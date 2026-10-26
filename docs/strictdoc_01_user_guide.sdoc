@@ -3253,7 +3253,7 @@ specific programming languages and their constructs, such as classes or
 functions.
 
 Language-aware parsing recognizes selected language syntax, primarily enabling
-traceability of functions (in Python, C/C++, Rust, and others), classes (in
+traceability of functions (in Python, C/C++, Rust, Ada, and others), classes (in
 Python, C++, and others), and tests (Python, C++, Robot Framework) to
 requirements.
 
@@ -3319,7 +3319,7 @@ The marker must be added to the top comment of a file.
         @relation(REQ-1, scope=class)
         """
 
-**3\) Linking language items to a requirement (Python, C, C++, Rust)**
+**3\) Linking language items to a requirement (Python, C, C++, Rust, Ada)**
 
 For Python, ``@relation`` markers can be placed inside `doc strings`_ to link
 functions and classes.
@@ -3351,6 +3351,20 @@ definition.
     void hello_world(void) {
         print("Hello, World\n");
     }
+
+For Ada, ``@relation`` markers are placed in the ``--`` comment directly
+above a subprogram declaration or body. As with C, if the marker is in the
+declaration (for example, in a ``.ads`` file), StrictDoc also links the
+requirement to the corresponding subprogram body.
+
+.. code:: ada
+
+    package Hello is
+       -- Some text.
+       --
+       -- @relation(REQ-1, scope=function)
+       procedure Hello_World;
+    end Hello;
 
 For Rust, ``@relation`` marker can be placed inside `doc comments`_ to
 automatically infer the linked item. This works for almost all Rust language

@@ -3,6 +3,7 @@
 """
 
 import re
+from collections import Counter
 from copy import copy
 from typing import (
     TYPE_CHECKING,
@@ -88,6 +89,10 @@ class FileTraceabilityIndex:
         self.map_all_function_names_to_definition_functions: Dict[
             str, List[LanguageItem]
         ] = {}
+
+        # Ada subprogram names with more than one declaration or body in the
+        # source tree (overloads). These are not linked.
+        self.ada_overloaded_function_names: Set[str] = set()
 
         # "file.py" -> [SDocNode]  # noqa: ERA001
         self.source_file_reqs_cache: Dict[str, Optional[List[SDocNode]]] = {}
@@ -227,6 +232,7 @@ class FileTraceabilityIndex:
         # STEP: Collect minimal information that will help to resolve the
         #       forward-declared paths/function names at the step 2.
         #
+        ada_function_counts: Counter[Tuple[bool, str]] = Counter()
         for trace_info_ in self.trace_infos:
             source_file: SourceFile = assert_cast(
                 trace_info_.source_file, SourceFile
@@ -241,6 +247,15 @@ class FileTraceabilityIndex:
                     self.map_all_function_names_to_definition_functions.setdefault(
                         function_.name, []
                     ).append(function_)
+                if source_file.is_ada_file():
+                    ada_function_counts[
+                        (function_.is_definition(), function_.name)
+                    ] += 1
+        self.ada_overloaded_function_names = {
+            name_
+            for (_, name_), count_ in ada_function_counts.items()
+            if count_ > 1
+        }
 
         #
         # STEP: Auto-generated SDocNodes from source file comments and register
@@ -763,7 +778,7 @@ class FileTraceabilityIndex:
                     trace_info_.markers.append(marker_copy)
 
         #
-        # Resolve definitions to declarations (only applicable for C and C++).
+        # Resolve definitions to declarations (C, C++ and Ada only).
         #
 
         reversed_trace_info = {
@@ -779,6 +794,12 @@ class FileTraceabilityIndex:
                     function_.is_declaration()
                     and function_.name
                     in self.map_all_function_names_to_definition_functions
+                    and not (
+                        assert_cast(
+                            traceability_info_.source_file, SourceFile
+                        ).is_ada_file()
+                        and function_.name in self.ada_overloaded_function_names
+                    )
                 ):
                     definition_functions: List[LanguageItem] = []
                     if not function_.is_public():

@@ -1,0 +1,20 @@
+# @relation(SDOC-SRS-208, SDOC-SRS-137, scope=file)
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: warning: Ada source reader: {{.*}}file.ads:11: skipping a scope=function marker for REQ-2: no subprogram found directly below the comment.
+CHECK: Export completed.
+
+RUN: %check_exists --file "%T/html/_source_files/file.ads.html"
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: <a{{.*}}href="../_source_files/file.ads.html#REQ-1#2#4">
+CHECK-HTML: file.ads, <i>lines: 2-4</i>, function Hello.Hello_World_1
+CHECK-HTML: <a{{.*}}href="../_source_files/file.ads.html#REQ-2#6#9">
+CHECK-HTML: file.ads, <i>lines: 6-9</i>, function Hello.Swap
+
+RUN: %cat %T/html/_source_files/file.ads.html | filecheck %s --dump-input=fail --check-prefix CHECK-FILE-ADS
+CHECK-FILE-ADS: 2 - 4 | function Hello.Hello_World_1()
+CHECK-FILE-ADS: 6 - 9 | function Hello.Swap()
+
+RUN: %cat %T/html/source_coverage.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-COVERAGE
+CHECK-SOURCE-COVERAGE: 63.6

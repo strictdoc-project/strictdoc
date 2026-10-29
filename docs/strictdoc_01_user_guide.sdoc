@@ -624,6 +624,12 @@ provided in separate repositories:
   – StrictDoc markup syntax highlighting in Sublime Text.
 - `manueldiagostino/tree-sitter-strictdoc <https://github.com/manueldiagostino/tree-sitter-strictdoc>`_
   – StrictDoc Tree‑sitter parser for Neovim.
+- `awschult002/strictdoc.nvim <https://github.com/awschult002/strictdoc.nvim>`_
+  – Neovim plugin for StrictDoc (pure Lua): syntax highlighting, visual
+  nesting indent, formatting (``:StrictdocFormat``, optional format-on-save),
+  ``:make`` integration via ``strictdoc format`` with quickfix errors, node
+  navigation and text objects, folding, an outline view, and tag jumps to
+  UIDs and anchors across ``.sdoc`` files.
 
 The instructions for installing the StrictDoc markup can be found in all
 repositories.

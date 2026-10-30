@@ -33,6 +33,39 @@ def test_10__project_features__accepts_strings_or_enums():
     assert project_config.is_activated_reqif()
 
 
+def test_11__project_features__all_features_expands_via_constructor():
+    project_config = ProjectConfig(project_features=["ALL_FEATURES", "SEARCH"])
+    assert project_config.project_features == ProjectFeature.all()
+
+
+def test_12__project_features__all_features_expands_when_assigned_after_construction(
+    tmp_path,
+):
+    """
+    An extending create_config() commonly assigns project_features to an
+    already-constructed ProjectConfig (`config.project_features = [...]`),
+    bypassing the ALL_FEATURES expansion that __init__ would otherwise do.
+    validate_and_finalize(), which every ProjectConfigLoader path calls,
+    must still expand it.
+    """
+    config_path = tmp_path / "strictdoc_config.py"
+    config_path.write_text(
+        """\
+from strictdoc.core.project_config import ProjectConfig
+
+def create_config() -> ProjectConfig:
+    config = ProjectConfig()
+    config.project_features = ["ALL_FEATURES", "SEARCH"]
+    return config
+""",
+        encoding="utf8",
+    )
+
+    project_config = ProjectConfigLoader.load(str(tmp_path))
+
+    assert project_config.project_features == ProjectFeature.all()
+
+
 def test_30_include_doc_paths_bad_mask():
     with pytest.raises(ValueError):
         _ = ProjectConfig(include_doc_paths=[" "])
@@ -51,6 +84,31 @@ def test_32_include_source_paths_bad_mask():
 def test_33_exclude_source_paths_bad_mask():
     with pytest.raises(ValueError):
         _ = ProjectConfig(exclude_source_paths=[" "])
+
+
+def test_34_exclude_paths_from_gitignore_tracked_separately(tmp_path):
+    (tmp_path / ".gitignore").write_text(
+        "output/\n# a comment\n\nbuild/\n",
+        encoding="utf8",
+    )
+    project_config = ProjectConfig(exclude_doc_paths=["/docs/drafts/"])
+    project_config.input_paths = [str(tmp_path)]
+    project_config.validate_and_finalize()
+
+    assert project_config.exclude_paths_from_gitignore == [
+        "/.git/",
+        "output/",
+        "build/",
+    ]
+    # The explicitly configured exclude is not mistaken for a gitignore one.
+    assert "/docs/drafts/" not in project_config.exclude_paths_from_gitignore
+    # Both still end up in the merged list used for actual filtering.
+    assert project_config.exclude_doc_paths == [
+        "/docs/drafts/",
+        "/.git/",
+        "output/",
+        "build/",
+    ]
 
 
 #
@@ -113,7 +171,7 @@ def create_config():
         f.write(config_content)
         path = f.name
     try:
-        config = ProjectConfigLoader.load_from_path_or_get_default(
+        config, _ = ProjectConfigLoader.load_from_path_or_get_default(
             path_to_config=path
         )
         assert config.project_title == "Canonical"
@@ -134,7 +192,7 @@ def create_config():
         f.write(config_content)
         path = f.name
     try:
-        config = ProjectConfigLoader.load_from_path_or_get_default(
+        config, _ = ProjectConfigLoader.load_from_path_or_get_default(
             path_to_config=path
         )
         assert config.project_title == "NonCanonical"
@@ -153,7 +211,7 @@ def create_config():
     return ProjectConfig(lazy_document_loading_threshold=50)
 """
     )
-    project_config = ProjectConfigLoader.load_from_path_or_get_default(
+    project_config, _ = ProjectConfigLoader.load_from_path_or_get_default(
         path_to_config=str(path_to_config)
     )
     assert project_config.lazy_document_loading_threshold == 50
@@ -170,7 +228,7 @@ def create_config():
     return ProjectConfig(project_title="No threshold set")
 """
     )
-    project_config = ProjectConfigLoader.load_from_path_or_get_default(
+    project_config, _ = ProjectConfigLoader.load_from_path_or_get_default(
         path_to_config=str(path_to_config)
     )
     assert project_config.lazy_document_loading_threshold == 200

@@ -81,7 +81,7 @@ def _get_allowed_format_handles() -> List[str]:
         return allowed_handles
 
     try:
-        project_config = ProjectConfigLoader.load_from_path_or_get_default(
+        project_config, _ = ProjectConfigLoader.load_from_path_or_get_default(
             path_to_config=config_path
         )
     except Exception:

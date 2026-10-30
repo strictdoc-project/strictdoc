@@ -1,0 +1,22 @@
+#
+# Round trip with the default Excel export fields (UID, STATEMENT, PARENT):
+# export to Excel, import it back, and export the imported document to HTML.
+# The importer must declare the Parent relation in the generated grammar.
+#
+# @relation(SDOC-SRS-152, scope=file)
+#
+
+RUN: %strictdoc export --formats=excel --output-dir=%T "%S/input.sdoc"
+RUN: %check_exists --file "%T/excel/input.xlsx"
+
+RUN: %strictdoc convert "%T/excel/input.xlsx" %T_import/ --input-format=excel
+RUN: %cat %T_import/input.sdoc | filecheck %s --check-prefix=CHECK-SDOC
+CHECK-SDOC: [GRAMMAR]
+CHECK-SDOC: RELATIONS:
+CHECK-SDOC-NEXT: - TYPE: Parent
+CHECK-SDOC: [REQUIREMENT]
+CHECK-SDOC: RELATIONS:
+CHECK-SDOC-NEXT: - TYPE: Parent
+
+RUN: %strictdoc export %T_import --output-dir %T_html | filecheck %s --check-prefix=CHECK-EXPORT
+CHECK-EXPORT: Export completed.

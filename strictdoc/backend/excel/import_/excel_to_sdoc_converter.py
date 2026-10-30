@@ -149,7 +149,7 @@ class ExcelToSDocConverter:
         document = ExcelToSDocConverter.create_document(
             title,
             extra_header_pairs,
-            has_parent_column=parent_column_idx is not None,
+            has_parent_relations=parent_column_idx is not None,
         )
         for i in range(header_row_idx + 1, sheet.nrows):
             row_values = sheet.row_values(i)
@@ -164,7 +164,7 @@ class ExcelToSDocConverter:
     def create_document(
         title: Optional[str],
         extra_header_pairs: List[Tuple[int, str]],
-        has_parent_column: bool = False,
+        has_parent_relations: bool = False,
     ) -> SDocDocument:
         document_config = DocumentConfig.default_config(None)
         document_title = title if title else "<No title>"
@@ -206,9 +206,10 @@ class ExcelToSDocConverter:
             fields=fields,
             relations=[],
         )
-        # The nodes get Parent relations from the parent column, so the
-        # grammar has to declare that relation type.
-        if has_parent_column:
+        # A PARENT column becomes "RELATIONS: - TYPE: Parent" on each node,
+        # so the grammar must declare that relation, or the imported document
+        # fails to load ("relation type/role is not registered: Parent").
+        if has_parent_relations:
             requirements_element.relations = [
                 GrammarElementRelationParent(
                     parent=requirements_element,

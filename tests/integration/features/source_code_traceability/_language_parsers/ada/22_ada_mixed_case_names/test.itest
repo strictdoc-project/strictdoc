@@ -1,0 +1,18 @@
+# @relation(SDOC-SRS-208, SDOC-SRS-137, SDOC-SRS-145, scope=file)
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Export completed.
+
+RUN: %check_exists --file "%T/html/_source_files/pkg.adb.html"
+RUN: %check_exists --file "%T/html/_source_files/pkg.ads.html"
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: <a{{.*}}href="../_source_files/pkg.adb.html#REQ-1#2#5">
+CHECK-HTML: pkg.adb, <i>lines: 2-5</i>, function Pkg.Foo
+CHECK-HTML: <a{{.*}}href="../_source_files/pkg.ads.html#REQ-1#2#3">
+CHECK-HTML: pkg.ads, <i>lines: 2-3</i>, function Pkg.Foo
+CHECK-HTML: <a{{.*}}href="../_source_files/pkg.adb.html#REQ-2#7#10">
+CHECK-HTML: pkg.adb, <i>lines: 7-10</i>, function pkg.hello_World
+
+RUN: %cat %T/html/_source_files/pkg.adb.html | filecheck %s --dump-input=fail --check-prefix CHECK-PKG-ADB
+CHECK-PKG-ADB: 7 - 10 | function pkg.hello_World()

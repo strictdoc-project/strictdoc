@@ -87,6 +87,11 @@ multiline field made the ReqIF file not well-formed XML. As a result,
 consecutive empty lines, and the server then failed to read the document. The
 UI now collapses each run of empty lines into one, outside code blocks and
 blockquotes.
+
+8\) The static HTML export stores the content chunks of large documents
+gzip-compressed and base64-encoded. The browser unpacks them with
+``DecompressionStream``, also when the page opens from ``file://``. For the
+ECSS documents from #3238, the chunks go from 14.84 MB to 0.34 MB.
 <<<
 
 [[/SECTION]]

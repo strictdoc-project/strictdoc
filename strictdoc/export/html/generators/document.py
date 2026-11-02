@@ -2,6 +2,8 @@
 @relation(SDOC-SRS-54, scope=file)
 """
 
+import base64
+import gzip
 import os
 
 import orjson
@@ -81,7 +83,17 @@ class DocumentHTMLGenerator:
                 b"window.StrictDoc.chunks["
                 + orjson.dumps(view_object.static_chunk_key(chunk))
                 + b"] = "
-                + orjson.dumps(str(chunk_html))
+                + b'{"z":'
+                + orjson.dumps(
+                    base64.b64encode(
+                        gzip.compress(
+                            str(chunk_html).encode("utf-8"),
+                            compresslevel=9,
+                            mtime=0,
+                        )
+                    ).decode("ascii")
+                )
+                + b"}"
                 + b";\n"
             )
             chunk_out_file = os.path.join(

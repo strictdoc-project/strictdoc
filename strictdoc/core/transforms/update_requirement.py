@@ -32,6 +32,7 @@ from strictdoc.backend.sdoc.models.model import (
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.object_factory import SDocObjectFactory
 from strictdoc.backend.sdoc.models.reference import (
+    FileReference,
     Reference,
 )
 from strictdoc.core.constants import (
@@ -86,6 +87,10 @@ class UpdateRequirementActionObject:
 @dataclass
 class CreateOrUpdateNodeResult:
     this_document_requirements_to_update: List[SDocNode]
+    # File relations are resolved by the file traceability index, which is
+    # built from scratch together with the source files. When they change,
+    # the caller has to rebuild the traceability index.
+    file_relations_changed: bool = False
 
 
 class CreateOrUpdateNodeCommand:
@@ -365,6 +370,7 @@ class CreateOrUpdateNodeCommand:
         )
         action_object.this_document_requirements_to_update = {requirement}
 
+        existing_file_relations = self._file_relations_signature(requirement)
         references: List[Reference] = form_object.get_requirement_relations(
             requirement
         )
@@ -422,6 +428,7 @@ class CreateOrUpdateNodeCommand:
                     else None,
                 )
             elif reference_field.field_type == "File":
+                # Handled below by comparing the File relations before/after.
                 pass
             else:
                 raise AssertionError(f"Must not reach here: {reference_field}")
@@ -513,7 +520,25 @@ class CreateOrUpdateNodeCommand:
             this_document_requirements_to_update=list(
                 action_object.this_document_requirements_to_update
             ),
+            file_relations_changed=(
+                existing_file_relations
+                != self._file_relations_signature(requirement)
+            ),
         )
+
+    @staticmethod
+    def _file_relations_signature(
+        node: SDocNode,
+    ) -> List[Tuple[str, Optional[str], Optional[str]]]:
+        return [
+            (
+                relation_.get_posix_path(),
+                relation_.g_file_entry.g_line_range,
+                relation_.role,
+            )
+            for relation_ in node.relations
+            if isinstance(relation_, FileReference)
+        ]
 
     def _update_traceability_index_with_links_and_anchors(
         self, updated_node: SDocNode, existing_node_fields: List[SDocNodeField]

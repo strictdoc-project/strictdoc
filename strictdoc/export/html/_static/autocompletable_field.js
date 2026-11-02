@@ -85,7 +85,8 @@
       return;
     }
 
-    const urlValue = autocompletable.dataset.autocompletableUrl;
+    // Read lazily: a relation row swaps the URL when its type changes.
+    const urlValue = () => autocompletable.dataset.autocompletableUrl;
     const minLengthValue = Number(autocompletable.dataset.autocompletableMinLength || 0);
     const delayValue = Number(autocompletable.dataset.autocompletableDelay || 10);
     const queryParamValue = autocompletable.dataset.autocompletableQueryParam || 'q';
@@ -205,7 +206,7 @@
     }
 
     function buildURL(query) {
-      const url = new URL(urlValue, window.location.href);
+      const url = new URL(urlValue(), window.location.href);
       const params = new URLSearchParams(url.search.slice(1));
       params.append(queryParamValue, query);
       url.search = params.toString();
@@ -230,7 +231,7 @@
     }
 
     async function fetchResults(query) {
-      if (!urlValue) return;
+      if (!urlValue()) return;
 
       // Abort the previous request as we are about to send a new one.
       if (abortController) abortController.abort();
@@ -396,5 +397,33 @@
   }
 
   window.StrictDoc.onInsert(SEL_AUTOCOMPLETABLE, initAutocompletable);
+
+  // Relation rows: switching the relation type to/from "File" switches the
+  // autocomplete source (node UIDs vs. source files) and shows the optional
+  // line range field.
+  document.addEventListener('change', (event) => {
+    const select = event.target;
+    if (!(select instanceof HTMLSelectElement)) return;
+    const row = select.closest('[data-js-relation-row]');
+    if (!row) return;
+    const isFile = select.value.split(',')[0] === 'File';
+    const autocompletable = row.querySelector(SEL_AUTOCOMPLETABLE);
+    if (autocompletable) {
+      autocompletable.dataset.autocompletableUrl = isFile
+        ? row.dataset.relationFileUrl
+        : row.dataset.relationUidUrl;
+      autocompletable.dataset.fieldLabel = isFile ? 'Path to file' : 'Relation UID';
+    }
+    const lineRange = row.querySelector('[data-js-relation-line-range]');
+    if (lineRange) lineRange.hidden = !isFile;
+  });
+
+  // Saving File relations rebuilds the traceability index on the server,
+  // which answers with <turbo-stream action="reload">.
+  document.addEventListener('turbo:before-stream-render', (event) => {
+    if (event.target.getAttribute('action') !== 'reload') return;
+    event.preventDefault();
+    window.location.reload();
+  });
 
 })();

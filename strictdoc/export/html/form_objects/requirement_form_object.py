@@ -2,6 +2,7 @@
 @relation(SDOC-SRS-55, scope=file)
 """
 
+import re
 from collections import defaultdict
 from enum import Enum
 from typing import Dict, Iterator, List, Optional, Set, Tuple, Union
@@ -32,7 +33,6 @@ from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     FileEntry,
-    FileEntryFormat,
     FileReference,
     ParentReqReference,
     Reference,
@@ -207,6 +207,8 @@ class RequirementReferenceFormField:
         # False (default) for rows that were already saved and loaded into the form.
         # Used to distinguish "silently discard if empty" vs. "raise error if empty".
         is_new: bool = False,
+        # File relations only: optional "start, end" line range.
+        field_line_range: str = "",
     ) -> None:
         assert isinstance(field_mid, str), field_mid
         assert isinstance(field_value, str), field_value
@@ -217,6 +219,7 @@ class RequirementReferenceFormField:
             field_role if field_role is not None and len(field_role) > 0 else ""
         )
         self.is_new: bool = is_new
+        self.field_line_range: str = field_line_range
         self.validation_messages: List[str] = []
 
     def get_input_field_name(self) -> str:
@@ -230,6 +233,9 @@ class RequirementReferenceFormField:
 
     def get_is_new_field_name(self) -> str:
         return f"requirement[relations][{self.field_mid}][is_new]"
+
+    def get_line_range_field_name(self) -> str:
+        return f"requirement[relations][{self.field_mid}][line_range]"
 
 
 @auto_described
@@ -324,7 +330,6 @@ class RequirementFormObject(ErrorObject):
         # FIXME: defaulting to {}
         requirement_relations_dict = requirement_dict.get("relations", {})
         for relation_mid, relation_dict in requirement_relations_dict.items():
-            # FIXME: Editing files is not supported. Fix this hack ASAP.
             relation_typerole = relation_dict.get("typerole", "File")
             relation_typerole_parts = relation_typerole.split(",")
             if len(relation_typerole_parts) == 2:
@@ -344,7 +349,7 @@ class RequirementFormObject(ErrorObject):
 
             relation_value = relation_dict["value"].strip()
 
-            if len(relation_value) == 0 and relation_type != "File":
+            if len(relation_value) == 0:
                 # is_new distinguishes two empty-UID cases:
                 # - True: user added a row but left it blank → silently discard.
                 # - False: user cleared the UID of an existing saved relation
@@ -359,6 +364,9 @@ class RequirementFormObject(ErrorObject):
                     field_type=field_type,
                     field_value=relation_value,
                     field_role=relation_role,
+                    field_line_range=relation_dict.get("line_range", "").strip()
+                    if relation_type == "File"
+                    else "",
                 )
             )
 
@@ -541,6 +549,8 @@ class RequirementFormObject(ErrorObject):
                     field_type=RequirementReferenceFormField.FieldType.FILE,
                     field_value=child_file_reference.get_posix_path(),
                     field_role=child_file_reference.role,
+                    field_line_range=child_file_reference.g_file_entry.g_line_range
+                    or "",
                 )
                 form_refs_fields.append(form_ref_field)
         return RequirementFormObject(
@@ -611,6 +621,14 @@ class RequirementFormObject(ErrorObject):
         self, requirement: SDocNode
     ) -> List[Reference]:
         references: List[Reference] = []
+        # The form only edits the path and the line range of a File relation.
+        # Other attributes (format, element/function/class, hash) are kept
+        # from the existing relation with the same MID.
+        existing_file_references: Dict[str, FileReference] = {
+            relation_.mid: relation_
+            for relation_ in requirement.relations
+            if isinstance(relation_, FileReference)
+        }
         reference_field: RequirementReferenceFormField
         for reference_field in self.reference_fields:
             ref_uid = reference_field.field_value
@@ -629,18 +647,55 @@ class RequirementFormObject(ErrorObject):
                     )
                 )
             elif ref_type == RequirementReferenceFormField.FieldType.FILE:
-                file_entry = FileEntry(
+                existing_reference = existing_file_references.get(
+                    reference_field.field_mid
+                )
+                existing_entry = (
+                    existing_reference.g_file_entry
+                    if existing_reference is not None
+                    else None
+                )
+                is_deprecated_entry = existing_entry is not None and (
+                    existing_entry.deprecated_function is not None
+                    or existing_entry.deprecated_clazz is not None
+                )
+                file_reference = FileReference(
                     parent=requirement,
-                    g_file_format=FileEntryFormat.SOURCECODE,
-                    g_file_path=reference_field.field_value,
-                    g_line_range="",
+                    g_file_entry=FileEntry(
+                        parent=None,
+                        g_file_format=existing_entry.g_file_format
+                        if existing_entry is not None
+                        else None,
+                        g_file_path=reference_field.field_value,
+                        # Keep the legacy "VALUE:" spelling if it was used.
+                        g_deprecated_file_path=reference_field.field_value
+                        if existing_entry is not None
+                        and existing_entry.g_deprecated_file_path is not None
+                        else None,
+                        g_line_range=reference_field.field_line_range,
+                        function=existing_entry.deprecated_function
+                        if existing_entry is not None
+                        else None,
+                        clazz=existing_entry.deprecated_clazz
+                        if existing_entry is not None
+                        else None,
+                        element=existing_entry.element
+                        if existing_entry is not None
+                        and not is_deprecated_entry
+                        else None,
+                        id=existing_entry.id
+                        if existing_entry is not None
+                        and not is_deprecated_entry
+                        else None,
+                        hash=existing_entry.hash
+                        if existing_entry is not None
+                        else None,
+                    ),
+                    role=ref_role,
                 )
-                references.append(
-                    FileReference(
-                        parent=requirement,
-                        g_file_entry=file_entry,
-                    )
-                )
+                file_reference.g_file_entry.parent = file_reference
+                file_reference.mid = MID(reference_field.field_mid)
+                references.append(file_reference)
             else:
                 raise NotImplementedError(ref_type)
         return references
@@ -916,9 +971,21 @@ class RequirementFormObject(ErrorObject):
                 self.uid_rename_blocked_by_relations = True
                 return
 
+        if requirement_uid is None:
+            for reference_field in self.reference_fields:
+                if reference_field.field_type == "File":
+                    reference_field.validation_messages.append(
+                        "A node must have a UID to have File relations."
+                    )
+
         if requirement_uid is not None:
             relation_target_uids_so_far: Set[str] = set()
             for reference_field in self.reference_fields:
+                if reference_field.field_type == "File":
+                    self._validate_file_relation(
+                        reference_field, traceability_index, config
+                    )
+                    continue
                 if reference_field.field_type in ("Parent", "Child"):
                     link_uid = reference_field.field_value
                     if len(link_uid) == 0:
@@ -965,6 +1032,58 @@ class RequirementFormObject(ErrorObject):
                     self._validate_no_cycle_by_new_node(
                         traceability_index, reference_field, requirement_uid
                     )
+
+    @staticmethod
+    def _validate_file_relation(
+        reference_field: RequirementReferenceFormField,
+        traceability_index: TraceabilityIndex,
+        config: ProjectConfig,
+    ) -> None:
+        """
+        Validate the path and the optional line range of a File relation.
+        """
+        if not config.is_activated_requirements_to_source_traceability():
+            reference_field.validation_messages.append(
+                "File relations require the "
+                "REQUIREMENT_TO_SOURCE_TRACEABILITY feature to be enabled "
+                "in the project config."
+            )
+            return
+
+        file_path = reference_field.field_value
+        if len(file_path) == 0:
+            reference_field.validation_messages.append(
+                "File path must not be empty."
+            )
+        elif (
+            traceability_index.get_file_traceability_index().get_coverage_info_weak(
+                file_path
+            )
+            is None
+        ):
+            reference_field.validation_messages.append(
+                f'File "{file_path}" does not exist among the source files '
+                "found by StrictDoc."
+            )
+
+        line_range = reference_field.field_line_range
+        if len(line_range) > 0:
+            match = re.fullmatch(r"\s*(\d+)\s*,\s*(\d+)\s*", line_range)
+            if match is None:
+                reference_field.validation_messages.append(
+                    'Line range must have the format "start, end", '
+                    'for example "1, 10".'
+                )
+                return
+            start, end = int(match.group(1)), int(match.group(2))
+            if start < 1 or start > end:
+                reference_field.validation_messages.append(
+                    "Line range start must be at least 1 and not greater "
+                    "than its end."
+                )
+                return
+            # Normalize to the canonical SDoc LINE_RANGE format.
+            reference_field.field_line_range = f"{start}, {end}"
 
     @staticmethod
     def _validate_no_cycle_by_new_node(

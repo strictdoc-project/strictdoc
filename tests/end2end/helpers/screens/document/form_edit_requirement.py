@@ -109,6 +109,15 @@ class Form_EditRequirement(Form):  # pylint: disable=invalid-name
         assert isinstance(field_value, str)
         super().do_fill_in_mid(mid, "form-field-relation-uid", field_value)
 
+    def do_fill_in_field_relation_line_range(
+        self, mid: MID, field_value: str
+    ) -> None:
+        assert isinstance(mid, MID)
+        assert isinstance(field_value, str)
+        super().do_fill_in_mid(
+            mid, "form-field-relation-line-range", field_value
+        )
+
     def do_fill_in_field_relation_and_autocomplete(
         self, mid: MID, field_value: str
     ) -> None:

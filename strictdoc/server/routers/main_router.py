@@ -395,6 +395,25 @@ def create_main_router(
     ) -> Response:
         return _error_response(HTTP_STATUS_INTERNAL_SERVER_ERROR)
 
+    def rebuild_index_after_file_relations_change() -> Response:
+        """
+        File relations are resolved against the source files when the
+        traceability index is built, so the index is rebuilt (the caller
+        already holds the global write lock) and the browser reloads the page
+        because the rebuilt nodes have new MIDs.
+        """
+        export_action.traceability_index = TraceabilityIndexBuilder.create(
+            project_config=project_config,
+            parallelizer=parallelizer,
+        )
+        return HTMLResponse(
+            content=env().render_template_as_markup(
+                "actions/document/reload_page/stream_reload_page.jinja.html"
+            ),
+            status_code=200,
+            headers={"Content-Type": "text/vnd.turbo-stream.html"},
+        )
+
     def read_lock() -> Iterator[None]:
         with lock_manager.acquire_global_read():
             yield
@@ -758,6 +777,7 @@ def create_main_router(
             existing_revision=0,
         )
 
+        create_result: Optional[CreateOrUpdateNodeResult] = None
         if not form_object.any_errors():
             command = CreateOrUpdateNodeCommand(
                 form_object=form_object,
@@ -769,7 +789,7 @@ def create_main_router(
                 traceability_index=export_action.traceability_index,
                 project_config=project_config,
             )
-            command.perform()
+            create_result = command.perform()
 
         if form_object.any_errors():
             assert document.meta is not None
@@ -811,6 +831,11 @@ def create_main_router(
         write_document_to_file(document)
         if document != editing_context_document:
             write_document_to_file(editing_context_document)
+
+        if assert_cast(
+            create_result, CreateOrUpdateNodeResult
+        ).file_relations_changed:
+            return rebuild_index_after_file_relations_change()
 
         # Exporting the updated document to HTML. Note that this happens after
         # the traceability index last update marker has been updated. This way
@@ -1076,6 +1101,9 @@ def create_main_router(
         write_document_to_file(document)
 
         revisions[requirement_mid] += 1
+
+        if update_requirement_command_result.file_relations_changed:
+            return rebuild_index_after_file_relations_change()
 
         # Exporting the updated document to HTML. Note that this happens after
         # the traceability index last update marker has been updated. This way
@@ -2509,9 +2537,12 @@ def create_main_router(
             traceability_index=export_action.traceability_index,
             project_config=project_config,
         )
-        update_command.perform()
+        update_result = update_command.perform()
         write_document_to_file(document)
         revisions[node_mid_str] += 1
+
+        if update_result.file_relations_changed:
+            return rebuild_index_after_file_relations_change()
 
         new_related_uids = {
             r.ref_uid
@@ -4916,6 +4947,37 @@ def create_main_router(
             content=output,
             status_code=200,
         )
+
+    @read_router.get("/autocomplete/source_file", response_class=Response)
+    def get_autocomplete_source_file_results(
+        q: Optional[str] = None,
+    ) -> Response:
+        """
+        Returns matches of source file paths (relative to the source root)
+        when creating a File relation.
+        """
+        output = ""
+        if (
+            q is not None
+            and project_config.is_activated_requirements_to_source_traceability()
+        ):
+            query_words = q.lower().split()
+            file_traceability_index = (
+                export_action.traceability_index.get_file_traceability_index()
+            )
+            resulting_paths: List[str] = []
+            for path_ in sorted(
+                file_traceability_index.map_paths_to_source_file_traceability_info
+            ):
+                if all(word_ in path_.lower() for word_ in query_words):
+                    resulting_paths.append(path_)
+                    if len(resulting_paths) >= AUTOCOMPLETE_LIMIT:
+                        break
+            output = env().render_template_as_markup(
+                "autocomplete/source_file/stream_autocomplete_source_file.jinja.html",
+                paths=resulting_paths,
+            )
+        return Response(content=output, status_code=200)
 
     @read_router.get("/autocomplete/field", response_class=Response)
     def get_autocomplete_field_results(

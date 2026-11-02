@@ -31,8 +31,14 @@
   value="{{ 'true' if relation_row_context.field.is_new else 'false' }}"
 />
 
+{%- set is_file_relation = relation_row_context.field.field_type == "File" -%}
+{%- set uid_autocomplete_url = "/autocomplete/uid?exclude_requirement_mid="~requirement_mid -%}
+{%- set file_autocomplete_url = "/autocomplete/source_file" -%}
 <sdoc-form-field-group
   data-field-label="Node relation"
+  data-js-relation-row
+  data-relation-uid-url="{{ uid_autocomplete_url }}"
+  data-relation-file-url="{{ file_autocomplete_url }}"
   {% if form_object.errors|length -%}
     errors="true"
   {%- endif -%}
@@ -46,29 +52,40 @@
     {%- endfor -%}
   {%- endif -%}
 
-  {% if relation_row_context.field.field_type == "File" %}
-    <sdoc-form-error>
-      Warning: Editing file relations is not supported yet.
-    </sdoc-form-error>
-  {% endif %}
-
   {%- with
     field_class_name = none,
     result_class_name = "requirement__link",
-    field_editable = true if relation_row_context.field.field_type != "File" else false,
-    field_label = "Relation UID" if relation_row_context.field.field_type != "File" else "Path to file",
+    field_editable = true,
+    field_label = "Path to file" if is_file_relation else "Relation UID",
     field_input_name = relation_row_context.field.get_value_field_name(),
-    field_placeholder = "Enter relation UID...",
+    field_placeholder = "Enter path to file..." if is_file_relation else "Enter relation UID...",
     field_type = "singleline",
     field_value = relation_row_context.field.field_value,
     mid = relation_row_context.field.field_mid,
-    autocomplete_url = "/autocomplete/uid?exclude_requirement_mid="~requirement_mid,
+    autocomplete_url = file_autocomplete_url if is_file_relation else uid_autocomplete_url,
     autocomplete_len = "2",
     autocomplete_multiplechoice = False,
     testid_postfix = "relation-uid"
   %}
   {%- include "components/form/field/autocompletable/index.jinja" %}
   {%- endwith -%}
+
+  {#- Optional LINE_RANGE of a File relation, shown only for the File type. -#}
+  <div data-js-relation-line-range {% if not is_file_relation %}hidden{% endif %}>
+  {%- with
+    field_class_name = none,
+    field_editable = true,
+    field_label = "Line range (optional)",
+    field_input_name = relation_row_context.field.get_line_range_field_name(),
+    field_placeholder = "start, end",
+    field_type = "singleline",
+    field_value = relation_row_context.field.field_line_range,
+    mid = relation_row_context.field.field_mid,
+    testid_postfix = "relation-line-range"
+  %}
+  {%- include "components/form/field/contenteditable/index.jinja" %}
+  {%- endwith -%}
+  </div>
 
   <sdoc-form-field field-type="select">
     <label for="relation_typerole_{{ relation_row_context.field.field_mid }}">Relation type</label>
@@ -77,14 +94,9 @@
       name="{{ relation_row_context.field.get_type_field_name() }}"
       id="relation_typerole_{{ relation_row_context.field.field_mid }}"
       mid="{{ relation_row_context.field.field_mid }}"
-      {% if relation_row_context.field.field_type == "File" %}
-        disabled
-      {% endif %}
     >
       {% for relation_type_, relation_role_, is_current_relation_ in relation_row_context.form_object.enumerate_relation_roles(relation_row_context.field) %}
-        {%- if relation_row_context.field.field_type != "File" and relation_type_ == "File" -%}
-          {# FIXME: Not implemented yet. #}
-        {%- elif relation_role_ is not none %}
+        {%- if relation_role_ is not none %}
           <option
             value="{{ relation_type_ }},{{ relation_role_ }}"
             {% if is_current_relation_ %}

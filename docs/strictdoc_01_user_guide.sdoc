@@ -3372,6 +3372,29 @@ requirement to the corresponding subprogram body.
        procedure Hello_World;
     end Hello;
 
+The Ada reader finds markers in ``--`` comments, including ``--!`` and
+``---`` comments. A marker must start the comment line, so
+``-- Implements @relation(REQ-1, scope=file)`` is ignored. Consecutive
+comment lines form one comment block. A blank line or a line of code ends the
+block.
+
+A ``scope=file`` marker must be in the first comment block of the file. If a
+blank line or code separates the file header from the marker, the marker is
+not in the first block and StrictDoc ignores it. A ``scope=function`` marker
+must be in the block directly above the subprogram, with no blank line.
+
+.. code:: ada
+
+    -- Copyright (c) ACME.
+    -- @relation(REQ-1, scope=file)
+    with Ada.Text_IO;
+
+    --! @relation(REQ-2, scope=function)
+    procedure Hello_World is
+    begin
+       Ada.Text_IO.Put_Line ("Hello"); -- @relation(REQ-3, scope=line)
+    end Hello_World;
+
 For Rust, ``@relation`` marker can be placed inside `doc comments`_ to
 automatically infer the linked item. This works for almost all Rust language
 elements like modules, functions, traits, enums or structs.
@@ -4472,6 +4495,10 @@ files feature is enabled.
 
 The behavior of the wildcards is the same as for the
 ``include_doc_paths/exclude_doc_paths`` options.
+
+The paths are relative to ``source_root_path``. A pattern like ``**/*.adb``
+needs at least one folder, so it does not match ``hello.adb`` at the top of
+the source root. Use ``**.adb`` to match the files in all folders.
 
 .. note::
 

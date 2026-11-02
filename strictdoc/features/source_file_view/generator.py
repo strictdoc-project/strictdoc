@@ -10,6 +10,7 @@ from markupsafe import Markup
 from pygments import highlight
 from pygments.formatters.html import HtmlFormatter
 from pygments.lexers import get_lexer_for_filename
+from pygments.lexers.ada import AdaLexer
 from pygments.lexers.c_cpp import CLexer, CppLexer
 from pygments.lexers.configs import TOMLLexer
 from pygments.lexers.data import YamlLexer
@@ -185,6 +186,8 @@ class SourceFileViewHTMLGenerator:
             lexer = CLexer()
         elif source_file.is_cpp_file():
             lexer = CppLexer()
+        elif source_file.is_ada_file():
+            lexer = AdaLexer()
         elif source_file.is_tex_file():
             lexer = TexLexer()
         elif source_file.is_toml_file():

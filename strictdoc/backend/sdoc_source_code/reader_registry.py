@@ -3,6 +3,9 @@ from typing import Optional, Union
 from strictdoc.backend.sdoc_source_code.reader import (
     SourceFileTraceabilityReader,
 )
+from strictdoc.backend.sdoc_source_code.reader_ada import (
+    SourceFileTraceabilityReader_Ada,
+)
 from strictdoc.backend.sdoc_source_code.reader_c import (
     SourceFileTraceabilityReader_C,
 )
@@ -30,6 +33,7 @@ class SourceCodeReaderRegistry:
         SourceFileTraceabilityReader_C,
         SourceFileTraceabilityReader_Robot,
         SourceFileTraceabilityReader_Rust,
+        SourceFileTraceabilityReader_Ada,
     ]:
         if path_to_file.endswith(".py"):
             return SourceFileTraceabilityReader_Python()
@@ -48,6 +52,10 @@ class SourceCodeReaderRegistry:
             )
         if path_to_file.endswith(".rs"):
             return SourceFileTraceabilityReader_Rust(
+                custom_tags=source_node_tags
+            )
+        if path_to_file.endswith((".adb", ".ads", ".ada")):
+            return SourceFileTraceabilityReader_Ada(
                 custom_tags=source_node_tags
             )
         return SourceFileTraceabilityReader()

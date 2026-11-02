@@ -1,0 +1,17 @@
+# @relation(SDOC-SRS-208, SDOC-SRS-145, scope=file)
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Export completed.
+
+RUN: %check_exists --file "%T/html/_source_files/file.adb.html"
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: <a{{.*}}href="../_source_files/file.adb.html#REQ-1#4#4">
+CHECK-HTML: <a{{.*}}href="../_source_files/file.adb.html#REQ-1#6#6">
+
+RUN: %cat %T/html/_source_files/file.adb.html | filecheck %s --dump-input=fail --check-prefix CHECK-FILE-ADB
+CHECK-FILE-ADB: 4 - 4 | function Hello.Hello_World_3()
+CHECK-FILE-ADB: 6 - 6 | function Hello.Hello_World_4()
+
+RUN: %cat %T/html/source_coverage.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-COVERAGE
+CHECK-SOURCE-COVERAGE: 40.0

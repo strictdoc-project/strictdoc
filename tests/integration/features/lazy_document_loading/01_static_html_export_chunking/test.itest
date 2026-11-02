@@ -19,23 +19,25 @@ CHECK-MAIN: data-chunk-key="input-chunk-2"
 CHECK-MAIN-NOT: loading="lazy"
 CHECK-MAIN-NOT: src="/fragments/
 
-# Each generated chunk .js file is one long line (a single JSON-escaped
-# string), so it's checked with one positive CHECK per filecheck invocation
-# rather than several in sequence.
+# Each generated chunk .js file stores its HTML as {"z": base64(gzip(html))}.
+# The key line is checked on the raw file; the content is checked on the
+# decoded HTML (%cat_static_chunk).
 
 # Chunk 1 covers requirements 011-020 only.
 RUN: %cat %T/html/%THIS_TEST_FOLDER/input-chunk-1.js | filecheck %s --check-prefix CHECK-CHUNK-1-KEY --dump-input=fail
-CHECK-CHUNK-1-KEY: window.StrictDoc.chunks["input-chunk-1"] = "<turbo-frame id=\"document-chunk-1\">
+CHECK-CHUNK-1-KEY: window.StrictDoc.chunks["input-chunk-1"] = {"z":"
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/input-chunk-1.js | filecheck %s --check-prefix CHECK-CHUNK-1-CONTENT --dump-input=fail
+RUN: %cat_static_chunk %T/html/%THIS_TEST_FOLDER/input-chunk-1.js | filecheck %s --check-prefix CHECK-CHUNK-1-CONTENT --dump-input=fail
+CHECK-CHUNK-1-CONTENT: <turbo-frame id="document-chunk-1">
 CHECK-CHUNK-1-CONTENT: Statement of requirement 015
 CHECK-CHUNK-1-CONTENT-NOT: Statement of requirement 005
 CHECK-CHUNK-1-CONTENT-NOT: Statement of requirement 025
 
 # Chunk 2 covers requirements 021-025 only.
 RUN: %cat %T/html/%THIS_TEST_FOLDER/input-chunk-2.js | filecheck %s --check-prefix CHECK-CHUNK-2-KEY --dump-input=fail
-CHECK-CHUNK-2-KEY: window.StrictDoc.chunks["input-chunk-2"] = "<turbo-frame id=\"document-chunk-2\">
+CHECK-CHUNK-2-KEY: window.StrictDoc.chunks["input-chunk-2"] = {"z":"
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/input-chunk-2.js | filecheck %s --check-prefix CHECK-CHUNK-2-CONTENT --dump-input=fail
+RUN: %cat_static_chunk %T/html/%THIS_TEST_FOLDER/input-chunk-2.js | filecheck %s --check-prefix CHECK-CHUNK-2-CONTENT --dump-input=fail
+CHECK-CHUNK-2-CONTENT: <turbo-frame id="document-chunk-2">
 CHECK-CHUNK-2-CONTENT: Statement of requirement 025
 CHECK-CHUNK-2-CONTENT-NOT: Statement of requirement 015

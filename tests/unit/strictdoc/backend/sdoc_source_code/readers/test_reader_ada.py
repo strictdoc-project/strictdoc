@@ -192,3 +192,47 @@ end Hello;
     assert [marker_.reqs for marker_ in info.markers] == [["REQ-1"], ["REQ-2"]]
     assert info.functions[0].markers[0].reqs == ["REQ-1"]
     assert info.functions[1].markers[0].reqs == ["REQ-2"]
+
+
+def test_08_file_marker_directly_above_subprogram_is_not_duplicated():
+    input_string = b"""\
+-- @relation(REQ-1, scope=file)
+procedure Hello is
+begin
+   null;
+end Hello;
+"""
+
+    reader = SourceFileTraceabilityReader_Ada()
+
+    info = reader.read(input_string, file_path="hello.adb")
+
+    assert len(info.markers) == 1
+    assert info.markers[0].reqs == ["REQ-1"]
+    assert len(info.functions) == 1
+    assert len(info.functions[0].markers) == 0
+
+
+def test_09_markers_in_dash_dash_bang_and_triple_dash_comments():
+    input_string = b"""\
+--! @relation(REQ-1, scope=file)
+
+package body Hello is
+   --- @relation(REQ-2, scope=function)
+   procedure Hello_World is
+   begin
+      --! @relation(REQ-3, scope=range_start)
+      null;
+      --! @relation(REQ-3, scope=range_end)
+   end Hello_World;
+end Hello;
+"""
+
+    reader = SourceFileTraceabilityReader_Ada()
+
+    info = reader.read(input_string, file_path="hello.adb")
+
+    assert info.markers[0].reqs == ["REQ-1"]
+    assert info.functions[0].markers[0].reqs == ["REQ-2"]
+    assert info.ng_map_reqs_to_markers["REQ-3"][0].ng_range_line_begin == 7
+    assert info.ng_map_reqs_to_markers["REQ-3"][0].ng_range_line_end == 9

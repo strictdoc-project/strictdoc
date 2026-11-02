@@ -122,6 +122,10 @@ class SourceFileTraceabilityReader_Ada:
                 ):
                     language_item_marker_processor(marker_, parse_context)
                     traceability_info.markers.append(marker_)
+                    # The file comment does not belong to the item below it.
+                    blocks_by_last_line.pop(
+                        comment_blocks[0][-1].start_point[0], None
+                    )
 
         for node_ in subprogram_nodes:
             specification_node = self._find_specification_node(node_)
@@ -238,8 +242,9 @@ class SourceFileTraceabilityReader_Ada:
         ]
         # The common comment preprocessor does not know "--". Blank it out
         # with the same length to keep the byte offsets for write-back.
+        # Also blank out the extra "-" or "!" of "---" and "--!" comments.
         comment_text = re.sub(
-            r"^(\s*)--",
+            r"^(\s*)--[-!]*",
             lambda match_: " " * len(match_.group(0)),
             comment_bytes.decode("utf8"),
             flags=re.MULTILINE,

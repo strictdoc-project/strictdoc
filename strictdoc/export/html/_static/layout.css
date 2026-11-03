@@ -17,7 +17,7 @@
   grid-template-areas:
       "nav  header   header   header   header    aside"
       "nav  tree     bar_left main     bar_right aside"
-      "nav  footer   footer   footer   footer    aside";
+      "footer  footer   footer   footer   footer    aside";
 
   place-items: stretch stretch;
   place-content: stretch stretch;

@@ -41,6 +41,11 @@ Import ReqIF document
   </form>
 {% endblock modal_form__content %}
 
+
+{% block modal_form__footer_cancel %}
+  {# It is possible to call with a 'name' and 'href' variable #}
+  {{ super() }}
+{% endblock modal_form__footer_cancel %}
 {% block modal_form__footer_extra %}{% endblock modal_form__footer_extra %}
 {% block modal_form__footer_submit %}
   {# It is possible to call with a 'name' variable #}
@@ -48,7 +53,3 @@ Import ReqIF document
     {% include "components/button/submit.jinja" %}
   {%- endwith -%}
 {% endblock modal_form__footer_submit %}
-{% block modal_form__footer_cancel %}
-  {# It is possible to call with a 'name' and 'href' variable #}
-  {{ super() }}
-{% endblock modal_form__footer_cancel %}

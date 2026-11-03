@@ -13,12 +13,12 @@
           {%- block modal_form__content %}{% endblock -%}
         </sdoc-modal-content>
         <sdoc-modal-footer>
+          {%- block modal_form__footer_cancel %}
+            {% include "components/button/cancel.jinja" %}
+          {% endblock -%}
           {%- block modal_form__footer_extra %}{% endblock -%}
           {%- block modal_form__footer_submit %}
             {% include "components/button/submit.jinja" %}
-          {% endblock -%}
-          {%- block modal_form__footer_cancel %}
-            {% include "components/button/cancel.jinja" %}
           {% endblock -%}
         </sdoc-modal-footer>
       </sdoc-modal>

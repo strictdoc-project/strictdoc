@@ -1,3 +1,5 @@
+import pytest
+
 from strictdoc.cli.cli_arg_parser import (
     SDocArgsParser,
 )
@@ -166,3 +168,30 @@ def test_development_flag_sets_development_mode_independently_of_debug():
 def test_development_flag_is_hidden_from_help_text():
     parser = cli_args_parser()
     assert "--development" not in parser.format_help()
+
+
+@pytest.mark.parametrize("command_name", ["export", "server"])
+@pytest.mark.parametrize("enabled", [False, True])
+def test_relaxed_mode_switch_controls_missing_relation_handling(
+    command_name: str, enabled: bool
+) -> None:
+    parser = cli_args_parser()
+    arguments = [command_name, "docs"]
+    if enabled:
+        arguments.append("--relaxed-mode")
+    args = parser.parse_args(arguments)
+    command = COMMAND_REGISTRY[command_name](args)
+
+    assert command.config.relaxed_mode is enabled
+
+
+@pytest.mark.parametrize("command_name", ["export", "server"])
+def test_relaxed_mode_rejects_replaced_option(command_name: str) -> None:
+    parser = cli_args_parser()
+
+    with pytest.raises(SystemExit) as exception_info:
+        parser.parse_args(
+            [command_name, "docs", "--allow-missing-relation-requirements"]
+        )
+
+    assert exception_info.value.code == 2

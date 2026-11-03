@@ -43,6 +43,8 @@ BooleanExpression:
   |
   NoneInExpression
   |
+  NodeHasMissingRelationsExpression
+  |
   InExpression
   |
   NotInExpression
@@ -100,6 +102,10 @@ NodeHasParentRequirementsExpression:
 
 NodeHasChildRequirementsExpression:
   _ = 'node.has_child_requirements'
+;
+
+NodeHasMissingRelationsExpression:
+  _ = 'node.has_missing_relations'
 ;
 
 NodeIsRequirementExpression:

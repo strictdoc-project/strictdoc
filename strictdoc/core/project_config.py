@@ -215,6 +215,7 @@ class ProjectConfig:
         ] = ProjectConfigDefault.DEFAULT_SECTION_BEHAVIOR,
         statistics_generator: Optional[str] = None,
         document_line_width: Optional[int] = None,
+        relaxed_mode: bool = False,
         # Logo path can be set in the project config to customize the launcher's appearance for a specific project.
         launcher_logo_path: Optional[str] = None,
         # Favicon path can be set in the project config to customize the
@@ -505,6 +506,9 @@ class ProjectConfig:
             )
         self.document_line_width: Optional[int] = document_line_width
 
+        assert isinstance(relaxed_mode, bool), relaxed_mode
+        self.relaxed_mode: bool = relaxed_mode
+
         self.user_plugin: Optional[StrictDocPlugin] = user_plugin
 
         self.custom_node_prefix_function: Optional[CustomNodePrefixFunction] = (
@@ -648,12 +652,16 @@ class ProjectConfig:
         from strictdoc.features.tree_map.feature import (  # noqa: PLC0415
             TreeMapFeature,
         )
+        from strictdoc.features.unresolved_references import (  # noqa: PLC0415
+            feature as unresolved_references_feature,
+        )
 
         return {
             feature.HANDLE: feature
             for feature in [
                 ProjectStatisticsFeature(),
                 TreeMapFeature(),
+                unresolved_references_feature.UnresolvedReferencesFeature(),
             ]
         }
 
@@ -669,9 +677,21 @@ class ProjectConfig:
         resolved_features: List[Feature] = []
         for feature in self.project_features:
             if isinstance(feature, Feature):
+                if (
+                    feature.HANDLE == "UNRESOLVED_REFERENCES_SCREEN"
+                    and not self.relaxed_mode
+                ):
+                    continue
                 resolved_features.append(feature)
             elif feature in builtin_features_by_handle:
                 resolved_features.append(builtin_features_by_handle[feature])
+        if self.relaxed_mode and not any(
+            feature_.HANDLE == "UNRESOLVED_REFERENCES_SCREEN"
+            for feature_ in resolved_features
+        ):
+            resolved_features.append(
+                builtin_features_by_handle["UNRESOLVED_REFERENCES_SCREEN"]
+            )
         return resolved_features
 
     def get_feature(self, handle: str) -> Optional[Feature]:
@@ -739,6 +759,9 @@ class ProjectConfig:
         self.export_formats = ["html"]
         self.generate_bundle_document = False
         self.export_included_documents = True
+
+        if server_config.relaxed_mode:
+            self.relaxed_mode = True
 
     def integrate_export_config(
         self, export_config: ExportCommandConfig
@@ -814,6 +837,9 @@ class ProjectConfig:
             )
         if not self.reqif_enable_mid:
             self.reqif_enable_mid = export_config.reqif_enable_mid
+
+        if export_config.relaxed_mode:
+            self.relaxed_mode = True
 
     def validate_and_finalize(self) -> None:
         project_path = self.get_project_root_path()
@@ -1403,6 +1429,7 @@ class ProjectConfigLoader:
         section_behavior: str = ProjectConfigDefault.DEFAULT_SECTION_BEHAVIOR
         statistics_generator: Optional[str] = None
         document_line_width: Optional[int] = None
+        relaxed_mode: bool = False
 
         if "project" in config_dict:
             project_content = config_dict["project"]
@@ -1508,6 +1535,11 @@ class ProjectConfigLoader:
                 "document_line_width", document_line_width
             )
 
+            relaxed_mode = project_content.get(
+                "relaxed_mode",
+                relaxed_mode,
+            )
+
             if "source_nodes" in project_content:
                 source_nodes_config = project_content["source_nodes"]
                 assert isinstance(source_nodes_config, list)
@@ -1573,5 +1605,6 @@ class ProjectConfigLoader:
             section_behavior=section_behavior,
             statistics_generator=statistics_generator,
             document_line_width=document_line_width,
+            relaxed_mode=relaxed_mode,
             _config_last_update=config_last_update,
         )

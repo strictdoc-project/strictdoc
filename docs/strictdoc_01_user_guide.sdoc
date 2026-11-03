@@ -3295,6 +3295,10 @@ the programming language. For example, the ``scope=class`` option is available
 for Python files but not for C files, as C does not support classes. The marker
 supports both () and {} for arguments.
 
+By default, StrictDoc rejects markers that reference missing requirement UIDs.
+Enable [LINK: SDOC_UG_RELAXED_MODE] to export or serve a project with unresolved
+references.
+
 .. note::
 
     Language-specific scopes such as ``class`` and ``function`` are available for supported source file types. See [LINK: SECTION-UG-Language-aware-parsing-of-source-code].
@@ -5188,6 +5192,65 @@ and enough users report that they have used and tested this feature.
 
 See also [LINK: SDOC_UG_CONFIG_FEATURES] for general instructions.
 <<<
+
+[[SECTION]]
+MID: 84d9c820af4d4aabbd08592bbbe4e250
+UID: SDOC_UG_RELAXED_MODE
+TITLE: Relaxed mode (experimental)
+
+[TEXT]
+MID: 5b8aeb8db7e745bf89f3b605335edc64
+STATEMENT: >>>
+Use relaxed mode to export or serve a project with unresolved references.
+StrictDoc reports unresolved references as warnings.
+
+Relaxed mode allows unresolved references in:
+
+- Parent and child requirement relations
+- Requirement-to-file relations
+- Source code ``@relation`` markers that reference requirement UIDs
+- Inline ``[LINK:]`` tags that reference node UIDs or anchors.
+
+Enable relaxed mode for an export or server session:
+
+.. code:: bash
+
+    strictdoc export . --relaxed-mode
+    strictdoc server . --relaxed-mode
+
+To enable relaxed mode in ``strictdoc_config.py``, pass ``relaxed_mode=True``
+to ``ProjectConfig``. See [LINK: SDOC_UG_OPTIONS_PROJECT_LEVEL] for
+configuration instructions.
+
+For a legacy TOML configuration, set ``relaxed_mode = true`` in the
+``[project]`` table.
+
+StrictDoc displays warnings in the command output and beside affected fields
+or source markers. The project index shows the total number of unresolved
+relations and inline links.
+
+Open **Unresolved references** from the navigation bar to see all unresolved
+references in one place. The page groups requirement relations, file
+relations, source markers, and inline links.
+
+Each row identifies the missing target and its source. Select the source
+link to open the affected requirement or source range. The page includes
+totals for each group.
+
+The page is available automatically in relaxed mode for HTML exports and
+the server.
+For changes to source files on disk, export again or restart the server to
+refresh the list.
+
+Source markers that reference missing requirement UIDs contribute no line or
+function coverage for those UIDs. Markers that reference both valid and
+missing UIDs retain their valid links and coverage.
+
+Relaxed mode still enforces document syntax and other validation constraints.
+By default, StrictDoc stops with an error for unresolved references.
+<<<
+
+[[/SECTION]]
 
 [[SECTION]]
 MID: f32e122437ba4f6193d9eac3b8eb8abd

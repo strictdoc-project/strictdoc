@@ -1,0 +1,28 @@
+[DOCUMENT]
+TITLE: Doc with missing inline links
+
+[TEXT]
+STATEMENT: >>>
+Existing anchor definition.
+
+[ANCHOR: EXISTING-ANCHOR]
+<<<
+
+[REQUIREMENT]
+UID: REQ-001
+TITLE: Existing requirement
+STATEMENT: Existing requirement statement.
+
+[REQUIREMENT]
+UID: REQ-002
+TITLE: Requirement with a missing node link
+STATEMENT: >>>
+Valid node link [LINK: REQ-001] and missing node link [LINK: MISSING-UID].
+<<<
+
+[REQUIREMENT]
+UID: REQ-003
+TITLE: Requirement with a missing anchor link
+STATEMENT: >>>
+Valid anchor link [LINK: EXISTING-ANCHOR] and missing anchor link [LINK: MISSING-ANCHOR].
+<<<

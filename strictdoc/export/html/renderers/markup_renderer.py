@@ -200,18 +200,28 @@ class MarkupRenderer:
                     parts_output += part
             elif isinstance(part, InlineLink):
                 linkable_node = (
-                    self.traceability_index.get_linkable_node_by_uid(part.link)
-                )
-                href = self.link_renderer.render_node_link(
-                    linkable_node, self.context_document, document_type
-                )
-                if part.title is not None:
-                    parts_output += fragment_writer.write_anchor_link(
-                        part.title, href, with_icon=False
+                    self.traceability_index.get_linkable_node_by_uid_weak(
+                        part.link
                     )
+                )
+                if linkable_node is not None:
+                    href = self.link_renderer.render_node_link(
+                        linkable_node, self.context_document, document_type
+                    )
+                    if part.title is not None:
+                        parts_output += fragment_writer.write_anchor_link(
+                            part.title, href, with_icon=False
+                        )
+                    else:
+                        parts_output += fragment_writer.write_anchor_link(
+                            linkable_node.get_display_title(), href
+                        )
                 else:
+                    # In relaxed mode, render a missing inline target as a link
+                    # to "#" so generation can continue. The field validation
+                    # issue identifies the missing target.
                     parts_output += fragment_writer.write_anchor_link(
-                        linkable_node.get_display_title(), href
+                        part.link, "#"
                     )
             elif isinstance(part, Anchor):
                 parts_output += self.template_anchor.render(

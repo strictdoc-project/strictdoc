@@ -1,0 +1,6 @@
+# @relation(REQ-002, MISSING-RANGE, scope=range_start)
+code
+# @relation(REQ-002, MISSING-RANGE, scope=range_end)
+# @relation(MISSING-LINE, scope=line)
+code
+# @relation(MISSING-FILE, scope=file)

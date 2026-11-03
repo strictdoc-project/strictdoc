@@ -1,0 +1,7 @@
+[DOCUMENT]
+TITLE: Project without unresolved references
+
+[REQUIREMENT]
+UID: REQ-001
+TITLE: Existing requirement
+STATEMENT: The requirement has no unresolved references.

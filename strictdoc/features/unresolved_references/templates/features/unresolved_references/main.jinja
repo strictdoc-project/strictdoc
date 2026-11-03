@@ -1,0 +1,59 @@
+<div class="main unresolved_references">
+  <h1>Unresolved references</h1>
+  <p>
+    Total unresolved references:
+    <strong data-testid="unresolved-references-total">
+      {{- view_object.total -}}
+    </strong>
+  </p>
+
+  {% if view_object.total == 0 %}
+    <p data-testid="unresolved-references-empty">No unresolved references.</p>
+  {% else %}
+    <nav aria-label="Reference types" class="unresolved_references_summary">
+      {% for group_ in view_object.groups %}
+        <a href="#{{ group_.identifier }}">
+          {{ group_.title }} ({{ group_.entries|length }})
+        </a>
+      {% endfor %}
+    </nav>
+
+    {% for group_ in view_object.groups %}
+      <section id="{{ group_.identifier }}">
+        <h2>{{ group_.title }} ({{ group_.entries|length }})</h2>
+        {% if group_.entries|length == 0 %}
+          <p>No unresolved references of this type.</p>
+        {% else %}
+          <div class="unresolved_references_table">
+            <table>
+              <caption>{{ group_.title }}</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Type</th>
+                  <th scope="col">Source</th>
+                  <th scope="col">Context</th>
+                  <th scope="col">Missing target</th>
+                  <th scope="col">Role</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for entry_ in group_.entries %}
+                  <tr data-testid="unresolved-reference-row"
+                    data-reference-type="{{ entry_.reference_type }}">
+                    <td>{{ entry_.reference_type }}</td>
+                    <td><a href="{{ entry_.owner_url }}">
+                      {{- entry_.owner -}}
+                    </a></td>
+                    <td>{{ entry_.context }}</td>
+                    <td><code>{{ entry_.target }}</code></td>
+                    <td>{{ entry_.role if entry_.role is not none else '' }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        {% endif %}
+      </section>
+    {% endfor %}
+  {% endif %}
+</div>

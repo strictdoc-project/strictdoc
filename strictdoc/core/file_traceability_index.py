@@ -636,7 +636,7 @@ class FileTraceabilityIndex:
                     file_posix_path
                 )
                 if source_file_traceability_info is None:
-                    if project_config.allow_missing_relation_requirements:
+                    if project_config.relaxed_mode:
                         traceability_index.validation_index.add_issue(
                             forward_requirement_,
                             issue=f"Missing file relation: {file_posix_path}",
@@ -777,7 +777,7 @@ class FileTraceabilityIndex:
                         requirement_uid_
                     )
                     if node is None:
-                        if project_config.allow_missing_relation_requirements:
+                        if project_config.relaxed_mode:
                             if marker_.is_begin():
                                 self._missing_requirement_relations.append(
                                     MissingSourceRequirementRelation(

@@ -46,13 +46,13 @@ class ServerCommand(BaseCommand):
             ),
         )
         command_parser_server.add_argument(
-            "--allow-missing-relation-requirements",
+            "--relaxed-mode",
             default=False,
             action="store_true",
-            dest="allow_missing_relation_requirements",
+            dest="relaxed_mode",
             help=(
-                "Allow starting the server even when some requirement "
-                "relations (parent/child) cannot be resolved."
+                "Continue with warnings for unresolved relations "
+                "and inline links."
             ),
         )
         command_parser_server.add_argument(

@@ -217,11 +217,9 @@ class MarkupRenderer:
                             linkable_node.get_display_title(), href
                         )
                 else:
-                    # Relaxed mode (allow_missing_relation_requirements): the
-                    # inline link references a target that does not exist. Render
-                    # the link target as a dead link so that the generation does
-                    # not fail. The missing link is highlighted separately as a
-                    # validation issue on the owning field.
+                    # In relaxed mode, render a missing inline target as a link
+                    # to "#" so generation can continue. The field validation
+                    # issue identifies the missing target.
                     parts_output += fragment_writer.write_anchor_link(
                         part.link, "#"
                     )

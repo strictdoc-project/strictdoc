@@ -5,4 +5,4 @@ features = [
   "PROJECT_STATISTICS_SCREEN",
 ]
 
-allow_missing_relation_requirements = true
+relaxed_mode = true

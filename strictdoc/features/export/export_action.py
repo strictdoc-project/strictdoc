@@ -43,7 +43,7 @@ class ExportAction:
         return traceability_index
 
     def _print_missing_relations_warning(self) -> None:
-        if not self.project_config.allow_missing_relation_requirements:
+        if not self.project_config.relaxed_mode:
             return
 
         missing_relations = self.traceability_index.get_all_missing_relations()
@@ -89,7 +89,7 @@ class ExportAction:
             )
 
     def _print_unresolved_inline_links_warning(self) -> None:
-        if not self.project_config.allow_missing_relation_requirements:
+        if not self.project_config.relaxed_mode:
             return
 
         unresolved_inline_links = (

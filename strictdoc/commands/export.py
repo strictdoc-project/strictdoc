@@ -272,13 +272,13 @@ class ExportCommand(BaseCommand):
             ),
         )
         command_parser_export.add_argument(
-            "--allow-missing-relation-requirements",
-            dest="allow_missing_relation_requirements",
+            "--relaxed-mode",
+            dest="relaxed_mode",
             action="store_true",
             default=False,
             help=(
-                "Allow exporting even when some requirement relations "
-                "(parent/child) cannot be resolved."
+                "Continue with warnings for unresolved relations "
+                "and inline links."
             ),
         )
         command_parser_export.add_argument(

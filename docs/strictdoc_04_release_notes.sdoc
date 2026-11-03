@@ -60,8 +60,11 @@ This release contains the following enhancements:
 
 1\) Relaxed mode now supports source markers that reference missing requirement
 UIDs. StrictDoc reports the missing references and displays warnings in the
-source view. Valid links remain available, and missing references contribute
-no code coverage.
+source view. Valid links remain available. Missing references contribute no
+code coverage.
+
+2\) The ``export`` and ``server`` commands accept ``--relaxed-mode`` to report
+unresolved relations and inline links as warnings.
 <<<
 
 [[/SECTION]]

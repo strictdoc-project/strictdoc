@@ -21,7 +21,7 @@ class ServerCommandConfig:
         host: Optional[str],
         port: Optional[int],
         watch: bool = False,
-        allow_missing_relation_requirements: bool = False,
+        relaxed_mode: bool = False,
     ):
         self.debug: bool = debug
         self.development: bool = development
@@ -33,9 +33,7 @@ class ServerCommandConfig:
         self.host: Optional[str] = host
         self.port: Optional[int] = port
         self.watch: bool = watch
-        self.allow_missing_relation_requirements: bool = (
-            allow_missing_relation_requirements
-        )
+        self.relaxed_mode: bool = relaxed_mode
 
     def get_full_input_path(self) -> str:
         return os.path.abspath(self._input_path)

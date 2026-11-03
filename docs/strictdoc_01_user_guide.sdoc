@@ -3295,21 +3295,9 @@ the programming language. For example, the ``scope=class`` option is available
 for Python files but not for C files, as C does not support classes. The marker
 supports both () and {} for arguments.
 
-StrictDoc reports an error if a marker references a requirement UID that does
-not exist. To export a project with unresolved references, enable relaxed mode:
-
-.. code:: bash
-
-    strictdoc export . --allow-missing-relation-requirements
-
-Set ``allow_missing_relation_requirements=True`` in the Python project
-configuration to enable this behavior for exports and the server.
-
-In relaxed mode, StrictDoc reports each missing UID with its source path and
-location. The source view displays missing UIDs as warnings, and the project
-warning total includes these references. Missing references contribute no line
-or function coverage. Markers with both valid and missing UIDs retain their
-valid links and coverage.
+By default, StrictDoc rejects markers that reference missing requirement UIDs.
+Enable [LINK: SDOC_UG_RELAXED_MODE] to export or serve a project with unresolved
+references.
 
 .. note::
 
@@ -5204,6 +5192,52 @@ and enough users report that they have used and tested this feature.
 
 See also [LINK: SDOC_UG_CONFIG_FEATURES] for general instructions.
 <<<
+
+[[SECTION]]
+MID: 84d9c820af4d4aabbd08592bbbe4e250
+UID: SDOC_UG_RELAXED_MODE
+TITLE: Relaxed mode (experimental)
+
+[TEXT]
+MID: 5b8aeb8db7e745bf89f3b605335edc64
+STATEMENT: >>>
+Use relaxed mode to export or serve a project with unresolved references.
+StrictDoc reports unresolved references as warnings.
+
+Relaxed mode allows unresolved references in:
+
+- Parent and child requirement relations
+- Requirement-to-file relations
+- Source code ``@relation`` markers that reference requirement UIDs
+- Inline ``[LINK:]`` tags that reference node UIDs or anchors.
+
+Enable relaxed mode for an export or server session:
+
+.. code:: bash
+
+    strictdoc export . --relaxed-mode
+    strictdoc server . --relaxed-mode
+
+To enable relaxed mode in ``strictdoc_config.py``, pass ``relaxed_mode=True``
+to ``ProjectConfig``. See [LINK: SDOC_UG_OPTIONS_PROJECT_LEVEL] for
+configuration instructions.
+
+For a legacy TOML configuration, set ``relaxed_mode = true`` in the
+``[project]`` table.
+
+StrictDoc displays warnings in the command output and beside affected fields
+or source markers. The project index shows the total number of unresolved
+relations and inline links.
+
+Source markers that reference missing requirement UIDs contribute no line or
+function coverage for those UIDs. Markers that reference both valid and
+missing UIDs retain their valid links and coverage.
+
+Relaxed mode still enforces document syntax and other validation constraints.
+By default, StrictDoc stops with an error for unresolved references.
+<<<
+
+[[/SECTION]]
 
 [[SECTION]]
 MID: f32e122437ba4f6193d9eac3b8eb8abd

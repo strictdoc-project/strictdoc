@@ -225,9 +225,7 @@ def _create_source_index(
 ]:
     document_builder = DocumentBuilder()
     document_builder.add_requirement("REQ-001")
-    document_builder.project_config.allow_missing_relation_requirements = (
-        allow_missing
-    )
+    document_builder.project_config.relaxed_mode = allow_missing
     document_tree = DocumentTree(
         file_tree=[],
         document_list=[document_builder.build()],

@@ -221,7 +221,7 @@ class ProgressStatisticsGenerator:
                 link='search?q=(node.is_requirement() and not node.is_root and node["STATUS"] != "Backlog" and not node.has_parent_requirements)',
             )
         )
-        if project_config.allow_missing_relation_requirements:
+        if project_config.relaxed_mode:
             section.metrics.append(
                 Metric(
                     name="Requirements with missing relations",

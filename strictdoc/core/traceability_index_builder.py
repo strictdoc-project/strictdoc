@@ -268,11 +268,10 @@ class TraceabilityIndexBuilder:
                 link_type=GraphLinkType.UID_TO_NODE,
                 lhs_node=inline_link.link,
             ):
-                if project_config.allow_missing_relation_requirements:
-                    # Relaxed mode: an inline link may reference a target that
-                    # does not exist. Record a validation issue (which prints a
-                    # warning and highlights the owning field) instead of
-                    # failing the whole build.
+                if project_config.relaxed_mode:
+                    # In relaxed mode, record a missing inline target as a
+                    # validation issue. The issue produces a command-line
+                    # warning. The UI marks the affected field.
                     inline_link_field = inline_link.parent
                     inline_link_node = inline_link.parent_node()
                     field_name: Optional[str] = (
@@ -690,7 +689,7 @@ class TraceabilityIndexBuilder:
                             lhs_node=parent_reference.ref_uid,
                         )
                         if parent_requirement is None:
-                            if project_config.allow_missing_relation_requirements:
+                            if project_config.relaxed_mode:
                                 traceability_index.validation_index.add_issue(
                                     requirement,
                                     issue=f"Missing parent relation: {parent_reference.ref_uid}",
@@ -745,7 +744,7 @@ class TraceabilityIndexBuilder:
                             lhs_node=child_reference.ref_uid,
                         )
                         if child_requirement is None:
-                            if project_config.allow_missing_relation_requirements:
+                            if project_config.relaxed_mode:
                                 traceability_index.validation_index.add_issue(
                                     requirement,
                                     issue=f"Missing child relation: {child_reference.ref_uid}",

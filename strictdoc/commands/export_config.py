@@ -33,7 +33,7 @@ class ExportCommandConfig:
         chromedriver: Optional[str],
         chrome_binary: Optional[str],
         disable_ssl_check: bool,
-        allow_missing_relation_requirements: bool = False,
+        relaxed_mode: bool = False,
     ):
         assert isinstance(input_paths, list), f"{input_paths}"
         self.debug: bool = debug
@@ -59,9 +59,7 @@ class ExportCommandConfig:
         self.chromedriver: Optional[str] = chromedriver
         self.chrome_binary: Optional[str] = chrome_binary
         self.disable_ssl_check: bool = disable_ssl_check
-        self.allow_missing_relation_requirements: bool = (
-            allow_missing_relation_requirements
-        )
+        self.relaxed_mode: bool = relaxed_mode
 
     def get_path_to_config(self) -> str:
         # FIXME: The control flow can be improved.

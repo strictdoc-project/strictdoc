@@ -1,10 +1,10 @@
 #
-# In relaxed mode (--allow-missing-relation-requirements), an inline [LINK:]
-# that references a missing node UID or a missing [ANCHOR:] produces a warning
-# and a UI highlight instead of a hard error. Valid links still resolve.
+# In relaxed mode (--relaxed-mode), StrictDoc warns about inline [LINK:] tags
+# that reference missing node UIDs or anchors. StrictDoc marks the affected
+# fields in the UI. Valid links still resolve.
 #
 
-RUN: %strictdoc export %S --output-dir %T --allow-missing-relation-requirements | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S --output-dir %T --relaxed-mode | filecheck %s --dump-input=fail
 CHECK: warning: Missing link: MISSING-UID
 CHECK: warning: Missing link: MISSING-ANCHOR
 CHECK: warning: unresolved inline links were detected and allowed by configuration.

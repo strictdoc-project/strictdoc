@@ -143,9 +143,8 @@ class RSTWriter:
                         )
                     output += f":ref:`{node_display_title} <{part.link}>`"
                 else:
-                    # Relaxed mode (allow_missing_relation_requirements): the
-                    # inline link target does not exist. Render the target as
-                    # plain text to avoid producing a broken :ref: reference.
+                    # In relaxed mode, render a missing inline target as plain
+                    # text to avoid a broken :ref: reference.
                     output += part.link
             elif isinstance(part, Anchor):
                 output += f".. _{part.value}:\n"

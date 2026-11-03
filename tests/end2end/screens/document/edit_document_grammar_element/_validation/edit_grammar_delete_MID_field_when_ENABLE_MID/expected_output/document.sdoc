@@ -1,0 +1,48 @@
+[DOCUMENT]
+MID: 2c8a3e1f1e6b4d0a9f6f3b1f7e0c5a11
+TITLE: Document 1
+OPTIONS:
+  ENABLE_MID: True
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: MID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+
+[TEXT]
+MID: 5b2d6e0e8a7c4f7a9b3c1d2e4f6a8b01
+STATEMENT: >>>
+Hello world!
+<<<
+
+[REQUIREMENT]
+MID: 7d9f1a3b5c7e4d2f8a0b2c4d6e8f0a12
+TITLE: Requirement title
+STATEMENT: >>>
+Requirement statement.
+<<<

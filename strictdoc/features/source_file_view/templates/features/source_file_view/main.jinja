@@ -11,7 +11,8 @@
       {%- set is_marker = (line.__class__.__name__ == "SourceMarkerTuple") -%}
       {%- set is_markup = (line.__class__.__name__ == "Markup") -%}
 
-      {%- if is_marker and not line.is_end() -%}
+      {#-- a range that covers one line has its begin and end markers on the same line --#}
+      {%- if is_marker and (not line.is_end() or line.ng_range_line_begin == line.ng_range_line_end) -%}
         {%- set current_marker_link = view_object.render_marker_range_link(line) -%}
         {%- set current_range_begin = line.ng_range_line_begin -%}
         {%- set current_range_end = line.ng_range_line_end -%}

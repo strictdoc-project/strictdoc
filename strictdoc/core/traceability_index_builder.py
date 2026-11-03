@@ -229,6 +229,10 @@ class TraceabilityIndexBuilder:
                 )
                 if is_source_file_referenced:
                     source_file.is_referenced = True
+                    traceability_index.file_dependency_manager.add_dependency(
+                        source_file.full_path,
+                        source_file.output_file_full_path,
+                    )
 
                     source_file_reqs: Optional[List[SDocNode]] = (
                         traceability_index.get_source_file_reqs(
@@ -244,10 +248,6 @@ class TraceabilityIndexBuilder:
                         )
                         assert node_document.meta is not None
 
-                        traceability_index.file_dependency_manager.add_dependency(
-                            source_file.full_path,
-                            source_file.output_file_full_path,
-                        )
                         traceability_index.file_dependency_manager.add_dependency(
                             source_file.full_path,
                             node_document.meta.output_document_full_path,

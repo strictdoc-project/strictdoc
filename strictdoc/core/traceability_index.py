@@ -42,7 +42,10 @@ from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.file_dependency_manager import FileDependencyManager
 from strictdoc.core.file_system.source_tree import SourceFile
-from strictdoc.core.file_traceability_index import FileTraceabilityIndex
+from strictdoc.core.file_traceability_index import (
+    FileTraceabilityIndex,
+    MissingSourceRequirementRelation,
+)
 from strictdoc.core.graph.abstract_bucket import ALL_EDGES
 from strictdoc.core.graph_database import GraphDatabase
 from strictdoc.core.project_config import ProjectConfig
@@ -565,6 +568,13 @@ class TraceabilityIndex:
 
     def has_missing_relations(self) -> bool:
         return len(self.get_all_missing_relations()) > 0
+
+    def get_missing_source_requirement_relations(
+        self, source_file_rel_path: Optional[str] = None
+    ) -> List[MissingSourceRequirementRelation]:
+        return self._file_traceability_index.get_missing_requirement_relations(
+            source_file_rel_path
+        )
 
     def get_unresolved_inline_links(self, node: SDocNode) -> List[InlineLink]:
         assert isinstance(node, SDocNode)

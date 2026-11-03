@@ -3295,6 +3295,22 @@ the programming language. For example, the ``scope=class`` option is available
 for Python files but not for C files, as C does not support classes. The marker
 supports both () and {} for arguments.
 
+StrictDoc reports an error if a marker references a requirement UID that does
+not exist. To export a project with unresolved references, enable relaxed mode:
+
+.. code:: bash
+
+    strictdoc export . --allow-missing-relation-requirements
+
+Set ``allow_missing_relation_requirements=True`` in the Python project
+configuration to enable this behavior for exports and the server.
+
+In relaxed mode, StrictDoc reports each missing UID with its source path and
+location. The source view displays missing UIDs as warnings, and the project
+warning total includes these references. Missing references contribute no line
+or function coverage. Markers with both valid and missing UIDs retain their
+valid links and coverage.
+
 .. note::
 
     Language-specific scopes such as ``class`` and ``function`` are available for supported source file types. See [LINK: SECTION-UG-Language-aware-parsing-of-source-code].

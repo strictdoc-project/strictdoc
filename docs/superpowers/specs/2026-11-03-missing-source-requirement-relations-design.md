@@ -1,6 +1,6 @@
 # Missing requirement references in source files
 
-Status: proposed, awaiting approval.
+Status: approved on 2026-11-03.
 
 ## Goal
 

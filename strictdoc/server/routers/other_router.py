@@ -258,8 +258,14 @@ def create_other_router(
             project_config_copy_rhs: ProjectConfig = deepcopy(project_config)
             assert project_config_copy_rhs.input_paths is not None
 
+            # The input path can be in a subfolder of the Git repository.
+            # Resolve it relative to the repository root because the LHS and
+            # RHS copies are checked out from the repository root.
+            path_to_git_toplevel = GitClient(".").get_path_to_toplevel()
+
             export_input_rel_path = os.path.relpath(
-                project_config_copy_lhs.input_paths[0], os.getcwd()
+                os.path.realpath(project_config_copy_lhs.input_paths[0]),
+                path_to_git_toplevel,
             )
             export_input_abs_path = os.path.join(
                 git_client_lhs.path_to_git_root, export_input_rel_path
@@ -267,7 +273,8 @@ def create_other_router(
             project_config_copy_lhs.input_paths = [export_input_abs_path]
 
             export_input_rel_path = os.path.relpath(
-                project_config_copy_rhs.input_paths[0], os.getcwd()
+                os.path.realpath(project_config_copy_rhs.input_paths[0]),
+                path_to_git_toplevel,
             )
             export_input_abs_path = os.path.join(
                 git_client_rhs.path_to_git_root, export_input_rel_path

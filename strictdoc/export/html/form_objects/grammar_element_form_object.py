@@ -127,6 +127,7 @@ class GrammarElementFormObject(ErrorObject):
         relations: List[GrammarFormRelation],
         project_config: ProjectConfig,
         jinja_environment: JinjaEnvironment,
+        document_enable_mid: bool = False,
     ):
         assert isinstance(document_mid, str), document_mid
         super().__init__()
@@ -140,6 +141,7 @@ class GrammarElementFormObject(ErrorObject):
         self.relations: List[GrammarFormRelation] = relations
         self.project_config: ProjectConfig = project_config
         self.jinja_environment: JinjaEnvironment = jinja_environment
+        self.document_enable_mid: bool = document_enable_mid
 
     @staticmethod
     def create_from_request(
@@ -234,6 +236,7 @@ class GrammarElementFormObject(ErrorObject):
             relations=form_object_relations,
             project_config=project_config,
             jinja_environment=jinja_environment,
+            document_enable_mid=document.config.enable_mid is True,
         )
         return form_object
 
@@ -308,6 +311,18 @@ class GrammarElementFormObject(ErrorObject):
                 )
             else:
                 fields_so_far.add(field.field_name)
+
+        if (
+            self.document_enable_mid
+            and RequirementFieldName.MID not in fields_so_far
+        ):
+            self.add_error(
+                "Fields_Row",
+                (
+                    "The MID field must not be removed "
+                    "when the document has ENABLE_MID set to True."
+                ),
+            )
 
         if len(self.relations) == 0 and self.element_name not in (
             "TEXT",

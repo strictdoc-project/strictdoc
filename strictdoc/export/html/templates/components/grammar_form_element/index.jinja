@@ -52,6 +52,15 @@
 
       <sdoc-form-grid>
         <div style="display: contents;" id="document__editable_grammar_fields">
+          {%- set errors_ = form_object.get_errors("Fields_Row") %}
+          {%- if errors_|length > 0 -%}
+            {%- for error_ in errors_ -%}
+            <sdoc-form-error>
+              {{ error_ }}
+            </sdoc-form-error>
+            {%- endfor -%}
+          {%- endif -%}
+
           {%- for field_ in form_object.fields -%}
             {%- if field_.reserved -%}
               {{ form_object.render_row_with_reserved_field(field_) }}

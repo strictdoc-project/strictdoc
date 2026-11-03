@@ -1,0 +1,40 @@
+RUN: %strictdoc export %S --output-dir %T --allow-missing-relation-requirements | filecheck %s --dump-input=fail
+CHECK-DAG: warning: Source file source.txt:1 references a requirement that does not exist: REQ-RANGE.
+CHECK-DAG: warning: Source file source.txt:4 references a requirement that does not exist: REQ-LINE.
+CHECK-DAG: warning: Source file source.txt:6 references a requirement that does not exist: REQ-FILE.
+CHECK-DAG: warning: Source file file.py:{{[0-9]+}} references a requirement that does not exist: REQ-CLASS.
+CHECK-DAG: warning: Source file file.py:{{[0-9]+}} references a requirement that does not exist: REQ-FUNCTION.
+CHECK-DAG: warning: Source file file.py:1 references a requirement that does not exist: REQ-PYFILE.
+CHECK-DAG: warning: Source file api.h:{{[0-9]+}} references a requirement that does not exist: REQ-DECLARATION.
+CHECK-DAG: warning: Source file missing_only.txt:1 references a requirement that does not exist: REQ-ONLY.
+CHECK: Export completed.
+
+RUN: %cat %T/html/index.html | filecheck %s --check-prefix PROJECT --dump-input=fail
+PROJECT: 8 relation(s) or link(s) could not be resolved in this project.
+
+RUN: %cat %T/html/_source_files/source.txt.html | filecheck %s --check-prefix SOURCE --dump-input=fail
+SOURCE-DAG: Missing requirement: REQ-RANGE
+SOURCE-DAG: Missing requirement: REQ-LINE
+SOURCE-DAG: Missing requirement: REQ-FILE
+SOURCE-DAG: Valid requirement
+SOURCE: </html>
+
+RUN: %cat %T/html/_source_files/file.py.html | filecheck %s --check-prefix PYTHON --dump-input=fail
+PYTHON-DAG: Missing requirement: REQ-CLASS
+PYTHON-DAG: Missing requirement: REQ-FUNCTION
+PYTHON-DAG: Missing requirement: REQ-PYFILE
+PYTHON-DAG: Valid requirement
+PYTHON: </html>
+
+RUN: %cat %T/html/_source_files/api.cpp.html | filecheck %s --check-prefix CPP --dump-input=fail
+CPP-DAG: Missing requirement: REQ-DECLARATION
+CPP-DAG: Valid requirement
+CPP: </html>
+
+RUN: %cat %T/html/_source_files/missing_only.txt.html | filecheck %s --check-prefix ONLY --dump-input=fail
+ONLY: <div class="sdoc-table_key_value-value">0 / 3 (0.0%)</div>
+ONLY: Missing requirement: REQ-ONLY
+
+RUN: %strictdoc export %S --output-dir %T/configured --config %S/relaxed.py | filecheck %s --check-prefix CONFIG --dump-input=fail
+CONFIG: warning: Source file
+CONFIG: Export completed.

@@ -1,0 +1,7 @@
+[DOCUMENT]
+TITLE: Source relations
+
+[REQUIREMENT]
+UID: REQ-001
+TITLE: Valid requirement
+STATEMENT: A valid requirement remains linked to its source markers.

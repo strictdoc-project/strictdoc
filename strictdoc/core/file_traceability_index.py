@@ -5,6 +5,7 @@
 import re
 from collections import Counter
 from copy import copy
+from dataclasses import dataclass
 from typing import (
     TYPE_CHECKING,
     Dict,
@@ -64,6 +65,13 @@ if TYPE_CHECKING:
     )
 
 
+@dataclass(frozen=True)
+class MissingSourceRequirementRelation:
+    source_file: SourceFile
+    marker: RelationMarkerType
+    requirement_uid: str
+
+
 class FileTraceabilityIndex:
     def __init__(self) -> None:
         # "file.py" -> List[SDocNode]
@@ -105,6 +113,20 @@ class FileTraceabilityIndex:
             OrderedSet()
         )
         self.trace_infos: List[SourceFileTraceabilityInfo] = []
+        self._missing_requirement_relations: List[
+            MissingSourceRequirementRelation
+        ] = []
+
+    def get_missing_requirement_relations(
+        self, source_file_rel_path: Optional[str] = None
+    ) -> List[MissingSourceRequirementRelation]:
+        return [
+            relation_
+            for relation_ in self._missing_requirement_relations
+            if source_file_rel_path is None
+            or relation_.source_file.in_doctree_source_file_rel_path_posix
+            == source_file_rel_path
+        ]
 
     def has_source_file_reqs(self, source_file_rel_path: str) -> bool:
         path_reqs = self.map_paths_to_reqs.get(source_file_rel_path)
@@ -572,6 +594,8 @@ class FileTraceabilityIndex:
                             node = traceability_index.get_node_by_uid_weak2(
                                 req_
                             )
+                            if node is None:
+                                continue
                             if len(testcase_nodes) > 0:
                                 for testcase_node_ in testcase_nodes:
                                     #
@@ -786,6 +810,7 @@ class FileTraceabilityIndex:
                         reqs_uids,
                     )
 
+            source_path: str = source_file.in_doctree_source_file_rel_path_posix
             marker_: Union[
                 LanguageItemMarker, LineMarker, RangeMarker, ForwardRangeMarker
             ]
@@ -798,6 +823,25 @@ class FileTraceabilityIndex:
                         requirement_uid_
                     )
                     if node is None:
+                        if project_config.allow_missing_relation_requirements:
+                            if marker_.is_begin():
+                                self._missing_requirement_relations.append(
+                                    MissingSourceRequirementRelation(
+                                        source_file=source_file,
+                                        marker=marker_,
+                                        requirement_uid=requirement_uid_,
+                                    )
+                                )
+                                source_line: Optional[int] = (
+                                    marker_.ng_source_line_begin
+                                )
+                                print(  # noqa: T201
+                                    f"warning: Source file {source_path}:"
+                                    f"{source_line} references a requirement "
+                                    "that does not exist: "
+                                    f"{requirement_uid_}."
+                                )
+                            continue
                         raise StrictDocException(
                             f"Source file {source_file.in_doctree_source_file_rel_path_posix} references "
                             f"a requirement that does not exist: {requirement_uid_}."
@@ -870,6 +914,11 @@ class FileTraceabilityIndex:
                             )
 
                             for req_uid_ in marker_.reqs:
+                                node = traceability_index.get_node_by_uid_weak2(
+                                    req_uid_
+                                )
+                                if node is None:
+                                    continue
                                 definition_function_trace_info.ng_map_reqs_to_markers.setdefault(
                                     req_uid_, []
                                 ).append(language_item_marker)
@@ -881,9 +930,6 @@ class FileTraceabilityIndex:
                                     req_uid_, OrderedSet()
                                 ).add(path_to_info)
 
-                                node = traceability_index.get_node_by_uid(
-                                    req_uid_
-                                )
                                 self.map_paths_to_reqs.setdefault(
                                     path_to_info, OrderedSet()
                                 ).add(node)
@@ -1137,6 +1183,11 @@ class FileTraceabilityIndex:
                     continue
                 if not marker_.is_begin():
                     continue
+                if not any(
+                    traceability_index.get_node_by_uid_weak2(uid_) is not None
+                    for uid_ in marker_.reqs
+                ):
+                    continue
                 begin, end = (
                     assert_cast(marker_.ng_range_line_begin, int),
                     assert_cast(marker_.ng_range_line_end, int),
@@ -1177,7 +1228,9 @@ class FileTraceabilityIndex:
                 markers_.sort(key=marker_comparator_range)
 
                 # Validate here, SDocNode.relations doesn't track marker roles.
-                node = traceability_index.get_node_by_uid(req_uid_)
+                node = traceability_index.get_node_by_uid_weak2(req_uid_)
+                if node is None:
+                    continue
                 document = node.get_document()
                 assert document is not None
                 assert document.grammar is not None
@@ -1486,6 +1539,8 @@ class FileTraceabilityIndex:
                 continue
             for req_ in marker_.reqs:
                 node = traceability_index.get_node_by_uid_weak2(req_)
+                if node is None:
+                    continue
                 if not traceability_index.graph_database.has_link(
                     link_type=GraphLinkType.NODE_TO_PARENT_NODES,
                     lhs_node=sdoc_node,

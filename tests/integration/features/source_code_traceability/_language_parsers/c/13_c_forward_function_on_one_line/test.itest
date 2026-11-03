@@ -1,0 +1,20 @@
+# This test ensures that a range that covers only one line of source code
+# is rendered as a range in the source file view, the same way as a
+# multi-line range. It fixes this issue:
+# Bug: Source navigation fails for forward relations that cover only 1 line
+# of source code #2668
+# https://github.com/strictdoc-project/strictdoc/issues/2668
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Export completed.
+
+RUN: %cat %T/html/_source_files/file.c.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
+CHECK-SOURCE-FILE:      class="source__range collapsed"
+CHECK-SOURCE-FILE-NEXT: data-begin="1"
+CHECK-SOURCE-FILE-NEXT: data-end="2"
+CHECK-SOURCE-FILE:      class="source__range collapsed"
+CHECK-SOURCE-FILE-NEXT: data-begin="4"
+CHECK-SOURCE-FILE-NEXT: data-end="4"
+CHECK-SOURCE-FILE:      4 - 4 | function fn2()
+CHECK-SOURCE-FILE:      class="source__range-closer"
+CHECK-SOURCE-FILE-NEXT: data-end="4"

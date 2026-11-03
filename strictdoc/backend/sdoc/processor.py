@@ -187,7 +187,10 @@ class SDocParsingProcessor:
         assert self.parse_context.document_config is not None
         if (
             requirement.reserved_title is None
-            or not self.parse_context.document_config.is_requirement_in_toc()
+            or (
+                not self.parse_context.document_config.is_requirement_in_toc()
+                and requirement.node_type != "SECTION"
+            )
         ) and self.parse_context.document_config.auto_levels:
             requirement.ng_resolved_custom_level = "None"
 

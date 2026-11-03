@@ -5229,6 +5229,19 @@ StrictDoc displays warnings in the command output and beside affected fields
 or source markers. The project index shows the total number of unresolved
 relations and inline links.
 
+Open **Unresolved references** from the navigation bar to see all unresolved
+references in one place. The page groups requirement relations, file
+relations, source markers, and inline links.
+
+Each row identifies the missing target and its source. Select the source
+link to open the affected requirement or source range. The page includes
+totals for each group.
+
+The page is available automatically in relaxed mode for HTML exports and
+the server.
+For changes to source files on disk, export again or restart the server to
+refresh the list.
+
 Source markers that reference missing requirement UIDs contribute no line or
 function coverage for those UIDs. Markers that reference both valid and
 missing UIDs retain their valid links and coverage.

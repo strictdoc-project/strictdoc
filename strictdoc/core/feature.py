@@ -33,6 +33,8 @@ class FeatureContext:
 
 
 class Feature(ABC):
+    ALWAYS_EXPORT: bool = False
+
     HANDLE: str
     """
     Reuses the existing ProjectFeature enum value string verbatim (e.g.

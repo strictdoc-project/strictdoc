@@ -652,12 +652,16 @@ class ProjectConfig:
         from strictdoc.features.tree_map.feature import (  # noqa: PLC0415
             TreeMapFeature,
         )
+        from strictdoc.features.unresolved_references import (  # noqa: PLC0415
+            feature as unresolved_references_feature,
+        )
 
         return {
             feature.HANDLE: feature
             for feature in [
                 ProjectStatisticsFeature(),
                 TreeMapFeature(),
+                unresolved_references_feature.UnresolvedReferencesFeature(),
             ]
         }
 
@@ -673,9 +677,21 @@ class ProjectConfig:
         resolved_features: List[Feature] = []
         for feature in self.project_features:
             if isinstance(feature, Feature):
+                if (
+                    feature.HANDLE == "UNRESOLVED_REFERENCES_SCREEN"
+                    and not self.relaxed_mode
+                ):
+                    continue
                 resolved_features.append(feature)
             elif feature in builtin_features_by_handle:
                 resolved_features.append(builtin_features_by_handle[feature])
+        if self.relaxed_mode and not any(
+            feature_.HANDLE == "UNRESOLVED_REFERENCES_SCREEN"
+            for feature_ in resolved_features
+        ):
+            resolved_features.append(
+                builtin_features_by_handle["UNRESOLVED_REFERENCES_SCREEN"]
+            )
         return resolved_features
 
     def get_feature(self, handle: str) -> Optional[Feature]:

@@ -262,8 +262,12 @@ class ChangeGenerator:
         )
 
         assert project_config.input_paths is not None
+        # The input path can be in a subfolder of the Git repository. Resolve
+        # it relative to the repository root because the LHS and RHS copies
+        # are checked out from the repository root.
         export_input_rel_path = os.path.relpath(
-            project_config.input_paths[0], os.getcwd()
+            os.path.realpath(project_config.input_paths[0]),
+            git_client.get_path_to_toplevel(),
         )
         export_input_abs_path_lhs = os.path.join(
             git_client_lhs.path_to_git_root, export_input_rel_path

@@ -32,9 +32,7 @@ class GitClient:
         with measure_performance(f"Copy Git repo: {revision}"):
             path_to_cwd = os.getcwd()
             if revision == "HEAD+":
-                path_to_project_git_dir = os.path.join(path_to_cwd, ".git")
-                assert os.path.isdir(path_to_project_git_dir)
-                return GitClient(path_to_cwd)
+                return GitClient(GitClient(path_to_cwd).get_path_to_toplevel())
 
             path_to_sandbox = os.path.join(
                 project_config.get_path_to_cache_dir(), "git"
@@ -384,6 +382,21 @@ class GitClient:
         if result.returncode != 0:
             return False
         return result.stdout == ""
+
+    def get_path_to_toplevel(self) -> str:
+        """
+        Return the root folder of the Git working tree that contains
+        path_to_git_root. path_to_git_root can be a subfolder of it.
+        """
+        result = subprocess.run(
+            ["git", "rev-parse", "--show-toplevel"],
+            cwd=self.path_to_git_root,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        assert result.returncode == 0, result
+        return result.stdout.strip()
 
     def check_revision(self, revision: str) -> str:
         assert isinstance(revision, str)

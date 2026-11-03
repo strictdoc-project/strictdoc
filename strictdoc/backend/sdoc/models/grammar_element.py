@@ -341,14 +341,19 @@ class GrammarElement:
         self.ng_col_start: Optional[int] = None
 
     @staticmethod
-    def create_default(tag: str) -> "GrammarElement":
-        return GrammarElement(
-            parent=None,
-            tag=tag,
-            property_is_composite="",
-            property_prefix="",
-            property_view_style="",
-            fields=[
+    def create_default(tag: str, enable_mid: bool = False) -> "GrammarElement":
+        fields: List[GrammarElementFieldType] = []
+        if enable_mid:
+            fields.append(
+                GrammarElementFieldString(
+                    parent=None,
+                    title=RequirementFieldName.MID,
+                    human_title=None,
+                    required="False",
+                )
+            )
+        fields.extend(
+            [
                 GrammarElementFieldString(
                     parent=None,
                     title="UID",
@@ -367,7 +372,15 @@ class GrammarElement:
                     human_title=None,
                     required="False",
                 ),
-            ],
+            ]
+        )
+        return GrammarElement(
+            parent=None,
+            tag=tag,
+            property_is_composite="",
+            property_prefix="",
+            property_view_style="",
+            fields=fields,
             relations=[],
         )
 

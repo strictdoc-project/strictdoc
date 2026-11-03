@@ -1,4 +1,4 @@
-RUN: %strictdoc export %S --output-dir %T --allow-missing-relation-requirements | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S --output-dir %T --relaxed-mode | filecheck %s --dump-input=fail
 CHECK-DAG: warning: Source file source.txt:1 references a requirement that does not exist: REQ-RANGE.
 CHECK-DAG: warning: Source file source.txt:4 references a requirement that does not exist: REQ-LINE.
 CHECK-DAG: warning: Source file source.txt:6 references a requirement that does not exist: REQ-FILE.

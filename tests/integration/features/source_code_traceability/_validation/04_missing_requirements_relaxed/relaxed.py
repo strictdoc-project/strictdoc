@@ -7,5 +7,5 @@ def create_config() -> ProjectConfig:
         include_source_paths=[
             "source.txt", "missing_only.txt", "file.py", "api.h", "api.cpp"
         ],
-        allow_missing_relation_requirements=True,
+        relaxed_mode=True,
     )

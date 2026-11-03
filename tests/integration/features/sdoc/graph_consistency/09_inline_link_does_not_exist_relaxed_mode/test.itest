@@ -13,7 +13,7 @@ CHECK: warning: node 'REQ-002' in document 'Doc with missing inline links' has a
 CHECK: warning: node 'REQ-003' in document 'Doc with missing inline links' has an unresolved inline link to 'MISSING-ANCHOR'.
 CHECK: Export completed.
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHECK-HTML
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.sdoc.html | filecheck %s --check-prefix CHECK-HTML
 
 # The missing node link is rendered as a dead link and highlighted as an issue.
 CHECK-HTML: MISSING-UID</a>

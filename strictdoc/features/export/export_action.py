@@ -196,7 +196,10 @@ class ExportAction:
             for feature_ in self.project_config.get_features():
                 if not feature_.supports_export():
                     continue
-                if self.traceability_index.is_up_to_date():
+                if (
+                    not feature_.ALWAYS_EXPORT
+                    and self.traceability_index.is_up_to_date()
+                ):
                     print(  # noqa: T201
                         "All documents are up-to-date. "
                         f"Skipping the generation of {feature_.HANDLE}."

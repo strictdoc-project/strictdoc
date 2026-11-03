@@ -65,6 +65,11 @@ code coverage.
 
 2\) The ``export`` and ``server`` commands accept ``--relaxed-mode`` to report
 unresolved relations and inline links as warnings.
+
+3\) Relaxed mode includes an **Unresolved references** page in HTML exports
+and the server. The page lists missing requirement relations, file
+relations, source markers, and inline links. Each entry links to the affected
+requirement or source range.
 <<<
 
 [[/SECTION]]

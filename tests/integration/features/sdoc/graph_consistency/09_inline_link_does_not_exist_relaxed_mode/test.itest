@@ -11,7 +11,7 @@ CHECK: warning: unresolved inline links were detected and allowed by configurati
 CHECK: warning: unresolved inline links count: 2
 CHECK: warning: node 'REQ-002' in document 'Doc with missing inline links' has an unresolved inline link to 'MISSING-UID'.
 CHECK: warning: node 'REQ-003' in document 'Doc with missing inline links' has an unresolved inline link to 'MISSING-ANCHOR'.
-CHECK: Published: Doc with missing inline links
+CHECK: Export completed.
 
 RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHECK-HTML
 

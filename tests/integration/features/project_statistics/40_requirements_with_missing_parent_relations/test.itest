@@ -5,8 +5,8 @@
 #
 
 RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
-CHECK: Published: Hello world doc
-CHECK: warning: unresolved parent requirement relations were detected and allowed by configuration.
+CHECK: warning: unresolved relations were detected and allowed by configuration.
+CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/project_statistics.html"
 

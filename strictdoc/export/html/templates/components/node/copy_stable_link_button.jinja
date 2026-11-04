@@ -8,7 +8,7 @@
 
   Expected targets inside this element (used by the feedback() function in copy_to_clipboard.js):
     data-copy-clipboard-target="copyIcon"
-    data-copy-clipboard-target="doneIcon"
+    data-copy-clipboard-target="doneIcon"     — added by the script on first use
 
   Requires: path
 #}
@@ -19,11 +19,8 @@
     class="copy_stable_link-button"
     title="Click to copy a stable node link to the clipboard"
   >
-    <span style="display: contents;" data-copy-clipboard-target="copyIcon">
+    <span data-copy-clipboard-target="copyIcon">
       {% include "icons/ico16_link.svg" %}
-    </span>
-    <span style="display: none;" data-copy-clipboard-target="doneIcon">
-      {% include "icons/ico16_done.svg" %}
     </span>
   </div>
 {%- endif -%}

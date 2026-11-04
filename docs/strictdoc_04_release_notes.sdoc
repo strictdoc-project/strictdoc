@@ -50,6 +50,23 @@ releases:
 <<<
 
 [[SECTION]]
+MID: c6f62f0ae897412fb3cb62167e8547d7
+TITLE: Unreleased
+
+[TEXT]
+MID: 09001cc56db1410e935c4771535e1034
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) Fixed: the ReqIF export with ``--reqif-multiline-is-xhtml`` now escapes
+markup characters in multiline fields. Before, a ``<`` or ``&`` in a
+multiline field made the ReqIF file not well-formed XML. As a result,
+``reqif validate`` and the ReqIF import of StrictDoc rejected the file.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: b8b2939ac85c4300b5f8e96675f3d196
 TITLE: 0.30.4 (2026-10-22)
 

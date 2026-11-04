@@ -2148,3 +2148,14 @@ sdoc-node-content .field_issue-ribbon::before {
   outline: 2px solid var(--color-action);
   outline-offset: 2px;
 }
+
+/* Copy-to-clipboard icons (copy_to_clipboard.js toggles them). */
+[data-copy-clipboard-target="copyIcon"] {
+  display: contents;
+}
+[data-copy-clipboard-target="doneIcon"] {
+  display: none;
+}
+.anchor_base_icon {
+  line-height: 0.1;
+}

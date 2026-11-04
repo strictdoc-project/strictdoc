@@ -14,7 +14,7 @@
     data-copy-clipboard-target="button"  — marks the copy button
     data-copy-clipboard-target="cover"   — orange fade animation
     data-copy-clipboard-target="copyIcon"
-    data-copy-clipboard-target="doneIcon"
+    data-copy-clipboard-target="doneIcon" — added by the script on first use
 
   ! Enabling this option for PDF is highly not recommended.
 
@@ -31,11 +31,8 @@
     <div class="copy_to_clipboard">
       <div class="copy_to_clipboard-cover" data-copy-clipboard-target="cover">
         <div title="Click to copy" class="copy_to_clipboard-button action_button" data-copy-clipboard-target="button">
-          <span style="display: contents;" data-copy-clipboard-target="copyIcon">
+          <span data-copy-clipboard-target="copyIcon">
             {% include "icons/ico16_copy.svg" %}
-          </span>
-          <span style="display: none;" data-copy-clipboard-target="doneIcon">
-            {% include "icons/ico16_done.svg" %}
           </span>
         </div>
       </div>

@@ -50,6 +50,27 @@ releases:
 <<<
 
 [[SECTION]]
+MID: 17377246cc104f679cc6867f00a4fc2b
+TITLE: Unreleased
+
+[TEXT]
+MID: 8a0c61da37f047428cb1bec3378f39d7
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) The static HTML export is smaller. Each copy button no longer carries a
+hidden "done" icon. The icon is added when the button is clicked. For the
+ECSS documents from #3238, the export goes from 61.65 MB to 54.93 MB.
+
+2\) The static HTML export stores the content chunks of large documents
+gzip-compressed and base64-encoded. The browser unpacks them with
+``DecompressionStream``, also when the page opens from ``file://``. For the
+ECSS documents from #3238, the chunks go from 14.84 MB to 0.34 MB.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: b8b2939ac85c4300b5f8e96675f3d196
 TITLE: 0.30.4 (2026-10-22)
 

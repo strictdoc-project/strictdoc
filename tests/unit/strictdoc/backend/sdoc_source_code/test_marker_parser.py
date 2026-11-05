@@ -8,6 +8,7 @@ from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc_source_code.marker_parser import MarkerParser
 from strictdoc.backend.sdoc_source_code.models.language_item_marker import (
     LanguageItemMarker,
+    RangeMarkerType,
 )
 from strictdoc.backend.sdoc_source_code.models.line_marker import LineMarker
 
@@ -420,3 +421,24 @@ a statement
 And this is the same statement's another paragraph.\
 """
     )
+
+
+def test_43_component_scope():
+    """
+    @relation(SDOC-LLR-220, scope=function)
+    """
+
+    source_node = MarkerParser.parse(
+        input_string="@relation(REQ-1, scope=component)\n",
+        line_start=3,
+        line_end=4,
+        comment_line_start=3,
+        comment_byte_range=None,
+        entity_name="Rig.Check.req1Check",
+    )
+    marker = source_node.markers[0]
+    assert isinstance(marker, LanguageItemMarker)
+    assert marker.scope is RangeMarkerType.COMPONENT
+    assert marker.ng_range_line_begin == 3
+    assert marker.ng_range_line_end == 4
+    assert marker.get_description() == "component Rig.Check.req1Check"

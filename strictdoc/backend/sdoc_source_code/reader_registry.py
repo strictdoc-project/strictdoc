@@ -6,6 +6,9 @@ from strictdoc.backend.sdoc_source_code.reader import (
 from strictdoc.backend.sdoc_source_code.reader_c import (
     SourceFileTraceabilityReader_C,
 )
+from strictdoc.backend.sdoc_source_code.reader_modelica import (
+    SourceFileTraceabilityReader_Modelica,
+)
 from strictdoc.backend.sdoc_source_code.reader_python import (
     SourceFileTraceabilityReader_Python,
 )
@@ -30,6 +33,7 @@ class SourceCodeReaderRegistry:
         SourceFileTraceabilityReader_C,
         SourceFileTraceabilityReader_Robot,
         SourceFileTraceabilityReader_Rust,
+        SourceFileTraceabilityReader_Modelica,
     ]:
         if path_to_file.endswith(".py"):
             return SourceFileTraceabilityReader_Python()
@@ -50,4 +54,6 @@ class SourceCodeReaderRegistry:
             return SourceFileTraceabilityReader_Rust(
                 custom_tags=source_node_tags
             )
+        if path_to_file.endswith(".mo"):
+            return SourceFileTraceabilityReader_Modelica()
         return SourceFileTraceabilityReader()

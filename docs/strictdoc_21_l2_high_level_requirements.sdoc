@@ -1553,6 +1553,28 @@ language's specifics.
 <<<
 
 [REQUIREMENT]
+MID: 15b2e585a80c43639c696130988f6343
+UID: SDOC-SRS-208
+STATUS: Active
+TITLE: Language-aware parsing of Modelica code
+STATEMENT: >>>
+StrictDoc shall support parsing the Modelica source files which includes:
+
+- Recognizing Modelica classes, including nested classes and short class
+  definitions.
+- Recognizing component declarations.
+<<<
+RATIONALE: >>>
+In a Modelica model of a physical system, a class or a component implements
+or checks a requirement. Line ranges are a fragile link in Modelica code
+because Modelica tools rewrite a file when a user edits the model in a
+diagram.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-72
+
+[REQUIREMENT]
 MID: 9183080f1358485f9bacdcda0635109
 UID: SDOC-SRS-148
 STATUS: Active

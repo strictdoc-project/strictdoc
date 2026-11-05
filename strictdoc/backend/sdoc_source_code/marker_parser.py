@@ -203,7 +203,7 @@ class MarkerParser:
             ].column
             requirements.append(requirement)
 
-        if relation_scope in ("file", "class", "function"):
+        if relation_scope in ("file", "class", "component", "function"):
             language_item_marker = LanguageItemMarker(
                 None, requirements, scope=relation_scope, role=relation_role
             )
@@ -223,6 +223,8 @@ class MarkerParser:
                 )
             elif relation_scope == "class":
                 language_item_marker.set_description(f"class {entity_name}")
+            elif relation_scope == "component":
+                language_item_marker.set_description(f"component {entity_name}")
             markers.append(language_item_marker)
         elif relation_scope in ("range_start", "range_end"):
             range_marker = RangeMarker(

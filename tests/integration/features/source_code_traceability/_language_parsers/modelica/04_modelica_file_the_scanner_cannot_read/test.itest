@@ -1,0 +1,9 @@
+# @relation(SDOC-LLR-223, scope=file)
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: warning: Modelica source reader: {{.*}}Check.mo:7: the end of the file inside an equation or algorithm section. Reading the file, line and range markers of the file without classes and components.
+CHECK: Export completed.
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: href="../_source_files/Check.mo.html#REQ-1#4#6"
+CHECK-HTML: range

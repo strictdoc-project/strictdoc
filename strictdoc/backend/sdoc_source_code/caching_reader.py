@@ -14,6 +14,9 @@ from strictdoc.backend.sdoc_source_code.reader import (
 from strictdoc.backend.sdoc_source_code.reader_c import (
     SourceFileTraceabilityReader_C,
 )
+from strictdoc.backend.sdoc_source_code.reader_modelica import (
+    SourceFileTraceabilityReader_Modelica,
+)
 from strictdoc.backend.sdoc_source_code.reader_python import (
     SourceFileTraceabilityReader_Python,
 )
@@ -77,6 +80,7 @@ class SourceFileTraceabilityCachingReader:
         SourceFileTraceabilityReader_C,
         SourceFileTraceabilityReader_Robot,
         SourceFileTraceabilityReader_Rust,
+        SourceFileTraceabilityReader_Modelica,
     ]:
         return SourceCodeReaderRegistry.get_reader(
             path_to_file, project_config, source_node_tags

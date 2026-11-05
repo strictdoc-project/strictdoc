@@ -36,7 +36,7 @@ relation_marker: _RELATION_MARKER_START _WS? relation_node_uid (_SEP _WS relatio
 
 _RELATION_MARKER_START: /##RELATION_MARKER_START/
 relation_node_uid: /##REGEX_REQ/
-relation_scope: /file|class|function|line|range_start|range_end/
+relation_scope: /file|class|component|function|line|range_start|range_end/
 relation_role: ALPHANUMERIC_WORD
 
 ##GRAMMAR_EXTENSION

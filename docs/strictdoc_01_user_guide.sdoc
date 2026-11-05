@@ -3260,8 +3260,8 @@ functions.
 
 Language-aware parsing recognizes selected language syntax, primarily enabling
 traceability of functions (in Python, C/C++, Rust, and others), classes (in
-Python, C++, and others), and tests (Python, C++, Robot Framework) to
-requirements.
+Python, C++, Modelica, and others), Modelica components, and tests (Python,
+C++, Robot Framework) to requirements.
 
 Language-aware parsing is enabled automatically for supported source file types
 when requirement-to-source traceability is enabled:
@@ -3297,7 +3297,7 @@ supports both () and {} for arguments.
 
 .. note::
 
-    Language-specific scopes such as ``class`` and ``function`` are available for supported source file types. See [LINK: SECTION-UG-Language-aware-parsing-of-source-code].
+    Language-specific scopes such as ``class``, ``function`` and ``component`` are available for supported source file types. See [LINK: SECTION-UG-Language-aware-parsing-of-source-code].
 
 It is also possible to use @relation markers and be compatible with Doxygen. See
 [LINK: SECTION-UG-Doxygen].
@@ -3325,7 +3325,7 @@ The marker must be added to the top comment of a file.
         @relation(REQ-1, scope=class)
         """
 
-**3\) Linking language items to a requirement (Python, C, C++, Rust)**
+**3\) Linking language items to a requirement (Python, C, C++, Rust, Modelica)**
 
 For Python, ``@relation`` markers can be placed inside `doc strings`_ to link
 functions and classes.
@@ -3406,6 +3406,26 @@ elements like modules, functions, traits, enums or structs.
             }
         }
     }
+
+For Modelica, a ``@relation`` marker in the description string of a class or
+component links the class or component. The marker can omit the scope. A
+given scope must be ``class`` for a class and ``component`` for a component.
+Modelica tools keep description strings when they rewrite a file.
+
+.. code:: modelica
+
+    within Rig;
+    model Check "Checks of TC-1 @relation(TC-1, scope=class)"
+      Real req1Check "Rise check @relation(REQ-1, scope=component)";
+      Real req2Check "Fall check @relation(REQ-2)";
+    equation
+      ...
+    end Check;
+
+In Modelica comments, StrictDoc reads file, line and range markers. StrictDoc
+skips a class or component marker in a comment and prints a warning. If
+StrictDoc cannot scan a Modelica file, it prints a warning and reads the file,
+line and range markers of the file without classes and components.
 
 **4\) Linking a range to a requirement**
 
@@ -3488,16 +3508,22 @@ type ``File``.
     - TYPE: File
       VALUE: file.rs
       FUNCTION: <file::FooTuple as file::FooTrait>::bar
+    - TYPE: File
+      VALUE: Rig/Check.mo
+      FUNCTION: Rig.Check.req1Check
 
 .. note::
 
     Rules for building the full qualified path of an identifier depend on the language of the source file.
     For linking to Python functions in classes, a class name has to be added in a format: ``<class name>.<function name>``.
     For linking to any Rust identifier, `canonical paths`_ for a single file are used.
+    A link to a Modelica class or component uses the fully qualified
+    Modelica name, which starts with the package of the ``within`` clause.
+    ``FUNCTION`` and ``CLASS`` both link to classes and components.
 
 .. _canonical paths: https://doc.rust-lang.org/reference/paths.html#canonical-paths>
 
-**4\) Linking a requirement to a class in a source file (Python only)**
+**4\) Linking a requirement to a class in a source file (Python, Modelica)**
 
 .. code:: strictdoc
 

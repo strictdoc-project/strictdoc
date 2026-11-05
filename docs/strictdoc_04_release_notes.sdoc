@@ -105,6 +105,13 @@ subprogram declarations and bodies, so the @relation marker can be used on
 subprograms. A subprogram body is linked to the requirements of its
 declaration, as for C function declarations and definitions. Thanks to
 @briot for the tree-sitter-ada grammar and to @haxtibal.
+
+11\) StrictDoc now parses Modelica source files (``.mo``). Each class and each
+component declaration is a language item with its fully qualified Modelica
+name. A ``@relation`` marker in the description string of a class or
+component links that class or component. The new ``component`` scope marks a
+component. ``CLASS`` and ``FUNCTION`` forward relations link to classes and
+components. The parser is written in Python and adds no dependency.
 <<<
 
 [[/SECTION]]

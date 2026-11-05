@@ -1,0 +1,29 @@
+[DOCUMENT]
+TITLE: Modelica forward relations
+
+[REQUIREMENT]
+UID: TC-1
+TITLE: Test case 1
+STATEMENT: The check model checks the requirements.
+RELATIONS:
+- TYPE: File
+  VALUE: Rig.mo
+  CLASS: Rig.Check
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Requirement 1
+STATEMENT: The output rises.
+RELATIONS:
+- TYPE: File
+  VALUE: Rig.mo
+  FUNCTION: Rig.Check.req1Check
+
+[REQUIREMENT]
+UID: REQ-2
+TITLE: Requirement 2
+STATEMENT: The temperature is in Kelvin.
+RELATIONS:
+- TYPE: File
+  VALUE: Rig.mo
+  CLASS: Rig.Temperature

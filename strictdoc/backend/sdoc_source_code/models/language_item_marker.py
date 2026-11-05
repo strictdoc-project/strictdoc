@@ -13,6 +13,7 @@ from strictdoc.helpers.auto_described import auto_described
 class RangeMarkerType(Enum):
     FUNCTION = "function"
     CLASS = "class"
+    COMPONENT = "component"
     FILE = "file"
 
 

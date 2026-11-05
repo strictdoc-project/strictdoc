@@ -1,0 +1,17 @@
+[DOCUMENT]
+TITLE: Modelica comments
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Requirement 1
+STATEMENT: The file implements the requirement.
+
+[REQUIREMENT]
+UID: REQ-2
+TITLE: Requirement 2
+STATEMENT: The range implements the requirement.
+
+[REQUIREMENT]
+UID: REQ-3
+TITLE: Requirement 3
+STATEMENT: The line implements the requirement.

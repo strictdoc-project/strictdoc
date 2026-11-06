@@ -259,7 +259,7 @@
     }
 
     const uploadUrl =
-      '/actions/document/upload_asset' +
+      application_base_url()+'/actions/document/upload_asset' +
       `?document_mid=${encodeURIComponent(documentMid)}` +
       `&requirement_mid=${encodeURIComponent(requirementMid)}`;
 

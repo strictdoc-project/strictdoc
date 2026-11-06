@@ -7,7 +7,7 @@
 #}
 
 <form
-  action="/actions/table/update_node_relations"
+  action="{{ application_base_url }}/actions/table/update_node_relations"
   method="POST"
   data-turbo="false"
   js-table_view_edit-form
@@ -61,7 +61,7 @@
   <sdoc-form-row>
     <a
       class="action_button"
-      href="/actions/document/new_relation?requirement_mid={{ form_object.requirement_mid }}&document_mid={{ form_object.document_mid }}&context_document_mid={{ form_object.context_document_mid }}&element_type={{ form_object.element_type }}&revision={{ form_object.revision }}"
+      href="{{ application_base_url }}/actions/document/new_relation?requirement_mid={{ form_object.requirement_mid }}&document_mid={{ form_object.document_mid }}&context_document_mid={{ form_object.context_document_mid }}&element_type={{ form_object.element_type }}&revision={{ form_object.revision }}"
       data-action-type="add_field"
       js-table_view_edit-add-field
       data-testid="form-action-add-relation"

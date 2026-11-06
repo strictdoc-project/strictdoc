@@ -3,7 +3,7 @@
     <a class="sdoc-tab"
       {% if view_object.tab == "diff" %}active{% endif %}
       {% if view_object.project_config.is_running_on_server %}
-      href="/diff?tab=diff&left_revision={{ view_object.left_revision_urlencoded }}&right_revision={{ view_object.right_revision_urlencoded }}"
+      href="{{ application_base_url }}/diff?tab=diff&left_revision={{ view_object.left_revision_urlencoded }}&right_revision={{ view_object.right_revision_urlencoded }}"
       {% else %}
       href="diff.html"
       {% endif %}
@@ -11,7 +11,7 @@
     <a class="sdoc-tab"
       {% if view_object.tab == "changelog" %}active{% endif %}
       {% if view_object.project_config.is_running_on_server %}
-      href="/diff?tab=changelog&left_revision={{ view_object.left_revision_urlencoded }}&right_revision={{ view_object.right_revision_urlencoded }}"
+      href="{{ application_base_url }}/diff?tab=changelog&left_revision={{ view_object.left_revision_urlencoded }}&right_revision={{ view_object.right_revision_urlencoded }}"
       {% else %}
       href="changelog.html"
       {% endif %}

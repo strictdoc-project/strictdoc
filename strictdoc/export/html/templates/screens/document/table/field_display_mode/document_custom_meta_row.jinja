@@ -39,7 +39,7 @@
     {%- if view_object.is_running_on_server %}
     data-field-type="contenteditable"
     js-table_view_edit-field="contenteditable"
-    data-url="/actions/table/get_document_custom_meta_inline?document_mid={{ doc_mid }}&amp;form_key={{ form_key }}&amp;field_name=name"
+    data-url="{{ application_base_url }}/actions/table/get_document_custom_meta_inline?document_mid={{ doc_mid }}&amp;form_key={{ form_key }}&amp;field_name=name"
     {%- endif %}
   >
     {%- if view_object.is_running_on_server %}<div class="editable-cell-indicator"></div>{%- endif %}
@@ -54,7 +54,7 @@
     {%- if view_object.is_running_on_server %}
     data-field-type="contenteditable"
     js-table_view_edit-field="contenteditable"
-    data-url="/actions/table/get_document_custom_meta_inline?document_mid={{ doc_mid }}&amp;form_key={{ form_key }}&amp;field_name=value"
+    data-url="{{ application_base_url }}/actions/table/get_document_custom_meta_inline?document_mid={{ doc_mid }}&amp;form_key={{ form_key }}&amp;field_name=value"
     {%- endif %}
   >
     {%- if view_object.is_running_on_server %}<div class="editable-cell-indicator"></div>{%- endif %}

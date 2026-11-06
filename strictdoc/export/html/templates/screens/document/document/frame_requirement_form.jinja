@@ -2,11 +2,11 @@
 
 {%- set frame_id="article-"~form_object.requirement_mid %}
 {%- if is_new_requirement -%}
-  {%- set submit_url="/actions/document/create_requirement" %}
-  {%- set cancel_url="/actions/document/cancel_new_requirement?requirement_mid="~form_object.requirement_mid -%}
+  {%- set submit_url=application_base_url ~ "/actions/document/create_requirement" %}
+  {%- set cancel_url=application_base_url ~ "/actions/document/cancel_new_requirement?requirement_mid="~form_object.requirement_mid -%}
 {%- else -%}
-  {%- set submit_url="/actions/document/update_requirement" %}
-  {%- set cancel_url="/actions/document/cancel_edit_requirement?requirement_mid="~form_object.requirement_mid -%}
+  {%- set submit_url=application_base_url ~ "/actions/document/update_requirement" %}
+  {%- set cancel_url=application_base_url ~ "/actions/document/cancel_edit_requirement?requirement_mid="~form_object.requirement_mid -%}
 {%- endif -%}
 
 {% block form_content %}
@@ -97,7 +97,7 @@
   <sdoc-form-row>
     <a
       class="action_button"
-      href="/actions/document/new_relation?requirement_mid={{ form_object.requirement_mid }}&document_mid={{ form_object.document_mid }}&context_document_mid={{ form_object.context_document_mid }}&element_type={{ form_object.element_type }}&revision={{ form_object.revision }}"
+      href="{{ application_base_url }}/actions/document/new_relation?requirement_mid={{ form_object.requirement_mid }}&document_mid={{ form_object.document_mid }}&context_document_mid={{ form_object.context_document_mid }}&element_type={{ form_object.element_type }}&revision={{ form_object.revision }}"
       data-turbo-action="replace"
       data-turbo="true"
       data-action-type="add_field"
@@ -133,7 +133,7 @@
   <sdoc-form-row>
     <a
       class="action_button"
-      href="/actions/document/new_comment?requirement_mid={{ form_object.requirement_mid }}&document_mid={{ form_object.document_mid }}&context_document_mid={{ form_object.context_document_mid }}&element_type={{ form_object.element_type }}&revision={{ form_object.revision }}"
+      href="{{ application_base_url }}/actions/document/new_comment?requirement_mid={{ form_object.requirement_mid }}&document_mid={{ form_object.document_mid }}&context_document_mid={{ form_object.context_document_mid }}&element_type={{ form_object.element_type }}&revision={{ form_object.revision }}"
       data-turbo-action="replace"
       data-turbo="true"
       data-action-type="add_field"

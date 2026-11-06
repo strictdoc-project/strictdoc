@@ -17,28 +17,28 @@
   --------------------------------------------------------
   "singleline"
       JS fetches the inline form from the URL stored in data-url attribute
-      (GET /actions/table/get_node_singleline_inline).
+      (GET {{ application_base_url }}/actions/table/get_node_singleline_inline).
       Server returns a turbo-stream that replaces the cell content with a
       single-line contenteditable form. On blur / outside click: JS POSTs the
-      form to /actions/table/update_node_field, server updates
+      form to {{ application_base_url }}/actions/table/update_node_field, server updates
       <div id="cell-{mid}-{field}"> via turbo-stream.
 
   "multiline"
       JS fetches the inline form from the URL stored in data-url attribute
-      (GET /actions/table/get_node_contenteditable_inline).
+      (GET {{ application_base_url }}/actions/table/get_node_contenteditable_inline).
       Server returns a turbo-stream that replaces the cell content with a
       multi-line contenteditable form. On blur / outside click: JS POSTs the
-      form to /actions/table/update_node_field_multiline, server updates
+      form to {{ application_base_url }}/actions/table/update_node_field_multiline, server updates
       <div id="cell-{mid}-{field}"> via turbo-stream.
 
   "comments"
-      JS fetches /actions/table/get_node_comments_inline?node_mid=...
+      JS fetches {{ application_base_url }}/actions/table/get_node_comments_inline?node_mid=...
       Server returns an inline form with multiple comment fields.
       On blur / outside click: JS POSTs the form, server updates
       <div id="cell-{mid}-COMMENT"> via turbo-stream.
 
   "relations"
-      JS fetches /actions/table/get_node_relations_inline?node_mid=...
+      JS fetches {{ application_base_url }}/actions/table/get_node_relations_inline?node_mid=...
       Server returns an inline form with relation rows (editable) and
       computed/derived relations (read-only).
       On blur / outside click: JS POSTs the form, server updates
@@ -47,7 +47,7 @@
   "autocomplete"
       autocompletable_field.js is already wired to the element in the DOM.
       Edit mode CSS hides .cell-display and shows .cell-edit-ac (contenteditable).
-      On blur: JS POSTs to /actions/table/update_node_field via fetch.
+      On blur: JS POSTs to {{ application_base_url }}/actions/table/update_node_field via fetch.
 
   JS handles "singleline", "multiline", "comments", "relations" identically
   (openInlineCell / saveInlineCell). The distinction is purely server-side:

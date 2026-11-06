@@ -67,6 +67,8 @@ class ExportAction:
                 strictdoc_last_update=self.traceability_index.strictdoc_last_update,
             )
 
+            html_templates.jinja_environment().environment.globals["application_base_url"] = self.project_config.application_base_url
+
             # The bundle document is generated only when the option is provided.
             if self.project_config.generate_bundle_document:
                 bundle_traceability_index, bundle_document = (

@@ -743,7 +743,7 @@
         }
         try {
             const { response, html } = await postTurboStream(
-                '/actions/table/add_node',
+                application_base_url()+'/actions/table/add_node',
                 formData
             );
             if (response.ok) {
@@ -1043,7 +1043,7 @@
 
         try {
             const { response, html } = await postTurboStream(
-                '/actions/table/update_node_field',
+                application_base_url()+'/actions/table/update_node_field',
                 formData
             );
             const saveSession = classifySaveSession(

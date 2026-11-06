@@ -127,14 +127,16 @@ def create_app(*, project_config: ProjectConfig) -> FastAPI:
         create_other_router(
             project_config=project_config,
             lock_manager=lock_manager,
-        )
+        ),
+        prefix=project_config.application_base_url
     )
     app.include_router(
         create_main_router(
             project_config=project_config,
             app=app,
             lock_manager=lock_manager,
-        )
+        ),
+        prefix=project_config.application_base_url
     )
 
     return app

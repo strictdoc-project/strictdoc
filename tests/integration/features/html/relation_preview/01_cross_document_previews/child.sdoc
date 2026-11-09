@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Child document
+
+[REQUIREMENT]
+UID: REQ-CROSS-CHILD
+TITLE: Cross-document child
+STATEMENT: The cross-document child statement.
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-PARENT-1

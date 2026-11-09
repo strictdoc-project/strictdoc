@@ -36,6 +36,11 @@ from strictdoc.backend.sdoc_source_code.models.source_file_info import (
 from strictdoc.core.file_system.source_tree import SourceFile
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
+from strictdoc.export.html.generators.relation_previews import (
+    collect_source_relation_previews,
+    render_relation_previews_js,
+    source_relation_previews_file_path,
+)
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
@@ -48,6 +53,10 @@ from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.file_system import file_open_read_utf8
 from strictdoc.helpers.timing import measure_performance
 
+PygmentedSource = Tuple[
+    List[SourceLineEntry], Markup, SourceFileTraceabilityInfo
+]
+
 
 class SourceFileViewHTMLGenerator:
     @staticmethod
@@ -58,11 +67,16 @@ class SourceFileViewHTMLGenerator:
         traceability_index: TraceabilityIndex,
         html_templates: HTMLTemplates,
     ) -> None:
-        document_content = SourceFileViewHTMLGenerator.export(
+        pygmented_source = SourceFileViewHTMLGenerator.read_pygmented_source(
+            source_file=source_file,
+            traceability_index=traceability_index,
+        )
+        document_content = SourceFileViewHTMLGenerator.render(
             project_config=project_config,
             source_file=source_file,
             traceability_index=traceability_index,
             html_templates=html_templates,
+            pygmented_source=pygmented_source,
         )
         Path(source_file.output_dir_full_path).mkdir(
             parents=True, exist_ok=True
@@ -71,6 +85,18 @@ class SourceFileViewHTMLGenerator:
             source_file.output_file_full_path, "w", encoding="utf-8"
         ) as file:
             file.write(document_content)
+
+        # The server renders the relation previews on request.
+        if not project_config.is_running_on_server:
+            pygmented_source_file_lines, _, trace_info = pygmented_source
+            previews = collect_source_relation_previews(
+                pygmented_source_file_lines, trace_info
+            )
+            if len(previews) > 0:
+                with open(
+                    source_relation_previews_file_path(source_file), "wb"
+                ) as file:
+                    file.write(render_relation_previews_js(previews))
 
     @staticmethod
     def export_to_file_with_performance(
@@ -113,6 +139,23 @@ class SourceFileViewHTMLGenerator:
         traceability_index: TraceabilityIndex,
         html_templates: HTMLTemplates,
     ) -> Markup:
+        return SourceFileViewHTMLGenerator.render(
+            project_config=project_config,
+            source_file=source_file,
+            traceability_index=traceability_index,
+            html_templates=html_templates,
+            pygmented_source=SourceFileViewHTMLGenerator.read_pygmented_source(
+                source_file=source_file,
+                traceability_index=traceability_index,
+            ),
+        )
+
+    @staticmethod
+    def read_pygmented_source(
+        *,
+        source_file: SourceFile,
+        traceability_index: TraceabilityIndex,
+    ) -> PygmentedSource:
         with file_open_read_utf8(source_file.full_path) as opened_file:
             source_file_lines = opened_file.readlines()
 
@@ -132,6 +175,20 @@ class SourceFileViewHTMLGenerator:
             ) = SourceFileViewHTMLGenerator.get_pygmented_source_lines(
                 source_file, source_file_lines, trace_info
             )
+        return pygmented_source_file_lines, pygments_styles, trace_info
+
+    @staticmethod
+    def render(
+        *,
+        project_config: ProjectConfig,
+        source_file: SourceFile,
+        traceability_index: TraceabilityIndex,
+        html_templates: HTMLTemplates,
+        pygmented_source: PygmentedSource,
+    ) -> Markup:
+        pygmented_source_file_lines, pygments_styles, trace_info = (
+            pygmented_source
+        )
         link_renderer = LinkRenderer(
             root_path=source_file.path_depth_prefix,
             static_path=project_config.dir_for_sdoc_assets,

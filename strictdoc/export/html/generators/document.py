@@ -11,6 +11,9 @@ from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
+from strictdoc.export.html.generators.relation_previews import (
+    export_relation_previews,
+)
 from strictdoc.export.html.generators.view_objects.document_screen_view_object import (
     DocumentScreenViewObject,
 )
@@ -56,6 +59,11 @@ class DocumentHTMLGenerator:
             and view_object.is_chunked_rendering()
         ):
             DocumentHTMLGenerator._export_static_chunks(view_object)
+
+        # The server renders the relation previews on request instead, see
+        # main_router.py's get_relation_previews.
+        if not project_config.is_running_on_server:
+            export_relation_previews(view_object)
 
         return content
 

@@ -3,6 +3,7 @@
 {% block head_css %}
   {{ super() }}
   <link rel="stylesheet" href="{{ view_object.render_static_url('requirement-tree.css') }}"/>
+  <link rel="stylesheet" href="{{ view_object.render_static_url('relation_preview.css') }}"/>
 {% endblock head_css %}
 
 {% block head_scripts %}
@@ -14,6 +15,7 @@
   <script src="{{ view_object.render_static_url('collapsible_toc.js') }}"></script>
   <script src="{{ view_object.render_static_url('project_tree_preserve_scroll.js') }}"></script>
   <script src="{{ view_object.render_static_url('toc_highlighting.js') }}"></script>
+  <script src="{{ view_object.render_static_url('relation_preview.js') }}"></script>
 
   {%- if view_object.project_config.is_running_on_server -%}
   <script type="module">

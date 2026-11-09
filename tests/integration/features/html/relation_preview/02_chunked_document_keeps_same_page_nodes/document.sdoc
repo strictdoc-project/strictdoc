@@ -1,0 +1,20 @@
+[DOCUMENT]
+TITLE: Chunked document
+
+[REQUIREMENT]
+UID: REQ-PARENT
+TITLE: Parent requirement
+STATEMENT: The parent statement.
+
+[REQUIREMENT]
+UID: REQ-CHILD
+TITLE: Child requirement
+STATEMENT: The child statement.
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-PARENT
+
+[REQUIREMENT]
+UID: REQ-UNRELATED
+TITLE: Unrelated requirement
+STATEMENT: The unrelated statement.

@@ -3,6 +3,7 @@
 {% block head_css %}
   {{ super() }}
   <link rel="stylesheet" href="{{ view_object.render_static_url('media_zoom.css') }}"/>
+  <link rel="stylesheet" href="{{ view_object.render_static_url('relation_preview.css') }}"/>
   {%- if view_object.is_running_on_server %}
   <link rel="stylesheet" href="{{ view_object.render_static_url('move_node_tree.css') }}"/>
   {%- endif %}
@@ -40,6 +41,7 @@
   {%- endif -%}
 
   <script src="{{ view_object.render_static_url('copy_to_clipboard.js') }}"></script>
+  <script src="{{ view_object.render_static_url('relation_preview.js') }}"></script>
 
   {% include "_shared/static_search_head.jinja" %}
 

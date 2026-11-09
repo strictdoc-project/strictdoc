@@ -1,0 +1,15 @@
+# This test ensures that in a chunked document, the relation previews keep
+# the nodes that are only linked from the same document: the linked node can
+# be in a chunk that the browser has not loaded yet.
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Export completed.
+
+RUN: %check_exists --file "%T/html/02_chunked_document_keeps_same_page_nodes/document-chunk-1.js"
+
+RUN: %cat %T/html/02_chunked_document_keeps_same_page_nodes/document-relation-previews.js | filecheck %s --dump-input=fail --check-prefix CHECK-JS
+CHECK-JS: "REQ-PARENT":
+CHECK-JS-SAME: The parent statement.
+CHECK-JS-SAME: "REQ-CHILD":
+CHECK-JS-SAME: The child statement.
+CHECK-JS-NOT: REQ-UNRELATED

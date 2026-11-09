@@ -1,0 +1,29 @@
+# This test ensures that:
+# - A source file page "_source_files/<path>.html" gets a
+#   "<path>-relation-previews.js" file next to it with the highlighted lines
+#   of each linked range, keyed by the first line of the range.
+# - A range is stored up to its end, at most 15 lines.
+# - Source code is HTML-escaped by Pygments.
+# - The TRACE screen loads relation_preview.js.
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Export completed.
+
+RUN: %cat %T/html/03_source_file_previews/document.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: _static/relation_preview.js
+CHECK-HTML: class="requirement__link-file" href="../_source_files/src/example.py.html#REQ-RANGE#1#2"
+
+RUN: %cat %T/html/03_source_file_previews/document-TRACE.html | filecheck %s --dump-input=fail --check-prefix CHECK-TRACE
+CHECK-TRACE: _static/relation_preview.css
+CHECK-TRACE: _static/relation_preview.js
+
+RUN: %cat %T/html/_source_files/src/example.py-relation-previews.js | filecheck %s --dump-input=fail --check-prefix CHECK-JS
+CHECK-JS: window.StrictDoc.relationPreviews
+CHECK-JS-SAME: {"1":[
+CHECK-JS-SAME: <span class=\"nf\">short_function</span>
+CHECK-JS-SAME: \"&lt;short&gt; &amp; sweet\"</span>"],"5":[
+CHECK-JS-SAME: <span class=\"nf\">long_function</span>
+CHECK-JS-SAME: <span class=\"mi\">12</span>"]};
+
+RUN: %cat %T/html/_source_files/src/example.py-relation-previews.js | filecheck %s --dump-input=fail --check-prefix CHECK-JS-CUT
+CHECK-JS-CUT-NOT: <span class=\"mi\">13</span>

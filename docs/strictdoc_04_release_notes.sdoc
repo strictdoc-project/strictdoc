@@ -58,15 +58,18 @@ MID: 6361a90f704f48f5a020eb221e71d6bc
 STATEMENT: >>>
 This release contains the following enhancements:
 
-1\) On the DOCUMENT screen, hovering over or focusing a Parent or Child
-relation link now shows a card with the UID, title, and statement of the
-linked node. The reader can read a parent requirement without leaving the
-child's page. The card works in the static HTML export, also when the export
-is opened from ``file://``, and on the server. The statements are not copied
-into the pages. For a linked node in another document, the browser loads a
-small ``<document>-relation-previews.js`` file the first time such a link is
-hovered. The static export writes this file next to the document's HTML, and
-the server renders it on request.
+1\) On the DOCUMENT and TRACE screens, hovering over or focusing a relation
+link now shows a card about the link target. For a Parent or Child link, with
+or without a role, the card shows the UID, title, and statement of the linked
+node. For a File link, the card shows the file path and the first lines of the
+linked range or function, highlighted as on the source file page. A range
+longer than 15 lines is cut, and the card says how many lines it shows. The
+card works in the static HTML export, also when the export is opened from
+``file://``, and on the server. The statements and the source code are not
+copied into the pages. The browser loads a small ``-relation-previews.js``
+file next to the linked document or source file page the first time such a
+link is hovered. The static export writes these files, and the server renders
+them on request.
 <<<
 
 [[/SECTION]]

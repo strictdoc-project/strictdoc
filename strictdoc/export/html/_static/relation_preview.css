@@ -1,0 +1,42 @@
+/* relation_preview: the card relation_preview.js shows next to a relation link. */
+
+.relation_preview {
+  position: fixed;
+  z-index: 100;
+  box-sizing: border-box;
+  max-width: min(32rem, calc(100vw - 16px));
+  max-height: 50vh;
+  overflow: auto;
+  padding: var(--base-rhythm) calc(var(--base-rhythm) * 1.5);
+  font-size: var(--font-size-sm);
+  line-height: var(--base-line-height);
+  color: var(--color-fg-main);
+  background: var(--color-bg-contrast);
+  border: var(--base-border);
+  border-radius: 4px;
+  box-shadow: var(--base-elevation-node);
+}
+
+.relation_preview[hidden] {
+  display: none;
+}
+
+.relation_preview-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--base-rhythm);
+  margin-bottom: calc(var(--base-rhythm) / 2);
+  font-weight: bold;
+}
+
+.relation_preview-uid {
+  color: var(--color-fg-secondary);
+}
+
+.relation_preview-statement > :first-child {
+  margin-top: 0;
+}
+
+.relation_preview-statement > :last-child {
+  margin-bottom: 0;
+}

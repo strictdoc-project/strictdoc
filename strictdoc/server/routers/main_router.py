@@ -129,6 +129,11 @@ from strictdoc.export.html.form_objects.requirement_form_object import (
     RequirementReferenceFormField,
     deduplicate_comma_separated_value,
 )
+from strictdoc.export.html.generators.relation_previews import (
+    collect_relation_previews,
+    document_url_for_relation_previews,
+    render_relation_previews_js,
+)
 from strictdoc.export.html.generators.view_objects.document_chunks import (
     CHUNK_SIZE,
 )
@@ -5056,6 +5061,33 @@ def create_main_router(
         # via @app.exception_handler(404).
         raise HTTPException(status_code=404, detail="UID or MID was not found")
 
+    def _create_document_screen_view_object(
+        document: SDocDocument,
+    ) -> DocumentScreenViewObject:
+        assert document.meta is not None
+        link_renderer = LinkRenderer(
+            root_path=document.meta.get_root_path_prefix(),
+            static_path=project_config.dir_for_sdoc_assets,
+        )
+        markup_renderer = MarkupRenderer.create(
+            markup=document.config.get_markup(),
+            traceability_index=export_action.traceability_index,
+            link_renderer=link_renderer,
+            html_templates=html_generator.html_templates,
+            config=project_config,
+            context_document=document,
+        )
+        return DocumentScreenViewObject(
+            document_type=DocumentType.DOCUMENT,
+            document=document,
+            traceability_index=export_action.traceability_index,
+            project_config=project_config,
+            link_renderer=link_renderer,
+            markup_renderer=markup_renderer,
+            jinja_environment=env(),
+            git_client=html_generator.git_client,
+        )
+
     @read_router.get(
         "/fragments/document/{document_mid}/chunk", response_class=Response
     )
@@ -5079,30 +5111,7 @@ def create_main_router(
         if not isinstance(document_or_none, SDocDocument):
             return _error_response(HTTP_STATUS_NOT_FOUND)
         document: SDocDocument = document_or_none
-
-        assert document.meta is not None
-        link_renderer = LinkRenderer(
-            root_path=document.meta.get_root_path_prefix(),
-            static_path=project_config.dir_for_sdoc_assets,
-        )
-        markup_renderer = MarkupRenderer.create(
-            markup=document.config.get_markup(),
-            traceability_index=export_action.traceability_index,
-            link_renderer=link_renderer,
-            html_templates=html_generator.html_templates,
-            config=project_config,
-            context_document=document,
-        )
-        view_object = DocumentScreenViewObject(
-            document_type=DocumentType.DOCUMENT,
-            document=document,
-            traceability_index=export_action.traceability_index,
-            project_config=project_config,
-            link_renderer=link_renderer,
-            markup_renderer=markup_renderer,
-            jinja_environment=env(),
-            git_client=html_generator.git_client,
-        )
+        view_object = _create_document_screen_view_object(document)
         # An unknown from_node cursor (e.g., the node was deleted by a
         # concurrent edit) renders an empty turbo-frame on purpose: HTTP 200
         # lets Turbo replace the lazy placeholder with the empty frame
@@ -5200,6 +5209,10 @@ def create_main_router(
         _, file_extension = os.path.splitext(full_path)
         if file_extension == ".html":
             return get_document(request, full_path)
+        elif (
+            document_url := document_url_for_relation_previews(full_path)
+        ) is not None:
+            return get_relation_previews(document_url)
         elif file_extension == "":
             # No extension: StrictDoc documents always end in .html, so no
             # extension can ever resolve to a valid document. Return 404
@@ -5207,6 +5220,35 @@ def create_main_router(
             return _error_response(HTTP_STATUS_NOT_FOUND)
         else:
             return get_asset(request, full_path)
+
+    def get_relation_previews(url_to_document: str) -> Response:
+        """
+        Serve "<document>-relation-previews.js", the STATEMENT previews that
+        relation_preview.js shows when hovering a link to this document. The
+        static export writes the same file next to the document's HTML.
+        """
+        document_relative_path: SDocRelativePath = SDocRelativePath.from_url(
+            url_to_document
+        )
+        with lock_manager.acquire_global_read():
+            document_tree = assert_cast(
+                export_action.traceability_index.document_tree,
+                DocumentTree,
+            )
+            document = document_tree.map_docs_by_rel_paths.get(
+                document_relative_path.relative_path
+            )
+            if document is None:
+                return _error_response(HTTP_STATUS_NOT_FOUND)
+            view_object = _create_document_screen_view_object(document)
+            content = render_relation_previews_js(
+                collect_relation_previews(view_object)
+            )
+        return Response(
+            content=content,
+            media_type="text/javascript",
+            headers={"Cache-Control": "no-cache"},
+        )
 
     def get_document(request: Request, url_to_document: str) -> Response:
         """

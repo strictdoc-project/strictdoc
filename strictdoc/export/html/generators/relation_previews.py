@@ -1,19 +1,25 @@
 """
-Relation previews for the DOCUMENT screen.
+Relation previews for the DOCUMENT and TRACE screens.
 
-Hovering or focusing a Parent/Child relation link shows the linked node's
-STATEMENT in a small card (see _static/relation_preview.js). When the linked
-node is on the same page, the browser copies the STATEMENT from the page. For
-the other cases, a document gets a "<name>-relation-previews.js" file next to
-its HTML with the rendered STATEMENT of each node that a link on another page
-can point to. The file is only loaded when such a link is hovered, so the
-document pages themselves do not grow.
+Hovering or focusing a relation link shows a small card (see
+_static/relation_preview.js). For a link to a node, the card shows the linked
+node's STATEMENT. When the linked node is on the same page, the browser copies
+the STATEMENT from the page. For the other cases, a document gets a
+"<name>-relation-previews.js" file next to its HTML with the rendered
+STATEMENT of each node that a link on another page can point to.
 
-The static export writes the file, the server renders it on request.
+For a File relation link, the card shows the first lines of the linked range.
+Each source file page "_source_files/<path>.html" gets a
+"<path>-relation-previews.js" file with the highlighted lines that start each
+range of that file, at most SOURCE_PREVIEW_MAX_LINES per range.
+
+The files are only loaded when such a link is hovered, so the pages
+themselves do not grow. The static export writes the files, the server
+renders them on request.
 """
 
 import os
-from typing import Dict, Optional
+from typing import TYPE_CHECKING, Dict, List, Mapping, Optional, Sequence
 
 import orjson
 from markupsafe import Markup
@@ -24,7 +30,17 @@ from strictdoc.export.html.generators.view_objects.document_screen_view_object i
     DocumentScreenViewObject,
 )
 
+if TYPE_CHECKING:
+    from strictdoc.backend.sdoc_source_code.models.source_file_info import (
+        SourceFileTraceabilityInfo,
+    )
+    from strictdoc.core.file_system.source_tree import SourceFile
+    from strictdoc.features.source_file_view.view_object import (
+        SourceLineEntry,
+    )
+
 RELATION_PREVIEWS_SUFFIX = "-relation-previews.js"
+SOURCE_PREVIEW_MAX_LINES = 15
 
 
 def relation_previews_file_name(document: SDocDocument) -> str:
@@ -85,7 +101,43 @@ def collect_relation_previews(
     return previews
 
 
-def render_relation_previews_js(previews: Dict[str, Markup]) -> bytes:
+def collect_source_relation_previews(
+    pygmented_lines: Sequence["SourceLineEntry"],
+    trace_info: "SourceFileTraceabilityInfo",
+) -> Dict[str, List[str]]:
+    """
+    Highlighted lines per first line number of each range in a source file,
+    up to the range end and at most SOURCE_PREVIEW_MAX_LINES of them. Ranges
+    that start on the same line share the entry of the longest one. The
+    browser cuts the list at the end of the hovered range and marks a longer
+    range as truncated.
+    """
+    previews: Dict[str, List[str]] = {}
+    for marker_ in trace_info.markers:
+        begin = marker_.ng_range_line_begin
+        end = marker_.ng_range_line_end
+        if begin is None or end is None:
+            continue
+        if not 1 <= begin <= len(pygmented_lines):
+            continue
+        key = str(begin)
+        length = min(max(end - begin + 1, 1), SOURCE_PREVIEW_MAX_LINES)
+        if key in previews and len(previews[key]) >= length:
+            continue
+        previews[key] = [
+            str(getattr(line_, "source_line", line_))
+            for line_ in pygmented_lines[begin - 1 : begin - 1 + length]
+        ]
+    return previews
+
+
+def source_relation_previews_file_path(source_file: "SourceFile") -> str:
+    output_file = source_file.output_file_full_path
+    assert output_file.endswith(".html"), output_file
+    return output_file[: -len(".html")] + RELATION_PREVIEWS_SUFFIX
+
+
+def render_relation_previews_js(previews: Mapping[str, object]) -> bytes:
     # The map is stored under the script's own URL, so that two documents
     # with the same file name in different folders do not overwrite each
     # other. relation_preview.js reads it back by the same URL.
@@ -94,7 +146,7 @@ def render_relation_previews_js(previews: Dict[str, Markup]) -> bytes:
         b"window.StrictDoc.relationPreviews = "
         b"window.StrictDoc.relationPreviews || {};\n"
         b"window.StrictDoc.relationPreviews[document.currentScript.src] = "
-        + orjson.dumps({key_: str(value_) for key_, value_ in previews.items()})
+        + orjson.dumps(previews)
         + b";\n"
     )
 

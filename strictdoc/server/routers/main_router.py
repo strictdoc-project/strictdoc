@@ -131,6 +131,7 @@ from strictdoc.export.html.form_objects.requirement_form_object import (
 )
 from strictdoc.export.html.generators.relation_previews import (
     collect_relation_previews,
+    collect_source_relation_previews,
     document_url_for_relation_previews,
     render_relation_previews_js,
 )
@@ -163,6 +164,9 @@ from strictdoc.features.project_index.view_object import (
 )
 from strictdoc.features.search.view_object import (
     SearchScreenViewObject,
+)
+from strictdoc.features.source_file_view.generator import (
+    SourceFileViewHTMLGenerator,
 )
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.file_modification_time import (
@@ -5231,6 +5235,12 @@ def create_main_router(
             url_to_document
         )
         with lock_manager.acquire_global_read():
+            if document_relative_path.relative_path.startswith(
+                "_source_files/"
+            ):
+                return get_source_relation_previews(
+                    document_relative_path.relative_path
+                )
             document_tree = assert_cast(
                 export_action.traceability_index.document_tree,
                 DocumentTree,
@@ -5244,6 +5254,37 @@ def create_main_router(
             content = render_relation_previews_js(
                 collect_relation_previews(view_object)
             )
+        return Response(
+            content=content,
+            media_type="text/javascript",
+            headers={"Cache-Control": "no-cache"},
+        )
+
+    def get_source_relation_previews(url_to_source_file: str) -> Response:
+        """
+        Serve "_source_files/<path>-relation-previews.js", the first lines of
+        each range that relation_preview.js shows when hovering a File
+        relation link. The caller holds the global read lock.
+        """
+        if not project_config.is_activated_requirements_to_source_traceability():
+            return _error_response(HTTP_STATUS_NOT_FOUND)
+        source_file = HTMLGenerator.find_referenced_source_file(
+            traceability_index=export_action.traceability_index,
+            path_to_source_file=url_to_source_file,
+        )
+        if source_file is None:
+            return _error_response(HTTP_STATUS_NOT_FOUND)
+        pygmented_source_file_lines, _, trace_info = (
+            SourceFileViewHTMLGenerator.read_pygmented_source(
+                source_file=source_file,
+                traceability_index=export_action.traceability_index,
+            )
+        )
+        content = render_relation_previews_js(
+            collect_source_relation_previews(
+                pygmented_source_file_lines, trace_info
+            )
+        )
         return Response(
             content=content,
             media_type="text/javascript",

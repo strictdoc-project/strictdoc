@@ -1,0 +1,38 @@
+[DOCUMENT]
+TITLE: Source document
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+    ROLE: Refines
+  - TYPE: File
+  - TYPE: File
+    ROLE: Implementation
+
+[REQUIREMENT]
+UID: REQ-SOURCE
+TITLE: Requirement with source links
+STATEMENT: The requirement with source links.
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-PARENT-1
+  ROLE: Refines
+- TYPE: File
+  VALUE: src/example.py
+  LINE_RANGE: 1, 2
+- TYPE: File
+  ROLE: Implementation
+  VALUE: src/example.py
+  FUNCTION: long_function

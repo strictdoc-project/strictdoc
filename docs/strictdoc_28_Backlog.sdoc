@@ -345,15 +345,6 @@ RELATIONS:
   VALUE: SDOC-SSS-80
 
 [REQUIREMENT]
-MID: fa7fd8fd3a694d8e93953fd60e19fdde
-UID: SDOC-SRS-61
-STATUS: Backlog
-TITLE: Tables HTML editor
-STATEMENT: >>>
-StrictDoc shall provide a solution for editing tables in its web interface.
-<<<
-
-[REQUIREMENT]
 MID: 45b8513623744776899abfbf99c95286
 UID: SDOC-SRS-58
 STATUS: Backlog

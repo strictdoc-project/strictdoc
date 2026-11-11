@@ -1161,6 +1161,20 @@ RELATIONS:
 - TYPE: File
   VALUE: strictdoc/export/html/_static/copy_to_clipboard.js
 
+[REQUIREMENT]
+MID: fa7fd8fd3a694d8e93953fd60e19fdde
+UID: SDOC-SRS-61
+STATUS: Active
+TITLE: Tables HTML editor
+STATEMENT: >>>
+StrictDoc shall provide a solution for editing tables in its web interface.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-80
+- TYPE: File
+  VALUE: strictdoc/export/html/_static/table_editor.js
+
 [[/SECTION]]
 
 [[SECTION]]

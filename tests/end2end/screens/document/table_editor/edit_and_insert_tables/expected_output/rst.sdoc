@@ -1,0 +1,30 @@
+[DOCUMENT]
+TITLE: RST
+
+[REQUIREMENT]
+TITLE: Requirement title
+STATEMENT: >>>
+Paragraph.
+
++-------+--------+
+| first |        |
++-------+--------+
+|       | second |
++-------+--------+
+
+.. table:: Caption
+
+   +-------+-----+--------+
+   | Key   | New | Values |
+   +=======+=====+========+
+   | alpha |     | x | y  |
+   |       |     |        |
+   | beta  |     |        |
+   +-------+-----+--------+
+
++-----+-----+
+| A   | B   |
++=====+=====+
+| spanned   |
++-----+-----+
+<<<

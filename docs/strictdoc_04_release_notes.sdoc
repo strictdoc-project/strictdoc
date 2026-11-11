@@ -50,6 +50,23 @@ releases:
 <<<
 
 [[SECTION]]
+MID: 780712d4d6a04ee68ef8c49b11ceb85d
+TITLE: Unreleased
+
+[TEXT]
+MID: 95aef4d99b47420082ed3e6c589a5cfc
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) The Web UI has a table editor for multiline fields with RST or Markdown
+markup. The editor inserts and edits RST grid tables and Markdown pipe tables.
+It writes the table into the field as plain markup text. See
+[LINK: SECTION-UG-Tables].
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: b8b2939ac85c4300b5f8e96675f3d196
 TITLE: 0.30.4 (2026-10-22)
 

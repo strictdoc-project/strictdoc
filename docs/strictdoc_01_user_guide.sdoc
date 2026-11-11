@@ -2823,6 +2823,47 @@ direct reference to each uploaded file. It does not use wildcard image paths.
 [[/SECTION]]
 
 [[SECTION]]
+MID: 01b73b2f291f4b9bafcae607f87cbe1e
+UID: SECTION-UG-Tables
+TITLE: Tables
+
+[TEXT]
+MID: 26737917a6634aea97b3cefaf981522d
+STATEMENT: >>>
+The Web UI has a table editor for all multiline fields with RST or Markdown
+markup. Fields with other markup, such as HTML or Text, have no table editor.
+
+The table editor inserts and edits tables as plain markup text: RST grid
+tables and Markdown pipe tables. The table text in the field stays editable by
+hand. When the caret is in a table, a button next to the field opens the table
+in the editor. In other places, the button inserts a new table.
+
+The table editor recognizes the following tables:
+
+- RST: grid tables without merged cells. A cell can contain several lines and
+  paragraphs.
+- Markdown: pipe tables where all rows have the same number of cells. The
+  editor writes a line break in a cell as ``<br>`` and the ``|`` character as
+  ``\|``. The editor ignores tables in fenced code blocks.
+
+The table editor does not open or change other tables, for example RST simple
+tables, ``list-table``, ``csv-table``, or grid tables with merged cells. After
+you correct a table by hand to one of the formats above, the editor can open
+it.
+
+The table editor always shows a header row:
+
+- RST: if all header cells are empty, the editor writes the table without a
+  header row.
+- Markdown: a pipe table always has a header row. Its cells can be empty.
+
+The table editor keeps the column alignment of a Markdown table but cannot
+change it.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 83066d011cef4e8694aac5fbe90a357e
 TITLE: Mathjax support
 

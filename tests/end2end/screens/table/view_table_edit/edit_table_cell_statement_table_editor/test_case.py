@@ -36,7 +36,7 @@ class Test(E2ECase):
             screen_table.do_open_inline_cell(node_mid, "STATEMENT")
 
             table_editor = TableEditor(self, "STATEMENT")
-            table_editor.assert_highlighted_tables(1)
+            table_editor.wait_for_highlighted_tables(1)
 
             # Escape in the editor closes only the editor, not the cell.
             table_editor.do_place_caret_after("Key")

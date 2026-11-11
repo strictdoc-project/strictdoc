@@ -1607,8 +1607,10 @@
         scheduleAutocompleteBlurSave(cell, autocompleteInput);
     }
 
-    // modal.js may have removed the modal already: it handles the same click or
-    // Escape first. composedPath() still lists the modal.
+    // modal.js is loaded before this script, so its document listeners run
+    // first. On Cancel or Escape, it removes the modal before this check runs,
+    // and a check such as "is a modal open now" would find none. The event path
+    // is recorded when the event is dispatched, so it still lists the modal.
     function isEventFromModal(event) {
         return event.composedPath().some(
             (node) => node instanceof Element && node.matches(SEL_MODAL)

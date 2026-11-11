@@ -153,9 +153,10 @@
   // Cuts one text line of a row into the parts of its cells. A line that is
   // still aligned with the top border is cut at the "+" positions of that
   // border, so a "|" inside a cell is plain text. A line misaligned by typing
-  // is split on "|" instead, and accepted only if that gives exactly one part
-  // per column: one more part means a "|" inside a cell, and then the cell
-  // boundaries are ambiguous.
+  // cannot be cut by positions, so it is split on "|" instead. That split is
+  // accepted only if it gives exactly one part per column. More parts mean
+  // that some cell contains a "|", and then it is unclear where the cells
+  // end.
   function parseRstRowLine(line, edges) {
     const isAligned = line.length === edges[edges.length - 1] + 1 &&
       edges.every((edge) => line[edge] === '|');
@@ -460,9 +461,11 @@
   // Field text and DOM positions.
   //
   // The field usually holds a single text node, but typing can add more text
-  // nodes and <br> elements. Text nodes and <br> are mapped to characters of
-  // the field text; if the field holds anything else, its innerText (what is
-  // saved) and this mapping disagree, and highlighting is skipped.
+  // nodes and <br> elements. To find a text position in the DOM, each text
+  // node is mapped to its characters and each <br> to a line break. If the
+  // field holds other elements, this mapping no longer matches innerText
+  // (the text that is saved). Then the field gets no highlights and no edit
+  // button, because positions in it cannot be computed reliably.
   //
 
   function textSegments(root) {
@@ -551,7 +554,8 @@
   // field -> { format, button, typing, lines, offsets, segments, mapped,
   // tables, blocks }
   // typing: the caret position after the last input, or false.
-  // The text fields are filled by scanField().
+  // lines, offsets, segments, mapped, tables, and blocks describe the
+  // current field text; scanField() sets them after every change.
   const fieldStates = new Map();
   let activeField = null;
 
@@ -660,8 +664,8 @@
     const {
       button
     } = state;
-    // The button hides while the user types and shows up again once the
-    // caret is somewhere else than where the last input left it.
+    // The button hides while the user types. It shows up again when the
+    // caret moves away from the position where the last input left it.
     const caret = caretRange();
     if (state.typing && (caret.startContainer !== state.typing.node ||
         caret.startOffset !== state.typing.offset)) {
@@ -725,7 +729,9 @@
     field.dispatchEvent(new Event('input', {
       bubbles: true
     }));
-    // A rewrite by the editor is not typing: keep the button.
+    // The input event above makes the input listener treat this rewrite as
+    // typing, which would hide the button. The editor wrote the text, not
+    // the user, so the button stays.
     fieldStates.get(field).typing = false;
     updateActiveTable();
   }
@@ -1096,7 +1102,8 @@
       edited.rows[Number(row)][Number(column)] = cell.innerText;
     });
 
-    // Cells take plain text only.
+    // Cells take plain text only, so that pasted formatting does not end up
+    // as HTML elements in a cell.
     grid.addEventListener('paste', (event) => {
       event.preventDefault();
       const text = event.clipboardData.getData('text/plain');
@@ -1210,8 +1217,9 @@
       if (menu && !menu.element.contains(event.target)) closeMenu();
     });
 
-    // Escape closes the menu, not the whole editor (modal.js listens on
-    // the document).
+    // When the menu is open, Escape closes only the menu. modal.js closes the
+    // whole editor on Escape from its listener on the document, so the event
+    // must not get there.
     backdrop.addEventListener('keydown', (event) => {
       if (event.key !== 'Escape' || !menu) return;
       event.stopPropagation();
@@ -1524,7 +1532,10 @@
     updateActiveTable();
   });
 
-  // Clicking the caret back to where typing stopped moves nothing.
+  // After typing, the button comes back when the caret moves (see
+  // placeButton()). A click at the position where typing stopped does not
+  // move the caret, so no selectionchange event fires. The click itself then
+  // brings the button back.
   document.addEventListener('pointerup', (event) => {
     const state = fieldStates.get(event.target.closest?.(SEL_FIELD));
     if (!state?.typing) return;

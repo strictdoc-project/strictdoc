@@ -890,9 +890,22 @@
   // Builds the modal around an empty grid. modal.js removes the
   // data-js-modal element on Escape and on a click on the
   // data-js-modal-cancel-button element.
+  //
+  // Why the backdrop is focusable (tabIndex -1, so it is not in the Tab
+  // order):
+  // A click on a part of the modal that cannot take focus, for example the
+  // header, normally moves the focus to the page body. A key pressed after
+  // that comes from the body, not from the modal. In the table view, this
+  // breaks Escape: one press would do two things. modal.js would close the
+  // modal, and table_view_edit.js would cancel the edited cell, because it
+  // ignores only the keys that come from a modal. With a focusable backdrop,
+  // such a click focuses the backdrop, the key comes from the modal, and
+  // Escape only closes the modal.
   function createModal(title) {
     const backdrop = document.createElement('sdoc-backdrop');
     backdrop.setAttribute('data-js-modal', '');
+    backdrop.className = 'table-editor-backdrop';
+    backdrop.tabIndex = -1;
     backdrop.dataset.testid = 'table-editor-modal';
 
     const modal = document.createElement('sdoc-modal');

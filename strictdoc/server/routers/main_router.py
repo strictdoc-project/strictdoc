@@ -1729,6 +1729,7 @@ def create_main_router(
             current_value=current_value,
             field_type=field_type,
             form_action=form_action,
+            document_markup=document.config.get_markup(),
         )
         return HTMLResponse(
             content=output,

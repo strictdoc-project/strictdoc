@@ -68,6 +68,11 @@
     const EVENT_BEFORE_TABLE_STATE_CHANGE = 'strictdoc:table-view-before-state-change';
     const EVENT_AFTER_TABLE_STATE_CHANGE = 'strictdoc:table-view-after-state-change';
 
+    // modal.js marks every modal with data-js-modal. A modal can be opened from
+    // an edited cell (for example, the table editor of a multiline field). Its
+    // clicks and keys belong to the modal and must not save or cancel the cell.
+    const SEL_MODAL = '[data-js-modal]';
+
     // Custom-metadata DOM contract:
     // - js-table_view_edit-custom_meta-error associates a validation error with
     // one metadata row.
@@ -1602,7 +1607,16 @@
         scheduleAutocompleteBlurSave(cell, autocompleteInput);
     }
 
+    // modal.js may have removed the modal already: it handles the same click or
+    // Escape first. composedPath() still lists the modal.
+    function isEventFromModal(event) {
+        return event.composedPath().some(
+            (node) => node instanceof Element && node.matches(SEL_MODAL)
+        );
+    }
+
     function handleDocumentKeydown(event) {
+        if (isEventFromModal(event)) return;
         const addNodeHandle = event.target.closest?.(
             `[${ATTR_ADD_NODE_HANDLE}]`
         );
@@ -1650,6 +1664,7 @@
     // them. Cell saves are serialized, so a blur handler and this click handler
     // can safely request the same save.
     function handleDocumentClick(event) {
+        if (isEventFromModal(event)) return;
         const eventPath = event.composedPath();
         const tableToolbar = event.target.closest?.(
             '[data-testid="table-toolbar"]'

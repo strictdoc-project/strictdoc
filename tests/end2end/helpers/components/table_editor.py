@@ -1,5 +1,6 @@
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from seleniumbase import BaseCase
 
 
@@ -228,4 +229,9 @@ class TableEditor:  # pylint: disable=invalid-name
         self.test_case.click_xpath(
             f"{self.MODAL}//*[@data-testid='table-editor-cancel-action']"
         )
+        self.assert_not_open()
+
+    def do_close_by_escape(self) -> None:
+        """Presses Escape in the focused editor cell."""
+        ActionChains(self.test_case.driver).send_keys(Keys.ESCAPE).perform()
         self.assert_not_open()

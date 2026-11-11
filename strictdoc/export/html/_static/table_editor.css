@@ -25,6 +25,7 @@
   font-size: 14px;
   line-height: 1;
   cursor: pointer;
+  z-index: 20; /* > 10, because of the table view */
 }
 
 .table-editor-button[hidden] {
@@ -278,4 +279,10 @@ sdoc-table-editor-canvas .table-editor-grid {
 
 .table-editor-grid .table-editor-deleting {
   background-color: var(--color-highlight-danger);
+}
+
+/* The backdrop takes focus on a click in the modal (see table_editor.js) */
+
+.table-editor-backdrop:focus {
+  outline: none;
 }

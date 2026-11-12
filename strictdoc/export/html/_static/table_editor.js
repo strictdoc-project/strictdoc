@@ -41,7 +41,7 @@
   // key of TOOLTIPS.
   // - js-table_editor-icon marks an icon in the #template-table-editor-icons
   // template (components/table_editor/icons.jinja). Its value is a grip
-  // menu action, or "table" for the insert menu item.
+  // menu action.
   const ATTR_CELL = 'js-table_editor-cell';
   const ATTR_INSERT = 'js-table_editor-insert';
   const ATTR_GRIP = 'js-table_editor-grip';
@@ -1141,10 +1141,6 @@
   const fieldTables = new Map();
 
   function updateHighlights() {
-    // Drops the fields of closed forms; nothing watches for their removal.
-    for (const field of fieldTables.keys()) {
-      if (!field.isConnected) fieldTables.delete(field);
-    }
     if (!HAS_HIGHLIGHTS) return;
 
     const ranges = [];
@@ -1161,7 +1157,6 @@
     id: 'table',
     label: 'Table',
     editTitle: 'Edit table',
-    icon: () => menuIcon('table'),
     supports: (markup) => FORMATS.has(markup),
 
     scan(field, lines, markup) {
@@ -1170,6 +1165,11 @@
         format,
         tables: format.findTables(lines)
       });
+      updateHighlights();
+    },
+
+    forget(field) {
+      fieldTables.delete(field);
       updateHighlights();
     },
 

@@ -2588,6 +2588,19 @@ Example:
 This sentence contains a
 [LINK: SDOC_UG_LINKS_AND_ANCHORS, link with a custom title].
 
+In the Web UI, the link widget inserts a LINK tag into a multiline field with
+RST or Markdown markup. The widget shows a list of link targets at the caret:
+documents, sections, nodes, and anchors with a UID. To open the list:
+
+- Type ``@`` at the start of a word, or type ``[LINK:``.
+- On an empty line, click the ``+`` button and select **Link**.
+
+Type a part of the UID or the title to filter the list. The filter can have
+several words. The targets of the current document come first. Select a target
+with the arrow keys and Enter, or with a click. Escape closes the list and keeps
+the typed text. After ``@``, the list also closes when a filter with a space
+matches no target, so plain text such as ``meet @ 10:00`` stays plain text.
+
 .. note::
 
     Adding a LINK tag only works when it is placed in multiline fields written with ``>>>...<<<``. Single-line fields do not support RST syntax or tags such as ``[LINK:...]``. See also: [LINK: SECTION-UG-Single-vs-multiline-fields].
@@ -2607,6 +2620,13 @@ that can be referenced from other pages using ``[LINK <Anchor UID>]``.
 
 The optional title can be an unquoted string, but must be enclosed in double
 quotes if it contains special characters.
+
+In the Web UI, the anchor widget inserts an ANCHOR tag into a multiline field
+with RST or Markdown markup. On an empty line, click the ``+`` button and select
+**Anchor**. Enter the UID and, optionally, the title of the anchor. The widget
+checks the UID while you type: the UID must follow the UID syntax and must not
+be used in the project or by another anchor in the field. The widget puts the
+title in double quotes when the title needs them.
 
 Example:
 

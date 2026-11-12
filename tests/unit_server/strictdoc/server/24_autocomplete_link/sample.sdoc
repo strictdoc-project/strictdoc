@@ -1,0 +1,27 @@
+[DOCUMENT]
+TITLE: Sample document
+UID: DOC-1
+
+[[SECTION]]
+UID: SECT-1
+TITLE: Overview
+
+[TEXT]
+STATEMENT: >>>
+Text before the anchors.
+
+[ANCHOR: ANCHOR-1, Anchor title]
+
+[ANCHOR: ANCHOR-2]
+<<<
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: First requirement
+STATEMENT: System shall do 1.
+
+[REQUIREMENT]
+TITLE: Requirement without UID
+STATEMENT: System shall do 2.
+
+[[/SECTION]]

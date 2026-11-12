@@ -12,6 +12,8 @@
   <input type="hidden" name="field_name" value="{{ field_name }}"/>
   {#- field_widgets.js reads the field markup from document_markup. #}
   <input type="hidden" name="document_markup" value="{{ document_markup }}"/>
+  {#- link_widget.js lists the links to the current document first. #}
+  <input type="hidden" name="context_document_mid" value="{{ context_document_mid }}"/>
 
   {%- with
     field_class_name=none,

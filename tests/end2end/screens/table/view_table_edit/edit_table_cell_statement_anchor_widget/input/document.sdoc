@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Document
+
+[REQUIREMENT]
+TITLE: Requirement title
+STATEMENT: >>>
+Text.
+
+More text.
+<<<

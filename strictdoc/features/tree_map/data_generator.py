@@ -192,7 +192,11 @@ class TreeMapDataGenerator:
                     node_
                 )
                 for file_path_, _ in file_links:
-                    if "tests/" in file_path_:
+                    # Files ending in "_test.go" is the regular naming
+                    # nomenclature for Go projects.
+                    if "tests/" in file_path_ or file_path_.endswith(
+                        "_test.go"
+                    ):
                         node_coverage.child_nodes_with_test_links = 1
                     else:
                         node_coverage.child_nodes_with_source_links = 1

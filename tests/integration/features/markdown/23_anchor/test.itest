@@ -12,3 +12,12 @@ RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail 
 CHECK-HTML: id="SEC-INTRO"
 CHECK-HTML: id="SEC-DETAILS"
 CHECK-HTML: href="#SEC-INTRO"
+
+# An anchor with incoming links renders the list of the links as HTML, not
+# as escaped HTML code, and the text after the anchor stays a paragraph.
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-BACK-LINKS
+CHECK-BACK-LINKS: <div class="anchor_back_links">
+CHECK-BACK-LINKS: <p>This section describes the introduction.</p>
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-NO-ESCAPED-HTML
+CHECK-NO-ESCAPED-HTML-NOT: &lt;div class=&quot;anchor_back_links

@@ -172,9 +172,12 @@ class Test(E2ECase):
             assert len(requirement_actions) == 1
 
             # Holding Shift over a requirement shows its available node data.
-            ActionChains(self.driver).key_down(Keys.SHIFT).move_to_element(
+            # Move the pointer before pressing Shift. Otherwise, the map's
+            # keydown handler can ignore Shift because the map is not hovered.
+            ActionChains(self.driver).move_to_element(
                 requirement_element
             ).perform()
+            ActionChains(self.driver).key_down(Keys.SHIFT).perform()
             info_panel = '[data-testid="tree-map-info-panel"]'
             self.assert_element(info_panel + ":not([hidden])")
             self.assert_text("Requirement 1", info_panel)

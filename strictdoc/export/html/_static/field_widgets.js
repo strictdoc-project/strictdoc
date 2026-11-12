@@ -18,32 +18,39 @@
 // per widget that supports the field markup (the form's "document_markup"
 // input).
 //
-// Widget contract (the methods marked "optional" are for widgets that
-// recognize their own blocks in the field text):
-// - id: a name for the insert menu item and its test ID.
-// - label: the text of the insert menu item. The icon of the item comes
-// from the #template-field-widgets-icons template
+// Widget contract. Every widget has:
+// - id: the widget name. It names the insert menu item, its test ID
+// "field-widgets-insert-<id>", and its icon in the
+// #template-field-widgets-icons template
 // (components/field_widgets/icons.jinja).
+// - label: the text of the insert menu item.
 // - supports(markup): returns true if the widget works with the markup.
 // - insert(field, line): inserts a new element at the blank caret line.
-// - scan(field, lines, markup): optional. Called after every change of the
-// field text.
-// - blockAt(field, line): optional. Returns the block {start, end, ...}
-// that holds the line, or null.
-// - editTitle: optional. The title of the edit button.
-// - edit(field, block): optional. Edits a block returned by blockAt().
-// - activate(field, block): optional. Called on every caret move with the
-// block that holds the caret, or with null.
+// Any widget can also have these optional hooks:
+// - scan(field, lines, markup): called after every change of the text of
+// a field with a supported markup.
+// - forget(field): called when the field is no longer in the DOM, so the
+// widget can drop its data about the field.
+// A widget that recognizes its own blocks in the field text (for example,
+// tables) also has:
+// - blockAt(field, line): returns the block {start, end, ...} that holds
+// the line, or null. The edit button shows next to the block.
+// - editTitle: the title of the edit button.
+// - edit(field, block): edits a block returned by blockAt().
+// - activate(field, block): called on every caret move with the block
+// that holds the caret, or with null.
 //
 // Helpers for the widgets:
+// - hasWidget(field, id): returns true if the widget works in the field.
 // - lineRange(field, start, end): a DOM range for the lines [start, end],
 // or null if the field DOM cannot be mapped to its text.
+// - textBeforeCaret(field): the field text before the caret, or null if
+// the caret is not in the field or the field DOM cannot be mapped to its
+// text.
 // - insertBlock(field, line, blockLines): writes the lines in place of the
 // blank caret line.
 // - replaceLines(field, start, end, newLines): writes the lines in place of
 // the lines [start, end].
-// - caretOffset(field): the character offset of the caret in the field
-// text, or null.
 // - replaceText(field, from, to, text): writes the text in place of the
 // characters [from, to) and puts the caret after it.
 
@@ -71,8 +78,10 @@
   // nodes and <br> elements. To find a text position in the DOM, each text
   // node is mapped to its characters and each <br> to a line break. If the
   // field holds other elements, this mapping no longer matches innerText
-  // (the text that is saved). Then the field gets no highlights and no
-  // button, because positions in it cannot be computed reliably.
+  // (the text that is saved). Then positions in the field cannot be computed
+  // reliably: the field gets no button, and lineRange() and
+  // textBeforeCaret() return null, so the widgets cannot highlight or
+  // write anything there.
   //
 
   function textSegments(root) {
@@ -167,31 +176,47 @@
   const fieldStates = new Map();
   let activeField = null;
 
-  function fieldWidgets(field) {
+  // Returns the widgets that support the markup of the field.
+  function widgetsFor(field) {
     const {
       markup
     } = fieldStates.get(field);
     return widgets.filter((widget) => widget.supports(markup));
   }
 
-  function scanField(field) {
-    // Drops the fields of closed forms; nothing watches for their removal.
+  function hasWidget(field, id) {
+    return fieldStates.has(field) &&
+      widgetsFor(field).some((widget) => widget.id === id);
+  }
+
+  function isBlankLine(state, line) {
+    return state.lines[line].trim() === '';
+  }
+
+  // Drops the fields of closed forms. Nothing watches for their removal, so
+  // every scan checks the known fields.
+  function forgetRemovedFields() {
     for (const known of fieldStates.keys()) {
-      if (!known.isConnected) fieldStates.delete(known);
+      if (known.isConnected) continue;
+      fieldStates.delete(known);
+      widgets.forEach((widget) => widget.forget?.(known));
     }
+  }
+
+  function scanField(field) {
+    forgetRemovedFields();
     const state = fieldStates.get(field);
     const text = field.innerText;
     state.lines = text.split('\n');
     state.offsets = lineOffsets(state.lines);
     state.segments = textSegments(field);
     state.mapped = segmentsText(state.segments) === text;
-    fieldWidgets(field).forEach(
+    widgetsFor(field).forEach(
       (widget) => widget.scan?.(field, state.lines, state.markup),
     );
   }
 
-  // Returns the field text before the caret, or null if the caret is not in
-  // the field or the field's DOM cannot be mapped to its text.
+  // See the helpers in the file comment.
   function textBeforeCaret(field) {
     if (!fieldStates.get(field)?.mapped) return null;
     const range = caretRange();
@@ -201,10 +226,6 @@
     before.selectNodeContents(field);
     before.setEnd(range.startContainer, range.startOffset);
     return segmentsText(textSegments(before.cloneContents()));
-  }
-
-  function caretOffset(field) {
-    return textBeforeCaret(field)?.length ?? null;
   }
 
   // Returns the line index of the caret, or null (see textBeforeCaret()).
@@ -217,7 +238,7 @@
   // null.
   function blockAtLine(field, line) {
     if (line === null) return null;
-    for (const widget of fieldWidgets(field)) {
+    for (const widget of widgetsFor(field)) {
       const block = widget.blockAt?.(field, line);
       if (block) return {
         widget,
@@ -294,15 +315,16 @@
     const {
       button
     } = state;
-    // The button hides while the user types. It shows up again when the
-    // caret moves away from the position where the last input left it.
+    // The button hides while the user types, so it does not flicker next to
+    // the text the user writes. It shows up again when the caret moves away
+    // from the position where the last input left it.
     const caret = caretRange();
-    if (state.typing && (caret.startContainer !== state.typing.node ||
-        caret.startOffset !== state.typing.offset)) {
+    if (state.typing && (caret?.startContainer !== state.typing.node ||
+        caret?.startOffset !== state.typing.offset)) {
       state.typing = false;
     }
-    const canInsert = line !== null && state.lines[line].trim() === '' &&
-      fieldWidgets(field).length > 0;
+    const canInsert = line !== null && isBlankLine(state, line) &&
+      widgetsFor(field).length > 0;
     if (line === null || state.typing || (!found && !canInsert)) {
       hideButton(field);
       return found;
@@ -346,7 +368,7 @@
     element.className = 'dropdown_menu';
     element.dataset.testid = 'field-widgets-insert-menu';
     element.setAttribute('role', 'menu');
-    for (const widget of fieldWidgets(field)) {
+    for (const widget of widgetsFor(field)) {
       const item = document.createElement('button');
       item.type = 'button';
       item.className = 'dropdown_menu_item';
@@ -482,7 +504,7 @@
         found.widget.edit(field, found.block);
       } else if (state.menu) {
         closeInsertMenu(state);
-      } else if (line !== null && state.lines[line].trim() === '') {
+      } else if (line !== null && isBlankLine(state, line)) {
         openInsertMenu(field, line);
       }
     });
@@ -513,10 +535,11 @@
 
   window.StrictDoc.fieldWidgets = {
     register,
+    hasWidget,
     lineRange,
+    textBeforeCaret,
     insertBlock,
     replaceLines,
-    caretOffset,
     replaceText,
   };
 

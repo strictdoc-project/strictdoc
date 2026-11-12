@@ -4936,7 +4936,10 @@ def create_main_router(
         """
 
         def iterate_link_targets() -> Iterator[Tuple[str, str, str]]:
-            # Yields (UID, title, kind) for every target with a UID.
+            # Yields (UID, title, kind) for every target with a UID. The kind
+            # is the grammar element tag of a node (SECTION, REQUIREMENT,
+            # TEST_CASE, ...), the same text that the UI shows elsewhere, or
+            # DOCUMENT or ANCHOR.
             document_tree = assert_cast(
                 export_action.traceability_index.document_tree, DocumentTree
             )
@@ -4947,13 +4950,21 @@ def create_main_router(
                 if document_mid is not None
                 else None
             )
-            documents = sorted(
-                document_tree.document_list,
-                key=lambda document_: document_ is not current_document,
-            )
+            # A link usually points to the document that holds the edited
+            # field, so its targets come first. The other documents follow in
+            # the order of the document tree.
+            documents = [
+                document_
+                for document_ in document_tree.document_list
+                if document_ is current_document
+            ] + [
+                document_
+                for document_ in document_tree.document_list
+                if document_ is not current_document
+            ]
             for document in documents:
                 if document.reserved_uid is not None:
-                    yield document.reserved_uid, document.title, "Document"
+                    yield document.reserved_uid, document.title, "DOCUMENT"
                 document_iterator = (
                     export_action.traceability_index.get_document_iterator(
                         document
@@ -4968,7 +4979,7 @@ def create_main_router(
                         yield (
                             node_.reserved_uid,
                             node_.reserved_title or "",
-                            node_.node_type.capitalize(),
+                            node_.node_type,
                         )
                     for field_ in node_.enumerate_fields():
                         for part_ in field_.parts:
@@ -4976,7 +4987,7 @@ def create_main_router(
                                 yield (
                                     part_.value,
                                     part_.title if part_.has_title else "",
-                                    "Anchor",
+                                    "ANCHOR",
                                 )
 
         output = ""

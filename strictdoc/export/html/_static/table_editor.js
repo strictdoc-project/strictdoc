@@ -1141,10 +1141,6 @@
   const fieldTables = new Map();
 
   function updateHighlights() {
-    // Drops the fields of closed forms; nothing watches for their removal.
-    for (const field of fieldTables.keys()) {
-      if (!field.isConnected) fieldTables.delete(field);
-    }
     if (!HAS_HIGHLIGHTS) return;
 
     const ranges = [];
@@ -1169,6 +1165,11 @@
         format,
         tables: format.findTables(lines)
       });
+      updateHighlights();
+    },
+
+    forget(field) {
+      fieldTables.delete(field);
       updateHighlights();
     },
 

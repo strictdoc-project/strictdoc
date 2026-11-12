@@ -102,26 +102,30 @@ A widget is an object with these members:
 | `label` | yes | Text of the insert menu item. |
 | `supports(markup)` | yes | True if the widget works with the markup. |
 | `insert(field, line)` | yes | Inserts a new element at the blank caret line. |
-| `scan(field, lines, markup)` | no | Called after every change of the field text. |
+| `scan(field, lines, markup)` | no | Called after every change of the text of a field with a supported markup. |
+| `forget(field)` | no | Called when the field is no longer in the DOM. The widget drops its data about the field. |
 | `blockAt(field, line)` | no | Returns the block `{start, end, ...}` that holds the line, or null. |
 | `editTitle` | no | Title of the edit button. |
 | `edit(field, block)` | no | Edits a block from `blockAt()`. |
 | `activate(field, block)` | no | Called on every caret move with the block that holds the caret, or null. |
 
-The optional members are for widgets that recognize their own blocks in
-the field text.
+Any widget can have `scan()` and `forget()`. The members from `blockAt()`
+to `activate()` are for widgets that recognize their own blocks in the
+field text, such as tables.
 
-`StrictDoc.fieldWidgets` also gives the widgets five helpers:
+`StrictDoc.fieldWidgets` also gives the widgets six helpers:
 
+- `hasWidget(field, id)`: true if the widget works in the field.
 - `lineRange(field, start, end)`: a DOM range for the lines, or null if
   the script cannot map the field DOM to its text.
+- `textBeforeCaret(field)`: the field text before the caret, or null if
+  the caret is not in the field or the script cannot map the field DOM to
+  its text.
 - `insertBlock(field, line, blockLines)`: writes the lines in place of the
   blank caret line. Blank lines separate the block from the text around
   it.
 - `replaceLines(field, start, end, newLines)`: writes the lines in place of
   the lines from `start` to `end`.
-- `caretOffset(field)`: the character offset of the caret in the field
-  text, or null.
 - `replaceText(field, from, to, text)`: writes the text in place of the
   characters from `from` to `to` and puts the caret after the text.
 
@@ -150,7 +154,8 @@ As a result, `register()` scans the fields that already exist.
   `input`, the script records the caret position. The button stays hidden
   until the caret moves elsewhere.
 - A `Map` holds the state of each field. A rescan removes the entries of
-  the fields that are no longer in the DOM.
+  the fields that are no longer in the DOM and calls `forget()` of every
+  widget for each removed field.
 - In the table view, Escape in a field cancels the cell edit. When the
   insert menu is open, a capture listener on `document` stops the Escape
   event and closes only the menu.
@@ -159,7 +164,8 @@ As a result, `register()` scans the fields that already exist.
 
 `link_widget.js` with `link_widget.css` is the `link` widget. The widget
 has no blocks of its own. As a result, the widget implements only
-`supports()`, `scan()` (to remember the link fields), and `insert()`.
+`supports()` and `insert()`. The widget listens to `input` itself and
+checks the field with `hasWidget()`.
 
 The list of link targets comes from `GET /autocomplete/link`:
 
@@ -174,13 +180,23 @@ The list of link targets comes from `GET /autocomplete/link`:
   of the document in tree order, then the anchors in the node fields. The
   response has at most `AUTOCOMPLETE_LIMIT` (50) targets.
 - Each response item has the same markup as the `/autocomplete/uid` items
-  and a kind label: Document, Section, the node type, or Anchor.
+  and a kind label. The label of a node is its grammar element tag, such
+  as `SECTION`, `REQUIREMENT`, or `TEST_CASE`, the same text that the UI
+  shows elsewhere. A grammar element has no other name. The label of a
+  document is `DOCUMENT`, and the label of an anchor is `ANCHOR`.
 
 The popup:
 
 - reuses the `autocomplete-items` and `autocompletable-result-item` styles
-- goes into the parent of the field and gets its position from the caret
-  rectangle
+- is a child of `<body>` with a fixed position. Inside the form, the
+  overflow of `sdoc-form-grid` would cut the popup: `sdoc-node` is a CSS
+  container, and a container is the containing block of its fixed
+  descendants.
+- gets its position from the caret rectangle, stays inside the viewport,
+  and opens above the caret line if there is no room below. The popup
+  follows the caret line on scroll and on a window resize.
+- stops the propagation of its clicks. In the table view, a click outside
+  the edited cell saves the cell.
 - sends the request 150 ms after the last keystroke and aborts the
   previous request
 - handles its keys in a capture listener on `document` and stops the key
@@ -225,7 +241,13 @@ link widget:
 - Escape: the text stays, and the popup does not open again for the same
   trigger
 - a query with a space that matches nothing closes the popup
+- after the user deletes the closed trigger, a new `@` at the same place
+  opens the popup
 - the Link item of the insert menu with a query of two words.
+
+`tests/end2end/screens/table/view_table_edit/edit_table_cell_statement_link_widget/`
+covers the table view: the popup in a narrow cell, a click on a target
+does not save the cell, and Escape does not cancel the cell.
 
 `tests/unit_server/strictdoc/server/24_autocomplete_link/` covers the
 endpoint: all kinds of targets, the match by UID and by title, the kind

@@ -88,12 +88,12 @@ def test_kind_of_each_target(client: TestClient):
         r'<span class="field-widgets-link-kind">([^<]+)</span>', response.text
     )
     assert kinds == [
-        "Document",
-        "Section",
-        "Anchor",
-        "Anchor",
-        "Requirement",
-        "Requirement",
+        "DOCUMENT",
+        "SECTION",
+        "ANCHOR",
+        "ANCHOR",
+        "REQUIREMENT",
+        "REQUIREMENT",
     ]
 
 

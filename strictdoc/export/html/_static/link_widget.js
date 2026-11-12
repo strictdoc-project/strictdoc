@@ -24,6 +24,13 @@
 // matches never flashes an empty popup. While the popup is hidden, the keys
 // work as usual.
 //
+// The popup is a child of <body> with fixed position. Inside the form, the
+// overflow of sdoc-form-grid would cut it: sdoc-node is a CSS container,
+// and a container is the containing block of its fixed descendants. The
+// popup stays in the viewport and opens above the caret line if there is
+// no room below. In the table view, a click outside the edited cell saves
+// the cell, so the popup stops its clicks.
+//
 // Arrow keys move the selection, Enter or Tab chooses the target, Escape
 // closes the popup and leaves the typed text as it is. After Escape, or
 // after a query with a space finds nothing, the popup stays closed until
@@ -38,12 +45,13 @@
   const REQUEST_DELAY = 150;
   const SEL_OPTION = '[role="option"]:not([aria-disabled])';
   const CLASS_ACTIVE = 'autocomplete-active';
+  // The distance in pixels between the popup and the caret line or the
+  // viewport edge.
+  const POPUP_GAP = 4;
+  // The same markup as in autocompletable_field.js: keep both in sync.
   const NO_RESULTS_HTML =
     '<li class="autocompletable-result-item autocompletable-result-item_no-results" ' +
     'role="option" aria-disabled="true">No matches found</li>';
-
-  // The fields with a markup that supports links.
-  const linkFields = new WeakSet();
 
   //
   // LINK syntax.
@@ -97,9 +105,8 @@
   }
 
   function currentTrigger(field) {
-    const offset = fieldWidgets.caretOffset(field);
-    if (offset === null) return null;
-    return findTrigger(field.innerText.slice(0, offset));
+    const textBefore = fieldWidgets.textBeforeCaret(field);
+    return textBefore === null ? null : findTrigger(textBefore);
   }
 
   function closePopup() {
@@ -138,18 +145,32 @@
       start
     } = popup;
     const uid = option.dataset.autocompletableValue;
-    const end = fieldWidgets.caretOffset(field);
+    const end = fieldWidgets.textBeforeCaret(field).length;
     closePopup();
     fieldWidgets.replaceText(field, start, end, linkTag(uid));
   }
 
-  // Puts the popup under the caret.
+  // Puts the visible popup under the caret line, or above it if there is no
+  // room below. The popup stays inside the viewport.
   function placePopup() {
-    const caret = window.getSelection().getRangeAt(0);
-    const rect = caret.getClientRects()[0] ?? popup.field.getBoundingClientRect();
-    const parentRect = popup.element.offsetParent.getBoundingClientRect();
-    popup.element.style.top = `${rect.bottom - parentRect.top}px`;
-    popup.element.style.left = `${rect.left - parentRect.left}px`;
+    const selection = window.getSelection();
+    const caret = selection.rangeCount ? selection.getRangeAt(0) : null;
+    const rect = caret?.getClientRects()[0] ?? popup.field.getBoundingClientRect();
+    const {
+      element
+    } = popup;
+    const width = element.offsetWidth;
+    const height = element.offsetHeight;
+
+    const maxLeft = window.innerWidth - width - POPUP_GAP;
+    const left = Math.max(POPUP_GAP, Math.min(rect.left, maxLeft));
+    const below = rect.bottom + POPUP_GAP;
+    const above = rect.top - POPUP_GAP - height;
+    const fitsBelow = below + height <= window.innerHeight - POPUP_GAP;
+    const top = fitsBelow || above < POPUP_GAP ? below : above;
+
+    element.style.left = `${left}px`;
+    element.style.top = `${top}px`;
   }
 
   function requestTargets(query) {
@@ -200,10 +221,12 @@
       // Keep the caret in the field: choose() reads its position.
       element.addEventListener('mousedown', (event) => event.preventDefault());
       element.addEventListener('click', (event) => {
+        // The table view must not see this click (see the file comment).
+        event.stopPropagation();
         const option = event.target.closest(SEL_OPTION);
         if (option) choose(option);
       });
-      field.parentElement.appendChild(element);
+      document.body.appendChild(element);
       popup = {
         field,
         start: trigger.start,
@@ -222,7 +245,7 @@
 
   document.addEventListener('input', (event) => {
     const field = event.target;
-    if (!linkFields.has(field)) return;
+    if (!fieldWidgets.hasWidget(field, 'link')) return;
     const trigger = currentTrigger(field);
     // The closed trigger is identified by its offset. Once the text before
     // the caret has no trigger at that offset (for example, the user deleted
@@ -249,6 +272,8 @@
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
       moveActive(event.key === 'ArrowDown' ? 1 : -1);
     } else if (event.key === 'Enter' || event.key === 'Tab') {
+      // With "No matches found", no option is active, so the key works as
+      // usual in the field.
       const active = popup.element.querySelector(`.${CLASS_ACTIVE}`);
       if (!active) return;
       choose(active);
@@ -265,14 +290,18 @@
     if (popup && event.target === popup.field) closePopup();
   });
 
+  // The popup has a fixed position, so it follows the caret line when the
+  // page or a container scrolls, and when the window size changes.
+  function replacePopup() {
+    if (popup && !popup.element.hidden) placePopup();
+  }
+  document.addEventListener('scroll', replacePopup, true);
+  window.addEventListener('resize', replacePopup);
+
   fieldWidgets.register({
     id: 'link',
     label: 'Link',
     supports: (markup) => markup === 'RST' || markup === 'Markdown',
-
-    scan(field) {
-      linkFields.add(field);
-    },
 
     insert(field, line) {
       fieldWidgets.insertBlock(field, line, ['@']);

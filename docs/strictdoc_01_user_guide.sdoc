@@ -2833,10 +2833,11 @@ STATEMENT: >>>
 The Web UI has a table editor for all multiline fields with RST or Markdown
 markup. Fields with other markup, such as HTML or Text, have no table editor.
 
-The table editor inserts and edits tables as plain markup text: RST grid
-tables and Markdown pipe tables. The table text in the field stays editable by
-hand. When the caret is in a table, a button next to the field opens the table
-in the editor. In other places, the button inserts a new table.
+The table editor inserts and edits tables as plain markup text: RST grid tables
+and Markdown pipe tables. The table text in the field stays editable by hand.
+When the caret is in a table, a button next to the field opens the table in the
+editor. When the caret is on an empty line, the ``+`` button opens a menu.
+Select **Table** to insert a new table.
 
 The table editor recognizes the following tables:
 

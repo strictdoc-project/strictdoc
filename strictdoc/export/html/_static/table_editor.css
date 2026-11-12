@@ -36,6 +36,19 @@
   border-color: var(--color-action);
 }
 
+/* Insert menu, under the field button; table_editor.js sets its top */
+
+sdoc-table-editor-insert-menu {
+  left: -28px;
+}
+
+sdoc-table-editor-insert-menu button {
+  border: none;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+}
+
 /* Editor modal */
 
 sdoc-modal[context="table-editor"] {

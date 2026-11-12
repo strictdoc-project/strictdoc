@@ -12,11 +12,11 @@
 // so the editor never rewrites a table it has misread.
 //
 // While the caret is in a field, a button floats in the field's left margin:
-// next to the table that holds the caret ("edit"), or next to the caret line
-// ("insert"). It hides while the user types and inside table-like text that
-// is not editable. Both modes open a modal that edits a copy of the table:
-// cells, grips with a menu for rows and columns, insert buttons on the
-// borders, and extend bars. Apply writes the serialized table back into the
+// next to the table that holds the caret ("edit"), or next to a blank caret
+// line ("insert"). It hides while the user types. The insert button opens a
+// menu of the blocks it can insert; the only block is a table. Edit and
+// insert open a modal that edits a copy of the table: cells, grips with a
+// menu for rows and columns, insert buttons on the borders, and extend bars. Apply writes the serialized table back into the
 // field and fires a bubbling "input" event, so editable_field.js syncs the
 // hidden textarea the same way it does for typing.
 //
@@ -43,16 +43,19 @@
   // "column".
   // - js-table_editor-menu-action marks a grip menu item. Its value is the
   // action.
+  // - js-table_editor-insert-block marks an item of the insert menu. Its
+  // value is the block to insert.
   // - js-table_editor-tooltip marks a handle with a tooltip. Its value is a
   // key of TOOLTIPS.
   // - js-table_editor-icon marks an icon in the #template-table-editor-icons
-  // template (components/table_editor/icons.jinja). Its value is the menu
-  // action.
+  // template (components/table_editor/icons.jinja). Its value is a grip
+  // menu action or an insert menu block.
   const ATTR_CELL = 'js-table_editor-cell';
   const ATTR_INSERT = 'js-table_editor-insert';
   const ATTR_GRIP = 'js-table_editor-grip';
   const ATTR_EXTEND = 'js-table_editor-extend';
   const ATTR_MENU_ACTION = 'js-table_editor-menu-action';
+  const ATTR_INSERT_BLOCK = 'js-table_editor-insert-block';
   const ATTR_TOOLTIP = 'js-table_editor-tooltip';
   const ATTR_ICON = 'js-table_editor-icon';
   const ICON_TEMPLATE_ID = 'template-table-editor-icons';
@@ -69,12 +72,9 @@
   //
 
   // Parses each run of consecutive lines accepted by isCandidate(). Returns
-  // the runs that parse() accepts as tables, with their line range, and the
-  // rejected runs of two or more lines as blocks: table-like text that the
-  // editor must neither rewrite nor insert into.
+  // the runs that parse() accepts as tables, with their line range.
   function findTables(lines, isCandidate, parse) {
     const tables = [];
-    const blocks = [];
     let start = -1;
     for (let index = 0; index <= lines.length; index++) {
       const candidate = index < lines.length && isCandidate(lines[index], index);
@@ -86,19 +86,11 @@
             start,
             end: index - 1
           }));
-        } else if (index - start > 1) {
-          blocks.push({
-            start,
-            end: index - 1
-          });
         }
         start = -1;
       }
     }
-    return {
-      tables,
-      blocks
-    };
+    return tables;
   }
 
   // Returns the indent shared by all lines, or null if they differ. A line
@@ -551,11 +543,12 @@
   // Per-field state and highlighting.
   //
 
-  // field -> { format, button, typing, lines, offsets, segments, mapped,
-  // tables, blocks }
+  // field -> { format, button, menu, typing, lines, offsets, segments,
+  // mapped, tables }
+  // menu: the open insert menu as { element, line }, or null.
   // typing: the caret position after the last input, or false.
-  // lines, offsets, segments, mapped, tables, and blocks describe the
-  // current field text; scanField() sets them after every change.
+  // lines, offsets, segments, mapped, and tables describe the current field
+  // text; scanField() sets them after every change.
   const fieldStates = new Map();
   let activeField = null;
 
@@ -566,10 +559,7 @@
     state.offsets = lineOffsets(state.lines);
     state.segments = textSegments(field);
     state.mapped = segmentsText(state.segments) === text;
-    ({
-      tables: state.tables,
-      blocks: state.blocks
-    } = state.format.findTables(state.lines));
+    state.tables = state.format.findTables(state.lines);
   }
 
   // Returns the line index of the caret, or null if the caret is not in the
@@ -586,9 +576,9 @@
     return text.split('\n').length - 1;
   }
 
-  function tableAtLine(state, line, list = state.tables) {
+  function tableAtLine(state, line) {
     if (line === null) return null;
-    return list.find(
+    return state.tables.find(
       (table) => line >= table.start && line <= table.end,
     ) || null;
   }
@@ -648,14 +638,20 @@
     return fieldStates.has(field) && field === document.activeElement ? field : null;
   }
 
+  function closeInsertMenu(state) {
+    state.menu?.element.remove();
+    state.menu = null;
+  }
+
   function hideButton(field) {
     const state = fieldStates.get(field);
     if (!state) return;
+    closeInsertMenu(state);
     state.button.hidden = true;
   }
 
   // Shows the button in the left margin of the field: next to the first line
-  // of the table that holds the caret ("edit"), or next to the caret line
+  // of the table that holds the caret ("edit"), or next to a blank caret line
   // ("insert"). Returns the table that holds the caret.
   function placeButton(field) {
     const state = fieldStates.get(field);
@@ -671,14 +667,15 @@
         caret.startOffset !== state.typing.offset)) {
       state.typing = false;
     }
-    if (line === null || state.typing || (!table && tableAtLine(state, line, state.blocks))) {
-      button.hidden = true;
+    if (line === null || state.typing || (!table && state.lines[line].trim() !== '')) {
+      hideButton(field);
       return table;
     }
+    if (state.menu?.line !== line) closeInsertMenu(state);
 
     button.dataset.mode = table ? 'edit' : 'insert';
-    button.textContent = table ? '✎' : '⊞';
-    button.title = table ? 'Edit table' : 'Insert table';
+    button.textContent = table ? '✎' : '+';
+    button.title = table ? 'Edit table' : 'Insert';
     button.setAttribute('aria-label', button.title);
     const top = table ?
       lineTop(field, state, table.start, null) :
@@ -748,8 +745,8 @@
     writeLines(field, updated, table.start + tableLines.length - 1);
   }
 
-  // Inserts the table after the caret line, or in place of it if the line is
-  // blank. Blank lines separate the table from the surrounding text.
+  // Inserts the table in place of the blank caret line. Blank lines separate
+  // the table from the surrounding text.
   function insertTable(field, line, tableLines) {
     const {
       lines
@@ -760,10 +757,8 @@
       return;
     }
 
-    const lineIndex = Math.min(line ?? lines.length - 1, lines.length - 1);
-    const isBlank = lines[lineIndex].trim() === '';
-    const before = lines.slice(0, isBlank ? lineIndex : lineIndex + 1);
-    const after = lines.slice(lineIndex + 1);
+    const before = lines.slice(0, line);
+    const after = lines.slice(line + 1);
     const blankBefore = before.length === 0 ||
       before[before.length - 1].trim() === '' ? [] : [''];
     const blankAfter = after.length > 0 && after[0].trim() !== '' ? [''] : [];
@@ -861,7 +856,7 @@
     return bar;
   }
 
-  // Returns a copy of the icon of a menu action, or null if the page has no
+  // Returns a copy of the icon of a menu item, or null if the page has no
   // icon template.
   function menuIcon(action) {
     const template = document.getElementById(ICON_TEMPLATE_ID);
@@ -1468,8 +1463,56 @@
   }
 
   //
-  // Field button.
+  // Field button and insert menu.
   //
+
+  // [block, label]: the items of the insert menu.
+  const INSERT_BLOCKS = [
+    ['table', 'Table'],
+  ];
+
+  // Opens the insert menu under the button. The menu keeps the caret in the
+  // field, so the caret line is still known when an item is chosen.
+  function openInsertMenu(field, line) {
+    const state = fieldStates.get(field);
+    const {
+      button
+    } = state;
+    const element = document.createElement('sdoc-table-editor-insert-menu');
+    element.className = 'dropdown_menu';
+    element.dataset.testid = 'table-editor-insert-menu';
+    element.setAttribute('role', 'menu');
+    for (const [block, label] of INSERT_BLOCKS) {
+      const item = createButton(
+        'dropdown_menu_item',
+        label,
+        null,
+        `table-editor-insert-${block}`,
+      );
+      item.setAttribute('role', 'menuitem');
+      item.setAttribute(ATTR_INSERT_BLOCK, block);
+      const icon = menuIcon(block);
+      if (icon) item.prepend(icon);
+      element.appendChild(item);
+    }
+    element.addEventListener('mousedown', (event) => event.preventDefault());
+    element.addEventListener('click', (event) => {
+      const item = event.target.closest(`[${ATTR_INSERT_BLOCK}]`);
+      if (!item) return;
+      closeInsertMenu(state);
+      openEditor('Insert table', createEmptyTable(3, 2), (created) => {
+        if (!field.isConnected) return;
+        scanField(field);
+        insertTable(field, line, state.format.serialize(created));
+      });
+    });
+    element.style.top = `${button.offsetTop + button.offsetHeight}px`;
+    button.after(element);
+    state.menu = {
+      element,
+      line
+    };
+  }
 
   function initField(field) {
     if (fieldStates.has(field)) return;
@@ -1495,12 +1538,10 @@
           if (!field.isConnected) return;
           replaceTable(field, table, format.serialize(edited));
         });
-      } else if (!tableAtLine(state, line, state.blocks)) {
-        openEditor('Insert table', createEmptyTable(3, 2), (created) => {
-          if (!field.isConnected) return;
-          scanField(field);
-          insertTable(field, line, format.serialize(created));
-        });
+      } else if (state.menu) {
+        closeInsertMenu(state);
+      } else if (line !== null && state.lines[line].trim() === '') {
+        openInsertMenu(field, line);
       }
     });
 
@@ -1511,6 +1552,7 @@
     fieldStates.set(field, {
       format,
       button,
+      menu: null,
       typing: false
     });
     scanField(field);
@@ -1542,6 +1584,24 @@
     state.typing = false;
     updateActiveTable();
   });
+
+  document.addEventListener('pointerdown', (event) => {
+    for (const state of fieldStates.values()) {
+      if (state.menu && !state.menu.element.contains(event.target) &&
+        !state.button.contains(event.target)) closeInsertMenu(state);
+    }
+  });
+
+  // Escape closes only the insert menu. The table view cancels the edited
+  // cell on Escape from its listener on the document, so the event must not
+  // get there.
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    const state = fieldStates.get(event.target.closest?.(SEL_FIELD));
+    if (!state?.menu) return;
+    event.stopPropagation();
+    closeInsertMenu(state);
+  }, true);
 
   document.addEventListener('focusout', (event) => {
     if (fieldStates.has(event.target)) hideButton(event.target);

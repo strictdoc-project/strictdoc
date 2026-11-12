@@ -51,6 +51,14 @@ class TableEditor:  # pylint: disable=invalid-name
         )
         assert found, f"Text not found in the field: {text!r}"
 
+    def do_place_caret_on_next_line(self, text: str) -> None:
+        """
+        Places the caret at the start of the line that follows `text`.
+        `text` must end its line.
+        """
+        self.do_place_caret_after(text)
+        self.do_type_at_caret(Keys.ARROW_RIGHT)
+
     def do_type_at_caret(self, text: str) -> None:
         ActionChains(self.test_case.driver).send_keys(text).perform()
 
@@ -96,10 +104,26 @@ class TableEditor:  # pylint: disable=invalid-name
             self.button_xpath, by=By.XPATH
         )
 
-    def do_open_insert(self) -> None:
-        """Opens the editor with a new 3 x 3 table: a header and 2 rows."""
+    INSERT_MENU = "//*[@data-testid='table-editor-insert-menu']"
+
+    def do_open_insert_menu(self) -> None:
         self.assert_button("insert")
         self.test_case.click_xpath(self.button_xpath)
+        self.test_case.assert_element(self.INSERT_MENU, by=By.XPATH)
+
+    def do_close_insert_menu_by_escape(self) -> None:
+        ActionChains(self.test_case.driver).send_keys(Keys.ESCAPE).perform()
+        self.test_case.assert_element_not_present(self.INSERT_MENU, by=By.XPATH)
+
+    def do_open_insert(self) -> None:
+        """
+        Opens the editor with a new 3 x 3 table, a header and 2 rows, through
+        the insert menu.
+        """
+        self.do_open_insert_menu()
+        self.test_case.click_xpath(
+            f"{self.INSERT_MENU}//*[@data-testid='table-editor-insert-table']"
+        )
         self.assert_open()
 
     def do_open_edit(self) -> None:

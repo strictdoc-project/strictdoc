@@ -46,6 +46,7 @@ class Test(E2ECase):
             form.do_fill_in_field_comment(new_comment_mid, "Second comment.")
 
             screen_table.do_save_inline_cell_by_outside_click()
+            screen_table.wait_for_cell_save_applied(node_mid, "COMMENT")
 
             self.assert_text("First comment.")
             self.assert_text("Second comment.")

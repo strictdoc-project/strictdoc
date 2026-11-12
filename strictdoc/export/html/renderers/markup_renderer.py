@@ -33,6 +33,30 @@ FragmentWriterType = Union[
 ]
 
 
+def flatten_html_block_for_markdown(html: str) -> str:
+    """
+    Prepares the HTML of an anchor for a Markdown field.
+
+    The anchor HTML goes into the Markdown text of the field before
+    markdown-it parses that text. markdown-it reads the anchor HTML as a raw
+    HTML block, and a raw HTML block ends at the first blank line. The anchor
+    template (markup/anchor.jinja) has indented lines, and the Jinja tags
+    that render the incoming links of the anchor leave blank lines. After
+    such a blank line, markdown-it reads every line indented by four or more
+    spaces as a code block. As a result, the rest of the anchor HTML, for
+    example the list of incoming links, was shown as escaped HTML code
+    instead of being rendered.
+
+    This function removes the indentation and the blank lines, so the whole
+    anchor HTML stays one raw HTML block. The function keeps one blank line
+    at the end, because this blank line closes the HTML block: without it,
+    the text after the anchor would become part of the HTML block and would
+    not be rendered as a paragraph.
+    """
+    lines = [line.strip() for line in html.splitlines()]
+    return "\n".join(line for line in lines if line) + "\n\n"
+
+
 class MarkupRenderer:
     @staticmethod
     def create(
@@ -214,12 +238,15 @@ class MarkupRenderer:
                         linkable_node.get_display_title(), href
                     )
             elif isinstance(part, Anchor):
-                parts_output += self.template_anchor.render(
+                anchor_html = self.template_anchor.render(
                     anchor=part,
                     traceability_index=self.traceability_index,
                     link_renderer=self.link_renderer,
                     document_type=DocumentType.DOCUMENT,
                 )
+                if isinstance(fragment_writer, MarkdownToHtmlFragmentWriter):
+                    anchor_html = flatten_html_block_for_markdown(anchor_html)
+                parts_output += anchor_html
             else:
                 raise NotImplementedError
             prev_part = part

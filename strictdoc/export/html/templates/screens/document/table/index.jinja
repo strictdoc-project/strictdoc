@@ -5,6 +5,7 @@
   <link rel="stylesheet" href="{{ view_object.render_static_url('table_view.css') }}"/>
   <link rel="stylesheet" href="{{ view_object.render_static_url('media_zoom.css') }}"/>
   {%- if view_object.is_running_on_server %}
+  <link rel="stylesheet" href="{{ view_object.render_static_url('field_widgets.css') }}"/>
   <link rel="stylesheet" href="{{ view_object.render_static_url('table_editor.css') }}"/>
   {%- endif %}
 {% endblock head_css %}
@@ -26,6 +27,7 @@
     import hotwiredTurbo from "{{ view_object.render_static_url('turbo.min.js') }}";
   </script>
   <script src="{{ view_object.render_static_url('editable_field.js') }}"></script>
+  <script src="{{ view_object.render_static_url('field_widgets.js') }}"></script>
   <script src="{{ view_object.render_static_url('table_editor.js') }}"></script>
   <script src="{{ view_object.render_static_url('deletable_field.js') }}"></script>
   <script src="{{ view_object.render_static_url('movable_field.js') }}"></script>

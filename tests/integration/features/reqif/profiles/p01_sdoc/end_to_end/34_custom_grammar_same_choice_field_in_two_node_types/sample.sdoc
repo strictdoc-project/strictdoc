@@ -1,0 +1,41 @@
+[DOCUMENT]
+TITLE: sample
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: KIND
+    TYPE: SingleChoice(functional, performance)
+    REQUIRED: False
+  - TITLE: TAGS
+    TYPE: MultipleChoice(A, B)
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+- TAG: TEST_CASE
+  FIELDS:
+  - TITLE: KIND
+    TYPE: SingleChoice(transient, steady_state)
+    REQUIRED: False
+  - TITLE: TAGS
+    TYPE: MultipleChoice(X, Y)
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+
+[REQUIREMENT]
+KIND: performance
+TAGS: A, B
+STATEMENT: >>>
+The system shall respond.
+<<<
+
+[TEST_CASE]
+KIND: steady_state
+TAGS: Y
+STATEMENT: >>>
+Check the response.
+<<<

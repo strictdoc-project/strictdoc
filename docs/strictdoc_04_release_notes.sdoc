@@ -73,6 +73,10 @@ before the node is saved. See [LINK: SDOC_UG_LINKS_AND_ANCHORS].
 
 4\) Fixed: in Markdown fields, an anchor with incoming links showed its list of
 incoming links as HTML code. The anchor now renders as in RST fields.
+
+5\) Fixed: the ReqIF export now accepts grammars in which two node types
+have a ``SingleChoice`` or ``MultipleChoice`` field with the same title and
+different options. Before, the export failed with an assertion error.
 <<<
 
 [[/SECTION]]

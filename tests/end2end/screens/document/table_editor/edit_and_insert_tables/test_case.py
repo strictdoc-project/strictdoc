@@ -66,8 +66,18 @@ class Test(E2ECase):
             table_editor.do_place_caret_after("spanned")
             table_editor.assert_button_hidden()
 
-            # Cancel leaves the field as it was.
+            # The insert button shows only on a blank line.
             table_editor.do_place_caret_after("Paragraph.")
+            table_editor.assert_button_hidden()
+
+            # Escape closes only the insert menu.
+            table_editor.do_place_caret_on_next_line("Paragraph.")
+            table_editor.do_open_insert_menu()
+            table_editor.do_close_insert_menu_by_escape()
+            table_editor.assert_button("insert")
+            form.assert_on_form()
+
+            # Cancel leaves the field as it was.
             table_editor.do_open_insert()
             table_editor.assert_cell(2, 2, "")
             table_editor.do_click_extend("row")
@@ -94,7 +104,7 @@ class Test(E2ECase):
             table_editor.do_apply()
 
             # The header stays empty: the table is written without one.
-            table_editor.do_place_caret_after("Paragraph.")
+            table_editor.do_place_caret_on_next_line("Paragraph.")
             table_editor.do_open_insert()
             table_editor.do_fill_cell(1, 0, "first")
             table_editor.do_fill_cell(2, 1, "second")
@@ -143,9 +153,6 @@ class Test(E2ECase):
             form.assert_on_form()
 
             table_editor.assert_highlighted_tables(1)
-
-            table_editor.do_place_caret_after("| not")
-            table_editor.assert_button("insert")
 
             table_editor.do_place_caret_after("| and")
             table_editor.do_open_edit()

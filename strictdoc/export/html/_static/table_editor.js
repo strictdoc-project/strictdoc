@@ -1,33 +1,27 @@
 // @relation(SDOC-SRS-61, scope=file)
 //
-// Table editor for the multiline fields of the node form.
+// Table editor: the "table" widget of field_widgets.js.
 //
 // Supported markup: RST grid tables and Markdown (GFM) pipe tables. The
-// format follows the field markup (the form's "document_markup" input);
-// fields with other markup are left alone.
+// format follows the field markup; fields with other markup have no table
+// editor.
 //
 // A table is editable only when the parser understands its whole structure
 // (see parseRstGridTable() and parseMarkdownPipeTable()). Anything else, for
 // example an RST table with spans, is not highlighted and cannot be opened,
 // so the editor never rewrites a table it has misread.
 //
-// While the caret is in a field, a button floats in the field's left margin:
-// next to the table that holds the caret ("edit"), or next to a blank caret
-// line ("insert"). It hides while the user types. The insert button opens a
-// menu of the blocks it can insert; the only block is a table. Edit and
-// insert open a modal that edits a copy of the table: cells, grips with a
-// menu for rows and columns, insert buttons on the borders, and extend bars. Apply writes the serialized table back into the
-// field and fires a bubbling "input" event, so editable_field.js syncs the
-// hidden textarea the same way it does for typing.
+// The field button edits the table that holds the caret. The insert menu of
+// the field button inserts a new table. Both open a modal that edits a copy
+// of the table: cells, grips with a menu for rows and columns, insert
+// buttons on the borders, and extend bars. Apply writes the serialized
+// table back into the field through field_widgets.js.
 //
 // The CSS Custom Highlight API paints the tables in place, so there are no
 // overlay elements to position or to keep away from the caret.
 
 (() => {
 
-  const SEL_FIELD =
-    'sdoc-contenteditable[data-js-editable-field]' +
-    '[data-field-type="multiline"][contenteditable="true"]';
   const HIGHLIGHT_TABLE = 'sdoc-table';
   const HIGHLIGHT_ACTIVE_TABLE = 'sdoc-table-active';
   const HAS_HIGHLIGHTS = typeof CSS !== 'undefined' && 'highlights' in CSS;
@@ -43,19 +37,16 @@
   // "column".
   // - js-table_editor-menu-action marks a grip menu item. Its value is the
   // action.
-  // - js-table_editor-insert-block marks an item of the insert menu. Its
-  // value is the block to insert.
   // - js-table_editor-tooltip marks a handle with a tooltip. Its value is a
   // key of TOOLTIPS.
   // - js-table_editor-icon marks an icon in the #template-table-editor-icons
   // template (components/table_editor/icons.jinja). Its value is a grip
-  // menu action or an insert menu block.
+  // menu action, or "table" for the insert menu item.
   const ATTR_CELL = 'js-table_editor-cell';
   const ATTR_INSERT = 'js-table_editor-insert';
   const ATTR_GRIP = 'js-table_editor-grip';
   const ATTR_EXTEND = 'js-table_editor-extend';
   const ATTR_MENU_ACTION = 'js-table_editor-menu-action';
-  const ATTR_INSERT_BLOCK = 'js-table_editor-insert-block';
   const ATTR_TOOLTIP = 'js-table_editor-tooltip';
   const ATTR_ICON = 'js-table_editor-icon';
   const ICON_TEMPLATE_ID = 'template-table-editor-icons';
@@ -447,328 +438,6 @@
       if (table.align) move(table.align);
     }
     return at;
-  }
-
-  //
-  // Field text and DOM positions.
-  //
-  // The field usually holds a single text node, but typing can add more text
-  // nodes and <br> elements. To find a text position in the DOM, each text
-  // node is mapped to its characters and each <br> to a line break. If the
-  // field holds other elements, this mapping no longer matches innerText
-  // (the text that is saved). Then the field gets no highlights and no edit
-  // button, because positions in it cannot be computed reliably.
-  //
-
-  function textSegments(root) {
-    const segments = [];
-    const walker = document.createTreeWalker(
-      root,
-      NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT,
-    );
-    while (walker.nextNode()) {
-      const node = walker.currentNode;
-      if (node.nodeType === Node.TEXT_NODE) {
-        segments.push({
-          node,
-          text: node.nodeValue
-        });
-      } else if (node.nodeName === 'BR') {
-        segments.push({
-          node,
-          text: '\n'
-        });
-      }
-    }
-    return segments;
-  }
-
-  function segmentsText(segments) {
-    return segments.map((segment) => segment.text).join('');
-  }
-
-  // Returns a DOM position {node, offset} for a character offset.
-  function domPosition(field, segments, charOffset) {
-    let start = 0;
-    for (const segment of segments) {
-      const end = start + segment.text.length;
-      if (charOffset <= end) {
-        if (segment.node.nodeType === Node.TEXT_NODE) {
-          return {
-            node: segment.node,
-            offset: charOffset - start
-          };
-        }
-        const parent = segment.node.parentNode;
-        const index = Array.prototype.indexOf.call(parent.childNodes, segment.node);
-        return {
-          node: parent,
-          offset: charOffset === start ? index : index + 1
-        };
-      }
-      start = end;
-    }
-    return {
-      node: field,
-      offset: field.childNodes.length
-    };
-  }
-
-  // Returns a DOM range for the characters [from, to) of the field text.
-  function textRange(field, segments, from, to) {
-    const start = domPosition(field, segments, from);
-    const end = domPosition(field, segments, to);
-    const range = document.createRange();
-    range.setStart(start.node, start.offset);
-    range.setEnd(end.node, end.offset);
-    return range;
-  }
-
-  function lineOffsets(lines) {
-    const offsets = [];
-    let offset = 0;
-    for (const line of lines) {
-      offsets.push(offset);
-      offset += line.length + 1;
-    }
-    return offsets;
-  }
-
-  function caretRange() {
-    const selection = window.getSelection();
-    return selection?.rangeCount ? selection.getRangeAt(0) : null;
-  }
-
-  //
-  // Per-field state and highlighting.
-  //
-
-  // field -> { format, button, menu, typing, lines, offsets, segments,
-  // mapped, tables }
-  // menu: the open insert menu as { element, line }, or null.
-  // typing: the caret position after the last input, or false.
-  // lines, offsets, segments, mapped, and tables describe the current field
-  // text; scanField() sets them after every change.
-  const fieldStates = new Map();
-  let activeField = null;
-
-  function scanField(field) {
-    const state = fieldStates.get(field);
-    const text = field.innerText;
-    state.lines = text.split('\n');
-    state.offsets = lineOffsets(state.lines);
-    state.segments = textSegments(field);
-    state.mapped = segmentsText(state.segments) === text;
-    state.tables = state.format.findTables(state.lines);
-  }
-
-  // Returns the line index of the caret, or null if the caret is not in the
-  // field or the field's DOM cannot be mapped to its text.
-  function caretLine(field) {
-    if (!fieldStates.get(field).mapped) return null;
-    const range = caretRange();
-    if (!range || !field.contains(range.startContainer)) return null;
-
-    const before = document.createRange();
-    before.selectNodeContents(field);
-    before.setEnd(range.startContainer, range.startOffset);
-    const text = segmentsText(textSegments(before.cloneContents()));
-    return text.split('\n').length - 1;
-  }
-
-  function tableAtLine(state, line) {
-    if (line === null) return null;
-    return state.tables.find(
-      (table) => line >= table.start && line <= table.end,
-    ) || null;
-  }
-
-  function tableRange(field, state, table) {
-    return textRange(
-      field,
-      state.segments,
-      state.offsets[table.start],
-      state.offsets[table.end] + state.lines[table.end].length,
-    );
-  }
-
-  // Returns the viewport top of a text line. A collapsed range on an empty
-  // line has no rect, so the top is then derived from the closest non-empty
-  // line above.
-  function lineTop(field, state, line, caret) {
-    const caretRect = caret?.getClientRects()[0];
-    if (caretRect?.height) return caretRect.top;
-
-    for (let above = line; above >= 0; above--) {
-      const length = state.lines[above].length;
-      if (length === 0) continue;
-      const from = state.offsets[above] + (above === line ? 0 : length - 1);
-      const rect = textRange(field, state.segments, from, from + 1)
-        .getClientRects()[0];
-      if (rect) return rect.top + (line - above) * rect.height;
-    }
-    const style = getComputedStyle(field);
-    const lineHeight = parseFloat(style.lineHeight) ||
-      parseFloat(style.fontSize) * 1.2;
-    return field.getBoundingClientRect().top + parseFloat(style.paddingTop) +
-      line * lineHeight;
-  }
-
-  function updateHighlights() {
-    // Drops the fields of closed forms; nothing watches for their removal.
-    for (const field of fieldStates.keys()) {
-      if (!field.isConnected) fieldStates.delete(field);
-    }
-    if (!HAS_HIGHLIGHTS) return;
-
-    const ranges = [];
-    for (const [field, state] of fieldStates) {
-      if (!state.mapped) continue;
-      state.tables.forEach((table) => {
-        ranges.push(tableRange(field, state, table));
-      });
-    }
-    CSS.highlights.set(HIGHLIGHT_TABLE, new Highlight(...ranges));
-  }
-
-  function caretField() {
-    const node = caretRange()?.startContainer;
-    const element = node?.nodeType === Node.ELEMENT_NODE ? node : node?.parentElement;
-    const field = element?.closest(SEL_FIELD) ?? null;
-    return fieldStates.has(field) && field === document.activeElement ? field : null;
-  }
-
-  function closeInsertMenu(state) {
-    state.menu?.element.remove();
-    state.menu = null;
-  }
-
-  function hideButton(field) {
-    const state = fieldStates.get(field);
-    if (!state) return;
-    closeInsertMenu(state);
-    state.button.hidden = true;
-  }
-
-  // Shows the button in the left margin of the field: next to the first line
-  // of the table that holds the caret ("edit"), or next to a blank caret line
-  // ("insert"). Returns the table that holds the caret.
-  function placeButton(field) {
-    const state = fieldStates.get(field);
-    const line = caretLine(field);
-    const table = tableAtLine(state, line);
-    const {
-      button
-    } = state;
-    // The button hides while the user types. It shows up again when the
-    // caret moves away from the position where the last input left it.
-    const caret = caretRange();
-    if (state.typing && (caret.startContainer !== state.typing.node ||
-        caret.startOffset !== state.typing.offset)) {
-      state.typing = false;
-    }
-    if (line === null || state.typing || (!table && state.lines[line].trim() !== '')) {
-      hideButton(field);
-      return table;
-    }
-    if (state.menu?.line !== line) closeInsertMenu(state);
-
-    button.dataset.mode = table ? 'edit' : 'insert';
-    button.textContent = table ? '✎' : '+';
-    button.title = table ? 'Edit table' : 'Insert';
-    button.setAttribute('aria-label', button.title);
-    const top = table ?
-      lineTop(field, state, table.start, null) :
-      lineTop(field, state, line, caret);
-    button.hidden = false;
-    button.style.top = `${top - button.offsetParent.getBoundingClientRect().top}px`;
-    return table;
-  }
-
-  // Updates the button and the active-table highlight for the field that
-  // holds the caret.
-  function updateActiveTable() {
-    const field = caretField();
-    if (activeField && activeField !== field) hideButton(activeField);
-    activeField = field;
-
-    let activeRange = null;
-    if (activeField) {
-      const table = placeButton(activeField);
-      if (table) {
-        activeRange = tableRange(activeField, fieldStates.get(activeField), table);
-      }
-    }
-
-    if (HAS_HIGHLIGHTS) {
-      CSS.highlights.set(
-        HIGHLIGHT_ACTIVE_TABLE,
-        activeRange ? new Highlight(activeRange) : new Highlight(),
-      );
-    }
-  }
-
-  //
-  // Writing back to the field.
-  //
-
-  // Replaces the field content with one text node, so the caret can be set
-  // by a text offset.
-  function writeLines(field, lines, caretAfterLine) {
-    const text = lines.join('\n');
-    field.replaceChildren(document.createTextNode(text));
-
-    field.focus();
-    const caretOffset = lineOffsets(lines)[caretAfterLine] +
-      lines[caretAfterLine].length;
-    window.getSelection().collapse(field.firstChild, caretOffset);
-
-    field.dispatchEvent(new Event('input', {
-      bubbles: true
-    }));
-    // The input event above makes the input listener treat this rewrite as
-    // typing, which would hide the button. The editor wrote the text, not
-    // the user, so the button stays.
-    fieldStates.get(field).typing = false;
-    updateActiveTable();
-  }
-
-  function replaceTable(field, table, tableLines) {
-    const {
-      lines
-    } = fieldStates.get(field);
-    const updated = [
-      ...lines.slice(0, table.start),
-      ...tableLines,
-      ...lines.slice(table.end + 1),
-    ];
-    writeLines(field, updated, table.start + tableLines.length - 1);
-  }
-
-  // Inserts the table in place of the blank caret line. Blank lines separate
-  // the table from the surrounding text.
-  function insertTable(field, line, tableLines) {
-    const {
-      lines
-    } = fieldStates.get(field);
-
-    if (lines.join('').trim() === '') {
-      writeLines(field, tableLines, tableLines.length - 1);
-      return;
-    }
-
-    const before = lines.slice(0, line);
-    const after = lines.slice(line + 1);
-    const blankBefore = before.length === 0 ||
-      before[before.length - 1].trim() === '' ? [] : [''];
-    const blankAfter = after.length > 0 && after[0].trim() !== '' ? [''] : [];
-
-    const updated = [...before, ...blankBefore, ...tableLines, ...blankAfter, ...after];
-    writeLines(
-      field,
-      updated,
-      before.length + blankBefore.length + tableLines.length - 1,
-    );
   }
 
   //
@@ -1463,150 +1132,82 @@
   }
 
   //
-  // Field button and insert menu.
+  // Widget.
   //
 
-  // [block, label]: the items of the insert menu.
-  const INSERT_BLOCKS = [
-    ['table', 'Table'],
-  ];
+  const fieldWidgets = window.StrictDoc.fieldWidgets;
 
-  // Opens the insert menu under the button. The menu keeps the caret in the
-  // field, so the caret line is still known when an item is chosen.
-  function openInsertMenu(field, line) {
-    const state = fieldStates.get(field);
-    const {
-      button
-    } = state;
-    const element = document.createElement('sdoc-table-editor-insert-menu');
-    element.className = 'dropdown_menu';
-    element.dataset.testid = 'table-editor-insert-menu';
-    element.setAttribute('role', 'menu');
-    for (const [block, label] of INSERT_BLOCKS) {
-      const item = createButton(
-        'dropdown_menu_item',
-        label,
-        null,
-        `table-editor-insert-${block}`,
-      );
-      item.setAttribute('role', 'menuitem');
-      item.setAttribute(ATTR_INSERT_BLOCK, block);
-      const icon = menuIcon(block);
-      if (icon) item.prepend(icon);
-      element.appendChild(item);
+  // field -> { format, tables } for the fields with a table format.
+  const fieldTables = new Map();
+
+  function updateHighlights() {
+    // Drops the fields of closed forms; nothing watches for their removal.
+    for (const field of fieldTables.keys()) {
+      if (!field.isConnected) fieldTables.delete(field);
     }
-    element.addEventListener('mousedown', (event) => event.preventDefault());
-    element.addEventListener('click', (event) => {
-      const item = event.target.closest(`[${ATTR_INSERT_BLOCK}]`);
-      if (!item) return;
-      closeInsertMenu(state);
+    if (!HAS_HIGHLIGHTS) return;
+
+    const ranges = [];
+    for (const [field, entry] of fieldTables) {
+      entry.tables.forEach((table) => {
+        const range = fieldWidgets.lineRange(field, table.start, table.end);
+        if (range) ranges.push(range);
+      });
+    }
+    CSS.highlights.set(HIGHLIGHT_TABLE, new Highlight(...ranges));
+  }
+
+  fieldWidgets.register({
+    id: 'table',
+    label: 'Table',
+    editTitle: 'Edit table',
+    icon: () => menuIcon('table'),
+    supports: (markup) => FORMATS.has(markup),
+
+    scan(field, lines, markup) {
+      const format = FORMATS.get(markup);
+      fieldTables.set(field, {
+        format,
+        tables: format.findTables(lines)
+      });
+      updateHighlights();
+    },
+
+    blockAt(field, line) {
+      return fieldTables.get(field)?.tables.find(
+        (table) => line >= table.start && line <= table.end,
+      ) ?? null;
+    },
+
+    activate(field, table) {
+      if (!HAS_HIGHLIGHTS) return;
+      const range = table && fieldWidgets.lineRange(field, table.start, table.end);
+      CSS.highlights.set(
+        HIGHLIGHT_ACTIVE_TABLE,
+        range ? new Highlight(range) : new Highlight(),
+      );
+    },
+
+    edit(field, table) {
+      const {
+        format
+      } = fieldTables.get(field);
+      openEditor('Edit table', table, (edited) => {
+        if (!field.isConnected) return;
+        const tableLines = format.serialize(edited);
+        fieldWidgets.replaceLines(field, table.start, table.end, tableLines);
+      });
+    },
+
+    insert(field, line) {
+      const {
+        format
+      } = fieldTables.get(field);
       openEditor('Insert table', createEmptyTable(3, 2), (created) => {
         if (!field.isConnected) return;
-        scanField(field);
-        insertTable(field, line, state.format.serialize(created));
+        fieldWidgets.insertBlock(field, line, format.serialize(created));
       });
-    });
-    element.style.top = `${button.offsetTop + button.offsetHeight}px`;
-    button.after(element);
-    state.menu = {
-      element,
-      line
-    };
-  }
-
-  function initField(field) {
-    if (fieldStates.has(field)) return;
-
-    const markup = field.closest('form')
-      ?.querySelector('[name="document_markup"]')?.value;
-    const format = FORMATS.get(markup);
-    if (!format) return;
-
-    const button = createButton('table-editor-button', '', null, 'table-editor-action');
-    button.hidden = true;
-
-    // Keep the caret in the field: the click handler reads its position.
-    button.addEventListener('mousedown', (event) => event.preventDefault());
-
-    button.addEventListener('click', () => {
-      scanField(field);
-      const state = fieldStates.get(field);
-      const line = caretLine(field);
-      const table = tableAtLine(state, line);
-      if (table) {
-        openEditor('Edit table', table, (edited) => {
-          if (!field.isConnected) return;
-          replaceTable(field, table, format.serialize(edited));
-        });
-      } else if (state.menu) {
-        closeInsertMenu(state);
-      } else if (line !== null && state.lines[line].trim() === '') {
-        openInsertMenu(field, line);
-      }
-    });
-
-    // The hidden textarea must stay the field's next sibling:
-    // editable_field.js finds it with nextElementSibling.
-    (field.nextElementSibling ?? field).after(button);
-
-    fieldStates.set(field, {
-      format,
-      button,
-      menu: null,
-      typing: false
-    });
-    scanField(field);
-    updateHighlights();
-  }
-
-  window.StrictDoc.onInsert(SEL_FIELD, initField);
-
-  document.addEventListener('input', (event) => {
-    const field = event.target.closest?.(SEL_FIELD);
-    if (!fieldStates.has(field)) return;
-    const range = caretRange();
-    fieldStates.get(field).typing = range && {
-      node: range.startContainer,
-      offset: range.startOffset
-    };
-    scanField(field);
-    updateHighlights();
-    updateActiveTable();
+    },
   });
-
-  // After typing, the button comes back when the caret moves (see
-  // placeButton()). A click at the position where typing stopped does not
-  // move the caret, so no selectionchange event fires. The click itself then
-  // brings the button back.
-  document.addEventListener('pointerup', (event) => {
-    const state = fieldStates.get(event.target.closest?.(SEL_FIELD));
-    if (!state?.typing) return;
-    state.typing = false;
-    updateActiveTable();
-  });
-
-  document.addEventListener('pointerdown', (event) => {
-    for (const state of fieldStates.values()) {
-      if (state.menu && !state.menu.element.contains(event.target) &&
-        !state.button.contains(event.target)) closeInsertMenu(state);
-    }
-  });
-
-  // Escape closes only the insert menu. The table view cancels the edited
-  // cell on Escape from its listener on the document, so the event must not
-  // get there.
-  document.addEventListener('keydown', (event) => {
-    if (event.key !== 'Escape') return;
-    const state = fieldStates.get(event.target.closest?.(SEL_FIELD));
-    if (!state?.menu) return;
-    event.stopPropagation();
-    closeInsertMenu(state);
-  }, true);
-
-  document.addEventListener('focusout', (event) => {
-    if (fieldStates.has(event.target)) hideButton(event.target);
-  });
-
-  document.addEventListener('selectionchange', updateActiveTable);
 
 })();

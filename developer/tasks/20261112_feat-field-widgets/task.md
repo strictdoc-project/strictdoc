@@ -1,0 +1,132 @@
+# Field widgets
+
+## WHAT
+
+Multiline fields have widgets that insert and edit markup elements. The
+widgets work in server mode on two screens: the document screen (node
+form) and the table view (inline cell form).
+
+| Widget | Markup | Description |
+|---|---|---|
+| Table | RST, Markdown | [Table editor](../20261109_feat_table_editor/task.md) |
+
+### Field button
+
+While the field has focus, one button shows in the left margin of the
+field:
+
+| Caret position | Button | Location | Click |
+|---|---|---|---|
+| In a block that a widget can edit | Edit (`✎`) | Next to the first line of the block | Opens the widget editor for the block. |
+| On a blank line outside such a block | Insert (`+`) | Next to the caret line | Opens the insert menu. |
+
+The button hides on any other caret line, while the user types, and when
+the field loses focus. The insert button shows only if a widget supports
+the field markup.
+
+### Insert menu
+
+The insert menu has one item for each widget that supports the field
+markup. An item inserts a new element at the blank caret line.
+
+The menu closes:
+
+- on a second click on the button
+- on Escape
+- on a click outside the menu
+- when the caret moves to another line.
+
+Escape closes only the menu. In the table view, the cell stays in edit
+mode.
+
+## WHY
+
+
+Markup elements such as tables and links have a strict syntax. A user must
+remember the syntax and type every element by hand. One typing error
+breaks the element.
+
+Related requirement: SDOC-SRS-208 (Field widgets).
+
+## HOW
+
+`field_widgets.js` with `field_widgets.css` holds the parts that all
+widgets share: the field text, the button, the insert menu, and the write
+back into the field. Each widget is a separate script that registers with
+`StrictDoc.fieldWidgets.register()`. The screens load `field_widgets.js`
+before the widget scripts, in server mode only.
+
+### Widget contract
+
+A widget is an object with these members:
+
+| Member | Required | Purpose |
+|---|---|---|
+| `id` | yes | Name of the insert menu item and its test ID. |
+| `label` | yes | Text of the insert menu item. |
+| `icon()` | yes | Icon of the menu item, or null. |
+| `supports(markup)` | yes | True if the widget works with the markup. |
+| `insert(field, line)` | yes | Inserts a new element at the blank caret line. |
+| `scan(field, lines, markup)` | no | Called after every change of the field text. |
+| `blockAt(field, line)` | no | Returns the block `{start, end, ...}` that holds the line, or null. |
+| `editTitle` | no | Title of the edit button. |
+| `edit(field, block)` | no | Edits a block from `blockAt()`. |
+| `activate(field, block)` | no | Called on every caret move with the block that holds the caret, or null. |
+
+The optional members are for widgets that recognize their own blocks in
+the field text.
+
+`StrictDoc.fieldWidgets` also gives the widgets three helpers:
+
+- `lineRange(field, start, end)`: a DOM range for the lines, or null if
+  the script cannot map the field DOM to its text.
+- `insertBlock(field, line, blockLines)`: writes the lines in place of the
+  blank caret line. Blank lines separate the block from the text around
+  it.
+- `replaceLines(field, start, end, newLines)`: writes the lines in place of
+  the lines from `start` to `end`.
+
+A widget script can load after `field_widgets.js` initializes the fields.
+As a result, `register()` scans the fields that already exist.
+
+### Field integration
+
+- `StrictDoc.onInsert()` initializes every multiline contenteditable,
+  including the fields that Turbo inserts later. The script has no
+  `MutationObserver` of its own.
+- The field markup comes from the `document_markup` input of the form.
+  The table view cell form gets this input from the
+  `table__get_node_contenteditable_inline` route.
+- The button and the insert menu go after the hidden textarea of the
+  field, because `editable_field.js` finds the textarea through
+  `editable.nextElementSibling`. Both are absolutely positioned in
+  `sdoc-form-field`, so the button and the menu scroll with the field.
+- The source text is the `innerText` of the field, the same value that
+  `editable_field.js` saves.
+- A write replaces the field content with one text node and dispatches a
+  bubbling `input` event. `editable_field.js` handles the event and
+  updates the hidden textarea.
+- Delegated `input`, `selectionchange`, `pointerup`, and `focusout`
+  listeners on `document` rescan the field and update the button. After
+  `input`, the script records the caret position. The button stays hidden
+  until the caret moves elsewhere.
+- A `Map` holds the state of each field. A rescan removes the entries of
+  the fields that are no longer in the DOM.
+- In the table view, Escape in a field cancels the cell edit. When the
+  insert menu is open, a capture listener on `document` stops the Escape
+  event and closes only the menu.
+
+### Text positions
+
+The DOM-to-text mapping walks text nodes and `<br>` elements. If the
+mapping does not match `innerText` (for example, when the field contains
+other elements), the script cannot compute the caret line reliably. In
+this case, the field has no button, and `lineRange()` returns null.
+
+### Tests
+
+The table editor tests cover the button and the insert menu, see
+[Table editor](../20261109_feat_table_editor/task.md). The page object
+`tests/end2end/helpers/components/table_editor.py` uses the test IDs
+`field-widgets-button`, `field-widgets-insert-menu`, and
+`field-widgets-insert-<id>`.

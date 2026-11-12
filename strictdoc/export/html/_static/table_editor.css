@@ -10,45 +10,6 @@
   background-color: var(--color-highlight);
 }
 
-/* Field button, in the left padding of sdoc-form-field */
-
-.table-editor-button {
-  position: absolute;
-  left: -28px;
-  width: calc(var(--base-rhythm)*3);
-  height: calc(var(--base-rhythm)*3);
-  padding: 0;
-  border: var(--base-border);
-  border-radius: 4px;
-  background: var(--color-bg-contrast);
-  color: var(--color-action);
-  font-size: 14px;
-  line-height: 1;
-  cursor: pointer;
-  z-index: 20; /* > 10, because of the table view */
-}
-
-.table-editor-button[hidden] {
-  display: none;
-}
-
-.table-editor-button:hover {
-  border-color: var(--color-action);
-}
-
-/* Insert menu, under the field button; table_editor.js sets its top */
-
-sdoc-table-editor-insert-menu {
-  left: -28px;
-}
-
-sdoc-table-editor-insert-menu button {
-  border: none;
-  background: none;
-  font: inherit;
-  cursor: pointer;
-}
-
 /* Editor modal */
 
 sdoc-modal[context="table-editor"] {

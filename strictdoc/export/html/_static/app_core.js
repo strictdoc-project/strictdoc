@@ -10,6 +10,7 @@ Supported shared namespaces:
 - StrictDoc.contentViewport
 - StrictDoc.search
 - StrictDoc.project
+- StrictDoc.fieldWidgets
 
 Feature scripts should keep their own logic in local scope and only use
 StrictDoc.* for intentional cross-script contracts and shared runtime data.
@@ -53,6 +54,11 @@ onInsert(selector, callback) contract:
     DOM mutation anywhere on the page would be scanned N times over; one
     shared observer keeps that work to a single pass regardless of how many
     features register.
+
+fieldWidgets contract:
+    Defined by field_widgets.js, which documents it. A widget script, for
+    example table_editor.js, registers through
+    StrictDoc.fieldWidgets.register() and loads after field_widgets.js.
 */
 
 (function(global) {

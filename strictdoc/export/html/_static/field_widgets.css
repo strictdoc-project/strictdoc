@@ -1,0 +1,40 @@
+/* @relation(SDOC-SRS-208, scope=file) */
+
+/* Field button, in the left padding of sdoc-form-field */
+
+.field-widgets-button {
+  position: absolute;
+  left: -28px;
+  width: calc(var(--base-rhythm)*3);
+  height: calc(var(--base-rhythm)*3);
+  padding: 0;
+  border: var(--base-border);
+  border-radius: 4px;
+  background: var(--color-bg-contrast);
+  color: var(--color-action);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  z-index: 20; /* > 10, because of the table view */
+}
+
+.field-widgets-button[hidden] {
+  display: none;
+}
+
+.field-widgets-button:hover {
+  border-color: var(--color-action);
+}
+
+/* Insert menu, under the field button; field_widgets.js sets its top */
+
+sdoc-field-widgets-insert-menu {
+  left: -28px;
+}
+
+sdoc-field-widgets-insert-menu button {
+  border: none;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+}

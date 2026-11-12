@@ -20,7 +20,7 @@ class TableEditor:  # pylint: disable=invalid-name
         self.field_xpath = f"//*[@data-testid='form-field-{field_name}']"
         self.button_xpath = (
             f"{self.field_xpath}/following-sibling::"
-            "*[@data-testid='table-editor-action']"
+            "*[@data-testid='field-widgets-button']"
         )
 
     # field
@@ -104,7 +104,7 @@ class TableEditor:  # pylint: disable=invalid-name
             self.button_xpath, by=By.XPATH
         )
 
-    INSERT_MENU = "//*[@data-testid='table-editor-insert-menu']"
+    INSERT_MENU = "//*[@data-testid='field-widgets-insert-menu']"
 
     def do_open_insert_menu(self) -> None:
         self.assert_button("insert")
@@ -122,7 +122,7 @@ class TableEditor:  # pylint: disable=invalid-name
         """
         self.do_open_insert_menu()
         self.test_case.click_xpath(
-            f"{self.INSERT_MENU}//*[@data-testid='table-editor-insert-table']"
+            f"{self.INSERT_MENU}//*[@data-testid='field-widgets-insert-table']"
         )
         self.assert_open()
 

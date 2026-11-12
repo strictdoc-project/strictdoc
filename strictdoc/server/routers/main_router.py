@@ -1731,6 +1731,7 @@ def create_main_router(
             field_type=field_type,
             form_action=form_action,
             document_markup=document.config.get_markup(),
+            context_document_mid=document.reserved_mid,
         )
         return HTMLResponse(
             content=output,
@@ -4920,13 +4921,16 @@ def create_main_router(
         )
 
     @read_router.get("/autocomplete/link", response_class=Response)
-    def get_autocomplete_link_results(q: Optional[str] = None) -> Response:
+    def get_autocomplete_link_results(
+        q: Optional[str] = None, document_mid: Optional[str] = None
+    ) -> Response:
         """
         Returns the possible targets of a [LINK: <UID>] tag: documents,
         sections, nodes, and anchors that have a UID.
 
         A target matches if its UID and title together contain every word of
-        the query.
+        the query. The targets of the document identified by the optional
+        parameter "document_mid" come first.
 
         @relation(SDOC-SRS-208, scope=function)
         """
@@ -4936,7 +4940,18 @@ def create_main_router(
             document_tree = assert_cast(
                 export_action.traceability_index.document_tree, DocumentTree
             )
-            for document in document_tree.document_list:
+            current_document = (
+                export_action.traceability_index.get_node_by_mid_weak(
+                    MID(document_mid)
+                )
+                if document_mid is not None
+                else None
+            )
+            documents = sorted(
+                document_tree.document_list,
+                key=lambda document_: document_ is not current_document,
+            )
+            for document in documents:
                 if document.reserved_uid is not None:
                     yield document.reserved_uid, document.title, "Document"
                 document_iterator = (

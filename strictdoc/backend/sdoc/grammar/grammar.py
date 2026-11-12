@@ -14,6 +14,8 @@ NEGATIVE_UID = "(?!^UID)"
 NEGATIVE_INLINE_LINK_START = rf"(?!\[LINK: {REGEX_UID})"
 NEGATIVE_ANCHOR_START = rf"(?!^\[ANCHOR: {REGEX_UID})"
 
+# The InlineLink syntax is also written by the link widget (link_widget.js).
+# @relation(SDOC-SRS-149, SDOC-SRS-150, scope=range_start)
 TEXT_TYPES_GRAMMAR = rf"""
 TextPart[noskipws]:
   (Anchor | InlineLink | NormalString)
@@ -58,6 +60,7 @@ FieldName[noskipws]:
   /{NEGATIVE_UID}{NEGATIVE_RELATIONS}{REGEX_FIELD_NAME}/
 ;
 """
+# @relation(SDOC-SRS-149, SDOC-SRS-150, scope=range_end)
 
 FREE_TEXT_PARSER_GRAMMAR = r"""
 FreeTextContainer[noskipws]:

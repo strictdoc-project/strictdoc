@@ -1,0 +1,8 @@
+[DOCUMENT]
+MID: 5f0c2d6b8a9e4f1aa3c7d2e1b4f60789
+TITLE: Second document
+
+[REQUIREMENT]
+UID: SECOND-1
+TITLE: Second requirement
+STATEMENT: System shall do 3.

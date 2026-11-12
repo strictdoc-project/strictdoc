@@ -4,7 +4,7 @@
 
 import os
 import re
-from typing import List
+from typing import List, Optional
 
 import pytest
 from fastapi.testclient import TestClient
@@ -33,8 +33,16 @@ def client():
     return TestClient(create_app(project_config=project_config))
 
 
-def found_uids(client: TestClient, query: str) -> List[str]:
-    response = client.get("/autocomplete/link", params={"q": query})
+SECOND_DOCUMENT_MID = "5f0c2d6b8a9e4f1aa3c7d2e1b4f60789"
+
+
+def found_uids(
+    client: TestClient, query: str, document_mid: Optional[str] = None
+) -> List[str]:
+    params = {"q": query}
+    if document_mid is not None:
+        params["document_mid"] = document_mid
+    response = client.get("/autocomplete/link", params=params)
     assert response.status_code == 200
     return re.findall(r'data-autocompletable-value="([^"]+)"', response.text)
 
@@ -45,6 +53,22 @@ def test_all_kinds_of_targets(client: TestClient):
         "SECT-1",
         "ANCHOR-1",
         "ANCHOR-2",
+        "REQ-1",
+        "SECOND-1",
+    ]
+
+
+def test_current_document_first(client: TestClient):
+    assert found_uids(client, "", document_mid=SECOND_DOCUMENT_MID) == [
+        "SECOND-1",
+        "DOC-1",
+        "SECT-1",
+        "ANCHOR-1",
+        "ANCHOR-2",
+        "REQ-1",
+    ]
+    assert found_uids(client, "requirement", SECOND_DOCUMENT_MID) == [
+        "SECOND-1",
         "REQ-1",
     ]
 
@@ -63,7 +87,14 @@ def test_kind_of_each_target(client: TestClient):
     kinds = re.findall(
         r'<span class="field-widgets-link-kind">([^<]+)</span>', response.text
     )
-    assert kinds == ["Document", "Section", "Anchor", "Anchor", "Requirement"]
+    assert kinds == [
+        "Document",
+        "Section",
+        "Anchor",
+        "Anchor",
+        "Requirement",
+        "Requirement",
+    ]
 
 
 def test_no_query_returns_nothing(client: TestClient):

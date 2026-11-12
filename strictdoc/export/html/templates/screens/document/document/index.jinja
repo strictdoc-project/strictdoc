@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="{{ view_object.render_static_url('move_node_tree.css') }}"/>
   <link rel="stylesheet" href="{{ view_object.render_static_url('field_widgets.css') }}"/>
   <link rel="stylesheet" href="{{ view_object.render_static_url('table_editor.css') }}"/>
+  <link rel="stylesheet" href="{{ view_object.render_static_url('link_widget.css') }}"/>
   {%- endif %}
 {% endblock head_css %}
 
@@ -58,6 +59,7 @@
   <script src="{{ view_object.render_static_url('editable_field.js') }}"></script>
   <script src="{{ view_object.render_static_url('field_widgets.js') }}"></script>
   <script src="{{ view_object.render_static_url('table_editor.js') }}"></script>
+  <script src="{{ view_object.render_static_url('link_widget.js') }}"></script>
   <script src="{{ view_object.render_static_url('deletable_field.js') }}"></script>
   <script src="{{ view_object.render_static_url('movable_field.js') }}"></script>
   <script src="{{ view_object.render_static_url('restorable_field.js') }}"></script>
@@ -261,6 +263,7 @@
 {% block main_content %}
   {% include "screens/document/document/main.jinja" %}
   {%- if view_object.is_running_on_server %}
+  {% include "components/field_widgets/icons.jinja" %}
   {% include "components/table_editor/icons.jinja" %}
   {%- endif %}
 {% endblock main_content %}

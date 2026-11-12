@@ -21,8 +21,9 @@
 // Widget contract (the methods marked "optional" are for widgets that
 // recognize their own blocks in the field text):
 // - id: a name for the insert menu item and its test ID.
-// - label: the text of the insert menu item.
-// - icon(): returns the icon element of the menu item, or null.
+// - label: the text of the insert menu item. The icon of the item comes
+// from the #template-field-widgets-icons template
+// (components/field_widgets/icons.jinja).
 // - supports(markup): returns true if the widget works with the markup.
 // - insert(field, line): inserts a new element at the blank caret line.
 // - scan(field, lines, markup): optional. Called after every change of the
@@ -41,6 +42,10 @@
 // blank caret line.
 // - replaceLines(field, start, end, newLines): writes the lines in place of
 // the lines [start, end].
+// - caretOffset(field): the character offset of the caret in the field
+// text, or null.
+// - replaceText(field, from, to, text): writes the text in place of the
+// characters [from, to) and puts the caret after it.
 
 (() => {
 
@@ -52,6 +57,10 @@
   // - js-field_widgets-insert marks an item of the insert menu. Its value is
   // the widget id.
   const ATTR_INSERT = 'js-field_widgets-insert';
+  // - js-field_widgets-icon marks an icon in the
+  // #template-field-widgets-icons template. Its value is the widget id.
+  const ATTR_ICON = 'js-field_widgets-icon';
+  const ICON_TEMPLATE_ID = 'template-field-widgets-icons';
 
   const widgets = [];
 
@@ -181,18 +190,27 @@
     );
   }
 
-  // Returns the line index of the caret, or null if the caret is not in the
-  // field or the field's DOM cannot be mapped to its text.
-  function caretLine(field) {
-    if (!fieldStates.get(field).mapped) return null;
+  // Returns the field text before the caret, or null if the caret is not in
+  // the field or the field's DOM cannot be mapped to its text.
+  function textBeforeCaret(field) {
+    if (!fieldStates.get(field)?.mapped) return null;
     const range = caretRange();
     if (!range || !field.contains(range.startContainer)) return null;
 
     const before = document.createRange();
     before.selectNodeContents(field);
     before.setEnd(range.startContainer, range.startOffset);
-    const text = segmentsText(textSegments(before.cloneContents()));
-    return text.split('\n').length - 1;
+    return segmentsText(textSegments(before.cloneContents()));
+  }
+
+  function caretOffset(field) {
+    return textBeforeCaret(field)?.length ?? null;
+  }
+
+  // Returns the line index of the caret, or null (see textBeforeCaret()).
+  function caretLine(field) {
+    const text = textBeforeCaret(field);
+    return text === null ? null : text.split('\n').length - 1;
   }
 
   // Returns {widget, block} for the widget block that holds the line, or
@@ -336,8 +354,9 @@
       item.dataset.testid = `field-widgets-insert-${widget.id}`;
       item.setAttribute('role', 'menuitem');
       item.setAttribute(ATTR_INSERT, widget.id);
-      const icon = widget.icon();
-      if (icon) item.prepend(icon);
+      const icon = document.getElementById(ICON_TEMPLATE_ID)
+        ?.content.querySelector(`[${ATTR_ICON}="${widget.id}"] svg`);
+      if (icon) item.prepend(icon.cloneNode(true));
       element.appendChild(item);
     }
     element.addEventListener('mousedown', (event) => event.preventDefault());
@@ -362,14 +381,11 @@
 
   // Replaces the field content with one text node, so the caret can be set
   // by a text offset.
-  function writeLines(field, lines, caretAfterLine) {
-    const text = lines.join('\n');
+  function writeText(field, text, caret) {
     field.replaceChildren(document.createTextNode(text));
 
     field.focus();
-    const caretOffset = lineOffsets(lines)[caretAfterLine] +
-      lines[caretAfterLine].length;
-    window.getSelection().collapse(field.firstChild, caretOffset);
+    window.getSelection().collapse(field.firstChild, caret);
 
     field.dispatchEvent(new Event('input', {
       bubbles: true
@@ -379,6 +395,23 @@
     // the user, so the button stays.
     fieldStates.get(field).typing = false;
     updateActiveField();
+  }
+
+  function writeLines(field, lines, caretAfterLine) {
+    writeText(
+      field,
+      lines.join('\n'),
+      lineOffsets(lines)[caretAfterLine] + lines[caretAfterLine].length,
+    );
+  }
+
+  function replaceText(field, from, to, text) {
+    const current = field.innerText;
+    writeText(
+      field,
+      current.slice(0, from) + text + current.slice(to),
+      from + text.length,
+    );
   }
 
   function replaceLines(field, start, end, newLines) {
@@ -483,6 +516,8 @@
     lineRange,
     insertBlock,
     replaceLines,
+    caretOffset,
+    replaceText,
   };
 
   window.StrictDoc.onInsert(SEL_FIELD, initField);

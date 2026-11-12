@@ -62,6 +62,10 @@ This release contains the following enhancements:
 markup. The editor inserts and edits RST grid tables and Markdown pipe tables.
 It writes the table into the field as plain markup text. See
 [LINK: SECTION-UG-Tables].
+
+2\) The Web UI has a link widget for multiline fields with RST or Markdown
+markup. Type ``@`` or ``[LINK:`` to select a link target from a list. See
+[LINK: SDOC_UG_LINKS_AND_ANCHORS].
 <<<
 
 [[/SECTION]]

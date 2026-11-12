@@ -2588,6 +2588,19 @@ Example:
 This sentence contains a
 [LINK: SDOC_UG_LINKS_AND_ANCHORS, link with a custom title].
 
+In the Web UI, the link widget inserts a LINK tag into a multiline field with
+RST or Markdown markup. The widget shows a list of link targets at the caret:
+documents, sections, nodes, and anchors with a UID. To open the list:
+
+- Type ``@`` at the start of a word, or type ``[LINK:``.
+- On an empty line, click the ``+`` button and select **Link**.
+
+Type a part of the UID or the title to filter the list. The filter can have
+several words. The targets of the current document come first. Select a target
+with the arrow keys and Enter, or with a click. Escape closes the list and keeps
+the typed text. After ``@``, the list also closes when a filter with a space
+matches no target, so plain text such as ``meet @ 10:00`` stays plain text.
+
 .. note::
 
     Adding a LINK tag only works when it is placed in multiline fields written with ``>>>...<<<``. Single-line fields do not support RST syntax or tags such as ``[LINK:...]``. See also: [LINK: SECTION-UG-Single-vs-multiline-fields].

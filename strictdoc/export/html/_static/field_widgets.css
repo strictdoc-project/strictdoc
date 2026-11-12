@@ -26,10 +26,11 @@
   border-color: var(--color-action);
 }
 
-/* Insert menu, under the field button; field_widgets.js sets its top */
+/* Insert menu, a child of <body>; field_widgets.js sets its top and left
+   under or above the field button. */
 
 sdoc-field-widgets-insert-menu {
-  left: -28px;
+  position: fixed;
 }
 
 sdoc-field-widgets-insert-menu button {

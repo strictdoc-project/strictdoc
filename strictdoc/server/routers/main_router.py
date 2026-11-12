@@ -4929,17 +4929,42 @@ def create_main_router(
         sections, nodes, and anchors that have a UID.
 
         A target matches if its UID and title together contain every word of
-        the query. The targets of the document identified by the optional
-        parameter "document_mid" come first.
+        the query. The target whose UID equals the query comes first, so the
+        anchor widget can check if a UID is taken. The targets of the
+        document identified by the optional parameter "document_mid" come
+        next.
 
         @relation(SDOC-SRS-208, scope=function)
         """
 
-        def iterate_link_targets() -> Iterator[Tuple[str, str, str]]:
-            # Yields (UID, title, kind) for every target with a UID. The kind
-            # is the grammar element tag of a node (SECTION, REQUIREMENT,
-            # TEST_CASE, ...), the same text that the UI shows elsewhere, or
-            # DOCUMENT or ANCHOR.
+        def describe_link_target(
+            target: Union[SDocDocument, SDocNode, Anchor],
+        ) -> Tuple[str, str, str]:
+            # Returns (UID, title, kind). The kind is the grammar element tag
+            # of a node (SECTION, REQUIREMENT, TEST_CASE, ...), the same text
+            # that the UI shows elsewhere, or DOCUMENT or ANCHOR.
+            if isinstance(target, SDocDocument):
+                return (
+                    assert_cast(target.reserved_uid, str),
+                    target.title,
+                    "DOCUMENT",
+                )
+            if isinstance(target, Anchor):
+                return (
+                    target.value,
+                    target.title if target.has_title else "",
+                    "ANCHOR",
+                )
+            return (
+                assert_cast(target.reserved_uid, str),
+                target.reserved_title or "",
+                target.node_type,
+            )
+
+        def iterate_link_targets() -> Iterator[
+            Union[SDocDocument, SDocNode, Anchor]
+        ]:
+            # Yields every document, node, and anchor with a UID.
             document_tree = assert_cast(
                 export_action.traceability_index.document_tree, DocumentTree
             )
@@ -4964,7 +4989,7 @@ def create_main_router(
             ]
             for document in documents:
                 if document.reserved_uid is not None:
-                    yield document.reserved_uid, document.title, "DOCUMENT"
+                    yield document
                 document_iterator = (
                     export_action.traceability_index.get_document_iterator(
                         document
@@ -4976,30 +5001,36 @@ def create_main_router(
                     if not isinstance(node_, SDocNode):
                         continue
                     if node_.reserved_uid is not None:
-                        yield (
-                            node_.reserved_uid,
-                            node_.reserved_title or "",
-                            node_.node_type,
-                        )
+                        yield node_
                     for field_ in node_.enumerate_fields():
                         for part_ in field_.parts:
                             if isinstance(part_, Anchor):
-                                yield (
-                                    part_.value,
-                                    part_.title if part_.has_title else "",
-                                    "ANCHOR",
-                                )
+                                yield part_
 
         output = ""
         if q is not None:
-            query_words = q.lower().split()
             targets: List[Tuple[str, str, str]] = []
-            for uid_, title_, kind_ in iterate_link_targets():
+            # The list has a limit, so a target whose UID equals the query
+            # could be cut off by targets that only contain the query. The
+            # index finds the exact UID directly.
+            exact_target = (
+                export_action.traceability_index.get_linkable_node_by_uid_weak(
+                    q.strip()
+                )
+            )
+            if exact_target is not None:
+                targets.append(describe_link_target(exact_target))
+
+            query_words = q.lower().split()
+            for target_ in iterate_link_targets():
+                if len(targets) >= AUTOCOMPLETE_LIMIT:
+                    break
+                if target_ is exact_target:
+                    continue
+                uid_, title_, kind_ = describe_link_target(target_)
                 words_ = (uid_ + " " + title_).lower()
                 if all(word_ in words_ for word_ in query_words):
                     targets.append((uid_, title_, kind_))
-                    if len(targets) >= AUTOCOMPLETE_LIMIT:
-                        break
 
             output = env().render_template_as_markup(
                 "autocomplete/link/stream_autocomplete_link.jinja.html",

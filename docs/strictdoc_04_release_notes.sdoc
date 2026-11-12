@@ -66,6 +66,10 @@ It writes the table into the field as plain markup text. See
 2\) The Web UI has a link widget for multiline fields with RST or Markdown
 markup. Type ``@`` or ``[LINK:`` to select a link target from a list. See
 [LINK: SDOC_UG_LINKS_AND_ANCHORS].
+
+3\) The Web UI has an anchor widget for multiline fields with RST or Markdown
+markup. The widget inserts an ANCHOR tag and checks that the UID is free
+before the node is saved. See [LINK: SDOC_UG_LINKS_AND_ANCHORS].
 <<<
 
 [[/SECTION]]

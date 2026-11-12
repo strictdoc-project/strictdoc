@@ -24,12 +24,8 @@
 // matches never flashes an empty popup. While the popup is hidden, the keys
 // work as usual.
 //
-// The popup is a child of <body> with fixed position. Inside the form, the
-// overflow of sdoc-form-grid would cut it: sdoc-node is a CSS container,
-// and a container is the containing block of its fixed descendants. The
-// popup stays in the viewport and opens above the caret line if there is
-// no room below. In the table view, a click outside the edited cell saves
-// the cell, so the popup stops its clicks.
+// The popup is a child of <body> with a fixed position, see placeFixed()
+// in field_widgets.js.
 //
 // Arrow keys move the selection, Enter or Tab chooses the target, Escape
 // closes the popup and leaves the typed text as it is. After Escape, or
@@ -45,9 +41,6 @@
   const REQUEST_DELAY = 150;
   const SEL_OPTION = '[role="option"]:not([aria-disabled])';
   const CLASS_ACTIVE = 'autocomplete-active';
-  // The distance in pixels between the popup and the caret line or the
-  // viewport edge.
-  const POPUP_GAP = 4;
   // The same markup as in autocompletable_field.js: keep both in sync.
   const NO_RESULTS_HTML =
     '<li class="autocompletable-result-item autocompletable-result-item_no-results" ' +
@@ -150,27 +143,12 @@
     fieldWidgets.replaceText(field, start, end, linkTag(uid));
   }
 
-  // Puts the visible popup under the caret line, or above it if there is no
-  // room below. The popup stays inside the viewport.
+  // Puts the visible popup under the caret line.
   function placePopup() {
     const selection = window.getSelection();
     const caret = selection.rangeCount ? selection.getRangeAt(0) : null;
     const rect = caret?.getClientRects()[0] ?? popup.field.getBoundingClientRect();
-    const {
-      element
-    } = popup;
-    const width = element.offsetWidth;
-    const height = element.offsetHeight;
-
-    const maxLeft = window.innerWidth - width - POPUP_GAP;
-    const left = Math.max(POPUP_GAP, Math.min(rect.left, maxLeft));
-    const below = rect.bottom + POPUP_GAP;
-    const above = rect.top - POPUP_GAP - height;
-    const fitsBelow = below + height <= window.innerHeight - POPUP_GAP;
-    const top = fitsBelow || above < POPUP_GAP ? below : above;
-
-    element.style.left = `${left}px`;
-    element.style.top = `${top}px`;
+    fieldWidgets.placeFixed(popup.element, rect);
   }
 
   function requestTargets(query) {
@@ -221,7 +199,7 @@
       // Keep the caret in the field: choose() reads its position.
       element.addEventListener('mousedown', (event) => event.preventDefault());
       element.addEventListener('click', (event) => {
-        // The table view must not see this click (see the file comment).
+        // The table view must not see this click (see field_widgets.js).
         event.stopPropagation();
         const option = event.target.closest(SEL_OPTION);
         if (option) choose(option);

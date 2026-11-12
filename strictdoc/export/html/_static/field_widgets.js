@@ -25,7 +25,9 @@
 // (components/field_widgets/icons.jinja).
 // - label: the text of the insert menu item.
 // - supports(markup): returns true if the widget works with the markup.
-// - insert(field, line): inserts a new element at the blank caret line.
+// - insert(field, line, rect): inserts a new element at the blank caret
+// line. `rect` is the viewport rectangle of the field button, for a widget
+// that shows its own popup there.
 // Any widget can also have these optional hooks:
 // - scan(field, lines, markup): called after every change of the text of
 // a field with a supported markup.
@@ -53,6 +55,15 @@
 // the lines [start, end].
 // - replaceText(field, from, to, text): writes the text in place of the
 // characters [from, to) and puts the caret after it.
+// - placeFixed(element, rect): puts a fixed element under the rect, or
+// above it if there is no room below, inside the viewport.
+//
+// A widget popup that must not be cut by the form goes into <body> with a
+// fixed position (see placeFixed()). Inside the form, the overflow of
+// sdoc-form-grid would cut it: sdoc-node is a CSS container, and a
+// container is the containing block of its fixed descendants. In the table
+// view, a click or a key outside the edited cell saves or cancels the
+// cell, so such a popup stops the propagation of its clicks and keys.
 
 (() => {
 
@@ -68,6 +79,10 @@
   // #template-field-widgets-icons template. Its value is the widget id.
   const ATTR_ICON = 'js-field_widgets-icon';
   const ICON_TEMPLATE_ID = 'template-field-widgets-icons';
+
+  // The distance in pixels between a fixed popup and its rect or the
+  // viewport edge.
+  const POPUP_GAP = 4;
 
   const widgets = [];
 
@@ -357,8 +372,10 @@
     ));
   }
 
-  // Opens the insert menu under the button. The menu keeps the caret in the
-  // field, so the caret line is still known when an item is chosen.
+  // Opens the insert menu under the button, or above it if there is no
+  // room below. The menu is a fixed popup in <body> (see placeFixed()). The
+  // menu keeps the caret in the field, so the caret line is still known when
+  // an item is chosen.
   function openInsertMenu(field, line) {
     const state = fieldStates.get(field);
     const {
@@ -383,14 +400,17 @@
     }
     element.addEventListener('mousedown', (event) => event.preventDefault());
     element.addEventListener('click', (event) => {
+      // The table view must not see this click (see placeFixed()).
+      event.stopPropagation();
       const item = event.target.closest(`[${ATTR_INSERT}]`);
       if (!item) return;
+      const rect = button.getBoundingClientRect();
       closeInsertMenu(state);
       const id = item.getAttribute(ATTR_INSERT);
-      widgets.find((widget) => widget.id === id).insert(field, line);
+      widgets.find((widget) => widget.id === id).insert(field, line, rect);
     });
-    element.style.top = `${button.offsetTop + button.offsetHeight}px`;
-    button.after(element);
+    document.body.appendChild(element);
+    placeFixed(element, button.getBoundingClientRect());
     state.menu = {
       element,
       line
@@ -475,6 +495,22 @@
     );
   }
 
+  // See the helpers in the file comment.
+  function placeFixed(element, rect) {
+    const width = element.offsetWidth;
+    const height = element.offsetHeight;
+
+    const maxLeft = window.innerWidth - width - POPUP_GAP;
+    const left = Math.max(POPUP_GAP, Math.min(rect.left, maxLeft));
+    const below = rect.bottom + POPUP_GAP;
+    const above = rect.top - POPUP_GAP - height;
+    const fitsBelow = below + height <= window.innerHeight - POPUP_GAP;
+    const top = fitsBelow || above < POPUP_GAP ? below : above;
+
+    element.style.left = `${left}px`;
+    element.style.top = `${top}px`;
+  }
+
   //
   // Fields and listeners.
   //
@@ -541,6 +577,7 @@
     insertBlock,
     replaceLines,
     replaceText,
+    placeFixed,
   };
 
   window.StrictDoc.onInsert(SEL_FIELD, initField);
@@ -589,6 +626,16 @@
   document.addEventListener('focusout', (event) => {
     if (fieldStates.has(event.target)) hideButton(event.target);
   });
+
+  // The insert menu has a fixed position, so it follows the button when the
+  // page or a container scrolls, and when the window size changes.
+  function replaceInsertMenus() {
+    for (const state of fieldStates.values()) {
+      if (state.menu) placeFixed(state.menu.element, state.button.getBoundingClientRect());
+    }
+  }
+  document.addEventListener('scroll', replaceInsertMenus, true);
+  window.addEventListener('resize', replaceInsertMenus);
 
   document.addEventListener('selectionchange', updateActiveField);
 

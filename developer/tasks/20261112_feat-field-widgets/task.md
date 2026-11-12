@@ -10,6 +10,9 @@ form) and the table view (inline cell form).
 |---|---|---|
 | Table | RST, Markdown | [Table editor](../20261109_feat_table_editor/task.md) |
 | Link | RST, Markdown | [Link widget](#link-widget) |
+| Anchor | RST, Markdown | [Anchor widget](#anchor-widget) |
+
+The widgets work only with RST and Markdown.
 
 ### Field button
 
@@ -28,7 +31,8 @@ the field markup.
 ### Insert menu
 
 The insert menu has one item for each widget that supports the field
-markup. An item inserts a new element at the blank caret line.
+markup. An item inserts a new element at the blank caret line. The menu
+opens under the button, or above the button if there is no room below.
 
 The menu closes:
 
@@ -75,12 +79,43 @@ The list behavior:
 - After Escape, or after a query with a space that matches no target, the
   list stays closed until the user starts another trigger.
 
+### Anchor widget
+
+The anchor widget writes an `[ANCHOR: <UID>]` or `[ANCHOR: <UID>, <title>]`
+tag on the blank caret line. An anchor tag is block-level, and the insert
+button shows only on a blank line. The widget does not edit existing
+anchors.
+
+The Anchor item of the insert menu opens a form under the field button:
+
+| Input | Required | Check while the user types |
+|---|---|---|
+| UID | yes | The UID follows the UID syntax of the SDoc grammar. No document, node, or saved anchor in the project has this UID. No anchor in the field text has this UID, including the anchors that are not saved yet. |
+| Title | no | The tag syntax can hold the title (see below). |
+
+- The Insert button works only when both inputs pass the checks. A message under
+  the input names the problem, for example the kind of the target that
+  already has the UID.
+- A title with `,` or `]` goes in double quotes. Such a title cannot
+  contain a double quote. A title without `,` and `]` cannot start or end
+  with a double quote, because the parser removes the quotes at the ends.
+- Enter in an input inserts the anchor. Escape or Cancel closes the form.
+  Both give the focus back to the field. A click outside the form closes
+  the form.
+- In the table view, the clicks and keys in the form do not save or cancel
+  the edited cell.
+
+The checks of the form help the user. The server still validates the
+anchors when the user saves the node form.
+
 ## WHY
 
 Markup elements such as tables and links have a strict syntax. A user must
 remember the syntax and type every element by hand. One typing error
 breaks the element. A link also needs the exact UID of its target, which
-the user must look up in another document or screen.
+the user must look up in another document or screen. A new anchor needs a
+UID that no other target uses, and the user learns about a conflict only
+when the user saves the node form.
 
 Related requirement: SDOC-SRS-208 (Field widgets).
 
@@ -101,7 +136,7 @@ A widget is an object with these members:
 | `id` | yes | Name of the insert menu item, its test ID, and its icon in `components/field_widgets/icons.jinja`. |
 | `label` | yes | Text of the insert menu item. |
 | `supports(markup)` | yes | True if the widget works with the markup. |
-| `insert(field, line)` | yes | Inserts a new element at the blank caret line. |
+| `insert(field, line, rect)` | yes | Inserts a new element at the blank caret line. `rect` is the viewport rectangle of the field button, for a widget that shows its own popup there. |
 | `scan(field, lines, markup)` | no | Called after every change of the text of a field with a supported markup. |
 | `forget(field)` | no | Called when the field is no longer in the DOM. The widget drops its data about the field. |
 | `blockAt(field, line)` | no | Returns the block `{start, end, ...}` that holds the line, or null. |
@@ -113,7 +148,7 @@ Any widget can have `scan()` and `forget()`. The members from `blockAt()`
 to `activate()` are for widgets that recognize their own blocks in the
 field text, such as tables.
 
-`StrictDoc.fieldWidgets` also gives the widgets six helpers:
+`StrictDoc.fieldWidgets` also gives the widgets seven helpers:
 
 - `hasWidget(field, id)`: true if the widget works in the field.
 - `lineRange(field, start, end)`: a DOM range for the lines, or null if
@@ -128,6 +163,15 @@ field text, such as tables.
   the lines from `start` to `end`.
 - `replaceText(field, from, to, text)`: writes the text in place of the
   characters from `from` to `to` and puts the caret after the text.
+- `placeFixed(element, rect)`: puts a fixed element under the rectangle,
+  or above it if there is no room below, inside the viewport.
+
+A widget popup that the form must not cut goes into `<body>` with a fixed
+position. Inside the form, the overflow of `sdoc-form-grid` would cut the
+popup: `sdoc-node` is a CSS container, and a container is the containing
+block of its fixed descendants. In the table view, a click or a key
+outside the edited cell saves or cancels the cell. As a result, such a
+popup stops the propagation of its clicks and keys.
 
 A widget script can load after `field_widgets.js` initializes the fields.
 As a result, `register()` scans the fields that already exist.
@@ -140,10 +184,13 @@ As a result, `register()` scans the fields that already exist.
 - The field markup comes from the `document_markup` input of the form.
   The table view cell form gets this input from the
   `table__get_node_contenteditable_inline` route.
-- The button and the insert menu go after the hidden textarea of the
-  field, because `editable_field.js` finds the textarea through
-  `editable.nextElementSibling`. Both are absolutely positioned in
-  `sdoc-form-field`, so the button and the menu scroll with the field.
+- The button goes after the hidden textarea of the field, because
+  `editable_field.js` finds the textarea through
+  `editable.nextElementSibling`. The button is absolutely positioned in
+  `sdoc-form-field`, so the button scrolls with the field.
+- The insert menu is a fixed popup in `<body>` (see the helpers), placed
+  with `placeFixed()` at the button. The menu stops the propagation of
+  its clicks and follows the button on scroll and on a window resize.
 - The source text is the `innerText` of the field, the same value that
   `editable_field.js` saves.
 - A write replaces the field content with one text node and dispatches a
@@ -172,6 +219,10 @@ The list of link targets comes from `GET /autocomplete/link`:
 - `q` is the query. A target matches if its UID and title together
   contain every word of the query, case-insensitive. An empty `q` matches
   every target. Without `q`, the response is empty.
+- The target whose UID equals `q` (case-sensitive, without the spaces
+  around `q`) comes first. The index finds it directly, so the limit of
+  the list cannot cut it. The anchor widget uses this item to check if a
+  UID is taken.
 - `document_mid` is optional. The targets of this document come first.
   The widget sends the `context_document_mid` input of the form, that is,
   the document on the screen. The table view cell form gets this input
@@ -188,15 +239,10 @@ The list of link targets comes from `GET /autocomplete/link`:
 The popup:
 
 - reuses the `autocomplete-items` and `autocompletable-result-item` styles
-- is a child of `<body>` with a fixed position. Inside the form, the
-  overflow of `sdoc-form-grid` would cut the popup: `sdoc-node` is a CSS
-  container, and a container is the containing block of its fixed
-  descendants.
-- gets its position from the caret rectangle, stays inside the viewport,
-  and opens above the caret line if there is no room below. The popup
-  follows the caret line on scroll and on a window resize.
-- stops the propagation of its clicks. In the table view, a click outside
-  the edited cell saves the cell.
+- is a fixed popup in `<body>` (see the helpers) and stops the propagation
+  of its clicks
+- gets its position from the caret rectangle with `placeFixed()` and
+  follows the caret line on scroll and on a window resize
 - sends the request 150 ms after the last keystroke and aborts the
   previous request
 - handles its keys in a capture listener on `document` and stops the key
@@ -207,8 +253,33 @@ The popup:
 `[LINK: <UID>]` syntax. Both functions relate to SDOC-SRS-149 (Inline
 links). The grammar of `InlineLink` and `Anchor` in `grammar.py` relates
 to SDOC-SRS-149 and SDOC-SRS-150, with a comment that points to
-`link_widget.js`. As a result, the trace of SDOC-SRS-149 shows both places
-that a syntax change affects.
+`link_widget.js` and `anchor_widget.js`. As a result, the traces of
+SDOC-SRS-149 and SDOC-SRS-150 show every place that a syntax change
+affects.
+
+### Anchor widget implementation
+
+`anchor_widget.js` with `anchor_widget.css` is the `anchor` widget. The
+widget implements only `supports()` and `insert()`. `insert()` opens the
+form at the rectangle of the field button.
+
+The form:
+
+- is a fixed popup in `<body>` (see the helpers). The form stops the
+  propagation of its clicks and keys. The form keeps its offset from the
+  field, so the form follows the field on scroll and on a window resize.
+- checks the UID syntax with `UID_PATTERN`, the JavaScript form of
+  `REGEX_UID` in `grammar.py`
+- finds the anchors of the field text with a regular expression on the
+  lines that start with `[ANCHOR: `
+- asks `/autocomplete/link?q=<UID>` 150 ms after the last keystroke and
+  aborts the previous request. The UID is taken if the first item has the
+  same UID. Insert stays disabled until the response confirms that the
+  UID is free.
+- writes the tag with `insertBlock()`.
+
+`UID_PATTERN`, `fieldAnchorUids()`, `titleSource()`, and `anchorTag()`
+relate to SDOC-SRS-150 (Inline anchors).
 
 ### Text positions
 
@@ -225,11 +296,12 @@ The page objects in `tests/end2end/helpers/components/`:
   insert menu
 - `table_editor.py`: `TableEditor(FieldWidgets)`, the table highlights
   and the editor modal
-- `link_widget.py`: `LinkWidget(FieldWidgets)`, the popup of link targets.
+- `link_widget.py`: `LinkWidget(FieldWidgets)`, the popup of link targets
+- `anchor_widget.py`: `AnchorWidget(FieldWidgets)`, the anchor form.
 
 The page objects use the test IDs `field-widgets-button`,
-`field-widgets-insert-menu`, `field-widgets-insert-<id>`, and
-`field-widgets-link-popup`.
+`field-widgets-insert-menu`, `field-widgets-insert-<id>`,
+`field-widgets-link-popup`, and `field-widgets-anchor-*`.
 
 The table editor tests cover the button and the insert menu, see
 [Table editor](../20261109_feat_table_editor/task.md).
@@ -249,6 +321,16 @@ link widget:
 covers the table view: the popup in a narrow cell, a click on a target
 does not save the cell, and Escape does not cancel the cell.
 
+`tests/end2end/screens/document/field_widgets/insert_anchors/` covers the
+anchor widget: Escape, a UID with a wrong syntax, a UID of a node, a title
+that the tag cannot hold, a title in double quotes, and a UID of an anchor
+that is in the field text but not saved yet.
+
+`tests/end2end/screens/table/view_table_edit/edit_table_cell_statement_anchor_widget/`
+covers the anchor form in the table view: Escape and a click on Insert do
+not cancel or save the cell.
+
 `tests/unit_server/strictdoc/server/24_autocomplete_link/` covers the
-endpoint: all kinds of targets, the match by UID and by title, the kind
-labels, the current document first, and a request without `q`.
+endpoint: all kinds of targets, the match by UID and by title, the exact
+UID first, the kind labels, the current document first, and a request
+without `q`.

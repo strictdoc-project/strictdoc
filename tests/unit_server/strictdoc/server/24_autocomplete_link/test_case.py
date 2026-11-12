@@ -54,12 +54,20 @@ def test_all_kinds_of_targets(client: TestClient):
         "ANCHOR-1",
         "ANCHOR-2",
         "REQ-1",
+        "SECOND-10",
         "SECOND-1",
     ]
 
 
+def test_exact_uid_first(client: TestClient):
+    assert found_uids(client, "SECOND-1") == ["SECOND-1", "SECOND-10"]
+    assert found_uids(client, " SECOND-1 ") == ["SECOND-1", "SECOND-10"]
+    assert found_uids(client, "second-1") == ["SECOND-10", "SECOND-1"]
+
+
 def test_current_document_first(client: TestClient):
     assert found_uids(client, "", document_mid=SECOND_DOCUMENT_MID) == [
+        "SECOND-10",
         "SECOND-1",
         "DOC-1",
         "SECT-1",
@@ -68,6 +76,7 @@ def test_current_document_first(client: TestClient):
         "REQ-1",
     ]
     assert found_uids(client, "requirement", SECOND_DOCUMENT_MID) == [
+        "SECOND-10",
         "SECOND-1",
         "REQ-1",
     ]
@@ -92,6 +101,7 @@ def test_kind_of_each_target(client: TestClient):
         "SECTION",
         "ANCHOR",
         "ANCHOR",
+        "REQUIREMENT",
         "REQUIREMENT",
         "REQUIREMENT",
     ]

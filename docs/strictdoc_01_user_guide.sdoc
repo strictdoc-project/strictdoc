@@ -2621,6 +2621,13 @@ that can be referenced from other pages using ``[LINK <Anchor UID>]``.
 The optional title can be an unquoted string, but must be enclosed in double
 quotes if it contains special characters.
 
+In the Web UI, the anchor widget inserts an ANCHOR tag into a multiline field
+with RST or Markdown markup. On an empty line, click the ``+`` button and select
+**Anchor**. Enter the UID and, optionally, the title of the anchor. The widget
+checks the UID while you type: the UID must follow the UID syntax and must not
+be used in the project or by another anchor in the field. The widget puts the
+title in double quotes when the title needs them.
+
 Example:
 
 This is a link to anchor: [LINK: ANCHOR-EXAMPLE].

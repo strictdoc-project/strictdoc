@@ -11,6 +11,7 @@ from starlette.datastructures import FormData
 from strictdoc.backend.markdown.markdown_to_html_fragment_writer import (
     MarkdownToHtmlFragmentWriter,
 )
+from strictdoc.backend.markdown.reader import SDMarkdownReader
 from strictdoc.backend.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
 )
@@ -367,6 +368,13 @@ class RequirementFormObject(ErrorObject):
         element: GrammarElement = grammar.elements_by_type[element_type]
         form_fields: List[RequirementFormField] = []
 
+        is_markdown_file = (
+            document.meta is not None
+            and document.meta.input_doc_full_path.lower().endswith(
+                (".md", ".markdown")
+            )
+        )
+
         for field_idx, field_name in enumerate(element.field_titles):
             multiline = element.is_field_idx_multiline(field_idx)
 
@@ -380,6 +388,17 @@ class RequirementFormObject(ErrorObject):
                 sanitized_field_value: str = sanitize_html_form_field(
                     requirement_field_value, multiline=multiline
                 )
+                # The Markdown reader rejects a file with two or more
+                # consecutive empty lines outside code blocks and blockquotes.
+                # Markdown renders such a run the same as one empty line, so
+                # collapsing it here changes no output and lets the reader
+                # parse the saved file.
+                if multiline and is_markdown_file:
+                    sanitized_field_value = (
+                        SDMarkdownReader.collapse_redundant_empty_lines(
+                            sanitized_field_value
+                        )
+                    )
                 form_field = RequirementFormField.create_from_grammar_field(
                     grammar_field=field,
                     multiline=multiline,

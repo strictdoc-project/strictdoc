@@ -3,8 +3,7 @@ updates:
   - package-ecosystem: github-actions
     directory: /
     schedule:
-      interval: weekly
-      day: friday
+      interval: monthly
     groups:
       github-actions:
         patterns: ["*"]
@@ -13,8 +12,7 @@ updates:
   - package-ecosystem: pip
     directory: /
     schedule:
-      interval: weekly
-      day: friday
+      interval: monthly
     allow:
       - dependency-type: development
     ignore:

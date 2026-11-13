@@ -1,0 +1,22 @@
+RUN: %mkdir %T/project
+RUN: %cp %S/input.sdoc %T/project/input.sdoc
+RUN: %cp %S/strictdoc_config.py %T/project/strictdoc_config.py
+RUN: %cp %S/source_before.txt %T/project/source.txt
+RUN: %strictdoc export %T/project --output-dir %T/output | filecheck %s
+CHECK: Export completed.
+
+RUN: %cat %T/output/html/unresolved_references.html | filecheck %s --check-prefix BEFORE
+BEFORE: MISSING-BEFORE
+BEFORE-NOT: MISSING-AFTER
+
+RUN: %cp %S/source_after.txt %T/project/source.txt
+RUN: %strictdoc export %T/project --output-dir %T/output | filecheck %s
+RUN: %cat %T/output/html/unresolved_references.html | filecheck %s --check-prefix AFTER
+AFTER-NOT: MISSING-BEFORE
+AFTER: MISSING-AFTER
+
+RUN: %cp %S/source_resolved.txt %T/project/source.txt
+RUN: %strictdoc export %T/project --output-dir %T/output | filecheck %s
+RUN: %cat %T/output/html/unresolved_references.html | filecheck %s --check-prefix RESOLVED
+RESOLVED-NOT: MISSING-AFTER
+RESOLVED: No unresolved references.

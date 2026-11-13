@@ -46,6 +46,16 @@ class ServerCommand(BaseCommand):
             ),
         )
         command_parser_server.add_argument(
+            "--relaxed-mode",
+            default=False,
+            action="store_true",
+            dest="relaxed_mode",
+            help=(
+                "Continue with warnings for unresolved relations "
+                "and inline links."
+            ),
+        )
+        command_parser_server.add_argument(
             "--config",
             type=str,
             help="Path to the StrictDoc TOML config file.",

@@ -49,6 +49,7 @@ class DocumentTreeStats:
     requirements_no_uid: int = 0
     requirements_no_links: int = 0
     requirements_root_no_links: int = 0
+    requirements_missing_relations: int = 0
     requirements_no_rationale: int = 0
 
     # STATUS.
@@ -123,6 +124,11 @@ class SDocStatisticsGenerator:
                                     == 0
                                 ):
                                     document_tree_stats.requirements_no_links += 1
+
+                        if traceability_index.has_missing_relations_for_requirement(
+                            requirement
+                        ):
+                            document_tree_stats.requirements_missing_relations += 1
 
                         # RATIONALE.
                         if (
@@ -253,6 +259,16 @@ class SDocStatisticsGenerator:
                 link='search?q=(node.is_requirement() and not node.is_root and node["STATUS"] != "Backlog" and not node.has_parent_requirements)',
             )
         )
+        if project_config.relaxed_mode:
+            section.metrics.append(
+                Metric(
+                    name="Requirements with missing relations",
+                    value=str(
+                        document_tree_stats.requirements_missing_relations
+                    ),
+                    link="search?q=(node.is_requirement() and node.has_missing_relations)",
+                )
+            )
         section.metrics.append(
             Metric(
                 name="Requirements with no RATIONALE",

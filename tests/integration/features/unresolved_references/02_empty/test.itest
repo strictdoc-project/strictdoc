@@ -1,0 +1,20 @@
+RUN: %strictdoc export %S --output-dir %T --relaxed-mode | filecheck %s
+CHECK: Export completed.
+
+RUN: %cat %T/html/unresolved_references.html | filecheck %s --check-prefix PAGE
+PAGE: data-testid="unresolved-references-total">0</strong>
+PAGE: No unresolved references.
+PAGE-NOT: data-testid="unresolved-reference-row"
+
+RUN: %mkdir %T/strict
+RUN: %rm %T/strict
+RUN: %strictdoc export %S --output-dir %T/strict | filecheck %s
+RUN: %check_exists --invert --file %T/strict/html/unresolved_references.html
+RUN: %cat %T/strict/html/index.html | filecheck %s --check-prefix STRICT
+STRICT-NOT: project-tree-link-unresolved-references
+STRICT: </html>
+
+RUN: %strictdoc export %S --output-dir %T/strict --relaxed-mode | filecheck %s
+RUN: %check_exists --file %T/strict/html/unresolved_references.html
+RUN: %cat %T/strict/html/index.html | filecheck %s --check-prefix RELAXED
+RELAXED: href="unresolved_references.html"

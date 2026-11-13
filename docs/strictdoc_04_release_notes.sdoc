@@ -50,35 +50,48 @@ releases:
 <<<
 
 [[SECTION]]
-MID: 780712d4d6a04ee68ef8c49b11ceb85d
+MID: 7b06c624b6634fb9b4ea4f87d19b259c
 TITLE: Unreleased
 
 [TEXT]
-MID: 95aef4d99b47420082ed3e6c589a5cfc
+MID: f23cf66d838742228e6af56d1d0c7abd
 STATEMENT: >>>
 This release contains the following enhancements:
 
-1\) The Web UI has a table editor for multiline fields with RST or Markdown
+1\) Relaxed mode now supports source markers that reference missing requirement
+UIDs. StrictDoc reports the missing references and displays warnings in the
+source view. Valid links remain available. Missing references contribute no
+code coverage.
+
+2\) The ``export`` and ``server`` commands accept ``--relaxed-mode`` to report
+unresolved relations and inline links as warnings.
+
+3\) Relaxed mode includes an **Unresolved references** page in HTML exports
+and the server. The page lists missing requirement relations, file
+relations, source markers, and inline links. Each entry links to the affected
+requirement or source range.
+
+4\) The Web UI has a table editor for multiline fields with RST or Markdown
 markup. The editor inserts and edits RST grid tables and Markdown pipe tables.
 It writes the table into the field as plain markup text. See
 [LINK: SECTION-UG-Tables].
 
-2\) The Web UI has a link widget for multiline fields with RST or Markdown
+5\) The Web UI has a link widget for multiline fields with RST or Markdown
 markup. Type ``@`` or ``[LINK:`` to select a link target from a list. See
 [LINK: SDOC_UG_LINKS_AND_ANCHORS].
 
-3\) The Web UI has an anchor widget for multiline fields with RST or Markdown
+6\) The Web UI has an anchor widget for multiline fields with RST or Markdown
 markup. The widget inserts an ANCHOR tag and checks that the UID is free
 before the node is saved. See [LINK: SDOC_UG_LINKS_AND_ANCHORS].
 
-4\) Fixed: in Markdown fields, an anchor with incoming links showed its list of
+7\) Fixed: in Markdown fields, an anchor with incoming links showed its list of
 incoming links as HTML code. The anchor now renders as in RST fields.
 
-5\) Fixed: the ReqIF export now accepts grammars in which two node types
+8\) Fixed: the ReqIF export now accepts grammars in which two node types
 have a ``SingleChoice`` or ``MultipleChoice`` field with the same title and
 different options. Before, the export failed with an assertion error.
 
-6\) Fixed: the ReqIF export with ``--reqif-multiline-is-xhtml`` now escapes
+9\) Fixed: the ReqIF export with ``--reqif-multiline-is-xhtml`` now escapes
 markup characters in multiline fields. Before, a ``<`` or ``&`` in a
 multiline field made the ReqIF file not well-formed XML. As a result,
 ``reqif validate`` and the ReqIF import of StrictDoc rejected the file.

@@ -28,7 +28,7 @@ from strictdoc.backend.sdoc.models.model import (
     SDocElementIF,
     SDocNodeIF,
 )
-from strictdoc.backend.sdoc.models.node import SDocNode
+from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
 from strictdoc.backend.sdoc.models.reference import (
     ChildReqReference,
     ParentReqReference,
@@ -229,6 +229,10 @@ class TraceabilityIndexBuilder:
                 )
                 if is_source_file_referenced:
                     source_file.is_referenced = True
+                    traceability_index.file_dependency_manager.add_dependency(
+                        source_file.full_path,
+                        source_file.output_file_full_path,
+                    )
 
                     source_file_reqs: Optional[List[SDocNode]] = (
                         traceability_index.get_source_file_reqs(
@@ -244,10 +248,6 @@ class TraceabilityIndexBuilder:
                         )
                         assert node_document.meta is not None
 
-                        traceability_index.file_dependency_manager.add_dependency(
-                            source_file.full_path,
-                            source_file.output_file_full_path,
-                        )
                         traceability_index.file_dependency_manager.add_dependency(
                             source_file.full_path,
                             node_document.meta.output_document_full_path,
@@ -268,6 +268,35 @@ class TraceabilityIndexBuilder:
                 link_type=GraphLinkType.UID_TO_NODE,
                 lhs_node=inline_link.link,
             ):
+                if project_config.relaxed_mode:
+                    # In relaxed mode, record a missing inline target as a
+                    # validation issue. The issue produces a command-line
+                    # warning. The UI marks the affected field.
+                    inline_link_field = inline_link.parent
+                    inline_link_node = inline_link.parent_node()
+                    field_name: Optional[str] = (
+                        inline_link_field.field_name
+                        if isinstance(inline_link_field, SDocNodeField)
+                        else None
+                    )
+                    node_name: Optional[str] = None
+                    if isinstance(inline_link_node, SDocNode):
+                        node_name = (
+                            inline_link_node.reserved_title
+                            if inline_link_node.reserved_title is not None
+                            else inline_link_node.reserved_uid
+                        )
+                    traceability_index.validation_index.add_issue(
+                        inline_link_node,
+                        issue=f"Missing link: {inline_link.link}",
+                        field=field_name,
+                        subject=(
+                            f"Node: {node_name}"
+                            if node_name is not None
+                            else None
+                        ),
+                    )
+                    continue
                 raise StrictDocException(
                     "DocumentIndex: "
                     "the inline link references an object with an UID "
@@ -660,6 +689,14 @@ class TraceabilityIndexBuilder:
                             lhs_node=parent_reference.ref_uid,
                         )
                         if parent_requirement is None:
+                            if project_config.relaxed_mode:
+                                traceability_index.validation_index.add_issue(
+                                    requirement,
+                                    issue=f"Missing parent relation: {parent_reference.ref_uid}",
+                                    field="RELATIONS (Parent)",
+                                    subject=f"Node: {requirement.reserved_title}",
+                                )
+                                continue
                             raise StrictDocException(
                                 f"[DocumentIndex.create] "
                                 f"Requirement {requirement.reserved_uid} "
@@ -707,6 +744,14 @@ class TraceabilityIndexBuilder:
                             lhs_node=child_reference.ref_uid,
                         )
                         if child_requirement is None:
+                            if project_config.relaxed_mode:
+                                traceability_index.validation_index.add_issue(
+                                    requirement,
+                                    issue=f"Missing child relation: {child_reference.ref_uid}",
+                                    field="RELATIONS (Child)",
+                                    subject=f"Node: {requirement.reserved_title}",
+                                )
+                                continue
                             raise StrictDocException(
                                 f"[DocumentIndex.create] "
                                 f"Requirement {requirement.reserved_uid} "

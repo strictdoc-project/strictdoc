@@ -9,7 +9,7 @@
         {%- endset -%}
         {%- if view_object.can_delete_node(node) -%}
           {%- with
-            delete_href="/actions/table/delete_node?node_id="~node.reserved_mid~
+            delete_href=application_base_url~"/actions/table/delete_node?node_id="~node.reserved_mid~
               "&context_document_mid="~view_object.document.reserved_mid
           -%}
             {%- include "components/button_inline/delete.jinja" -%}

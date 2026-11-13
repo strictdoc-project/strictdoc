@@ -44,7 +44,7 @@
               data-node-mid="{{ requirement.reserved_mid }}"
               data-field-type="relations"
               js-table_view_edit-field="relations"
-              data-url="/actions/table/get_node_relations_inline?node_mid={{ requirement.reserved_mid }}"
+              data-url="{{ application_base_url }}/actions/table/get_node_relations_inline?node_mid={{ requirement.reserved_mid }}"
               {%- endif %}
           >
             {%- if is_server %}<div class="editable-cell-indicator"></div>{%- endif %}
@@ -68,7 +68,7 @@
               data-node-mid="{{ requirement.reserved_mid }}"
               data-field-type="contenteditable"
               js-table_view_edit-field="contenteditable"
-              data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&amp;field_name=TITLE"
+              data-url="{{ application_base_url }}/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&amp;field_name=TITLE"
               {%- endif %}
           >
             {%- if is_server %}<div class="editable-cell-indicator"></div>{%- endif %}
@@ -99,7 +99,7 @@
               data-node-mid="{{ requirement.reserved_mid }}"
               data-field-type="contenteditable"
               js-table_view_edit-field="contenteditable"
-              data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&amp;field_name=STATEMENT"
+              data-url="{{ application_base_url }}/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&amp;field_name=STATEMENT"
               {%- endif %}
           >
             {%- if is_server %}<div class="editable-cell-indicator"></div>{%- endif %}
@@ -127,7 +127,7 @@
               data-node-mid="{{ requirement.reserved_mid }}"
               data-field-type="contenteditable"
               js-table_view_edit-field="contenteditable"
-              data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&amp;field_name=RATIONALE"
+              data-url="{{ application_base_url }}/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&amp;field_name=RATIONALE"
               {%- endif %}
           >
             {%- if is_server %}<div class="editable-cell-indicator"></div>{%- endif %}
@@ -155,7 +155,7 @@
               data-node-mid="{{ requirement.reserved_mid }}"
               data-field-type="comments"
               js-table_view_edit-field="comments"
-              data-url="/actions/table/get_node_comments_inline?node_mid={{ requirement.reserved_mid }}"
+              data-url="{{ application_base_url }}/actions/table/get_node_comments_inline?node_mid={{ requirement.reserved_mid }}"
               {%- endif %}
           >
             {%- if is_server %}<div class="editable-cell-indicator"></div>{%- endif %}

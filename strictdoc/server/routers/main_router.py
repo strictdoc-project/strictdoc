@@ -316,6 +316,7 @@ def create_main_router(
         strictdoc_last_update=export_action.traceability_index.strictdoc_last_update,
     )
 
+    html_templates.jinja_environment().environment.globals["application_base_url"] = project_config.application_base_url
     html_generator = HTMLGenerator(project_config, html_templates)
 
     # Server screens contributed by built-in Features (e.g.
@@ -3702,7 +3703,7 @@ def create_main_router(
         export_action.export()
 
         # Redirect back to the project index page.
-        return RedirectResponse("/", status_code=303)
+        return RedirectResponse(project_config.application_base_url+"/", status_code=303)
 
     @read_router.get("/actions/document/new_comment", response_class=Response)
     def document__add_comment(
@@ -5167,7 +5168,7 @@ def create_main_router(
         # correct URL (page + #anchor)
         if linkable_node is not None:
             link_renderer = LinkRenderer(
-                root_path="", static_path=project_config.dir_for_sdoc_assets
+                root_path=project_config.application_base_url, static_path=project_config.dir_for_sdoc_assets
             )
             # This route has no document of its own, so the link must be
             # absolute from the server root: a relative link is resolved

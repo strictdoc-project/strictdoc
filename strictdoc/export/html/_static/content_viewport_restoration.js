@@ -72,7 +72,7 @@
   const CHUNK_FRAME_SELECTOR =
     `turbo-frame[id^='${CHUNK_FRAME_ID_PREFIX}']`;
   const CHUNK_PLACEHOLDER_CLASS = "document-chunk-placeholder";
-  const CREATE_REQUIREMENT_ACTION = "/actions/document/create_requirement";
+  const CREATE_REQUIREMENT_ACTION = application_base_url()+"/actions/document/create_requirement";
   // These keys can move the content viewport when focus is not inside an
   // editable control. Their movement may continue after keydown, so they must
   // cancel exact operation positioning before the browser starts scrolling.

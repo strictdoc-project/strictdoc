@@ -1,5 +1,5 @@
 <a
-  href="/actions/document/edit_grammar?document_mid={{ view_object.document.reserved_mid }}"
+  href="{{ application_base_url }}/actions/document/edit_grammar?document_mid={{ view_object.document.reserved_mid }}"
   class="dropdown_menu_item"
   data-turbo="true"
   data-turbo-action="replace"
@@ -11,7 +11,7 @@
 {%- if view_object.project_config.is_activated_html2pdf() -%}
 <a
   class="dropdown_menu_item"
-  href="/export_html2pdf/{{ view_object.document.reserved_mid }}"
+  href="{{ application_base_url }}/export_html2pdf/{{ view_object.document.reserved_mid }}"
   data-testid="document-export-html2pdf-action"
   role="menuitem"
 >{% include "icons/ico16_export.svg" %} Export to PDF</a>
@@ -20,7 +20,7 @@
 {%- if view_object.project_config.is_activated_reqif() -%}
 <a
   class="dropdown_menu_item"
-  href="/reqif/export_document/{{ view_object.document.reserved_mid }}"
+  href="{{ application_base_url }}/reqif/export_document/{{ view_object.document.reserved_mid }}"
   data-testid="document-export-reqif-action"
   role="menuitem"
 >{% include "icons/ico16_export.svg" %} Export to ReqIF</a>
@@ -28,7 +28,7 @@
 
 <a
   class="dropdown_menu_item"
-  href="/actions/document/delete_document?document_mid={{ view_object.document.reserved_mid }}"
+  href="{{ application_base_url }}/actions/document/delete_document?document_mid={{ view_object.document.reserved_mid }}"
   data-turbo="true"
   data-turbo-method="delete"
   title="Delete document"

@@ -4,7 +4,7 @@
 {% block modal_form__header %}
 <turbo-frame>
   <a
-    href="/actions/document/edit_grammar?document_mid={{ form_object.document_mid }}"
+    href="{{ application_base_url }}/actions/document/edit_grammar?document_mid={{ form_object.document_mid }}"
     data-testid="back-link-grammar-element"
     class="sdoc-modal-header-back-button"
     data-turbo="true"
@@ -17,7 +17,7 @@
     id="{{ form }}"  {# defined in the parent template #}
     method="POST"
     data-turbo="true"
-    action="/actions/document/save_grammar_element"
+    action="{{ application_base_url }}/actions/document/save_grammar_element"
     data-js-tabs
     >
     <input type="hidden" id="document_mid" name="document_mid" value="{{ form_object.document_mid }}"/>
@@ -65,7 +65,7 @@
       <sdoc-form-footer>
         <a
           class="action_button"
-          href="/actions/document/add_grammar_field?document_mid={{ form_object.document_mid }}"
+          href="{{ application_base_url }}/actions/document/add_grammar_field?document_mid={{ form_object.document_mid }}"
           data-turbo="true"
           data-action-type="add_field"
           data-testid="form-action-add-grammar-field"
@@ -102,7 +102,7 @@
       <sdoc-form-footer>
         <a
           class="action_button"
-          href="/actions/document/add_grammar_relation?document_mid={{ form_object.document_mid }}"
+          href="{{ application_base_url }}/actions/document/add_grammar_relation?document_mid={{ form_object.document_mid }}"
           data-turbo="true"
           data-action-type="add_relation"
           data-testid="form-action-add-grammar-relation"

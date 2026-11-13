@@ -9,7 +9,7 @@
 {%- if view_object.is_running_on_server %}
 <form
   id="document-custom-meta-{{ doc_mid }}"
-  action="/actions/table/update_document_custom_meta"
+  action="{{ application_base_url }}/actions/table/update_document_custom_meta"
   method="POST"
   data-turbo="false"
   style="display: contents;"

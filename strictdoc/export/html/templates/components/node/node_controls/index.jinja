@@ -19,7 +19,7 @@
   {# META #}
   <a
   {% if view_object.can_edit_document(view_object.document) %}
-    href="/actions/document/edit_config?document_mid={{ view_object.document.reserved_mid }}"
+    href="{{ application_base_url }}/actions/document/edit_config?document_mid={{ view_object.document.reserved_mid }}"
     class="action_button"
     data-turbo-action="replace"
     data-turbo="true"
@@ -42,7 +42,7 @@
   {% if not sdoc_entity.is_root_included_document %}
   <a
     {% if view_object.can_edit_node(sdoc_entity) %}
-    href="/actions/document/edit_{{ sdoc_entity.get_type_string() }}?node_id={{sdoc_entity.reserved_mid}}&context_document_mid={{ view_object.document.reserved_mid }}"
+    href="{{ application_base_url }}/actions/document/edit_{{ sdoc_entity.get_type_string() }}?node_id={{sdoc_entity.reserved_mid}}&context_document_mid={{ view_object.document.reserved_mid }}"
     class="action_button"
     data-turbo-action="replace"
     data-turbo="true"
@@ -56,7 +56,7 @@
   >{% include "icons/ico16_edit.svg" %}</a>
   <a
     {% if view_object.can_delete_node(sdoc_entity) %}
-    href="/actions/document/delete_{{ sdoc_entity.get_type_string() }}?node_id={{ sdoc_entity.reserved_mid }}&context_document_mid={{ view_object.document.reserved_mid }}"
+    href="{{ application_base_url }}/actions/document/delete_{{ sdoc_entity.get_type_string() }}?node_id={{ sdoc_entity.reserved_mid }}&context_document_mid={{ view_object.document.reserved_mid }}"
     class="action_button"
     data-turbo-method="delete"
     data-turbo="true"
@@ -70,7 +70,7 @@
   >{% include "icons/ico16_delete.svg" %}</a>
   {% else %}
     <a
-      href="/actions/document/edit_included_document?document_mid={{sdoc_entity.reserved_mid}}&context_document_mid={{ view_object.document.reserved_mid }}"
+      href="{{ application_base_url }}/actions/document/edit_included_document?document_mid={{sdoc_entity.reserved_mid}}&context_document_mid={{ view_object.document.reserved_mid }}"
       class="action_button"
       data-turbo-action="replace"
       data-turbo="true"
@@ -89,7 +89,7 @@
 {%- if sdoc_entity.get_type_string() != 'document' and not sdoc_entity.is_root_included_document -%}
   <a
     {% if view_object.can_move_node_across_documents(sdoc_entity) %}
-    href="/actions/document/show_move_node?node_mid={{ sdoc_entity.reserved_mid }}"
+    href="{{ application_base_url }}/actions/document/show_move_node?node_mid={{ sdoc_entity.reserved_mid }}"
     class="action_button"
     data-turbo-action="replace"
     data-turbo="true"
@@ -119,7 +119,7 @@
 {%- if sdoc_entity.get_type_string() == 'requirement' -%}
   <a
     {% if view_object.can_clone_node(sdoc_entity) %}
-    href="/actions/document/clone_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&context_document_mid={{view_object.document.reserved_mid}}"
+    href="{{ application_base_url }}/actions/document/clone_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&context_document_mid={{view_object.document.reserved_mid}}"
     class="action_button"
     {# data-turbo-action="replace" #}
     {# data-turbo-method="delete" #}
@@ -179,7 +179,7 @@
             <li>{# 2 • Document -> add Requirement #}</li>
             <li>{# 3 • Document -> add Requirement #}
               <a
-                  href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=child&element_type={{ element_.tag }}&context_document_mid={{ view_object.document.reserved_mid }}"
+                  href="{{ application_base_url }}/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=child&element_type={{ element_.tag }}&context_document_mid={{ view_object.document.reserved_mid }}"
                   data-turbo-action="replace"
                   data-turbo="true"
                   title="Add first child {{ element_.tag }}"
@@ -200,7 +200,7 @@
             {# There should be 3 places for the buttons: #}
             <li>{# 1 • Section -> add Requirement #}
               <a
-                href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before&element_type={{ element_.tag }}&context_document_mid={{view_object.document.reserved_mid}}"
+                href="{{ application_base_url }}/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before&element_type={{ element_.tag }}&context_document_mid={{view_object.document.reserved_mid}}"
                 data-turbo-action="replace"
                 data-turbo="true"
                 title="Add {{ element_.tag }} above"
@@ -209,7 +209,7 @@
             </li>
             <li>{# 2 • Section -> add Requirement #}
               <a
-                  href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=child&element_type={{ element_.tag }}&context_document_mid={{view_object.document.reserved_mid}}"
+                  href="{{ application_base_url }}/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=child&element_type={{ element_.tag }}&context_document_mid={{view_object.document.reserved_mid}}"
                   data-turbo-action="replace"
                   data-turbo="true"
                   title="Add child {{ element_.tag }}"
@@ -218,7 +218,7 @@
             </li>
             <li>{# 3 • Section -> add Requirement #}
               <a
-                href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after&element_type={{ element_.tag }}&context_document_mid={{view_object.document.reserved_mid}}"
+                href="{{ application_base_url }}/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after&element_type={{ element_.tag }}&context_document_mid={{view_object.document.reserved_mid}}"
                 data-turbo-action="replace"
                 data-turbo="true"
                 title="Add {{ element_.tag }} below"
@@ -242,7 +242,7 @@
             {% endif %}
             <li>{# 1 • Requirement -> add Requirement #}
               <a
-                href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before&element_type={{ element_.tag }}&context_document_mid={{view_object.document.reserved_mid}}"
+                href="{{ application_base_url }}/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=before&element_type={{ element_.tag }}&context_document_mid={{view_object.document.reserved_mid}}"
                 data-turbo-action="replace"
                 data-turbo="true"
                 title="Add {{ element_.tag }} above"
@@ -252,7 +252,7 @@
             {% if sdoc_entity.is_composite %}
             <li>{# 2 • Requirement -> add Requirement #}
               <a
-                href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=child&element_type={{ element_.tag }}&context_document_mid={{view_object.document.reserved_mid}}"
+                href="{{ application_base_url }}/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=child&element_type={{ element_.tag }}&context_document_mid={{view_object.document.reserved_mid}}"
                 data-turbo-action="replace"
                 data-turbo="true"
                 title="Add child {{ element_.tag }}"
@@ -262,7 +262,7 @@
             {% endif %}
             <li>{# 3 • Requirement -> add Requirement #}
               <a
-                href="/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after&element_type={{ element_.tag }}&context_document_mid={{view_object.document.reserved_mid}}"
+                href="{{ application_base_url }}/actions/document/new_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&whereto=after&element_type={{ element_.tag }}&context_document_mid={{view_object.document.reserved_mid}}"
                 data-turbo-action="replace"
                 data-turbo="true"
                 title="Add {{ element_.tag }} below"

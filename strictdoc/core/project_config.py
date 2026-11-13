@@ -138,6 +138,7 @@ class ProjectConfigDefault:
         ProjectFeature.SEARCH,
     ]
     DEFAULT_SERVER_HOST = "127.0.0.1"
+    DEFAULT_APPLICATION_BASE_URL=""
     DEFAULT_SERVER_PORT = 5111
     DEFAULT_LAZY_DOCUMENT_LOADING_THRESHOLD = 200
     DEFAULT_BUNDLE_DOCUMENT_VERSION = "@GIT_VERSION (Git branch: @GIT_BRANCH)"
@@ -172,6 +173,7 @@ class ProjectConfig:
         dir_for_sdoc_cache: str = ProjectConfigDefault.DEFAULT_DIR_FOR_SDOC_CACHE,
         project_features: Optional[List[Union[str, Feature]]] = None,
         server_host: str = ProjectConfigDefault.DEFAULT_SERVER_HOST,
+        application_base_url: str = ProjectConfigDefault.DEFAULT_APPLICATION_BASE_URL,
         server_port: int = ProjectConfigDefault.DEFAULT_SERVER_PORT,
         lazy_document_loading_threshold: int = (
             ProjectConfigDefault.DEFAULT_LAZY_DOCUMENT_LOADING_THRESHOLD
@@ -241,6 +243,7 @@ class ProjectConfig:
         self.project_title: str = project_title
         self.dir_for_sdoc_assets: str = dir_for_sdoc_assets
 
+        self.application_base_url: str=application_base_url
         if env_cache_dir := os.environ.get("STRICTDOC_CACHE_DIR"):
             # The only use case for STRICTDOC_CACHE_DIR is to make the cache
             # local to an itest folder.
@@ -1353,6 +1356,12 @@ class ProjectConfigLoader:
         project_config.config_last_update = get_file_modification_time(
             config_py_path
         )
+
+        project_config.application_base_url = project_config.application_base_url.strip("/")
+
+        if project_config.application_base_url:
+            project_config.application_base_url = "/" + project_config.application_base_url
+
         return project_config
 
     @staticmethod
@@ -1368,6 +1377,7 @@ class ProjectConfigLoader:
             ProjectConfigDefault.DEFAULT_FEATURES
         )
         server_host = ProjectConfigDefault.DEFAULT_SERVER_HOST
+        application_base_url=ProjectConfigDefault.DEFAULT_APPLICATION_BASE_URL
         server_port = ProjectConfigDefault.DEFAULT_SERVER_PORT
         lazy_document_loading_threshold = (
             ProjectConfigDefault.DEFAULT_LAZY_DOCUMENT_LOADING_THRESHOLD
@@ -1548,6 +1558,7 @@ class ProjectConfigLoader:
             dir_for_sdoc_cache=dir_for_sdoc_cache,
             project_features=project_features,
             server_host=server_host,
+            application_base_url=application_base_url,
             server_port=server_port,
             lazy_document_loading_threshold=lazy_document_loading_threshold,
             include_doc_paths=include_doc_paths,

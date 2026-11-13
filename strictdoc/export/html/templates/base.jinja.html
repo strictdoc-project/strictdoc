@@ -36,6 +36,11 @@
   {% endif %}
   {% endblock head_custom_css %}
 
+  <script>
+    function application_base_url() {
+        return "{{ application_base_url }}";
+    }
+  </script>
   {% block head_scripts %}
   {# moved to docs templates #}
   {% endblock head_scripts %}

@@ -348,9 +348,9 @@ class CreateOrUpdateNodeCommand:
             RequirementFieldName.LEVEL not in requirement.ordered_fields_lookup
             and document.config.auto_levels
         ):
-            if (
-                requirement.reserved_title is None
-                or not document.config.is_requirement_in_toc()
+            if requirement.reserved_title is None or (
+                not document.config.is_requirement_in_toc()
+                and requirement.node_type != "SECTION"
             ):
                 requirement.ng_resolved_custom_level = "None"
             else:

@@ -2588,6 +2588,19 @@ Example:
 This sentence contains a
 [LINK: SDOC_UG_LINKS_AND_ANCHORS, link with a custom title].
 
+In the Web UI, the link widget inserts a LINK tag into a multiline field with
+RST or Markdown markup. The widget shows a list of link targets at the caret:
+documents, sections, nodes, and anchors with a UID. To open the list:
+
+- Type ``@`` at the start of a word, or type ``[LINK:``.
+- On an empty line, click the ``+`` button and select **Link**.
+
+Type a part of the UID or the title to filter the list. The filter can have
+several words. The targets of the current document come first. Select a target
+with the arrow keys and Enter, or with a click. Escape closes the list and keeps
+the typed text. After ``@``, the list also closes when a filter with a space
+matches no target, so plain text such as ``meet @ 10:00`` stays plain text.
+
 .. note::
 
     Adding a LINK tag only works when it is placed in multiline fields written with ``>>>...<<<``. Single-line fields do not support RST syntax or tags such as ``[LINK:...]``. See also: [LINK: SECTION-UG-Single-vs-multiline-fields].
@@ -2607,6 +2620,13 @@ that can be referenced from other pages using ``[LINK <Anchor UID>]``.
 
 The optional title can be an unquoted string, but must be enclosed in double
 quotes if it contains special characters.
+
+In the Web UI, the anchor widget inserts an ANCHOR tag into a multiline field
+with RST or Markdown markup. On an empty line, click the ``+`` button and select
+**Anchor**. Enter the UID and, optionally, the title of the anchor. The widget
+checks the UID while you type: the UID must follow the UID syntax and must not
+be used in the project or by another anchor in the field. The widget puts the
+title in double quotes when the title needs them.
 
 Example:
 
@@ -2819,6 +2839,48 @@ direct reference to each uploaded file. It does not use wildcard image paths.
 <<<
 
 [[/SECTION]]
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 01b73b2f291f4b9bafcae607f87cbe1e
+UID: SECTION-UG-Tables
+TITLE: Tables
+
+[TEXT]
+MID: 26737917a6634aea97b3cefaf981522d
+STATEMENT: >>>
+The Web UI has a table editor for all multiline fields with RST or Markdown
+markup. Fields with other markup, such as HTML or Text, have no table editor.
+
+The table editor inserts and edits tables as plain markup text: RST grid tables
+and Markdown pipe tables. The table text in the field stays editable by hand.
+When the caret is in a table, a button next to the field opens the table in the
+editor. When the caret is on an empty line, the ``+`` button opens a menu.
+Select **Table** to insert a new table.
+
+The table editor recognizes the following tables:
+
+- RST: grid tables without merged cells. A cell can contain several lines and
+  paragraphs.
+- Markdown: pipe tables where all rows have the same number of cells. The
+  editor writes a line break in a cell as ``<br>`` and the ``|`` character as
+  ``\|``. The editor ignores tables in fenced code blocks.
+
+The table editor does not open or change other tables, for example RST simple
+tables, ``list-table``, ``csv-table``, or grid tables with merged cells. After
+you correct a table by hand to one of the formats above, the editor can open
+it.
+
+The table editor always shows a header row:
+
+- RST: if all header cells are empty, the editor writes the table without a
+  header row.
+- Markdown: a pipe table always has a header row. Its cells can be empty.
+
+The table editor keeps the column alignment of a Markdown table but cannot
+change it.
+<<<
 
 [[/SECTION]]
 

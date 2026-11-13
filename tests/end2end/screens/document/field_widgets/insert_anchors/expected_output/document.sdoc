@@ -1,0 +1,17 @@
+[DOCUMENT]
+TITLE: Anchors
+
+[REQUIREMENT]
+TITLE: Requirement title
+STATEMENT: >>>
+First paragraph.
+
+[ANCHOR: UNIT, "Unit, plural"]
+
+Second paragraph.
+<<<
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Target requirement
+STATEMENT: Target.

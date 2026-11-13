@@ -2,7 +2,10 @@
 @relation(SDOC-SRS-46, scope=file)
 """
 
+import json
 from time import sleep
+from typing import Any, Dict, List, Optional, Tuple, Union
+from unittest.mock import patch
 from urllib.parse import urlparse, urlunparse
 
 from selenium.common import WebDriverException
@@ -64,6 +67,49 @@ class E2ECase(BaseCase):
     @selenium_connection_error_retry_handler(3)
     def assert_element(self, selector, by="css selector", timeout=None):
         super().assert_element(selector, by, timeout)
+
+    def assert_no_js_errors(
+        self,
+        exclude: Optional[Union[str, List[str], Tuple[str, ...]]] = None,
+    ) -> None:
+        """
+        Print raw Chrome errors before SeleniumBase formats them.
+
+        SeleniumBase's BaseCase.assert_no_js_errors() reformats SEVERE browser
+        log entries. For failed resource requests, the reformatted message
+        drops the net::ERR_* reason that explains why the request failed.
+
+        E2ECase overrides BaseCase.assert_no_js_errors(), so all StrictDoc E2E
+        checks use this method. Chrome removes browser log entries when
+        get_log() reads them, so this override does not read the log before
+        SeleniumBase requests it. It wraps driver.get_log() while the
+        SeleniumBase method runs and prints the SEVERE entries that
+        SeleniumBase receives. The wrapper returns all entries unchanged, and
+        SeleniumBase applies its normal filtering and failure behavior to
+        them.
+        """
+        original_get_log = self.driver.get_log
+
+        def get_log_and_print_severe(log_type: str) -> List[Dict[str, Any]]:
+            entries: List[Dict[str, Any]] = original_get_log(log_type)
+            if log_type == "browser":
+                severe_entries = [
+                    entry_ for entry_ in entries if entry_["level"] == "SEVERE"
+                ]
+                if len(severe_entries) > 0:
+                    print(  # noqa: T201
+                        "Raw Chrome browser log:\n"
+                        + json.dumps(
+                            severe_entries,
+                            indent=2,
+                            ensure_ascii=False,
+                        ),
+                        flush=True,
+                    )
+            return entries
+
+        with patch.object(self.driver, "get_log", get_log_and_print_severe):
+            super().assert_no_js_errors(exclude=exclude)
 
     def do_paste_text_via_js(self, element, text: str) -> None:
         # Simulates a paste event on a DOM element with arbitrary text content.

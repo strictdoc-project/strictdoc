@@ -1,0 +1,262 @@
+/* @relation(SDOC-SRS-61, scope=file) */
+
+/* Tables recognized in a field, painted with the CSS Custom Highlight API. */
+
+::highlight(sdoc-table) {
+  background-color: var(--color-highlight-secondary);
+}
+
+::highlight(sdoc-table-active) {
+  background-color: var(--color-highlight);
+}
+
+/* Editor modal */
+
+sdoc-modal[context="table-editor"] {
+  width: 90vw;
+  /* max-width: 900px; */
+}
+
+.table-editor-grid {
+  border-collapse: collapse;
+  margin: calc(var(--base-rhythm)*2) calc(var(--base-rhythm)*4);
+}
+
+.table-editor-grid th,
+.table-editor-grid td {
+  padding: var(--base-rhythm) calc(var(--base-rhythm) * 1.5);
+  vertical-align: top;
+  text-align: left;
+  border: var(--base-border);
+  min-width: calc(var(--base-rhythm) * 6);
+  max-width: calc(var(--base-rhythm) * 48);
+}
+
+.table-editor-grid th {
+  /* as in "sdoc-autogen table th" */
+  background-color: var(--color-bg-main);
+  overflow-wrap: normal;
+  word-break: normal;
+}
+
+.table-editor-grid
+[contenteditable=true][data-field-type="multiline"] {
+  font-family: var(--base-font-family);
+}
+
+/* Row and column handles */
+
+.table-editor-grid .table-editor-handle,
+.table-editor-grid thead tr:first-child td:first-child {
+  position: relative;
+  border: none;
+  min-width: calc(var(--base-rhythm)*3);
+  height: calc(var(--base-rhythm)*3);
+}
+
+.table-editor-insert-button,
+.table-editor-grip {
+  position: absolute;
+  z-index: 1;
+  padding: 0;
+  border: var(--base-border);
+  background: var(--color-bg-contrast);
+  color: var(--color-fg-secondary);
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.table-editor-insert-button {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  opacity: .35;
+}
+
+.table-editor-handle:hover .table-editor-insert-button,
+.table-editor-insert-button:focus-visible {
+  opacity: 1;
+}
+
+.table-editor-insert-button:hover {
+  color: var(--color-action);
+  border-color: var(--color-action);
+}
+
+/* Insert buttons sit on the border between two rows or columns. */
+thead .table-editor-insert-button[data-edge="start"] {
+  left: -9px;
+  top: 2px;
+}
+
+thead .table-editor-insert-button[data-edge="end"] {
+  right: -9px;
+  top: 2px;
+}
+
+tbody .table-editor-insert-button[data-edge="start"] {
+  top: -9px;
+  left: 2px;
+}
+
+tbody .table-editor-insert-button[data-edge="end"] {
+  bottom: -9px;
+  left: 2px;
+}
+
+/* Grips sit on the table border, in the middle of their row or column. */
+.table-editor-grip {
+  border-radius: 4px;
+  cursor: grab;
+  touch-action: none;
+}
+
+thead .table-editor-grip {
+  left: 50%;
+  bottom: -8px;
+  width: 22px;
+  height: 14px;
+  transform: translateX(-50%);
+}
+
+tbody .table-editor-grip {
+  right: -8px;
+  top: 50%;
+  width: 14px;
+  height: 22px;
+  transform: translateY(-50%);
+}
+
+.table-editor-grip:hover {
+  color: var(--color-action);
+  border-color: var(--color-action);
+}
+
+/* Grip menu: the look comes from .dropdown_menu and .dropdown_menu_item */
+
+sdoc-table-editor-menu {
+  top: 100%;
+  left: 50%;
+}
+
+tbody sdoc-table-editor-menu {
+  top: 50%;
+  left: 100%;
+}
+
+sdoc-table-editor-menu button {
+  border: none;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+sdoc-table-editor-menu button[js-table_editor-menu-action="delete"] {
+  color: var(--color-danger);
+}
+
+/* Tooltip of the extend bars; table_editor.js sets its position */
+
+sdoc-table-editor-tooltip {
+  position: fixed;
+  z-index: 103;
+  padding: var(--base-rhythm) calc(var(--base-rhythm)*1.5);
+  border-radius: var(--base-rhythm);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, .3);
+  background: var(--color-bg-ui);
+  /* color: var(--color-fg-secondary-invert); */
+  color: var(--color-bg-main);
+  text-align: center;
+  font-size: var(--font-size-xsm);
+  line-height: 1.4;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+sdoc-table-editor-tooltip[hidden] {
+  display: none;
+}
+
+/* Extend bars: below and right of the table */
+
+sdoc-table-editor-canvas {
+  display: grid;
+  grid-template-columns: max-content auto;
+  grid-template-areas:
+    "table columns"
+    "rows .";
+  gap: var(--base-rhythm);
+  margin: calc(var(--base-rhythm)*2) calc(var(--base-rhythm)*4);
+}
+
+sdoc-table-editor-canvas .table-editor-grid {
+  grid-area: table;
+  margin: 0;
+}
+
+.table-editor-extend-bar {
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: var(--color-bg-secondary);
+  color: var(--color-fg-secondary);
+  font-size: 12px;
+  opacity: .5;
+  touch-action: none;
+}
+
+.table-editor-extend-bar:hover {
+  opacity: 1;
+}
+
+.table-editor-extend-bar[js-table_editor-extend="row"] {
+  grid-area: rows;
+  height: 16px;
+  margin-left: calc(var(--base-rhythm)*3);
+  cursor: row-resize;
+}
+
+.table-editor-extend-bar[js-table_editor-extend="column"] {
+  grid-area: columns;
+  width: 16px;
+  margin-top: calc(var(--base-rhythm)*3);
+  cursor: col-resize;
+}
+
+/* Dragging rows and columns by their grips */
+
+.table-editor-grid.table-editor-dragging,
+.table-editor-grid.table-editor-dragging * {
+  cursor: grabbing;
+}
+
+.table-editor-grid .table-editor-dragged {
+  opacity: .5;
+}
+
+.table-editor-grid tr[data-drop="before"] > :is(td, th) {
+  box-shadow: inset 0 3px 0 var(--color-action);
+}
+
+.table-editor-grid tr[data-drop="after"] > :is(td, th) {
+  box-shadow: inset 0 -3px 0 var(--color-action);
+}
+
+.table-editor-grid :is(td, th)[data-drop="before"] {
+  box-shadow: inset 3px 0 0 var(--color-action);
+}
+
+.table-editor-grid :is(td, th)[data-drop="after"] {
+  box-shadow: inset -3px 0 0 var(--color-action);
+}
+
+.table-editor-grid .table-editor-deleting {
+  background-color: var(--color-highlight-danger);
+}
+
+/* The backdrop takes focus on a click in the modal (see table_editor.js) */
+
+.table-editor-backdrop:focus {
+  outline: none;
+}

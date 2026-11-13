@@ -709,18 +709,26 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
     def wait_for_cell_save_applied(
         self, node_mid: str, field_name: str, timeout: float = 10
     ) -> None:
-        # Polls until the save's Turbo Stream response has been applied to the
-        # cell DOM. data-mode is cleared synchronously before renderTurboStream
-        # fires, so wait_for_cell_not_editing resolves too early. This method
-        # instead checks the absence of sdoc-contenteditable and
-        # sdoc-autocompletable inside div#cell-{mid}-{field}: both are injected
-        # by the editing form and are gone once the Turbo Stream replaces the
-        # cell content with the display view. Use this after any save action
-        # (outside-click or Cmd+Enter) that triggers a server round-trip.
+        # Wait until the server response replaces the inline editor with the
+        # saved cell content. The cell exits editing mode before the response
+        # arrives. As a result, wait_for_cell_not_editing() does not confirm
+        # that the save has finished.
+        #
+        # The helper checks the form because the form remains until Turbo Stream
+        # applies the response. This check also covers an empty RELATIONS editor.
+        # Removing the last relation removes its sdoc-autocompletable element
+        # before the save finishes, but the empty form remains.
+        #
+        # Autocomplete cells do not have a form. The helper also checks the
+        # custom editing elements to cover these cells.
         WebDriverWait(self.test_case.driver, timeout).until(
             lambda _: self.test_case.execute_script(
-                f"const c = document.getElementById('cell-{node_mid}-{field_name}');"
-                f"return c ? !c.querySelector('sdoc-contenteditable, sdoc-autocompletable') : true;"
+                f"const cell = document.getElementById("
+                f"'cell-{node_mid}-{field_name}'"
+                ");"
+                "return cell !== null && !cell.querySelector("
+                "'form, sdoc-contenteditable, sdoc-autocompletable'"
+                ");"
             )
         )
 

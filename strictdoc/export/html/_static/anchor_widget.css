@@ -1,0 +1,46 @@
+/* @relation(SDOC-SRS-208, scope=file) */
+
+/* Anchor form, a child of <body>; anchor_widget.js sets its top and left
+   under the field button. The buttons use .action_button. */
+
+sdoc-field-widgets-anchor-form {
+  position: fixed;
+  z-index: 999;
+  display: grid;
+  gap: calc(var(--base-rhythm) * 1.5);
+  width: min(320px, calc(100vw - 8px));
+  padding: calc(var(--base-rhythm) * 2);
+  border-radius: var(--base-rhythm);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
+  background: var(--color-bg-contrast);
+  font-size: var(--font-size-sm);
+}
+
+.field-widgets-anchor-label {
+  display: grid;
+  gap: calc(var(--base-rhythm) * 0.5);
+  color: var(--color-fg-secondary);
+}
+
+.field-widgets-anchor-label input {
+  padding: var(--base-rhythm);
+  border: var(--base-border);
+  border-radius: 4px;
+  font: inherit;
+  color: var(--color-fg-contrast);
+}
+
+.field-widgets-anchor-message {
+  color: var(--color-danger);
+  font-size: var(--font-size-xsm);
+}
+
+.field-widgets-anchor-message[hidden] {
+  display: none;
+}
+
+.field-widgets-anchor-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--base-rhythm);
+}

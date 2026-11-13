@@ -97,6 +97,7 @@ class Test(E2ECase):
                 comment_mid, "New comment."
             )
             screen_table.do_save_inline_cell_by_cmd_enter()
+            screen_table.wait_for_cell_save_applied(node_mid, "COMMENT")
 
             self.assert_text("New comment.")
             assert (

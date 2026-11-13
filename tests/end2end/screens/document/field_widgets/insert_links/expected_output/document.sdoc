@@ -1,0 +1,28 @@
+[DOCUMENT]
+TITLE: Links
+
+[REQUIREMENT]
+TITLE: Requirement title
+STATEMENT: >>>
+First paragraph. See [LINK: SECT-1] and [LINK: ANCHOR-1] @x @overview zzz end
+
+[LINK: REQ-1]
+
+Second paragraph.
+<<<
+
+[[SECTION]]
+UID: SECT-1
+TITLE: Overview
+
+[TEXT]
+STATEMENT: >>>
+[ANCHOR: ANCHOR-1, Anchor title]
+<<<
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Target requirement
+STATEMENT: Target.
+
+[[/SECTION]]

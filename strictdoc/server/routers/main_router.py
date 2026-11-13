@@ -8,7 +8,7 @@ import uuid
 from collections import defaultdict
 from mimetypes import guess_type
 from pathlib import Path
-from typing import Any, Dict, Iterator, List, Optional, Set, Union
+from typing import Any, Dict, Iterator, List, Optional, Set, Tuple, Union
 from urllib.parse import quote
 
 from fastapi import (
@@ -46,6 +46,7 @@ from strictdoc.backend.reqif.p01_sdoc.sdoc_to_reqif_converter import (
     P01_SDocToReqIFObjectConverter,
 )
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
+from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import (
     DocumentGrammar,
@@ -1729,6 +1730,8 @@ def create_main_router(
             current_value=current_value,
             field_type=field_type,
             form_action=form_action,
+            document_markup=document.config.get_markup(),
+            context_document_mid=document.reserved_mid,
         )
         return HTMLResponse(
             content=output,
@@ -4910,6 +4913,128 @@ def create_main_router(
             output = env().render_template_as_markup(
                 "autocomplete/uid/stream_autocomplete_uid.jinja.html",
                 nodes=resulting_nodes,
+            )
+
+        return Response(
+            content=output,
+            status_code=200,
+        )
+
+    @read_router.get("/autocomplete/link", response_class=Response)
+    def get_autocomplete_link_results(
+        q: Optional[str] = None, document_mid: Optional[str] = None
+    ) -> Response:
+        """
+        Returns the possible targets of a [LINK: <UID>] tag: documents,
+        sections, nodes, and anchors that have a UID.
+
+        A target matches if its UID and title together contain every word of
+        the query. The target whose UID equals the query comes first, so the
+        anchor widget can check if a UID is taken. The targets of the
+        document identified by the optional parameter "document_mid" come
+        next.
+
+        @relation(SDOC-SRS-208, scope=function)
+        """
+
+        def describe_link_target(
+            target: Union[SDocDocument, SDocNode, Anchor],
+        ) -> Tuple[str, str, str]:
+            # Returns (UID, title, kind). The kind is the grammar element tag
+            # of a node (SECTION, REQUIREMENT, TEST_CASE, ...), the same text
+            # that the UI shows elsewhere, or DOCUMENT or ANCHOR.
+            if isinstance(target, SDocDocument):
+                return (
+                    assert_cast(target.reserved_uid, str),
+                    target.title,
+                    "DOCUMENT",
+                )
+            if isinstance(target, Anchor):
+                return (
+                    target.value,
+                    target.title if target.has_title else "",
+                    "ANCHOR",
+                )
+            return (
+                assert_cast(target.reserved_uid, str),
+                target.reserved_title or "",
+                target.node_type,
+            )
+
+        def iterate_link_targets() -> Iterator[
+            Union[SDocDocument, SDocNode, Anchor]
+        ]:
+            # Yields every document, node, and anchor with a UID.
+            document_tree = assert_cast(
+                export_action.traceability_index.document_tree, DocumentTree
+            )
+            current_document = (
+                export_action.traceability_index.get_node_by_mid_weak(
+                    MID(document_mid)
+                )
+                if document_mid is not None
+                else None
+            )
+            # A link usually points to the document that holds the edited
+            # field, so its targets come first. The other documents follow in
+            # the order of the document tree.
+            documents = [
+                document_
+                for document_ in document_tree.document_list
+                if document_ is current_document
+            ] + [
+                document_
+                for document_ in document_tree.document_list
+                if document_ is not current_document
+            ]
+            for document in documents:
+                if document.reserved_uid is not None:
+                    yield document
+                document_iterator = (
+                    export_action.traceability_index.get_document_iterator(
+                        document
+                    )
+                )
+                for node_, _ in document_iterator.all_content(
+                    print_fragments=False
+                ):
+                    if not isinstance(node_, SDocNode):
+                        continue
+                    if node_.reserved_uid is not None:
+                        yield node_
+                    for field_ in node_.enumerate_fields():
+                        for part_ in field_.parts:
+                            if isinstance(part_, Anchor):
+                                yield part_
+
+        output = ""
+        if q is not None:
+            targets: List[Tuple[str, str, str]] = []
+            # The list has a limit, so a target whose UID equals the query
+            # could be cut off by targets that only contain the query. The
+            # index finds the exact UID directly.
+            exact_target = (
+                export_action.traceability_index.get_linkable_node_by_uid_weak(
+                    q.strip()
+                )
+            )
+            if exact_target is not None:
+                targets.append(describe_link_target(exact_target))
+
+            query_words = q.lower().split()
+            for target_ in iterate_link_targets():
+                if len(targets) >= AUTOCOMPLETE_LIMIT:
+                    break
+                if target_ is exact_target:
+                    continue
+                uid_, title_, kind_ = describe_link_target(target_)
+                words_ = (uid_ + " " + title_).lower()
+                if all(word_ in words_ for word_ in query_words):
+                    targets.append((uid_, title_, kind_))
+
+            output = env().render_template_as_markup(
+                "autocomplete/link/stream_autocomplete_link.jinja.html",
+                targets=targets,
             )
 
         return Response(

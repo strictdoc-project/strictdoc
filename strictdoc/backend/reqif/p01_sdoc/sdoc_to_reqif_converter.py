@@ -3,6 +3,7 @@
 """
 
 import datetime
+import html
 import uuid
 from collections import defaultdict
 from enum import Enum
@@ -83,6 +84,12 @@ class P01_SDocToReqIFBuildContext:
 
         # Maps SDoc field titles to ReqiF Data Type identifiers.
         self.data_types_lookup: Dict[str, str] = {}
+
+        # Maps (node type, field title) of SingleChoice/MultipleChoice fields
+        # to ReqIF enumeration Data Type identifiers. Two node types can
+        # declare a choice field with the same title and different options.
+        # Therefore, the field title alone does not identify the enumeration.
+        self.choice_data_types_lookup: Dict[Tuple[str, str], str] = {}
 
         self.map_grammar_node_tags_to_spec_object_type: Dict[
             SDocDocument, Dict[str, ReqIFSpecObjectType]
@@ -214,9 +221,9 @@ class P01_SDocToReqIFObjectConverter:
                             values=values,
                         )
                         data_types.append(data_type)
-                        context.data_types_lookup[field.title] = (
-                            data_type.identifier
-                        )
+                        context.choice_data_types_lookup[
+                            (element.tag, field.title)
+                        ] = data_type.identifier
                     elif isinstance(field, GrammarElementFieldMultipleChoice):
                         values = []
                         values_map = {}
@@ -245,9 +252,9 @@ class P01_SDocToReqIFObjectConverter:
                             values=values,
                         )
                         data_types.append(data_type)
-                        context.data_types_lookup[field.title] = (
-                            data_type.identifier
-                        )
+                        context.choice_data_types_lookup[
+                            (element.tag, field.title)
+                        ] = data_type.identifier
                     else:
                         raise NotImplementedError(  # pragma: no cover
                             field
@@ -459,7 +466,9 @@ class P01_SDocToReqIFObjectConverter:
 
             grammar_field = grammar_element.fields_map[field.field_name]
             if isinstance(grammar_field, GrammarElementFieldSingleChoice):
-                data_type_ref = context.data_types_lookup[field.field_name]
+                data_type_ref = context.choice_data_types_lookup[
+                    (requirement.node_type, field.field_name)
+                ]
 
                 enum_ref_value = None
                 for data_type in data_types:
@@ -488,7 +497,9 @@ class P01_SDocToReqIFObjectConverter:
                 field_values: List[str] = field.get_text_value().split(",")
                 field_values = list(map(lambda v: v.strip(), field_values))
 
-                data_type_ref = context.data_types_lookup[field.field_name]
+                data_type_ref = context.choice_data_types_lookup[
+                    (requirement.node_type, field.field_name)
+                ]
 
                 data_type_lookup = {}
                 for data_type in data_types:
@@ -527,8 +538,10 @@ class P01_SDocToReqIFObjectConverter:
                         field_value = (
                             "<xhtml:div>\n  "
                             + "\n  ".join(
-                                f"<xhtml:p>{line}</xhtml:p>"
-                                for line in field_value.split("\n\n")
+                                "<xhtml:p>"
+                                + html.escape(paragraph_, quote=False)
+                                + "</xhtml:p>"
+                                for paragraph_ in field_value.split("\n\n")
                             )
                             + "\n</xhtml:div>"
                         )
@@ -632,8 +645,8 @@ class P01_SDocToReqIFObjectConverter:
                     attribute = SpecAttributeDefinition(
                         attribute_type=SpecObjectAttributeType.ENUMERATION,
                         identifier=field_identifier,
-                        datatype_definition=context.data_types_lookup[
-                            field.title
+                        datatype_definition=context.choice_data_types_lookup[
+                            (element.tag, field.title)
                         ],
                         long_name=field_human_title,
                         multi_valued=False,
@@ -643,8 +656,8 @@ class P01_SDocToReqIFObjectConverter:
                     attribute = SpecAttributeDefinition(
                         attribute_type=SpecObjectAttributeType.ENUMERATION,
                         identifier=field_identifier,
-                        datatype_definition=context.data_types_lookup[
-                            field.title
+                        datatype_definition=context.choice_data_types_lookup[
+                            (element.tag, field.title)
                         ],
                         long_name=field_human_title,
                         multi_valued=True,

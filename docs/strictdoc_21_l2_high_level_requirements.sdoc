@@ -875,6 +875,25 @@ RELATIONS:
   VALUE: SDOC-SSS-81
 
 [REQUIREMENT]
+MID: 85960cfc3d83412185e5ce5ebd7c8976
+UID: SDOC-SRS-208
+STATUS: Active
+TITLE: Field widgets
+STATEMENT: >>>
+StrictDoc's web interface shall provide widgets that insert and edit markup
+elements, such as tables and links, in multiline text fields.
+<<<
+RATIONALE: >>>
+A widget writes correct markup for the user. As a result, the user does not
+need to remember the markup syntax or type every element by hand.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-80
+- TYPE: File
+  VALUE: strictdoc/export/html/_static/field_widgets.js
+
+[REQUIREMENT]
 MID: 8811f0ef33de4365bc66a602a8c184f6
 UID: SDOC-SRS-48
 STATUS: Active
@@ -1160,6 +1179,20 @@ RELATIONS:
   VALUE: SDOC-SSS-80
 - TYPE: File
   VALUE: strictdoc/export/html/_static/copy_to_clipboard.js
+
+[REQUIREMENT]
+MID: fa7fd8fd3a694d8e93953fd60e19fdde
+UID: SDOC-SRS-61
+STATUS: Active
+TITLE: Tables HTML editor
+STATEMENT: >>>
+StrictDoc shall provide a solution for editing tables in its web interface.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-80
+- TYPE: File
+  VALUE: strictdoc/export/html/_static/table_editor.js
 
 [[/SECTION]]
 

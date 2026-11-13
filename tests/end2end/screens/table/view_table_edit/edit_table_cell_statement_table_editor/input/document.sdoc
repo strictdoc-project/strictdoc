@@ -1,0 +1,12 @@
+[DOCUMENT]
+TITLE: Document
+
+[REQUIREMENT]
+TITLE: Requirement title
+STATEMENT: >>>
++-----+-----+
+| Key | Val |
++=====+=====+
+| a   | 1   |
++-----+-----+
+<<<

@@ -3,6 +3,7 @@
 """
 
 import datetime
+import html
 import uuid
 from collections import defaultdict
 from enum import Enum
@@ -537,8 +538,10 @@ class P01_SDocToReqIFObjectConverter:
                         field_value = (
                             "<xhtml:div>\n  "
                             + "\n  ".join(
-                                f"<xhtml:p>{line}</xhtml:p>"
-                                for line in field_value.split("\n\n")
+                                "<xhtml:p>"
+                                + html.escape(paragraph_, quote=False)
+                                + "</xhtml:p>"
+                                for paragraph_ in field_value.split("\n\n")
                             )
                             + "\n</xhtml:div>"
                         )

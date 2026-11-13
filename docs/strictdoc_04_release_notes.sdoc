@@ -77,6 +77,11 @@ incoming links as HTML code. The anchor now renders as in RST fields.
 5\) Fixed: the ReqIF export now accepts grammars in which two node types
 have a ``SingleChoice`` or ``MultipleChoice`` field with the same title and
 different options. Before, the export failed with an assertion error.
+
+6\) Fixed: the ReqIF export with ``--reqif-multiline-is-xhtml`` now escapes
+markup characters in multiline fields. Before, a ``<`` or ``&`` in a
+multiline field made the ReqIF file not well-formed XML. As a result,
+``reqif validate`` and the ReqIF import of StrictDoc rejected the file.
 <<<
 
 [[/SECTION]]

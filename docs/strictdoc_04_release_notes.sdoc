@@ -82,6 +82,11 @@ different options. Before, the export failed with an assertion error.
 markup characters in multiline fields. Before, a ``<`` or ``&`` in a
 multiline field made the ReqIF file not well-formed XML. As a result,
 ``reqif validate`` and the ReqIF import of StrictDoc rejected the file.
+
+7\) Fixed: the Web UI saved a field of a Markdown document with two or more
+consecutive empty lines, and the server then failed to read the document. The
+UI now collapses each run of empty lines into one, outside code blocks and
+blockquotes.
 <<<
 
 [[/SECTION]]

@@ -8,5 +8,4 @@
 
 Requirement statement.
 
-
 ![](./_assets/REQ-1/picture.svg)

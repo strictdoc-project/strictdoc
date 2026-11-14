@@ -32,6 +32,7 @@ class Test(E2ECase):
             self.click(title)
             self.type(title_editor, "Updated document")
             screen_table.do_save_inline_cell_by_outside_click()
+            self.assert_element_not_present(title_editor)
             self.assert_text("Updated document", selector=title)
 
             # The custom-metadata rows share one <form> with the document's
@@ -45,15 +46,15 @@ class Test(E2ECase):
             first_field = (
                 f'{first_row} [data-testid="document-config-metadata-field"]'
             )
+            first_editor = '[data-testid="form-field-metadata-custom_meta_0"]'
             self.click(first_field)
-            self.wait_for_element(
-                '[data-testid="form-field-metadata-custom_meta_0"]'
-            )
+            self.wait_for_element(first_editor)
             self.type(
-                '[data-testid="form-field-metadata-custom_meta_0"]',
+                first_editor,
                 "Updated value",
             )
             screen_table.do_save_inline_cell_by_outside_click()
+            self.assert_element_not_present(first_editor)
             self.assert_text("Updated value", selector=first_row)
 
             # The title must still read the value saved above: the hidden

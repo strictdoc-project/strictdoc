@@ -146,8 +146,11 @@
       const params = new URLSearchParams({
         q: query
       });
+      // A field outside a form gives its document in an attribute (see
+      // "Fields outside a form" in field_widgets.js).
       const documentMid = popup.field.closest('form')
-        ?.querySelector('[name="context_document_mid"]')?.value;
+        ?.querySelector('[name="context_document_mid"]')?.value ??
+        popup.field.dataset.fieldWidgetsDocumentMid;
       if (documentMid) params.set('document_mid', documentMid);
       const url = `${AUTOCOMPLETE_URL}?${params}`;
       try {

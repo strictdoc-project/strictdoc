@@ -757,7 +757,18 @@
   // edited copy. The editor always shows a header row: serializing decides
   // what an empty header becomes in the format. The header row has no grip:
   // it cannot be moved or deleted, and it stays first.
-  function openEditor(title, table, onApply) {
+  // The cells of the editor take the inline widgets of field_widgets.js, so
+  // the widgets need the markup and the document of the field (see "Fields
+  // outside a form" in field_widgets.js).
+  function cellWidgetContext(field) {
+    return {
+      markup: fieldTables.get(field).markup,
+      documentMid: field.closest('form')
+        ?.querySelector('[name="context_document_mid"]')?.value ?? '',
+    };
+  }
+
+  function openEditor(title, table, onApply, widgetContext) {
     const edited = copyTable(table);
     if (!edited.hasHeader) {
       edited.rows.unshift(Array(edited.rows[0].length).fill(''));
@@ -831,6 +842,9 @@
           input.setAttribute('role', 'textbox');
           input.setAttribute('aria-multiline', 'true');
           input.dataset.fieldType = 'multiline';
+          input.dataset.fieldWidgetsMarkup = widgetContext.markup;
+          input.dataset.fieldWidgetsDocumentMid = widgetContext.documentMid;
+          input.setAttribute('data-field-widgets-inline-only', '');
           input.textContent = cell;
           input.dataset.testid = 'table-editor-cell';
           input.dataset.row = String(rowIndex);
@@ -1264,7 +1278,7 @@
 
   const fieldWidgets = window.StrictDoc.fieldWidgets;
 
-  // field -> { format, tables } for the fields with a table format.
+  // field -> { markup, format, tables } for the fields with a table format.
   const fieldTables = new Map();
 
   function updateHighlights() {
@@ -1372,6 +1386,7 @@
     scan(field, lines, markup) {
       const format = FORMATS.get(markup);
       fieldTables.set(field, {
+        markup,
         format,
         tables: format.findTables(lines)
       });
@@ -1420,7 +1435,7 @@
         if (!field.isConnected) return;
         const tableLines = format.serialize(edited);
         fieldWidgets.replaceLines(field, table.start, table.end, tableLines);
-      });
+      }, cellWidgetContext(field));
     },
 
     insert(field, line) {
@@ -1430,7 +1445,7 @@
       openEditor('Insert table', createEmptyTable(3, 2), (created) => {
         if (!field.isConnected) return;
         fieldWidgets.insertBlock(field, line, format.serialize(created));
-      });
+      }, cellWidgetContext(field));
     },
   });
 

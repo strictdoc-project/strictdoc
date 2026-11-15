@@ -97,13 +97,29 @@
 // sdoc-form-grid would cut it: sdoc-node is a CSS container, and a
 // container is the containing block of its fixed descendants. In the table
 // view, a click or a key outside the edited cell saves or cancels the
-// cell, so such a popup stops the propagation of its clicks and keys.
+// cell, so such a popup stops the propagation of its clicks and keys. The
+// insert menu and the widget popups are above the modals, such as the
+// table editor (z-index in the CSS of each widget).
+//
+// Fields outside a form. A multiline contenteditable outside a form, such
+// as a cell of the table editor, gets the widgets when it has these
+// attributes:
+// - data-field-widgets-markup: the markup of the text ("RST" or
+// "Markdown"), which a form field takes from the "document_markup" input.
+// - data-field-widgets-document-mid: the document of the text, which a form
+// field takes from the "context_document_mid" input (see link_widget.js).
+// - data-field-widgets-inline-only: only inline widgets work in the field.
+// The field has no button, and "/" opens the menu.
 
 (() => {
 
+  // A field of a form, or a field outside a form that gives its markup in
+  // data-field-widgets-markup, such as a cell of the table editor (see
+  // "Fields outside a form" in the file comment).
   const SEL_FIELD =
     'sdoc-contenteditable[data-js-editable-field]' +
-    '[data-field-type="multiline"][contenteditable="true"]';
+    '[data-field-type="multiline"][contenteditable="true"], ' +
+    '[data-field-widgets-markup][contenteditable="true"]';
 
   // Insert menu DOM contract:
   // - js-field_widgets-insert marks an item of the insert menu. Its value is
@@ -237,8 +253,10 @@
   // Per-field state.
   //
 
-  // field -> { markup, button, extraButton, extraAction, typing, lines,
-  // offsets, segments, mapped }
+  // field -> { markup, inlineOnly, button, extraButton, extraAction,
+  // typing, lines, offsets, segments, mapped }
+  // inlineOnly: the field accepts only inline widgets (see "Fields outside
+  // a form" in the file comment).
   // extraAction: the extraAction() result of the extra button, or null.
   // typing: the caret position after the last input, or false.
   // lines, offsets, segments, and mapped describe the current field text;
@@ -257,9 +275,12 @@
   // Returns the widgets that support the markup of the field.
   function widgetsFor(field) {
     const {
-      markup
+      markup,
+      inlineOnly
     } = fieldStates.get(field);
-    return widgets.filter((widget) => widget.supports(markup));
+    return widgets.filter(
+      (widget) => widget.supports(markup) && (!inlineOnly || widget.inline),
+    );
   }
 
   function hasWidget(field, id) {
@@ -404,7 +425,9 @@
     }
     const canInsert = line !== null && isBlankLine(state, line) &&
       widgetsFor(field).length > 0;
-    if (line === null || state.typing || (!found && !canInsert)) {
+    // A field with inline widgets only has no room for the button: the
+    // insert menu opens with "/".
+    if (line === null || state.typing || state.inlineOnly || (!found && !canInsert)) {
       hideButton(field);
       return found;
     }
@@ -464,11 +487,18 @@
   // Insert menu.
   //
 
+  // The placeholder splits a text node of the field, and its removal leaves
+  // the parts. Both change the DOM that scanField() has mapped, so the field
+  // is scanned again, or lineRange() would use the old text nodes.
   function closeInsertMenu() {
     if (!menu) return;
+    const {
+      field
+    } = menu;
     menu.element.remove();
     menu.placeholder.remove();
     menu = null;
+    if (field.isConnected) scanField(field);
   }
 
   function menuItems() {
@@ -544,6 +574,8 @@
     placeholder.dataset.testid = 'field-widgets-placeholder';
     caret.insertNode(placeholder);
     window.getSelection().collapse(caret.startContainer, caret.startOffset);
+    // See closeInsertMenu().
+    scanField(field);
 
     const element = document.createElement('sdoc-field-widgets-insert-menu');
     element.className = 'dropdown_menu';
@@ -813,7 +845,7 @@
   function initField(field) {
     if (fieldStates.has(field)) return;
 
-    const markup = field.closest('form')
+    const markup = field.dataset.fieldWidgetsMarkup ?? field.closest('form')
       ?.querySelector('[name="document_markup"]')?.value;
     if (!markup) return;
 
@@ -855,6 +887,7 @@
 
     fieldStates.set(field, {
       markup,
+      inlineOnly: field.hasAttribute('data-field-widgets-inline-only'),
       button,
       extraButton,
       extraAction: null,

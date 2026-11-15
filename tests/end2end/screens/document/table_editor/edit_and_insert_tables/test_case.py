@@ -2,6 +2,8 @@
 @relation(SDOC-SRS-61, scope=file)
 """
 
+from selenium.webdriver.common.keys import Keys
+
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.components.table_editor import TableEditor
@@ -85,6 +87,21 @@ class Test(E2ECase):
             table_editor.do_click_extend("row")
             table_editor.assert_cell(3, 0, "")
             table_editor.do_fill_cell(0, 0, "Discarded")
+
+            # A cell takes the inline widgets: "/" opens the insert menu with
+            # Link only. The menu and the link popup are above the modal.
+            # Escape closes only the popup.
+            table_editor.do_fill_cell(1, 1, "/")
+            table_editor.assert_insert_items(["link"])
+            table_editor.assert_on_top(table_editor.INSERT_MENU)
+            table_editor.do_choose_insert_item("link")
+            table_editor.assert_cell(1, 1, "[LINK: ")
+            table_editor.wait_for_link_popup()
+            table_editor.assert_on_top(table_editor.LINK_POPUP)
+            table_editor.do_type_at_caret(Keys.ESCAPE)
+            table_editor.assert_link_popup_closed()
+            table_editor.assert_open()
+
             table_editor.do_cancel()
             table_editor.assert_field_text(RST_FIELD_TEXT)
 

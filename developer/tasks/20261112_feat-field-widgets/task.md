@@ -183,6 +183,20 @@ As a result, `register()` scans the fields that already exist.
 
 ### Field integration
 
+- A field outside a form, such as a cell of the table editor, gets the
+  widgets through attributes: `data-field-widgets-markup` (the markup
+  that a form field takes from `document_markup`),
+  `data-field-widgets-document-mid` (the document for the order of link
+  targets), and `data-field-widgets-inline-only` (only inline widgets, no
+  field button; `/` opens the menu).
+- The insert menu and the widget popups have `z-index: 100000`, above the
+  modals (`sdoc-backdrop`, 99999), so they work in the table editor. The
+  insert menu rule includes `.dropdown_menu` to be stronger than its
+  `z-index`.
+- The placeholder of the insert menu splits a text node of the field. The
+  field is scanned again after the placeholder is inserted and removed,
+  so `lineRange()` never uses the old text nodes.
+
 - `StrictDoc.onInsert()` initializes every multiline contenteditable,
   including the fields that Turbo inserts later. The script has no
   `MutationObserver` of its own.

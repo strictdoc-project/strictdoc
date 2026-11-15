@@ -4,9 +4,10 @@
    left from the caret. The look comes from .autocomplete-items and
    .autocompletable-result-item. */
 
-.field-widgets-link-popup {
+.field-widgets-link-popup.autocomplete-items {
   position: fixed;
   right: auto;
+  z-index: 100000; /* > 99999, above the modals, such as the table editor */
 }
 
 .field-widgets-link-popup[hidden] {

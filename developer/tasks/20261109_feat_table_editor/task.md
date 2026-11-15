@@ -66,6 +66,13 @@ its row. A misaligned table is still editable (see the parsers).
 The editor is a modal with one multiline cell per table cell. Enter adds
 a line. A blank line separates paragraphs.
 
+A cell takes the inline widgets of the field widgets: `[LINK:` and `/`
+work in a cell, and the insert menu has only Link. Block widgets do not
+fit a cell: an anchor must start a line of the field text, but in the
+field a cell line starts with `|` (RST) or the whole table row is one
+line (Markdown). The editor does not support nested tables. A cell has no
+`+` button.
+
 Structure controls:
 
 - `+` buttons on the borders insert a row or a column.
@@ -217,6 +224,13 @@ Automatic alignment (RST):
 - `edit()` clears `editing`. The editor writes the whole table on Apply,
   and the field loses focus when the modal opens.
 
+Widgets in the cells: the modal does not depend on the format, but each
+cell gets the markup and the document of the field
+(`cellWidgetContext()`) as the attributes of a field outside a form (see
+the field widgets task). The cells keep their own Enter behavior and have
+no `data-js-editable-field`, so `editable_field.js` does not handle
+them.
+
 ### Highlighting
 
 The highlights use the CSS Custom Highlight API
@@ -270,14 +284,17 @@ one RST document and one Markdown document.
   typed space misaligns a row: the Format table button aligns the table, the
   table is aligned when the caret leaves it, and the table is aligned
   before the form is sent.
+- RST editor session: `/` in a cell opens the insert menu with Link only,
+  the menu and the link popup are on top of the modal (checked with
+  `document.elementFromPoint()`), and Escape closes only the popup.
 - Markdown: the Format table button shows for the misaligned table, and the
   table is not aligned when the caret leaves it. A table with a short row
   and a line without `|` is aligned with empty cells. A table with an extra
   cell has the overflow highlight, opens in the editor with an added
-  column, and keeps the cell when aligned. The test reads `\|` and `<br/>` in cells and writes a
-  multi-line cell. The test inserts a row through the grip menu, inserts a
-  column, and moves a column and a row by drag. The alignment moves with
-  its column.
+  column, and keeps the cell when aligned. The test reads `\|` and
+  `<br/>` in cells and writes a multi-line cell. The test inserts a row
+  through the grip menu, inserts a column, and moves a column and a row by
+  drag. The alignment moves with its column.
 
 `tests/end2end/screens/table/view_table_edit/edit_table_cell_statement_table_editor/`
 covers the table view:

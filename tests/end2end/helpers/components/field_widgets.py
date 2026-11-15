@@ -215,6 +215,23 @@ class FieldWidgets:  # pylint: disable=invalid-name
         expected = [f"field-widgets-insert-{id_}" for id_ in widget_ids]
         assert actual == expected, f"{actual!r} != {expected!r}"
 
+    def assert_on_top(self, xpath: str) -> None:
+        """
+        Nothing covers the center of the element, for example a modal. A
+        click does not prove it: SeleniumBase falls back to a script click.
+        """
+        element = self.test_case.find_element(xpath, by=By.XPATH)
+        on_top = self.test_case.execute_script(
+            """
+            const rect = arguments[0].getBoundingClientRect();
+            const top = document.elementFromPoint(
+              rect.left + rect.width / 2, rect.top + rect.height / 2);
+            return arguments[0].contains(top);
+            """,
+            element,
+        )
+        assert on_top, f"Element is covered: {xpath}"
+
     def do_close_insert_menu_by_escape(self) -> None:
         ActionChains(self.test_case.driver).send_keys(Keys.ESCAPE).perform()
         self.assert_insert_menu_closed()

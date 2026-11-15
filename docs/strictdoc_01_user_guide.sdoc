@@ -2899,6 +2899,10 @@ The table editor always shows a header row:
 The table editor keeps the column alignment of a Markdown table but cannot
 change it.
 
+In a cell of the table editor, you can insert a link: type ``[LINK:``, or type
+``/`` and select **Link**. The insert menu of a cell has only the widgets that
+insert text into a line, so a cell has no anchors and no nested tables.
+
 A table is aligned when the column separators stand at the same positions in all
 lines: ``|`` in the rows and, in RST, ``+`` in the borders. Columns can be wider
 than their text. A table becomes misaligned when you type in its cells. When the

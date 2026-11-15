@@ -40,6 +40,15 @@ class TableEditor(FieldWidgets):  # pylint: disable=invalid-name
         )
         assert actual == texts, f"{actual!r} != {texts!r}"
 
+    LINK_POPUP = "//*[@data-testid='field-widgets-link-popup']"
+
+    def wait_for_link_popup(self) -> None:
+        """The popup shows when the first list of targets arrives."""
+        self.test_case.assert_element(self.LINK_POPUP, by=By.XPATH)
+
+    def assert_link_popup_closed(self) -> None:
+        self.test_case.assert_element_not_present(self.LINK_POPUP, by=By.XPATH)
+
     def wait_for_highlighted_tables(
         self, count: int, timeout: float = 5
     ) -> None:

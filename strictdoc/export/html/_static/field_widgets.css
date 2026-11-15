@@ -77,8 +77,10 @@ sdoc-field-widgets-placeholder::before {
 /* Insert menu, a child of <body>; field_widgets.js sets its top and left
    under or above the placeholder. */
 
-sdoc-field-widgets-insert-menu {
+/* With the class, the rule is stronger than the z-index of .dropdown_menu. */
+sdoc-field-widgets-insert-menu.dropdown_menu {
   position: fixed;
+  z-index: 100000; /* > 99999, above the modals, such as the table editor */
 }
 
 sdoc-field-widgets-insert-menu button {

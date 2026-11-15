@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.2.5 Chrome/138.0.7204.251 Electron/37.6.1 Safari/537.36" pages="2">
   <diagram id="P9gQJe-g11wjnl4rl_ec" name="Backlog — 2026">
-    <mxGraphModel dx="4067" dy="-177" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="4324" dy="53" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -82,7 +82,7 @@
         <mxCell id="xBUwhWlFWRuDQ3vYKA49-1" parent="xBUwhWlFWRuDQ3vYKA49-38" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" value="UI: Traceability navigator" vertex="1">
           <mxGeometry height="50" width="280" x="20" y="460" as="geometry" />
         </mxCell>
-        <mxCell id="my6LpwKuQYxvOHTBM5B0-5" parent="xBUwhWlFWRuDQ3vYKA49-38" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" value="UI: HTML tables editor" vertex="1">
+        <mxCell id="my6LpwKuQYxvOHTBM5B0-5" parent="xBUwhWlFWRuDQ3vYKA49-38" style="text;html=1;strokeColor=#82b366;fillColor=#d5e8d4;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" value="UI: Table editor" vertex="1">
           <mxGeometry height="50" width="280" x="20" y="220" as="geometry" />
         </mxCell>
         <mxCell id="xBUwhWlFWRuDQ3vYKA49-39" parent="xBUwhWlFWRuDQ3vYKA49-38" style="text;html=1;strokeColor=#82b366;fillColor=#d5e8d4;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" value="UI: HTML static search: Enable on server as well" vertex="1">
@@ -160,7 +160,7 @@
         <mxCell id="xBUwhWlFWRuDQ3vYKA49-27" parent="xBUwhWlFWRuDQ3vYKA49-58" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" value="&lt;a href=&quot;https://github.com/strictdoc-project/strictdoc/issues/544&quot;&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;OSLC interface&lt;/font&gt;&lt;/a&gt;" vertex="1">
           <mxGeometry height="50" width="280" x="20" y="288" as="geometry" />
         </mxCell>
-        <mxCell id="xBUwhWlFWRuDQ3vYKA49-3" parent="xBUwhWlFWRuDQ3vYKA49-58" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#f8cecc;strokeColor=#b85450;" value="&lt;a href=&quot;https://github.com/strictdoc-project/strictdoc/issues/1371&quot;&gt;&lt;font style=&quot;color: rgb(0, 0, 0);&quot;&gt;OpenAPI/RapiDoc&lt;/font&gt;&lt;/a&gt;&amp;nbsp;— Deleted" vertex="1">
+        <mxCell id="xBUwhWlFWRuDQ3vYKA49-3" parent="xBUwhWlFWRuDQ3vYKA49-58" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#647687;strokeColor=#314354;fontColor=#ffffff;" value="&lt;font style=&quot;color: light-dark(rgb(255, 255, 255), rgb(255, 255, 255));&quot;&gt;OpenAPI/RapiDoc&lt;/font&gt;&amp;nbsp;— Deleted" vertex="1">
           <mxGeometry height="50" width="280" x="20" y="468" as="geometry" />
         </mxCell>
         <mxCell id="xBUwhWlFWRuDQ3vYKA49-29" parent="xBUwhWlFWRuDQ3vYKA49-58" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" value="&lt;font color=&quot;#000000&quot;&gt;Doxygen: bi-directional I/F&lt;/font&gt;" vertex="1">
@@ -208,7 +208,7 @@
         <mxCell id="K9-8k4Y43kNKOBq0DaJJ-3" parent="xBUwhWlFWRuDQ3vYKA49-60" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" value="Gcov&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt; -&amp;gt; SDoc&amp;nbsp;&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;color: rgb(0, 0, 0);&quot;&gt;test report generator&lt;/span&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="50" width="280" x="20" y="280" as="geometry" />
         </mxCell>
-        <mxCell id="A6TBCRVBIh-bMebSgLXN-1" parent="xBUwhWlFWRuDQ3vYKA49-60" style="text;html=1;strokeColor=#6c8ebf;fillColor=#dae8fc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" value="Parse Ada" vertex="1">
+        <mxCell id="A6TBCRVBIh-bMebSgLXN-1" parent="xBUwhWlFWRuDQ3vYKA49-60" style="text;html=1;strokeColor=#82b366;fillColor=#d5e8d4;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" value="Parse Ada" vertex="1">
           <mxGeometry height="50" width="280" x="20" y="160" as="geometry" />
         </mxCell>
         <mxCell id="WPKMsA5IL_EO0J-wpA1P-9" parent="xBUwhWlFWRuDQ3vYKA49-60" style="text;html=1;strokeColor=#666666;fillColor=#f5f5f5;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fontColor=#333333;" value="Parse Gherkin" vertex="1">

@@ -1,10 +1,10 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.2.5 Chrome/138.0.7204.251 Electron/37.6.1 Safari/537.36">
   <diagram name="Roadmap" id="QL4QDE5GQBR7DcBM7GMb">
-    <mxGraphModel dx="4182" dy="4522" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="3300" math="0" shadow="0">
+    <mxGraphModel dx="3611" dy="4143" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="2339" pageHeight="3300" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <object label="Background" id="e4xbaoC47YMUbLc9hft--7">
-          <mxCell parent="0" style="" />
+          <mxCell parent="0" style="locked=1;" />
         </object>
         <mxCell id="e4xbaoC47YMUbLc9hft--8" parent="e4xbaoC47YMUbLc9hft--7" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fontSize=72;strokeWidth=3;" value="StrictDoc Roadmap" vertex="1">
           <mxGeometry height="1770" width="4180" x="-1450" y="-130" as="geometry" />
@@ -564,11 +564,26 @@
         <mxCell id="B8qJVDq6c8O8GEGYHyqU-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" value="Markdown/&lt;div&gt;Pygments/&lt;/div&gt;&lt;div&gt;code blocks&lt;/div&gt;" vertex="1">
           <mxGeometry height="70" width="90" x="2000" y="900" as="geometry" />
         </mxCell>
-        <mxCell id="RslivZbRlXHfHyVq7ABO-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" value="&lt;div&gt;Stabilization 2026 Q4&lt;/div&gt;&lt;div&gt;Flaky test fixes&lt;/div&gt;" vertex="1">
+        <mxCell id="RslivZbRlXHfHyVq7ABO-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;strokeColor=#d6b656;fillColor=#fff2cc;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;" value="&lt;div&gt;Stabilization 2026 Q4&lt;/div&gt;&lt;div&gt;Flaky test fixes, ReqIF fixes,&amp;nbsp;&lt;/div&gt;" vertex="1">
           <mxGeometry height="70" width="460" x="2170" y="1440" as="geometry" />
         </mxCell>
         <mxCell id="RslivZbRlXHfHyVq7ABO-2" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#fff2cc;strokeColor=#d6b656;" value="&lt;span style=&quot;color: rgb(51, 51, 51);&quot;&gt;Specification graph SVG visualization&lt;/span&gt;" vertex="1">
-          <mxGeometry height="70" width="240" x="2110" y="1260" as="geometry" />
+          <mxGeometry height="70" width="370" x="2110" y="1260" as="geometry" />
+        </mxCell>
+        <mxCell id="4efTfsZ0ryx_wIEkxDOt-1" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" value="Edit MD/RST tables in Web UI" vertex="1">
+          <mxGeometry height="70" width="90" x="2310" y="900" as="geometry" />
+        </mxCell>
+        <mxCell id="4efTfsZ0ryx_wIEkxDOt-2" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" value="Ada support" vertex="1">
+          <mxGeometry height="70" width="90" x="2190" y="1080" as="geometry" />
+        </mxCell>
+        <mxCell id="4efTfsZ0ryx_wIEkxDOt-3" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" value="Modelica support" vertex="1">
+          <mxGeometry height="70" width="90" x="2280" y="1080" as="geometry" />
+        </mxCell>
+        <mxCell id="4efTfsZ0ryx_wIEkxDOt-4" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" value="GZIP compression for document chunks" vertex="1">
+          <mxGeometry height="70" width="100" x="2140" y="1170" as="geometry" />
+        </mxCell>
+        <mxCell id="4efTfsZ0ryx_wIEkxDOt-5" parent="5Hoejhb2v4ojji3GJ6aL-5" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=0;fontSize=16;fillColor=#d5e8d4;strokeColor=#82b366;" value="&quot;+&quot; Button for adding Table, LINK, ANCHOR" vertex="1">
+          <mxGeometry height="70" width="90" x="2310" y="990" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

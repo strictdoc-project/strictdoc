@@ -263,6 +263,37 @@ class SDMarkdownReader:
         return document
 
     @staticmethod
+    def collapse_redundant_empty_lines(markdown_text: str) -> str:
+        """
+        Collapse runs of empty lines into one empty line.
+
+        Uses the same exemptions as _validate_no_redundant_empty_lines: lines
+        inside code blocks and blockquotes are kept as is.
+        """
+        markdown_tokens: Sequence[Token] = (
+            SDMarkdownReader.markdown_parser.parse(markdown_text)
+        )
+        exempt_line_indexes = SDMarkdownReader._get_empty_line_exempt_indexes(
+            markdown_tokens
+        )
+
+        output_lines: List[str] = []
+        previous_line_is_empty = False
+        for line_index, line in enumerate(markdown_text.split("\n")):
+            if line_index in exempt_line_indexes:
+                previous_line_is_empty = False
+                output_lines.append(line)
+                continue
+
+            line_is_empty = len(line.strip()) == 0
+            if line_is_empty and previous_line_is_empty:
+                continue
+            previous_line_is_empty = line_is_empty
+            output_lines.append(line)
+
+        return "\n".join(output_lines)
+
+    @staticmethod
     def _make_new_empty_document(
         title: str,
         file_raw_text_content: str,
@@ -838,14 +869,9 @@ class SDMarkdownReader:
         file_path: Optional[str],
     ) -> None:
         """Raise if two or more consecutive empty lines appear outside code blocks and blockquotes."""
-        exempt_line_indexes: Set[int] = set()
-        for token in markdown_tokens:
-            if token.type not in ("fence", "code_block", "blockquote_open"):
-                continue
-            if token.map is None:
-                continue
-            for line_index in range(token.map[0], token.map[1]):
-                exempt_line_indexes.add(line_index)
+        exempt_line_indexes = SDMarkdownReader._get_empty_line_exempt_indexes(
+            markdown_tokens
+        )
 
         input_lines = input_string.splitlines()
         empty_line_count = 0
@@ -871,6 +897,21 @@ class SDMarkdownReader:
                     )
             else:
                 empty_line_count = 0
+
+    @staticmethod
+    def _get_empty_line_exempt_indexes(
+        markdown_tokens: Sequence[Token],
+    ) -> Set[int]:
+        """Return indexes of lines where repeated empty lines are allowed."""
+        exempt_line_indexes: Set[int] = set()
+        for token in markdown_tokens:
+            if token.type not in ("fence", "code_block", "blockquote_open"):
+                continue
+            if token.map is None:
+                continue
+            for line_index in range(token.map[0], token.map[1]):
+                exempt_line_indexes.add(line_index)
+        return exempt_line_indexes
 
     @staticmethod
     def _parse_markdown_node(

@@ -1030,3 +1030,32 @@ def test_037_markdown_reader_accepts_multiple_comment_fields():
         "First comment.",
         "Second comment.",
     ]
+
+
+def test_038_collapse_redundant_empty_lines_outside_code_blocks():
+    markdown_content = "First.\n\n\nSecond.\n\n\n\nThird."
+
+    assert (
+        SDMarkdownReader.collapse_redundant_empty_lines(markdown_content)
+        == "First.\n\nSecond.\n\nThird."
+    )
+
+
+def test_039_collapse_redundant_empty_lines_keeps_code_blocks_and_blockquotes():
+    markdown_content = """\
+```
+code
+
+
+code
+```
+
+> quote
+>
+>
+> quote"""
+
+    assert (
+        SDMarkdownReader.collapse_redundant_empty_lines(markdown_content)
+        == markdown_content
+    )

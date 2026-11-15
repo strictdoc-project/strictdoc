@@ -6,19 +6,18 @@
 // A popup at the caret lists the link targets from /autocomplete/link:
 // documents, sections, nodes, and anchors with a UID. The targets of the
 // current document (the form's "context_document_mid" input) come first.
-// The popup opens when the user types one of the triggers:
-// - "@" at the start of a word. The query is the text after "@", up to the
-// caret. The tag replaces "@" and the query.
-// - "[LINK:". The query is the text after "[LINK:", up to the caret. The
-// tag replaces "[LINK:" and the query.
-// The Link item of the insert menu writes "@" on the blank caret line, so
-// the popup opens there.
+// The popup opens when the user types "[LINK:". The query is the text
+// after "[LINK:", up to the caret. The tag replaces "[LINK:" and the
+// query. The Link item of the insert menu writes "[LINK: " at the caret
+// position, so the popup opens there.
+//
+// The query can contain "/", because a UID can contain it. So while the
+// caret is after "[LINK:", the widget captures the input (capturesInput()),
+// and a typed "/" does not open the insert menu. This also holds after
+// Escape, while the user still types the UID.
 //
 // A query can have several words: the server matches each word separately.
-// After "@", a space can also mean that the user writes plain text, for
-// example "meet @ 10:00". So a query with a space that has no matches
-// closes the popup. A query without a space that has no matches shows
-// "No matches found".
+// A query that has no matches shows "No matches found".
 //
 // The popup is hidden until the first response arrives, so a query without
 // matches never flashes an empty popup. While the popup is hidden, the keys
@@ -28,9 +27,8 @@
 // in field_widgets.js.
 //
 // Arrow keys move the selection, Enter or Tab chooses the target, Escape
-// closes the popup and leaves the typed text as it is. After Escape, or
-// after a query with a space finds nothing, the popup stays closed until
-// the user starts another trigger.
+// closes the popup and leaves the typed text as it is. After Escape, the
+// popup stays closed until the user starts another trigger.
 
 (() => {
 
@@ -51,26 +49,15 @@
   //
 
   // Returns the trigger that ends at the caret as {start, query}, or null.
-  // `start` is the offset of "@" or "[LINK:" in the field text.
+  // `start` is the offset of "[LINK:" in the field text.
   // @relation(SDOC-SRS-149, scope=function)
   function findTrigger(textBefore) {
     const lineStart = textBefore.lastIndexOf('\n') + 1;
-    const line = textBefore.slice(lineStart);
-
-    const tag = line.match(/\[LINK:\s?([^[\],]*)$/);
-    if (tag) return {
+    const tag = textBefore.slice(lineStart).match(/\[LINK:\s?([^[\],]*)$/);
+    return tag ? {
       start: lineStart + tag.index,
       query: tag[1]
-    };
-
-    // The query can contain spaces (see the file comment). It ends at the
-    // last "@" of the line.
-    const mention = line.match(/(^|\s)@([^@[\]]*)$/);
-    if (mention) return {
-      start: lineStart + mention.index + mention[1].length,
-      query: mention[2]
-    };
-    return null;
+    } : null;
   }
 
   // @relation(SDOC-SRS-149, scope=function)
@@ -84,9 +71,8 @@
 
   // The open popup: { field, start, element, controller, timer }, or null.
   let popup = null;
-  // {field, start} of the trigger closed with Escape or by a query with a
-  // space that has no matches, or null. The popup does not open again for
-  // this trigger while the user types after it.
+  // {field, start} of the trigger closed with Escape, or null. The popup
+  // does not open again for this trigger while the user types after it.
   let dismissed = null;
 
   function dismiss() {
@@ -170,11 +156,6 @@
         });
         const html = await response.text();
         if (popup?.controller !== controller) return;
-        if (!html.trim() && query.includes(' ')) {
-          // The user writes plain text after "@" (see the file comment).
-          dismiss();
-          return;
-        }
         popup.element.innerHTML = html.trim() ? html : NO_RESULTS_HTML;
         popup.element.hidden = false;
         placePopup();
@@ -227,7 +208,7 @@
     const trigger = currentTrigger(field);
     // The closed trigger is identified by its offset. Once the text before
     // the caret has no trigger at that offset (for example, the user deleted
-    // the "@"), a new trigger at the same offset is a new one.
+    // the "["), a new trigger at the same offset is a new one.
     if (dismissed && (dismissed.field !== field || trigger?.start !== dismissed.start)) {
       dismissed = null;
     }
@@ -236,7 +217,7 @@
   });
 
   // The popup closes when the caret leaves the trigger. Only typing opens
-  // it, so a click into old text such as an e-mail address does not.
+  // it, so a click into an old trigger does not.
   document.addEventListener('selectionchange', () => {
     if (!popup) return;
     const trigger = currentTrigger(popup.field);
@@ -280,9 +261,14 @@
     id: 'link',
     label: 'Link',
     supports: (markup) => markup === 'RST' || markup === 'Markdown',
+    inline: true,
 
-    insert(field, line) {
-      fieldWidgets.insertBlock(field, line, ['@']);
+    capturesInput(field) {
+      return currentTrigger(field) !== null;
+    },
+
+    insert(field, offset) {
+      fieldWidgets.insertInline(field, offset, '[LINK: ');
     },
   });
 

@@ -2592,14 +2592,22 @@ In the Web UI, the link widget inserts a LINK tag into a multiline field with
 RST or Markdown markup. The widget shows a list of link targets at the caret:
 documents, sections, nodes, and anchors with a UID. To open the list:
 
-- Type ``@`` at the start of a word, or type ``[LINK:``.
-- On an empty line, click the ``+`` button and select **Link**.
+- Type ``[LINK:``.
+- Open the insert menu and select **Link**. To open the insert menu, type ``/``
+  anywhere in the field, or click the ``+`` button on an empty line. The widget
+  writes ``[LINK:`` at the caret.
 
 Type a part of the UID or the title to filter the list. The filter can have
 several words. The targets of the current document come first. Select a target
-with the arrow keys and Enter, or with a click. Escape closes the list and keeps
-the typed text. After ``@``, the list also closes when a filter with a space
-matches no target, so plain text such as ``meet @ 10:00`` stays plain text.
+with the arrow keys and Enter or Tab, or with a click. Escape closes the list
+and keeps the typed text.
+
+In the insert menu, the text typed after ``/`` filters the menu. Select a widget
+with the arrow keys and Enter or Tab, or with a click. Escape closes the menu
+and keeps the typed text. An inline widget, such as **Link**, inserts its tag at
+the caret. On an empty line, the tag forms its own paragraph. A block widget,
+such as **Table** or **Anchor**, inserts its block after the paragraph that
+holds the caret.
 
 .. note::
 
@@ -2622,11 +2630,11 @@ The optional title can be an unquoted string, but must be enclosed in double
 quotes if it contains special characters.
 
 In the Web UI, the anchor widget inserts an ANCHOR tag into a multiline field
-with RST or Markdown markup. On an empty line, click the ``+`` button and select
-**Anchor**. Enter the UID and, optionally, the title of the anchor. The widget
-checks the UID while you type: the UID must follow the UID syntax and must not
-be used in the project or by another anchor in the field. The widget puts the
-title in double quotes when the title needs them.
+with RST or Markdown markup. Open the insert menu and select **Anchor**. Enter
+the UID and, optionally, the title of the anchor. The widget checks the UID
+while you type: the UID must follow the UID syntax and must not be used in the
+project or by another anchor in the field. The widget puts the title in double
+quotes when the title needs them.
 
 Example:
 
@@ -2856,8 +2864,9 @@ markup. Fields with other markup, such as HTML or Text, have no table editor.
 The table editor inserts and edits tables as plain markup text: RST grid tables
 and Markdown pipe tables. The table text in the field stays editable by hand.
 When the caret is in a table, a button next to the field opens the table in the
-editor. When the caret is on an empty line, the ``+`` button opens a menu.
-Select **Table** to insert a new table.
+editor. To insert a new table, open the insert menu and select **Table**. To
+open the insert menu, type ``/`` anywhere in the field, or click the ``+``
+button on an empty line.
 
 The table editor recognizes the following tables:
 

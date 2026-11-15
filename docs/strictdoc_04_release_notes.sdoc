@@ -64,11 +64,12 @@ markup. The table editor:
 - inserts and edits RST grid tables and Markdown pipe tables
 - writes the table into the field as plain markup text
 - is available on the Document screen and on the TABLE screen
-- inserts a new table when a user puts the caret on an empty line, clicks the
-  ``+`` button, and selects **Table**.
+- inserts a new table from the insert menu. To open the menu, type ``/`` anywhere
+  in the field, or click the ``+`` button on an empty line.
 
 2\) The Web UI has a link widget for multiline fields with RST or Markdown
-markup. Type ``@`` or ``[LINK:`` to select a link target from a list. See
+markup. Type ``[LINK:``, or select **Link** in the insert menu, to select a link
+target from a list. See
 [LINK: SDOC_UG_LINKS_AND_ANCHORS].
 
 3\) The Web UI has an anchor widget for multiline fields with RST or Markdown

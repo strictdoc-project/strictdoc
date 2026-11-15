@@ -1,11 +1,11 @@
 // @relation(SDOC-SRS-208, scope=file)
 //
 // Anchor widget: the "anchor" widget of field_widgets.js. It writes an
-// [ANCHOR: <UID>, <title>] tag on the blank caret line of an RST or
-// Markdown field. The tag is block-level: it starts a line and ends it, and
-// the insert button shows only on a blank line.
+// [ANCHOR: <UID>, <title>] tag into an RST or Markdown field. The tag is
+// block-level: it starts a line and ends it, so the widget is a block
+// widget.
 //
-// The Anchor item of the insert menu opens a form under the field button
+// The Anchor item of the insert menu opens a form under the caret position
 // with two inputs: UID (required) and title (optional). The form checks the
 // UID while the user types:
 // - The UID must match the UID syntax of the SDoc grammar.
@@ -222,7 +222,7 @@
     return button;
   }
 
-  function openForm(field, line, buttonRect) {
+  function openForm(field, line, rect) {
     closeForm(false);
 
     const element = document.createElement('sdoc-field-widgets-anchor-form');
@@ -272,9 +272,9 @@
       titleMessage: title.message,
       insertButton,
       offset: {
-        left: buttonRect.left - fieldRect.left,
-        top: buttonRect.top - fieldRect.top,
-        bottom: buttonRect.bottom - fieldRect.top,
+        left: rect.left - fieldRect.left,
+        top: rect.top - fieldRect.top,
+        bottom: rect.bottom - fieldRect.top,
       },
       timer: null,
       controller: null,

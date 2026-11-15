@@ -11,8 +11,8 @@
 // example an RST table with spans, is not highlighted and cannot be opened,
 // so the editor never rewrites a table it has misread.
 //
-// The field button edits the table that holds the caret. The insert menu of
-// the field button inserts a new table. Both open a modal that edits a copy
+// The field button edits the table that holds the caret. The insert menu
+// inserts a new table. Both open a modal that edits a copy
 // of the table: cells, grips with a menu for rows and columns, insert
 // buttons on the borders, and extend bars. Apply writes the serialized
 // table back into the field through field_widgets.js.

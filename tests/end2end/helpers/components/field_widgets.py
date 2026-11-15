@@ -1,3 +1,5 @@
+from typing import List
+
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -7,10 +9,11 @@ from seleniumbase import BaseCase
 class FieldWidgets:  # pylint: disable=invalid-name
     """
     The field widgets of a multiline form field: the caret, the field's
-    button, and the insert menu.
+    button, and the insert menu with its placeholder at the caret.
     """
 
     INSERT_MENU = "//*[@data-testid='field-widgets-insert-menu']"
+    PLACEHOLDER = "//*[@data-testid='field-widgets-placeholder']"
 
     def __init__(self, test_case: BaseCase, field_name: str) -> None:
         assert isinstance(test_case, BaseCase)
@@ -84,14 +87,51 @@ class FieldWidgets:  # pylint: disable=invalid-name
     def do_open_insert_menu(self) -> None:
         self.assert_button("insert")
         self.test_case.click_xpath(self.button_xpath)
+        self.assert_insert_menu_open()
+
+    # insert menu
+
+    def assert_insert_menu_open(self) -> None:
         self.test_case.assert_element(self.INSERT_MENU, by=By.XPATH)
+        self.test_case.assert_element(
+            f"{self.field_xpath}{self.PLACEHOLDER}", by=By.XPATH
+        )
+
+    def assert_insert_menu_closed(self) -> None:
+        self.test_case.assert_element_not_present(self.INSERT_MENU, by=By.XPATH)
+        self.test_case.assert_element_not_present(self.PLACEHOLDER, by=By.XPATH)
+
+    def assert_insert_items(self, widget_ids: List[str]) -> None:
+        """The visible items of the insert menu, in order."""
+        actual = self.test_case.execute_script(
+            """
+            return [...document.querySelectorAll(arguments[0])]
+              .filter((item) => !item.hidden)
+              .map((item) => item.dataset.testid);
+            """,
+            "[data-testid='field-widgets-insert-menu'] "
+            "[js-field_widgets-insert]",
+        )
+        expected = [f"field-widgets-insert-{id_}" for id_ in widget_ids]
+        assert actual == expected, f"{actual!r} != {expected!r}"
 
     def do_close_insert_menu_by_escape(self) -> None:
         ActionChains(self.test_case.driver).send_keys(Keys.ESCAPE).perform()
-        self.test_case.assert_element_not_present(self.INSERT_MENU, by=By.XPATH)
+        self.assert_insert_menu_closed()
+
+    def do_close_insert_menu_by_click(self) -> None:
+        self.test_case.click_xpath(
+            f"{self.INSERT_MENU}//*[@data-testid='field-widgets-menu-close']"
+        )
+        self.assert_insert_menu_closed()
 
     def do_choose_insert_item(self, widget_id: str) -> None:
         self.test_case.click_xpath(
             f"{self.INSERT_MENU}"
             f"//*[@data-testid='field-widgets-insert-{widget_id}']"
         )
+        self.assert_insert_menu_closed()
+
+    def do_choose_insert_item_by_enter(self) -> None:
+        ActionChains(self.test_case.driver).send_keys(Keys.ENTER).perform()
+        self.assert_insert_menu_closed()

@@ -2,6 +2,8 @@
 @relation(SDOC-SRS-208, scope=file)
 """
 
+from selenium.webdriver.common.keys import Keys
+
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.components.link_widget import LinkWidget
@@ -44,16 +46,17 @@ class Test(E2ECase):
             # The popup is visible in the narrow cell, and a click on it
             # does not save the cell.
             link_widget.do_place_caret_after("Text.")
-            link_widget.do_type_at_caret(" See @target")
+            link_widget.do_type_at_caret(" See [LINK: target")
             link_widget.wait_for_options(["REQ-1"])
             link_widget.do_choose_by_click("REQ-1")
             screen_table.assert_cell_is_inline_editing(node_mid, "STATEMENT")
 
             # Escape closes only the popup, not the cell.
-            link_widget.do_type_at_caret(" @")
+            link_widget.do_type_at_caret(" [LINK: ")
             link_widget.wait_for_options(["REQ-1"])
             link_widget.do_close_popup_by_escape()
             screen_table.assert_cell_is_inline_editing(node_mid, "STATEMENT")
+            link_widget.do_type_at_caret(Keys.BACKSPACE * len(" [LINK: "))
 
             screen_table.do_save_inline_cell_by_outside_click()
             screen_table.wait_for_cell_save_applied(node_mid, "STATEMENT")

@@ -14,9 +14,22 @@
 //
 // While the caret is in a field, the button shows next to a block that a
 // widget can edit ("edit"), or next to a blank caret line ("insert"). It
-// hides while the user types. The insert button opens a menu with one item
-// per widget that supports the field markup (the form's "document_markup"
-// input).
+// hides while the user types.
+//
+// The insert menu has one item per widget that supports the field markup
+// (the form's "document_markup" input). It opens at the caret when the
+// user clicks the insert button or types "/" anywhere in the field. The
+// text typed after "/" filters the items. The arrow keys move the active
+// item, Enter or Tab chooses it. While the menu is open, a
+// placeholder marks the caret position. The placeholder is not part of the
+// field text. Escape or the last item of the menu closes the menu and keeps
+// the typed text. When the user chooses a widget, the menu removes the "/"
+// and the filter text, and the widget inserts its element:
+// - an inline widget at the caret position, with spaces around it. On a
+// blank line, the element forms a new paragraph (see
+// inlineFormsParagraph());
+// - a block widget as a new paragraph after the block of non-blank lines
+// that holds the caret. On a blank line, the element takes its place.
 //
 // Widget contract. Every widget has:
 // - id: the widget name. It names the insert menu item, its test ID
@@ -25,14 +38,20 @@
 // (components/field_widgets/icons.jinja).
 // - label: the text of the insert menu item.
 // - supports(markup): returns true if the widget works with the markup.
-// - insert(field, line, rect): inserts a new element at the blank caret
-// line. `rect` is the viewport rectangle of the field button, for a widget
-// that shows its own popup there.
+// - insert(field, at, rect): inserts a new element. For an inline widget,
+// `at` is the text offset of the caret, for a block widget, the caret
+// line. `rect` is the viewport rectangle of the caret position, for a
+// widget that shows its own popup there.
+// - inline: true for an inline widget (see insertInline()), false or
+// absent for a block widget (see insertBlock()).
 // Any widget can also have these optional hooks:
 // - scan(field, lines, markup): called after every change of the text of
 // a field with a supported markup.
 // - forget(field): called when the field is no longer in the DOM, so the
 // widget can drop its data about the field.
+// - capturesInput(field): returns true if the text at the caret belongs to
+// the widget, for example, the query of an unfinished tag. Then a typed "/"
+// is part of that text and does not open the insert menu.
 // A widget that recognizes its own blocks in the field text (for example,
 // tables) also has:
 // - blockAt(field, line): returns the block {start, end, ...} that holds
@@ -49,8 +68,12 @@
 // - textBeforeCaret(field): the field text before the caret, or null if
 // the caret is not in the field or the field DOM cannot be mapped to its
 // text.
-// - insertBlock(field, line, blockLines): writes the lines in place of the
-// blank caret line.
+// - insertInline(field, offset, text): writes the text at the offset, with
+// spaces around it, or as a new paragraph (see inlineFormsParagraph()), and
+// puts the caret after the text.
+// - insertBlock(field, line, blockLines): writes the lines as a new
+// paragraph after the block that holds the line, or in place of the line
+// if it is blank.
 // - replaceLines(field, start, end, newLines): writes the lines in place of
 // the lines [start, end].
 // - replaceText(field, from, to, text): writes the text in place of the
@@ -75,6 +98,11 @@
   // - js-field_widgets-insert marks an item of the insert menu. Its value is
   // the widget id.
   const ATTR_INSERT = 'js-field_widgets-insert';
+  // - js-field_widgets-close marks the last item, which closes the menu.
+  const ATTR_CLOSE = 'js-field_widgets-close';
+  // - the class "active" marks the item that Enter chooses. It is styled by
+  // .dropdown_menu_item.active in element.css.
+  const CLASS_ACTIVE = 'active';
   // - js-field_widgets-icon marks an icon in the
   // #template-field-widgets-icons template. Its value is the widget id.
   const ATTR_ICON = 'js-field_widgets-icon';
@@ -182,14 +210,20 @@
   // Per-field state.
   //
 
-  // field -> { markup, button, menu, typing, lines, offsets, segments,
-  // mapped }
-  // menu: the open insert menu as { element, line }, or null.
+  // field -> { markup, button, typing, lines, offsets, segments, mapped }
   // typing: the caret position after the last input, or false.
   // lines, offsets, segments, and mapped describe the current field text;
   // scanField() sets them after every change.
   const fieldStates = new Map();
   let activeField = null;
+
+  // The open insert menu: { field, element, placeholder, start, offset,
+  // query }, or null.
+  // start: the text offset of the "/" that opened the menu, or null if the
+  // insert button opened it.
+  // offset: the text offset of the caret when the menu opened.
+  // query: the text typed after "/".
+  let menu = null;
 
   // Returns the widgets that support the markup of the field.
   function widgetsFor(field) {
@@ -213,6 +247,7 @@
   function forgetRemovedFields() {
     for (const known of fieldStates.keys()) {
       if (known.isConnected) continue;
+      if (menu?.field === known) closeInsertMenu();
       fieldStates.delete(known);
       widgets.forEach((widget) => widget.forget?.(known));
     }
@@ -247,6 +282,11 @@
   function caretLine(field) {
     const text = textBeforeCaret(field);
     return text === null ? null : text.split('\n').length - 1;
+  }
+
+  // Returns the text offset of the caret, or null (see textBeforeCaret()).
+  function caretOffset(field) {
+    return textBeforeCaret(field)?.length ?? null;
   }
 
   // Returns {widget, block} for the widget block that holds the line, or
@@ -307,16 +347,9 @@
   // Field button.
   //
 
-  function closeInsertMenu(state) {
-    state.menu?.element.remove();
-    state.menu = null;
-  }
-
   function hideButton(field) {
     const state = fieldStates.get(field);
-    if (!state) return;
-    closeInsertMenu(state);
-    state.button.hidden = true;
+    if (state) state.button.hidden = true;
   }
 
   // Shows the button in the left margin of the field: next to the first line
@@ -344,7 +377,6 @@
       hideButton(field);
       return found;
     }
-    if (state.menu?.line !== line) closeInsertMenu(state);
 
     button.dataset.mode = found ? 'edit' : 'insert';
     button.textContent = found ? '✎' : '+';
@@ -359,8 +391,12 @@
   }
 
   // Updates the button for the field that holds the caret and tells every
-  // widget which of its blocks holds the caret.
+  // widget which of its blocks holds the caret. The insert menu closes when
+  // the caret leaves the position where the menu expects it.
   function updateActiveField() {
+    if (menu && caretOffset(menu.field) !== menu.offset + menu.query.length) {
+      closeInsertMenu();
+    }
     const field = caretField();
     if (activeField && activeField !== field) hideButton(activeField);
     activeField = field;
@@ -372,15 +408,91 @@
     ));
   }
 
-  // Opens the insert menu under the button, or above it if there is no
-  // room below. The menu is a fixed popup in <body> (see placeFixed()). The
-  // menu keeps the caret in the field, so the caret line is still known when
-  // an item is chosen.
-  function openInsertMenu(field, line) {
-    const state = fieldStates.get(field);
+  //
+  // Insert menu.
+  //
+
+  function closeInsertMenu() {
+    if (!menu) return;
+    menu.element.remove();
+    menu.placeholder.remove();
+    menu = null;
+  }
+
+  function menuItems() {
+    return [...menu.element.querySelectorAll(`[${ATTR_INSERT}]`)];
+  }
+
+  function setActive(item) {
+    menuItems().forEach((each) => each.classList.toggle(CLASS_ACTIVE, each === item));
+  }
+
+  function moveActive(step) {
+    const items = menuItems().filter((item) => !item.hidden);
+    const index = items.findIndex((item) => item.classList.contains(CLASS_ACTIVE));
+    setActive(items[(index + step + items.length) % items.length]);
+  }
+
+  // Shows the items with a word of the label that starts with the query.
+  // The menu closes when no item matches.
+  function filterInsertMenu() {
+    const query = menu.query.toLowerCase();
+    const items = menuItems();
+    for (const item of items) {
+      const id = item.getAttribute(ATTR_INSERT);
+      const words = widgets.find((widget) => widget.id === id)
+        .label.toLowerCase().split(/\s+/);
+      item.hidden = !words.some((word) => word.startsWith(query));
+    }
+    const first = items.find((item) => !item.hidden);
+    if (first) setActive(first);
+    else closeInsertMenu();
+  }
+
+  function placeInsertMenu() {
+    placeFixed(menu.element, menu.placeholder.getBoundingClientRect());
+  }
+
+  // Removes the "/" and the query, and lets the widget insert its element
+  // at the caret position.
+  function chooseWidget(id) {
     const {
-      button
-    } = state;
+      field,
+      placeholder,
+      start
+    } = menu;
+    const rect = placeholder.getBoundingClientRect();
+    let at = menu.offset + menu.query.length;
+    closeInsertMenu();
+    if (start !== null) {
+      replaceText(field, start, at, '');
+      at = start;
+    }
+    const widget = widgets.find((each) => each.id === id);
+    if (widget.inline) {
+      widget.insert(field, at, rect);
+    } else {
+      widget.insert(field, field.innerText.slice(0, at).split('\n').length - 1, rect);
+    }
+  }
+
+  // Opens the insert menu under the caret, or above it if there is no room
+  // below. The menu is a fixed popup in <body> (see placeFixed()). The menu
+  // keeps the caret in the field, so the caret position is still known when
+  // an item is chosen. `start` is the text offset of the "/" that opens the
+  // menu, or null.
+  //
+  // The placeholder at the caret is an empty element: its text comes from
+  // CSS, so the field text (innerText) does not include it.
+  function openInsertMenu(field, start) {
+    closeInsertMenu();
+    const caret = caretRange();
+    const placeholder = document.createElement('sdoc-field-widgets-placeholder');
+    placeholder.contentEditable = 'false';
+    placeholder.dataset.testid = 'field-widgets-placeholder';
+    caret.insertNode(placeholder);
+    window.getSelection().collapse(caret.startContainer, caret.startOffset);
+
     const element = document.createElement('sdoc-field-widgets-insert-menu');
     element.className = 'dropdown_menu';
     element.dataset.testid = 'field-widgets-insert-menu';
@@ -396,25 +508,40 @@
       const icon = document.getElementById(ICON_TEMPLATE_ID)
         ?.content.querySelector(`[${ATTR_ICON}="${widget.id}"] svg`);
       if (icon) item.prepend(icon.cloneNode(true));
+      item.addEventListener('pointerenter', () => setActive(item));
       element.appendChild(item);
     }
+    const close = document.createElement('button');
+    close.type = 'button';
+    close.className = 'dropdown_menu_item field-widgets-menu-close';
+    close.textContent = 'Close menu';
+    close.dataset.testid = 'field-widgets-menu-close';
+    close.setAttribute(ATTR_CLOSE, '');
+    const key = document.createElement('span');
+    key.className = 'field-widgets-menu-key';
+    key.textContent = 'Esc';
+    close.appendChild(key);
+    element.appendChild(close);
+
     element.addEventListener('mousedown', (event) => event.preventDefault());
     element.addEventListener('click', (event) => {
       // The table view must not see this click (see placeFixed()).
       event.stopPropagation();
       const item = event.target.closest(`[${ATTR_INSERT}]`);
-      if (!item) return;
-      const rect = button.getBoundingClientRect();
-      closeInsertMenu(state);
-      const id = item.getAttribute(ATTR_INSERT);
-      widgets.find((widget) => widget.id === id).insert(field, line, rect);
+      if (item) chooseWidget(item.getAttribute(ATTR_INSERT));
+      else if (event.target.closest(`[${ATTR_CLOSE}]`)) closeInsertMenu();
     });
     document.body.appendChild(element);
-    placeFixed(element, button.getBoundingClientRect());
-    state.menu = {
+    menu = {
+      field,
       element,
-      line
+      placeholder,
+      start,
+      offset: caretOffset(field),
+      query: ''
     };
+    filterInsertMenu();
+    placeInsertMenu();
   }
 
   //
@@ -468,8 +595,34 @@
     writeLines(field, updated, start + newLines.length - 1);
   }
 
-  // Writes the block in place of the blank caret line. Blank lines separate
-  // the block from the surrounding text.
+  // The rule for an inline element on a blank line. Alone on a blank line
+  // between two paragraphs, the element would join them into one, so it
+  // forms its own paragraph, as a block does. To insert the element into a
+  // blank line as is, return false.
+  function inlineFormsParagraph(lines, line) {
+    return lines[line].trim() === '';
+  }
+
+  // See the helpers in the file comment.
+  function insertInline(field, offset, text) {
+    const current = field.innerText;
+    const lines = current.split('\n');
+    const line = current.slice(0, offset).split('\n').length - 1;
+    if (inlineFormsParagraph(lines, line)) {
+      insertBlock(field, line, [text]);
+      return;
+    }
+    const spaceBefore = offset > 0 && /\S/.test(current[offset - 1]) ? ' ' : '';
+    const spaceAfter = offset < current.length && /\S/.test(current[offset]) ? ' ' : '';
+    writeText(
+      field,
+      current.slice(0, offset) + spaceBefore + text + spaceAfter + current.slice(offset),
+      offset + spaceBefore.length + text.length,
+    );
+  }
+
+  // See the helpers in the file comment. Blank lines separate the block
+  // from the surrounding text.
   function insertBlock(field, line, blockLines) {
     scanField(field);
     const {
@@ -481,8 +634,14 @@
       return;
     }
 
-    const before = lines.slice(0, line);
-    const after = lines.slice(line + 1);
+    // A blank line is replaced. Otherwise, the block goes after the last
+    // non-blank line of the block that holds the line.
+    let [before, after] = [lines.slice(0, line), lines.slice(line + 1)];
+    if (lines[line].trim() !== '') {
+      let end = line;
+      while (end + 1 < lines.length && lines[end + 1].trim() !== '') end++;
+      [before, after] = [lines.slice(0, end + 1), lines.slice(end + 1)];
+    }
     const blankBefore = before.length === 0 ||
       before[before.length - 1].trim() === '' ? [] : [''];
     const blankAfter = after.length > 0 && after[0].trim() !== '' ? [''] : [];
@@ -538,10 +697,10 @@
       const found = blockAtLine(field, line);
       if (found) {
         found.widget.edit(field, found.block);
-      } else if (state.menu) {
-        closeInsertMenu(state);
+      } else if (menu?.field === field) {
+        closeInsertMenu();
       } else if (line !== null && isBlankLine(state, line)) {
-        openInsertMenu(field, line);
+        openInsertMenu(field, null);
       }
     });
 
@@ -552,7 +711,6 @@
     fieldStates.set(field, {
       markup,
       button,
-      menu: null,
       typing: false
     });
     scanField(field);
@@ -574,6 +732,7 @@
     hasWidget,
     lineRange,
     textBeforeCaret,
+    insertInline,
     insertBlock,
     replaceLines,
     replaceText,
@@ -591,8 +750,33 @@
       offset: range.startOffset
     };
     scanField(field);
+    updateInsertMenu(field, event);
     updateActiveField();
   });
+
+  // Typing closes the menu of the insert button. In the menu of "/", the
+  // typed text is the query. A "/" typed into the field opens the menu,
+  // unless a widget captures the input (see capturesInput() in the file
+  // comment).
+  function updateInsertMenu(field, event) {
+    if (menu?.field === field) {
+      const before = menu.start === null ? null : textBeforeCaret(field);
+      const query = before !== null && before.length > menu.start &&
+        before[menu.start] === '/' ? before.slice(menu.start + 1) : null;
+      if (query === null || /\s/.test(query)) {
+        closeInsertMenu();
+      } else {
+        menu.query = query;
+        filterInsertMenu();
+      }
+    }
+    const available = widgetsFor(field);
+    if (!menu && event.inputType === 'insertText' && event.data === '/' &&
+      available.length > 0 && !available.some((widget) => widget.capturesInput?.(field))) {
+      const offset = caretOffset(field);
+      if (offset !== null) openInsertMenu(field, offset - 1);
+    }
+  }
 
   // After typing, the button comes back when the caret moves (see
   // placeButton()). A click at the position where typing stopped does not
@@ -606,36 +790,43 @@
   });
 
   document.addEventListener('pointerdown', (event) => {
-    for (const state of fieldStates.values()) {
-      if (state.menu && !state.menu.element.contains(event.target) &&
-        !state.button.contains(event.target)) closeInsertMenu(state);
-    }
+    if (menu && !menu.element.contains(event.target) &&
+      !fieldStates.get(menu.field).button.contains(event.target)) closeInsertMenu();
   });
 
-  // Escape closes only the insert menu. The table view cancels the edited
-  // cell on Escape from its listener on the document, so the event must not
-  // get there.
+  // The menu keys must not reach the field or the table view, which cancels
+  // the edited cell on Escape. The arrow keys left and right close the menu,
+  // so the caret does not move past the placeholder.
   document.addEventListener('keydown', (event) => {
-    if (event.key !== 'Escape') return;
-    const state = fieldStates.get(event.target.closest?.(SEL_FIELD));
-    if (!state?.menu) return;
+    if (!menu || event.target !== menu.field) return;
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      moveActive(event.key === 'ArrowDown' ? 1 : -1);
+    } else if (event.key === 'Enter' || event.key === 'Tab') {
+      const active = menu.element.querySelector(`.${CLASS_ACTIVE}`);
+      chooseWidget(active.getAttribute(ATTR_INSERT));
+    } else if (event.key === 'Escape') {
+      closeInsertMenu();
+    } else {
+      if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') closeInsertMenu();
+      return;
+    }
+    event.preventDefault();
     event.stopPropagation();
-    closeInsertMenu(state);
   }, true);
 
   document.addEventListener('focusout', (event) => {
-    if (fieldStates.has(event.target)) hideButton(event.target);
+    if (!fieldStates.has(event.target)) return;
+    if (menu?.field === event.target) closeInsertMenu();
+    hideButton(event.target);
   });
 
-  // The insert menu has a fixed position, so it follows the button when the
-  // page or a container scrolls, and when the window size changes.
-  function replaceInsertMenus() {
-    for (const state of fieldStates.values()) {
-      if (state.menu) placeFixed(state.menu.element, state.button.getBoundingClientRect());
-    }
+  // The insert menu has a fixed position, so it follows the placeholder
+  // when the page or a container scrolls, and when the window size changes.
+  function replaceInsertMenu() {
+    if (menu) placeInsertMenu();
   }
-  document.addEventListener('scroll', replaceInsertMenus, true);
-  window.addEventListener('resize', replaceInsertMenus);
+  document.addEventListener('scroll', replaceInsertMenu, true);
+  window.addEventListener('resize', replaceInsertMenu);
 
   document.addEventListener('selectionchange', updateActiveField);
 

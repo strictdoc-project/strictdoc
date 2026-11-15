@@ -111,7 +111,9 @@ component declaration is a language item with its fully qualified Modelica
 name. A ``@relation`` marker in the description string of a class or
 component links that class or component. The new ``component`` scope marks a
 component. ``CLASS`` and ``FUNCTION`` forward relations link to classes and
-components. The parser is written in Python and adds no dependency.
+components. A ``File`` relation with ``ELEMENT: component`` links to a
+component and shows the link as a component. The parser is written in Python
+and adds no dependency.
 <<<
 
 [[/SECTION]]

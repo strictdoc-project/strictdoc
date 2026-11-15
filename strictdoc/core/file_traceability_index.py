@@ -84,6 +84,10 @@ class FileTraceabilityIndex:
         self.map_file_class_names_to_reqs_uids: Dict[
             str, Dict[str, List[Tuple[str, Optional[str]]]]
         ] = {}
+        # Modelica components, from File relations with "ELEMENT: component".
+        self.map_file_component_names_to_reqs_uids: Dict[
+            str, Dict[str, List[Tuple[str, Optional[str]]]]
+        ] = {}
 
         # This is only public non-static functions from languages like C.
         self.map_all_function_names_to_definition_functions: Dict[
@@ -674,6 +678,20 @@ class FileTraceabilityIndex:
                     ).append(
                         (forward_requirement_.reserved_uid, relation_.role)
                     )
+                elif (
+                    file_reference.g_file_entry.element == "component"
+                    and file_reference.g_file_entry.id is not None
+                ):
+                    one_file_component_name_to_reqs_uids = (
+                        self.map_file_component_names_to_reqs_uids.setdefault(
+                            file_posix_path, {}
+                        )
+                    )
+                    one_file_component_name_to_reqs_uids.setdefault(
+                        file_reference.g_file_entry.id, []
+                    ).append(
+                        (forward_requirement_.reserved_uid, relation_.role)
+                    )
                 elif file_reference.g_file_entry.line_range is not None:
                     line_range = file_reference.g_file_entry.line_range
                     uid = forward_requirement_.reserved_uid
@@ -712,7 +730,8 @@ class FileTraceabilityIndex:
                     source_file_info.markers.append(forward_file_marker)
 
         #
-        # STEP: Add markers for forward relations to functions and classes
+        # STEP: Add markers for forward relations to functions, classes and
+        # components
         #
         for trace_info_ in self.trace_infos:
             source_file = assert_cast(trace_info_.source_file, SourceFile)
@@ -744,6 +763,18 @@ class FileTraceabilityIndex:
                         trace_info_,
                         function_,
                         RangeMarkerType.CLASS,
+                        reqs_uids,
+                    )
+                if (
+                    reqs_uids := self.get_req_uids_by_component_name(
+                        source_file.in_doctree_source_file_rel_path_posix,
+                        function_.display_name,
+                    )
+                ) is not None:
+                    self.create_traceability_info_shared_markers_for_function(
+                        trace_info_,
+                        function_,
+                        RangeMarkerType.COMPONENT,
                         reqs_uids,
                     )
 
@@ -949,6 +980,18 @@ class FileTraceabilityIndex:
             )
         return None
 
+    def get_req_uids_by_component_name(
+        self, rel_path_posix: str, name: str
+    ) -> Optional[List[Tuple[str, Optional[str]]]]:
+        """
+        @relation(SDOC-LLR-224, scope=function)
+        """
+        if rel_path_posix in self.map_file_component_names_to_reqs_uids:
+            return self.map_file_component_names_to_reqs_uids[
+                rel_path_posix
+            ].get(name, None)
+        return None
+
     @staticmethod
     def create_traceability_info_shared_markers_for_function(
         traceability_info: SourceFileTraceabilityInfo,
@@ -999,6 +1042,8 @@ class FileTraceabilityIndex:
             )
         elif marker_type == RangeMarkerType.CLASS:
             language_item_marker.set_description(f"class {function.name}")
+        elif marker_type == RangeMarkerType.COMPONENT:
+            language_item_marker.set_description(f"component {function.name}")
         return language_item_marker
 
     @staticmethod

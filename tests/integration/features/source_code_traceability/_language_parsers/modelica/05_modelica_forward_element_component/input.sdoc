@@ -1,0 +1,22 @@
+[DOCUMENT]
+TITLE: Modelica forward relations with ELEMENT
+
+[REQUIREMENT]
+UID: TC-1
+TITLE: Test case 1
+STATEMENT: The check model checks the requirements.
+RELATIONS:
+- TYPE: File
+  VALUE: Rig.mo
+  ELEMENT: class
+  ID: Rig.Check
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Requirement 1
+STATEMENT: The output rises.
+RELATIONS:
+- TYPE: File
+  VALUE: Rig.mo
+  ELEMENT: component
+  ID: Rig.Check.req1Check

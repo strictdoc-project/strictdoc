@@ -3620,6 +3620,8 @@ type ``File``.
     A link to a Modelica class or component uses the fully qualified
     Modelica name, which starts with the package of the ``within`` clause.
     ``FUNCTION`` and ``CLASS`` both link to classes and components.
+    To show a link to a component as a component, use
+    ``ELEMENT: component``. See the example below.
 
 .. _canonical paths: https://doc.rust-lang.org/reference/paths.html#canonical-paths>
 
@@ -3635,6 +3637,24 @@ type ``File``.
     - TYPE: File
       VALUE: file.py
       CLASS: Foo
+
+**5\) Linking a requirement to a component in a source file (Modelica only)**
+
+.. code:: strictdoc
+
+    [REQUIREMENT]
+    UID: REQ-003
+    TITLE: Component reference
+    STATEMENT: This requirement references a component in a file.
+    RELATIONS:
+    - TYPE: File
+      VALUE: Rig/Check.mo
+      ELEMENT: component
+      ID: Rig.Check.req1Check
+
+StrictDoc shows this link as ``component Rig.Check.req1Check``. A
+``FUNCTION`` relation to the same component shows as
+``function Rig.Check.req1Check()``.
 <<<
 
 [[/SECTION]]

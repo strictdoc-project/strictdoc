@@ -948,6 +948,36 @@ RELATIONS:
 - TYPE: Parent
   VALUE: SDOC-SRS-210
 
+[REQUIREMENT]
+MID: d1a9c0d456df4783a7280019803c83e6
+UID: SDOC-LLR-224
+STATUS: Active
+TITLE: Forward relations to Modelica components
+STATEMENT: >>>
+StrictDoc shall link a :code:`File` relation with :code:`ELEMENT: component`
+to the Modelica component that has the qualified name of the :code:`ID` field.
+StrictDoc shall show the link as :code:`component <qualified name>`.
+
+.. code-block:: strictdoc
+
+   [REQUIREMENT]
+   UID: REQ-1
+   RELATIONS:
+   - TYPE: File
+     VALUE: Rig/Check.mo
+     ELEMENT: component
+     ID: Rig.Check.req1Check
+<<<
+RATIONALE: >>>
+A Modelica component is not a function. A :code:`FUNCTION` relation to a
+component shows the link as :code:`function Rig.Check.req1Check()`.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-145
+- TYPE: Parent
+  VALUE: SDOC-SRS-210
+
 [[/SECTION]]
 
 [[/SECTION]]

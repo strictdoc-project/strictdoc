@@ -47,7 +47,7 @@ _TEXT_BEFORE_MARKER_REGEX = re.compile(r"^[^\n]*?(?=@relation[\(\{])", re.M)
 class SourceFileTraceabilityReader_Modelica:
     @staticmethod
     def supported_elements() -> list[str]:
-        return ["class", "function"]
+        return ["class", "component", "function"]
 
     def read(
         self, input_buffer: bytes, file_path: Optional[str] = None

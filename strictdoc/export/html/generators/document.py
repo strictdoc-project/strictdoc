@@ -2,6 +2,8 @@
 @relation(SDOC-SRS-54, scope=file)
 """
 
+import base64
+import gzip
 import os
 
 import orjson
@@ -75,13 +77,31 @@ class DocumentHTMLGenerator:
                     count=chunk.size,
                 )
             )
+            chunk_payload_bytes: bytes
+            # Compressing the chunks reduces the output size significantly.
+            if view_object.project_config.lazy_document_loading_compress_chunks:
+                chunk_payload_bytes = (
+                    b'{"z":'
+                    + orjson.dumps(
+                        base64.b64encode(
+                            gzip.compress(
+                                str(chunk_html).encode("utf-8"),
+                                compresslevel=9,
+                                mtime=0,
+                            )
+                        ).decode("ascii")
+                    )
+                    + b"}"
+                )
+            else:
+                chunk_payload_bytes = orjson.dumps(str(chunk_html))
             chunk_js_bytes = (
                 b"window.StrictDoc = window.StrictDoc || {};\n"
                 b"window.StrictDoc.chunks = window.StrictDoc.chunks || {};\n"
                 b"window.StrictDoc.chunks["
                 + orjson.dumps(view_object.static_chunk_key(chunk))
                 + b"] = "
-                + orjson.dumps(str(chunk_html))
+                + chunk_payload_bytes
                 + b";\n"
             )
             chunk_out_file = os.path.join(

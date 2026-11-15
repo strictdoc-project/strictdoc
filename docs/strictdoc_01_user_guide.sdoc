@@ -4703,6 +4703,43 @@ to configure this option.
 
 [[/SECTION]]
 
+[[SECTION]]
+MID: 7c4360866e154a9dbab1fe5b81903a0b
+UID: SECTION-UG-Compressed-document-chunks
+TITLE: Compressed document chunks
+
+[TEXT]
+MID: f6cdd8ac176542e88b7c9c2b0f728134
+STATEMENT: >>>
+By default, the static HTML export compresses the chunks of a chunked
+document. StrictDoc writes each chunk to a separate ``.js`` chunk file next to
+the HTML page of the document. Each chunk file stores the chunk HTML
+gzip-compressed and base64-encoded. As a result, the chunk files are much
+smaller. The browser decompresses the chunks with ``DecompressionStream``,
+also when the HTML page opens from ``file://``.
+
+To store the chunks as plain HTML strings, set the
+``lazy_document_loading_compress_chunks`` option to ``False`` in
+``strictdoc_config.py``. Disable the compression in these cases:
+
+- The browser that opens the export does not support ``DecompressionStream``.
+- The chunk files must stay searchable as text.
+
+.. code:: python
+
+    from strictdoc.core.project_config import ProjectConfig
+
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_title="Test project",
+            lazy_document_loading_compress_chunks=False,
+        )
+        return config
+<<<
+
+[[/SECTION]]
+
 [[/SECTION]]
 
 [[SECTION]]

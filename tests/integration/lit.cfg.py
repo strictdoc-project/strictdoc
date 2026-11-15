@@ -37,6 +37,12 @@ config.environment["PYTHONPATH"] = current_dir
 config.substitutions.append(("%strictdoc", strictdoc_exec))
 
 config.substitutions.append(
+    (
+        "%cat_static_chunk",
+        f'python "{current_dir}/tests/integration/cat_static_chunk.py"',
+    )
+)
+config.substitutions.append(
     ("%cat", f'python "{current_dir}/tests/integration/cat.py"')
 )
 config.substitutions.append(

@@ -60,13 +60,27 @@
   // snapshot/compensation, the preload observer's unobserve, the
   // placeholder-class cleanup below, and this file's own onFrameLoad
   // handlers) keeps working unchanged.
+  async function inflateChunk(base64) {
+    const bytes = Uint8Array.from(atob(base64), (c) => c.charCodeAt(0));
+    const stream = new Blob([bytes])
+      .stream()
+      .pipeThrough(new DecompressionStream("gzip"));
+    return new Response(stream).text();
+  }
+
   async function loadStaticChunk(frame) {
     const src = frame.dataset.chunkSrc;
     const key = frame.dataset.chunkKey;
     if (!src || !key) return;
     await window.StrictDoc.loadScript(src);
-    const html = window.StrictDoc.chunks?.[key];
+    let html = window.StrictDoc.chunks?.[key];
     if (html === undefined) return;
+    // Exported chunks are stored as {z: base64(gzip(html))} to keep the
+    // (already unreadable, JSON-escaped) chunk files small. Plain strings
+    // are still accepted.
+    if (typeof html === "object" && typeof html.z === "string") {
+      html = await inflateChunk(html.z);
+    }
     // The generated .js file wraps the chunk's HTML exactly as rendered by
     // document_chunk.jinja.html, i.e. a single <turbo-frame id="...">...
     // </turbo-frame> root. Splice in its *inner* content only, so this same

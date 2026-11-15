@@ -2,6 +2,7 @@
 @relation(SDOC-SRS-161, scope=file)
 """
 
+import requests
 from selenium.webdriver.common.by import By
 
 from tests.end2end.e2e_case import E2ECase
@@ -33,14 +34,42 @@ class Test(E2ECase):
 
             # Assert clone button exists on Requirement
             self.assert_element_present(
-                "//*[@data-testid='node-requirement']//*[@data-testid='node-clone-action']",
+                "//*[@node-type='REQUIREMENT']"
+                "//*[@data-testid='node-clone-action']",
                 by=By.XPATH,
             )
             # Assert clone button does not exist on Section
+            section_xpath = "//sdoc-node[@node-type='SECTION']"
+            self.assert_element_present(section_xpath, by=By.XPATH)
             self.assert_element_not_present(
-                "//*[@data-testid='node-section']//*[@data-testid='node-clone-action']",
+                f"{section_xpath}//*[@data-testid='node-clone-action']",
                 by=By.XPATH,
             )
+            self.assert_element_not_present(
+                f"{section_xpath}"
+                "//*[@data-testid='node-clone-action-disabled']",
+                by=By.XPATH,
+            )
+
+            section = self.find_element(section_xpath, by=By.XPATH)
+            section_frame = section.find_element(
+                By.XPATH, "parent::turbo-frame"
+            )
+            section_frame_id = section_frame.get_attribute("id")
+            assert section_frame_id.startswith("article-")
+            section_mid = section_frame_id.removeprefix("article-")
+
+            clone_section_response = requests.get(
+                f"{test_server.get_host_and_port()}"
+                "/actions/document/clone_requirement"
+                f"?reference_mid={section_mid}"
+                "&context_document_mid=NOT_RELEVANT",
+                timeout=10,
+            )
+            assert clone_section_response.status_code == 403
+            assert clone_section_response.json() == {
+                "detail": "Cloning is not supported for this node kind."
+            }
 
             requirement = screen_document.get_node(2)
             requirement.assert_requirement_title("Requirement title", "2")

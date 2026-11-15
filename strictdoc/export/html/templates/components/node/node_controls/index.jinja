@@ -111,12 +111,8 @@
   >{% include "icons/ico16_move_node.svg" %}</a>
 {%- endif -%}
 
-  {# CLONE:
-    - NOT section
-    + requirement
-    - NOT document
-  #}
-{%- if sdoc_entity.get_type_string() == 'requirement' -%}
+  {# CLONE: regular, non-composite document nodes only. #}
+{%- if view_object.is_node_clone_supported(sdoc_entity) -%}
   <a
     {% if view_object.can_clone_node(sdoc_entity) %}
     href="/actions/document/clone_requirement?reference_mid={{ sdoc_entity.reserved_mid }}&context_document_mid={{view_object.document.reserved_mid}}"

@@ -95,6 +95,9 @@ HTML page opens from ``file://``. For the ECSS documents from #3238, the chunk
 files shrink from 14.84 MB to 0.34 MB. To disable the compression, set the
 ``lazy_document_loading_compress_chunks`` option to ``False``. See
 [LINK: SECTION-UG-Compressed-document-chunks].
+
+9\) The Document screen no longer offers or accepts Clone for sections and
+other composite nodes. Users can still clone regular document nodes.
 <<<
 
 [[/SECTION]]

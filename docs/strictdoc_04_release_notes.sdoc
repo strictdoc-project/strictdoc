@@ -59,9 +59,13 @@ STATEMENT: >>>
 This release contains the following enhancements:
 
 1\) The Web UI has a table editor for multiline fields with RST or Markdown
-markup. The editor inserts and edits RST grid tables and Markdown pipe tables.
-It writes the table into the field as plain markup text. See
-[LINK: SECTION-UG-Tables].
+markup. The table editor:
+
+- inserts and edits RST grid tables and Markdown pipe tables
+- writes the table into the field as plain markup text
+- is available on the Document screen and on the TABLE screen
+- inserts a new table when a user puts the caret on an empty line, clicks the
+  ``+`` button, and selects **Table**.
 
 2\) The Web UI has a link widget for multiline fields with RST or Markdown
 markup. Type ``@`` or ``[LINK:`` to select a link target from a list. See
@@ -114,6 +118,15 @@ component. ``CLASS`` and ``FUNCTION`` forward relations link to classes and
 components. A ``File`` relation with ``ELEMENT: component`` links to a
 component and shows the link as a component. The parser is written in Python
 and adds no dependency.
+
+12\) Fixed: the source file view now shows a range that starts and ends on the
+same line, for example a forward relation to a function on one line. Before,
+the view did not show the range, and a click on the node in the left panel
+caused a JavaScript error.
+
+13\) Fixed: the Tree Map screen now counts a link to a Go test file as a test
+link. A Go test file has a name that ends with ``_test.go``. Before, only a
+link to a file with ``tests/`` in its path counted as a test link.
 <<<
 
 [[/SECTION]]

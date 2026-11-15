@@ -263,6 +263,7 @@
   fieldWidgets.register({
     id: 'link',
     label: 'Link',
+    // A LINK tag is inline text, so it fits every context, also a table cell.
     supports: (markup) => markup === 'RST' || markup === 'Markdown',
     inline: true,
 

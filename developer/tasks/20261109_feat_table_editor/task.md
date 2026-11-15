@@ -66,12 +66,10 @@ its row. A misaligned table is still editable (see the parsers).
 The editor is a modal with one multiline cell per table cell. Enter adds
 a line. A blank line separates paragraphs.
 
-A cell takes the inline widgets of the field widgets: `[LINK:` and `/`
-work in a cell, and the insert menu has only Link. Block widgets do not
-fit a cell: an anchor must start a line of the field text, but in the
-field a cell line starts with `|` (RST) or the whole table row is one
-line (Markdown). The editor does not support nested tables. A cell has no
-`+` button.
+A cell is a field of the field widgets in the `table-cell` context. Each
+widget decides if it works in a cell (see Widget contexts in the field
+widgets task). Only Link works in a cell: `[LINK:` and `/` work there,
+and the insert menu has only Link. A cell has no `+` button.
 
 Structure controls:
 
@@ -226,8 +224,8 @@ Automatic alignment (RST):
 
 Widgets in the cells: the modal does not depend on the format, but each
 cell gets the markup and the document of the field
-(`cellWidgetContext()`) as the attributes of a field outside a form (see
-the field widgets task). The cells keep their own Enter behavior and have
+(`cellWidgetContext()`) and the context `table-cell` as the attributes of
+a field outside a form (see the field widgets task). The cells keep their own Enter behavior and have
 no `data-js-editable-field`, so `editable_field.js` does not handle
 them.
 

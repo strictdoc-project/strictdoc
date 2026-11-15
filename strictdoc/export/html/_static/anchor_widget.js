@@ -303,7 +303,11 @@
   fieldWidgets.register({
     id: 'anchor',
     label: 'Anchor',
-    supports: (markup) => markup === 'RST' || markup === 'Markdown',
+    // An ANCHOR tag must start a line of the field text. In a table cell,
+    // the line starts with "|" (RST), or the whole table row is one line
+    // (Markdown), so the widget works only in a form field.
+    supports: (markup, context) => context === 'field' &&
+      (markup === 'RST' || markup === 'Markdown'),
 
     insert(field, line, rect) {
       openForm(field, line, rect);

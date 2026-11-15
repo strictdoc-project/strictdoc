@@ -135,7 +135,7 @@ A widget is an object with these members:
 |---|---|---|
 | `id` | yes | Name of the insert menu item, its test ID, and its icon in `components/field_widgets/icons.jinja`. |
 | `label` | yes | Text of the insert menu item. |
-| `supports(markup)` | yes | True if the widget works with the markup. |
+| `supports(markup, context)` | yes | True if the widget works in a field with this markup and in this context (see Widget contexts). |
 | `insert(field, line, rect)` | yes | Inserts a new element at the blank caret line. `rect` is the viewport rectangle of the field button, for a widget that shows its own popup there. |
 | `scan(field, lines, markup)` | no | Called after every change of the text of a field with a supported markup. |
 | `forget(field)` | no | Called when the field is no longer in the DOM. The widget drops its data about the field. |
@@ -181,14 +181,38 @@ popup stops the propagation of its clicks and keys.
 A widget script can load after `field_widgets.js` initializes the fields.
 As a result, `register()` scans the fields that already exist.
 
+### Widget contexts
+
+The context says where the field is. Each widget decides in `supports()`
+in which contexts it works, because what fits depends on the place and on
+the format.
+
+| Context | Field | Field button |
+|---|---|---|
+| `field` | A multiline field of a form: the node form or the table view cell form. | Yes |
+| `table-cell` | A cell of the table editor. The cell text goes into one table cell of the field. | No, `/` opens the menu |
+
+Where the widgets work:
+
+| Widget | `field` | `table-cell` | Why |
+|---|---|---|---|
+| Link | Yes | Yes | A LINK tag is inline text. |
+| Anchor | Yes | No | An ANCHOR tag must start a line of the field text. In the field, a line of an RST cell starts with `\|`, and a Markdown table row is one line. |
+| Table | Yes | No | The editor does not support nested tables. |
+
+A new widget can work in a cell of one format only. For example, in
+Markdown a table cell holds only inline text, but in RST a cell can also
+hold blocks such as lists or code. Such a widget checks both arguments:
+`(markup, context) => context === 'field' || markup === 'RST'`.
+
 ### Field integration
 
 - A field outside a form, such as a cell of the table editor, gets the
   widgets through attributes: `data-field-widgets-markup` (the markup
   that a form field takes from `document_markup`),
   `data-field-widgets-document-mid` (the document for the order of link
-  targets), and `data-field-widgets-inline-only` (only inline widgets, no
-  field button; `/` opens the menu).
+  targets), and `data-field-widgets-context` (the context for
+  `supports()`; without it, the context is `field`).
 - The insert menu and the widget popups have `z-index: 100000`, above the
   modals (`sdoc-backdrop`, 99999), so they work in the table editor. The
   insert menu rule includes `.dropdown_menu` to be stronger than its

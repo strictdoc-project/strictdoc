@@ -757,9 +757,10 @@
   // edited copy. The editor always shows a header row: serializing decides
   // what an empty header becomes in the format. The header row has no grip:
   // it cannot be moved or deleted, and it stays first.
-  // The cells of the editor take the inline widgets of field_widgets.js, so
-  // the widgets need the markup and the document of the field (see "Fields
-  // outside a form" in field_widgets.js).
+  // The cells of the editor are fields of field_widgets.js in the
+  // "table-cell" context. Each widget decides in supports() if it works in a
+  // cell. The widgets also need the markup and the document of the field
+  // (see "Fields outside a form" in field_widgets.js).
   function cellWidgetContext(field) {
     return {
       markup: fieldTables.get(field).markup,
@@ -844,7 +845,7 @@
           input.dataset.fieldType = 'multiline';
           input.dataset.fieldWidgetsMarkup = widgetContext.markup;
           input.dataset.fieldWidgetsDocumentMid = widgetContext.documentMid;
-          input.setAttribute('data-field-widgets-inline-only', '');
+          input.dataset.fieldWidgetsContext = 'table-cell';
           input.textContent = cell;
           input.dataset.testid = 'table-editor-cell';
           input.dataset.row = String(rowIndex);
@@ -1381,7 +1382,9 @@
     id: 'table',
     label: 'Table',
     editTitle: 'Edit table',
-    supports: (markup) => FORMATS.has(markup),
+    // The editor does not support nested tables, so the widget works only in
+    // a form field, not in a cell of its own editor.
+    supports: (markup, context) => context === 'field' && FORMATS.has(markup),
 
     scan(field, lines, markup) {
       const format = FORMATS.get(markup);

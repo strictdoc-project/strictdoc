@@ -37,7 +37,15 @@
 // #template-field-widgets-icons template
 // (components/field_widgets/icons.jinja).
 // - label: the text of the insert menu item.
-// - supports(markup): returns true if the widget works with the markup.
+// - supports(markup, context): returns true if the widget works in a field
+// with this markup ("RST" or "Markdown") and in this context. The context
+// says where the field is:
+// - "field": a multiline field of a form (the node form, the table view
+// cell form).
+// - "table-cell": a cell of the table editor. A cell holds the text of
+// one table cell, so the widget decides by the format what fits there.
+// For example, in Markdown a table cell can hold only inline text, but in
+// RST a cell can also hold blocks such as lists or code.
 // - insert(field, at, rect): inserts a new element. For an inline widget,
 // `at` is the text offset of the caret, for a block widget, the caret
 // line. `rect` is the viewport rectangle of the caret position, for a
@@ -108,8 +116,10 @@
 // "Markdown"), which a form field takes from the "document_markup" input.
 // - data-field-widgets-document-mid: the document of the text, which a form
 // field takes from the "context_document_mid" input (see link_widget.js).
-// - data-field-widgets-inline-only: only inline widgets work in the field.
-// The field has no button, and "/" opens the menu.
+// - data-field-widgets-context: the context for supports(), for example
+// "table-cell". Without the attribute, the context is "field".
+// Only a field in the "field" context has the field button. In the other
+// contexts, "/" opens the insert menu.
 
 (() => {
 
@@ -253,10 +263,10 @@
   // Per-field state.
   //
 
-  // field -> { markup, inlineOnly, button, extraButton, extraAction,
+  // field -> { markup, context, button, extraButton, extraAction,
   // typing, lines, offsets, segments, mapped }
-  // inlineOnly: the field accepts only inline widgets (see "Fields outside
-  // a form" in the file comment).
+  // context: the context for supports(), "field" or another context (see
+  // "Fields outside a form" in the file comment).
   // extraAction: the extraAction() result of the extra button, or null.
   // typing: the caret position after the last input, or false.
   // lines, offsets, segments, and mapped describe the current field text;
@@ -276,10 +286,10 @@
   function widgetsFor(field) {
     const {
       markup,
-      inlineOnly
+      context
     } = fieldStates.get(field);
     return widgets.filter(
-      (widget) => widget.supports(markup) && (!inlineOnly || widget.inline),
+      (widget) => widget.supports(markup, context),
     );
   }
 
@@ -425,9 +435,10 @@
     }
     const canInsert = line !== null && isBlankLine(state, line) &&
       widgetsFor(field).length > 0;
-    // A field with inline widgets only has no room for the button: the
-    // insert menu opens with "/".
-    if (line === null || state.typing || state.inlineOnly || (!found && !canInsert)) {
+    // Only a form field has room for the button. In the other contexts, such
+    // as a cell of the table editor, the insert menu opens with "/".
+    if (line === null || state.typing || state.context !== 'field' ||
+      (!found && !canInsert)) {
       hideButton(field);
       return found;
     }
@@ -887,7 +898,7 @@
 
     fieldStates.set(field, {
       markup,
-      inlineOnly: field.hasAttribute('data-field-widgets-inline-only'),
+      context: field.dataset.fieldWidgetsContext ?? 'field',
       button,
       extraButton,
       extraAction: null,
@@ -901,7 +912,7 @@
   function register(widget) {
     widgets.push(widget);
     for (const [field, state] of fieldStates) {
-      if (field.isConnected && widget.supports(state.markup)) {
+      if (field.isConnected && widget.supports(state.markup, state.context)) {
         widget.scan?.(field, state.lines, state.markup);
       }
     }

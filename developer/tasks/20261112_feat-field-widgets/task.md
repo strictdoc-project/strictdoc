@@ -152,8 +152,9 @@ field text, such as tables.
 `StrictDoc.fieldWidgets` also gives the widgets seven helpers:
 
 - `hasWidget(field, id)`: true if the widget works in the field.
-- `lineRange(field, start, end)`: a DOM range for the lines, or null if
-  the script cannot map the field DOM to its text.
+- `lineRange(field, start, end, startColumn = 0)`: a DOM range for the
+  lines, from the column `startColumn` of the first line, or null if the
+  script cannot map the field DOM to its text.
 - `textBeforeCaret(field)`: the field text before the caret, or null if
   the caret is not in the field or the script cannot map the field DOM to
   its text.

@@ -11,8 +11,9 @@
 }
 
 /* A Markdown table with more cells in a row than in the header: the page
-   does not show the extra cells. */
-::highlight(sdoc-table-overflow) {
+   does not show the extra cells. The extra cells have both highlights. */
+::highlight(sdoc-table-overflow),
+::highlight(sdoc-table-overflow-cells) {
   background-color: var(--color-highlight-danger);
 }
 

@@ -40,8 +40,10 @@
   const HIGHLIGHT_TABLE = 'sdoc-table';
   const HIGHLIGHT_ACTIVE_TABLE = 'sdoc-table-active';
   // A Markdown table with more cells in a row than in the header (see
-  // parseMarkdownPipeTable()). This highlight is above the other two.
+  // parseMarkdownPipeTable()), and, on top of it, the extra cells of such
+  // rows. These highlights are above the other two.
   const HIGHLIGHT_OVERFLOW_TABLE = 'sdoc-table-overflow';
+  const HIGHLIGHT_OVERFLOW_CELLS = 'sdoc-table-overflow-cells';
   const HAS_HIGHLIGHTS = typeof CSS !== 'undefined' && 'highlights' in CSS;
 
   // Editor DOM contract. The row and column indexes of cells and handles are
@@ -351,15 +353,14 @@
     return cells;
   }
 
-  // Returns the positions of the unescaped "|" in a line, as a string to
-  // compare lines.
+  // Returns the positions of the unescaped "|" in a line.
   function pipePositions(line) {
     const positions = [];
     for (let index = 0; index < line.length; index++) {
       if (line[index] === '\\' && line[index + 1] === '|') index++;
       else if (line[index] === '|') positions.push(index);
     }
-    return positions.join();
+    return positions;
   }
 
   function parseAlign(cell) {
@@ -382,6 +383,18 @@
     if (header.length !== delimiter.length) return null;
 
     const columns = Math.max(header.length, ...body.map((row) => row.length));
+    // The extra cells of a row start after the "|" that ends its last
+    // header-wide cell. The leading "|" of a row is optional.
+    const overflowCells = [];
+    body.forEach((row, index) => {
+      if (row.length <= header.length) return;
+      const line = blockLines[index + 2];
+      const leading = line.trimStart().startsWith('|') ? 1 : 0;
+      overflowCells.push({
+        line: index + 2,
+        column: pipePositions(line)[header.length - 1 + leading] + 1,
+      });
+    });
     const pad = (cells, value) => [...cells, ...Array(columns - cells.length).fill(value)];
     return {
       // The serializer writes all lines with the indent of the header.
@@ -392,11 +405,13 @@
       )),
       align: pad(delimiter.map(parseAlign), ''),
       // A row with more cells than the header: markdown-it does not show
-      // the extra cells.
+      // the extra cells. overflowCells: {line, column} where the extra cells
+      // of a row start; `line` counts from the header row.
       overflow: columns > header.length,
+      overflowCells,
       // See "Alignment" in the file comment.
       aligned: blockLines.every(
-        (line) => pipePositions(line) === pipePositions(blockLines[0]),
+        (line) => pipePositions(line).join() === pipePositions(blockLines[0]).join(),
       ),
     };
   }
@@ -1257,16 +1272,31 @@
 
     const ranges = [];
     const overflowRanges = [];
+    const overflowCellRanges = [];
     for (const [field, entry] of fieldTables) {
       entry.tables.forEach((table) => {
         const range = fieldWidgets.lineRange(field, table.start, table.end);
-        if (range)(table.overflow ? overflowRanges : ranges).push(range);
+        if (!range) return;
+        if (!table.overflow) {
+          ranges.push(range);
+          return;
+        }
+        overflowRanges.push(range);
+        for (const cells of table.overflowCells) {
+          const line = table.start + cells.line;
+          overflowCellRanges.push(fieldWidgets.lineRange(field, line, line, cells.column));
+        }
       });
     }
     CSS.highlights.set(HIGHLIGHT_TABLE, new Highlight(...ranges));
+    // The two overflow highlights are translucent, so the extra cells, which
+    // have both, look denser than the rest of the table.
     const overflow = new Highlight(...overflowRanges);
     overflow.priority = 1;
     CSS.highlights.set(HIGHLIGHT_OVERFLOW_TABLE, overflow);
+    const overflowCells = new Highlight(...overflowCellRanges);
+    overflowCells.priority = 2;
+    CSS.highlights.set(HIGHLIGHT_OVERFLOW_CELLS, overflowCells);
   }
 
   //

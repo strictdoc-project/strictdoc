@@ -66,7 +66,8 @@
 //
 // Helpers for the widgets:
 // - hasWidget(field, id): returns true if the widget works in the field.
-// - lineRange(field, start, end): a DOM range for the lines [start, end],
+// - lineRange(field, start, end, startColumn = 0): a DOM range for the
+// lines [start, end], from the column startColumn of the first line,
 // or null if the field DOM cannot be mapped to its text.
 // - textBeforeCaret(field): the field text before the caret, or null if
 // the caret is not in the field or the field DOM cannot be mapped to its
@@ -322,13 +323,13 @@
     return null;
   }
 
-  function lineRange(field, start, end) {
+  function lineRange(field, start, end, startColumn = 0) {
     const state = fieldStates.get(field);
     if (!state?.mapped) return null;
     return textRange(
       field,
       state.segments,
-      state.offsets[start],
+      state.offsets[start] + startColumn,
       state.offsets[end] + state.lines[end].length,
     );
   }

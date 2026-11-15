@@ -180,6 +180,7 @@ class Test(E2ECase):
 
             table_editor.assert_highlighted_tables(2)
             table_editor.assert_overflow_tables(1)
+            table_editor.assert_overflow_cells([" 3 |"])
 
             # Missing cells are written as empty cells.
             table_editor.do_place_caret_after("| one")
@@ -205,6 +206,7 @@ class Test(E2ECase):
                 "| A   | B   |     |\n| --- | --- | --- |\n| 1   | 2   | 3   |\n"
             ) in table_editor.get_field_text()
             table_editor.assert_overflow_tables(0)
+            table_editor.assert_overflow_cells([])
             table_editor.assert_highlighted_tables(3)
 
             # The Markdown table is misaligned: the escaped "\|" moves the

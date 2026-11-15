@@ -171,9 +171,12 @@ the table rule of markdown-it, which renders Markdown in StrictDoc
 - A row with fewer cells gets empty cells.
 - A row with more cells than the header: markdown-it does not show the
   extra cells. The parser adds columns for them, so the editor and the
-  alignment keep the text, and sets `overflow`. The field highlights such
-  a table with `::highlight(sdoc-table-overflow)`, in red, above the other
-  table highlights.
+  alignment keep the text, and sets `overflow`. `overflowCells` holds the
+  line and the column where the extra cells of each such row start. The
+  field highlights such a table with `::highlight(sdoc-table-overflow)`,
+  in red, above the other table highlights. The extra cells also get
+  `::highlight(sdoc-table-overflow-cells)`, with the same translucent
+  red, so they look denser.
 - Lines inside fenced code blocks are never part of a table.
 
 All lines of a table must have one indent. The serializer writes the

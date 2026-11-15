@@ -274,26 +274,26 @@
     );
   }
 
-  // Returns the viewport top of a text line. A collapsed range on an empty
-  // line has no rect, so the top is then derived from the closest non-empty
-  // line above.
+  // Returns the viewport top of a text line.
+  // Uses the caret position when available; otherwise calculates the position
+  // from the closest non-empty line at or above it, or from the field's top,
+  // using line-height to account for empty lines.
   function lineTop(field, state, line, caret) {
     const caretRect = caret?.getClientRects()[0];
     if (caretRect?.height) return caretRect.top;
 
+    const style = getComputedStyle(field);
+    const lineHeight = parseFloat(style.lineHeight);
     for (let above = line; above >= 0; above--) {
       const length = state.lines[above].length;
       if (length === 0) continue;
       const from = state.offsets[above] + (above === line ? 0 : length - 1);
       const rect = textRange(field, state.segments, from, from + 1)
         .getClientRects()[0];
-      if (rect) return rect.top + (line - above) * rect.height;
+      if (rect) return rect.top + (line - above) * (lineHeight || rect.height);
     }
-    const style = getComputedStyle(field);
-    const lineHeight = parseFloat(style.lineHeight) ||
-      parseFloat(style.fontSize) * 1.2;
     return field.getBoundingClientRect().top + parseFloat(style.paddingTop) +
-      line * lineHeight;
+      line * (lineHeight || parseFloat(style.fontSize) * 1.2);
   }
 
   function caretField() {

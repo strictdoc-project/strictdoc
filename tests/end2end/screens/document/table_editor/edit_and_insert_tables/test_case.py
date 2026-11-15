@@ -138,7 +138,31 @@ class Test(E2ECase):
                 "+-----+-----+\n"
             )
             table_editor.assert_highlighted_tables(2)
+            RST_ALIGNED_TEXT = table_editor.get_field_text()
 
+            # A typed space misaligns a row. The extra button aligns the
+            # table: the trailing space of the cell goes away.
+            table_editor.do_place_caret_after("| first")
+            table_editor.do_type_at_caret(" ")
+            table_editor.do_place_caret_after("second")
+            table_editor.assert_extra_button("Align table")
+            table_editor.do_click_extra_button()
+            table_editor.assert_field_text(RST_ALIGNED_TEXT)
+            table_editor.assert_extra_button_hidden()
+
+            # An RST table changed by hand is aligned when the caret leaves
+            # it. (A row with a "|" inside a cell would not do here: once
+            # misaligned, it cannot be split into cells, and the table is no
+            # longer recognized.)
+            table_editor.do_place_caret_after("| beta")
+            table_editor.do_type_at_caret(" ")
+            table_editor.do_place_caret_after("Paragraph.")
+            table_editor.wait_for_field_text(RST_ALIGNED_TEXT)
+
+            # The field loses focus on submit, and the changed table is
+            # aligned before the form is sent: the saved text is aligned.
+            table_editor.do_place_caret_after("| Key")
+            table_editor.do_type_at_caret(" ")
             form.do_form_submit()
             screen_document.assert_text("second")
 
@@ -153,6 +177,16 @@ class Test(E2ECase):
             form.assert_on_form()
 
             table_editor.assert_highlighted_tables(1)
+
+            # The Markdown table is misaligned: the escaped "\|" moves the
+            # last "|" of its row. The extra button can align it, but the
+            # table is not aligned automatically when the caret leaves it.
+            table_editor.do_place_caret_after("| or")
+            table_editor.assert_extra_button("Align table")
+            table_editor.do_type_at_caret(" ")
+            table_editor.do_place_caret_after("both |")
+            table_editor.do_place_caret_after("not")
+            assert "| or    |" in table_editor.get_field_text()
 
             table_editor.do_place_caret_after("| and")
             table_editor.do_open_edit()

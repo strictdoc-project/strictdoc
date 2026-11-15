@@ -19,6 +19,21 @@
 //
 // The CSS Custom Highlight API paints the tables in place, so there are no
 // overlay elements to position or to keep away from the caret.
+//
+// Alignment. A table is aligned when its cell separators stand at the same
+// positions in all lines: "|" in the rows, and also "+" in the borders of
+// an RST table (the `aligned` flag of the parsers). A table with columns
+// wider than their text is aligned too. A misaligned table is still
+// editable, but RST rejects it ("Malformed table"), and in Markdown it is
+// only harder to read. So:
+// - Next to the edit button of a misaligned table, a second button aligns
+// it: it writes the table the same way as Apply of the editor.
+// - An RST table that the user or a widget has changed is aligned
+// automatically when the caret leaves the table or the field loses focus.
+// Only a changed table is aligned, so a table that the user only passes
+// through stays as it is. It is not aligned while the caret is in it: a
+// widget may still be writing there, for example, the "[LINK: " draft and
+// its popup. Markdown tables are not aligned automatically.
 
 (() => {
 
@@ -127,6 +142,13 @@
     return `+${widths.map((width) => char.repeat(width + 2)).join('+')}+`;
   }
 
+  // Returns true if the line has `char` at every column edge and ends at the
+  // last edge.
+  function isAlignedRstLine(line, edges, char) {
+    return line.length === edges[edges.length - 1] + 1 &&
+      edges.every((edge) => line[edge] === char);
+  }
+
   // Returns the number of columns of a full-width border line, or 0.
   function rstBorderColumns(line, char) {
     const pattern = char === '=' ? /^\+(=+\+)+$/ : /^\+(-+\+)+$/;
@@ -141,9 +163,7 @@
   // that some cell contains a "|", and then it is unclear where the cells
   // end.
   function parseRstRowLine(line, edges) {
-    const isAligned = line.length === edges[edges.length - 1] + 1 &&
-      edges.every((edge) => line[edge] === '|');
-    if (isAligned) {
+    if (isAlignedRstLine(line, edges, '|')) {
       return edges.slice(1).map(
         (edge, column) => line.slice(edges[column] + 1, edge),
       );
@@ -210,7 +230,10 @@
       indent,
       hasHeader,
       rows,
-      align: null
+      align: null,
+      // See "Alignment" in the file comment.
+      aligned: lines.every((line) => isAlignedRstLine(line, edges, '+') ||
+        isAlignedRstLine(line, edges, '|')),
     };
   }
 
@@ -272,6 +295,17 @@
     return cells;
   }
 
+  // Returns the positions of the unescaped "|" in a line, as a string to
+  // compare lines.
+  function pipePositions(line) {
+    const positions = [];
+    for (let index = 0; index < line.length; index++) {
+      if (line[index] === '\\' && line[index + 1] === '|') index++;
+      else if (line[index] === '|') positions.push(index);
+    }
+    return positions.join();
+  }
+
   function parseAlign(cell) {
     const left = cell.startsWith(':');
     const right = cell.endsWith(':');
@@ -304,6 +338,10 @@
         (cell) => cell.replace(MD_LINE_BREAK, '\n'),
       )),
       align: delimiter.map(parseAlign),
+      // See "Alignment" in the file comment.
+      aligned: blockLines.every(
+        (line) => pipePositions(line) === pipePositions(blockLines[0]),
+      ),
     };
   }
 
@@ -1153,6 +1191,70 @@
     CSS.highlights.set(HIGHLIGHT_TABLE, new Highlight(...ranges));
   }
 
+  //
+  // Alignment (see the file comment).
+  //
+
+  // The table that holds the caret: { field, start, changed }, or null.
+  // changed: the field text changed while the caret was in the table.
+  let editing = null;
+  // True while the widget writes an aligned table, so that this write does
+  // not count as a change of the table.
+  let aligning = false;
+
+  function writeAligned(field, table, options) {
+    const {
+      format
+    } = fieldTables.get(field);
+    aligning = true;
+    try {
+      fieldWidgets.replaceLines(
+        field, table.start, table.end, format.serialize(table), options,
+      );
+    } finally {
+      aligning = false;
+    }
+  }
+
+  // Aligns the changed RST table that starts at the line `start`, if it is
+  // still a misaligned table. The caret stays where the user put it.
+  function alignChangedTable(field, start) {
+    const state = fieldTables.get(field);
+    if (!field.isConnected || state?.format !== RST) return;
+    const table = state.tables.find((each) => each.start === start);
+    if (table && !table.aligned) {
+      writeAligned(field, table, {
+        keepCaret: true
+      });
+    }
+  }
+
+  // Follows the table that holds the caret. When the caret leaves a changed
+  // table, the table is aligned after the current event: the caret move
+  // comes from field_widgets.js, which must finish its own update first.
+  function followCaret(field, table) {
+    if (editing && (editing.field !== field || editing.start !== table?.start)) {
+      const left = editing;
+      editing = null;
+      if (left.changed) queueMicrotask(() => alignChangedTable(left.field, left.start));
+    }
+    if (table && !editing) {
+      editing = {
+        field,
+        start: table.start,
+        changed: false
+      };
+    }
+  }
+
+  // Any write into the field while the caret is in a table changes the
+  // table: typing, paste, undo, and the writes of the widgets. The listener
+  // runs in the capture phase, before field_widgets.js moves the caret
+  // state on the same input.
+  document.addEventListener('input', (event) => {
+    if (!aligning && editing?.field === event.target) editing.changed = true;
+  }, true);
+
   fieldWidgets.register({
     id: 'table',
     label: 'Table',
@@ -1170,6 +1272,7 @@
 
     forget(field) {
       fieldTables.delete(field);
+      if (editing?.field === field) editing = null;
       updateHighlights();
     },
 
@@ -1180,6 +1283,7 @@
     },
 
     activate(field, table) {
+      followCaret(field, table);
       if (!HAS_HIGHLIGHTS) return;
       const range = table && fieldWidgets.lineRange(field, table.start, table.end);
       CSS.highlights.set(
@@ -1188,10 +1292,22 @@
       );
     },
 
+    extraAction(field, table) {
+      if (table.aligned) return null;
+      return {
+        text: '↔',
+        title: 'Align table',
+        run: () => writeAligned(field, table),
+      };
+    },
+
     edit(field, table) {
       const {
         format
       } = fieldTables.get(field);
+      // The editor writes the whole table on Apply, so the table is not
+      // aligned automatically when the editor takes the focus.
+      editing = null;
       openEditor('Edit table', table, (edited) => {
         if (!field.isConnected) return;
         const tableLines = format.serialize(edited);

@@ -59,7 +59,10 @@
 // - editTitle: the title of the edit button.
 // - edit(field, block): edits a block returned by blockAt().
 // - activate(field, block): called on every caret move with the block
-// that holds the caret, or with null.
+// that holds the caret, or with null. Also called with null when the field
+// loses focus.
+// - extraAction(field, block): optional. Returns {text, title, run} for a
+// second button under the edit button, or null. run() is called on click.
 //
 // Helpers for the widgets:
 // - hasWidget(field, id): returns true if the widget works in the field.
@@ -74,8 +77,10 @@
 // - insertBlock(field, line, blockLines, options): writes the lines as a new
 // paragraph after the block that holds the line, or in place of the line
 // if it is blank.
-// - replaceLines(field, start, end, newLines): writes the lines in place of
-// the lines [start, end].
+// - replaceLines(field, start, end, newLines, options): writes the lines in
+// place of the lines [start, end]. With the option {keepCaret: true}, the
+// caret stays where the user put it, and a field without focus does not
+// get it.
 // - replaceText(field, from, to, text): writes the text in place of the
 // characters [from, to) and puts the caret after it.
 // The helpers that write text highlight the written text for a moment (see
@@ -115,6 +120,8 @@
   // The distance in pixels between a fixed popup and its rect or the
   // viewport edge.
   const POPUP_GAP = 4;
+  // The distance in pixels between the edit button and the extra button.
+  const EXTRA_BUTTON_GAP = 4;
 
   // The highlight of the text that a widget has just written, and the
   // class that fades it (see highlightWritten()).
@@ -220,7 +227,9 @@
   // Per-field state.
   //
 
-  // field -> { markup, button, typing, lines, offsets, segments, mapped }
+  // field -> { markup, button, extraButton, extraAction, typing, lines,
+  // offsets, segments, mapped }
+  // extraAction: the extraAction() result of the extra button, or null.
   // typing: the caret position after the last input, or false.
   // lines, offsets, segments, and mapped describe the current field text;
   // scanField() sets them after every change.
@@ -359,7 +368,9 @@
 
   function hideButton(field) {
     const state = fieldStates.get(field);
-    if (state) state.button.hidden = true;
+    if (!state) return;
+    state.button.hidden = true;
+    state.extraButton.hidden = true;
   }
 
   // Shows the button in the left margin of the field: next to the first line
@@ -397,7 +408,25 @@
       lineTop(field, state, line, caret);
     button.hidden = false;
     button.style.top = `${top - button.offsetParent.getBoundingClientRect().top}px`;
+    placeExtraButton(field, found);
     return found;
+  }
+
+  // Shows the button of the widget's extraAction() under the edit button,
+  // or hides it.
+  function placeExtraButton(field, found) {
+    const state = fieldStates.get(field);
+    const {
+      button,
+      extraButton
+    } = state;
+    state.extraAction = found?.widget.extraAction?.(field, found.block) ?? null;
+    extraButton.hidden = state.extraAction === null;
+    if (extraButton.hidden) return;
+    extraButton.textContent = state.extraAction.text;
+    extraButton.title = state.extraAction.title;
+    extraButton.setAttribute('aria-label', state.extraAction.title);
+    extraButton.style.top = `${button.offsetTop + button.offsetHeight + EXTRA_BUTTON_GAP}px`;
   }
 
   // Updates the button for the field that holds the caret and tells every
@@ -561,6 +590,29 @@
   // Replaces the field content with one text node, so the caret can be set
   // by a text offset.
   //
+  // `written` is the range [from, to) of the text to highlight, or null. A
+  // null `caret` leaves the focus and the scroll position as they are.
+  function writeText(field, text, caret, written = null) {
+    if (caret === null) {
+      field.replaceChildren(document.createTextNode(text));
+    } else {
+      placeCaret(field, text, caret);
+    }
+    if (written && written[0] < written[1]) highlightWritten(field, ...written);
+
+    field.dispatchEvent(new Event('input', {
+      bubbles: true
+    }));
+    // The input event above makes the input listener treat this rewrite as
+    // typing, which would hide the button. The widget wrote the text, not
+    // the user, so the button stays.
+    fieldStates.get(field).typing = false;
+    updateActiveField();
+  }
+
+  // Writes the text, focuses the field, puts the caret at the offset, and
+  // scrolls to the caret.
+  //
   // The browser does not scroll to a caret that a script sets, and a caret
   // has no element to scroll to. So the text is first written with a marker
   // element at the caret, and scrollIntoView() scrolls to the marker.
@@ -569,9 +621,7 @@
   // inline block with a zero-width space, so it has the height of the line.
   // An inline marker, or an empty one, scrolls only to the top of the caret
   // line, and the line stays just below the edge, under the page footer.
-  //
-  // `written` is the range [from, to) of the text to highlight, or null.
-  function writeText(field, text, caret, written = null) {
+  function placeCaret(field, text, caret) {
     const marker = document.createElement('span');
     marker.style.display = 'inline-block';
     marker.textContent = '\u200b';
@@ -590,16 +640,6 @@
     });
     field.replaceChildren(document.createTextNode(text));
     window.getSelection().collapse(field.firstChild, caret);
-    if (written && written[0] < written[1]) highlightWritten(field, ...written);
-
-    field.dispatchEvent(new Event('input', {
-      bubbles: true
-    }));
-    // The input event above makes the input listener treat this rewrite as
-    // typing, which would hide the button. The widget wrote the text, not
-    // the user, so the button stays.
-    fieldStates.get(field).typing = false;
-    updateActiveField();
   }
 
   // `written` is the range [start, end] of the lines to highlight, or null.
@@ -623,9 +663,12 @@
     );
   }
 
-  function replaceLines(field, start, end, newLines) {
+  function replaceLines(field, start, end, newLines, {
+    keepCaret = false
+  } = {}) {
     const {
-      lines
+      lines,
+      offsets
     } = fieldStates.get(field);
     const updated = [
       ...lines.slice(0, start),
@@ -633,7 +676,19 @@
       ...lines.slice(end + 1),
     ];
     const last = start + newLines.length - 1;
-    writeLines(field, updated, last, [start, last]);
+    if (!keepCaret) {
+      writeLines(field, updated, last, [start, last]);
+      return;
+    }
+    // The caret moves with the text after the replaced lines. A caret
+    // inside them goes to their end.
+    const from = offsets[start];
+    const to = offsets[end] + lines[end].length;
+    const length = newLines.join('\n').length;
+    let caret = field === document.activeElement ? caretOffset(field) : null;
+    if (caret !== null && caret >= to) caret += length - (to - from);
+    else if (caret !== null && caret > from) caret = from + length;
+    writeText(field, updated.join('\n'), caret, [from, from + length]);
   }
 
   // The rule for an inline element on a blank line. Alone on a blank line
@@ -773,13 +828,24 @@
       }
     });
 
+    // The button of the widget's extraAction() (see placeExtraButton()).
+    const extraButton = document.createElement('button');
+    extraButton.type = 'button';
+    extraButton.className = 'field-widgets-button';
+    extraButton.dataset.testid = 'field-widgets-extra-button';
+    extraButton.hidden = true;
+    extraButton.addEventListener('mousedown', (event) => event.preventDefault());
+    extraButton.addEventListener('click', () => fieldStates.get(field).extraAction?.run());
+
     // The hidden textarea must stay the field's next sibling:
     // editable_field.js finds it with nextElementSibling.
-    (field.nextElementSibling ?? field).after(button);
+    (field.nextElementSibling ?? field).after(button, extraButton);
 
     fieldStates.set(field, {
       markup,
       button,
+      extraButton,
+      extraAction: null,
       typing: false
     });
     scanField(field);
@@ -883,10 +949,14 @@
     event.stopPropagation();
   }, true);
 
+  // The widgets learn that the caret has left the field: during focusout,
+  // the field is not the active element, so updateActiveField() passes null
+  // to activate().
   document.addEventListener('focusout', (event) => {
     if (!fieldStates.has(event.target)) return;
     if (menu?.field === event.target) closeInsertMenu();
     hideButton(event.target);
+    updateActiveField();
   });
 
   // The insert menu has a fixed position, so it follows the placeholder

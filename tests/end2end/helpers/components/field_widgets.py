@@ -25,6 +25,10 @@ class FieldWidgets:  # pylint: disable=invalid-name
             f"{self.field_xpath}/following-sibling::"
             "*[@data-testid='field-widgets-button']"
         )
+        self.extra_button_xpath = (
+            f"{self.field_xpath}/following-sibling::"
+            "*[@data-testid='field-widgets-extra-button']"
+        )
 
     # field
 
@@ -132,6 +136,21 @@ class FieldWidgets:  # pylint: disable=invalid-name
     def do_type_at_caret(self, text: str) -> None:
         ActionChains(self.test_case.driver).send_keys(text).perform()
 
+    def get_field_text(self) -> str:
+        field = self.test_case.find_element(self.field_xpath, by=By.XPATH)
+        return self.test_case.execute_script(
+            "return arguments[0].innerText;", field
+        )
+
+    def wait_for_field_text(self, text: str, timeout: float = 5) -> None:
+        """
+        For changes that come after a caret move: the browser reports the
+        move with a delay (selectionchange).
+        """
+        WebDriverWait(self.test_case.driver, timeout).until(
+            lambda _: self.get_field_text() == text
+        )
+
     def assert_field_text(self, text: str) -> None:
         field = self.test_case.find_element(self.field_xpath, by=By.XPATH)
         actual = self.test_case.execute_script(
@@ -151,6 +170,19 @@ class FieldWidgets:  # pylint: disable=invalid-name
         self.test_case.assert_element_not_visible(
             self.button_xpath, by=By.XPATH
         )
+
+    def assert_extra_button(self, title: str) -> None:
+        self.test_case.assert_element(
+            f"{self.extra_button_xpath}[@title='{title}']", by=By.XPATH
+        )
+
+    def assert_extra_button_hidden(self) -> None:
+        self.test_case.assert_element_not_visible(
+            self.extra_button_xpath, by=By.XPATH
+        )
+
+    def do_click_extra_button(self) -> None:
+        self.test_case.click_xpath(self.extra_button_xpath)
 
     def do_open_insert_menu(self) -> None:
         self.assert_button("insert")

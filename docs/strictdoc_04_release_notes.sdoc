@@ -66,6 +66,8 @@ markup. The table editor:
 - is available on the Document screen and on the TABLE screen
 - inserts a new table from the insert menu. To open the menu, type ``/`` anywhere
   in the field, or click the ``+`` button on an empty line.
+- aligns a misaligned table with a button. After a change, an RST table is
+  aligned automatically when the caret leaves it.
 
 2\) The Web UI has a link widget for multiline fields with RST or Markdown
 markup. Type ``[LINK:``, or select **Link** in the insert menu, to select a link

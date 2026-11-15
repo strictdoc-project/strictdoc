@@ -142,10 +142,11 @@ A widget is an object with these members:
 | `blockAt(field, line)` | no | Returns the block `{start, end, ...}` that holds the line, or null. |
 | `editTitle` | no | Title of the edit button. |
 | `edit(field, block)` | no | Edits a block from `blockAt()`. |
-| `activate(field, block)` | no | Called on every caret move with the block that holds the caret, or null. |
+| `activate(field, block)` | no | Called on every caret move with the block that holds the caret, or null. Also called with null when the field loses focus. |
+| `extraAction(field, block)` | no | Returns `{text, title, run}` for a second button under the edit button, or null. The button calls `run()`. The table widget uses it to align a table. |
 
 Any widget can have `scan()` and `forget()`. The members from `blockAt()`
-to `activate()` are for widgets that recognize their own blocks in the
+to `extraAction()` are for widgets that recognize their own blocks in the
 field text, such as tables.
 
 `StrictDoc.fieldWidgets` also gives the widgets seven helpers:
@@ -159,8 +160,11 @@ field text, such as tables.
 - `insertBlock(field, line, blockLines)`: writes the lines in place of the
   blank caret line. Blank lines separate the block from the text around
   it.
-- `replaceLines(field, start, end, newLines)`: writes the lines in place of
-  the lines from `start` to `end`.
+- `replaceLines(field, start, end, newLines, options)`: writes the lines in
+  place of the lines from `start` to `end`. With `{keepCaret: true}`, the
+  caret stays where the user put it, and a field without focus does not
+  get the focus. The table widget uses this option to align a table after
+  the caret has left it.
 - `replaceText(field, from, to, text)`: writes the text in place of the
   characters from `from` to `to` and puts the caret after the text.
 - `placeFixed(element, rect)`: puts a fixed element under the rectangle,
@@ -197,7 +201,9 @@ As a result, `register()` scans the fields that already exist.
   bubbling `input` event. `editable_field.js` handles the event and
   updates the hidden textarea.
 - Delegated `input`, `selectionchange`, `pointerup`, and `focusout`
-  listeners on `document` rescan the field and update the button. After
+  listeners on `document` rescan the field and update the button. On
+  `focusout`, the widgets get `activate()` with null, so a widget can act
+  when the user leaves the field, for example, before the form is sent. After
   `input`, the script records the caret position. The button stays hidden
   until the caret moves elsewhere.
 - A `Map` holds the state of each field. A rescan removes the entries of

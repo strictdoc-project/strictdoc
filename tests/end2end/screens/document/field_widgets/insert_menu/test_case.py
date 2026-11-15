@@ -64,7 +64,11 @@ class Test(E2ECase):
             widgets.do_type_at_caret(Keys.BACKSPACE * len("/zz"))
 
             # A block widget goes after the paragraph that holds the caret.
-            # The "/" and the query are removed.
+            # The "/" and the query are removed. With the caret line at the
+            # bottom of the viewport, the new block is out of view, so the
+            # page scrolls to the caret after it.
+            widgets.do_add_space_above_field()
+            widgets.do_scroll_caret_to_viewport_bottom()
             widgets.do_type_at_caret("/an")
             widgets.assert_insert_items(["anchor"])
             widgets.do_choose_insert_item_by_enter()
@@ -72,6 +76,7 @@ class Test(E2ECase):
             widgets.do_type_uid("NEW-1")
             widgets.assert_insert_enabled()
             widgets.do_insert_by_enter()
+            widgets.wait_for_caret_in_viewport()
 
             # At the end of the field, the block gets a blank line before it
             # only.

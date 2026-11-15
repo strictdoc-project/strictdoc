@@ -550,10 +550,33 @@
 
   // Replaces the field content with one text node, so the caret can be set
   // by a text offset.
+  //
+  // The browser does not scroll to a caret that a script sets, and a caret
+  // has no element to scroll to. So the text is first written with a marker
+  // element at the caret, and scrollIntoView() scrolls to the marker.
+  // 'nearest' scrolls as little as possible: a caret below the viewport ends
+  // up at its bottom edge, a visible caret does not scroll. The marker is an
+  // inline block with a zero-width space, so it has the height of the line.
+  // An inline marker, or an empty one, scrolls only to the top of the caret
+  // line, and the line stays just below the edge, under the page footer.
   function writeText(field, text, caret) {
+    const marker = document.createElement('span');
+    marker.style.display = 'inline-block';
+    marker.textContent = '\u200b';
+    field.replaceChildren(
+      document.createTextNode(text.slice(0, caret)),
+      marker,
+      document.createTextNode(text.slice(caret)),
+    );
+    // focus() scrolls to the field and would stop the smooth scroll of the
+    // page to the marker.
+    field.focus({
+      preventScroll: true
+    });
+    marker.scrollIntoView({
+      block: 'nearest'
+    });
     field.replaceChildren(document.createTextNode(text));
-
-    field.focus();
     window.getSelection().collapse(field.firstChild, caret);
 
     field.dispatchEvent(new Event('input', {

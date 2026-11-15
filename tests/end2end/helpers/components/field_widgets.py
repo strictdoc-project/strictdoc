@@ -3,6 +3,7 @@ from typing import List
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.wait import WebDriverWait
 from seleniumbase import BaseCase
 
 
@@ -60,6 +61,73 @@ class FieldWidgets:  # pylint: disable=invalid-name
         """
         self.do_place_caret_after(text)
         self.do_type_at_caret(Keys.ARROW_RIGHT)
+
+    # The caret has no element, so the scripts below put an empty marker
+    # element at the caret, use it, remove it, and restore the caret.
+    CARET_MARKER_SCRIPT = """
+        const selection = window.getSelection();
+        const range = selection.getRangeAt(0);
+        const [node, offset] = [range.startContainer, range.startOffset];
+        const marker = document.createElement('span');
+        range.insertNode(marker);
+        const result = (%s)(marker);
+        marker.remove();
+        selection.collapse(node, offset);
+        return result;
+    """
+
+    def do_add_space_above_field(self) -> None:
+        """
+        A short document does not scroll. An empty element at the start of
+        the scroll container of the field makes it scroll, so the field can
+        be scrolled up to the bottom of the viewport.
+        """
+        field = self.test_case.find_element(self.field_xpath, by=By.XPATH)
+        self.test_case.execute_script(
+            """
+            let container = arguments[0].parentElement;
+            while (container &&
+              !/(auto|scroll)/.test(getComputedStyle(container).overflowY)) {
+              container = container.parentElement;
+            }
+            const space = document.createElement('div');
+            space.style.minHeight = `${2 * window.innerHeight}px`;
+            (container ?? document.body).prepend(space);
+            """,
+            field,
+        )
+
+    def do_scroll_caret_to_viewport_bottom(self) -> None:
+        self.test_case.execute_script(
+            self.CARET_MARKER_SCRIPT % "(marker) => marker.scrollIntoView("
+            "{block: 'end', behavior: 'instant'})"
+        )
+
+    def wait_for_caret_in_viewport(self, timeout: float = 5) -> None:
+        """
+        The caret must be inside the visible area of the scroll container
+        of the field, which ends above the page footer. The page scrolls
+        smoothly, so the caret gets there with a delay.
+        """
+
+        def caret_in_viewport(_) -> bool:
+            return self.test_case.execute_script(
+                self.CARET_MARKER_SCRIPT
+                % """(marker) => {
+                    let container = marker.parentElement;
+                    while (container && !/(auto|scroll)/.test(
+                      getComputedStyle(container).overflowY)) {
+                      container = container.parentElement;
+                    }
+                    const area = container ?
+                      container.getBoundingClientRect() :
+                      {top: 0, bottom: window.innerHeight};
+                    const rect = marker.getBoundingClientRect();
+                    return rect.top >= area.top && rect.bottom <= area.bottom;
+                }"""
+            )
+
+        WebDriverWait(self.test_case.driver, timeout).until(caret_in_viewport)
 
     def do_type_at_caret(self, text: str) -> None:
         ActionChains(self.test_case.driver).send_keys(text).perform()

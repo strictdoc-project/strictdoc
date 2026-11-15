@@ -39,6 +39,9 @@
 
   const HIGHLIGHT_TABLE = 'sdoc-table';
   const HIGHLIGHT_ACTIVE_TABLE = 'sdoc-table-active';
+  // A Markdown table with more cells in a row than in the header (see
+  // parseMarkdownPipeTable()). This highlight is above the other two.
+  const HIGHLIGHT_OVERFLOW_TABLE = 'sdoc-table-overflow';
   const HAS_HIGHLIGHTS = typeof CSS !== 'undefined' && 'highlights' in CSS;
 
   // Editor DOM contract. The row and column indexes of cells and handles are
@@ -266,10 +269,63 @@
   // Markdown (GFM) pipe tables.
   //
 
+  // The table rules follow the table rule of markdown-it, which renders
+  // Markdown in StrictDoc (markdown_it/rules_block/table.py, after GFM):
+  // - A table starts with a header row that contains "|" and a delimiter
+  // row with the same number of cells. The table can interrupt a
+  // paragraph: the paragraph lines above the header are not part of it.
+  // - Every following line is a row, even without "|", up to a blank line,
+  // a line indented by four or more spaces (code), or the start of another
+  // block (MD_BLOCK_STARTS).
+  // - A row can have fewer cells than the header: the missing cells are
+  // empty. A row can have more cells: markdown-it does not show the extra
+  // cells. The editor keeps them in added columns, so it never deletes
+  // text, and such a table gets the overflow highlight.
   const MD_DELIMITER_CELL = /^:?-+:?$/;
+  // A delimiter row has only "|", "-", ":", and spaces. A row that starts
+  // with "-" and a space is a list item.
+  const MD_DELIMITER_ROW = /^[|:-][|:\- \t]*$/;
   // A pipe table row is one text line: line breaks inside a cell are <br>.
   const MD_LINE_BREAK = /<br\s*\/?>/gi;
   const MD_FENCE = /^ {0,3}(`{3,}|~{3,})/;
+  // The HTML block names of markdown-it (common/html_blocks.py).
+  const MD_HTML_BLOCK_NAMES = 'address|article|aside|base|basefont|blockquote|body|caption|' +
+    'center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|figcaption|figure|' +
+    'footer|form|frame|frameset|h1|h2|h3|h4|h5|h6|head|header|hr|html|iframe|legend|li|' +
+    'link|main|menu|menuitem|nav|noframes|ol|optgroup|option|p|param|search|section|' +
+    'summary|table|tbody|td|tfoot|th|thead|title|tr|track|ul';
+  // The starts of the blocks that end a table, tested on a line without
+  // its indent: fence, blockquote, thematic break, list item, heading, and
+  // the HTML blocks that can end a paragraph.
+  const MD_BLOCK_STARTS = [
+    /^(`{3,}|~{3,})/,
+    /^>/,
+    /^([-*_])([ \t]*\1){2,}[ \t]*$/,
+    /^([-*+]|\d{1,9}[.)])([ \t]|$)/,
+    /^#{1,6}([ \t]|$)/,
+    /^<(script|pre|style|textarea)(?=(\s|>|$))/i,
+    /^<!--/,
+    /^<\?/,
+    /^<![A-Z]/,
+    /^<!\[CDATA\[/,
+    new RegExp(`^</?(${MD_HTML_BLOCK_NAMES})(?=(\\s|/?>|$))`, 'i'),
+  ];
+
+  function indentOf(line) {
+    return line.match(/^ */)[0].length;
+  }
+
+  function isDelimiterRow(line) {
+    const text = line.trim();
+    return indentOf(line) < 4 && MD_DELIMITER_ROW.test(text) && !/^-[ \t]/.test(text);
+  }
+
+  // Returns true if the line continues a table (see the rules above).
+  function isTableRow(line) {
+    const text = line.trimStart();
+    return text !== '' && indentOf(line) < 4 &&
+      !MD_BLOCK_STARTS.some((start) => start.test(text));
+  }
 
   // Splits a row on unescaped "|" and unescapes "\|" inside cells. The
   // leading and trailing pipes are optional in GFM.
@@ -315,29 +371,29 @@
     return '';
   }
 
-  // Accepts a header row, a delimiter row, and body rows, all with the same
-  // number of cells. GFM itself tolerates rows with fewer or more cells;
-  // such tables are left alone instead of being "fixed" silently.
+  // Parses the lines of one table: a header row, a delimiter row, and body
+  // rows (see the rules above). Returns null if the header and the
+  // delimiter row do not make a table. The rows are padded with empty cells
+  // to the widest row, so the table model has the same number of cells in
+  // every row. The added columns are not aligned.
   function parseMarkdownPipeTable(blockLines) {
-    if (blockLines.length < 2) return null;
-
-    // An indent of four spaces makes an indented code block, not a table.
-    const indent = commonIndent(blockLines);
-    if (indent === null || indent.length > 3) return null;
-
     const [header, delimiter, ...body] = blockLines.map(splitPipeRow);
     if (!delimiter.every((cell) => MD_DELIMITER_CELL.test(cell))) return null;
-    if (![header, ...body].every((row) => row.length === delimiter.length)) {
-      return null;
-    }
+    if (header.length !== delimiter.length) return null;
 
+    const columns = Math.max(header.length, ...body.map((row) => row.length));
+    const pad = (cells, value) => [...cells, ...Array(columns - cells.length).fill(value)];
     return {
-      indent,
+      // The serializer writes all lines with the indent of the header.
+      indent: ' '.repeat(indentOf(blockLines[0])),
       hasHeader: true,
-      rows: [header, ...body].map((row) => row.map(
+      rows: [header, ...body].map((row) => pad(row, '').map(
         (cell) => cell.replace(MD_LINE_BREAK, '\n'),
       )),
-      align: delimiter.map(parseAlign),
+      align: pad(delimiter.map(parseAlign), ''),
+      // A row with more cells than the header: markdown-it does not show
+      // the extra cells.
+      overflow: columns > header.length,
       // See "Alignment" in the file comment.
       aligned: blockLines.every(
         (line) => pipePositions(line) === pipePositions(blockLines[0]),
@@ -392,8 +448,26 @@
         }
       });
 
-      const isCandidate = (line, index) => !inFence[index] && line.includes('|');
-      return findTables(lines, isCandidate, parseMarkdownPipeTable);
+      const tables = [];
+      let start = 0;
+      while (start < lines.length - 1) {
+        const isStart = !inFence[start] && !inFence[start + 1] &&
+          indentOf(lines[start]) < 4 && lines[start].includes('|') &&
+          isDelimiterRow(lines[start + 1]);
+        let end = start + 2;
+        while (isStart && end < lines.length && !inFence[end] && isTableRow(lines[end])) end++;
+        const table = isStart && parseMarkdownPipeTable(lines.slice(start, end));
+        if (!table) {
+          start++;
+          continue;
+        }
+        tables.push(Object.assign(table, {
+          start,
+          end: end - 1
+        }));
+        start = end;
+      }
+      return tables;
     },
     serialize: serializeMarkdownPipeTable,
   };
@@ -1182,13 +1256,17 @@
     if (!HAS_HIGHLIGHTS) return;
 
     const ranges = [];
+    const overflowRanges = [];
     for (const [field, entry] of fieldTables) {
       entry.tables.forEach((table) => {
         const range = fieldWidgets.lineRange(field, table.start, table.end);
-        if (range) ranges.push(range);
+        if (range)(table.overflow ? overflowRanges : ranges).push(range);
       });
     }
     CSS.highlights.set(HIGHLIGHT_TABLE, new Highlight(...ranges));
+    const overflow = new Highlight(...overflowRanges);
+    overflow.priority = 1;
+    CSS.highlights.set(HIGHLIGHT_OVERFLOW_TABLE, overflow);
   }
 
   //
@@ -1295,7 +1373,7 @@
     extraAction(field, table) {
       if (table.aligned) return null;
       return {
-        text: '↔',
+        text: '🔧',
         title: 'Align table',
         run: () => writeAligned(field, table),
       };

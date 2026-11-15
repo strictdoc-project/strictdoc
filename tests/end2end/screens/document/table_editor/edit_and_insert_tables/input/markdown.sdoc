@@ -15,4 +15,13 @@ STATEMENT: >>>
 | not | a table |
 | --- | ------- |
 ```
+
+| Short | rows | here |
+| --- | --- | --- |
+| one |
+lazy line
+
+| A | B |
+| --- | --- |
+| 1 | 2 | 3 |
 <<<

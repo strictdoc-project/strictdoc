@@ -2872,9 +2872,17 @@ The table editor recognizes the following tables:
 
 - RST: grid tables without merged cells. A cell can contain several lines and
   paragraphs.
-- Markdown: pipe tables where all rows have the same number of cells. The
+- Markdown: the pipe tables that StrictDoc renders as tables. A table ends at a
+  blank line or at the start of another block, such as a heading or a list. A
+  line right after a table is a row of the table, even without ``|``. The
   editor writes a line break in a cell as ``<br>`` and the ``|`` character as
   ``\|``. The editor ignores tables in fenced code blocks.
+
+In a Markdown table, a row can have fewer cells than the header row. The page
+shows the missing cells as empty, and the table editor writes them as empty
+cells. A row can also have more cells than the header row. The page does not
+show the extra cells, so the field highlights such a table in red. The table
+editor keeps the extra cells in added columns and does not delete them.
 
 The table editor does not open or change other tables, for example RST simple
 tables, ``list-table``, ``csv-table``, or grid tables with merged cells. After

@@ -15,7 +15,9 @@ from tests.end2end.server import SDocTestServer
 # column span, which the editor does not support: it stays not editable.
 #
 # Markdown: the table has column alignment, an escaped "\|" and a "<br/>"
-# inside cells. The table-like lines in the fenced code block are code.
+# inside cells. The table-like lines in the fenced code block are code. The
+# "Short" table has a row with fewer cells and a line without "|", which is
+# a row too. The last table has a row with more cells than its header.
 
 RST_FIELD_TEXT = (
     "Paragraph.\n"
@@ -176,7 +178,34 @@ class Test(E2ECase):
             form = screen_document.get_node().do_open_form_edit_requirement()
             form.assert_on_form()
 
-            table_editor.assert_highlighted_tables(1)
+            table_editor.assert_highlighted_tables(2)
+            table_editor.assert_overflow_tables(1)
+
+            # Missing cells are written as empty cells.
+            table_editor.do_place_caret_after("| one")
+            table_editor.assert_extra_button("Align table")
+            table_editor.do_click_extra_button()
+            assert (
+                "| Short     | rows | here |\n"
+                "| --------- | ---- | ---- |\n"
+                "| one       |      |      |\n"
+                "| lazy line |      |      |\n"
+            ) in table_editor.get_field_text()
+
+            # The page does not show the extra cell, but the editor keeps it
+            # in an added column, and so does the alignment.
+            table_editor.do_place_caret_after("| A")
+            table_editor.do_open_edit()
+            table_editor.assert_cell(0, 2, "")
+            table_editor.assert_cell(1, 2, "3")
+            table_editor.do_cancel()
+            table_editor.do_place_caret_after("| A")
+            table_editor.do_click_extra_button()
+            assert (
+                "| A   | B   |     |\n| --- | --- | --- |\n| 1   | 2   | 3   |\n"
+            ) in table_editor.get_field_text()
+            table_editor.assert_overflow_tables(0)
+            table_editor.assert_highlighted_tables(3)
 
             # The Markdown table is misaligned: the escaped "\|" moves the
             # last "|" of its row. The extra button can align it, but the
@@ -214,6 +243,15 @@ class Test(E2ECase):
                 "| not | a table |\n"
                 "| --- | ------- |\n"
                 "```\n"
+                "\n"
+                "| Short     | rows | here |\n"
+                "| --------- | ---- | ---- |\n"
+                "| one       |      |      |\n"
+                "| lazy line |      |      |\n"
+                "\n"
+                "| A   | B   |     |\n"
+                "| --- | --- | --- |\n"
+                "| 1   | 2   | 3   |\n"
             )
 
             form.do_form_submit()

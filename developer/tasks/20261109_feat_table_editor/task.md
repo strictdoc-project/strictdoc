@@ -12,7 +12,7 @@ the table view (inline cell form).
 | Format | Table | Limits | Line break in a cell |
 |---|---|---|---|
 | RST | Grid table | No row or column spans. At most one header row. The table can have an indent, for example under a `.. table::` directive. | A row spans several text lines. A blank line separates paragraphs. |
-| Markdown | GFM pipe table | Every row has the same number of cells. Tables inside fenced code blocks are code. | `<br>`. The editor also reads `<br/>` and `<br />`. |
+| Markdown | GFM pipe table | The tables that markdown-it renders as tables. A row can have fewer or more cells than the header. Tables inside fenced code blocks are code. | `<br>`. The editor also reads `<br/>` and `<br />`. |
 
 Recognition is live. The editor never rewrites table-like text that does
 not match these rules. Such text has no highlight and no edit button.
@@ -155,12 +155,26 @@ RST (`parseRstGridTable()`):
   the line only if the split gives one part per column.
 - Cell text is the parts joined by lines, without their common indent.
 
-Markdown (`parseMarkdownPipeTable()`):
+Markdown (`MARKDOWN.findTables()` and `parseMarkdownPipeTable()`) follows
+the table rule of markdown-it, which renders Markdown in StrictDoc
+(`markdown_it/rules_block/table.py`, after GFM):
 
-- A table is a header row, a delimiter row, and body rows.
-- All rows have the same cell count.
-- Rows split on unescaped `|`.
-- Lines inside fenced code blocks are never candidates.
+- A table starts with a header row that contains `|` and a delimiter row
+  with the same number of cells. The table can interrupt a paragraph.
+- Every following line is a row, even without `|`, up to a blank line, a
+  line indented by four or more spaces, or the start of another block:
+  fence, blockquote, thematic break, list item, heading, or an HTML block
+  that can end a paragraph (`MD_BLOCK_STARTS`).
+- Rows split on unescaped `|`. The leading and trailing `|` are optional.
+- Rows can have different indents up to three spaces. The serializer
+  writes all rows with the indent of the header row.
+- A row with fewer cells gets empty cells.
+- A row with more cells than the header: markdown-it does not show the
+  extra cells. The parser adds columns for them, so the editor and the
+  alignment keep the text, and sets `overflow`. The field highlights such
+  a table with `::highlight(sdoc-table-overflow)`, in red, above the other
+  table highlights.
+- Lines inside fenced code blocks are never part of a table.
 
 All lines of a table must have one indent. The serializer writes the
 indent back.
@@ -254,7 +268,10 @@ one RST document and one Markdown document.
   table is aligned when the caret leaves it, and the table is aligned
   before the form is sent.
 - Markdown: the Align button shows for the misaligned table, and the
-  table is not aligned when the caret leaves it. The test reads `\|` and `<br/>` in cells and writes a
+  table is not aligned when the caret leaves it. A table with a short row
+  and a line without `|` is aligned with empty cells. A table with an extra
+  cell has the overflow highlight, opens in the editor with an added
+  column, and keeps the cell when aligned. The test reads `\|` and `<br/>` in cells and writes a
   multi-line cell. The test inserts a row through the grip menu, inserts a
   column, and moves a column and a row by drag. The alignment moves with
   its column.

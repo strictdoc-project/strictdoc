@@ -68,6 +68,9 @@ markup. The table editor:
   in the field, or click the ``+`` button on an empty line.
 - aligns a misaligned table with a button. After a change, an RST table is
   aligned automatically when the caret leaves it.
+- recognizes Markdown tables the same way as the page renders them, including
+  rows with fewer or more cells than the header row. The editor keeps extra
+  cells, and the field highlights a table with extra cells in red.
 
 2\) The Web UI has a link widget for multiline fields with RST or Markdown
 markup. Type ``[LINK:``, or select **Link** in the insert menu, to select a link

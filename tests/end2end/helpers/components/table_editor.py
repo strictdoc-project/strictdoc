@@ -22,6 +22,12 @@ class TableEditor(FieldWidgets):  # pylint: disable=invalid-name
         )
         assert actual == count, f"{actual} != {count}"
 
+    def assert_overflow_tables(self, count: int) -> None:
+        actual = self.test_case.execute_script(
+            "return CSS.highlights.get('sdoc-table-overflow')?.size ?? 0;"
+        )
+        assert actual == count, f"{actual} != {count}"
+
     def wait_for_highlighted_tables(
         self, count: int, timeout: float = 5
     ) -> None:

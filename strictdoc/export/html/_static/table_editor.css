@@ -10,6 +10,12 @@
   background-color: var(--color-highlight);
 }
 
+/* A Markdown table with more cells in a row than in the header: the page
+   does not show the extra cells. */
+::highlight(sdoc-table-overflow) {
+  background-color: var(--color-highlight-danger);
+}
+
 /* Editor modal */
 
 sdoc-modal[context="table-editor"] {

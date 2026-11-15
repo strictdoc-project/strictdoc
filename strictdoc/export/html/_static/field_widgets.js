@@ -61,8 +61,9 @@
 // - activate(field, block): called on every caret move with the block
 // that holds the caret, or with null. Also called with null when the field
 // loses focus.
-// - extraAction(field, block): optional. Returns {text, title, run} for a
-// second button under the edit button, or null. run() is called on click.
+// - extraAction(field, block): optional. Returns {icon, title, run} for a
+// second button under the edit button, or null. `icon` names an icon in
+// the #template-field-widgets-icons template. run() is called on click.
 //
 // Helpers for the widgets:
 // - hasWidget(field, id): returns true if the widget works in the field.
@@ -114,9 +115,17 @@
   // .dropdown_menu_item.active in element.css.
   const CLASS_ACTIVE = 'active';
   // - js-field_widgets-icon marks an icon in the
-  // #template-field-widgets-icons template. Its value is the widget id.
+  // #template-field-widgets-icons template. Its value is the widget id for
+  // an insert menu item, "edit" for the edit button, or the `icon` of an
+  // extraAction().
   const ATTR_ICON = 'js-field_widgets-icon';
   const ICON_TEMPLATE_ID = 'template-field-widgets-icons';
+
+  // Returns a copy of the icon from the icon template, or null.
+  function icon(name) {
+    return document.getElementById(ICON_TEMPLATE_ID)
+      ?.content.querySelector(`[${ATTR_ICON}="${name}"] svg`)?.cloneNode(true) ?? null;
+  }
 
   // The distance in pixels between a fixed popup and its rect or the
   // viewport edge.
@@ -401,7 +410,10 @@
     }
 
     button.dataset.mode = found ? 'edit' : 'insert';
-    button.textContent = found ? '✎' : '+';
+    // The edit button shows the pencil icon; without the icon template, a
+    // pencil character.
+    if (found) button.replaceChildren(icon('edit') ?? '✎');
+    else button.textContent = '+';
     button.title = found ? found.widget.editTitle : 'Insert';
     button.setAttribute('aria-label', button.title);
     const top = found ?
@@ -424,7 +436,7 @@
     state.extraAction = found?.widget.extraAction?.(field, found.block) ?? null;
     extraButton.hidden = state.extraAction === null;
     if (extraButton.hidden) return;
-    extraButton.textContent = state.extraAction.text;
+    extraButton.replaceChildren(icon(state.extraAction.icon) ?? '');
     extraButton.title = state.extraAction.title;
     extraButton.setAttribute('aria-label', state.extraAction.title);
     extraButton.style.top = `${button.offsetTop + button.offsetHeight + EXTRA_BUTTON_GAP}px`;
@@ -545,9 +557,8 @@
       item.dataset.testid = `field-widgets-insert-${widget.id}`;
       item.setAttribute('role', 'menuitem');
       item.setAttribute(ATTR_INSERT, widget.id);
-      const icon = document.getElementById(ICON_TEMPLATE_ID)
-        ?.content.querySelector(`[${ATTR_ICON}="${widget.id}"] svg`);
-      if (icon) item.prepend(icon.cloneNode(true));
+      const itemIcon = icon(widget.id);
+      if (itemIcon) item.prepend(itemIcon);
       item.addEventListener('pointerenter', () => setActive(item));
       element.appendChild(item);
     }

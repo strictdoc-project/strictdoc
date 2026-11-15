@@ -16,6 +16,10 @@
   line-height: 1;
   cursor: pointer;
   z-index: 20; /* > 10, because of the table view */
+  /* Centers the icon of the button. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .field-widgets-button[hidden] {

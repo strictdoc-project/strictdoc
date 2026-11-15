@@ -191,7 +191,7 @@ The table widget implements the widget contract of `field_widgets.js`:
 - `blockAt()` returns the table that holds a line.
 - `activate()` sets the stronger highlight on the table that holds the
   caret and follows the caret for the automatic alignment.
-- `extraAction()` returns the Align button for a misaligned table.
+- `extraAction()` returns the Format table button for a misaligned table.
 - `edit()` and `insert()` open the modal. On Apply, the widget writes the
   table with `replaceLines()` or `insertBlock()`.
 
@@ -267,10 +267,10 @@ one RST document and one Markdown document.
   Typing in a table keeps the table editable. The test edits a multi-line
   cell, inserts a column, and deletes a row through the grip menu. A drag
   on the extend bar of a new 3x3 table stops at a non-empty column. A
-  typed space misaligns a row: the Align button aligns the table, the
+  typed space misaligns a row: the Format table button aligns the table, the
   table is aligned when the caret leaves it, and the table is aligned
   before the form is sent.
-- Markdown: the Align button shows for the misaligned table, and the
+- Markdown: the Format table button shows for the misaligned table, and the
   table is not aligned when the caret leaves it. A table with a short row
   and a line without `|` is aligned with empty cells. A table with an extra
   cell has the overflow highlight, opens in the editor with an added

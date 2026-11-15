@@ -1,0 +1,11 @@
+<svg
+  class="svg_icon"
+  viewBox="0 0 16 16"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <path transform="rotate(45 8 8)" d="M6.6,1.28 L6.6,4.6 L9.4,4.6 L9.4,1.28 A3.6,3.6 0 0 1 9.1,8.03 L9.1,14.2 A1.1,1.1 0 0 1 6.9,14.2 L6.9,8.03 A3.6,3.6 0 0 1 6.6,1.28 Z"></path>
+</svg>

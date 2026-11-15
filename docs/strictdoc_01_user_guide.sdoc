@@ -2902,8 +2902,8 @@ change it.
 A table is aligned when the column separators stand at the same positions in all
 lines: ``|`` in the rows and, in RST, ``+`` in the borders. Columns can be wider
 than their text. A table becomes misaligned when you type in its cells. When the
-caret is in a misaligned table, a second button under the edit button aligns
-the table without opening the editor.
+caret is in a misaligned table, the **Format table** button under the edit
+button aligns the table without opening the editor.
 
 RST does not accept a misaligned grid table. So when you change an RST table and
 the caret leaves the table, or the field loses focus, the table editor aligns

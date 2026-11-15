@@ -1403,8 +1403,8 @@
     extraAction(field, table) {
       if (table.aligned) return null;
       return {
-        text: '🔧',
-        title: 'Align table',
+        icon: 'format',
+        title: 'Format table',
         run: () => writeAligned(field, table),
       };
     },

@@ -147,7 +147,7 @@ class Test(E2ECase):
             table_editor.do_place_caret_after("| first")
             table_editor.do_type_at_caret(" ")
             table_editor.do_place_caret_after("second")
-            table_editor.assert_extra_button("Align table")
+            table_editor.assert_extra_button("Format table")
             table_editor.do_click_extra_button()
             table_editor.assert_field_text(RST_ALIGNED_TEXT)
             table_editor.assert_extra_button_hidden()
@@ -184,7 +184,7 @@ class Test(E2ECase):
 
             # Missing cells are written as empty cells.
             table_editor.do_place_caret_after("| one")
-            table_editor.assert_extra_button("Align table")
+            table_editor.assert_extra_button("Format table")
             table_editor.do_click_extra_button()
             assert (
                 "| Short     | rows | here |\n"
@@ -213,7 +213,7 @@ class Test(E2ECase):
             # last "|" of its row. The extra button can align it, but the
             # table is not aligned automatically when the caret leaves it.
             table_editor.do_place_caret_after("| or")
-            table_editor.assert_extra_button("Align table")
+            table_editor.assert_extra_button("Format table")
             table_editor.do_type_at_caret(" ")
             table_editor.do_place_caret_after("both |")
             table_editor.do_place_caret_after("not")

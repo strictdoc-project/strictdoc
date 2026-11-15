@@ -143,7 +143,7 @@ A widget is an object with these members:
 | `editTitle` | no | Title of the edit button. |
 | `edit(field, block)` | no | Edits a block from `blockAt()`. |
 | `activate(field, block)` | no | Called on every caret move with the block that holds the caret, or null. Also called with null when the field loses focus. |
-| `extraAction(field, block)` | no | Returns `{text, title, run}` for a second button under the edit button, or null. The button calls `run()`. The table widget uses it to align a table. |
+| `extraAction(field, block)` | no | Returns `{icon, title, run}` for a second button under the edit button, or null. `icon` names an icon in `components/field_widgets/icons.jinja`. The button calls `run()`. The table widget uses it for the Format table button (icon `format`, a wrench). |
 
 Any widget can have `scan()` and `forget()`. The members from `blockAt()`
 to `extraAction()` are for widgets that recognize their own blocks in the

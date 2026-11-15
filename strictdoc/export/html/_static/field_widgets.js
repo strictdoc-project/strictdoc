@@ -68,16 +68,20 @@
 // - textBeforeCaret(field): the field text before the caret, or null if
 // the caret is not in the field or the field DOM cannot be mapped to its
 // text.
-// - insertInline(field, offset, text): writes the text at the offset, with
-// spaces around it, or as a new paragraph (see inlineFormsParagraph()), and
-// puts the caret after the text.
-// - insertBlock(field, line, blockLines): writes the lines as a new
+// - insertInline(field, offset, text, options): writes the text at the
+// offset, with spaces around it, or as a new paragraph (see
+// inlineFormsParagraph()), and puts the caret after the text.
+// - insertBlock(field, line, blockLines, options): writes the lines as a new
 // paragraph after the block that holds the line, or in place of the line
 // if it is blank.
 // - replaceLines(field, start, end, newLines): writes the lines in place of
 // the lines [start, end].
 // - replaceText(field, from, to, text): writes the text in place of the
 // characters [from, to) and puts the caret after it.
+// The helpers that write text highlight the written text for a moment (see
+// highlightWritten()), because a widget writes its result, not a draft. A
+// widget that writes a draft, for example, the start of a tag that the
+// user completes, passes the option {highlight: false}.
 // - placeFixed(element, rect): puts a fixed element under the rect, or
 // above it if there is no room below, inside the viewport.
 //
@@ -111,6 +115,12 @@
   // The distance in pixels between a fixed popup and its rect or the
   // viewport edge.
   const POPUP_GAP = 4;
+
+  // The highlight of the text that a widget has just written, and the
+  // class that fades it (see highlightWritten()).
+  const HIGHLIGHT_WRITTEN = 'field-widgets-written';
+  const CLASS_WRITTEN = 'field-widgets-written';
+  const HAS_HIGHLIGHTS = typeof CSS !== 'undefined' && 'highlights' in CSS;
 
   const widgets = [];
 
@@ -559,7 +569,9 @@
   // inline block with a zero-width space, so it has the height of the line.
   // An inline marker, or an empty one, scrolls only to the top of the caret
   // line, and the line stays just below the edge, under the page footer.
-  function writeText(field, text, caret) {
+  //
+  // `written` is the range [from, to) of the text to highlight, or null.
+  function writeText(field, text, caret, written = null) {
     const marker = document.createElement('span');
     marker.style.display = 'inline-block';
     marker.textContent = '\u200b';
@@ -578,6 +590,7 @@
     });
     field.replaceChildren(document.createTextNode(text));
     window.getSelection().collapse(field.firstChild, caret);
+    if (written && written[0] < written[1]) highlightWritten(field, ...written);
 
     field.dispatchEvent(new Event('input', {
       bubbles: true
@@ -589,11 +602,14 @@
     updateActiveField();
   }
 
-  function writeLines(field, lines, caretAfterLine) {
+  // `written` is the range [start, end] of the lines to highlight, or null.
+  function writeLines(field, lines, caretAfterLine, written = null) {
+    const offsets = lineOffsets(lines);
     writeText(
       field,
       lines.join('\n'),
-      lineOffsets(lines)[caretAfterLine] + lines[caretAfterLine].length,
+      offsets[caretAfterLine] + lines[caretAfterLine].length,
+      written && [offsets[written[0]], offsets[written[1]] + lines[written[1]].length],
     );
   }
 
@@ -603,6 +619,7 @@
       field,
       current.slice(0, from) + text + current.slice(to),
       from + text.length,
+      [from, from + text.length],
     );
   }
 
@@ -615,7 +632,8 @@
       ...newLines,
       ...lines.slice(end + 1),
     ];
-    writeLines(field, updated, start + newLines.length - 1);
+    const last = start + newLines.length - 1;
+    writeLines(field, updated, last, [start, last]);
   }
 
   // The rule for an inline element on a blank line. Alone on a blank line
@@ -627,33 +645,42 @@
   }
 
   // See the helpers in the file comment.
-  function insertInline(field, offset, text) {
+  function insertInline(field, offset, text, {
+    highlight = true
+  } = {}) {
     const current = field.innerText;
     const lines = current.split('\n');
     const line = current.slice(0, offset).split('\n').length - 1;
     if (inlineFormsParagraph(lines, line)) {
-      insertBlock(field, line, [text]);
+      insertBlock(field, line, [text], {
+        highlight
+      });
       return;
     }
     const spaceBefore = offset > 0 && /\S/.test(current[offset - 1]) ? ' ' : '';
     const spaceAfter = offset < current.length && /\S/.test(current[offset]) ? ' ' : '';
+    const from = offset + spaceBefore.length;
     writeText(
       field,
       current.slice(0, offset) + spaceBefore + text + spaceAfter + current.slice(offset),
-      offset + spaceBefore.length + text.length,
+      from + text.length,
+      highlight ? [from, from + text.length] : null,
     );
   }
 
   // See the helpers in the file comment. Blank lines separate the block
   // from the surrounding text.
-  function insertBlock(field, line, blockLines) {
+  function insertBlock(field, line, blockLines, {
+    highlight = true
+  } = {}) {
     scanField(field);
     const {
       lines
     } = fieldStates.get(field);
 
     if (lines.join('').trim() === '') {
-      writeLines(field, blockLines, blockLines.length - 1);
+      const end = blockLines.length - 1;
+      writeLines(field, blockLines, end, highlight ? [0, end] : null);
       return;
     }
 
@@ -670,11 +697,30 @@
     const blankAfter = after.length > 0 && after[0].trim() !== '' ? [''] : [];
 
     const updated = [...before, ...blankBefore, ...blockLines, ...blankAfter, ...after];
-    writeLines(
-      field,
-      updated,
-      before.length + blankBefore.length + blockLines.length - 1,
-    );
+    const start = before.length + blankBefore.length;
+    const end = start + blockLines.length - 1;
+    writeLines(field, updated, end, highlight ? [start, end] : null);
+  }
+
+  // Highlights the characters [from, to) of the field for a moment. The
+  // ::highlight() pseudo-element cannot be animated, so the class
+  // CLASS_WRITTEN animates the custom property
+  // --field-widgets-written-alpha of the field, and the highlight takes its
+  // color from the property (see field_widgets.css). When the animation
+  // ends, the highlight is removed.
+  function highlightWritten(field, from, to) {
+    if (!HAS_HIGHLIGHTS) return;
+    const range = document.createRange();
+    range.setStart(field.firstChild, from);
+    range.setEnd(field.firstChild, to);
+    const highlight = new Highlight(range);
+    // Above the table highlights of table_editor.js.
+    highlight.priority = 1;
+    CSS.highlights.set(HIGHLIGHT_WRITTEN, highlight);
+    // A new write restarts the animation.
+    field.classList.remove(CLASS_WRITTEN);
+    void field.offsetWidth;
+    field.classList.add(CLASS_WRITTEN);
   }
 
   // See the helpers in the file comment.
@@ -850,6 +896,12 @@
   }
   document.addEventListener('scroll', replaceInsertMenu, true);
   window.addEventListener('resize', replaceInsertMenu);
+
+  document.addEventListener('animationend', (event) => {
+    if (event.animationName !== CLASS_WRITTEN) return;
+    event.target.classList.remove(CLASS_WRITTEN);
+    CSS.highlights.delete(HIGHLIGHT_WRITTEN);
+  });
 
   document.addEventListener('selectionchange', updateActiveField);
 

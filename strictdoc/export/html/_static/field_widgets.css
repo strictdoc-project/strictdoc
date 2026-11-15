@@ -43,6 +43,33 @@ sdoc-field-widgets-placeholder::before {
   content: 'insert';
 }
 
+/* Highlight of the text that a widget has just written. ::highlight()
+   cannot be animated, so the animation of the field changes the custom
+   property, and the highlight takes its color from it. */
+
+@property --field-widgets-written-alpha {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@keyframes field-widgets-written {
+  0%, 30% {
+    --field-widgets-written-alpha: 0.3;
+  }
+  100% {
+    --field-widgets-written-alpha: 0;
+  }
+}
+
+.field-widgets-written {
+  animation: field-widgets-written 1s ease-in;
+}
+
+::highlight(field-widgets-written) {
+  background-color: rgb(0 255 255 / var(--field-widgets-written-alpha));
+}
+
 /* Insert menu, a child of <body>; field_widgets.js sets its top and left
    under or above the placeholder. */
 

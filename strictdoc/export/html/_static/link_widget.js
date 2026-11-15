@@ -267,8 +267,12 @@
       return currentTrigger(field) !== null;
     },
 
+    // "[LINK: " is a draft: the tag gets highlighted when the user chooses
+    // a target.
     insert(field, offset) {
-      fieldWidgets.insertInline(field, offset, '[LINK: ');
+      fieldWidgets.insertInline(field, offset, '[LINK: ', {
+        highlight: false
+      });
     },
   });
 

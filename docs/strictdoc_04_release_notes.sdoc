@@ -98,6 +98,13 @@ files shrink from 14.84 MB to 0.34 MB. To disable the compression, set the
 
 9\) The Document screen no longer offers or accepts Clone for sections and
 other composite nodes. Users can still clone regular document nodes.
+
+10\) Ada support was added to the tracing to source files feature in StrictDoc.
+The parser reads ``.ads``, ``.adb`` and ``.ada`` files and recognizes
+subprogram declarations and bodies, so the @relation marker can be used on
+subprograms. A subprogram body is linked to the requirements of its
+declaration, as for C function declarations and definitions. Thanks to
+@briot for the tree-sitter-ada grammar and to @haxtibal.
 <<<
 
 [[/SECTION]]

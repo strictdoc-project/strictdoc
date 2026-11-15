@@ -1,0 +1,7 @@
+[DOCUMENT]
+TITLE: Modelica file that the scanner cannot read
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Requirement 1
+STATEMENT: The range implements the requirement.

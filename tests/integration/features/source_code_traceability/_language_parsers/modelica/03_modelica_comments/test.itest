@@ -1,0 +1,12 @@
+# @relation(SDOC-LLR-221, scope=file)
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Export completed.
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: href="../_source_files/Check.mo.html#REQ-1#1#12"
+CHECK-HTML: entire file
+CHECK-HTML: href="../_source_files/Check.mo.html#REQ-2#7#9"
+CHECK-HTML: range
+CHECK-HTML: href="../_source_files/Check.mo.html#REQ-3#10#11"
+CHECK-HTML: line

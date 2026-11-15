@@ -11,8 +11,22 @@ from strictdoc.helpers.auto_described import auto_described
 
 
 class RangeMarkerType(Enum):
+    # A function, method or subprogram, for example in Python, C, C++ and
+    # Ada. In Rust, all documented items use this scope, including structs,
+    # traits, enums and modules.
     FUNCTION = "function"
+
+    # A class, for example in Python or C++. In Modelica, a class of any
+    # kind, for example a model, block, connector, record or package.
     CLASS = "class"
+
+    # A Modelica component: a declaration of an instance of a class inside
+    # another class, for example "Resistor r1;" or "Real req1Check;". A
+    # component often models a physical component of a system, such as a
+    # resistor, a pipe or a sensor.
+    COMPONENT = "component"
+
+    # A whole source file, in any language.
     FILE = "file"
 
 

@@ -1,0 +1,24 @@
+#
+# In relaxed mode (--relaxed-mode), StrictDoc warns about inline [LINK:] tags
+# that reference missing node UIDs or anchors. StrictDoc marks the affected
+# fields in the UI. Valid links still resolve.
+#
+
+RUN: %strictdoc export %S --output-dir %T --relaxed-mode | filecheck %s --dump-input=fail
+CHECK: warning: Missing link: MISSING-UID
+CHECK: warning: Missing link: MISSING-ANCHOR
+CHECK: warning: unresolved inline links were detected and allowed by configuration.
+CHECK: warning: unresolved inline links count: 2
+CHECK: warning: node 'REQ-002' in document 'Doc with missing inline links' has an unresolved inline link to 'MISSING-UID'.
+CHECK: warning: node 'REQ-003' in document 'Doc with missing inline links' has an unresolved inline link to 'MISSING-ANCHOR'.
+CHECK: Export completed.
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHECK-HTML
+
+# The missing node link is rendered as a dead link and highlighted as an issue.
+CHECK-HTML: MISSING-UID</a>
+CHECK-HTML: Missing link: MISSING-UID
+
+# The missing anchor link is rendered as a dead link and highlighted as an issue.
+CHECK-HTML: MISSING-ANCHOR</a>
+CHECK-HTML: Missing link: MISSING-ANCHOR

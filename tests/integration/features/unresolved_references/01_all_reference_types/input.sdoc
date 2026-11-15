@@ -1,0 +1,40 @@
+[DOCUMENT]
+TITLE: Unresolved references example
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  RELATIONS:
+  - TYPE: Parent
+  - TYPE: Child
+  - TYPE: File
+
+[REQUIREMENT]
+UID: REQ-001
+TITLE: Requirement with unresolved references
+STATEMENT: >>>
+The report includes [LINK: MISSING-NODE] and [LINK: MISSING-ANCHOR].
+A valid reference still resolves: [LINK: REQ-002].
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: MISSING-PARENT
+- TYPE: Child
+  VALUE: MISSING-CHILD
+- TYPE: File
+  VALUE: missing.txt
+
+[REQUIREMENT]
+UID: REQ-002
+TITLE: Existing requirement
+STATEMENT: The existing requirement remains available.

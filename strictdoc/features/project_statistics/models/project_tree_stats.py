@@ -45,6 +45,7 @@ class DocumentTreeStats:
     requirements_no_uid: int = 0
     requirements_no_links: int = 0
     requirements_root_no_links: int = 0
+    requirements_missing_relations: int = 0
     requirements_no_rationale: int = 0
 
     # STATUS.

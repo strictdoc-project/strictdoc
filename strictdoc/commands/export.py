@@ -272,6 +272,16 @@ class ExportCommand(BaseCommand):
             ),
         )
         command_parser_export.add_argument(
+            "--relaxed-mode",
+            dest="relaxed_mode",
+            action="store_true",
+            default=False,
+            help=(
+                "Continue with warnings for unresolved relations "
+                "and inline links."
+            ),
+        )
+        command_parser_export.add_argument(
             "--config",
             type=str,
             help="Path to the StrictDoc TOML config file.",

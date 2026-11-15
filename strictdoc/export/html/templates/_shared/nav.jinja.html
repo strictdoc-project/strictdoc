@@ -25,6 +25,21 @@
   </a>
 {%- endif -%}
 
+{%- set unresolved_references_feature = view_object.project_config.get_feature(
+  "UNRESOLVED_REFERENCES_SCREEN"
+) -%}
+{%- if unresolved_references_feature is not none -%}
+  <a
+    data-link="unresolved_references"
+    class="nav_button"
+    href="{{ view_object.render_url('unresolved_references.html') }}"
+    title="Unresolved references"
+    data-testid="project-tree-link-unresolved-references"
+  >
+    {% include unresolved_references_feature.screen_icon() %}
+  </a>
+{%- endif -%}
+
 {%- if view_object.project_config.is_activated_requirements_coverage() -%}
   <a
     data-link="traceability-matrix"

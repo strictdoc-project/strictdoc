@@ -1,6 +1,7 @@
 {# needs sdoc_entity, see README.txt #}
   {%- set current_sdoc_entity = sdoc_entity -%}
-  {%- if view_object.traceability_index.has_parent_requirements(sdoc_entity) %}
+  {%- set has_missing_parent_relations = view_object.traceability_index.get_missing_parent_relations(current_sdoc_entity) | length > 0 -%}
+  {%- if view_object.traceability_index.has_parent_requirements(sdoc_entity) or has_missing_parent_relations %}
     <sdoc-node-field-label>RELATIONS (Parent):</sdoc-node-field-label>
     <sdoc-node-field data-field-label="parent relations">
       <ul class="requirement__link">
@@ -20,9 +21,11 @@
         {%- endfor %}
       </ul>
     </sdoc-node-field>
+    {{ view_object.render_issues(sdoc_entity, "RELATIONS (Parent)") }}
   {%- endif %}
 
-  {%- if view_object.traceability_index.has_children_requirements(sdoc_entity) %}
+  {%- set has_missing_child_relations = view_object.traceability_index.get_missing_child_relations(current_sdoc_entity) | length > 0 -%}
+  {%- if view_object.traceability_index.has_children_requirements(sdoc_entity) or has_missing_child_relations %}
     <sdoc-node-field-label>RELATIONS (Child):</sdoc-node-field-label>
     <sdoc-node-field data-field-label="child relations">
       <ul class="requirement__link">
@@ -42,4 +45,5 @@
         {%- endfor %}
       </ul>
     </sdoc-node-field>
+    {{ view_object.render_issues(sdoc_entity, "RELATIONS (Child)") }}
   {%- endif %}

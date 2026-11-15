@@ -1,0 +1,7 @@
+[DOCUMENT]
+TITLE: Source marker changes
+
+[REQUIREMENT]
+UID: REQ-001
+TITLE: Existing requirement
+STATEMENT: The requirement shall retain valid source relations.

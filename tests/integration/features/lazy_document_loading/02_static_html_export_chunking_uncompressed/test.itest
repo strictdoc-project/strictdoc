@@ -1,0 +1,26 @@
+RUN: %strictdoc export %S --output-dir %T | filecheck %s
+CHECK: Export completed.
+
+RUN: %check_exists --file "%T/html/%THIS_TEST_FOLDER/input-chunk-1.js"
+RUN: %check_exists --file "%T/html/%THIS_TEST_FOLDER/input-chunk-2.js"
+
+# With lazy_document_loading_compress_chunks=False, each generated chunk .js
+# file stores its HTML as a plain JSON string. The file is one long line, so
+# each filecheck invocation has one positive CHECK.
+
+# Chunk 1 covers requirements 011-020 only.
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input-chunk-1.js | filecheck %s --check-prefix CHECK-CHUNK-1-KEY --dump-input=fail
+CHECK-CHUNK-1-KEY: window.StrictDoc.chunks["input-chunk-1"] = "<turbo-frame id=\"document-chunk-1\">
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input-chunk-1.js | filecheck %s --check-prefix CHECK-CHUNK-1-CONTENT --dump-input=fail
+CHECK-CHUNK-1-CONTENT: Statement of requirement 015
+CHECK-CHUNK-1-CONTENT-NOT: Statement of requirement 005
+CHECK-CHUNK-1-CONTENT-NOT: Statement of requirement 025
+
+# Chunk 2 covers requirements 021-025 only.
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input-chunk-2.js | filecheck %s --check-prefix CHECK-CHUNK-2-KEY --dump-input=fail
+CHECK-CHUNK-2-KEY: window.StrictDoc.chunks["input-chunk-2"] = "<turbo-frame id=\"document-chunk-2\">
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input-chunk-2.js | filecheck %s --check-prefix CHECK-CHUNK-2-CONTENT --dump-input=fail
+CHECK-CHUNK-2-CONTENT: Statement of requirement 025
+CHECK-CHUNK-2-CONTENT-NOT: Statement of requirement 015

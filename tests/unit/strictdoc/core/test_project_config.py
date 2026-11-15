@@ -184,3 +184,18 @@ def test_82_lazy_document_loading_threshold_zero_disables():
 def test_83_lazy_document_loading_threshold_negative_rejected():
     with pytest.raises(AssertionError):
         _ = ProjectConfig(lazy_document_loading_threshold=-1)
+
+
+def test_84_lazy_document_loading_compress_chunks_default_true():
+    project_config = ProjectConfig()
+    assert project_config.lazy_document_loading_compress_chunks is True
+
+
+def test_85_lazy_document_loading_compress_chunks_disabled():
+    project_config = ProjectConfig(lazy_document_loading_compress_chunks=False)
+    assert project_config.lazy_document_loading_compress_chunks is False
+
+
+def test_86_lazy_document_loading_compress_chunks_non_bool_rejected():
+    with pytest.raises(AssertionError):
+        _ = ProjectConfig(lazy_document_loading_compress_chunks=1)  # type: ignore[arg-type]

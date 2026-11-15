@@ -176,6 +176,7 @@ class ProjectConfig:
         lazy_document_loading_threshold: int = (
             ProjectConfigDefault.DEFAULT_LAZY_DOCUMENT_LOADING_THRESHOLD
         ),
+        lazy_document_loading_compress_chunks: bool = True,
         input_paths: Optional[List[str]] = None,
         include_doc_paths: Optional[List[str]] = None,
         exclude_doc_paths: Optional[List[str]] = None,
@@ -322,6 +323,21 @@ class ProjectConfig:
         )
         self.lazy_document_loading_threshold: int = (
             lazy_document_loading_threshold
+        )
+
+        #
+        # lazy_document_loading_compress_chunks
+        # Applies only to the static HTML export. When True, StrictDoc
+        # stores the content chunks of a chunked document gzip-compressed
+        # and base64-encoded. When False, StrictDoc stores the chunks as
+        # plain HTML strings.
+        #
+        assert isinstance(lazy_document_loading_compress_chunks, bool), (
+            "config: lazy_document_loading_compress_chunks: must be a "
+            f"boolean: {lazy_document_loading_compress_chunks}."
+        )
+        self.lazy_document_loading_compress_chunks: bool = (
+            lazy_document_loading_compress_chunks
         )
 
         #

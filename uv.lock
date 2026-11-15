@@ -2984,7 +2984,7 @@ wheels = [
 
 [[package]]
 name = "reqif"
-version = "0.1.0"
+version = "0.1.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "jinja2" },
@@ -2992,9 +2992,9 @@ dependencies = [
     { name = "openpyxl" },
     { name = "xmlschema" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/dc/83/3d20cc6a37b514e0d43153b10686248af45786b33da1aa5a37bd6b754f7d/reqif-0.1.0.tar.gz", hash = "sha256:419e8fb838fdb1c0cd6b79ae8c0fb06c9c01dca78690e7e6bae80bf8878d3ca5", size = 55239, upload-time = "2026-08-11T20:11:10.386Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/13/2f/951a0a9936ca53d276551cd1eeb6b1985ec3b39f46ea880acbb3cd72d5c8/reqif-0.1.1.tar.gz", hash = "sha256:37901f7b82645094f643512be5e3fb25f992eca408435bbf8945322161ba6b46", size = 55935, upload-time = "2026-11-15T10:15:01.186Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/37/d6/4e41440e0c7b32bcd659bfdf66e92af889210ba371c35668eb01f955343d/reqif-0.1.0-py3-none-any.whl", hash = "sha256:c3af000d745e107c3d409535acc54274f469522385e6bb3923f5d3918219a189", size = 94886, upload-time = "2026-08-11T20:11:09.149Z" },
+    { url = "https://files.pythonhosted.org/packages/3a/0e/755ec9fb577c1be778163afc8b97a694addce521935f9f2707fb2c6ac775/reqif-0.1.1-py3-none-any.whl", hash = "sha256:e0f016f012a16207a53d36c1c11c5502158f3247c16474629986b1ceb0099e2e", size = 95504, upload-time = "2026-11-15T10:14:59.366Z" },
 ]
 
 [[package]]
@@ -3413,7 +3413,7 @@ requires-dist = [
     { name = "pypdf", specifier = "==6.*,>=6.5.0" },
     { name = "python-datauri", specifier = "==2.*,>=2.1.1" },
     { name = "python-multipart" },
-    { name = "reqif", specifier = "==0.1.*,>=0.1.0" },
+    { name = "reqif", specifier = "==0.1.*,>=0.1.1" },
     { name = "robotframework", specifier = ">=4.0.0" },
     { name = "spdx-tools", specifier = ">=0.8.5" },
     { name = "textx", specifier = "==4.*,>=4.0.0" },

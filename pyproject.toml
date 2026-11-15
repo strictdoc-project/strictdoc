@@ -97,7 +97,7 @@ dependencies = [
 
     # ReqIF
     # @relation(SDOC-SRS-73, scope=line)
-    "reqif >= 0.1.0, == 0.1.*",
+    "reqif >= 0.1.1, == 0.1.*",
 
     # SPDX
     "spdx-tools >= 0.8.5",

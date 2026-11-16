@@ -189,6 +189,7 @@
   }
 
   window.StrictDoc.editableField = {
+    fieldText,
     setText,
     textSelection,
     writeText,

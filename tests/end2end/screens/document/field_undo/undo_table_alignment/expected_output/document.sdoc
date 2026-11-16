@@ -1,0 +1,16 @@
+[DOCUMENT]
+TITLE: Undo
+OPTIONS:
+  MARKUP: RST
+
+[REQUIREMENT]
+TITLE: Title
+STATEMENT: >>>
+Paragraph.
+
++----+----+
+| a  | bb |
++----+----+
+| 1x | 2  |
++----+----+
+<<<

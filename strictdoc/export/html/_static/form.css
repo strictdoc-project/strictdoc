@@ -340,6 +340,23 @@ sdoc-contenteditable.is-dragging {
   cursor: copy !important;
 }
 
+/* Placeholder of an image upload. The label is not part of the field text
+   (see editable_field.js). An inline-block adds no line break to the field
+   text, a block would. */
+sdoc-image-upload-placeholder {
+  display: inline-block;
+  padding: 0 4px;
+  border-radius: 4px;
+  background: var(--color-highlight-secondary);
+  color: var(--color-fg-secondary);
+  line-height: normal;
+  user-select: none;
+}
+
+sdoc-image-upload-placeholder::before {
+  content: attr(data-label);
+}
+
 .autocomplete-items {
   /* reset default ul */
   padding: 0;

@@ -134,6 +134,20 @@ caused a JavaScript error.
 13\) Fixed: the Tree Map screen now counts a link to a Go test file as a test
 link. A Go test file has a name that ends with ``_test.go``. Before, only a
 link to a file with ``tests/`` in its path counted as a test link.
+
+14\) Fixed: the image upload placeholder was part of the field text. If the
+user typed in the field during an upload and saved the node before the upload
+ended, the node kept the line ``.. image:: Uploading <name>...``. The
+placeholder is now a label outside the field text. If the user deletes the
+label, the image reference goes where the label was. An image dropped or
+pasted over a selected text removes that text from the saved value at once,
+not when the upload ends.
+
+15\) Fixed: an uploaded image reference that the Web UI inserted right after a
+line of text did not render as an image in RST, because RST read it as part of
+the paragraph. The Web UI now puts an empty line between the reference and the
+text before and after it. Where an empty line is already there, the Web UI adds
+none.
 <<<
 
 [[/SECTION]]

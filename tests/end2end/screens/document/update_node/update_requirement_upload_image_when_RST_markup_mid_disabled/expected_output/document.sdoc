@@ -6,14 +6,12 @@ UID: REQ-1
 STATEMENT: >>>
 Requirement statement.
 
-
 .. image:: ./_assets/REQ-1/picture.svg
 <<<
 
 [REQUIREMENT]
 STATEMENT: >>>
 Requirement without a permanent MID or UID.
-
 
 .. image:: ./_assets/picture.svg
 <<<

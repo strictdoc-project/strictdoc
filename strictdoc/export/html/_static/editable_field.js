@@ -200,6 +200,159 @@
     return true;
   }
 
+  // An upload placeholder is an empty element with a label from CSS. The
+  // field text, which the form sends, does not include it, and the user can
+  // only delete it as a whole. When the upload ends, the script writes the
+  // image reference in place of the placeholder. If the user deletes the
+  // placeholder before that, the script writes the reference where the
+  // placeholder was.
+  //
+  // For each field with running uploads: { text, placeholders }. `text` is
+  // the field text at the last update, and each placeholder keeps its text
+  // offset in the field. The offset of a deleted placeholder moves with the
+  // text changes before it.
+  const uploadPlaceholders = new Map();
+
+  function createUploadPlaceholder(stem) {
+    const element = document.createElement('sdoc-image-upload-placeholder');
+    element.contentEditable = 'false';
+    element.dataset.label = `Uploading ${stem}...`;
+    element.dataset.testid = 'image-upload-placeholder';
+    return element;
+  }
+
+  // Text nodes and <br> elements make up the field text, as in innerText.
+  function walkFieldText(editable, visit) {
+    const walker = document.createTreeWalker(
+      editable,
+      NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT,
+    );
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      if (node.nodeType === Node.TEXT_NODE) {
+        if (visit(node, node.nodeValue) === false) return;
+      } else if (visit(node, node.nodeName === 'BR' ? '\n' : '') === false) {
+        return;
+      }
+    }
+  }
+
+  function fieldText(editable) {
+    let text = '';
+    walkFieldText(editable, (node, nodeText) => {
+      text += nodeText;
+    });
+    return text;
+  }
+
+  function textOffsetBefore(editable, element) {
+    let offset = 0;
+    walkFieldText(editable, (node, nodeText) => {
+      if (node === element) return false;
+      offset += nodeText.length;
+    });
+    return offset;
+  }
+
+  function insertTextAt(editable, offset, text) {
+    let rest = offset;
+    let inserted = false;
+    walkFieldText(editable, (node, nodeText) => {
+      if (node.nodeType === Node.TEXT_NODE && rest <= nodeText.length) {
+        node.insertData(rest, text);
+      } else if (node.nodeName === 'BR' && rest === 0) {
+        node.before(text);
+      } else {
+        rest -= nodeText.length;
+        return true;
+      }
+      inserted = true;
+      return false;
+    });
+    if (!inserted) editable.append(text);
+  }
+
+  function trackUploadPlaceholders(editable, placeholders) {
+    if (!uploadPlaceholders.has(editable)) {
+      uploadPlaceholders.set(editable, {
+        text: fieldText(editable),
+        placeholders: new Set(),
+      });
+    }
+    const tracked = uploadPlaceholders.get(editable);
+    for (const placeholder of placeholders) tracked.placeholders.add(placeholder);
+    updateUploadPlaceholderOffsets(editable);
+  }
+
+  function updateUploadPlaceholderOffsets(editable) {
+    const tracked = uploadPlaceholders.get(editable);
+    if (!tracked) return;
+    const text = fieldText(editable);
+    const previous = tracked.text;
+    let commonPrefix = 0;
+    while (
+      commonPrefix < previous.length &&
+      commonPrefix < text.length &&
+      previous[commonPrefix] === text[commonPrefix]
+    ) {
+      commonPrefix++;
+    }
+    for (const placeholder of tracked.placeholders) {
+      if (editable.contains(placeholder.element)) {
+        placeholder.offset = textOffsetBefore(editable, placeholder.element);
+      } else if (commonPrefix < placeholder.offset) {
+        placeholder.offset = Math.max(
+          commonPrefix,
+          placeholder.offset + text.length - previous.length,
+        );
+      }
+    }
+    tracked.text = text;
+  }
+
+  // Adds the line breaks that put an empty line between the reference and
+  // the text before and after it, so that the markup reads the reference as
+  // a block of its own. A line with spaces only counts as empty. At the start
+  // or the end of the field, the reference needs no empty line.
+  function separateBlock(text, offset, reference) {
+    const before = text.slice(0, offset);
+    const after = text.slice(offset);
+    const breaksBefore = before.match(/(\n[ \t]*)*$/)[0].split('\n').length - 1;
+    const breaksAfter = after.match(/^([ \t]*\n)*/)[0].split('\n').length - 1;
+    const needBefore = before.trim() ? Math.max(0, 2 - breaksBefore) : 0;
+    const needAfter = after.trim() ? Math.max(0, 2 - breaksAfter) : 0;
+    return '\n'.repeat(needBefore) + reference + '\n'.repeat(needAfter);
+  }
+
+  // Writes the reference in place of the placeholder, or only removes the
+  // placeholder if the reference is null. Does nothing for a placeholder
+  // that is already replaced.
+  function replaceUploadPlaceholder(editable, placeholder, reference) {
+    const tracked = uploadPlaceholders.get(editable);
+    if (!tracked?.placeholders.has(placeholder)) return;
+    tracked.placeholders.delete(placeholder);
+
+    const connected = editable.contains(placeholder.element);
+    const offset = connected ?
+      textOffsetBefore(editable, placeholder.element) :
+      placeholder.offset;
+    const text = reference === null ?
+      '' :
+      separateBlock(fieldText(editable), offset, reference);
+    if (connected) {
+      if (text) placeholder.element.replaceWith(text);
+      else placeholder.element.remove();
+    } else if (text) {
+      insertTextAt(editable, placeholder.offset, text);
+    }
+
+    if (tracked.placeholders.size === 0) {
+      uploadPlaceholders.delete(editable);
+    } else {
+      updateUploadPlaceholderOffsets(editable);
+    }
+  }
+
   async function handleAssetUpload(editable, files) {
     const uniqueFilenames = [...new Set(
       Array.from(files).map((file) => getImageFilename(file.name))
@@ -218,16 +371,13 @@
     }
 
     // Immediate feedback to inform the user that the upload has started.
-    // Create TextNodes instead of plain strings for placeholders.
-    const placeholders = uniqueFilenames.map((filename) => {
-      const stem = getImageStem(filename);
-      return {
-        filename,
-        node: document.createTextNode(`\n.. image:: Uploading ${stem}...\n`),
-      };
-    });
+    const placeholders = uniqueFilenames.map((filename) => ({
+      filename,
+      element: createUploadPlaceholder(getImageStem(filename)),
+      offset: 0,
+    }));
 
-    // Insert the placeholder nodes into the DOM
+    // Insert the placeholders into the DOM
     const selection = window.getSelection();
     let insertedIntoSelection = false;
     if (selection?.rangeCount > 0) {
@@ -237,20 +387,24 @@
         // insertNode() inserts new nodes before the previous one,
         // so iterate in reverse order.
         for (let index = placeholders.length - 1; index >= 0; index--) {
-          range.insertNode(placeholders[index].node);
+          range.insertNode(placeholders[index].element);
         }
         insertedIntoSelection = true;
       }
     }
 
     if (!insertedIntoSelection) {
-      if (editable.innerText.length > 0) {
-        editable.appendChild(document.createTextNode('\n'));
-      }
       for (const placeholder of placeholders) {
-        editable.appendChild(placeholder.node);
+        editable.appendChild(placeholder.element);
       }
     }
+    trackUploadPlaceholders(editable, placeholders);
+    // The placeholders can replace a selected text. The DOM change fires no
+    // 'input' event, so fire it: the hidden field must not keep the deleted
+    // text until the upload ends.
+    editable.dispatchEvent(new Event('input', {
+      bubbles: true
+    }));
 
     // Build multipart request.
     const formData = new FormData();
@@ -286,11 +440,10 @@
       // - replace the placeholder with the markup-specific image reference;
       // - remove the placeholder if the image is already referenced;
       // - insert a shared wildcard URI only once for a multi-file pair.
-      for (const {
-          filename,
-          node
-        }
-        of placeholders) {
+      for (const placeholder of placeholders) {
+        const {
+          filename
+        } = placeholder;
         const uri = imagesByFilename[filename];
         if (!uri) continue;
 
@@ -298,7 +451,7 @@
           documentMarkup === 'RST' &&
           replaceDirectImageUris(editable, uri)
         ) {
-          node.nodeValue = '';
+          replaceUploadPlaceholder(editable, placeholder, null);
           currentText = editable.innerText;
           continue;
         }
@@ -311,29 +464,31 @@
           // The image is already referenced in the document.
           // The user has re-uploaded, and the backend has overwritten the file,
           // so we just clean up the placeholder.
-          node.nodeValue = '';
+          replaceUploadPlaceholder(editable, placeholder, null);
           updatedFilenames.add(filename);
           continue;
         }
 
         if (insertedUris.has(referenceUri)) {
-          node.nodeValue = '';
+          replaceUploadPlaceholder(editable, placeholder, null);
           continue;
         }
 
         // Otherwise, this is a newly uploaded image, we add an image directive
         // suitable to the documentMarkup mode.
+        let reference;
         switch (documentMarkup) {
           case 'RST':
-            node.nodeValue = `\n.. image:: ${referenceUri}\n`;
+            reference = `.. image:: ${referenceUri}`;
             break;
           case 'HTML':
-            node.nodeValue = `\n<img src="${referenceUri}" />\n`;
+            reference = `<img src="${referenceUri}" />`;
             break;
           case 'Markdown':
-            node.nodeValue = `\n![](${referenceUri})\n`;
+            reference = `![](${referenceUri})`;
             break;
         }
+        replaceUploadPlaceholder(editable, placeholder, reference);
         insertedUris.add(referenceUri);
       }
       if (updatedFilenames.size > 0) {
@@ -345,11 +500,13 @@
       }
     } catch (error) {
       console.error('Upload failed', error);
-      for (const placeholder of placeholders) {
-        placeholder.node.nodeValue = '';
-      }
       showUploadFailedToast(files, error.message);
     } finally {
+      // Removes the placeholders that are left: the ones of a failed upload,
+      // or of a file that the response does not mention.
+      for (const placeholder of placeholders) {
+        replaceUploadPlaceholder(editable, placeholder, null);
+      }
       // Fire a synthetic bubbling 'input' event to sync the hidden field.
       editable.dispatchEvent(new Event('input', {
         bubbles: true
@@ -401,6 +558,8 @@
 
     const editedText = editable.innerText;
     hidden.value = isSingle ? filterSingleLine(editedText) : editedText;
+
+    updateUploadPlaceholderOffsets(editable);
   });
 
   document.addEventListener('keydown', (event) => {

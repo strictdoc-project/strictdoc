@@ -5,6 +5,7 @@ from selenium.common import StaleElementReferenceException, TimeoutException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.actions.wheel_input import ScrollOrigin
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
 from seleniumbase import BaseCase
 
@@ -1350,12 +1351,14 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
             return
 
         # Wait for the UI to update
-        # We wait until the placeholder "Uploading..." disappears
-        # and is replaced by the actual RST directive path.
+        # We wait until the upload placeholders disappear
+        # and the image references appear.
         start_time = datetime.now()
         while True:
             current_content = target_element.text
-            upload_finished = "Uploading " not in current_content and (
+            upload_finished = not target_element.find_elements(
+                By.CSS_SELECTOR, "[data-testid='image-upload-placeholder']"
+            ) and (
                 ".. image:: ./_assets/" in current_content
                 or '<img src="./_assets/' in current_content
                 or "![](./_assets/" in current_content
@@ -1449,6 +1452,99 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
             delete window.__assetUploadResponses;
             """
         )
+
+    def select_editable_text(
+        self, field_name: str, text: str, field_order: int = 1
+    ) -> None:
+        field_order_str = "last()" if field_order == -1 else str(field_order)
+        xpath_field = (
+            f"(//*[@data-testid='form-field-{field_name}'])[{field_order_str}]"
+        )
+        target_element = self.test_case.find_element(By.XPATH, xpath_field)
+        selected = self.test_case.driver.execute_script(
+            """
+            var target = arguments[0];
+            var text = arguments[1];
+            var walker = document.createTreeWalker(target, NodeFilter.SHOW_TEXT);
+            while (walker.nextNode()) {
+                var index = walker.currentNode.nodeValue.indexOf(text);
+                if (index === -1) continue;
+                var range = document.createRange();
+                range.setStart(walker.currentNode, index);
+                range.setEnd(walker.currentNode, index + text.length);
+                var selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(range);
+                return true;
+            }
+            return false;
+            """,
+            target_element,
+            text,
+        )
+        assert selected, f"Could not select {text!r}."
+
+    def get_editable_form_value(
+        self, field_name: str, field_order: int = 1
+    ) -> str:
+        """
+        The value that the form sends for the field: the hidden textarea
+        next to it.
+        """
+        field_order_str = "last()" if field_order == -1 else str(field_order)
+        xpath_field = (
+            f"(//*[@data-testid='form-field-{field_name}'])[{field_order_str}]"
+        )
+        target_element = self.test_case.find_element(By.XPATH, xpath_field)
+        return self.test_case.driver.execute_script(
+            "return arguments[0].nextElementSibling.value;", target_element
+        )
+
+    def do_type_in_editable_after_text(
+        self, field_name: str, after_text: str, text: str, field_order: int = 1
+    ) -> None:
+        field_order_str = "last()" if field_order == -1 else str(field_order)
+        xpath_field = (
+            f"(//*[@data-testid='form-field-{field_name}'])[{field_order_str}]"
+        )
+        target_element = self.test_case.find_element(By.XPATH, xpath_field)
+        self.test_case.driver.execute_script(
+            "arguments[0].focus();", target_element
+        )
+        self.set_editable_caret_after_text(field_name, after_text, field_order)
+        ActionChains(self.test_case.driver).send_keys(text).perform()
+
+    def do_delete_image_upload_placeholder(
+        self, field_name: str, field_order: int = 1
+    ) -> None:
+        """
+        Selects the first upload placeholder of the field and deletes it
+        with Backspace, as the user would.
+        """
+        field_order_str = "last()" if field_order == -1 else str(field_order)
+        xpath_field = (
+            f"(//*[@data-testid='form-field-{field_name}'])[{field_order_str}]"
+        )
+        target_element = self.test_case.find_element(By.XPATH, xpath_field)
+        selected = self.test_case.driver.execute_script(
+            """
+            var target = arguments[0];
+            var placeholder = target.querySelector(
+                "[data-testid='image-upload-placeholder']"
+            );
+            if (!placeholder) return false;
+            target.focus();
+            var range = document.createRange();
+            range.selectNode(placeholder);
+            var selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            return true;
+            """,
+            target_element,
+        )
+        assert selected, "No upload placeholder in the field."
+        ActionChains(self.test_case.driver).send_keys(Keys.BACKSPACE).perform()
 
     def do_drop_file_outside_editable(self, file_path: str) -> bool:
         absolute_file_path = os.path.abspath(file_path)
@@ -1550,8 +1646,7 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
             return
 
         # Wait for the UI to update
-        # We wait until the placeholder "Uploading..." disappears
-        # and is replaced by the actual RST directive path.
+        # We wait until the image reference appears.
         start_time = datetime.now()
         while True:
             current_content = target_element.text

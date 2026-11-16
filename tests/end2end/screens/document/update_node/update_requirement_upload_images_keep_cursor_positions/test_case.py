@@ -51,21 +51,23 @@ class Test(E2ECase):
                 uploaded_filenames=["second.svg"],
             )
 
-            editable_text = self.get_text(
-                "[data-testid='form-field-STATEMENT']"
+            # The placeholders are empty elements, so the test checks their
+            # order in the HTML of the field.
+            editable_html = self.get_attribute(
+                "[data-testid='form-field-STATEMENT']", "innerHTML"
             )
-            assert editable_text.index("First position.") < editable_text.index(
-                "Uploading first..."
+            assert editable_html.index("First position.") < editable_html.index(
+                'data-label="Uploading first..."'
             )
-            assert editable_text.index(
-                "Uploading first..."
-            ) < editable_text.index("Second position.")
-            assert editable_text.index(
+            assert editable_html.index(
+                'data-label="Uploading first..."'
+            ) < editable_html.index("Second position.")
+            assert editable_html.index(
                 "Second position."
-            ) < editable_text.index("Uploading second...")
-            assert editable_text.index(
-                "Uploading second..."
-            ) < editable_text.index("Third position.")
+            ) < editable_html.index('data-label="Uploading second..."')
+            assert editable_html.index(
+                'data-label="Uploading second..."'
+            ) < editable_html.index("Third position.")
 
             screen_document.release_asset_upload_response(1)
             self.assert_text("second.svg")

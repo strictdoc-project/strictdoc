@@ -1193,12 +1193,18 @@ and drag-and-drop:
    For every unsupported file, do not create an upload placeholder or send the file to the endpoint. Show a notification that identifies the unsupported file and lists the supported formats.
    The user shall be able to dismiss the notification with its close control or by clicking outside it.
 3. Upload images asynchronously to the backend ``/actions/document/upload_asset`` endpoint, passing the current requirement MID and the active document MID along.
-4. Indicate upload progress via a temporary placeholder text.
+4. Indicate upload progress via a temporary placeholder at the cursor
+   position. The placeholder shall not be part of the field value. If the user
+   deletes the placeholder before the upload ends, insert the image reference
+   where the placeholder was.
 5. On success, insert an image reference at the original cursor position, following the document's markup:
 
    - RST: ``.. image:: ./_assets/<node_specific_subfolder>/<filename>``
    - HTML: ``<img src="./_assets/<node_specific_subfolder>/<filename>" />``
    - Markdown: ``![](./_assets/<node_specific_subfolder>/<filename>)``
+
+   Put the reference on its own line, with an empty line between it and the
+   text before and after it. Add only the line breaks that are missing.
 
    For documents configured to use RST markup, when the upload creates a vector
    and raster pair, use the wildcard filename defined in

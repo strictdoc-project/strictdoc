@@ -1,0 +1,9 @@
+#
+# @relation(SDOC-SRS-70, SDOC-SRS-149, scope=file)
+#
+
+RUN: %strictdoc export --formats=rst --output-dir %T "%S/input.sdoc"
+
+RUN: %check_exists --file "%T/rst/input.rst"
+
+RUN: %diff "%T/rst/input.rst" "%S/expected/input.rst"

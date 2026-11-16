@@ -157,7 +157,9 @@ text keeps its length, and a grid table with the link stays aligned.
 StrictDoc replaced the link with longer markup before docutils parsed the
 table. The cell borders moved, and the export failed with "Malformed table".
 This happened also with links that the link widget inserts in the cells of the
-table editor.
+table editor. The RST export (``--formats=rst``) had the same problem with the
+``:ref:`` roles that replace the links. The RST export now aligns such tables
+again.
 <<<
 
 [[/SECTION]]

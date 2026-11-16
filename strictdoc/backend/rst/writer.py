@@ -1,6 +1,7 @@
 from enum import Enum
 from typing import Optional
 
+from strictdoc.backend.rst.rst_grid_table_aligner import align_grid_tables
 from strictdoc.backend.rst.rst_templates import RSTTemplates
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -144,5 +145,12 @@ class RSTWriter:
             else:
                 raise NotImplementedError
             prev_part = part
+
+        # A :ref: role is longer or shorter than the link source text, so a
+        # grid table with a link must be aligned again.
+        if any(
+            isinstance(part_, InlineLink) for part_ in object_with_parts.parts
+        ):
+            output = align_grid_tables(output)
 
         return output

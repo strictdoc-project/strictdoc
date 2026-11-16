@@ -53,7 +53,9 @@ class Test(E2ECase):
                 "Image has no content",
                 "[data-testid='image-upload-failed-message']",
             )
-            self.assert_text_not_visible("Uploading empty_picture")
+            self.assert_element_not_present(
+                "[data-testid='image-upload-placeholder']"
+            )
 
             form_edit_requirement.do_form_submit()
 

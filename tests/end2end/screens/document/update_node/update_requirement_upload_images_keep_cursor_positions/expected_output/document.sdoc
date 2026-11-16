@@ -8,9 +8,11 @@ OPTIONS:
 MID: a5c6b14d5ee443149687fb9be69a7ede
 STATEMENT: >>>
 First position.
+
 .. image:: ./_assets/a5c6b14d5ee443149687fb9be69a7ede/first.svg
 
 Second position.
+
 .. image:: ./_assets/a5c6b14d5ee443149687fb9be69a7ede/second.svg
 
 Third position.

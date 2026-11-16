@@ -4,11 +4,11 @@ TITLE: Links
 [REQUIREMENT]
 TITLE: Requirement title
 STATEMENT: >>>
-First paragraph. See [LINK: SECT-1] and [LINK: ANCHOR-1] @x @overview zzz end
+Fir [LINK: SECT-1] st paragraph. See [LINK: SECT-1] and [LINK: ANCHOR-1]
 
 [LINK: REQ-1]
 
-Second paragraph.
+Second [LINK: REQ-1] paragraph.
 <<<
 
 [[SECTION]]

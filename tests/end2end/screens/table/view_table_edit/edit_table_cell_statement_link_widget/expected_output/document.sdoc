@@ -4,7 +4,7 @@ TITLE: Document
 [REQUIREMENT]
 TITLE: Requirement title
 STATEMENT: >>>
-Text. See [LINK: REQ-1] @
+Text. See [LINK: REQ-1]
 <<<
 
 [REQUIREMENT]

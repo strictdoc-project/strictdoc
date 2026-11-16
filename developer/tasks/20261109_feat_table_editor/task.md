@@ -12,7 +12,7 @@ the table view (inline cell form).
 | Format | Table | Limits | Line break in a cell |
 |---|---|---|---|
 | RST | Grid table | No row or column spans. At most one header row. The table can have an indent, for example under a `.. table::` directive. | A row spans several text lines. A blank line separates paragraphs. |
-| Markdown | GFM pipe table | Every row has the same number of cells. Tables inside fenced code blocks are code. | `<br>`. The editor also reads `<br/>` and `<br />`. |
+| Markdown | GFM pipe table | The tables that markdown-it renders as tables. A row can have fewer or more cells than the header. Tables inside fenced code blocks are code. | `<br>`. The editor also reads `<br/>` and `<br />`. |
 
 Recognition is live. The editor never rewrites table-like text that does
 not match these rules. Such text has no highlight and no edit button.
@@ -29,16 +29,50 @@ has a stronger highlight.
 
 | Caret position | Field button | Click |
 |---|---|---|
-| In an editable table | Edit (`✎`), next to the first line of the table | Opens the table in the editor. |
-| On a blank line | Insert (`+`) | The Table item of the insert menu opens the editor with an empty table of 3 columns, a header row, and 2 body rows. |
+| In an editable table | Edit (pencil icon), next to the first line of the table | Opens the table in the editor. |
+| In a misaligned table | Format table (wrench icon), under the edit button | Aligns the table (see Alignment). |
 
-On Apply, a new table replaces the blank caret line. Blank lines separate
-the table from the text around it.
+The Table item of the insert menu (`+` on a blank line, or `/` anywhere in
+the field) opens the editor with an empty table of 3 columns, a header
+row, and 2 body rows. On Apply, the table is a block: it goes after the
+paragraph that holds the caret, or in place of a blank caret line. Blank
+lines separate the table from the text around it.
+
+### Alignment
+
+A table is aligned when its column separators stand at the same positions
+in all lines: `|` in the rows, and also `+` in the borders of an RST
+table. Columns can be wider than their text. Typing in a cell misaligns
+its row. A misaligned table is still editable (see the parsers).
+
+| Format | Misaligned table | Alignment |
+|---|---|---|
+| RST | Docutils rejects it ("Malformed table"). | Button. After a change, automatic when the caret leaves the table or the field loses focus. |
+| Markdown | Valid, only harder to read. | Button only. |
+
+- The Format table button shows under the edit button while the caret is
+  in a misaligned table. It writes the table the same way as Apply of the
+  editor, without opening the editor.
+- A change is any write while the caret is in the table: typing, paste,
+  undo, or a widget write such as a LINK tag. A table that the user only
+  passes through stays as it is, so an untouched misaligned table gets
+  only the button.
+- The table is not aligned while the caret is in it. A widget may still
+  write there: the Link item writes the `[LINK: ` draft, and its popup
+  depends on the positions of that text.
+- If a misaligned row has a `|` inside a cell, the parser cannot split the
+  row. The table is not recognized, and there is neither a button nor an
+  automatic alignment.
 
 ### Editor
 
 The editor is a modal with one multiline cell per table cell. Enter adds
 a line. A blank line separates paragraphs.
+
+A cell is a field of the field widgets in the `table-cell` context. Each
+widget decides if it works in a cell (see Widget contexts in the field
+widgets task). Only Link works in a cell: `[LINK:` and `/` work there,
+and the insert menu has only Link. A cell has no `+` button.
 
 Structure controls:
 
@@ -106,6 +140,10 @@ table model:
 - `rows[0]` is the header row when `hasHeader` is true.
 - A cell is a string. `"\n"` separates the lines of a cell.
 - `align` holds the Markdown column alignment. For RST, `align` is `null`.
+- `aligned` is true when the column separators stand at the same
+  positions in all lines (see Alignment). RST compares every line with
+  the `+` positions of the top border. Markdown compares the positions of
+  the unescaped `|` with the first line.
 
 `findTables()` collects runs of candidate lines and sends each run to the
 format parser. `findTables()` returns the runs that the parser accepts as
@@ -125,12 +163,29 @@ RST (`parseRstGridTable()`):
   the line only if the split gives one part per column.
 - Cell text is the parts joined by lines, without their common indent.
 
-Markdown (`parseMarkdownPipeTable()`):
+Markdown (`MARKDOWN.findTables()` and `parseMarkdownPipeTable()`) follows
+the table rule of markdown-it, which renders Markdown in StrictDoc
+(`markdown_it/rules_block/table.py`, after GFM):
 
-- A table is a header row, a delimiter row, and body rows.
-- All rows have the same cell count.
-- Rows split on unescaped `|`.
-- Lines inside fenced code blocks are never candidates.
+- A table starts with a header row that contains `|` and a delimiter row
+  with the same number of cells. The table can interrupt a paragraph.
+- Every following line is a row, even without `|`, up to a blank line, a
+  line indented by four or more spaces, or the start of another block:
+  fence, blockquote, thematic break, list item, heading, or an HTML block
+  that can end a paragraph (`MD_BLOCK_STARTS`).
+- Rows split on unescaped `|`. The leading and trailing `|` are optional.
+- Rows can have different indents up to three spaces. The serializer
+  writes all rows with the indent of the header row.
+- A row with fewer cells gets empty cells.
+- A row with more cells than the header: markdown-it does not show the
+  extra cells. The parser adds columns for them, so the editor and the
+  alignment keep the text, and sets `overflow`. `overflowCells` holds the
+  line and the column where the extra cells of each such row start. The
+  field highlights such a table with `::highlight(sdoc-table-overflow)`,
+  in red, above the other table highlights. The extra cells also get
+  `::highlight(sdoc-table-overflow-cells)`, with the same translucent
+  red, so they look denser.
+- Lines inside fenced code blocks are never part of a table.
 
 All lines of a table must have one indent. The serializer writes the
 indent back.
@@ -143,12 +198,39 @@ The table widget implements the widget contract of `field_widgets.js`:
 - `scan()` finds the tables of the field and updates the highlights.
 - `blockAt()` returns the table that holds a line.
 - `activate()` sets the stronger highlight on the table that holds the
-  caret.
+  caret and follows the caret for the automatic alignment.
+- `extraAction()` returns the Format table button for a misaligned table.
 - `edit()` and `insert()` open the modal. On Apply, the widget writes the
   table with `replaceLines()` or `insertBlock()`.
 
 A `Map` holds the tables of each field. The next highlight update removes
 the entries of the fields that are no longer in the DOM.
+
+Automatic alignment (RST):
+
+- `editing` is the table that holds the caret: `{field, start, changed}`.
+  `activate()` sets it when the caret enters a table. The table is
+  identified by its first line.
+- A capture `input` listener on `document` sets `changed`. The capture
+  phase runs before `field_widgets.js` moves the caret state on the same
+  input, so a change that also moves the caret out of the table counts.
+- When `activate()` reports another table or null, a changed table is
+  aligned in a microtask, after `field_widgets.js` has finished its
+  update. The widget writes with `replaceLines(..., {keepCaret: true})`.
+  On `focusout`, the field is not the active element, so the write does
+  not take the focus back, and the hidden textarea gets the aligned text
+  before the form or the table view cell is saved.
+- `aligning` is true during the widget's own alignment write, so this
+  write does not count as a change.
+- `edit()` clears `editing`. The editor writes the whole table on Apply,
+  and the field loses focus when the modal opens.
+
+Widgets in the cells: the modal does not depend on the format, but each
+cell gets the markup and the document of the field
+(`cellWidgetContext()`) and the context `table-cell` as the attributes of
+a field outside a form (see the field widgets task). The cells keep their own Enter behavior and have
+no `data-js-editable-field`, so `editable_field.js` does not handle
+them.
 
 ### Highlighting
 
@@ -199,15 +281,26 @@ one RST document and one Markdown document.
   click on the extend bar adds a row. Cancel discards the new table.
   Typing in a table keeps the table editable. The test edits a multi-line
   cell, inserts a column, and deletes a row through the grip menu. A drag
-  on the extend bar of a new 3x3 table stops at a non-empty column.
-- Markdown: the test reads `\|` and `<br/>` in cells and writes a
-  multi-line cell. The test inserts a row through the grip menu, inserts a
-  column, and moves a column and a row by drag. The alignment moves with
-  its column.
+  on the extend bar of a new 3x3 table stops at a non-empty column. A
+  typed space misaligns a row: the Format table button aligns the table, the
+  table is aligned when the caret leaves it, and the table is aligned
+  before the form is sent.
+- RST editor session: `/` in a cell opens the insert menu with Link only,
+  the menu and the link popup are on top of the modal (checked with
+  `document.elementFromPoint()`), and Escape closes only the popup.
+- Markdown: the Format table button shows for the misaligned table, and the
+  table is not aligned when the caret leaves it. A table with a short row
+  and a line without `|` is aligned with empty cells. A table with an extra
+  cell has the overflow highlight, opens in the editor with an added
+  column, and keeps the cell when aligned. The test reads `\|` and
+  `<br/>` in cells and writes a multi-line cell. The test inserts a row
+  through the grip menu, inserts a column, and moves a column and a row by
+  drag. The alignment moves with its column.
 
 `tests/end2end/screens/table/view_table_edit/edit_table_cell_statement_table_editor/`
 covers the table view:
 
 Escape in the editor closes only the editor, and the cell stays in edit
 mode. Clicks in the editor do not save the cell. Apply writes the table
-into the cell. An outside click saves the cell.
+into the cell. A changed table is aligned when an outside click saves the
+cell.

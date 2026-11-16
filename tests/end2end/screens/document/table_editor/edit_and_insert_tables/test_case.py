@@ -2,6 +2,8 @@
 @relation(SDOC-SRS-61, scope=file)
 """
 
+from selenium.webdriver.common.keys import Keys
+
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.end2end_test_setup import End2EndTestSetup
 from tests.end2end.helpers.components.table_editor import TableEditor
@@ -15,7 +17,9 @@ from tests.end2end.server import SDocTestServer
 # column span, which the editor does not support: it stays not editable.
 #
 # Markdown: the table has column alignment, an escaped "\|" and a "<br/>"
-# inside cells. The table-like lines in the fenced code block are code.
+# inside cells. The table-like lines in the fenced code block are code. The
+# "Short" table has a row with fewer cells and a line without "|", which is
+# a row too. The last table has a row with more cells than its header.
 
 RST_FIELD_TEXT = (
     "Paragraph.\n"
@@ -83,6 +87,21 @@ class Test(E2ECase):
             table_editor.do_click_extend("row")
             table_editor.assert_cell(3, 0, "")
             table_editor.do_fill_cell(0, 0, "Discarded")
+
+            # A cell is a field in the "table-cell" context: "/" opens the
+            # insert menu with Link only. The menu and the link popup are
+            # above the modal. Escape closes only the popup.
+            table_editor.do_fill_cell(1, 1, "/")
+            table_editor.assert_insert_items(["link"])
+            table_editor.assert_on_top(table_editor.INSERT_MENU)
+            table_editor.do_choose_insert_item("link")
+            table_editor.assert_cell(1, 1, "[LINK: ")
+            table_editor.wait_for_link_popup()
+            table_editor.assert_on_top(table_editor.LINK_POPUP)
+            table_editor.do_type_at_caret(Keys.ESCAPE)
+            table_editor.assert_link_popup_closed()
+            table_editor.assert_open()
+
             table_editor.do_cancel()
             table_editor.assert_field_text(RST_FIELD_TEXT)
 
@@ -138,7 +157,31 @@ class Test(E2ECase):
                 "+-----+-----+\n"
             )
             table_editor.assert_highlighted_tables(2)
+            RST_ALIGNED_TEXT = table_editor.get_field_text()
 
+            # A typed space misaligns a row. The Format table button aligns
+            # the table: the trailing space of the cell goes away.
+            table_editor.do_place_caret_after("| first")
+            table_editor.do_type_at_caret(" ")
+            table_editor.do_place_caret_after("second")
+            table_editor.assert_extra_button("Format table")
+            table_editor.do_click_extra_button()
+            table_editor.assert_field_text(RST_ALIGNED_TEXT)
+            table_editor.assert_extra_button_hidden()
+
+            # An RST table changed by hand is aligned when the caret leaves
+            # it. (A row with a "|" inside a cell would not do here: once
+            # misaligned, it cannot be split into cells, and the table is no
+            # longer recognized.)
+            table_editor.do_place_caret_after("| beta")
+            table_editor.do_type_at_caret(" ")
+            table_editor.do_place_caret_after("Paragraph.")
+            table_editor.wait_for_field_text(RST_ALIGNED_TEXT)
+
+            # The field loses focus on submit, and the changed table is
+            # aligned before the form is sent: the saved text is aligned.
+            table_editor.do_place_caret_after("| Key")
+            table_editor.do_type_at_caret(" ")
             form.do_form_submit()
             screen_document.assert_text("second")
 
@@ -152,7 +195,46 @@ class Test(E2ECase):
             form = screen_document.get_node().do_open_form_edit_requirement()
             form.assert_on_form()
 
-            table_editor.assert_highlighted_tables(1)
+            table_editor.assert_highlighted_tables(2)
+            table_editor.assert_overflow_tables(1)
+            table_editor.assert_overflow_cells([" 3 |"])
+
+            # Missing cells are written as empty cells.
+            table_editor.do_place_caret_after("| one")
+            table_editor.assert_extra_button("Format table")
+            table_editor.do_click_extra_button()
+            assert (
+                "| Short     | rows | here |\n"
+                "| --------- | ---- | ---- |\n"
+                "| one       |      |      |\n"
+                "| lazy line |      |      |\n"
+            ) in table_editor.get_field_text()
+
+            # The page does not show the extra cell, but the editor keeps it
+            # in an added column, and so does the alignment.
+            table_editor.do_place_caret_after("| A")
+            table_editor.do_open_edit()
+            table_editor.assert_cell(0, 2, "")
+            table_editor.assert_cell(1, 2, "3")
+            table_editor.do_cancel()
+            table_editor.do_place_caret_after("| A")
+            table_editor.do_click_extra_button()
+            assert (
+                "| A   | B   |     |\n| --- | --- | --- |\n| 1   | 2   | 3   |\n"
+            ) in table_editor.get_field_text()
+            table_editor.assert_overflow_tables(0)
+            table_editor.assert_overflow_cells([])
+            table_editor.assert_highlighted_tables(3)
+
+            # The Markdown table is misaligned: the escaped "\|" moves the
+            # last "|" of its row. The Format table button can align it, but
+            # the table is not aligned automatically when the caret leaves it.
+            table_editor.do_place_caret_after("| or")
+            table_editor.assert_extra_button("Format table")
+            table_editor.do_type_at_caret(" ")
+            table_editor.do_place_caret_after("both |")
+            table_editor.do_place_caret_after("not")
+            assert "| or    |" in table_editor.get_field_text()
 
             table_editor.do_place_caret_after("| and")
             table_editor.do_open_edit()
@@ -180,6 +262,15 @@ class Test(E2ECase):
                 "| not | a table |\n"
                 "| --- | ------- |\n"
                 "```\n"
+                "\n"
+                "| Short     | rows | here |\n"
+                "| --------- | ---- | ---- |\n"
+                "| one       |      |      |\n"
+                "| lazy line |      |      |\n"
+                "\n"
+                "| A   | B   |     |\n"
+                "| --- | --- | --- |\n"
+                "| 1   | 2   | 3   |\n"
             )
 
             form.do_form_submit()

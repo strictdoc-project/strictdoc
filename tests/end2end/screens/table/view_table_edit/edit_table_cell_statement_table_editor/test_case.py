@@ -60,6 +60,10 @@ class Test(E2ECase):
                 "+-----+-----+-----+\n"
             )
 
+            # A click outside the cell takes the focus from the field. The
+            # changed table is aligned before the cell is saved.
+            table_editor.do_place_caret_after("| a")
+            table_editor.do_type_at_caret(" ")
             screen_table.do_save_inline_cell_by_outside_click()
             screen_table.wait_for_cell_save_applied(node_mid, "STATEMENT")
             screen_table.assert_cell_dom_text_contains(

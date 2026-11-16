@@ -30,50 +30,52 @@ class Test(E2ECase):
 
             link_widget = LinkWidget(self, "STATEMENT")
 
-            # "@" opens the popup. Enter chooses the first target.
+            # "[LINK:" opens the popup. Enter chooses the first target.
             link_widget.do_place_caret_after("First paragraph.")
-            link_widget.do_type_at_caret(" See @over")
+            link_widget.do_type_at_caret(" See [LINK: over")
             link_widget.wait_for_options(["SECT-1"])
             link_widget.do_choose_by_enter()
 
-            # "[LINK:" opens the popup too. A click chooses a target.
+            # A click chooses a target.
             link_widget.do_type_at_caret(" and [LINK: anch")
             link_widget.wait_for_options(["ANCHOR-1"])
             link_widget.do_choose_by_click("ANCHOR-1")
 
             # Escape closes only the popup, and the typed text stays. The
-            # popup stays closed while the user types the same trigger.
-            link_widget.do_type_at_caret(" @")
+            # popup stays closed while the user types the same trigger. A "/"
+            # after "[LINK:" is a part of the UID, so it does not open the
+            # insert menu.
+            link_widget.do_type_at_caret(" [LINK: ")
             link_widget.wait_for_options(["SECT-1", "ANCHOR-1", "REQ-1"])
             link_widget.do_close_popup_by_escape()
-            link_widget.do_type_at_caret("x")
+            link_widget.do_type_at_caret("x/")
             link_widget.assert_popup_closed()
+            link_widget.assert_insert_menu_closed()
             form.assert_on_form()
 
-            # After "@", a query with a space that finds nothing is plain
-            # text: the popup closes and stays closed.
-            link_widget.do_type_at_caret(" @overview")
-            link_widget.wait_for_options(["SECT-1"])
-            link_widget.do_type_at_caret(" zzz")
-            link_widget.wait_for_popup_closed()
-            link_widget.do_type_at_caret(" end")
-            link_widget.assert_popup_closed()
-
-            # After the closed trigger is deleted, a new "@" at the same
+            # After the closed trigger is deleted, a new trigger at the same
             # place opens the popup again.
-            link_widget.do_type_at_caret(
-                Keys.BACKSPACE * len("@overview zzz end")
-            )
-            link_widget.do_type_at_caret("@")
+            link_widget.do_type_at_caret(Keys.BACKSPACE * len("[LINK: x/"))
+            link_widget.do_type_at_caret("[LINK: ")
             link_widget.wait_for_options(["SECT-1", "ANCHOR-1", "REQ-1"])
             link_widget.do_close_popup_by_escape()
-            link_widget.do_type_at_caret(Keys.BACKSPACE)
-            link_widget.do_type_at_caret("@overview zzz end")
-            link_widget.wait_for_popup_closed()
+            link_widget.do_type_at_caret(Keys.BACKSPACE * len(" [LINK: "))
 
-            # The Link item of the insert menu opens the popup on the blank
-            # line.
-            link_widget.do_place_caret_on_next_line("zzz end")
+            # "/" inside a word opens the insert menu, the text after "/"
+            # filters it. The link goes to the caret position with spaces
+            # around it.
+            link_widget.do_place_caret_after("Fir")
+            link_widget.do_type_at_caret("/li")
+            link_widget.assert_insert_menu_open()
+            link_widget.assert_insert_items(["link"])
+            link_widget.do_choose_insert_item_by_enter()
+            link_widget.do_type_at_caret("over")
+            link_widget.wait_for_options(["SECT-1"])
+            link_widget.do_choose_by_enter()
+
+            # The insert button on a blank line opens the same menu. On a
+            # blank line, the link forms its own paragraph.
+            link_widget.do_place_caret_on_next_line("[LINK: ANCHOR-1]")
             link_widget.do_open_insert_menu()
             link_widget.do_choose_insert_item("link")
             # A query can have several words.
@@ -81,13 +83,21 @@ class Test(E2ECase):
             link_widget.wait_for_options(["REQ-1"])
             link_widget.do_choose_by_enter()
 
+            # Before a space, the link gets no space after it.
+            link_widget.do_place_caret_after("Second")
+            link_widget.do_type_at_caret("/")
+            link_widget.do_choose_insert_item("link")
+            link_widget.do_type_at_caret("target")
+            link_widget.wait_for_options(["REQ-1"])
+            link_widget.do_choose_by_click("REQ-1")
+
             link_widget.assert_field_text(
-                "First paragraph. See [LINK: SECT-1] and [LINK: ANCHOR-1] @x"
-                " @overview zzz end\n"
+                "Fir [LINK: SECT-1] st paragraph. See [LINK: SECT-1] and"
+                " [LINK: ANCHOR-1]\n"
                 "\n"
                 "[LINK: REQ-1]\n"
                 "\n"
-                "Second paragraph.\n"
+                "Second [LINK: REQ-1] paragraph.\n"
             )
 
             form.do_form_submit()

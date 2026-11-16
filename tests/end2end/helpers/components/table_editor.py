@@ -1,3 +1,5 @@
+from typing import List
+
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -21,6 +23,31 @@ class TableEditor(FieldWidgets):  # pylint: disable=invalid-name
             "return CSS.highlights.get('sdoc-table')?.size ?? 0;"
         )
         assert actual == count, f"{actual} != {count}"
+
+    def assert_overflow_tables(self, count: int) -> None:
+        actual = self.test_case.execute_script(
+            "return CSS.highlights.get('sdoc-table-overflow')?.size ?? 0;"
+        )
+        assert actual == count, f"{actual} != {count}"
+
+    def assert_overflow_cells(self, texts: List[str]) -> None:
+        """The texts of the extra cells that have their own highlight."""
+        actual = self.test_case.execute_script(
+            """
+            const highlight = CSS.highlights.get('sdoc-table-overflow-cells');
+            return highlight ? [...highlight].map((range) => range.toString()) : [];
+            """
+        )
+        assert actual == texts, f"{actual!r} != {texts!r}"
+
+    LINK_POPUP = "//*[@data-testid='field-widgets-link-popup']"
+
+    def wait_for_link_popup(self) -> None:
+        """The popup shows when the first list of targets arrives."""
+        self.test_case.assert_element(self.LINK_POPUP, by=By.XPATH)
+
+    def assert_link_popup_closed(self) -> None:
+        self.test_case.assert_element_not_present(self.LINK_POPUP, by=By.XPATH)
 
     def wait_for_highlighted_tables(
         self, count: int, timeout: float = 5

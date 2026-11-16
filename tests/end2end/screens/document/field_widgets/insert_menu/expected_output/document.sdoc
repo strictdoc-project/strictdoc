@@ -1,0 +1,15 @@
+[DOCUMENT]
+TITLE: Insert menu
+
+[REQUIREMENT]
+TITLE: Requirement title
+STATEMENT: >>>
+First line of the paragraph.
+Second line of the paragraph.
+
+[ANCHOR: NEW-1]
+
+Last paragraph.
+
+[ANCHOR: NEW-2]
+<<<

@@ -16,6 +16,10 @@
   line-height: 1;
   cursor: pointer;
   z-index: 20; /* > 10, because of the table view */
+  /* Centers the icon of the button. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .field-widgets-button[hidden] {
@@ -26,11 +30,57 @@
   border-color: var(--color-action);
 }
 
-/* Insert menu, a child of <body>; field_widgets.js sets its top and left
-   under or above the field button. */
+/* Placeholder at the caret while the insert menu is open. The element is
+   empty, so its text is not part of the field text. */
 
-sdoc-field-widgets-insert-menu {
+sdoc-field-widgets-placeholder {
+  display: inline-block;
+  padding: 0 4px;
+  border-radius: 4px;
+  background: var(--color-highlight-secondary);
+  color: var(--color-fg-secondary);
+  line-height: normal;
+  user-select: none;
+}
+
+sdoc-field-widgets-placeholder::before {
+  content: 'insert';
+}
+
+/* Highlight of the text that a widget has just written. ::highlight()
+   cannot be animated, so the animation of the field changes the custom
+   property, and the highlight takes its color from it. */
+
+@property --field-widgets-written-alpha {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@keyframes field-widgets-written {
+  0%, 30% {
+    --field-widgets-written-alpha: 0.3;
+  }
+  100% {
+    --field-widgets-written-alpha: 0;
+  }
+}
+
+.field-widgets-written {
+  animation: field-widgets-written 1s ease-in;
+}
+
+::highlight(field-widgets-written) {
+  background-color: rgb(0 255 255 / var(--field-widgets-written-alpha));
+}
+
+/* Insert menu, a child of <body>; field_widgets.js sets its top and left
+   under or above the placeholder. */
+
+/* With the class, the rule is stronger than the z-index of .dropdown_menu. */
+sdoc-field-widgets-insert-menu.dropdown_menu {
   position: fixed;
+  z-index: 100000; /* > 99999, above the modals, such as the table editor */
 }
 
 sdoc-field-widgets-insert-menu button {
@@ -38,4 +88,17 @@ sdoc-field-widgets-insert-menu button {
   background: none;
   font: inherit;
   cursor: pointer;
+}
+
+sdoc-field-widgets-insert-menu .field-widgets-menu-close {
+  justify-content: space-between;
+  margin-top: calc(var(--base-rhythm)/2);
+  border-top: var(--base-border);
+  border-radius: 0;
+  color: var(--color-fg-secondary);
+}
+
+.field-widgets-menu-key {
+  color: var(--color-fg-secondary);
+  font-size: var(--font-size-xxsm);
 }

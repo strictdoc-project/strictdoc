@@ -11,19 +11,40 @@
 // example an RST table with spans, is not highlighted and cannot be opened,
 // so the editor never rewrites a table it has misread.
 //
-// The field button edits the table that holds the caret. The insert menu of
-// the field button inserts a new table. Both open a modal that edits a copy
-// of the table: cells, grips with a menu for rows and columns, insert
-// buttons on the borders, and extend bars. Apply writes the serialized
-// table back into the field through field_widgets.js.
+// The field button edits the table that holds the caret. The insert menu
+// inserts a new table. Both open a modal that edits a copy of the table:
+// cells, grips with a menu for rows and columns, insert buttons on the
+// borders, and extend bars. Apply writes the serialized table back into the
+// field through field_widgets.js. The cells take the field widgets that
+// work in a table cell, such as Link (see cellWidgetContext()).
 //
 // The CSS Custom Highlight API paints the tables in place, so there are no
 // overlay elements to position or to keep away from the caret.
+//
+// Alignment. A table is aligned when its cell separators stand at the same
+// positions in all lines: "|" in the rows, and also "+" in the borders of
+// an RST table (the `aligned` flag of the parsers). A table with columns
+// wider than their text is aligned too. A misaligned table is still
+// editable, but RST rejects it ("Malformed table"), and in Markdown it is
+// only harder to read. So:
+// - Under the edit button of a misaligned table, the Format table button
+// aligns it: it writes the table the same way as Apply of the editor.
+// - An RST table that the user or a widget has changed is aligned
+// automatically when the caret leaves the table or the field loses focus.
+// Only a changed table is aligned, so a table that the user only passes
+// through stays as it is. It is not aligned while the caret is in it: a
+// widget may still be writing there, for example, the "[LINK: " draft and
+// its popup. Markdown tables are not aligned automatically.
 
 (() => {
 
   const HIGHLIGHT_TABLE = 'sdoc-table';
   const HIGHLIGHT_ACTIVE_TABLE = 'sdoc-table-active';
+  // A Markdown table with more cells in a row than in the header (see
+  // parseMarkdownPipeTable()), and, on top of it, the extra cells of such
+  // rows. These highlights are above the other two.
+  const HIGHLIGHT_OVERFLOW_TABLE = 'sdoc-table-overflow';
+  const HIGHLIGHT_OVERFLOW_CELLS = 'sdoc-table-overflow-cells';
   const HAS_HIGHLIGHTS = typeof CSS !== 'undefined' && 'highlights' in CSS;
 
   // Editor DOM contract. The row and column indexes of cells and handles are
@@ -127,6 +148,13 @@
     return `+${widths.map((width) => char.repeat(width + 2)).join('+')}+`;
   }
 
+  // Returns true if the line has `char` at every column edge and ends at the
+  // last edge.
+  function isAlignedRstLine(line, edges, char) {
+    return line.length === edges[edges.length - 1] + 1 &&
+      edges.every((edge) => line[edge] === char);
+  }
+
   // Returns the number of columns of a full-width border line, or 0.
   function rstBorderColumns(line, char) {
     const pattern = char === '=' ? /^\+(=+\+)+$/ : /^\+(-+\+)+$/;
@@ -141,9 +169,7 @@
   // that some cell contains a "|", and then it is unclear where the cells
   // end.
   function parseRstRowLine(line, edges) {
-    const isAligned = line.length === edges[edges.length - 1] + 1 &&
-      edges.every((edge) => line[edge] === '|');
-    if (isAligned) {
+    if (isAlignedRstLine(line, edges, '|')) {
       return edges.slice(1).map(
         (edge, column) => line.slice(edges[column] + 1, edge),
       );
@@ -210,7 +236,10 @@
       indent,
       hasHeader,
       rows,
-      align: null
+      align: null,
+      // See "Alignment" in the file comment.
+      aligned: lines.every((line) => isAlignedRstLine(line, edges, '+') ||
+        isAlignedRstLine(line, edges, '|')),
     };
   }
 
@@ -243,10 +272,63 @@
   // Markdown (GFM) pipe tables.
   //
 
+  // The table rules follow the table rule of markdown-it, which renders
+  // Markdown in StrictDoc (markdown_it/rules_block/table.py, after GFM):
+  // - A table starts with a header row that contains "|" and a delimiter
+  // row with the same number of cells. The table can interrupt a
+  // paragraph: the paragraph lines above the header are not part of it.
+  // - Every following line is a row, even without "|", up to a blank line,
+  // a line indented by four or more spaces (code), or the start of another
+  // block (MD_BLOCK_STARTS).
+  // - A row can have fewer cells than the header: the missing cells are
+  // empty. A row can have more cells: markdown-it does not show the extra
+  // cells. The editor keeps them in added columns, so it never deletes
+  // text, and such a table gets the overflow highlight.
   const MD_DELIMITER_CELL = /^:?-+:?$/;
+  // A delimiter row has only "|", "-", ":", and spaces. A row that starts
+  // with "-" and a space is a list item.
+  const MD_DELIMITER_ROW = /^[|:-][|:\- \t]*$/;
   // A pipe table row is one text line: line breaks inside a cell are <br>.
   const MD_LINE_BREAK = /<br\s*\/?>/gi;
   const MD_FENCE = /^ {0,3}(`{3,}|~{3,})/;
+  // The HTML block names of markdown-it (common/html_blocks.py).
+  const MD_HTML_BLOCK_NAMES = 'address|article|aside|base|basefont|blockquote|body|caption|' +
+    'center|col|colgroup|dd|details|dialog|dir|div|dl|dt|fieldset|figcaption|figure|' +
+    'footer|form|frame|frameset|h1|h2|h3|h4|h5|h6|head|header|hr|html|iframe|legend|li|' +
+    'link|main|menu|menuitem|nav|noframes|ol|optgroup|option|p|param|search|section|' +
+    'summary|table|tbody|td|tfoot|th|thead|title|tr|track|ul';
+  // The starts of the blocks that end a table, tested on a line without
+  // its indent: fence, blockquote, thematic break, list item, heading, and
+  // the HTML blocks that can end a paragraph.
+  const MD_BLOCK_STARTS = [
+    /^(`{3,}|~{3,})/,
+    /^>/,
+    /^([-*_])([ \t]*\1){2,}[ \t]*$/,
+    /^([-*+]|\d{1,9}[.)])([ \t]|$)/,
+    /^#{1,6}([ \t]|$)/,
+    /^<(script|pre|style|textarea)(?=(\s|>|$))/i,
+    /^<!--/,
+    /^<\?/,
+    /^<![A-Z]/,
+    /^<!\[CDATA\[/,
+    new RegExp(`^</?(${MD_HTML_BLOCK_NAMES})(?=(\\s|/?>|$))`, 'i'),
+  ];
+
+  function indentOf(line) {
+    return line.match(/^ */)[0].length;
+  }
+
+  function isDelimiterRow(line) {
+    const text = line.trim();
+    return indentOf(line) < 4 && MD_DELIMITER_ROW.test(text) && !/^-[ \t]/.test(text);
+  }
+
+  // Returns true if the line continues a table (see the rules above).
+  function isTableRow(line) {
+    const text = line.trimStart();
+    return text !== '' && indentOf(line) < 4 &&
+      !MD_BLOCK_STARTS.some((start) => start.test(text));
+  }
 
   // Splits a row on unescaped "|" and unescapes "\|" inside cells. The
   // leading and trailing pipes are optional in GFM.
@@ -272,6 +354,16 @@
     return cells;
   }
 
+  // Returns the positions of the unescaped "|" in a line.
+  function pipePositions(line) {
+    const positions = [];
+    for (let index = 0; index < line.length; index++) {
+      if (line[index] === '\\' && line[index + 1] === '|') index++;
+      else if (line[index] === '|') positions.push(index);
+    }
+    return positions;
+  }
+
   function parseAlign(cell) {
     const left = cell.startsWith(':');
     const right = cell.endsWith(':');
@@ -281,29 +373,47 @@
     return '';
   }
 
-  // Accepts a header row, a delimiter row, and body rows, all with the same
-  // number of cells. GFM itself tolerates rows with fewer or more cells;
-  // such tables are left alone instead of being "fixed" silently.
+  // Parses the lines of one table: a header row, a delimiter row, and body
+  // rows (see the rules above). Returns null if the header and the
+  // delimiter row do not make a table. The rows are padded with empty cells
+  // to the widest row, so the table model has the same number of cells in
+  // every row. The added columns are not aligned.
   function parseMarkdownPipeTable(blockLines) {
-    if (blockLines.length < 2) return null;
-
-    // An indent of four spaces makes an indented code block, not a table.
-    const indent = commonIndent(blockLines);
-    if (indent === null || indent.length > 3) return null;
-
     const [header, delimiter, ...body] = blockLines.map(splitPipeRow);
     if (!delimiter.every((cell) => MD_DELIMITER_CELL.test(cell))) return null;
-    if (![header, ...body].every((row) => row.length === delimiter.length)) {
-      return null;
-    }
+    if (header.length !== delimiter.length) return null;
 
+    const columns = Math.max(header.length, ...body.map((row) => row.length));
+    // The extra cells of a row start after the "|" that ends its last
+    // header-wide cell. The leading "|" of a row is optional.
+    const overflowCells = [];
+    body.forEach((row, index) => {
+      if (row.length <= header.length) return;
+      const line = blockLines[index + 2];
+      const leading = line.trimStart().startsWith('|') ? 1 : 0;
+      overflowCells.push({
+        line: index + 2,
+        column: pipePositions(line)[header.length - 1 + leading] + 1,
+      });
+    });
+    const pad = (cells, value) => [...cells, ...Array(columns - cells.length).fill(value)];
     return {
-      indent,
+      // The serializer writes all lines with the indent of the header.
+      indent: ' '.repeat(indentOf(blockLines[0])),
       hasHeader: true,
-      rows: [header, ...body].map((row) => row.map(
+      rows: [header, ...body].map((row) => pad(row, '').map(
         (cell) => cell.replace(MD_LINE_BREAK, '\n'),
       )),
-      align: delimiter.map(parseAlign),
+      align: pad(delimiter.map(parseAlign), ''),
+      // A row with more cells than the header: markdown-it does not show
+      // the extra cells. overflowCells: {line, column} where the extra cells
+      // of a row start; `line` counts from the header row.
+      overflow: columns > header.length,
+      overflowCells,
+      // See "Alignment" in the file comment.
+      aligned: blockLines.every(
+        (line) => pipePositions(line).join() === pipePositions(blockLines[0]).join(),
+      ),
     };
   }
 
@@ -354,8 +464,26 @@
         }
       });
 
-      const isCandidate = (line, index) => !inFence[index] && line.includes('|');
-      return findTables(lines, isCandidate, parseMarkdownPipeTable);
+      const tables = [];
+      let start = 0;
+      while (start < lines.length - 1) {
+        const isStart = !inFence[start] && !inFence[start + 1] &&
+          indentOf(lines[start]) < 4 && lines[start].includes('|') &&
+          isDelimiterRow(lines[start + 1]);
+        let end = start + 2;
+        while (isStart && end < lines.length && !inFence[end] && isTableRow(lines[end])) end++;
+        const table = isStart && parseMarkdownPipeTable(lines.slice(start, end));
+        if (!table) {
+          start++;
+          continue;
+        }
+        tables.push(Object.assign(table, {
+          start,
+          end: end - 1
+        }));
+        start = end;
+      }
+      return tables;
     },
     serialize: serializeMarkdownPipeTable,
   };
@@ -626,11 +754,24 @@
     };
   }
 
+  // The cells of the editor are fields of field_widgets.js in the
+  // "table-cell" context. Each widget decides in supports() if it works in a
+  // cell. The widgets also need the markup and the document of the field
+  // (see "Fields outside a form" in field_widgets.js).
+  function cellWidgetContext(field) {
+    return {
+      markup: fieldTables.get(field).markup,
+      documentMid: field.closest('form')
+        ?.querySelector('[name="context_document_mid"]')?.value ?? '',
+    };
+  }
+
   // Opens the modal for a copy of `table`; onApply(table) receives the
   // edited copy. The editor always shows a header row: serializing decides
   // what an empty header becomes in the format. The header row has no grip:
-  // it cannot be moved or deleted, and it stays first.
-  function openEditor(title, table, onApply) {
+  // it cannot be moved or deleted, and it stays first. `widgetContext` comes
+  // from cellWidgetContext().
+  function openEditor(title, table, onApply, widgetContext) {
     const edited = copyTable(table);
     if (!edited.hasHeader) {
       edited.rows.unshift(Array(edited.rows[0].length).fill(''));
@@ -704,6 +845,9 @@
           input.setAttribute('role', 'textbox');
           input.setAttribute('aria-multiline', 'true');
           input.dataset.fieldType = 'multiline';
+          input.dataset.fieldWidgetsMarkup = widgetContext.markup;
+          input.dataset.fieldWidgetsDocumentMid = widgetContext.documentMid;
+          input.dataset.fieldWidgetsContext = 'table-cell';
           input.textContent = cell;
           input.dataset.testid = 'table-editor-cell';
           input.dataset.row = String(rowIndex);
@@ -1137,31 +1281,117 @@
 
   const fieldWidgets = window.StrictDoc.fieldWidgets;
 
-  // field -> { format, tables } for the fields with a table format.
+  // field -> { markup, format, tables } for the fields with a table format.
   const fieldTables = new Map();
 
   function updateHighlights() {
     if (!HAS_HIGHLIGHTS) return;
 
     const ranges = [];
+    const overflowRanges = [];
+    const overflowCellRanges = [];
     for (const [field, entry] of fieldTables) {
       entry.tables.forEach((table) => {
         const range = fieldWidgets.lineRange(field, table.start, table.end);
-        if (range) ranges.push(range);
+        if (!range) return;
+        if (!table.overflow) {
+          ranges.push(range);
+          return;
+        }
+        overflowRanges.push(range);
+        for (const cells of table.overflowCells) {
+          const line = table.start + cells.line;
+          overflowCellRanges.push(fieldWidgets.lineRange(field, line, line, cells.column));
+        }
       });
     }
     CSS.highlights.set(HIGHLIGHT_TABLE, new Highlight(...ranges));
+    // The two overflow highlights are translucent, so the extra cells, which
+    // have both, look denser than the rest of the table.
+    const overflow = new Highlight(...overflowRanges);
+    overflow.priority = 1;
+    CSS.highlights.set(HIGHLIGHT_OVERFLOW_TABLE, overflow);
+    const overflowCells = new Highlight(...overflowCellRanges);
+    overflowCells.priority = 2;
+    CSS.highlights.set(HIGHLIGHT_OVERFLOW_CELLS, overflowCells);
   }
+
+  //
+  // Alignment (see the file comment).
+  //
+
+  // The table that holds the caret: { field, start, changed }, or null.
+  // changed: the field text changed while the caret was in the table.
+  let editing = null;
+  // True while the widget writes an aligned table, so that this write does
+  // not count as a change of the table.
+  let aligning = false;
+
+  function writeAligned(field, table, options) {
+    const {
+      format
+    } = fieldTables.get(field);
+    aligning = true;
+    try {
+      fieldWidgets.replaceLines(
+        field, table.start, table.end, format.serialize(table), options,
+      );
+    } finally {
+      aligning = false;
+    }
+  }
+
+  // Aligns the changed RST table that starts at the line `start`, if it is
+  // still a misaligned table. The caret stays where the user put it.
+  function alignChangedTable(field, start) {
+    const state = fieldTables.get(field);
+    if (!field.isConnected || state?.format !== RST) return;
+    const table = state.tables.find((each) => each.start === start);
+    if (table && !table.aligned) {
+      writeAligned(field, table, {
+        keepCaret: true
+      });
+    }
+  }
+
+  // Follows the table that holds the caret. When the caret leaves a changed
+  // table, the table is aligned after the current event: the caret move
+  // comes from field_widgets.js, which must finish its own update first.
+  function followCaret(field, table) {
+    if (editing && (editing.field !== field || editing.start !== table?.start)) {
+      const left = editing;
+      editing = null;
+      if (left.changed) queueMicrotask(() => alignChangedTable(left.field, left.start));
+    }
+    if (table && !editing) {
+      editing = {
+        field,
+        start: table.start,
+        changed: false
+      };
+    }
+  }
+
+  // Any write into the field while the caret is in a table changes the
+  // table: typing, paste, undo, and the writes of the widgets. The listener
+  // runs in the capture phase, before field_widgets.js moves the caret
+  // state on the same input.
+  document.addEventListener('input', (event) => {
+    if (!aligning && editing?.field === event.target) editing.changed = true;
+  }, true);
 
   fieldWidgets.register({
     id: 'table',
     label: 'Table',
     editTitle: 'Edit table',
-    supports: (markup) => FORMATS.has(markup),
+    // The editor does not support nested tables, so the widget works only in
+    // a form field, not in a cell of its own editor.
+    supports: (markup, context) => context === 'field' && FORMATS.has(markup),
 
     scan(field, lines, markup) {
       const format = FORMATS.get(markup);
       fieldTables.set(field, {
+        markup,
         format,
         tables: format.findTables(lines)
       });
@@ -1170,6 +1400,7 @@
 
     forget(field) {
       fieldTables.delete(field);
+      if (editing?.field === field) editing = null;
       updateHighlights();
     },
 
@@ -1180,6 +1411,7 @@
     },
 
     activate(field, table) {
+      followCaret(field, table);
       if (!HAS_HIGHLIGHTS) return;
       const range = table && fieldWidgets.lineRange(field, table.start, table.end);
       CSS.highlights.set(
@@ -1188,15 +1420,27 @@
       );
     },
 
+    extraAction(field, table) {
+      if (table.aligned) return null;
+      return {
+        icon: 'format',
+        title: 'Format table',
+        run: () => writeAligned(field, table),
+      };
+    },
+
     edit(field, table) {
       const {
         format
       } = fieldTables.get(field);
+      // The editor writes the whole table on Apply, so the table is not
+      // aligned automatically when the editor takes the focus.
+      editing = null;
       openEditor('Edit table', table, (edited) => {
         if (!field.isConnected) return;
         const tableLines = format.serialize(edited);
         fieldWidgets.replaceLines(field, table.start, table.end, tableLines);
-      });
+      }, cellWidgetContext(field));
     },
 
     insert(field, line) {
@@ -1206,7 +1450,7 @@
       openEditor('Insert table', createEmptyTable(3, 2), (created) => {
         if (!field.isConnected) return;
         fieldWidgets.insertBlock(field, line, format.serialize(created));
-      });
+      }, cellWidgetContext(field));
     },
   });
 

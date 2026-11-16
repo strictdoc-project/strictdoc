@@ -112,11 +112,15 @@ class FieldWidgets:  # pylint: disable=invalid-name
         """
         The caret must be inside the visible area of the scroll container
         of the field, which ends above the page footer. The page scrolls
-        smoothly, so the caret gets there with a delay.
+        smoothly, so the caret gets there with a delay. The wait also lasts
+        until the scrolling stops: the caret can be in view before the end
+        of the scrolling, and a popup opened during the scrolling moves
+        under the next click.
         """
+        last_scroll_top = [None]
 
         def caret_in_viewport(_) -> bool:
-            return self.test_case.execute_script(
+            in_viewport, scroll_top = self.test_case.execute_script(
                 self.CARET_MARKER_SCRIPT
                 % """(marker) => {
                     let container = marker.parentElement;
@@ -128,9 +132,15 @@ class FieldWidgets:  # pylint: disable=invalid-name
                       container.getBoundingClientRect() :
                       {top: 0, bottom: window.innerHeight};
                     const rect = marker.getBoundingClientRect();
-                    return rect.top >= area.top && rect.bottom <= area.bottom;
+                    return [
+                      rect.top >= area.top && rect.bottom <= area.bottom,
+                      container ? container.scrollTop : window.scrollY,
+                    ];
                 }"""
             )
+            stopped = scroll_top == last_scroll_top[0]
+            last_scroll_top[0] = scroll_top
+            return in_viewport and stopped
 
         WebDriverWait(self.test_case.driver, timeout).until(caret_in_viewport)
 

@@ -103,14 +103,29 @@
     };
   }
 
-  // Replaces the text in [from, to) of the focused field with `text` and
-  // puts the caret after it. The browser fires the 'input' event.
+  // Replaces the text in [from, to) of the field with `text` and puts the
+  // caret after it. The browser fires the 'input' event.
+  //
+  // The browser writes only into the focused field. If another element has
+  // the focus, the field gets the focus for the write, and the other element
+  // gets it back with its selection, so the caret stays where the user is.
   //
   // A write that reaches the end of the field starts right after a character
   // that is not a line break, and the line breaks it moves over are written
   // again. Firefox otherwise moves the line break before the range to the end
   // of the field.
   function writeText(editable, from, to, text) {
+    const active = document.activeElement;
+    const selection = window.getSelection();
+    const saved = active !== editable && selection.rangeCount ?
+      selection.getRangeAt(0).cloneRange() :
+      null;
+    if (active !== editable) {
+      editable.focus({
+        preventScroll: true
+      });
+    }
+
     const current = fieldText(editable);
     let start = from;
     let written = text;
@@ -123,15 +138,58 @@
     const range = document.createRange();
     range.setStart(...domPosition(editable, start));
     range.setEnd(...domPosition(editable, to));
-    const selection = window.getSelection();
     selection.removeAllRanges();
     selection.addRange(range);
     const escaped = document.createElement('div');
     escaped.textContent = written;
     document.execCommand('insertHTML', false, escaped.innerHTML);
+
+    if (active === editable) return;
+    if (active && active !== document.body) {
+      active.focus({
+        preventScroll: true
+      });
+    } else {
+      editable.blur();
+    }
+    if (saved) {
+      selection.removeAllRanges();
+      selection.addRange(saved);
+    }
+  }
+
+  // Changes the text of the field to `text` with one write of the changed
+  // part only: the parts that the old and the new text share at the start
+  // and at the end stay. Returns false if the text is the same.
+  //
+  // The shared end is cut first, so a line break at the end of both texts
+  // stays out of the write: Chrome cannot delete the last line break of a
+  // field.
+  function setText(editable, text) {
+    const current = fieldText(editable);
+    let end = 0;
+    while (
+      end < current.length &&
+      end < text.length &&
+      current[current.length - 1 - end] === text[text.length - 1 - end]
+    ) {
+      end++;
+    }
+    let start = 0;
+    while (
+      start < current.length - end &&
+      start < text.length - end &&
+      current[start] === text[start]
+    ) {
+      start++;
+    }
+    if (start === current.length - end && start === text.length - end) return false;
+    writeText(editable, start, current.length - end, text.slice(start, text.length - end));
+    return true;
   }
 
   window.StrictDoc.editableField = {
+    setText,
     textSelection,
     writeText,
   };

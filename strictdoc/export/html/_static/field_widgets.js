@@ -167,12 +167,13 @@
   const HAS_HIGHLIGHTS = typeof CSS !== 'undefined' && 'highlights' in CSS;
 
   const widgets = [];
+  const editableField = window.StrictDoc.editableField;
 
   //
   // Field text and DOM positions.
   //
-  // The field usually holds a single text node, but typing can add more text
-  // nodes and <br> elements. To find a text position in the DOM, each text
+  // The field holds text nodes and can hold <br> elements: typing and the
+  // writes add them. To find a text position in the DOM, each text
   // node is mapped to its characters and each <br> to a line break. If the
   // field holds other elements, this mapping no longer matches innerText
   // (the text that is saved). Then positions in the field cannot be computed
@@ -643,59 +644,96 @@
   // Writing back to the field.
   //
 
-  // Replaces the field content with one text node, so the caret can be set
-  // by a text offset.
+  // Changes the field text to `text`. editable_field.js writes only the
+  // changed part, so that Ctrl+Z undoes the write (see setText() there).
   //
   // `written` is the range [from, to) of the text to highlight, or null. A
-  // null `caret` leaves the focus and the scroll position as they are.
+  // null `caret` leaves the focus, the caret and the scroll position as they
+  // are. Otherwise, the field gets the focus, and the caret goes to the
+  // offset.
   function writeText(field, text, caret, written = null) {
-    if (caret === null) {
-      field.replaceChildren(document.createTextNode(text));
-    } else {
-      placeCaret(field, text, caret);
+    editableField.setText(field, text);
+    // The write fires the input event, and the input listener scans the
+    // field and treats the write as typing, which would hide the button. The
+    // widget wrote the text, not the user, so the button stays.
+    const state = fieldStates.get(field);
+    state.typing = false;
+    if (caret !== null) placeCaret(field, state, caret);
+    if (state.mapped && written && written[0] < written[1]) {
+      highlightWritten(field, textRange(field, state.segments, ...written));
     }
-    if (written && written[0] < written[1]) highlightWritten(field, ...written);
-
-    field.dispatchEvent(new Event('input', {
-      bubbles: true
-    }));
-    // The input event above makes the input listener treat this rewrite as
-    // typing, which would hide the button. The widget wrote the text, not
-    // the user, so the button stays.
-    fieldStates.get(field).typing = false;
     updateActiveField();
   }
 
-  // Writes the text, focuses the field, puts the caret at the offset, and
-  // scrolls to the caret.
-  //
-  // The browser does not scroll to a caret that a script sets, and a caret
-  // has no element to scroll to. So the text is first written with a marker
-  // element at the caret, and scrollIntoView() scrolls to the marker.
-  // 'nearest' scrolls as little as possible: a caret below the viewport ends
-  // up at its bottom edge, a visible caret does not scroll. The marker is an
-  // inline block with a zero-width space, so it has the height of the line.
-  // An inline marker, or an empty one, scrolls only to the top of the caret
-  // line, and the line stays just below the edge, under the page footer.
-  function placeCaret(field, text, caret) {
-    const marker = document.createElement('span');
-    marker.style.display = 'inline-block';
-    marker.textContent = '\u200b';
-    field.replaceChildren(
-      document.createTextNode(text.slice(0, caret)),
-      marker,
-      document.createTextNode(text.slice(caret)),
-    );
+  // Focuses the field, puts the caret at the offset, and scrolls to the
+  // caret.
+  function placeCaret(field, state, caret) {
     // focus() scrolls to the field and would stop the smooth scroll of the
-    // page to the marker.
+    // page to the caret.
     field.focus({
       preventScroll: true
     });
-    marker.scrollIntoView({
-      block: 'nearest'
+    if (!state.mapped) return;
+    const position = domPosition(field, state.segments, caret);
+    window.getSelection().collapse(position.node, position.offset);
+    scrollToCaret(field, state.segments, caret);
+  }
+
+  // The browser does not scroll to a caret that a script sets, and a caret
+  // has no element to scroll to. So a marker element goes next to the field,
+  // over the caret line, and scrollIntoView() scrolls to the marker. The
+  // marker is not in the field: a DOM change in the field ends the undo
+  // history there. 'nearest' scrolls as little as possible: a caret below the
+  // viewport ends up at its bottom edge, a visible caret does not scroll.
+  //
+  // The caret line is the line of the character at the caret, or of the one
+  // before it at the end of the text. A collapsed range is not used: in
+  // Firefox, its rectangle at the start of a line is at the end of the
+  // previous line. The rectangle of a character is lower than the line, so
+  // the marker gets the line height around it. A marker of the character
+  // height leaves the bottom of the line under the edge of the viewport.
+  function scrollToCaret(field, segments, caret) {
+    const length = segmentsText(segments).length;
+    let rect = null;
+    if (caret < length) {
+      rect = textRange(field, segments, caret, caret + 1).getClientRects()[0];
+    }
+    if (!rect?.height && caret > 0) {
+      const rects = textRange(field, segments, caret - 1, caret).getClientRects();
+      rect = rects[rects.length - 1];
+    }
+    if (!rect?.height) {
+      field.scrollIntoView({
+        block: 'nearest'
+      });
+      return;
+    }
+    const lineHeight = Math.max(
+      rect.height,
+      parseFloat(getComputedStyle(field).lineHeight) || 0,
+    );
+    const top = rect.top - (lineHeight - rect.height) / 2;
+    const marker = document.createElement('span');
+    Object.assign(marker.style, {
+      position: 'absolute',
+      width: '1px',
+      height: `${lineHeight}px`,
+      visibility: 'hidden',
+      pointerEvents: 'none',
     });
-    field.replaceChildren(document.createTextNode(text));
-    window.getSelection().collapse(field.firstChild, caret);
+    field.parentElement.append(marker);
+    const parent = marker.offsetParent;
+    if (parent) {
+      const parentRect = parent.getBoundingClientRect();
+      marker.style.top =
+        `${top - parentRect.top - parent.clientTop + parent.scrollTop}px`;
+      marker.style.left =
+        `${rect.left - parentRect.left - parent.clientLeft + parent.scrollLeft}px`;
+      marker.scrollIntoView({
+        block: 'nearest'
+      });
+    }
+    marker.remove();
   }
 
   // `written` is the range [start, end] of the lines to highlight, or null.
@@ -813,17 +851,14 @@
     writeLines(field, updated, end, highlight ? [start, end] : null);
   }
 
-  // Highlights the characters [from, to) of the field for a moment. The
+  // Highlights the range of the field for a moment. The
   // ::highlight() pseudo-element cannot be animated, so the class
   // CLASS_WRITTEN animates the custom property
   // --field-widgets-written-alpha of the field, and the highlight takes its
   // color from the property (see field_widgets.css). When the animation
   // ends, the highlight is removed.
-  function highlightWritten(field, from, to) {
+  function highlightWritten(field, range) {
     if (!HAS_HIGHLIGHTS) return;
-    const range = document.createRange();
-    range.setStart(field.firstChild, from);
-    range.setEnd(field.firstChild, to);
     const highlight = new Highlight(range);
     // Above the table highlights of table_editor.js.
     highlight.priority = 1;

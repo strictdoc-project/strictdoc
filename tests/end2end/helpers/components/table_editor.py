@@ -105,6 +105,43 @@ class TableEditor(FieldWidgets):  # pylint: disable=invalid-name
         )
         assert actual == value, f"{actual!r} != {value!r}"
 
+    def do_place_caret_at_cell_end(self, row: int, column: int) -> None:
+        cell = self.test_case.find_element(
+            self._cell_xpath(row, column), by=By.XPATH
+        )
+        self.test_case.execute_script(
+            """
+            const cell = arguments[0];
+            cell.focus();
+            window.getSelection().selectAllChildren(cell);
+            window.getSelection().collapseToEnd();
+            """,
+            cell,
+        )
+
+    def do_paste_in_cell(self, row: int, column: int, text: str) -> None:
+        """
+        Pastes the text at the caret of the cell, as do_paste_at_caret() does
+        in the field.
+        """
+        cell = self.test_case.find_element(
+            self._cell_xpath(row, column), by=By.XPATH
+        )
+        self.test_case.execute_script(
+            """
+            const [cell, text] = arguments;
+            const data = new DataTransfer();
+            data.setData('text/plain', text);
+            cell.dispatchEvent(new ClipboardEvent('paste', {
+              clipboardData: data,
+              bubbles: true,
+              cancelable: true,
+            }));
+            """,
+            cell,
+            text,
+        )
+
     def do_fill_cell(self, row: int, column: int, value: str) -> None:
         r"""
         Row 0 is the header row. A "\n" in `value` presses Enter.

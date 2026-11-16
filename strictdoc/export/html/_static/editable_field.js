@@ -22,6 +22,121 @@
     return text.replace(/\s/g, ' ').replace(/\s\s+/g, ' ');
   }
 
+  // @relation(SDOC-LLR-225, scope=range_start)
+  //
+  // Field text and writing into a field.
+  //
+  // A script that changes the text of a field writes through writeText(), so
+  // that the browser records the change in its undo history: Ctrl+Z undoes
+  // the write, and the undo of the edits before it keeps working. The browser
+  // does not record a DOM change made by a script (insertNode(), nodeValue,
+  // replaceChildren()), and its history then refers to nodes that are gone.
+  //
+  // writeText() selects the range and writes HTML-escaped text with
+  // execCommand('insertHTML'). The field stays plain text in both Chrome and
+  // Firefox. writeText() does not use execCommand('insertText'): in Chrome, a
+  // multi-line text written at the end of a field gets an extra line break
+  // after it.
+  //
+
+  // Text nodes and <br> elements make up the field text, as in innerText.
+  // `root` is a field or a fragment of it.
+  function walkFieldText(root, visit) {
+    const walker = document.createTreeWalker(
+      root,
+      NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT,
+    );
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      if (node.nodeType === Node.TEXT_NODE) {
+        if (visit(node, node.nodeValue) === false) return;
+      } else if (visit(node, node.nodeName === 'BR' ? '\n' : '') === false) {
+        return;
+      }
+    }
+  }
+
+  function fieldText(root) {
+    let text = '';
+    walkFieldText(root, (node, nodeText) => {
+      text += nodeText;
+    });
+    return text;
+  }
+
+  // The DOM position of a text offset in the field.
+  function domPosition(editable, offset) {
+    let rest = offset;
+    let position = null;
+    walkFieldText(editable, (node, nodeText) => {
+      if (node.nodeType === Node.TEXT_NODE && rest <= nodeText.length) {
+        position = [node, rest];
+      } else if (node.nodeName === 'BR' && rest === 0) {
+        position = [node.parentNode, [...node.parentNode.childNodes].indexOf(node)];
+      } else {
+        rest -= nodeText.length;
+        return true;
+      }
+      return false;
+    });
+    return position ?? [editable, editable.childNodes.length];
+  }
+
+  function textOffset(editable, container, offset) {
+    const range = document.createRange();
+    range.setStart(editable, 0);
+    range.setEnd(container, offset);
+    return fieldText(range.cloneContents()).length;
+  }
+
+  // The selection in the field as text offsets { from, to }, or null if the
+  // selection is not in the field.
+  function textSelection(editable) {
+    const selection = window.getSelection();
+    if (!selection.rangeCount) return null;
+    const range = selection.getRangeAt(0);
+    if (!editable.contains(range.startContainer) ||
+      !editable.contains(range.endContainer)) return null;
+    return {
+      from: textOffset(editable, range.startContainer, range.startOffset),
+      to: textOffset(editable, range.endContainer, range.endOffset),
+    };
+  }
+
+  // Replaces the text in [from, to) of the focused field with `text` and
+  // puts the caret after it. The browser fires the 'input' event.
+  //
+  // A write that reaches the end of the field starts right after a character
+  // that is not a line break, and the line breaks it moves over are written
+  // again. Firefox otherwise moves the line break before the range to the end
+  // of the field.
+  function writeText(editable, from, to, text) {
+    const current = fieldText(editable);
+    let start = from;
+    let written = text;
+    if (to === current.length) {
+      while (start > 0 && current[start - 1] === '\n') {
+        start--;
+        written = `\n${written}`;
+      }
+    }
+    const range = document.createRange();
+    range.setStart(...domPosition(editable, start));
+    range.setEnd(...domPosition(editable, to));
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    const escaped = document.createElement('div');
+    escaped.textContent = written;
+    document.execCommand('insertHTML', false, escaped.innerHTML);
+  }
+
+  window.StrictDoc.editableField = {
+    textSelection,
+    writeText,
+  };
+  // @relation(SDOC-LLR-225, scope=range_end)
+
   // @relation(SDOC-LLR-214, scope=range_start)
   function getImageStem(path) {
     return getImageFilename(path).replace(/\.[^/.]+$/, '');
@@ -219,30 +334,6 @@
     element.dataset.label = `Uploading ${stem}...`;
     element.dataset.testid = 'image-upload-placeholder';
     return element;
-  }
-
-  // Text nodes and <br> elements make up the field text, as in innerText.
-  function walkFieldText(editable, visit) {
-    const walker = document.createTreeWalker(
-      editable,
-      NodeFilter.SHOW_TEXT | NodeFilter.SHOW_ELEMENT,
-    );
-    while (walker.nextNode()) {
-      const node = walker.currentNode;
-      if (node.nodeType === Node.TEXT_NODE) {
-        if (visit(node, node.nodeValue) === false) return;
-      } else if (visit(node, node.nodeName === 'BR' ? '\n' : '') === false) {
-        return;
-      }
-    }
-  }
-
-  function fieldText(editable) {
-    let text = '';
-    walkFieldText(editable, (node, nodeText) => {
-      text += nodeText;
-    });
-    return text;
   }
 
   function textOffsetBefore(editable, element) {
@@ -539,24 +630,15 @@
 
     const text = isSingle ? filterSingleLine(clipboardText) : clipboardText;
 
-    const selection = window.getSelection();
-    if (selection.rangeCount) {
-      selection.deleteFromDocument();
-      selection.getRangeAt(0).insertNode(document.createTextNode(text));
-    }
-
-    // This handler prevents the default paste, so the browser fires no
-    // 'input' event. Fire it as the browser would: the input listener below
-    // syncs the hidden field, and other scripts, such as the field widgets,
-    // see the new text.
-    editable.dispatchEvent(new InputEvent('input', {
-      bubbles: true,
-      inputType: 'insertFromPaste',
-    }));
+    // The write fires the 'input' event: the input listener below syncs the
+    // hidden field, and other scripts, such as the field widgets, see the
+    // new text.
+    const selected = textSelection(editable);
+    if (selected) writeText(editable, selected.from, selected.to, text);
   });
 
   // A contenteditable field is not a form control, so the form sends the
-  // hidden field, a textarea next to it. Every change of the field comes
+  // hidden field, an input next to it. Every change of the field comes
   // here as an 'input' event, and the listener copies the text into the
   // hidden field.
   document.addEventListener('input', (event) => {

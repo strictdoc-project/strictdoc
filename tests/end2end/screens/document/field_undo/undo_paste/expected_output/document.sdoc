@@ -1,0 +1,11 @@
+[DOCUMENT]
+TITLE: Undo
+
+[REQUIREMENT]
+TITLE: Title Single line
+STATEMENT: >>>
+Line one.
+Line two. Typed.
+Pasted one.
+Pasted two.
+<<<

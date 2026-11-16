@@ -1488,8 +1488,8 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
         self, field_name: str, field_order: int = 1
     ) -> str:
         """
-        The value that the form sends for the field: the hidden textarea
-        next to it.
+        The value that the form sends for the field: the hidden input next
+        to it.
         """
         field_order_str = "last()" if field_order == -1 else str(field_order)
         xpath_field = (

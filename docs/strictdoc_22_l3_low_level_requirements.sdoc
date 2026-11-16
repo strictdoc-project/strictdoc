@@ -1355,3 +1355,37 @@ requirement creation is aborted after already having uploaded images.
 [[/SECTION]]
 
 [[/SECTION]]
+
+[[SECTION]]
+MID: 532ec8e17d174566b30b1f36131282f4
+TITLE: Web interface
+
+[[SECTION]]
+MID: dfd37d87a0be48dcad9630091967a656
+TITLE: editable_field.js
+
+[REQUIREMENT]
+MID: 940032fa9c2a4d72a4cc232b122dbf8b
+UID: SDOC-LLR-225
+STATUS: Active
+TITLE: Field writes through the browser editing commands
+STATEMENT: >>>
+A script that changes the text of a field shall write through the
+``writeText()`` function of ``editable_field.js``. ``writeText()`` shall select
+the range and write the HTML-escaped text with ``execCommand('insertHTML')``, so
+that the browser records the change in its undo history.
+<<<
+RATIONALE: >>>
+The browser does not record a DOM change that a script makes, and its undo
+history then refers to nodes that are gone. Ctrl+Z after such a change does
+nothing, also for the typing before it. ``writeText()`` does not use
+``execCommand('insertText')``: in Chrome, a multi-line text written at the end
+of a field gets an extra line break after it.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-211
+
+[[/SECTION]]
+
+[[/SECTION]]

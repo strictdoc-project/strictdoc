@@ -819,7 +819,9 @@
       for (const placeholder of placeholders) {
         replaceUploadPlaceholder(editable, placeholder, null);
       }
-      // Fire a synthetic bubbling 'input' event to sync the hidden field.
+      // Fire a synthetic bubbling 'input' event to sync the hidden field. The
+      // event also makes the image references one step of the undo history
+      // of the field.
       editable.dispatchEvent(new Event('input', {
         bubbles: true
       }));

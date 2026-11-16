@@ -1453,6 +1453,37 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
             """
         )
 
+    def select_editable_text(
+        self, field_name: str, text: str, field_order: int = 1
+    ) -> None:
+        field_order_str = "last()" if field_order == -1 else str(field_order)
+        xpath_field = (
+            f"(//*[@data-testid='form-field-{field_name}'])[{field_order_str}]"
+        )
+        target_element = self.test_case.find_element(By.XPATH, xpath_field)
+        selected = self.test_case.driver.execute_script(
+            """
+            var target = arguments[0];
+            var text = arguments[1];
+            var walker = document.createTreeWalker(target, NodeFilter.SHOW_TEXT);
+            while (walker.nextNode()) {
+                var index = walker.currentNode.nodeValue.indexOf(text);
+                if (index === -1) continue;
+                var range = document.createRange();
+                range.setStart(walker.currentNode, index);
+                range.setEnd(walker.currentNode, index + text.length);
+                var selection = window.getSelection();
+                selection.removeAllRanges();
+                selection.addRange(range);
+                return true;
+            }
+            return false;
+            """,
+            target_element,
+            text,
+        )
+        assert selected, f"Could not select {text!r}."
+
     def get_editable_form_value(
         self, field_name: str, field_order: int = 1
     ) -> str:

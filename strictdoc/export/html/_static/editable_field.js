@@ -399,6 +399,12 @@
       }
     }
     trackUploadPlaceholders(editable, placeholders);
+    // The placeholders can replace a selected text. The DOM change fires no
+    // 'input' event, so fire it: the hidden field must not keep the deleted
+    // text until the upload ends.
+    editable.dispatchEvent(new Event('input', {
+      bubbles: true
+    }));
 
     // Build multipart request.
     const formData = new FormData();

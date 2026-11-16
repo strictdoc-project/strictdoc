@@ -1,0 +1,24 @@
+[DOCUMENT]
+TITLE: Links in a grid table
+
+[TEXT]
+STATEMENT: >>>
+[ANCHOR: THING-1, Thing]
+Something.
+<<<
+
+[TEXT]
+STATEMENT: >>>
++---------------------------------+--------------------------------+
+| Link                            | Description                    |
++=================================+================================+
+| [LINK: THING-1]                 | A link with the anchor title.  |
++---------------------------------+--------------------------------+
+| [LINK: THING-1, Custom title]   | A link with a custom title.    |
++---------------------------------+--------------------------------+
+| [LINK: THING-1, "Quoted title"] | A link with a quoted title.    |
++---------------------------------+--------------------------------+
+| [LINK: THING-1]s and            | A link followed by a letter    |
+| [LINK: THING-1]_                | and by an underscore.          |
++---------------------------------+--------------------------------+
+<<<

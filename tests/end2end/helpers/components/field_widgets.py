@@ -185,6 +185,14 @@ class FieldWidgets:  # pylint: disable=invalid-name
             self.UNDO_MODIFIER
         ).perform()
 
+    def do_redo_by_ctrl_y(self) -> None:
+        """
+        Ctrl+Y redoes on every system, also on macOS.
+        """
+        ActionChains(self.test_case.driver).key_down(Keys.CONTROL).send_keys(
+            "y"
+        ).key_up(Keys.CONTROL).perform()
+
     def get_field_text(self) -> str:
         field = self.test_case.find_element(self.field_xpath, by=By.XPATH)
         return self.test_case.execute_script(

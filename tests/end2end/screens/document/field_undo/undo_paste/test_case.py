@@ -11,7 +11,6 @@ from tests.end2end.helpers.screens.project_index.screen_project_index import (
 from tests.end2end.server import SDocTestServer
 
 # The form shows a multiline field with a line break at the end.
-TEXT = "Line one.\nLine two.\n"
 TYPED = "Line one.\nLine two. Typed.\n"
 PASTED = "Line one.\nLine two. Typed.\nPasted one.\nPasted two.\n"
 
@@ -32,7 +31,8 @@ class Test(E2ECase):
             form.assert_on_form()
 
             # A multiline field. The paste at the end of the field is one
-            # undo step, and the typing before it can still be undone.
+            # undo step, and the typing before it can still be undone, one
+            # character at a time.
             statement = FieldWidgets(self, "STATEMENT")
             statement.do_place_caret_after("Line two.")
             statement.do_type_at_caret(" Typed.")
@@ -42,7 +42,7 @@ class Test(E2ECase):
             statement.do_undo()
             statement.wait_for_field_text(TYPED)
             statement.do_undo()
-            statement.wait_for_field_text(TEXT)
+            statement.wait_for_field_text(TYPED.replace("Typed.", "Typed"))
             statement.do_redo()
             statement.wait_for_field_text(TYPED)
             statement.do_redo()

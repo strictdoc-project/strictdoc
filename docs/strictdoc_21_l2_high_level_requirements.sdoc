@@ -900,12 +900,15 @@ STATUS: Active
 TITLE: Undo and redo in text fields
 STATEMENT: >>>
 When the user presses Ctrl+Z or Ctrl+Shift+Z (Cmd+Z or Cmd+Shift+Z on macOS)
-in a text field of the web interface, StrictDoc shall undo or redo the last
-change of the field. This includes the changes that StrictDoc writes into the
-field, such as a paste or a widget write.
+in a text field of the web interface that has no autocompletion, StrictDoc
+shall undo or redo one step of that field. A step is one typed or deleted character, or one change that
+StrictDoc writes into the field, such as a paste, a widget write, or the
+automatic alignment of a table.
 <<<
 RATIONALE: >>>
-The user expects to undo a paste or a widget change in the same way as typing.
+The user expects to undo typing one character at a time, as in a text editor,
+and to undo a paste or a widget change in the same way as typing. Each field
+has its own steps, so an undo does not change another field.
 <<<
 RELATIONS:
 - TYPE: Parent

@@ -35,10 +35,6 @@
 // through stays as it is. It is not aligned while the caret is in it: a
 // widget may still be writing there, for example, the "[LINK: " draft and
 // its popup. Markdown tables are not aligned automatically.
-// - The automatic alignment is not an undo step of its own: one Ctrl+Z
-// undoes it together with the edit before it, and one Ctrl+Shift+Z redoes
-// both. The undone edit changes the table, so the table is aligned again
-// when the caret leaves it.
 
 (() => {
 
@@ -1327,6 +1323,9 @@
   // True while the widget writes an aligned table, so that this write does
   // not count as a change of the table.
   let aligning = false;
+  // The field of the 'input' event that field_widgets.js handles now, or
+  // null.
+  let inputField = null;
 
   function writeAligned(field, table, options) {
     const {
@@ -1349,59 +1348,11 @@
     if (!field.isConnected || state?.format !== RST) return;
     const table = state.tables.find((each) => each.start === start);
     if (table && !table.aligned) {
-      const before = editableField.fieldText(field);
       writeAligned(field, table, {
         keepCaret: true
       });
-      autoWrites(field).push({
-        before,
-        after: editableField.fieldText(field),
-        undoneTo: null
-      });
     }
   }
-
-  // The automatic alignments of each field: { before, after, undoneTo },
-  // the field text before and after the alignment, and the text after the
-  // undo of the alignment and the edit before it.
-  const fieldAutoWrites = new WeakMap();
-
-  function autoWrites(field) {
-    if (!fieldAutoWrites.has(field)) fieldAutoWrites.set(field, []);
-    return fieldAutoWrites.get(field);
-  }
-
-  // The field text before the current input.
-  let textBeforeInput = null;
-
-  document.addEventListener('beforeinput', (event) => {
-    if (fieldTables.has(event.target)) {
-      textBeforeInput = editableField.fieldText(event.target);
-    }
-  });
-
-  // An undo from the aligned text to the text before the alignment undoes
-  // one more step, the edit before the alignment. A redo of that edit
-  // redoes the alignment too.
-  document.addEventListener('input', (event) => {
-    const field = event.target;
-    const isUndo = event.inputType === 'historyUndo';
-    if (!fieldAutoWrites.has(field) || (!isUndo && event.inputType !== 'historyRedo')) {
-      return;
-    }
-    const previous = textBeforeInput;
-    const text = editableField.fieldText(field);
-    const write = autoWrites(field).findLast((each) => text === each.before && (
-      isUndo ? previous === each.after : previous === each.undoneTo
-    ));
-    if (!write) return;
-    if (isUndo) {
-      document.execCommand('undo');
-      write.undoneTo = editableField.fieldText(field);
-    } else {
-      document.execCommand('redo');
-    }
-  });
 
   // Follows the table that holds the caret. When the caret leaves a changed
   // table, the table is aligned after the current event: the caret move
@@ -1416,7 +1367,10 @@
       editing = {
         field,
         start: table.start,
-        changed: false
+        // A write puts the caret after the written text, so a table that
+        // gets the caret with a write is changed by it, for example, by an
+        // undo with the caret outside the table.
+        changed: inputField === field
       };
     }
   }
@@ -1426,8 +1380,16 @@
   // runs in the capture phase, before field_widgets.js moves the caret
   // state on the same input.
   document.addEventListener('input', (event) => {
-    if (!aligning && editing?.field === event.target) editing.changed = true;
+    if (aligning) return;
+    if (editing?.field === event.target) editing.changed = true;
+    inputField = event.target;
   }, true);
+
+  // This script runs after field_widgets.js, so its listener comes after the
+  // one of field_widgets.js.
+  document.addEventListener('input', () => {
+    inputField = null;
+  });
 
   fieldWidgets.register({
     id: 'table',

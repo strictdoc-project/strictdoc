@@ -1372,15 +1372,37 @@ TITLE: Field writes through the browser editing commands
 STATEMENT: >>>
 A script that changes the text of a field shall write through the
 ``writeText()`` function of ``editable_field.js``. ``writeText()`` shall select
-the range and write the HTML-escaped text with ``execCommand('insertHTML')``, so
-that the browser records the change in its undo history.
+the range, write the HTML-escaped text with ``execCommand('insertHTML')``, and
+record the write as one step of the undo history of the field.
 <<<
 RATIONALE: >>>
-The browser does not record a DOM change that a script makes, and its undo
-history then refers to nodes that are gone. Ctrl+Z after such a change does
-nothing, also for the typing before it. ``writeText()`` does not use
-``execCommand('insertText')``: in Chrome, a multi-line text written at the end
-of a field gets an extra line break after it.
+``execCommand('insertHTML')`` keeps the field plain text in Chrome and Firefox,
+fires the ``input`` event, and puts the caret after the written text.
+``writeText()`` does not use ``execCommand('insertText')``: in Chrome, a
+multi-line text written at the end of a field gets an extra line break after
+it.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-211
+
+[REQUIREMENT]
+MID: f16f24dd0d234d7aa50aaa005b178756
+UID: SDOC-LLR-226
+STATUS: Active
+TITLE: Undo history of a field
+STATEMENT: >>>
+``editable_field.js`` shall keep an undo history for each text field of a form
+that has no autocompletion, and for each cell of the table editor. Each
+``input`` event of the field and each ``writeText()`` call shall be one step,
+which keeps the changed part of the text. A text that an input method composes
+shall be one step. On Ctrl+Z or Ctrl+Shift+Z (Cmd+Z or Cmd+Shift+Z on macOS),
+or Ctrl+Y, ``editable_field.js`` shall cancel the undo of the browser and write
+the step of the focused field back, with the caret after the restored text.
+<<<
+RATIONALE: >>>
+The undo history of the browser is one history for the whole page, puts a
+whole typing run into one step, and works differently in Chrome and Firefox.
 <<<
 RELATIONS:
 - TYPE: Parent

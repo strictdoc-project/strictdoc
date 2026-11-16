@@ -10,6 +10,11 @@ from tests.end2end.helpers.screens.project_index.screen_project_index import (
 )
 from tests.end2end.server import SDocTestServer
 
+TABLE = "+---+----+\n| a | bb |\n+---+----+\n| 1x | 2  |\n+---+----+"
+ALIGNED_TABLE = (
+    "+----+----+\n| a  | bb |\n+----+----+\n| 1x | 2  |\n+----+----+"
+)
+
 
 class Test(E2ECase):
     def test(self):
@@ -29,44 +34,33 @@ class Test(E2ECase):
             table_editor = TableEditor(self, "STATEMENT")
             text = table_editor.get_field_text()
 
-            # Two edits are two undo steps: the caret moves between them.
             table_editor.do_place_caret_after("| 1")
             table_editor.do_type_at_caret("x")
-            first_typed = text.replace("| 1 ", "| 1x ", 1)
-            table_editor.assert_field_text(first_typed)
-            table_editor.do_place_caret_after("| 2")
-            table_editor.do_type_at_caret("y")
-            typed = first_typed.replace("| 2 ", "| 2y ", 1)
+            typed = text.replace("| 1 ", "| 1x ", 1)
+            assert TABLE in typed
             table_editor.assert_field_text(typed)
 
-            # The table is aligned when the caret leaves it.
+            # The table is aligned when the caret leaves it. The alignment
+            # is an undo step of its own.
             table_editor.do_place_caret_after("Paragraph.")
-            aligned = typed.replace(
-                "+---+----+\n| a | bb |\n+---+----+\n| 1x | 2y  |\n+---+----+",
-                "+----+----+\n| a  | bb |\n+----+----+\n| 1x | 2y |\n+----+----+",
-            )
-            assert aligned != typed
+            aligned = typed.replace(TABLE, ALIGNED_TABLE)
             table_editor.wait_for_field_text(aligned)
 
-            # One Ctrl+Z undoes the alignment and the edit before it, one
-            # Ctrl+Shift+Z redoes both.
             table_editor.do_undo()
-            table_editor.wait_for_field_text(first_typed)
+            table_editor.wait_for_field_text(typed)
+            table_editor.do_undo()
+            table_editor.wait_for_field_text(text)
+            table_editor.do_redo()
+            table_editor.wait_for_field_text(typed)
             table_editor.do_redo()
             table_editor.wait_for_field_text(aligned)
 
-            # After the undo, the table is aligned again when the caret
-            # leaves it.
-            table_editor.do_undo()
-            table_editor.wait_for_field_text(first_typed)
+            # RST rejects a misaligned table. After the undo of the
+            # alignment, the table is aligned again when the form is sent,
+            # also if the caret was outside the table on Ctrl+Z.
             table_editor.do_place_caret_after("Paragraph.")
-            table_editor.wait_for_field_text(
-                first_typed.replace(
-                    "+---+----+\n| a | bb |\n+---+----+\n| 1x | 2  |\n+---+----+",
-                    "+----+----+\n| a  | bb |\n+----+----+\n| 1x | 2  |\n+----+----+",
-                )
-            )
-
+            table_editor.do_undo()
+            table_editor.wait_for_field_text(typed)
             form.do_form_submit()
             screen_document.assert_text("Paragraph.")
 

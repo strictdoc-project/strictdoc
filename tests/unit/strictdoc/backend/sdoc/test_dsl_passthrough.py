@@ -315,6 +315,41 @@ STATEMENT: >>>
     assert input_sdoc == output
 
 
+def test_024_link_with_quoted_title_keeps_quotes(default_project_config):
+    """
+    The writer keeps the quotes of a title that does not need them, so the
+    link text keeps its length, for example, in a grid table.
+    """
+
+    input_sdoc = """
+[DOCUMENT]
+TITLE: Test Doc
+
+[REQUIREMENT]
+UID: unit
+STATEMENT: >>>
+This is a statement.
+<<<
+
+[TEXT]
+STATEMENT: >>>
++-------------------------+
+| [LINK: unit, "Units"]   |
++-------------------------+
+<<<
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input_sdoc)
+    assert isinstance(document, SDocDocument)
+
+    writer = SDWriter(default_project_config)
+    output = writer.write(document)
+
+    assert input_sdoc == output
+
+
 def test_030_multiline_statement(default_project_config):
     input_sdoc = """
 [DOCUMENT]

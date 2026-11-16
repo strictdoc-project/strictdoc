@@ -29,11 +29,14 @@ has a stronger highlight.
 
 | Caret position | Field button | Click |
 |---|---|---|
-| In an editable table | Edit (`✎`), next to the first line of the table | Opens the table in the editor. |
-| On a blank line | Insert (`+`) | The Table item of the insert menu opens the editor with an empty table of 3 columns, a header row, and 2 body rows. |
+| In an editable table | Edit (pencil icon), next to the first line of the table | Opens the table in the editor. |
+| In a misaligned table | Format table (wrench icon), under the edit button | Aligns the table (see Alignment). |
 
-On Apply, a new table replaces the blank caret line. Blank lines separate
-the table from the text around it.
+The Table item of the insert menu (`+` on a blank line, or `/` anywhere in
+the field) opens the editor with an empty table of 3 columns, a header
+row, and 2 body rows. On Apply, the table is a block: it goes after the
+paragraph that holds the caret, or in place of a blank caret line. Blank
+lines separate the table from the text around it.
 
 ### Alignment
 
@@ -47,8 +50,8 @@ its row. A misaligned table is still editable (see the parsers).
 | RST | Docutils rejects it ("Malformed table"). | Button. After a change, automatic when the caret leaves the table or the field loses focus. |
 | Markdown | Valid, only harder to read. | Button only. |
 
-- The button shows under the edit button (`✎`) while the caret is in a
-  misaligned table. It writes the table the same way as Apply of the
+- The Format table button shows under the edit button while the caret is
+  in a misaligned table. It writes the table the same way as Apply of the
   editor, without opening the editor.
 - A change is any write while the caret is in the table: typing, paste,
   undo, or a widget write such as a LINK tag. A table that the user only

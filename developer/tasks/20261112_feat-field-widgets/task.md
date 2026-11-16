@@ -4,45 +4,82 @@
 
 Multiline fields have widgets that insert and edit markup elements. The
 widgets work in server mode on two screens: the document screen (node
-form) and the table view (inline cell form).
+form) and the table view (inline cell form). The cells of the table editor
+take the widgets that fit a table cell (see Widget contexts).
 
-| Widget | Markup | Description |
-|---|---|---|
-| Table | RST, Markdown | [Table editor](../20261109_feat_table_editor/task.md) |
-| Link | RST, Markdown | [Link widget](#link-widget) |
-| Anchor | RST, Markdown | [Anchor widget](#anchor-widget) |
+| Widget | Markup | Kind | Description |
+|---|---|---|---|
+| Table | RST, Markdown | Block | [Table editor](../20261109_feat_table_editor/task.md) |
+| Link | RST, Markdown | Inline | [Link widget](#link-widget) |
+| Anchor | RST, Markdown | Block | [Anchor widget](#anchor-widget) |
 
 The widgets work only with RST and Markdown.
 
 ### Field button
 
-While the field has focus, one button shows in the left margin of the
+While a form field has focus, one button shows in the left margin of the
 field:
 
 | Caret position | Button | Location | Click |
 |---|---|---|---|
-| In a block that a widget can edit | Edit (`✎`) | Next to the first line of the block | Opens the widget editor for the block. |
+| In a block that a widget can edit | Edit (pencil icon) | Next to the first line of the block | Opens the widget editor for the block. |
 | On a blank line outside such a block | Insert (`+`) | Next to the caret line | Opens the insert menu. |
 
 The button hides on any other caret line, while the user types, and when
-the field loses focus. The insert button shows only if a widget supports
-the field markup.
+the field loses focus. The insert button shows only if a widget works in
+the field.
+
+A widget can add a second button under the edit button for its block. The
+table widget adds the Format table button (wrench icon) for a misaligned
+table.
 
 ### Insert menu
 
-The insert menu has one item for each widget that supports the field
-markup. An item inserts a new element at the blank caret line. The menu
-opens under the button, or above the button if there is no room below.
+The insert menu has one item for each widget that works in the field. The
+menu opens at the caret:
 
-The menu closes:
+- when the user clicks the insert button
+- when the user types `/` anywhere in the field, also inside a word.
 
-- on a second click on the button
-- on Escape
-- on a click outside the menu
-- when the caret moves to another line.
+While the menu is open, an `insert` placeholder marks the caret position.
+The placeholder is not part of the field text and is never saved.
+
+| Action | Result |
+|---|---|
+| Text typed after `/` | Filters the items by the start of a word of the label. If no item matches, the menu closes, and the text stays. |
+| Arrow keys up and down | Move the active item. |
+| Enter, Tab, or a click on an item | Removes `/` and the filter text, and inserts the element of the widget. |
+| Escape, or the Close menu item | Closes the menu. The typed text stays, `/` included. |
+| Arrow keys left and right, a click outside the menu, a caret move, a focus loss | Close the menu. |
+| Typing after the insert button opened the menu | Closes the menu. |
 
 Escape closes only the menu. In the table view, the cell stays in edit
 mode.
+
+Where the element goes:
+
+- An inline widget (Link) writes its text at the caret, with a space
+  before and after the text when the neighbor is not a space. On a blank
+  line, the text forms its own paragraph, with blank lines around it.
+- A block widget (Table, Anchor) writes its block as a new paragraph
+  after the block of non-blank lines that holds the caret. The text at the
+  caret stays as it is. On a blank line, the block takes the place of the
+  line. Blank lines separate the block from its neighbors.
+
+A widget can capture the input at the caret. Then `/` is plain text and
+does not open the menu. The link widget does so after `[LINK:`, because a
+UID can contain `/`.
+
+### After a write
+
+When a widget writes into the field:
+
+- The page scrolls as little as needed to show the caret line. A caret
+  below the visible area ends up at its bottom edge. A visible caret does
+  not scroll the page.
+- The written text has a highlight that fades out within a second. A
+  widget highlights only its result, not a draft such as the `[LINK: `
+  text before the user chooses a target.
 
 ### Link widget
 
@@ -55,38 +92,34 @@ The list opens on these triggers:
 
 | Trigger | Query | The tag replaces |
 |---|---|---|
-| `@` at the start of a word | The text after `@`, up to the caret | `@` and the query |
 | `[LINK:` | The text after `[LINK:`, up to the caret | `[LINK:` and the query |
-| Link item of the insert menu | The text typed after the item writes `@` on the blank caret line | `@` and the query |
+| Link item of the insert menu | The item writes `[LINK: ` at the caret, then the user types the query | `[LINK:` and the query |
 
 The list behavior:
 
 - A query can have several words. A target matches if its UID and title
-  together contain every word.
-- After `@`, a space can start plain text, for example `meet @ 10:00`.
-  As a result, a query with a space that matches no target closes the
-  list. A query without a space that matches no target shows "No matches
-  found".
+  together contain every word. A query that matches no target shows "No
+  matches found".
 - Only typing opens the list. A caret move only closes the list, when the
-  caret leaves the trigger. As a result, a click into old text with `@`,
-  such as an e-mail address, does not open the list.
+  caret leaves the trigger. As a result, a click into an old trigger does
+  not open the list.
 - The list stays hidden until the first response arrives. While the list
   is hidden, the keys work as usual.
 - The arrow keys move the selection. Enter or Tab writes the selected
   target. A click on a target writes the target.
 - Escape closes only the list and keeps the typed text. In the table view,
   the cell stays in edit mode.
-- After Escape, or after a query with a space that matches no target, the
-  list stays closed until the user starts another trigger.
+- After Escape, the list stays closed until the user starts another
+  trigger.
+- While the caret is after `[LINK:`, a typed `/` is part of the query.
 
 ### Anchor widget
 
 The anchor widget writes an `[ANCHOR: <UID>]` or `[ANCHOR: <UID>, <title>]`
-tag on the blank caret line. An anchor tag is block-level, and the insert
-button shows only on a blank line. The widget does not edit existing
-anchors.
+tag. An anchor tag is block-level: it is a block widget. The widget does
+not edit existing anchors.
 
-The Anchor item of the insert menu opens a form under the field button:
+The Anchor item of the insert menu opens a form under the caret position:
 
 | Input | Required | Check while the user types |
 |---|---|---|
@@ -136,20 +169,22 @@ A widget is an object with these members:
 | `id` | yes | Name of the insert menu item, its test ID, and its icon in `components/field_widgets/icons.jinja`. |
 | `label` | yes | Text of the insert menu item. |
 | `supports(markup, context)` | yes | True if the widget works in a field with this markup and in this context (see Widget contexts). |
-| `insert(field, line, rect)` | yes | Inserts a new element at the blank caret line. `rect` is the viewport rectangle of the field button, for a widget that shows its own popup there. |
-| `scan(field, lines, markup)` | no | Called after every change of the text of a field with a supported markup. |
+| `insert(field, at, rect)` | yes | Inserts a new element. For an inline widget, `at` is the text offset of the caret. For a block widget, `at` is the caret line. `rect` is the viewport rectangle of the caret position, for a widget that shows its own popup there. |
+| `inline` | no | True for an inline widget. A block widget leaves it out. |
+| `scan(field, lines, markup)` | no | Called after every change of the text of a field where the widget works. |
 | `forget(field)` | no | Called when the field is no longer in the DOM. The widget drops its data about the field. |
+| `capturesInput(field)` | no | True if the text at the caret belongs to the widget, for example the query of an unfinished tag. Then a typed `/` does not open the insert menu. |
 | `blockAt(field, line)` | no | Returns the block `{start, end, ...}` that holds the line, or null. |
 | `editTitle` | no | Title of the edit button. |
 | `edit(field, block)` | no | Edits a block from `blockAt()`. |
 | `activate(field, block)` | no | Called on every caret move with the block that holds the caret, or null. Also called with null when the field loses focus. |
 | `extraAction(field, block)` | no | Returns `{icon, title, run}` for a second button under the edit button, or null. `icon` names an icon in `components/field_widgets/icons.jinja`. The button calls `run()`. The table widget uses it for the Format table button (icon `format`, a wrench). |
 
-Any widget can have `scan()` and `forget()`. The members from `blockAt()`
-to `extraAction()` are for widgets that recognize their own blocks in the
-field text, such as tables.
+Any widget can have `scan()`, `forget()`, and `capturesInput()`. The
+members from `blockAt()` to `extraAction()` are for widgets that recognize
+their own blocks in the field text, such as tables.
 
-`StrictDoc.fieldWidgets` also gives the widgets seven helpers:
+`StrictDoc.fieldWidgets` also gives the widgets eight helpers:
 
 - `hasWidget(field, id)`: true if the widget works in the field.
 - `lineRange(field, start, end, startColumn = 0)`: a DOM range for the
@@ -158,9 +193,13 @@ field text, such as tables.
 - `textBeforeCaret(field)`: the field text before the caret, or null if
   the caret is not in the field or the script cannot map the field DOM to
   its text.
-- `insertBlock(field, line, blockLines)`: writes the lines in place of the
-  blank caret line. Blank lines separate the block from the text around
-  it.
+- `insertInline(field, offset, text, options)`: writes the text at the
+  offset, with spaces around it, or as a new paragraph on a blank line
+  (`inlineFormsParagraph()`). The caret goes after the text.
+- `insertBlock(field, line, blockLines, options)`: writes the lines as a
+  new paragraph after the block that holds the line, or in place of the
+  line if it is blank. Blank lines separate the block from the text
+  around it.
 - `replaceLines(field, start, end, newLines, options)`: writes the lines in
   place of the lines from `start` to `end`. With `{keepCaret: true}`, the
   caret stays where the user put it, and a field without focus does not
@@ -170,6 +209,11 @@ field text, such as tables.
   characters from `from` to `to` and puts the caret after the text.
 - `placeFixed(element, rect)`: puts a fixed element under the rectangle,
   or above it if there is no room below, inside the viewport.
+
+The helpers that write text highlight the written text, because a widget
+writes its result. A widget that writes a draft passes
+`{highlight: false}` to `insertInline()` or `insertBlock()`. The link
+widget does so for `[LINK: `.
 
 A widget popup that the form must not cut goes into `<body>` with a fixed
 position. Inside the form, the overflow of `sdoc-form-grid` would cut the
@@ -207,57 +251,85 @@ hold blocks such as lists or code. Such a widget checks both arguments:
 
 ### Field integration
 
-- A field outside a form, such as a cell of the table editor, gets the
-  widgets through attributes: `data-field-widgets-markup` (the markup
-  that a form field takes from `document_markup`),
-  `data-field-widgets-document-mid` (the document for the order of link
-  targets), and `data-field-widgets-context` (the context for
-  `supports()`; without it, the context is `field`).
-- The insert menu and the widget popups have `z-index: 100000`, above the
-  modals (`sdoc-backdrop`, 99999), so they work in the table editor. The
-  insert menu rule includes `.dropdown_menu` to be stronger than its
-  `z-index`.
-- The placeholder of the insert menu splits a text node of the field. The
-  field is scanned again after the placeholder is inserted and removed,
-  so `lineRange()` never uses the old text nodes.
-
 - `StrictDoc.onInsert()` initializes every multiline contenteditable,
   including the fields that Turbo inserts later. The script has no
   `MutationObserver` of its own.
 - The field markup comes from the `document_markup` input of the form.
   The table view cell form gets this input from the
   `table__get_node_contenteditable_inline` route.
+- A field outside a form, such as a cell of the table editor, gets the
+  widgets through attributes: `data-field-widgets-markup` (the markup
+  that a form field takes from `document_markup`),
+  `data-field-widgets-document-mid` (the document for the order of link
+  targets), and `data-field-widgets-context` (the context for
+  `supports()`; without it, the context is `field`).
 - The button goes after the hidden textarea of the field, because
   `editable_field.js` finds the textarea through
   `editable.nextElementSibling`. The button is absolutely positioned in
-  `sdoc-form-field`, so the button scrolls with the field.
-- The insert menu is a fixed popup in `<body>` (see the helpers), placed
-  with `placeFixed()` at the button. The menu stops the propagation of
-  its clicks and follows the button on scroll and on a window resize.
+  `sdoc-form-field`, so the button scrolls with the field. The edit
+  button and the extra button take their SVG icons from
+  `components/field_widgets/icons.jinja`.
 - The source text is the `innerText` of the field, the same value that
   `editable_field.js` saves.
-- A write replaces the field content with one text node and dispatches a
-  bubbling `input` event. `editable_field.js` handles the event and
-  updates the hidden textarea.
 - Delegated `input`, `selectionchange`, `pointerup`, and `focusout`
   listeners on `document` rescan the field and update the button. On
   `focusout`, the widgets get `activate()` with null, so a widget can act
-  when the user leaves the field, for example, before the form is sent. After
-  `input`, the script records the caret position. The button stays hidden
-  until the caret moves elsewhere.
+  when the user leaves the field, for example, before the form is sent.
+  After `input`, the script records the caret position. The button stays
+  hidden until the caret moves elsewhere.
 - A `Map` holds the state of each field. A rescan removes the entries of
   the fields that are no longer in the DOM and calls `forget()` of every
   widget for each removed field.
-- In the table view, Escape in a field cancels the cell edit. When the
-  insert menu is open, a capture listener on `document` stops the Escape
-  event and closes only the menu.
+
+Insert menu:
+
+- The `input` listener opens the menu when the user types `/`
+  (`inputType` `insertText`), unless a widget captures the input. The
+  menu remembers the offset of `/`, and the text between `/` and the caret
+  is the query.
+- The placeholder is an empty `contenteditable="false"` element at the
+  caret. Its `insert` text comes from CSS `::before`, so `innerText` does
+  not include it. The placeholder splits a text node of the field, so
+  the field is scanned again after the placeholder is inserted and
+  removed. Otherwise `lineRange()` would use the old text nodes.
+- The menu is a fixed popup in `<body>` (see the helpers), placed with
+  `placeFixed()` at the placeholder. The menu stops the propagation of
+  its clicks and follows the placeholder on scroll and on a window resize.
+- A capture listener on `document` handles the menu keys and stops them,
+  so the field and the table view do not see them. In the table view,
+  Escape in a field would cancel the cell edit.
+- The insert menu and the widget popups have `z-index: 100000`, above the
+  modals (`sdoc-backdrop`, 99999), so they work in the table editor. The
+  insert menu rule includes `.dropdown_menu` to be stronger than its
+  `z-index`.
+
+Writes:
+
+- A write replaces the field content with one text node and dispatches a
+  bubbling `input` event. `editable_field.js` handles the event and
+  updates the hidden textarea.
+- Scrolling to the caret: the browser does not scroll to a caret that a
+  script sets. The script first writes the text with a marker element at
+  the caret and calls `scrollIntoView({block: 'nearest'})` on it. The
+  marker is an inline block with a zero-width space, so it has the height
+  of the line: Chrome scrolls an empty or inline marker only to the top of
+  the line. The field gets the focus with `preventScroll`, because a
+  focus scroll stops the smooth scroll of `.main`.
+- The highlight of the written text uses the CSS Custom Highlight API
+  (`::highlight(field-widgets-written)`). `::highlight()` cannot be
+  animated, so a class on the field animates the custom property
+  `--field-widgets-written-alpha` (`@property`), and the highlight takes
+  its color from the property. When the animation ends, the highlight is
+  removed.
 
 ### Link widget implementation
 
-`link_widget.js` with `link_widget.css` is the `link` widget. The widget
-has no blocks of its own. As a result, the widget implements only
-`supports()` and `insert()`. The widget listens to `input` itself and
-checks the field with `hasWidget()`.
+`link_widget.js` with `link_widget.css` is the `link` widget, an inline
+widget. The widget has no blocks of its own. As a result, the widget
+implements only `supports()`, `insert()`, and `capturesInput()`. The
+widget listens to `input` itself and checks the field with `hasWidget()`.
+`insert()` writes `[LINK: ` with `insertInline()` and
+`{highlight: false}`, and the `input` event of this write opens the popup.
 
 The list of link targets comes from `GET /autocomplete/link`:
 
@@ -270,8 +342,9 @@ The list of link targets comes from `GET /autocomplete/link`:
   UID is taken.
 - `document_mid` is optional. The targets of this document come first.
   The widget sends the `context_document_mid` input of the form, that is,
-  the document on the screen. The table view cell form gets this input
-  from the `table__get_node_contenteditable_inline` route.
+  the document on the screen, or the `data-field-widgets-document-mid`
+  attribute of a field outside a form. The table view cell form gets the
+  input from the `table__get_node_contenteditable_inline` route.
 - The server walks the traceability index: each document, then the nodes
   of the document in tree order, then the anchors in the node fields. The
   response has at most `AUTOCOMPLETE_LIMIT` (50) targets.
@@ -304,9 +377,9 @@ affects.
 
 ### Anchor widget implementation
 
-`anchor_widget.js` with `anchor_widget.css` is the `anchor` widget. The
-widget implements only `supports()` and `insert()`. `insert()` opens the
-form at the rectangle of the field button.
+`anchor_widget.js` with `anchor_widget.css` is the `anchor` widget, a
+block widget. The widget implements only `supports()` and `insert()`.
+`insert()` opens the form at the rectangle of the caret position.
 
 The form:
 
@@ -337,30 +410,50 @@ this case, the field has no button, and `lineRange()` returns null.
 
 The page objects in `tests/end2end/helpers/components/`:
 
-- `field_widgets.py`: `FieldWidgets`, the caret, the field button, and the
-  insert menu
+- `field_widgets.py`: `FieldWidgets`, the caret, the field text, the field
+  button and the extra button, and the insert menu with its placeholder
 - `table_editor.py`: `TableEditor(FieldWidgets)`, the table highlights
   and the editor modal
 - `link_widget.py`: `LinkWidget(FieldWidgets)`, the popup of link targets
 - `anchor_widget.py`: `AnchorWidget(FieldWidgets)`, the anchor form.
 
 The page objects use the test IDs `field-widgets-button`,
-`field-widgets-insert-menu`, `field-widgets-insert-<id>`,
-`field-widgets-link-popup`, and `field-widgets-anchor-*`.
+`field-widgets-extra-button`, `field-widgets-insert-menu`,
+`field-widgets-insert-<id>`, `field-widgets-menu-close`,
+`field-widgets-placeholder`, `field-widgets-link-popup`, and
+`field-widgets-anchor-*`.
 
-The table editor tests cover the button and the insert menu, see
-[Table editor](../20261109_feat_table_editor/task.md).
+The table editor tests cover the button and the insert menu of the
+`+` button, see [Table editor](../20261109_feat_table_editor/task.md).
+
+`tests/end2end/screens/document/field_widgets/insert_menu/` covers the
+insert menu of `/`:
+
+- `/` inside a word opens the menu with the placeholder, and the
+  placeholder is not in the field text
+- Escape and the Close menu item keep `/`
+- a query that matches no item closes the menu and keeps the text
+- a block widget goes after the paragraph of two lines, and at the end of
+  the field it gets a blank line before it only
+- after the write, the page scrolls to the caret: the test adds space
+  above the field, so the page can scroll, and puts the caret line at the
+  bottom of the viewport. The check waits for the smooth scroll and
+  compares the caret with the scroll container, which ends above the page
+  footer.
 
 `tests/end2end/screens/document/field_widgets/insert_links/` covers the
 link widget:
 
-- `@` with Enter, and `[LINK:` with a click
+- `[LINK:` with Enter and with a click
 - Escape: the text stays, and the popup does not open again for the same
-  trigger
-- a query with a space that matches nothing closes the popup
-- after the user deletes the closed trigger, a new `@` at the same place
-  opens the popup
-- the Link item of the insert menu with a query of two words.
+  trigger; `/` after `[LINK:` does not open the insert menu
+- after the user deletes the closed trigger, a new trigger at the same
+  place opens the popup
+- `/` inside a word with the query `li`: the link goes to the caret with
+  spaces around it
+- the Link item of the insert button on a blank line: the link forms its
+  own paragraph, and a query of two words finds the target
+- before a space, the link gets no space after it.
 
 `tests/end2end/screens/table/view_table_edit/edit_table_cell_statement_link_widget/`
 covers the table view: the popup in a narrow cell, a click on a target
@@ -379,3 +472,6 @@ not cancel or save the cell.
 endpoint: all kinds of targets, the match by UID and by title, the exact
 UID first, the kind labels, the current document first, and a request
 without `q`.
+
+The highlight of the written text has no automatic test: the highlight
+fades out within a second, so a check would depend on the test timing.

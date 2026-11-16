@@ -527,7 +527,6 @@
     event.preventDefault();
 
     const isSingle = editable.dataset.fieldType === 'singleline';
-    const hidden = editable.nextElementSibling;
 
     // Read the text before the first await. Firefox returns an empty string
     // from getData() once the synchronous part of the event handler is over.
@@ -546,9 +545,20 @@
       selection.getRangeAt(0).insertNode(document.createTextNode(text));
     }
 
-    hidden.value = editable.innerText;
+    // This handler prevents the default paste, so the browser fires no
+    // 'input' event. Fire it as the browser would: the input listener below
+    // syncs the hidden field, and other scripts, such as the field widgets,
+    // see the new text.
+    editable.dispatchEvent(new InputEvent('input', {
+      bubbles: true,
+      inputType: 'insertFromPaste',
+    }));
   });
 
+  // A contenteditable field is not a form control, so the form sends the
+  // hidden field, a textarea next to it. Every change of the field comes
+  // here as an 'input' event, and the listener copies the text into the
+  // hidden field.
   document.addEventListener('input', (event) => {
     const editable = event.target.closest?.(SEL_EDITABLE);
     if (!editable) return;

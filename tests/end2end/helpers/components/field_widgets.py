@@ -133,6 +133,27 @@ class FieldWidgets:  # pylint: disable=invalid-name
 
         WebDriverWait(self.test_case.driver, timeout).until(caret_in_viewport)
 
+    def do_paste_at_caret(self, text: str) -> None:
+        """
+        Pastes the text as the browser would on Ctrl+V, with a paste event
+        that carries the text. A real Ctrl+V needs the system clipboard.
+        """
+        field = self.test_case.find_element(self.field_xpath, by=By.XPATH)
+        self.test_case.execute_script(
+            """
+            const [field, text] = arguments;
+            const data = new DataTransfer();
+            data.setData('text/plain', text);
+            field.dispatchEvent(new ClipboardEvent('paste', {
+              clipboardData: data,
+              bubbles: true,
+              cancelable: true,
+            }));
+            """,
+            field,
+            text,
+        )
+
     def do_type_at_caret(self, text: str) -> None:
         ActionChains(self.test_case.driver).send_keys(text).perform()
 

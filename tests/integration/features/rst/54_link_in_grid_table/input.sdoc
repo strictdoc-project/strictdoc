@@ -1,0 +1,26 @@
+[DOCUMENT]
+TITLE: Links in a grid table
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Requirement title
+STATEMENT: >>>
+Requirement statement.
+<<<
+
+[TEXT]
+STATEMENT: >>>
++-----------------------------+------------------------------+
+| Link                        | Description                  |
++=============================+==============================+
+| [LINK: REQ-1]               | A link with the node title.  |
++-----------------------------+------------------------------+
+| [LINK: REQ-1, "Custom"]     | A link with a custom title.  |
++-----------------------------+------------------------------+
+| [LINK: REQ-1]s and          | A link followed by a letter. |
++-----------------------------+------------------------------+
+
++---------------+---------------+
+| Not changed   | No links here |
++---------------+---------------+
+<<<

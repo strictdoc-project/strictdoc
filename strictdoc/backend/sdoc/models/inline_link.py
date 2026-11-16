@@ -19,8 +19,14 @@ class InlineLink:
         # An optional custom link text. When it is None, the link renders
         # the display title of the linked node.
         self.title: Optional[str] = None
+
+        # The title as written in the source, with its quotes if it has them.
+        # get_source_value() writes it back as is, so that the link text keeps
+        # its length. For example, a grid table with the link stays aligned.
+        self.source_title: Optional[str] = None
         if title is not None and len(title) > 0:
             self.title = title.strip('"')
+            self.source_title = title
 
         # FIXME: Remove either mid or reserved_mid.
         self.mid: MID = MID.create()
@@ -30,9 +36,6 @@ class InlineLink:
         return self.parent.get_owning_node()
 
     def get_source_value(self) -> str:
-        if self.title is None:
+        if self.source_title is None:
             return f"[LINK: {self.link}]"
-        title = self.title
-        if "," in title or "]" in title:
-            title = f'"{title}"'
-        return f"[LINK: {self.link}, {title}]"
+        return f"[LINK: {self.link}, {self.source_title}]"

@@ -148,6 +148,18 @@ line of text did not render as an image in RST, because RST read it as part of
 the paragraph. The Web UI now puts an empty line between the reference and the
 text before and after it. Where an empty line is already there, the Web UI adds
 none.
+
+16\) Fixed: saving a document removed the quotes from a quoted link title that
+does not need them, for example ``"Title"``. The quotes now stay, so the link
+text keeps its length, and a grid table with the link stays aligned.
+
+17\) Fixed: an RST grid table with an inline link in a cell now renders. Before,
+StrictDoc replaced the link with longer markup before docutils parsed the
+table. The cell borders moved, and the export failed with "Malformed table".
+This happened also with links that the link widget inserts in the cells of the
+table editor. The RST export (``--formats=rst``) had the same problem with the
+``:ref:`` roles that replace the links. The RST export now aligns such tables
+again.
 <<<
 
 [[/SECTION]]

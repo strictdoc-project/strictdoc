@@ -75,15 +75,12 @@
     {{- field_value -}}
   </sdoc-contenteditable>
 
-  {%- if field_type == "singleline" -%}
-    <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}" {% if field_required %}required{% endif %}/>
-  {%- endif -%}
-
-  {%- if field_type == "multiline" -%}
-    <textarea hidden name="{{ field_input_name }}" {% if field_required %}required{% endif %}>
-      {{- field_value -}}
-    </textarea>
-  {%- endif -%}
+  {#
+    The form sends the field text in this hidden input, for single-line and
+    multiline fields. editable_field.js copies the text into it on every change
+    of the field.
+  #}
+  <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}" {% if field_required %}required{% endif %}/>
 
   {%- if
     field_render_errors

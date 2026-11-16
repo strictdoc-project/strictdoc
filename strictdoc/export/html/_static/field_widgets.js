@@ -893,7 +893,7 @@
     extraButton.addEventListener('mousedown', (event) => event.preventDefault());
     extraButton.addEventListener('click', () => fieldStates.get(field).extraAction?.run());
 
-    // The hidden textarea must stay the field's next sibling:
+    // The hidden input must stay the field's next sibling:
     // editable_field.js finds it with nextElementSibling.
     (field.nextElementSibling ?? field).after(button, extraButton);
 

@@ -1370,10 +1370,11 @@ UID: SDOC-LLR-225
 STATUS: Active
 TITLE: Field writes through the browser editing commands
 STATEMENT: >>>
-A script that changes the text of a field shall write through the
-``writeText()`` function of ``editable_field.js``. ``writeText()`` shall select
-the range, write the HTML-escaped text with ``execCommand('insertHTML')``, and
-record the write as one step of the undo history of the field.
+The paste handlers, the field widgets, and the Restore UID button shall write
+into a field through the ``writeText()`` function of ``editable_field.js``.
+``writeText()`` shall select the range, write the HTML-escaped text with
+``execCommand('insertHTML')``, and record the write as one step of the undo
+history of the field.
 <<<
 RATIONALE: >>>
 ``execCommand('insertHTML')`` keeps the field plain text in Chrome and Firefox,

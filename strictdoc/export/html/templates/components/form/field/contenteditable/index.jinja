@@ -75,15 +75,14 @@
     {{- field_value -}}
   </sdoc-contenteditable>
 
-  {%- if field_type == "singleline" -%}
-    <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}" {% if field_required %}required{% endif %}/>
-  {%- endif -%}
-
-  {%- if field_type == "multiline" -%}
-    <textarea hidden name="{{ field_input_name }}" {% if field_required %}required{% endif %}>
-      {{- field_value -}}
-    </textarea>
-  {%- endif -%}
+  {#
+    The form sends the field text in this hidden input. editable_field.js
+    copies the text into it on every change of the field. It is not a
+    textarea, also for a multiline field: in Chrome, a script that sets the
+    value of a textarea ends the current typing step of the undo history, and
+    Ctrl+Z then undoes the typing one character at a time.
+  #}
+  <input type="hidden" name="{{ field_input_name }}" value="{{ field_value }}" {% if field_required %}required{% endif %}/>
 
   {%- if
     field_render_errors

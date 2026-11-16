@@ -1,3 +1,5 @@
+import platform
+
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -60,6 +62,23 @@ class FieldWidgets:  # pylint: disable=invalid-name
 
     def do_type_at_caret(self, text: str) -> None:
         ActionChains(self.test_case.driver).send_keys(text).perform()
+
+    # The browser's undo and redo keys: Ctrl+Z and Ctrl+Shift+Z, Cmd on macOS.
+    UNDO_MODIFIER = (
+        Keys.COMMAND if platform.system() == "Darwin" else Keys.CONTROL
+    )
+
+    def do_undo(self) -> None:
+        ActionChains(self.test_case.driver).key_down(
+            self.UNDO_MODIFIER
+        ).send_keys("z").key_up(self.UNDO_MODIFIER).perform()
+
+    def do_redo(self) -> None:
+        ActionChains(self.test_case.driver).key_down(
+            self.UNDO_MODIFIER
+        ).key_down(Keys.SHIFT).send_keys("z").key_up(Keys.SHIFT).key_up(
+            self.UNDO_MODIFIER
+        ).perform()
 
     def assert_field_text(self, text: str) -> None:
         field = self.test_case.find_element(self.field_xpath, by=By.XPATH)

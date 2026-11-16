@@ -5,7 +5,8 @@
 //
 // A popup at the caret lists the link targets from /autocomplete/link:
 // documents, sections, nodes, and anchors with a UID. The targets of the
-// current document (the form's "context_document_mid" input) come first.
+// current document come first: the form's "context_document_mid" input, or
+// the data-field-widgets-document-mid attribute of a field outside a form.
 // The popup opens when the user types "[LINK:". The query is the text
 // after "[LINK:", up to the caret. The tag replaces "[LINK:" and the
 // query. The Link item of the insert menu writes "[LINK: " at the caret

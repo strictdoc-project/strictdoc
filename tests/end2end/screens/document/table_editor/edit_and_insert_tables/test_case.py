@@ -88,9 +88,9 @@ class Test(E2ECase):
             table_editor.assert_cell(3, 0, "")
             table_editor.do_fill_cell(0, 0, "Discarded")
 
-            # A cell takes the inline widgets: "/" opens the insert menu with
-            # Link only. The menu and the link popup are above the modal.
-            # Escape closes only the popup.
+            # A cell is a field in the "table-cell" context: "/" opens the
+            # insert menu with Link only. The menu and the link popup are
+            # above the modal. Escape closes only the popup.
             table_editor.do_fill_cell(1, 1, "/")
             table_editor.assert_insert_items(["link"])
             table_editor.assert_on_top(table_editor.INSERT_MENU)
@@ -159,8 +159,8 @@ class Test(E2ECase):
             table_editor.assert_highlighted_tables(2)
             RST_ALIGNED_TEXT = table_editor.get_field_text()
 
-            # A typed space misaligns a row. The extra button aligns the
-            # table: the trailing space of the cell goes away.
+            # A typed space misaligns a row. The Format table button aligns
+            # the table: the trailing space of the cell goes away.
             table_editor.do_place_caret_after("| first")
             table_editor.do_type_at_caret(" ")
             table_editor.do_place_caret_after("second")
@@ -227,8 +227,8 @@ class Test(E2ECase):
             table_editor.assert_highlighted_tables(3)
 
             # The Markdown table is misaligned: the escaped "\|" moves the
-            # last "|" of its row. The extra button can align it, but the
-            # table is not aligned automatically when the caret leaves it.
+            # last "|" of its row. The Format table button can align it, but
+            # the table is not aligned automatically when the caret leaves it.
             table_editor.do_place_caret_after("| or")
             table_editor.assert_extra_button("Format table")
             table_editor.do_type_at_caret(" ")

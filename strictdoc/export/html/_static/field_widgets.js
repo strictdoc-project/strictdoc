@@ -1,7 +1,8 @@
 // @relation(SDOC-SRS-208, scope=file)
 //
 // Field widgets for the multiline fields of the node form and of the table
-// view cell form.
+// view cell form, and for the cells of the table editor (see "Fields outside
+// a form").
 //
 // A widget inserts or edits one kind of markup element, for example a
 // table. Each widget is a separate script that registers itself with
@@ -9,21 +10,20 @@
 // share:
 // - the field text, its lines, and the mapping of text positions to the DOM
 // - the button in the field's left margin
-// - the insert menu of the button
+// - the insert menu
 // - writing new text back into the field.
 //
 // While the caret is in a field, the button shows next to a block that a
 // widget can edit ("edit"), or next to a blank caret line ("insert"). It
 // hides while the user types.
 //
-// The insert menu has one item per widget that supports the field markup
-// (the form's "document_markup" input). It opens at the caret when the
-// user clicks the insert button or types "/" anywhere in the field. The
-// text typed after "/" filters the items. The arrow keys move the active
-// item, Enter or Tab chooses it. While the menu is open, a
-// placeholder marks the caret position. The placeholder is not part of the
-// field text. Escape or the last item of the menu closes the menu and keeps
-// the typed text. When the user chooses a widget, the menu removes the "/"
+// The insert menu has one item per widget that works in the field (see
+// supports() in the widget contract). It opens at the caret when the user
+// clicks the insert button or types "/" anywhere in the field. The text
+// typed after "/" filters the items. The arrow keys move the active item,
+// Enter or Tab chooses it. While the menu is open, a placeholder marks the
+// caret position. The placeholder is not part of the field text. Escape or
+// the last item of the menu closes the menu and keeps the typed text. When the user chooses a widget, the menu removes the "/"
 // and the filter text, and the widget inserts its element:
 // - an inline widget at the caret position, with spaces around it. On a
 // blank line, the element forms a new paragraph (see
@@ -54,7 +54,7 @@
 // absent for a block widget (see insertBlock()).
 // Any widget can also have these optional hooks:
 // - scan(field, lines, markup): called after every change of the text of
-// a field with a supported markup.
+// a field where the widget works.
 // - forget(field): called when the field is no longer in the DOM, so the
 // widget can drop its data about the field.
 // - capturesInput(field): returns true if the text at the caret belongs to
@@ -93,12 +93,13 @@
 // get it.
 // - replaceText(field, from, to, text): writes the text in place of the
 // characters [from, to) and puts the caret after it.
+// - placeFixed(element, rect): puts a fixed element under the rect, or
+// above it if there is no room below, inside the viewport.
 // The helpers that write text highlight the written text for a moment (see
 // highlightWritten()), because a widget writes its result, not a draft. A
 // widget that writes a draft, for example, the start of a tag that the
-// user completes, passes the option {highlight: false}.
-// - placeFixed(element, rect): puts a fixed element under the rect, or
-// above it if there is no room below, inside the viewport.
+// user completes, passes the option {highlight: false} to insertInline()
+// or insertBlock().
 //
 // A widget popup that must not be cut by the form goes into <body> with a
 // fixed position (see placeFixed()). Inside the form, the overflow of
@@ -282,7 +283,7 @@
   // query: the text typed after "/".
   let menu = null;
 
-  // Returns the widgets that support the markup of the field.
+  // Returns the widgets that work in the field (see supports()).
   function widgetsFor(field) {
     const {
       markup,

@@ -12,10 +12,11 @@
 // so the editor never rewrites a table it has misread.
 //
 // The field button edits the table that holds the caret. The insert menu
-// inserts a new table. Both open a modal that edits a copy
-// of the table: cells, grips with a menu for rows and columns, insert
-// buttons on the borders, and extend bars. Apply writes the serialized
-// table back into the field through field_widgets.js.
+// inserts a new table. Both open a modal that edits a copy of the table:
+// cells, grips with a menu for rows and columns, insert buttons on the
+// borders, and extend bars. Apply writes the serialized table back into the
+// field through field_widgets.js. The cells take the field widgets that
+// work in a table cell, such as Link (see cellWidgetContext()).
 //
 // The CSS Custom Highlight API paints the tables in place, so there are no
 // overlay elements to position or to keep away from the caret.
@@ -26,8 +27,8 @@
 // wider than their text is aligned too. A misaligned table is still
 // editable, but RST rejects it ("Malformed table"), and in Markdown it is
 // only harder to read. So:
-// - Next to the edit button of a misaligned table, a second button aligns
-// it: it writes the table the same way as Apply of the editor.
+// - Under the edit button of a misaligned table, the Format table button
+// aligns it: it writes the table the same way as Apply of the editor.
 // - An RST table that the user or a widget has changed is aligned
 // automatically when the caret leaves the table or the field loses focus.
 // Only a changed table is aligned, so a table that the user only passes
@@ -753,10 +754,6 @@
     };
   }
 
-  // Opens the modal for a copy of `table`; onApply(table) receives the
-  // edited copy. The editor always shows a header row: serializing decides
-  // what an empty header becomes in the format. The header row has no grip:
-  // it cannot be moved or deleted, and it stays first.
   // The cells of the editor are fields of field_widgets.js in the
   // "table-cell" context. Each widget decides in supports() if it works in a
   // cell. The widgets also need the markup and the document of the field
@@ -769,6 +766,11 @@
     };
   }
 
+  // Opens the modal for a copy of `table`; onApply(table) receives the
+  // edited copy. The editor always shows a header row: serializing decides
+  // what an empty header becomes in the format. The header row has no grip:
+  // it cannot be moved or deleted, and it stays first. `widgetContext` comes
+  // from cellWidgetContext().
   function openEditor(title, table, onApply, widgetContext) {
     const edited = copyTable(table);
     if (!edited.hasHeader) {

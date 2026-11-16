@@ -1,0 +1,14 @@
+[DOCUMENT]
+TITLE: Paste
+
+[REQUIREMENT]
+TITLE: Requirement title
+STATEMENT: >>>
+Paragraph.
+
++-----+-----+
+| a   | b   |
++-----+-----+
+
+Last paragraph.
+<<<

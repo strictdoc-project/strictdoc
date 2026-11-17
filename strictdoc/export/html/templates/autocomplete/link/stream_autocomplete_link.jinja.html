@@ -1,2 +1,3 @@
 {% for uid, title, kind in targets %}
-<li class="autocomplete_item" role="option" data-autocompletable-value="{{ uid }}" data-autocompletable-kind="{{ kind }}"><span class="autocomplete_item_uid">{{ uid }}</span> {{ title }} <span class="autocomplete_item_kind">{{ kind }}</span></li>{% endfor %}
+{% with item_value=uid, item_title=title, item_kind=kind %}{% include "components/autocomplete/item.jinja" %}{% endwith %}
+{%- endfor %}

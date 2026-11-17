@@ -1,2 +1,3 @@
 {% for node in nodes %}
-<li class="autocomplete_item" role="option" data-autocompletable-value="{{ node.reserved_uid }}"><span class="autocomplete_item_uid">{{ node.reserved_uid }}</span> {{ node.reserved_title }}</li>{% endfor %}
+{% with item_value=node.reserved_uid, item_title=node.reserved_title or "" %}{% include "components/autocomplete/item.jinja" %}{% endwith %}
+{%- endfor %}

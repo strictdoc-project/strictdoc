@@ -1,2 +1,3 @@
 {% for value, is_selected in values %}
-<li class="autocomplete_item" role="option" {% if is_selected %}aria-disabled="true" {% endif %}data-autocompletable-value="{{ value }}">{{ value }}</li>{% endfor %}
+{% with item_value=value, item_disabled=is_selected %}{% include "components/autocomplete/item.jinja" %}{% endwith %}
+{%- endfor %}

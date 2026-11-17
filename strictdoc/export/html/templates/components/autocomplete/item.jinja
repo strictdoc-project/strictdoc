@@ -1,0 +1,31 @@
+{#
+  An option of an autocomplete list (autocomplete.css, autocomplete.js).
+
+    {%- with
+      item_value = "REQ-1",
+      item_title = "Requirement title",
+      item_kind = "REQUIREMENT",
+      item_disabled = false
+    -%}
+    {% include "components/autocomplete/item.jinja" %}
+    {%- endwith -%}
+
+  Only item_value is required.
+  With item_title, the option shows item_value as a UID before the title.
+  item_kind is the kind of a link target; anchor_widget.js reads it from
+  data-autocompletable-kind.
+  item_disabled marks a value that the field already has.
+#}
+{%- assert item_value is defined, "item_value is defined" -%}
+<li class="autocomplete_item" role="option"
+  {%- if item_disabled is defined and item_disabled %} aria-disabled="true"{% endif %}
+  {{- " " -}} data-autocompletable-value="{{ item_value }}"
+  {%- if item_kind is defined %} data-autocompletable-kind="{{ item_kind }}"{% endif -%}
+>
+  {%- if item_title is defined -%}
+    <span class="autocomplete_item_uid">{{ item_value }}</span> {{ item_title }}
+  {%- else -%}
+    {{ item_value }}
+  {%- endif -%}
+  {%- if item_kind is defined %} <span class="autocomplete_item_kind">{{ item_kind }}</span>{% endif -%}
+</li>

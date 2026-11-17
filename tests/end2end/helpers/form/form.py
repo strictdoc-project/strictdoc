@@ -7,6 +7,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from strictdoc.helpers.mid import MID
 from tests.end2end.conftest import test_environment
 from tests.end2end.e2e_case import E2ECase
+from tests.end2end.helpers.components.autocomplete import (
+    autocomplete_list,
+    autocomplete_list_xpath,
+)
 
 
 class Form:  # pylint: disable=invalid-name
@@ -191,12 +195,7 @@ class Form:  # pylint: disable=invalid-name
 
         field_xpath = f"(//*[@data-testid='{test_id}'])"
         element = self.test_case.find_element(field_xpath)
-        hidden_input = element.find_element(
-            By.XPATH, 'following-sibling::input[@type="hidden"]'
-        )
-        results_ul = hidden_input.find_element(
-            By.XPATH, "following-sibling::ul[1]"
-        )
+        results_ul = autocomplete_list(element)
 
         # We simulate a user typing the supplied field_value.
         self.test_case.type(field_xpath, f"{field_value}", by=By.XPATH)
@@ -206,14 +205,9 @@ class Form:  # pylint: disable=invalid-name
             self.test_case.driver, test_environment.wait_timeout_seconds
         ).until(lambda _: results_ul.is_displayed())
 
-        # We send Arrow-Down and Enter select the first match.
-        # The stimulus.js controller uses a debounce of 10ms, we are
-        # careful to use an larger interval inbetween key presses.
+        # The first match is the active option, so Enter selects it.
         len_before_autocomplete = len(element.text.lower().strip())
-        select_first_match_action = ActionChains(self.test_case.driver)
-        select_first_match_action.send_keys(Keys.ARROW_DOWN).pause(
-            0.1
-        ).send_keys(Keys.RETURN).perform()
+        ActionChains(self.test_case.driver).send_keys(Keys.RETURN).perform()
 
         # Now wait for the length of the field to increase, this means
         # the autocomplete did happen.
@@ -234,12 +228,7 @@ class Form:  # pylint: disable=invalid-name
 
         field_xpath = f"(//*[@data-testid='{test_id}'])"
         element = self.test_case.find_element(field_xpath)
-        hidden_input = element.find_element(
-            By.XPATH, 'following-sibling::input[@type="hidden"]'
-        )
-        results_ul = hidden_input.find_element(
-            By.XPATH, "following-sibling::ul[1]"
-        )
+        results_ul = autocomplete_list(element)
 
         # We simulate a user typing a query that has no matches.
         self.test_case.type(field_xpath, f"{field_value}", by=By.XPATH)
@@ -272,12 +261,7 @@ class Form:  # pylint: disable=invalid-name
 
         field_xpath = f"(//*[@data-testid='{test_id}'])"
         element = self.test_case.find_element(field_xpath)
-        hidden_input = element.find_element(
-            By.XPATH, 'following-sibling::input[@type="hidden"]'
-        )
-        results_ul = hidden_input.find_element(
-            By.XPATH, "following-sibling::ul[1]"
-        )
+        results_ul = autocomplete_list(element)
 
         # The field already contains already_selected_value (with no
         # trailing comma). A click re-opens the dropdown: it must not
@@ -290,8 +274,7 @@ class Form:  # pylint: disable=invalid-name
         ).until(lambda _: results_ul.is_displayed())
 
         self.test_case.assert_element_not_present(
-            f"{field_xpath}/following-sibling::input[@type='hidden']"
-            "/following-sibling::ul[1]"
+            f"{autocomplete_list_xpath(element)}"
             f"//li[@data-autocompletable-value='{already_selected_value}']",
             by=By.XPATH,
         )
@@ -314,12 +297,7 @@ class Form:  # pylint: disable=invalid-name
 
         field_xpath = f"(//*[@data-testid='{test_id}'])"
         element = self.test_case.find_element(field_xpath)
-        hidden_input = element.find_element(
-            By.XPATH, 'following-sibling::input[@type="hidden"]'
-        )
-        results_ul = hidden_input.find_element(
-            By.XPATH, "following-sibling::ul[1]"
-        )
+        results_ul = autocomplete_list(element)
 
         # We simulate a user typing a comma, and the supplied field_value.
         element.send_keys(f",{field_value}")
@@ -329,14 +307,9 @@ class Form:  # pylint: disable=invalid-name
             self.test_case.driver, test_environment.wait_timeout_seconds
         ).until(lambda _: results_ul.is_displayed())
 
-        # We send Arrow-Down and Enter select the first match.
-        # autocompletable_field.js uses a debounce of 50ms, we are
-        # careful to use an larger interval inbetween key presses.
+        # The first match is the active option, so Enter selects it.
         len_before_autocomplete = len(element.text.lower().strip())
-        select_first_match_action = ActionChains(self.test_case.driver)
-        select_first_match_action.send_keys(Keys.ARROW_DOWN).pause(
-            0.1
-        ).send_keys(Keys.RETURN).perform()
+        ActionChains(self.test_case.driver).send_keys(Keys.RETURN).perform()
 
         # Now wait for the length of the field to increase, this means
         # the autocomplete did happen.
@@ -358,18 +331,13 @@ class Form:  # pylint: disable=invalid-name
 
         field_xpath = f"(//*[@mid='{mid}' and @data-testid='{test_id}'])"
         element = self.test_case.find_element(field_xpath)
-        hidden_input = element.find_element(
-            By.XPATH, 'following-sibling::input[@type="hidden"]'
-        )
-        results_ul = hidden_input.find_element(
-            By.XPATH, "following-sibling::ul[1]"
-        )
+        results_ul = autocomplete_list(element)
 
         # We simulate a user typing the supplied field_value.
         self.test_case.type(field_xpath, f"{field_value}", by=By.XPATH)
 
-        # We wait until the results <ul> is displayed. Sending Arrow-Down and
-        # Enter before the autocomplete request has resolved is a no-op that
+        # We wait until the results <ul> is displayed. Sending Enter before
+        # the autocomplete request has resolved is a no-op that
         # leaves the raw typed prefix in the field (e.g. "REQ-"), which is
         # still a substring of the expected value and previously made this
         # method report a false success, saving an invalid relation UID.
@@ -377,13 +345,9 @@ class Form:  # pylint: disable=invalid-name
             self.test_case.driver, test_environment.wait_timeout_seconds
         ).until(lambda _: results_ul.is_displayed())
 
-        # We send Arrow-Down and Enter select the first match.
-        # autocompletable_field.js uses a debounce of 10ms, we are
-        # careful to use an larger interval inbetween key presses.
-        select_first_match_action = ActionChains(self.test_case.driver)
-        select_first_match_action.send_keys(Keys.ARROW_DOWN).pause(
-            0.1
-        ).send_keys(Keys.RETURN).perform()
+        # Enter selects the active option: the option whose value equals
+        # field_value, otherwise the first option.
+        ActionChains(self.test_case.driver).send_keys(Keys.RETURN).perform()
 
         # Committing a match always closes the results dropdown (see
         # commit() in autocompletable_field.js). Wait for that
@@ -395,6 +359,34 @@ class Form:  # pylint: disable=invalid-name
             self.test_case.driver,
             timeout=test_environment.wait_timeout_seconds,
         ).until(lambda _: not results_ul.is_displayed())
+
+    def do_use_exact_autocomplete_match_mid(
+        self, mid: MID, test_id: str, field_value: str
+    ) -> None:
+        """
+        field_value is the value of an option that is not the first option.
+        That option becomes the active option, so Enter selects it.
+        """
+
+        assert isinstance(mid, MID)
+        assert isinstance(test_id, str)
+        assert isinstance(field_value, str)
+
+        field_xpath = f"(//*[@mid='{mid}' and @data-testid='{test_id}'])"
+        list_xpath = autocomplete_list_xpath(
+            self.test_case.find_element(field_xpath)
+        )
+        self.test_case.type(field_xpath, field_value, by=By.XPATH)
+
+        # The options of a shorter query, typed before the last key, could
+        # still be on the list: wait for the options of the full value.
+        self.test_case.wait_for_element(
+            f"{list_xpath}/li[@aria-selected='true']"
+            f"[@data-autocompletable-value='{field_value}']",
+            by=By.XPATH,
+        )
+        ActionChains(self.test_case.driver).send_keys(Keys.RETURN).perform()
+        self.test_case.wait_for_element_not_visible(list_xpath, by=By.XPATH)
 
     def do_clear_field(self, field_name: str, field_order: int = 1) -> None:
         assert isinstance(field_name, str)

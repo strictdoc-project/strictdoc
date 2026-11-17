@@ -142,7 +142,7 @@
         results.innerHTML = html;
         const first = results.content.querySelector('[data-autocompletable-value]');
         if (first?.dataset.autocompletableValue === uid) {
-          const kind = first.querySelector('.field-widgets-link-kind')?.textContent;
+          const kind = first.dataset.autocompletableKind;
           setMessage(form.uidMessage,
             `This UID is already used${kind ? ` by ${kind}` : ''}.`);
         } else {

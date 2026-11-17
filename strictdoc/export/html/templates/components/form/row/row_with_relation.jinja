@@ -54,7 +54,6 @@
 
   {%- with
     field_class_name = none,
-    result_class_name = "requirement__link",
     field_editable = true if relation_row_context.field.field_type != "File" else false,
     field_label = "Relation UID" if relation_row_context.field.field_type != "File" else "Path to file",
     field_input_name = relation_row_context.field.get_value_field_name(),

@@ -357,49 +357,6 @@ sdoc-image-upload-placeholder::before {
   content: attr(data-label);
 }
 
-.autocomplete-items {
-  /* reset default ul */
-  padding: 0;
-  margin: 0;
-  list-style-type: none;
-  /* autocomplete wrapper */
-  position: absolute;
-  border: 1px solid var(--color-action);
-  background-color: var(--color-bg-contrast);
-  color: var(--color-fg-contrast);
-  top: 100%;
-  left: 0;
-  right: 0;
-  width: 33vw;
-  max-height: 60vh;
-  overflow-y: auto;
-  z-index: 999;
-}
-
-.autocomplete-active {
-  /*when navigating through the items using the arrow keys:*/
-  background-color: var(--color-highlight) !important;
-}
-
-.autocompletable-result-item {
-  position:relative;
-  display:block;
-  padding:.25rem 0.25rem;
-  margin-bottom:-1px;
-  border:1px solid rgba(0,0,0,.125)
-}
-
-.autocompletable-result-item_no-results {
-  color: var(--color-fg-secondary);
-  font-style: italic;
-  cursor: default;
-}
-
-.autocompletable-result-item_selected {
-  color: var(--color-fg-secondary);
-  cursor: default;
-}
-
 .monospace {
   font-family: var(--code-font-family);
 }

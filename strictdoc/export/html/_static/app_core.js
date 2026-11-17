@@ -11,6 +11,7 @@ Supported shared namespaces:
 - StrictDoc.search
 - StrictDoc.project
 - StrictDoc.fieldWidgets
+- StrictDoc.autocomplete
 
 Feature scripts should keep their own logic in local scope and only use
 StrictDoc.* for intentional cross-script contracts and shared runtime data.
@@ -59,6 +60,10 @@ fieldWidgets contract:
     Defined by field_widgets.js, which documents it. A widget script, for
     example table_editor.js, registers through
     StrictDoc.fieldWidgets.register() and loads after field_widgets.js.
+
+autocomplete contract:
+    Defined by autocomplete.js, which documents it. autocompletable_field.js
+    and link_widget.js load after autocomplete.js.
 */
 
 (function(global) {

@@ -3,20 +3,15 @@
 //
 // A page can have several independent [data-js-autocompletable] elements at
 // once (e.g. one per editable table cell), so all per-instance state
-// (debounce timer, in-flight AbortController, mouseDown flag) lives in the
-// closure below, created fresh per element by StrictDoc.onInsert - none of
-// it is shared or stored on the element itself.
+// (debounce timer, in-flight AbortController) lives in the closure below,
+// created fresh per element by StrictDoc.onInsert - none of it is shared or
+// stored on the element itself.
+//
+// The options list comes from StrictDoc.autocomplete (autocomplete.js).
 
 (() => {
 
   const SEL_AUTOCOMPLETABLE = '[data-js-autocompletable]';
-  const optionSelector = "[role='option']:not([aria-disabled])";
-  const activeSelector = "[aria-selected='true']";
-  const selectedClasses = ['autocomplete-active'];
-  const noResultsItemHTML =
-    '<li class="autocompletable-result-item autocompletable-result-item_no-results" role="option" aria-disabled="true">No matches found</li>';
-
-  let uniqOptionId = 0;
 
   function filterSingleLine(text) {
     return text.replace(/\s/g, ' ').replace(/\s\s+/g, ' ');
@@ -92,50 +87,15 @@
     const multipleChoiceValue = autocompletable.hasAttribute(
       'data-autocompletable-multiple-choice');
 
-    let mouseDown = false;
     let abortController = null;
 
-    function options() {
-      return Array.from(results.querySelectorAll(optionSelector));
-    }
+    const list = window.StrictDoc.autocomplete.listbox(results, autocompletable, commit);
 
-    function selectedOption() {
-      return results.querySelector(activeSelector);
-    }
-
-    function sibling(next) {
-      const opts = options();
-      const selected = selectedOption();
-      const index = opts.indexOf(selected);
-      const sib = next ? opts[index + 1] : opts[index - 1];
-      const def = next ? opts[0] : opts[opts.length - 1];
-      return sib || def;
-    }
-
-    function select(target) {
-      const previouslySelected = selectedOption();
-      if (previouslySelected) {
-        previouslySelected.removeAttribute('aria-selected');
-        previouslySelected.classList.remove(...selectedClasses);
-      }
-
-      target.setAttribute('aria-selected', 'true');
-      target.classList.add(...selectedClasses);
-      autocompletable.setAttribute('aria-activedescendant', target.id);
-      target.scrollIntoView({
-        behavior: 'auto',
-        block: 'nearest'
-      });
-    }
-
-    function selectText(text) {
-      const normalizedText = text.trim().toLowerCase();
-      const match = options().find((option) => {
-        const label = option.getAttribute('data-autocompletable-label') || option.textContent;
-        return label.trim().toLowerCase() === normalizedText;
-      });
-
-      if (match) select(match);
+    // The value that the user types: for a MultipleChoice or Tag field, the
+    // part after the last comma.
+    function typedValue() {
+      const text = autocompletable.innerText;
+      return multipleChoiceValue ? text.split(',').pop() : text;
     }
 
     function moveCursorToEnd() {
@@ -192,16 +152,9 @@
       );
     }
 
-    function identifyOptions() {
-      const prefix = results.id || 'autocompletable';
-      results.querySelectorAll(`${optionSelector}:not([id])`).forEach((el) => {
-        el.id = `${prefix}-option-${uniqOptionId++}`;
-      });
-    }
-
     function hideAndRemoveOptions() {
       close();
-      results.innerHTML = '';
+      list.clear();
     }
 
     function buildURL(query) {
@@ -223,9 +176,7 @@
     }
 
     function replaceResults(html) {
-      const hasResults = html != null && html.trim().length > 0;
-      results.innerHTML = hasResults ? html : noResultsItemHTML;
-      identifyOptions();
+      list.render(html, typedValue());
       open();
     }
 
@@ -242,8 +193,6 @@
         autocompletable.dispatchEvent(new CustomEvent('loadstart'));
         const html = await doFetch(url, signal);
         replaceResults(html);
-        // Check if an entry matches the current text and select it.
-        selectText(autocompletable.innerText.trim());
         autocompletable.dispatchEvent(new CustomEvent('load'));
         autocompletable.dispatchEvent(new CustomEvent('loadend'));
       } catch (error) {
@@ -301,26 +250,26 @@
       },
       ArrowDown: (event) => {
         if (!resultsShown()) return;
-        const item = sibling(true);
-        if (item) select(item);
+        list.move(1);
         event.preventDefault();
       },
       ArrowUp: (event) => {
         if (!resultsShown()) return;
-        const item = sibling(false);
-        if (item) select(item);
+        list.move(-1);
         event.preventDefault();
       },
       Tab: (event) => {
         if (!resultsShown()) return;
-        // Either use the selected options, or else select the first result.
-        commit(selectedOption() || sibling(true));
+        // Without an active option, Tab moves the focus as usual.
+        const active = list.active();
+        if (!active) return;
+        commit(active);
         event.preventDefault();
       },
       Enter: (event) => {
         if (readonly) return;
-        const selected = selectedOption();
-        if (selected && resultsShown()) commit(selected);
+        const active = list.active();
+        if (active && resultsShown()) commit(active);
         // single line, dont allow enter
         event.preventDefault();
       }
@@ -360,10 +309,7 @@
       if (handler) handler(event);
     });
 
-    autocompletable.addEventListener('blur', () => {
-      if (mouseDown) return;
-      close();
-    });
+    autocompletable.addEventListener('blur', close);
 
     autocompletable.addEventListener('click', () => {
       // Toggle between showing / hiding results.
@@ -372,22 +318,6 @@
       } else {
         fetchResults(buildClickQuery());
       }
-    });
-
-    results.addEventListener('mousedown', () => {
-      mouseDown = true;
-      results.addEventListener('mouseup', () => {
-        mouseDown = false;
-      }, {
-        once: true
-      });
-    });
-
-    results.addEventListener('click', (event) => {
-      if (readonly) return;
-      if (!(event.target instanceof Element)) return;
-      const selected = event.target.closest(optionSelector);
-      if (selected) commit(selected);
     });
 
     if (autocompletable.hasAttribute('autofocus')) {

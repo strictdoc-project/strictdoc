@@ -1,0 +1,70 @@
+/* Autocomplete list: the options of an autocompletable form field
+   (autocompletable_field.js) and of the link widget (link_widget.js).
+
+   By default, the list is under its field. A caller with a different
+   position sets it in its own stylesheet, see link_widget.css. */
+
+.autocomplete {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 999;
+  box-sizing: border-box;
+  min-width: 100%;
+  width: max-content;
+  max-width: min(40rem, 90vw);
+  max-height: 60vh;
+  overflow-y: auto;
+  margin: 0;
+  padding: calc(var(--base-rhythm)/2);
+  list-style: none;
+  background: var(--color-bg-contrast);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
+  border-radius: var(--base-rhythm);
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
+}
+
+.autocomplete[hidden] {
+  display: none;
+}
+
+.autocomplete_item {
+  display: flex;
+  align-items: baseline;
+  column-gap: var(--base-rhythm);
+  padding: calc(var(--base-rhythm)/2) var(--base-rhythm);
+  border-radius: calc(var(--base-rhythm)/2);
+  color: var(--color-fg-main);
+  overflow-wrap: anywhere;
+  cursor: pointer;
+}
+
+.autocomplete_item:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+/* The option chosen with the arrow keys. */
+.autocomplete_item[aria-selected="true"] {
+  background-color: var(--color-bg-accent);
+  color: var(--color-fg-accent);
+}
+
+/* "No matches found", or a value that the field already has. */
+.autocomplete_item[aria-disabled="true"] {
+  background-color: transparent;
+  color: var(--color-fg-secondary);
+  cursor: default;
+}
+
+.autocomplete_item_uid {
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.autocomplete_item_kind {
+  margin-left: auto;
+  color: var(--color-fg-secondary);
+  font-size: var(--font-size-xxsm);
+  white-space: nowrap;
+}

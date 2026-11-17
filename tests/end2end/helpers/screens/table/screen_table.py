@@ -4,6 +4,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.wait import WebDriverWait
 from seleniumbase import BaseCase
 
+from tests.end2end.helpers.components.autocomplete import autocomplete_list
 from tests.end2end.helpers.screens.screen import Screen
 
 _SORT_RESET_BTN = '[data-testid="table-toolbar-sort-reset"]'
@@ -760,12 +761,7 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
         field_xpath = f"(//*[@data-testid='form-field-{field_name}'])"
         self.test_case.wait_for_element(field_xpath, by=By.XPATH, timeout=10)
         element = self.test_case.find_element(field_xpath, by=By.XPATH)
-        hidden_input = element.find_element(
-            By.XPATH, "following-sibling::input[@type='hidden']"
-        )
-        results_ul = hidden_input.find_element(
-            By.XPATH, "following-sibling::ul[1]"
-        )
+        results_ul = autocomplete_list(element)
         # Don't click element to focus it: a real click event also fires the
         # sdoc-autocompletable "click" listener, which starts its own
         # show-all-options fetch racing the debounced fetch for field_value
@@ -793,12 +789,7 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
         # Cell is already open; find the injected sdoc-autocompletable by testid.
         field_xpath = f"(//*[@data-testid='form-field-{field_name}'])"
         element = self.test_case.find_element(field_xpath, by=By.XPATH)
-        hidden_input = element.find_element(
-            By.XPATH, "following-sibling::input[@type='hidden']"
-        )
-        results_ul = hidden_input.find_element(
-            By.XPATH, "following-sibling::ul[1]"
-        )
+        results_ul = autocomplete_list(element)
         element.send_keys(f",{field_value}")
         WebDriverWait(self.test_case.driver, 6).until(
             lambda _: results_ul.is_displayed(),

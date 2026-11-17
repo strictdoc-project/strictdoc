@@ -88,7 +88,7 @@
     if (!popup) return;
     clearTimeout(popup.timer);
     popup.controller?.abort();
-    popup.list.clear();
+    popup.list.detach();
     popup.element.remove();
     popup = null;
   }

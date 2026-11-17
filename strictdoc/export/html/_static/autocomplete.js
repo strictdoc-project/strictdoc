@@ -3,7 +3,9 @@
 // autocomplete.css gives the look.
 //
 // StrictDoc.autocomplete.listbox(list, field, onChoose) connects a <ul> to
-// its field and returns the controller of the list. The caller decides
+// its field and returns the controller of the list. The aria-controls
+// attribute of the field names the id of the list; the end-to-end tests
+// find the list of a field this way. The caller decides
 // when to request the options, when to show and hide the list, which keys
 // reach the list, and what a chosen option writes into the field.
 //
@@ -24,6 +26,8 @@
 
   function listbox(list, field, onChoose) {
     list.setAttribute('role', 'listbox');
+    if (!list.id) list.id = `autocomplete-list-${uniqueId++}`;
+    field.setAttribute('aria-controls', list.id);
 
     function options() {
       return [...list.querySelectorAll(SEL_OPTION)];
@@ -78,6 +82,12 @@
       list.innerHTML = '';
     }
 
+    // For a list that the caller removes from the page.
+    function detach() {
+      clear();
+      field.removeAttribute('aria-controls');
+    }
+
     // Keep the focus and the caret in the field.
     list.addEventListener('mousedown', (event) => event.preventDefault());
 
@@ -95,7 +105,8 @@
       active,
       move,
       render,
-      clear
+      clear,
+      detach
     };
   }
 

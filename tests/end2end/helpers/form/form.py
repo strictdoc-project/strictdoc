@@ -7,6 +7,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from strictdoc.helpers.mid import MID
 from tests.end2end.conftest import test_environment
 from tests.end2end.e2e_case import E2ECase
+from tests.end2end.helpers.components.autocomplete import (
+    autocomplete_list,
+    autocomplete_list_xpath,
+)
 
 
 class Form:  # pylint: disable=invalid-name
@@ -191,12 +195,7 @@ class Form:  # pylint: disable=invalid-name
 
         field_xpath = f"(//*[@data-testid='{test_id}'])"
         element = self.test_case.find_element(field_xpath)
-        hidden_input = element.find_element(
-            By.XPATH, 'following-sibling::input[@type="hidden"]'
-        )
-        results_ul = hidden_input.find_element(
-            By.XPATH, "following-sibling::ul[1]"
-        )
+        results_ul = autocomplete_list(element)
 
         # We simulate a user typing the supplied field_value.
         self.test_case.type(field_xpath, f"{field_value}", by=By.XPATH)
@@ -229,12 +228,7 @@ class Form:  # pylint: disable=invalid-name
 
         field_xpath = f"(//*[@data-testid='{test_id}'])"
         element = self.test_case.find_element(field_xpath)
-        hidden_input = element.find_element(
-            By.XPATH, 'following-sibling::input[@type="hidden"]'
-        )
-        results_ul = hidden_input.find_element(
-            By.XPATH, "following-sibling::ul[1]"
-        )
+        results_ul = autocomplete_list(element)
 
         # We simulate a user typing a query that has no matches.
         self.test_case.type(field_xpath, f"{field_value}", by=By.XPATH)
@@ -267,12 +261,7 @@ class Form:  # pylint: disable=invalid-name
 
         field_xpath = f"(//*[@data-testid='{test_id}'])"
         element = self.test_case.find_element(field_xpath)
-        hidden_input = element.find_element(
-            By.XPATH, 'following-sibling::input[@type="hidden"]'
-        )
-        results_ul = hidden_input.find_element(
-            By.XPATH, "following-sibling::ul[1]"
-        )
+        results_ul = autocomplete_list(element)
 
         # The field already contains already_selected_value (with no
         # trailing comma). A click re-opens the dropdown: it must not
@@ -285,8 +274,7 @@ class Form:  # pylint: disable=invalid-name
         ).until(lambda _: results_ul.is_displayed())
 
         self.test_case.assert_element_not_present(
-            f"{field_xpath}/following-sibling::input[@type='hidden']"
-            "/following-sibling::ul[1]"
+            f"{autocomplete_list_xpath(element)}"
             f"//li[@data-autocompletable-value='{already_selected_value}']",
             by=By.XPATH,
         )
@@ -309,12 +297,7 @@ class Form:  # pylint: disable=invalid-name
 
         field_xpath = f"(//*[@data-testid='{test_id}'])"
         element = self.test_case.find_element(field_xpath)
-        hidden_input = element.find_element(
-            By.XPATH, 'following-sibling::input[@type="hidden"]'
-        )
-        results_ul = hidden_input.find_element(
-            By.XPATH, "following-sibling::ul[1]"
-        )
+        results_ul = autocomplete_list(element)
 
         # We simulate a user typing a comma, and the supplied field_value.
         element.send_keys(f",{field_value}")
@@ -348,12 +331,7 @@ class Form:  # pylint: disable=invalid-name
 
         field_xpath = f"(//*[@mid='{mid}' and @data-testid='{test_id}'])"
         element = self.test_case.find_element(field_xpath)
-        hidden_input = element.find_element(
-            By.XPATH, 'following-sibling::input[@type="hidden"]'
-        )
-        results_ul = hidden_input.find_element(
-            By.XPATH, "following-sibling::ul[1]"
-        )
+        results_ul = autocomplete_list(element)
 
         # We simulate a user typing the supplied field_value.
         self.test_case.type(field_xpath, f"{field_value}", by=By.XPATH)
@@ -395,20 +373,20 @@ class Form:  # pylint: disable=invalid-name
         assert isinstance(field_value, str)
 
         field_xpath = f"(//*[@mid='{mid}' and @data-testid='{test_id}'])"
+        list_xpath = autocomplete_list_xpath(
+            self.test_case.find_element(field_xpath)
+        )
         self.test_case.type(field_xpath, field_value, by=By.XPATH)
 
         # The options of a shorter query, typed before the last key, could
         # still be on the list: wait for the options of the full value.
         self.test_case.wait_for_element(
-            f"{field_xpath}/following-sibling::ul[1]"
-            f"/li[@aria-selected='true']"
+            f"{list_xpath}/li[@aria-selected='true']"
             f"[@data-autocompletable-value='{field_value}']",
             by=By.XPATH,
         )
         ActionChains(self.test_case.driver).send_keys(Keys.RETURN).perform()
-        self.test_case.wait_for_element_not_visible(
-            f"{field_xpath}/following-sibling::ul[1]", by=By.XPATH
-        )
+        self.test_case.wait_for_element_not_visible(list_xpath, by=By.XPATH)
 
     def do_clear_field(self, field_name: str, field_order: int = 1) -> None:
         assert isinstance(field_name, str)

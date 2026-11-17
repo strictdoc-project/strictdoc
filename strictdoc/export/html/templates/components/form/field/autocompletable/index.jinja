@@ -35,7 +35,8 @@
       required="true"
     {%- endif %}
     data-js-autocompletable
-    role="textbox"
+    role="combobox"
+    aria-autocomplete="list"
     {%- if field_editable is defined and not field_editable -%}
       contenteditable="false"
     {%- else -%}

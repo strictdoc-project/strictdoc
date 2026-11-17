@@ -1,2 +1,2 @@
 {% for value, is_selected in values %}
-<li class="autocompletable-result-item{% if is_selected %} autocompletable-result-item_selected{% endif %}" role="option" {% if is_selected %}aria-disabled="true" {% endif %}data-autocompletable-value="{{ value }}">{{ value }}</li>{% endfor %}
+<li class="autocomplete_item" role="option" {% if is_selected %}aria-disabled="true" {% endif %}data-autocompletable-value="{{ value }}">{{ value }}</li>{% endfor %}

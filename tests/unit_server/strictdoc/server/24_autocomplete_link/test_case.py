@@ -93,9 +93,7 @@ def test_match_by_uid_and_title(client: TestClient):
 
 def test_kind_of_each_target(client: TestClient):
     response = client.get("/autocomplete/link", params={"q": ""})
-    kinds = re.findall(
-        r'<span class="field-widgets-link-kind">([^<]+)</span>', response.text
-    )
+    kinds = re.findall(r'data-autocompletable-kind="([^"]+)"', response.text)
     assert kinds == [
         "DOCUMENT",
         "SECTION",

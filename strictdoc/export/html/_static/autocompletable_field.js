@@ -14,7 +14,7 @@
   const activeSelector = "[aria-selected='true']";
   const selectedClasses = ['autocomplete-active'];
   const noResultsItemHTML =
-    '<li class="autocompletable-result-item autocompletable-result-item_no-results" role="option" aria-disabled="true">No matches found</li>';
+    '<li class="autocomplete_item" role="option" aria-disabled="true">No matches found</li>';
 
   let uniqOptionId = 0;
 

@@ -1,2 +1,2 @@
 {% for uid, title, kind in targets %}
-<li class="autocompletable-result-item" role="option" data-autocompletable-value="{{ uid }}"><span class="requirement__link-parent"><span class="requirement__parent-uid">{{ uid }}</span> {{ title }} <span class="field-widgets-link-kind">{{ kind }}</span></span></li>{% endfor %}
+<li class="autocomplete_item" role="option" data-autocompletable-value="{{ uid }}" data-autocompletable-kind="{{ kind }}"><span class="autocomplete_item_uid">{{ uid }}</span> {{ title }} <span class="autocomplete_item_kind">{{ kind }}</span></li>{% endfor %}

@@ -25,8 +25,7 @@
   testid_postfix=cell_field_name,
   autocomplete_url="/autocomplete/field?document_mid=" ~ document_mid ~ "&element_type=" ~ element_type ~ "&field_name=" ~ cell_field_name,
   autocomplete_len=0,
-  autocomplete_multiplechoice=is_multiple_choice,
-  result_class_name="cell-autocomplete-dropdown"
+  autocomplete_multiplechoice=is_multiple_choice
 -%}
   {%- include "components/form/field/autocompletable/index.jinja" %}
 {%- endwith -%}

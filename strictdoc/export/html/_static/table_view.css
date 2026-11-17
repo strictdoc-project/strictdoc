@@ -428,14 +428,6 @@ background-image:
   word-break: normal;
 }
 
-[js-table_view_edit] [data-field-type="autocomplete"] .autocomplete-items {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  z-index: 1000;
-  min-width: 100%;
-}
-
 /* Column visibility toolbar */
 
 .table-toolbar {

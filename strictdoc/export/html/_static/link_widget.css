@@ -1,24 +1,10 @@
 /* @relation(SDOC-SRS-208, scope=file) */
 
 /* Popup of link targets, a child of <body>; link_widget.js sets its top and
-   left from the caret. The look comes from .autocomplete-items and
-   .autocompletable-result-item. */
+   left from the caret. The look comes from autocomplete.css. */
 
-.field-widgets-link-popup.autocomplete-items {
+.autocomplete.field-widgets-link-popup {
   position: fixed;
-  right: auto;
+  min-width: 0;
   z-index: 100000; /* > 99999, above the modals, such as the table editor */
-}
-
-.field-widgets-link-popup[hidden] {
-  display: none;
-}
-
-.field-widgets-link-popup [role="option"]:not([aria-disabled]) {
-  cursor: pointer;
-}
-
-.field-widgets-link-kind {
-  color: var(--color-fg-secondary);
-  font-size: var(--font-size-xsm);
 }

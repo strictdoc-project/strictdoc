@@ -42,7 +42,7 @@
   const CLASS_ACTIVE = 'autocomplete-active';
   // The same markup as in autocompletable_field.js: keep both in sync.
   const NO_RESULTS_HTML =
-    '<li class="autocompletable-result-item autocompletable-result-item_no-results" ' +
+    '<li class="autocomplete_item" ' +
     'role="option" aria-disabled="true">No matches found</li>';
 
   //
@@ -176,7 +176,7 @@
     }
     if (!popup) {
       const element = document.createElement('ul');
-      element.className = 'autocomplete-items field-widgets-link-popup';
+      element.className = 'autocomplete field-widgets-link-popup';
       element.dataset.testid = 'field-widgets-link-popup';
       element.setAttribute('role', 'listbox');
       // Shown when the first response arrives (see requestTargets()).

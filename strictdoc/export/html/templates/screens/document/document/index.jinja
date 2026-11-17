@@ -52,6 +52,7 @@
     import hotwiredTurbo from "{{ view_object.render_static_url('turbo.min.js') }}";
   </script>
 
+  <script src="{{ view_object.render_static_url('autocomplete.js') }}"></script>
   <script src="{{ view_object.render_static_url('autocompletable_field.js') }}"></script>
 
   {% if not view_object.has_included_document() %}

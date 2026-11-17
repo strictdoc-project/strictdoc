@@ -779,9 +779,8 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
             "become visible",
         )
         len_before = len(element.text.lower().strip())
-        ActionChains(self.test_case.driver).send_keys(Keys.ARROW_DOWN).pause(
-            0.1
-        ).send_keys(Keys.RETURN).perform()
+        # The first match is the active option, so Enter selects it.
+        ActionChains(self.test_case.driver).send_keys(Keys.RETURN).perform()
         WebDriverWait(self.test_case.driver, 6).until(
             lambda _: len(element.text.lower().strip()) > len_before,
             message=f"Field {field_name!r} text did not update after "
@@ -807,9 +806,8 @@ class Screen_Table(Screen):  # pylint: disable=invalid-name
             "become visible",
         )
         len_before = len(element.text.lower().strip())
-        ActionChains(self.test_case.driver).send_keys(Keys.ARROW_DOWN).pause(
-            0.1
-        ).send_keys(Keys.RETURN).perform()
+        # The first match is the active option, so Enter selects it.
+        ActionChains(self.test_case.driver).send_keys(Keys.RETURN).perform()
         WebDriverWait(self.test_case.driver, 6).until(
             lambda _: len(element.text.lower().strip()) > len_before,
             message=f"Field {field_name!r} text did not update after "

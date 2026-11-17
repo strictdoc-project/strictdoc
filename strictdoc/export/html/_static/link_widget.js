@@ -38,12 +38,6 @@
   const AUTOCOMPLETE_URL = '/autocomplete/link';
   // The delay in milliseconds between the last keystroke and the request.
   const REQUEST_DELAY = 150;
-  const SEL_OPTION = '[role="option"]:not([aria-disabled])';
-  const CLASS_ACTIVE = 'autocomplete-active';
-  // The same markup as in autocompletable_field.js: keep both in sync.
-  const NO_RESULTS_HTML =
-    '<li class="autocomplete_item" ' +
-    'role="option" aria-disabled="true">No matches found</li>';
 
   //
   // LINK syntax.
@@ -70,7 +64,8 @@
   // Popup.
   //
 
-  // The open popup: { field, start, element, controller, timer }, or null.
+  // The open popup: { field, start, element, list, controller, timer }, or
+  // null. `list` is the StrictDoc.autocomplete controller of `element`.
   let popup = null;
   // {field, start} of the trigger closed with Escape, or null. The popup
   // does not open again for this trigger while the user types after it.
@@ -93,30 +88,9 @@
     if (!popup) return;
     clearTimeout(popup.timer);
     popup.controller?.abort();
+    popup.list.clear();
     popup.element.remove();
     popup = null;
-  }
-
-  function options() {
-    return [...popup.element.querySelectorAll(SEL_OPTION)];
-  }
-
-  function setActive(option) {
-    options().forEach((item) => {
-      const isActive = item === option;
-      item.classList.toggle(CLASS_ACTIVE, isActive);
-      item.setAttribute('aria-selected', String(isActive));
-    });
-    option?.scrollIntoView({
-      block: 'nearest'
-    });
-  }
-
-  function moveActive(step) {
-    const items = options();
-    if (items.length === 0) return;
-    const index = items.findIndex((item) => item.classList.contains(CLASS_ACTIVE));
-    setActive(items[(index + step + items.length) % items.length]);
   }
 
   function choose(option) {
@@ -160,10 +134,9 @@
         });
         const html = await response.text();
         if (popup?.controller !== controller) return;
-        popup.element.innerHTML = html.trim() ? html : NO_RESULTS_HTML;
+        popup.list.render(html, query);
         popup.element.hidden = false;
         placePopup();
-        setActive(options()[0] ?? null);
       } catch (error) {
         if (error.name !== 'AbortError') throw error;
       }
@@ -178,22 +151,19 @@
       const element = document.createElement('ul');
       element.className = 'autocomplete field-widgets-link-popup';
       element.dataset.testid = 'field-widgets-link-popup';
-      element.setAttribute('role', 'listbox');
       // Shown when the first response arrives (see requestTargets()).
       element.hidden = true;
-      // Keep the caret in the field: choose() reads its position.
-      element.addEventListener('mousedown', (event) => event.preventDefault());
-      element.addEventListener('click', (event) => {
-        // The table view must not see this click (see field_widgets.js).
-        event.stopPropagation();
-        const option = event.target.closest(SEL_OPTION);
-        if (option) choose(option);
-      });
+      // The list keeps the caret in the field, and choose() reads its
+      // position.
+      const list = window.StrictDoc.autocomplete.listbox(element, field, choose);
+      // The table view must not see this click (see field_widgets.js).
+      element.addEventListener('click', (event) => event.stopPropagation());
       document.body.appendChild(element);
       popup = {
         field,
         start: trigger.start,
         element,
+        list,
         controller: null,
         timer: null
       };
@@ -233,11 +203,11 @@
   document.addEventListener('keydown', (event) => {
     if (!popup || popup.element.hidden || event.target !== popup.field) return;
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
-      moveActive(event.key === 'ArrowDown' ? 1 : -1);
+      popup.list.move(event.key === 'ArrowDown' ? 1 : -1);
     } else if (event.key === 'Enter' || event.key === 'Tab') {
       // With "No matches found", no option is active, so the key works as
       // usual in the field.
-      const active = popup.element.querySelector(`.${CLASS_ACTIVE}`);
+      const active = popup.list.active();
       if (!active) return;
       choose(active);
     } else if (event.key === 'Escape') {

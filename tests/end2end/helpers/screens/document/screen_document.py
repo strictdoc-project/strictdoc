@@ -915,7 +915,7 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
         witness_anchor: str,
         initial_witness_anchor: str,
         wheel_delta: int,
-        max_steps: int,
+        step_limit: int | None,
         pause_between_steps: float,
         continuous_input: bool = False,
         scroll_key: str | None = None,
@@ -1022,51 +1022,98 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
                 "arguments[0].tabIndex = -1; arguments[0].focus();",
                 container,
             )
+
+        def target_is_loaded() -> bool:
+            # A lazy frame keeps this class until Turbo replaces its
+            # placeholder with the loaded chunk.
+            return bool(
+                self.test_case.execute_script(
+                    """
+                    const frame = document.getElementById(arguments[0]);
+                    return !frame.classList.contains(
+                      "document-chunk-placeholder"
+                    );
+                    """,
+                    chunk_id_to_load,
+                )
+            )
+
+        # Scroll upward in small steps until the previous chunk loads.
+        # The test records the visible content during this scroll and
+        # checks that loading content above the viewport does not make the
+        # document jump.
         target_loaded = False
         if continuous_input:
+            # Queue the whole wheel sequence before checking the result. A
+            # check between steps would interrupt the continuous input that
+            # this mode reproduces.
+            assert step_limit is not None
             actions = ActionChains(self.test_case.driver)
-            for _ in range(max_steps):
+            for _ in range(step_limit):
                 actions.scroll_from_origin(scroll_origin, 0, wheel_delta)
                 actions.pause(pause_between_steps)
             actions.perform()
-            target_loaded = bool(
-                self.test_case.execute_script(
-                    """
-                    const frame = document.getElementById(arguments[0]);
-                    return !frame.classList.contains(
-                      "document-chunk-placeholder"
-                    );
-                    """,
-                    chunk_id_to_load,
-                )
-            )
-        for _ in range(max_steps):
-            if continuous_input:
-                break
-            actions = ActionChains(self.test_case.driver)
-            if scroll_key is not None:
+            target_loaded = target_is_loaded()
+        elif scroll_key is not None:
+            # Keyboard input is not continuous, so stop as soon as the chunk
+            # loads instead of sending the remaining key presses.
+            assert step_limit is not None
+            for _ in range(step_limit):
+                actions = ActionChains(self.test_case.driver)
                 actions.send_keys(scroll_key)
-            else:
-                actions.scroll_from_origin(scroll_origin, 0, wheel_delta)
-            actions.pause(pause_between_steps)
-            actions.perform()
-            target_loaded = bool(
+                actions.pause(pause_between_steps)
+                actions.perform()
+                target_loaded = target_is_loaded()
+                if target_loaded:
+                    break
+        else:
+            # Send one small wheel step at a time. The pause lets the recorder
+            # sample the visible content, and the loop stops as soon as the
+            # previous chunk loads.
+            # This mode stops on page state, so it has no numeric step limit.
+            assert step_limit is None
+            previous_scroll_top = float(
                 self.test_case.execute_script(
-                    """
-                    const frame = document.getElementById(arguments[0]);
-                    return !frame.classList.contains(
-                      "document-chunk-placeholder"
-                    );
-                    """,
-                    chunk_id_to_load,
+                    "return arguments[0].scrollTop;", container
                 )
             )
-            if target_loaded:
-                break
+            stalled_steps = 0
+            while not target_loaded:
+                actions = ActionChains(self.test_case.driver)
+                actions.scroll_from_origin(scroll_origin, 0, wheel_delta)
+                actions.pause(pause_between_steps)
+                actions.perform()
+                target_loaded = target_is_loaded()
+                if target_loaded:
+                    break
+
+                current_scroll_top = float(
+                    self.test_case.execute_script(
+                        "return arguments[0].scrollTop;", container
+                    )
+                )
+                if current_scroll_top == 0:
+                    # The scroll passed the chunk on its way to the top. Give
+                    # Turbo time to finish any load that is still in progress.
+                    self.assert_document_chunk_loaded(chunk_id_to_load)
+                    target_loaded = True
+                    break
+
+                if abs(current_scroll_top - previous_scroll_top) < 0.5:
+                    stalled_steps += 1
+                else:
+                    stalled_steps = 0
+                # One unchanged value can be a timing delay. Repeated values
+                # mean that wheel input is no longer moving the container.
+                assert stalled_steps < 20, (
+                    "Upward wheel input stopped moving the document at "
+                    f"scrollTop={current_scroll_top}."
+                )
+                previous_scroll_top = current_scroll_top
 
         assert target_loaded, (
             f"Chunk '{chunk_id_to_load}' did not load after "
-            f"{max_steps} upward wheel steps."
+            f"{step_limit} upward input steps."
         )
         self.assert_document_chunk_loaded(prerequisite_chunk_id)
 

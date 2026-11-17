@@ -141,7 +141,7 @@ class Test(E2ECase):
                 witness_anchor="CAB-021",
                 initial_witness_anchor="CAB-031",
                 wheel_delta=-80,
-                max_steps=100,
+                step_limit=None,
                 pause_between_steps=0.05,
             )
 
@@ -251,6 +251,10 @@ class Test(E2ECase):
         ) as test_server:
             self.open(test_server.get_host_and_port())
             screen_document = self._open_chunk_above_document()
+
+            # Give chunk 1 a known height difference between its placeholder
+            # and rendered content. Without scroll compensation, loading
+            # chunk 1 moves the visible document.
             screen_document.do_set_future_node_heights(
                 {
                     "CAB-006": 150,
@@ -262,6 +266,7 @@ class Test(E2ECase):
                     "CAB-012": 140,
                 }
             )
+
             # Begin one chunk farther down so the fast local server cannot
             # finish loading the measured chunk before sampling starts. Slow
             # upward input then crosses the ordinary middle chunk and reaches
@@ -293,18 +298,20 @@ class Test(E2ECase):
                     delayed_height_change,
                 )
 
+            # Stepwise wheel input stops on page state. Continuous wheel and
+            # keyboard input use a fixed number of actions.
             state = screen_document.do_record_anchor_while_scrolling_upward(
                 chunk_id_to_load=CHUNK_1_ID,
                 prerequisite_chunk_id=CHUNK_2_ID,
                 witness_anchor="CAB-010",
                 initial_witness_anchor="CAB-016",
                 wheel_delta=-wheel_step,
-                max_steps=(
+                step_limit=(
                     100
                     if scroll_key is not None
                     else 40
                     if wheel_step >= 50
-                    else 500
+                    else None
                 ),
                 pause_between_steps=(
                     0.05
@@ -317,6 +324,9 @@ class Test(E2ECase):
                 scroll_key=scroll_key,
             )
 
+            # CAB-010 is the last node in the newly loaded chunk 1. Its
+            # movement must match the wheel input, with no extra jump from the
+            # new chunk geometry.
             target_load_sample_index = state["targetLoadSampleIndex"]
             assert target_load_sample_index is not None
             samples = state["samples"]
@@ -364,6 +374,8 @@ class Test(E2ECase):
                 f"detailed_samples={state['detailedSamples']}."
             )
 
+            # CAB-016 was present before chunk 1 loaded. Loading chunk 1 above
+            # CAB-016 must not move CAB-016 independently of the wheel input.
             initial_load_sample_index = state["targetLoadInitialSampleIndex"]
             assert initial_load_sample_index is not None
             initial_samples = state["initialSamples"]

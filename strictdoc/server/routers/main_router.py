@@ -180,6 +180,7 @@ from strictdoc.server.document_watcher import (
     get_watched_document_extensions,
 )
 from strictdoc.server.error_object import ErrorObject
+from strictdoc.server.helpers.autocomplete import find_autocomplete_matches
 from strictdoc.server.helpers.hierarchical_rw_lock_manager import (
     HierarchicalRWLockManager,
 )
@@ -4871,10 +4872,16 @@ def create_main_router(
 
         @relation(SDOC-SRS-120, scope=function)
         """
-        output = ""
-        if q is not None:
-            query_words = q.lower().split()
-            resulting_nodes = []
+
+        def is_relation_target(node: object) -> bool:
+            return (
+                isinstance(node, SDocNodeIF)
+                and node.node_type != "SECTION"
+                and node.reserved_uid is not None
+                and node.reserved_mid != exclude_requirement_mid
+            )
+
+        def iterate_relation_targets() -> Iterator[SDocNodeIF]:
             document_tree = assert_cast(
                 export_action.traceability_index.document_tree, DocumentTree
             )
@@ -4887,35 +4894,28 @@ def create_main_router(
                 for node_, _ in document_iterator.all_content(
                     print_fragments=False
                 ):
-                    if not isinstance(node_, SDocNodeIF):
-                        continue
+                    if is_relation_target(node_):
+                        yield assert_cast(node_, SDocNodeIF)
 
-                    if node_.node_type == "SECTION":
-                        continue
-
-                    if (
-                        node_.reserved_uid is not None
-                        and node_.reserved_mid != exclude_requirement_mid
-                    ):
-                        words_ = node_.reserved_uid.strip().lower()
-                        if node_.reserved_title is not None:
-                            words_ = (
-                                words_
-                                + " "
-                                + node_.reserved_title.strip().lower()
-                            )
-                        if all(word_ in words_ for word_ in query_words):
-                            resulting_nodes.append(node_)
-
-                            # Excluding the following branch from code coverage
-                            # because it is not practical to create a test that
-                            # reproduces going above the limit. The code is
-                            # simple, so it should be safe to exclude this
-                            # branch from coverage.
-                            if (
-                                len(resulting_nodes) >= AUTOCOMPLETE_LIMIT
-                            ):  # pragma: no cover
-                                break
+        output = ""
+        if q is not None:
+            exact_node = (
+                export_action.traceability_index.get_linkable_node_by_uid_weak(
+                    q.strip()
+                )
+            )
+            resulting_nodes = find_autocomplete_matches(
+                q,
+                iterate_relation_targets(),
+                lambda node_: (
+                    assert_cast(node_.reserved_uid, str),
+                    node_.reserved_title or "",
+                ),
+                assert_cast(exact_node, SDocNodeIF)
+                if is_relation_target(exact_node)
+                else None,
+                AUTOCOMPLETE_LIMIT,
+            )
 
             output = env().render_template_as_markup(
                 "autocomplete/uid/stream_autocomplete_uid.jinja.html",
@@ -5016,32 +5016,22 @@ def create_main_router(
 
         output = ""
         if q is not None:
-            targets: List[Tuple[str, str, str]] = []
-            # The list has a limit, so a target whose UID equals the query
-            # could be cut off by targets that only contain the query. The
-            # index finds the exact UID directly.
             exact_target = (
                 export_action.traceability_index.get_linkable_node_by_uid_weak(
                     q.strip()
                 )
             )
-            if exact_target is not None:
-                targets.append(describe_link_target(exact_target))
-
-            query_words = q.lower().split()
-            for target_ in iterate_link_targets():
-                if len(targets) >= AUTOCOMPLETE_LIMIT:
-                    break
-                if target_ is exact_target:
-                    continue
-                uid_, title_, kind_ = describe_link_target(target_)
-                words_ = (uid_ + " " + title_).lower()
-                if all(word_ in words_ for word_ in query_words):
-                    targets.append((uid_, title_, kind_))
+            matches = find_autocomplete_matches(
+                q,
+                iterate_link_targets(),
+                lambda target_: describe_link_target(target_)[:2],
+                exact_target,
+                AUTOCOMPLETE_LIMIT,
+            )
 
             output = env().render_template_as_markup(
                 "autocomplete/link/stream_autocomplete_link.jinja.html",
-                targets=targets,
+                targets=[describe_link_target(target_) for target_ in matches],
             )
 
         return Response(

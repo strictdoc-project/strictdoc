@@ -1,0 +1,18 @@
+[DOCUMENT]
+TITLE: Sample document
+
+[[SECTION]]
+UID: REQ-1-SECTION
+TITLE: Overview
+
+[REQUIREMENT]
+UID: REQ-10
+TITLE: Tenth requirement
+STATEMENT: System shall do 10.
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: First requirement
+STATEMENT: System shall do 1.
+
+[[/SECTION]]

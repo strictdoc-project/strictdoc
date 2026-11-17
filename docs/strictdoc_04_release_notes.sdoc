@@ -160,6 +160,15 @@ This happened also with links that the link widget inserts in the cells of the
 table editor. The RST export (``--formats=rst``) had the same problem with the
 ``:ref:`` roles that replace the links. The RST export now aligns such tables
 again.
+
+18\) Text fields of the Web UI have their own undo history. Ctrl+Z (Cmd+Z on
+macOS) undoes one typed or deleted character at a time, and Ctrl+Shift+Z redoes
+it. A paste, a write of a field widget, an uploaded image reference, the
+automatic alignment of an RST table, and the Restore UID button are one undo
+step each. Before, Ctrl+Z did not undo these changes and could stop working
+after them. Each field and each cell of the table editor has its own history,
+so Ctrl+Z changes only the focused field. Fields with autocompletion do not
+have this undo history: they keep the undo of the browser.
 <<<
 
 [[/SECTION]]

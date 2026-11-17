@@ -1,3 +1,4 @@
+import platform
 from typing import List
 
 from selenium.webdriver.common.action_chains import ActionChains
@@ -111,11 +112,15 @@ class FieldWidgets:  # pylint: disable=invalid-name
         """
         The caret must be inside the visible area of the scroll container
         of the field, which ends above the page footer. The page scrolls
-        smoothly, so the caret gets there with a delay.
+        smoothly, so the caret gets there with a delay. The wait also lasts
+        until the scrolling stops: the caret can be in view before the end
+        of the scrolling, and a popup opened during the scrolling moves
+        under the next click.
         """
+        last_scroll_top = [None]
 
         def caret_in_viewport(_) -> bool:
-            return self.test_case.execute_script(
+            in_viewport, scroll_top = self.test_case.execute_script(
                 self.CARET_MARKER_SCRIPT
                 % """(marker) => {
                     let container = marker.parentElement;
@@ -127,9 +132,15 @@ class FieldWidgets:  # pylint: disable=invalid-name
                       container.getBoundingClientRect() :
                       {top: 0, bottom: window.innerHeight};
                     const rect = marker.getBoundingClientRect();
-                    return rect.top >= area.top && rect.bottom <= area.bottom;
+                    return [
+                      rect.top >= area.top && rect.bottom <= area.bottom,
+                      container ? container.scrollTop : window.scrollY,
+                    ];
                 }"""
             )
+            stopped = scroll_top == last_scroll_top[0]
+            last_scroll_top[0] = scroll_top
+            return in_viewport and stopped
 
         WebDriverWait(self.test_case.driver, timeout).until(caret_in_viewport)
 
@@ -156,6 +167,31 @@ class FieldWidgets:  # pylint: disable=invalid-name
 
     def do_type_at_caret(self, text: str) -> None:
         ActionChains(self.test_case.driver).send_keys(text).perform()
+
+    # The browser's undo and redo keys: Ctrl+Z and Ctrl+Shift+Z, Cmd on macOS.
+    UNDO_MODIFIER = (
+        Keys.COMMAND if platform.system() == "Darwin" else Keys.CONTROL
+    )
+
+    def do_undo(self) -> None:
+        ActionChains(self.test_case.driver).key_down(
+            self.UNDO_MODIFIER
+        ).send_keys("z").key_up(self.UNDO_MODIFIER).perform()
+
+    def do_redo(self) -> None:
+        ActionChains(self.test_case.driver).key_down(
+            self.UNDO_MODIFIER
+        ).key_down(Keys.SHIFT).send_keys("z").key_up(Keys.SHIFT).key_up(
+            self.UNDO_MODIFIER
+        ).perform()
+
+    def do_redo_by_ctrl_y(self) -> None:
+        """
+        Ctrl+Y redoes on every system, also on macOS.
+        """
+        ActionChains(self.test_case.driver).key_down(Keys.CONTROL).send_keys(
+            "y"
+        ).key_up(Keys.CONTROL).perform()
 
     def get_field_text(self) -> str:
         field = self.test_case.find_element(self.field_xpath, by=By.XPATH)

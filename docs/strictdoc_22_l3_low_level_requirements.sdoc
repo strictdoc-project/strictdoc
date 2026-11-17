@@ -1355,3 +1355,60 @@ requirement creation is aborted after already having uploaded images.
 [[/SECTION]]
 
 [[/SECTION]]
+
+[[SECTION]]
+MID: 532ec8e17d174566b30b1f36131282f4
+TITLE: Web interface
+
+[[SECTION]]
+MID: dfd37d87a0be48dcad9630091967a656
+TITLE: editable_field.js
+
+[REQUIREMENT]
+MID: 940032fa9c2a4d72a4cc232b122dbf8b
+UID: SDOC-LLR-225
+STATUS: Active
+TITLE: Field writes through the browser editing commands
+STATEMENT: >>>
+The paste handlers, the field widgets, and the Restore UID button shall write
+into a field through the ``writeText()`` function of ``editable_field.js``.
+``writeText()`` shall select the range, write the HTML-escaped text with
+``execCommand('insertHTML')``, and record the write as one step of the undo
+history of the field.
+<<<
+RATIONALE: >>>
+``execCommand('insertHTML')`` keeps the field plain text in Chrome and Firefox,
+fires the ``input`` event, and puts the caret after the written text.
+``writeText()`` does not use ``execCommand('insertText')``: in Chrome, a
+multi-line text written at the end of a field gets an extra line break after
+it.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-211
+
+[REQUIREMENT]
+MID: f16f24dd0d234d7aa50aaa005b178756
+UID: SDOC-LLR-226
+STATUS: Active
+TITLE: Undo history of a field
+STATEMENT: >>>
+``editable_field.js`` shall keep an undo history for each text field of a form
+that has no autocompletion, and for each cell of the table editor. Each
+``input`` event of the field and each ``writeText()`` call shall be one step,
+which keeps the changed part of the text. A text that an input method composes
+shall be one step. On Ctrl+Z or Ctrl+Shift+Z (Cmd+Z or Cmd+Shift+Z on macOS),
+or Ctrl+Y, ``editable_field.js`` shall cancel the undo of the browser and write
+the step of the focused field back, with the caret after the restored text.
+<<<
+RATIONALE: >>>
+The undo history of the browser is one history for the whole page, puts a
+whole typing run into one step, and works differently in Chrome and Firefox.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SRS-211
+
+[[/SECTION]]
+
+[[/SECTION]]

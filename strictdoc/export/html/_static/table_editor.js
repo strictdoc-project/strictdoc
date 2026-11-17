@@ -911,19 +911,15 @@
     });
 
     // Cells take plain text only, so that pasted formatting does not end up
-    // as HTML elements in a cell.
+    // as HTML elements in a cell. The write can be undone with Ctrl+Z and
+    // fires the 'input' event (see editable_field.js).
     grid.addEventListener('paste', (event) => {
+      const cell = event.target.closest(`[${ATTR_CELL}]`);
+      if (!cell) return;
       event.preventDefault();
       const text = event.clipboardData.getData('text/plain');
-      const selection = window.getSelection();
-      if (!selection.rangeCount) return;
-      selection.deleteFromDocument();
-      const node = document.createTextNode(text);
-      selection.getRangeAt(0).insertNode(node);
-      selection.collapse(node, text.length);
-      event.target.dispatchEvent(new Event('input', {
-        bubbles: true
-      }));
+      const selected = editableField.textSelection(cell);
+      if (selected) editableField.writeText(cell, selected.from, selected.to, text);
     });
 
     grid.addEventListener('focusin', (event) => {
@@ -1280,6 +1276,7 @@
   //
 
   const fieldWidgets = window.StrictDoc.fieldWidgets;
+  const editableField = window.StrictDoc.editableField;
 
   // field -> { markup, format, tables } for the fields with a table format.
   const fieldTables = new Map();
@@ -1326,6 +1323,9 @@
   // True while the widget writes an aligned table, so that this write does
   // not count as a change of the table.
   let aligning = false;
+  // The field of the 'input' event that field_widgets.js handles now, or
+  // null.
+  let inputField = null;
 
   function writeAligned(field, table, options) {
     const {
@@ -1367,7 +1367,10 @@
       editing = {
         field,
         start: table.start,
-        changed: false
+        // A write puts the caret after the written text, so a table that
+        // gets the caret with a write is changed by it, for example, by an
+        // undo with the caret outside the table.
+        changed: inputField === field
       };
     }
   }
@@ -1377,8 +1380,16 @@
   // runs in the capture phase, before field_widgets.js moves the caret
   // state on the same input.
   document.addEventListener('input', (event) => {
-    if (!aligning && editing?.field === event.target) editing.changed = true;
+    if (aligning) return;
+    if (editing?.field === event.target) editing.changed = true;
+    inputField = event.target;
   }, true);
+
+  // This script runs after field_widgets.js, so its listener comes after the
+  // one of field_widgets.js.
+  document.addEventListener('input', () => {
+    inputField = null;
+  });
 
   fieldWidgets.register({
     id: 'table',

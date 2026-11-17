@@ -894,6 +894,27 @@ RELATIONS:
   VALUE: strictdoc/export/html/_static/field_widgets.js
 
 [REQUIREMENT]
+MID: 93321c779b8a4e94a13ee351115c325b
+UID: SDOC-SRS-211
+STATUS: Active
+TITLE: Undo and redo in text fields
+STATEMENT: >>>
+When the user presses Ctrl+Z or Ctrl+Shift+Z (Cmd+Z or Cmd+Shift+Z on macOS)
+in a text field of the web interface that has no autocompletion, StrictDoc
+shall undo or redo one step of that field. A step is one typed or deleted character, or one change that
+StrictDoc writes into the field, such as a paste, a widget write, or the
+automatic alignment of a table.
+<<<
+RATIONALE: >>>
+The user expects to undo typing one character at a time, as in a text editor,
+and to undo a paste or a widget change in the same way as typing. Each field
+has its own steps, so an undo does not change another field.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-80
+
+[REQUIREMENT]
 MID: 8811f0ef33de4365bc66a602a8c184f6
 UID: SDOC-SRS-48
 STATUS: Active

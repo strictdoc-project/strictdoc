@@ -372,6 +372,11 @@ def test_end2end(
     focus_argument = f"-k {focus}" if focus is not None else ""
     exit_first_argument = "--exitfirst" if exit_first else ""
     headless_argument = "--headless2" if headless and not headed else "--gui"
+    windows_network_retry_arguments = (
+        '--reruns=1 --only-rerun="ERR_NO_BUFFER_SPACE"'
+        if os.name == "nt"
+        else ""
+    )
     test_command = f"""
             {coverage_command_or_none}
             pytest
@@ -385,6 +390,7 @@ def test_end2end(
             {exit_first_argument}
             {long_timeouts_argument}
             {headless_argument}
+            {windows_network_retry_arguments}
             --junit-xml={TEST_REPORTS_DIR}/tests_end2end.pytest.junit.xml
             -o junit_suite_name="StrictDoc End-to-End Tests"
             -o cache_dir=build/pytest_cache/end2end

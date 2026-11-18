@@ -582,6 +582,9 @@ STATEMENT: >>>
 .. code:: bash
 
     invoke test-end2end
+
+On Windows, this task reruns a test once when Chrome reports
+``ERR_NO_BUFFER_SPACE``. Other test failures are not rerun.
 <<<
 
 [[/SECTION]]

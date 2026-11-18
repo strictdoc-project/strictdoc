@@ -73,7 +73,7 @@ class E2ECase(BaseCase):
         exclude: Optional[Union[str, List[str], Tuple[str, ...]]] = None,
     ) -> None:
         """
-        Print raw Chrome errors before SeleniumBase formats them.
+        Preserve raw Chrome errors before SeleniumBase formats them.
 
         SeleniumBase's BaseCase.assert_no_js_errors() reformats SEVERE browser
         log entries. For failed resource requests, the reformatted message
@@ -86,16 +86,19 @@ class E2ECase(BaseCase):
         SeleniumBase method runs and prints the SEVERE entries that
         SeleniumBase receives. The wrapper returns all entries unchanged, and
         SeleniumBase applies its normal filtering and failure behavior to
-        them.
+        them. If Chrome reports ERR_NO_BUFFER_SPACE, the raised exception also
+        keeps that error code. The Windows E2E task uses the code to rerun the
+        affected test once instead of ignoring the incomplete page load.
         """
         original_get_log = self.driver.get_log
+        severe_entries: List[Dict[str, Any]] = []
 
         def get_log_and_print_severe(log_type: str) -> List[Dict[str, Any]]:
             entries: List[Dict[str, Any]] = original_get_log(log_type)
             if log_type == "browser":
-                severe_entries = [
+                severe_entries.extend(
                     entry_ for entry_ in entries if entry_["level"] == "SEVERE"
-                ]
+                )
                 if len(severe_entries) > 0:
                     print(  # noqa: T201
                         "Raw Chrome browser log:\n"
@@ -108,8 +111,18 @@ class E2ECase(BaseCase):
                     )
             return entries
 
-        with patch.object(self.driver, "get_log", get_log_and_print_severe):
-            super().assert_no_js_errors(exclude=exclude)
+        try:
+            with patch.object(self.driver, "get_log", get_log_and_print_severe):
+                super().assert_no_js_errors(exclude=exclude)
+        except AssertionError as exception:
+            if any(
+                "ERR_NO_BUFFER_SPACE" in entry_["message"]
+                for entry_ in severe_entries
+            ):
+                raise AssertionError(
+                    f"{exception}\nChrome network error: ERR_NO_BUFFER_SPACE"
+                ) from exception
+            raise
 
     def do_paste_text_via_js(self, element, text: str) -> None:
         # Simulates a paste event on a DOM element with arbitrary text content.

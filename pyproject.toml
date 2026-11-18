@@ -168,6 +168,7 @@ check = [
 
     # Unit tests
     "pytest>=6.2.2",
+    "pytest-rerunfailures",
     # Pytest fixture that provides fake file system for testing code that
     # accesses file systems.
     "pyfakefs>=4.5.5",

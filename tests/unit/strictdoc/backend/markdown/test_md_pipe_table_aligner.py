@@ -154,3 +154,32 @@ def test_09_indented_table_keeps_indent():
   | C   | D   |
 """
     )
+
+
+def test_10_wide_character_takes_width_of_two_characters():
+    text = """\
+| A | B |
+|-|-|
+| 😀 | 中文 |
+| ab | y |
+"""
+
+    assert (
+        format_pipe_tables(text)
+        == """\
+| A   | B    |
+| --- | ---- |
+| 😀  | 中文 |
+| ab  | y    |
+"""
+    )
+
+
+def test_11_aligned_table_with_wide_characters_stays_as_is():
+    text = """\
+| A   | B    |
+| --- | ---- |
+| 😀  | 中文 |
+"""
+
+    assert format_pipe_tables(text) == text

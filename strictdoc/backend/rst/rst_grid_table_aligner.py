@@ -6,6 +6,8 @@ import re
 from dataclasses import dataclass
 from typing import List, Optional
 
+from strictdoc.helpers.text_width import is_double_width, text_width
+
 TABLE_LINE_PATTERN = re.compile(r"^\s*[+|]")
 BORDER_PATTERN = re.compile(r"^\+(-+\+)+$")
 HEADER_BORDER_PATTERN = re.compile(r"^\+(=+\+)+$")
@@ -13,6 +15,13 @@ DIRECTIVE_PATTERN = re.compile(r"^\s*\.\. \S+::")
 LITERAL_DIRECTIVE_PATTERN = re.compile(
     r"^\s*\.\. (code|code-block|sourcecode)::"
 )
+# Docutils finds the cell borders of a grid table by the positions of "|" and
+# "+" in the lines. A wide character takes the width of two characters (see
+# strictdoc.helpers.text_width). Docutils puts a pad character after each
+# wide character before it parses the table
+# (docutils.statemachine.StringList.pad_double_width()). This module does the
+# same, so it measures the positions as docutils does.
+DOUBLE_WIDTH_PAD = "\x00"
 
 
 @dataclass
@@ -21,7 +30,8 @@ class _GridTable:
     has_header: bool
     # The cells of each row. A cell can hold several lines.
     rows: List[List[str]]
-    # The text widths of the columns in the source table.
+    # The text widths of the table columns in the source table (see
+    # strictdoc.helpers.text_width).
     column_widths: List[int]
     aligned: bool
 
@@ -142,7 +152,10 @@ def _parse_grid_table(block_lines: List[str]) -> Optional[_GridTable]:
     indent = _common_indent(block_lines)
     if indent is None:
         return None
-    lines = [line_[len(indent) :].rstrip() for line_ in block_lines]
+    lines = [
+        _pad_double_width(line_[len(indent) :].rstrip())
+        for line_ in block_lines
+    ]
 
     if BORDER_PATTERN.match(lines[0]) is None:
         return None
@@ -204,7 +217,7 @@ def _serialize_grid_table(
     table: _GridTable, keep_source_widths: bool
 ) -> List[str]:
     """
-    Write the table with the borders at the same columns.
+    Write the table with the borders at the same positions.
 
     If keep_source_widths is False, the serializer writes the table as the
     table editor of the Web UI does: it leaves out an empty header row (a grid
@@ -226,7 +239,7 @@ def _serialize_grid_table(
         max(
             1,
             table.column_widths[column_] if keep_source_widths else 1,
-            *(len(line_) for row_ in rows for line_ in row_[column_]),
+            *(text_width(line_) for row_ in rows for line_ in row_[column_]),
         )
         for column_ in range(len(table.column_widths))
     ]
@@ -241,8 +254,9 @@ def _serialize_grid_table(
         height = max(len(cell_) for cell_ in row)
         for line_index in range(height):
             cells = [
-                (cell_[line_index] if line_index < len(cell_) else "").ljust(
-                    widths[column_]
+                _pad_to_width(
+                    cell_[line_index] if line_index < len(cell_) else "",
+                    widths[column_],
                 )
                 for column_, cell_ in enumerate(row)
             ]
@@ -250,6 +264,19 @@ def _serialize_grid_table(
         is_header = has_header and row_index == 0
         lines.append(border("=" if is_header else "-"))
     return [table.indent + line_ for line_ in lines]
+
+
+def _pad_double_width(line: str) -> str:
+    return "".join(
+        character_ + DOUBLE_WIDTH_PAD
+        if is_double_width(character_)
+        else character_
+        for character_ in line
+    )
+
+
+def _pad_to_width(text: str, width: int) -> str:
+    return text + " " * (width - text_width(text))
 
 
 def _common_indent(lines: List[str]) -> Optional[str]:
@@ -307,14 +334,16 @@ def _cell_text(parts: List[str]) -> str:
     Join the parts of a cell from the text lines of its row.
 
     The indent shared by the non-blank parts is removed, so that nested
-    indents (lists, directives) stay relative to the cell.
+    indents (lists, directives) stay relative to the cell. The pad characters
+    after the wide characters (see DOUBLE_WIDTH_PAD) are removed too.
     """
 
     filled = [part_ for part_ in parts if part_.strip() != ""]
     if len(filled) == 0:
         return ""
     indent = min(len(part_) - len(part_.lstrip(" ")) for part_ in filled)
-    return "\n".join(_cell_lines("\n".join(part_[indent:] for part_ in parts)))
+    text = "\n".join(part_[indent:] for part_ in parts)
+    return "\n".join(_cell_lines(text.replace(DOUBLE_WIDTH_PAD, "")))
 
 
 def _cell_lines(cell: str) -> List[str]:

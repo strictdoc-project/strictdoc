@@ -2089,6 +2089,10 @@ STATEMENT: >>>
 When formatting documents, StrictDoc shall align the misaligned RST grid tables
 and Markdown pipe tables.
 
+StrictDoc shall measure the width of text in RST grid tables and Markdown pipe
+tables in the same way as docutils measures the width of text in RST grid
+tables.
+
 In a Markdown table, StrictDoc shall use the data in the rows as the source of
 truth, not the number of columns in the header row. A table shall have as many
 columns as its widest row.

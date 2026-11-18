@@ -171,9 +171,11 @@ so Ctrl+Z changes only the focused field. Fields with autocompletion do not
 have this undo history: they keep the undo of the browser.
 
 19\) The ``strictdoc format`` command aligns the misaligned RST grid tables and
-Markdown pipe tables. Each column becomes as wide as its longest text line.
-Table alignment does not depend on the ``document_line_width`` option. Tables
-in RST literal blocks and Markdown fenced code blocks stay as they are.
+Markdown pipe tables. Each column becomes as wide as its longest text line. As
+in docutils, a wide East Asian character, for example, a CJK character or an
+emoji, takes the width of two characters. Table alignment does not depend on
+the ``document_line_width`` option. Tables in RST literal blocks and Markdown
+fenced code blocks stay as they are.
 <<<
 
 [[/SECTION]]

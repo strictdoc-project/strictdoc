@@ -6,6 +6,8 @@ import re
 from dataclasses import dataclass
 from typing import List, Optional
 
+from strictdoc.helpers.text_width import text_width
+
 # The table rules follow the table editor of the Web UI (table_editor.js),
 # which follows the table rule of markdown-it (GFM):
 # - A table starts with a header row that contains "|" and a delimiter row
@@ -15,6 +17,13 @@ from typing import List, Optional
 #   block (BLOCK_START_PATTERNS).
 # - A row can have fewer cells than the header: the missing cells are empty.
 #   A row can have more cells: markdown-it does not show the extra cells.
+#
+# The widths and the "|" positions are measured in text width, as in RST
+# grid tables: a wide character, for example, a CJK character or an emoji,
+# takes the width of two characters (see strictdoc.helpers.text_width).
+# markdown-it does not use the "|" positions. But with this measure, a table
+# looks aligned in a monospace font, and the RST and Markdown tables follow
+# one rule.
 #
 # The data in the table rows is the source of truth, not the number of
 # columns in the header row. A table has as many columns as its widest row.
@@ -177,7 +186,7 @@ def _serialize_pipe_table(table: _PipeTable) -> List[str]:
     ]
     # Three characters fit the widest delimiter cell, ":-:".
     widths = [
-        max([3] + [len(row_[column_]) for row_ in rows])
+        max([3] + [text_width(row_[column_]) for row_ in rows])
         for column_ in range(len(rows[0]))
     ]
 
@@ -185,7 +194,7 @@ def _serialize_pipe_table(table: _PipeTable) -> List[str]:
         return (
             "| "
             + " | ".join(
-                cell_.ljust(widths[column_])
+                cell_ + " " * (widths[column_] - text_width(cell_))
                 for column_, cell_ in enumerate(cells)
             )
             + " |"
@@ -258,7 +267,8 @@ def _split_pipe_row(line: str) -> List[str]:
 
 def _pipe_positions(line: str) -> List[int]:
     """
-    Return the positions of the unescaped "|" in a line.
+    Return the positions of the unescaped "|" in a line, measured in text
+    width.
     """
 
     positions: List[int] = []
@@ -268,7 +278,7 @@ def _pipe_positions(line: str) -> List[int]:
             index += 2
             continue
         if line[index] == "|":
-            positions.append(index)
+            positions.append(text_width(line[:index]))
         index += 1
     return positions
 

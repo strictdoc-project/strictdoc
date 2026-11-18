@@ -3279,6 +3279,12 @@ The command aligns these tables in the multiline fields of documents with RST
 or Markdown markup. In an aligned table, each column is as wide as its longest
 text line. The command leaves out an empty header row of an RST table.
 
+The command measures the width of text as docutils does. A wide East Asian
+character, for example, a CJK character or an emoji, takes the width of two
+characters. Every other character takes the width of one character. As a
+result, docutils accepts an aligned RST table, and an aligned Markdown table
+looks aligned in a monospace font.
+
 In a Markdown table, the data in the rows is the source of truth, not the number
 of columns in the header row. A table has as many columns as its widest row. If
 a row has more cells than the header row, the command adds empty cells to the

@@ -1,7 +1,17 @@
+from docutils.core import publish_parts
+
 from strictdoc.backend.rst.rst_grid_table_aligner import (
     align_grid_tables,
     format_grid_tables,
 )
+
+
+def assert_docutils_accepts(text: str) -> None:
+    publish_parts(
+        text,
+        writer="html",
+        settings_overrides={"report_level": 5, "halt_level": 2},
+    )
 
 
 def test_01_misaligned_table_is_aligned():
@@ -228,5 +238,64 @@ def test_10_format_aligns_table_in_table_directive():
    +---+---+
    | C | D |
    +---+---+
+"""
+    )
+
+
+def test_11_wide_character_takes_width_of_two_characters():
+    text = """\
++--+--+
+| A | B |
++--+--+
+| 😀 | 中文 |
++--+--+
+| abc | x |
++--+--+
+"""
+
+    output = format_grid_tables(text)
+    assert (
+        output
+        == """\
++-----+------+
+| A   | B    |
++-----+------+
+| 😀  | 中文 |
++-----+------+
+| abc | x    |
++-----+------+
+"""
+    )
+    assert_docutils_accepts(output)
+    assert format_grid_tables(output) == output
+
+
+def test_12_table_aligned_with_wide_characters_stays_as_is():
+    text = """\
++----+---+
+| A  | B |
++----+---+
+| 😀 | x |
++----+---+
+"""
+
+    assert_docutils_accepts(text)
+    assert format_grid_tables(text) == text
+    assert align_grid_tables(text) == text
+
+
+def test_13_align_counts_wide_characters():
+    text = """\
++------+-----+
+| 中文 :ref:`T <X>` | A |
++------+-----+
+"""
+
+    assert (
+        align_grid_tables(text)
+        == """\
++-------------------+-----+
+| 中文 :ref:`T <X>` | A   |
++-------------------+-----+
 """
     )

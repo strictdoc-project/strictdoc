@@ -13,14 +13,20 @@ from strictdoc.helpers.parallelizer import Parallelizer
 
 
 class FormatCommand(BaseCommand):
-    HELP = "Format SDoc and Markdown documents to the configured line width."
+    """
+    @relation(SDOC-SRS-212, SDOC-SRS-213, scope=class)
+    """
+
+    HELP = "Format SDoc and Markdown documents."
     DETAILED_HELP = """\
 This command reads all SDoc and Markdown documents in the project tree and
-writes them back formatted according to the project's `document_line_width`
-configuration option (set in strictdoc_config.py).
+writes them back formatted:
 
-If `document_line_width` is not configured, the command still rewrites all
-documents to normalise their content (a no-op round-trip).
+- The command aligns the misaligned RST grid tables and Markdown pipe tables.
+- The command wraps the text according to the project's `document_line_width`
+  configuration option (set in strictdoc_config.py).
+
+If `document_line_width` is not configured, the command does not wrap the text.
 """
 
     @classmethod
@@ -64,7 +70,7 @@ documents to normalise their content (a no-op round-trip).
             sys.exit(1)
 
         line_width = project_config.document_line_width
-        sdoc_writer = SDWriter(project_config)
+        sdoc_writer = SDWriter(project_config, format_tables=True)
 
         for document in traceability_index.document_tree.document_list:
             assert document.meta is not None
@@ -80,4 +86,6 @@ documents to normalise their content (a no-op round-trip).
                 ) as output_file:
                     output_file.write(document_content)
             elif filename.endswith(".md"):
-                SDMarkdownWriter.write_to_file(document, line_width=line_width)
+                SDMarkdownWriter.write_to_file(
+                    document, line_width=line_width, format_tables=True
+                )

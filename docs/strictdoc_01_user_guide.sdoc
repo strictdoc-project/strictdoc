@@ -3251,8 +3251,11 @@ TITLE: Format project tree
 MID: a93595f44d65475db1d25661db43ce7f
 STATEMENT: >>>
 The ``strictdoc format`` command reads all SDoc and Markdown documents in the
-project tree and writes them back formatted according to the project's
-``document_line_width`` configuration option.
+project tree and writes them back formatted:
+
+- The command aligns the misaligned RST grid tables and Markdown pipe tables.
+- The command wraps the text according to the project's ``document_line_width``
+  configuration option.
 
 .. code:: text
 
@@ -3262,8 +3265,60 @@ The command performs in-place formatting: all documents are rewritten at their
 original paths.
 
 The ``document_line_width`` option must be configured in the project config to
-have an effect. If it is not set, the command still rewrites all documents but
-without applying any line-width changes (a normalizing round-trip).
+wrap the text. If it is not set, the command still rewrites all documents and
+aligns the tables, but does not change the line width.
+
+**Formatting tables**
+
+A table is aligned when its cell separators stand at the same columns in all
+lines. A table edited by hand in a text editor is often misaligned. RST rejects
+such a grid table ("Malformed table"), and a Markdown table becomes hard to
+read.
+
+The command aligns these tables in the multiline fields of documents with RST
+or Markdown markup. In an aligned table, each column is as wide as its longest
+text line. The command leaves out an empty header row of an RST table.
+
+The command measures the width of text as docutils does. A wide East Asian
+character, for example, a CJK character or an emoji, takes the width of two
+characters. Every other character takes the width of one character. As a
+result, docutils accepts an aligned RST table, and an aligned Markdown table
+looks aligned in a monospace font.
+
+In a Markdown table, the data in the rows is the source of truth, not the number
+of columns in the header row. A table has as many columns as its widest row. If
+a row has more cells than the header row, the command adds empty cells to the
+header row. As a result, the extra cells become columns, and the page shows the
+extra cells.
+
+.. code-block:: rst
+
+    Before:
+
+    +-----+-----+
+    | Name | Value |
+    +=====+=====+
+    | A | B |
+    +-----+-----+
+
+    After:
+
+    +------+-------+
+    | Name | Value |
+    +======+=======+
+    | A    | B     |
+    +------+-------+
+
+The command does not change the following tables:
+
+- Aligned tables, including tables with columns wider than their text.
+- Tables that the command cannot parse completely, for example, RST tables with
+  spans.
+- Tables in RST literal blocks (after ``::``, and in the ``code``,
+  ``code-block``, and ``sourcecode`` directives) and in Markdown fenced code
+  blocks. The page shows a code block as preformatted text and does not parse
+  a table in it. Such a table is an example of markup, and its author can make
+  it misaligned on purpose.
 
 **Configuring the line width**
 

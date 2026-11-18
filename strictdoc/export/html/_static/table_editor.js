@@ -124,10 +124,72 @@
     return lines;
   }
 
+  // The width of text. A wide or full-width East Asian character, for
+  // example, a CJK character or an emoji, takes the width of two characters.
+  // Every other character takes the width of one character, also a character
+  // outside the BMP. Docutils measures a grid table in this way
+  // (docutils.statemachine.StringList.pad_double_width()). The Markdown
+  // tables use the same measure, so a table looks aligned in a monospace
+  // font. The format command measures text in the same way
+  // (strictdoc/helpers/text_width.py).
+  //
+  // Docutils takes the width of a character from the unicodedata module of
+  // the Python on the server. The server writes the code point ranges of the
+  // double-width characters from the same module into the page
+  // (components/table_editor/double_width_ranges.jinja), as [first, last]
+  // pairs in ascending order. The page has the element only when the server
+  // renders it, and the table editor works only there.
+  const DOUBLE_WIDTH_RANGES_ID = 'table-editor-double-width-ranges';
+  let doubleWidthRanges = null;
+
+  // Reads the ranges at the first use: the script runs before the page body
+  // with the element is parsed.
+  function getDoubleWidthRanges() {
+    if (doubleWidthRanges === null) {
+      const element = document.getElementById(DOUBLE_WIDTH_RANGES_ID);
+      if (!element) throw new Error(`table_editor.js: no #${DOUBLE_WIDTH_RANGES_ID}`);
+      doubleWidthRanges = JSON.parse(element.textContent);
+    }
+    return doubleWidthRanges;
+  }
+
+  function isWideCodePoint(codePoint) {
+    const ranges = getDoubleWidthRanges();
+    let low = 0;
+    let high = ranges.length - 1;
+    while (low <= high) {
+      const middle = (low + high) >> 1;
+      const [first, last] = ranges[middle];
+      if (codePoint < first) high = middle - 1;
+      else if (codePoint > last) low = middle + 1;
+      else return true;
+    }
+    return false;
+  }
+
+  // A pad item after a wide character in textPositions().
+  const DOUBLE_WIDTH_PAD = '\0';
+
+  // Splits a line into its positions: one item per character, and a pad item
+  // after each wide character. The index of an item is its position in the
+  // line, measured in text width.
+  function textPositions(line) {
+    const positions = [];
+    for (const char of line) {
+      positions.push(char);
+      if (isWideCodePoint(char.codePointAt(0))) positions.push(DOUBLE_WIDTH_PAD);
+    }
+    return positions;
+  }
+
+  function textWidth(line) {
+    return textPositions(line).length;
+  }
+
   function columnWidths(rows, minWidth) {
     return rows[0].map((_, column) => Math.max(
       minWidth,
-      ...rows.map((row) => Math.max(...row[column].map((line) => line.length))),
+      ...rows.map((row) => Math.max(...row[column].map(textWidth))),
     ));
   }
 
@@ -135,24 +197,29 @@
   // height.
   function renderRowLines(row, widths) {
     const height = Math.max(...row.map((lines) => lines.length));
-    return Array(height).fill(null).map((_, index) => `| ${row.map(
-      (lines, column) => (lines[index] ?? '').padEnd(widths[column]),
-    ).join(' | ')} |`);
+    return Array(height).fill(null).map((_, index) => `| ${row.map((lines, column) => {
+      const line = lines[index] ?? '';
+      return line + ' '.repeat(widths[column] - textWidth(line));
+    }).join(' | ')} |`);
   }
 
   //
   // RST grid tables.
+  //
+  // Docutils finds the cell borders of a grid table by the positions of "|"
+  // and "+" in the lines, so the parser works on the lines split by
+  // textPositions().
   //
 
   function rstBorder(widths, char) {
     return `+${widths.map((width) => char.repeat(width + 2)).join('+')}+`;
   }
 
-  // Returns true if the line has `char` at every column edge and ends at the
-  // last edge.
-  function isAlignedRstLine(line, edges, char) {
-    return line.length === edges[edges.length - 1] + 1 &&
-      edges.every((edge) => line[edge] === char);
+  // Returns true if the line, given as positions (see textPositions()), has
+  // `char` at every column edge and ends at the last edge.
+  function isAlignedRstLine(positions, edges, char) {
+    return positions.length === edges[edges.length - 1] + 1 &&
+      edges.every((edge) => positions[edge] === char);
   }
 
   // Returns the number of columns of a full-width border line, or 0.
@@ -168,12 +235,13 @@
   // accepted only if it gives exactly one part per column. More parts mean
   // that some cell contains a "|", and then it is unclear where the cells
   // end.
-  function parseRstRowLine(line, edges) {
-    if (isAlignedRstLine(line, edges, '|')) {
+  function parseRstRowLine(positions, edges) {
+    if (isAlignedRstLine(positions, edges, '|')) {
       return edges.slice(1).map(
-        (edge, column) => line.slice(edges[column] + 1, edge),
+        (edge, column) => positions.slice(edges[column] + 1, edge).join(''),
       );
     }
+    const line = positions.join('');
     if (!/^\|.*\|$/.test(line)) return null;
     const parts = line.slice(1, -1).split('|');
     return parts.length === edges.length - 1 ? parts : null;
@@ -181,11 +249,13 @@
 
   // Joins the parts of a cell from the text lines of its row. The indent
   // shared by the non-blank parts is removed, so nested indents (lists,
-  // directives) are kept relative to the cell.
+  // directives) are kept relative to the cell. The pad items after the wide
+  // characters (see textPositions()) are removed too.
   function rstCellText(parts) {
     const filled = parts.filter((part) => part.trim() !== '');
     const indent = Math.min(...filled.map((part) => part.match(/^ */)[0].length));
-    return cellLines(parts.map((part) => part.slice(indent)).join('\n')).join('\n');
+    const text = parts.map((part) => part.slice(indent)).join('\n');
+    return cellLines(text.replaceAll(DOUBLE_WIDTH_PAD, '')).join('\n');
   }
 
   // Accepts grid tables without spans and with at most one header row. A row
@@ -198,9 +268,10 @@
 
     const indent = commonIndent(blockLines);
     if (indent === null) return null;
-    const lines = blockLines.map((line) => line.slice(indent.length).trimEnd());
+    // Each line as positions (see textPositions()).
+    const lines = blockLines.map((line) => textPositions(line.slice(indent.length).trimEnd()));
 
-    const columns = rstBorderColumns(lines[0], '-');
+    const columns = rstBorderColumns(lines[0].join(''), '-');
     if (columns === 0) return null;
     const edges = [];
     for (let index = 0; index < lines[0].length; index++) {
@@ -212,8 +283,8 @@
     let rowParts = [];
     for (let index = 1; index < lines.length; index++) {
       const line = lines[index];
-      const isBorder = rstBorderColumns(line, '-') === columns;
-      const isHeaderBorder = rstBorderColumns(line, '=') === columns;
+      const isBorder = rstBorderColumns(line.join(''), '-') === columns;
+      const isHeaderBorder = rstBorderColumns(line.join(''), '=') === columns;
       if (!isBorder && !isHeaderBorder) {
         const parts = parseRstRowLine(line, edges);
         if (!parts) return null;
@@ -354,7 +425,8 @@
     return cells;
   }
 
-  // Returns the positions of the unescaped "|" in a line.
+  // Returns the positions of the unescaped "|" in a line, as string
+  // indexes.
   function pipePositions(line) {
     const positions = [];
     for (let index = 0; index < line.length; index++) {
@@ -362,6 +434,12 @@
       else if (line[index] === '|') positions.push(index);
     }
     return positions;
+  }
+
+  // Returns the positions of the unescaped "|" in a line, measured in text
+  // width (see textWidth()).
+  function pipeTextPositions(line) {
+    return pipePositions(line).map((index) => textWidth(line.slice(0, index)));
   }
 
   function parseAlign(cell) {
@@ -412,7 +490,7 @@
       overflowCells,
       // See "Alignment" in the file comment.
       aligned: blockLines.every(
-        (line) => pipePositions(line).join() === pipePositions(blockLines[0]).join(),
+        (line) => pipeTextPositions(line).join() === pipeTextPositions(blockLines[0]).join(),
       ),
     };
   }

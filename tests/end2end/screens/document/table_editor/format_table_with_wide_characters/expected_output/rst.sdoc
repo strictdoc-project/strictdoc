@@ -1,0 +1,16 @@
+[DOCUMENT]
+TITLE: RST
+
+[REQUIREMENT]
+TITLE: Requirement title
+STATEMENT: >>>
+Paragraph.
+
++------+-------+
+| Name | Value |
++======+=======+
+| 中文 | x     |
++------+-------+
+| 😀   | y     |
++------+-------+
+<<<

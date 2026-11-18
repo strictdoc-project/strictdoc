@@ -3,7 +3,9 @@ from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 from strictdoc.backend.markdown.formatter import wrap_md_text
+from strictdoc.backend.markdown.md_pipe_table_aligner import format_pipe_tables
 from strictdoc.backend.rst.formatter import wrap_rst_text
+from strictdoc.backend.rst.rst_grid_table_aligner import format_grid_tables
 from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import DocumentConfig
@@ -48,9 +50,13 @@ class SDWriter:
         self,
         project_config: ProjectConfig,
         node_filter: Optional[NodeFilter] = None,
+        format_tables: bool = False,
     ) -> None:
         self.project_config: ProjectConfig = project_config
         self.node_filter: Optional[NodeFilter] = node_filter
+        # Align the misaligned RST and Markdown tables of the multiline
+        # fields, as the Format table button of the Web UI does.
+        self.format_tables: bool = format_tables
 
     def write_to_file(self, document: SDocDocument) -> None:
         document_content, fragments_dict = self.write_with_fragments(document)
@@ -445,9 +451,18 @@ class SDWriter:
                     output += "\n"
                     if field_value != "\n":
                         effective_value = field_value
+                        markup = document.config.get_markup()
+                        if self.format_tables:
+                            if markup == SDocMarkup.MARKDOWN:
+                                effective_value = format_pipe_tables(
+                                    effective_value
+                                )
+                            elif markup == SDocMarkup.RST:
+                                effective_value = format_grid_tables(
+                                    effective_value
+                                )
                         if self.project_config.document_line_width is not None:
                             line_width = self.project_config.document_line_width
-                            markup = document.config.get_markup()
                             if markup == SDocMarkup.MARKDOWN:
                                 effective_value = wrap_md_text(
                                     effective_value, line_width

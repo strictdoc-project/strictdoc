@@ -1,0 +1,15 @@
+[DOCUMENT]
+TITLE: Markdown
+OPTIONS:
+  MARKUP: Markdown
+
+[REQUIREMENT]
+TITLE: Markdown requirement
+STATEMENT: >>>
+Paragraph.
+
+| Name | Value |
+| ---- | ----- |
+| 中文 | x     |
+| 😀   | y     |
+<<<

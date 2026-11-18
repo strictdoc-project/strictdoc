@@ -67,6 +67,7 @@ from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.file_system import file_open_read_utf8
 from strictdoc.helpers.git_client import GitClient
 from strictdoc.helpers.string import interpolate_at_pattern_lazy
+from strictdoc.helpers.text_width import double_width_ranges
 from strictdoc.server.helpers.turbo import render_turbo_stream
 
 MOVE_NODE_TREE_PREVIEW_LENGTH = 80
@@ -474,6 +475,9 @@ class DocumentScreenViewObject:
 
     def render_static_url(self, url: str) -> Markup:
         return Markup(self.link_renderer.render_static_url(url))
+
+    def get_double_width_ranges(self) -> List[Tuple[int, int]]:
+        return double_width_ranges()
 
     def render_local_anchor(
         self, node: Union[Anchor, SDocNode, SDocDocument]

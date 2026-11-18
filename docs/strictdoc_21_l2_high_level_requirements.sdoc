@@ -2062,6 +2062,60 @@ RELATIONS:
 
 [[/SECTION]]
 
+[[SECTION]]
+MID: cd7ddbe6d0c94cd49a4c01f744ff9b25
+UID: SECTION-SRS-Command-Format
+TITLE: Command: Format
+
+[REQUIREMENT]
+MID: 1a2e33e07e384e10bc23943391616d2d
+UID: SDOC-SRS-212
+STATUS: Active
+TITLE: Format documents
+STATEMENT: >>>
+StrictDoc shall provide a command that formats the SDoc and Markdown documents
+of a project tree and writes them back to their files.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-32
+
+[REQUIREMENT]
+MID: 81997a035bf8400badce6e1e13299f29
+UID: SDOC-SRS-213
+STATUS: Active
+TITLE: Format tables
+STATEMENT: >>>
+When formatting documents, StrictDoc shall align the misaligned RST grid tables
+and Markdown pipe tables.
+
+In a Markdown table, StrictDoc shall use the data in the rows as the source of
+truth, not the number of columns in the header row. A table shall have as many
+columns as its widest row.
+
+StrictDoc shall not change the following tables:
+
+- Tables that StrictDoc cannot parse completely, for example, RST tables with
+  spans.
+- Tables in RST literal blocks and Markdown fenced code blocks.
+<<<
+RATIONALE: >>>
+Tables are difficult to edit by hand in a text editor. Formatting aligns the
+tables after the user edits them.
+
+A table in an RST literal block or a Markdown fenced code block is
+preformatted text, not a table. Docutils and markdown-it do not parse such a
+table. The table is an example of markup, and its author can make it misaligned
+on purpose. As a result, formatting does not change such a table.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-32
+- TYPE: Parent
+  VALUE: SDOC-SSS-63
+
+[[/SECTION]]
+
 [[/SECTION]]
 
 [[SECTION]]

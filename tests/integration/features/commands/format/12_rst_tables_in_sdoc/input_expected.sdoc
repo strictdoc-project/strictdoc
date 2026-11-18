@@ -1,0 +1,42 @@
+[DOCUMENT]
+TITLE: Test
+
+[TEXT]
+STATEMENT: >>>
+A misaligned table:
+
++------+-------+
+| Name | Value |
++======+=======+
+| A    | B     |
++------+-------+
+
+An aligned table with wide columns:
+
++------------+-------+
+| Name       | Value |
++------------+-------+
+
+A table in a literal block::
+
+    +-----+-----+
+    | A | B |
+    +-----+-----+
+
+A table with spans:
+
++-------+-------+
+| A spanning    |
++-------+-------+
+| C | D |
++-------+-------+
+<<<
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Requirement
+STATEMENT: >>>
++---+---+
+| A | B |
++---+---+
+<<<

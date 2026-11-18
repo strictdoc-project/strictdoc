@@ -1,0 +1,41 @@
+[DOCUMENT]
+TITLE: Test
+OPTIONS:
+  MARKUP: Markdown
+
+[TEXT]
+STATEMENT: >>>
+A misaligned table:
+
+| Name      | Value |
+| :-------- | ----: |
+| Long name | A     |
+
+An aligned table:
+
+| A   | B   |
+| --- | --- |
+| C   | D   |
+
+A table in a fenced code block:
+
+```
+| A | B |
+|-|-|
+```
+
+A table with more cells in a row than in the header:
+
+| A   | B   |     |
+| --- | --- | --- |
+| C   | D   | E   |
+<<<
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Requirement
+STATEMENT: >>>
+| A        | B               |
+| -------- | --------------- |
+| `x \| y` | First<br>second |
+<<<

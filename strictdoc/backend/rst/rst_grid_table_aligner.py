@@ -1,5 +1,5 @@
 """
-@relation(SDOC-SRS-70, SDOC-SRS-149, scope=file)
+@relation(SDOC-SRS-70, SDOC-SRS-149, SDOC-SRS-213, scope=file)
 """
 
 import re
@@ -9,6 +9,10 @@ from typing import List, Optional
 TABLE_LINE_PATTERN = re.compile(r"^\s*[+|]")
 BORDER_PATTERN = re.compile(r"^\+(-+\+)+$")
 HEADER_BORDER_PATTERN = re.compile(r"^\+(=+\+)+$")
+DIRECTIVE_PATTERN = re.compile(r"^\s*\.\. \S+::")
+LITERAL_DIRECTIVE_PATTERN = re.compile(
+    r"^\s*\.\. (code|code-block|sourcecode)::"
+)
 
 
 @dataclass
@@ -40,25 +44,95 @@ def align_grid_tables(text: str) -> str:
     proportions of the columns change as little as possible.
     """
 
+    return _align_grid_tables(
+        text, keep_source_widths=True, skip_literal_blocks=False
+    )
+
+
+def format_grid_tables(text: str) -> str:
+    """
+    Align the misaligned RST grid tables in the text as the Format table
+    button of the Web UI does (table_editor.js).
+
+    The parser is the same as in align_grid_tables(). The serializer follows
+    the table editor: a column is as wide as its longest text line, and the
+    serializer leaves out an empty header row.
+
+    The tables in literal blocks (after "::", and in the code, code-block,
+    and sourcecode directives) stay as they are. Docutils shows a literal
+    block as preformatted text and does not parse a grid table in it, so a
+    misaligned table in a literal block is not an error. Such a table is an
+    example of markup, and its author can make it misaligned on purpose.
+    """
+
+    return _align_grid_tables(
+        text, keep_source_widths=False, skip_literal_blocks=True
+    )
+
+
+def _align_grid_tables(
+    text: str, keep_source_widths: bool, skip_literal_blocks: bool
+) -> str:
     lines = text.split("\n")
+    in_literal_block = (
+        _literal_block_lines(lines)
+        if skip_literal_blocks
+        else [False] * len(lines)
+    )
+
+    def is_table_line(index_: int) -> bool:
+        return (
+            not in_literal_block[index_]
+            and TABLE_LINE_PATTERN.match(lines[index_]) is not None
+        )
+
     output: List[str] = []
     index = 0
     while index < len(lines):
-        if TABLE_LINE_PATTERN.match(lines[index]) is None:
+        if not is_table_line(index):
             output.append(lines[index])
             index += 1
             continue
         end = index
-        while end < len(lines) and TABLE_LINE_PATTERN.match(lines[end]):
+        while end < len(lines) and is_table_line(end):
             end += 1
         block = lines[index:end]
         table = _parse_grid_table(block)
         if table is not None and not table.aligned:
-            output.extend(_serialize_grid_table(table))
+            output.extend(_serialize_grid_table(table, keep_source_widths))
         else:
             output.extend(block)
         index = end
     return "\n".join(output)
+
+
+def _literal_block_lines(lines: List[str]) -> List[bool]:
+    """
+    Mark the lines of the literal blocks.
+
+    A literal block follows a line that ends with "::" or starts a code,
+    code-block, or sourcecode directive. It holds the next lines that are
+    blank or indented deeper than that line.
+    """
+
+    in_literal_block = [False] * len(lines)
+    marker_indent: Optional[int] = None
+    for index, line in enumerate(lines):
+        if marker_indent is not None:
+            if line.strip() == "" or _indent_width(line) > marker_indent:
+                in_literal_block[index] = True
+                continue
+            marker_indent = None
+        if LITERAL_DIRECTIVE_PATTERN.match(line) is not None or (
+            line.rstrip().endswith("::")
+            and DIRECTIVE_PATTERN.match(line) is None
+        ):
+            marker_indent = _indent_width(line)
+    return in_literal_block
+
+
+def _indent_width(line: str) -> int:
+    return len(line) - len(line.lstrip(" "))
 
 
 def _parse_grid_table(block_lines: List[str]) -> Optional[_GridTable]:
@@ -126,12 +200,32 @@ def _parse_grid_table(block_lines: List[str]) -> Optional[_GridTable]:
     )
 
 
-def _serialize_grid_table(table: _GridTable) -> List[str]:
-    rows = [[_cell_lines(cell_) for cell_ in row_] for row_ in table.rows]
+def _serialize_grid_table(
+    table: _GridTable, keep_source_widths: bool
+) -> List[str]:
+    """
+    Write the table with the borders at the same columns.
+
+    If keep_source_widths is False, the serializer writes the table as the
+    table editor of the Web UI does: it leaves out an empty header row (a grid
+    table without a header is valid RST) and does not keep the source column
+    widths.
+    """
+
+    has_header = table.has_header
+    source_rows = table.rows
+    if (
+        not keep_source_widths
+        and has_header
+        and all(cell_.strip() == "" for cell_ in table.rows[0])
+    ):
+        has_header = False
+        source_rows = table.rows[1:]
+    rows = [[_cell_lines(cell_) for cell_ in row_] for row_ in source_rows]
     widths = [
         max(
             1,
-            table.column_widths[column_],
+            table.column_widths[column_] if keep_source_widths else 1,
             *(len(line_) for row_ in rows for line_ in row_[column_]),
         )
         for column_ in range(len(table.column_widths))
@@ -153,7 +247,7 @@ def _serialize_grid_table(table: _GridTable) -> List[str]:
                 for column_, cell_ in enumerate(row)
             ]
             lines.append("| " + " | ".join(cells) + " |")
-        is_header = table.has_header and row_index == 0
+        is_header = has_header and row_index == 0
         lines.append(border("=" if is_header else "-"))
     return [table.indent + line_ for line_ in lines]
 

@@ -50,6 +50,24 @@ releases:
 <<<
 
 [[SECTION]]
+MID: cf43a1c5a1644a08a74fa573a79a7e7d
+TITLE: Unreleased
+
+[TEXT]
+MID: c56ed2dd0c68475dafa1355a516bfa15
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) HTML2PDF keeps the downloaded ChromeDriver in a per-user cache folder by
+default. Before, each new output folder downloaded the ChromeDriver again, and
+an export to a new output folder without a network connection failed. The
+``dir_for_sdoc_cache`` option and the ``STRICTDOC_CACHE_DIR`` environment
+variable still select a different cache folder.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 780712d4d6a04ee68ef8c49b11ceb85d
 TITLE: 0.31.0 (2026-11-18)
 

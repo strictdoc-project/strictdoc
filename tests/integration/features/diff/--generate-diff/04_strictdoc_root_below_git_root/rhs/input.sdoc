@@ -1,0 +1,10 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[GRAMMAR]
+IMPORT_FROM_FILE: @my_grammar
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Requirement #1
+STATEMENT: System shall do 1.

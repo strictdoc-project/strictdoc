@@ -49,3 +49,4 @@ __pycache__
 
 ### Draw.io
 /developer/drawio/*.drawio.bkp
+/dist/

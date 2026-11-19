@@ -77,8 +77,8 @@ pytest suite against a bundle (see `tests/bundle/TEST_PLAN.md`); it needs
 The build script uses `uv` when it is installed (dependencies pinned by
 `uv.lock`, CPython 3.12) and falls back to `python3 -m venv` and pip. The
 `Bundle (PyInstaller)` GitHub Actions workflow runs both scripts on Linux,
-Windows and macOS and attaches the zips to a GitHub Release when a `v*` tag
-is pushed.
+Windows and macOS and attaches the zips to a GitHub Release when a version
+tag such as `0.31.0` is pushed.
 
 ## Quick start
 

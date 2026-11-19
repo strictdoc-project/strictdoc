@@ -3,8 +3,8 @@
 #
 # - workflow_dispatch, and pull requests that touch the bundle: build + smoke
 #   test, zips uploaded as workflow artifacts.
-# - tag push v*: the same, then the zips are attached to a GitHub Release for
-#   that tag (created if it does not exist).
+# - push of a version tag such as 0.31.0: the same, then the zips are attached
+#   to a GitHub Release for that tag (created if it does not exist).
 #
 # The build and the smoke tests are plain scripts that also run locally:
 #   scripts/build_bundle.sh, scripts/smoke_bundle.sh
@@ -13,7 +13,8 @@ name: Bundle (PyInstaller)
 on:
   push:
     tags:
-      - "v*"
+      # Upstream release tags have no "v" prefix, e.g. 0.31.0.
+      - "[0-9]+.[0-9]+.[0-9]+"
   pull_request:
     paths:
       - "scripts/build_bundle.sh"
@@ -69,7 +70,7 @@ jobs:
           INPUT_VERSION: ${{ github.event.inputs.version }}
         run: |
           if [ "${GITHUB_REF_TYPE}" = tag ]; then
-            version="${GITHUB_REF_NAME#v}"
+            version="${GITHUB_REF_NAME}"
           elif [ -n "${INPUT_VERSION}" ]; then
             version="${INPUT_VERSION}"
           else

@@ -62,6 +62,10 @@ This release contains the following enhancements:
 ``TemplateNotFound`` after a run stops while it compiles the HTML templates.
 StrictDoc now checks that the compiled template cache is complete and up to
 date, and compiles it again if it is not.
+
+2\) Fixed: on Windows, the server no longer prints a ``ConnectionResetError``
+traceback each time a browser closes a connection. The error is harmless,
+and the server now ignores it.
 <<<
 
 [[/SECTION]]

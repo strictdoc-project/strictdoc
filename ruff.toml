@@ -157,6 +157,9 @@ exclude = ["tests/**/invalid_file*"]
 
 [lint.per-file-ignores]
 "strictdoc/server/routers/main_router.py" = ["B008"]
+# The bundle test suite is a standalone harness: it prints progress, checks
+# subprocess exit codes itself and imports optional test dependencies lazily.
+"tests/bundle/**" = ["ARG001", "PLC0415", "PLW1510", "PLW2901", "T201"]
 
 # Some of our helpers have deliberatly the name of a standard library module
 

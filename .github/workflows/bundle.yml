@@ -19,6 +19,7 @@ on:
       - "scripts/build_bundle.sh"
       - "scripts/smoke_bundle.sh"
       - "scripts/strictdoc.spec"
+      - "tests/bundle/**"
       - "developer/pyinstaller_hooks/**"
       - "strictdoc/helpers/frozen.py"
       - "strictdoc/helpers/parallelizer.py"
@@ -96,6 +97,38 @@ jobs:
           SMOKE_FULL: "1"
         run: |
           bash scripts/smoke_bundle.sh "${{ steps.build.outputs.exe }}"
+
+      # The deeper suite in tests/bundle (pytest + a Playwright crawl of the
+      # server). It needs Python test packages on the runner, never in the
+      # bundle; the tests run the bundle with a clean PATH and environment.
+      - name: Set up the bundle test suite
+        run: |
+          uv venv --quiet --python 3.12 build/test-venv
+          if [ "$RUNNER_OS" = Windows ]; then
+            py="$PWD/build/test-venv/Scripts/python.exe"
+          else
+            py="$PWD/build/test-venv/bin/python"
+          fi
+          uv pip install --python "$py" \
+            pytest==8.4.2 playwright==1.62.0 openpyxl==3.1.5 pypdf==6.16.1
+          if [ "$RUNNER_OS" = Linux ]; then
+            "$py" -m playwright install --with-deps chromium
+          else
+            "$py" -m playwright install chromium
+          fi
+          echo "BUNDLE_TEST_PYTHON=$py" >> "$GITHUB_ENV"
+
+      - name: Bundle test suite, smoke tier
+        run: |
+          bash tests/bundle/run_bundle_tests.sh "${{ steps.build.outputs.exe }}" smoke
+
+      - name: Upload the bundle test results
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: bundle-test-results-${{ matrix.os }}
+          path: build/bundle_test_results
+          if-no-files-found: ignore
 
       - name: Upload the bundle
         uses: actions/upload-artifact@v7

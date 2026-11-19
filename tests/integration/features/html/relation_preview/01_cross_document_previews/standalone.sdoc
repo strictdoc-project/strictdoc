@@ -1,0 +1,15 @@
+[DOCUMENT]
+TITLE: Standalone document
+
+[REQUIREMENT]
+UID: REQ-STANDALONE-PARENT
+TITLE: Standalone parent
+STATEMENT: The standalone parent statement.
+
+[REQUIREMENT]
+UID: REQ-STANDALONE-CHILD
+TITLE: Standalone child
+STATEMENT: The standalone child statement.
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-STANDALONE-PARENT

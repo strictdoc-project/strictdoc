@@ -677,6 +677,28 @@ class HTMLGenerator:
         traceability_index: TraceabilityIndex,
         path_to_source_file: str,
     ) -> None:
+        source_file = self.find_referenced_source_file(
+            traceability_index=traceability_index,
+            path_to_source_file=path_to_source_file,
+        )
+        if source_file is None:
+            raise FileNotFoundError
+        SourceFileViewHTMLGenerator.export_to_file_with_performance(
+            project_config=self.project_config,
+            source_file=source_file,
+            traceability_index=traceability_index,
+            html_templates=self.html_templates,
+        )
+
+    @staticmethod
+    def find_referenced_source_file(
+        *,
+        traceability_index: TraceabilityIndex,
+        path_to_source_file: str,
+    ) -> Optional[SourceFile]:
+        """
+        Find the source file that "_source_files/<path>.html" is the page of.
+        """
         assert isinstance(
             traceability_index.document_tree.source_tree, SourceTree
         ), traceability_index.document_tree.source_tree
@@ -702,15 +724,8 @@ class HTMLGenerator:
                 relative_path_to_source_file
                 == source_file.in_doctree_source_file_rel_path_posix
             ):
-                SourceFileViewHTMLGenerator.export_to_file_with_performance(
-                    project_config=self.project_config,
-                    source_file=source_file,
-                    traceability_index=traceability_index,
-                    html_templates=self.html_templates,
-                )
-                return
-
-        raise FileNotFoundError
+                return source_file
+        return None
 
     @timing_decorator("Export static HTML search index")
     def export_static_html_search_index(

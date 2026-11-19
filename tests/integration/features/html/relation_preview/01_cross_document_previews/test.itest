@@ -1,0 +1,29 @@
+# This test ensures that:
+# - Every DOCUMENT page loads relation_preview.js.
+# - A document whose nodes are linked from another document gets a
+#   "<name>-relation-previews.js" file with the rendered STATEMENT of only
+#   those nodes. Nodes linked from the same page only are left out because
+#   the browser reads them from the page itself.
+# - A document with only same-page relations gets no previews file.
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Export completed.
+
+RUN: %cat %T/html/01_cross_document_previews/child.html | filecheck %s --dump-input=fail --check-prefix CHECK-CHILD-HTML
+CHECK-CHILD-HTML: _static/relation_preview.js
+CHECK-CHILD-HTML: class="requirement__link-parent" href="../01_cross_document_previews/parent.html#REQ-PARENT-1"
+
+RUN: %check_exists --file "%T/html/_static/relation_preview.js"
+
+RUN: %cat %T/html/01_cross_document_previews/parent-relation-previews.js | filecheck %s --dump-input=fail --check-prefix CHECK-PARENT-JS
+CHECK-PARENT-JS: window.StrictDoc.relationPreviews
+CHECK-PARENT-JS: "REQ-PARENT-1":
+CHECK-PARENT-JS-SAME: The parent statement shall keep &lt;tags&gt; &amp; <strong>markup</strong>.
+CHECK-PARENT-JS-NOT: REQ-SAME-CHILD
+CHECK-PARENT-JS-NOT: REQ-UNRELATED
+
+RUN: %cat %T/html/01_cross_document_previews/child-relation-previews.js | filecheck %s --dump-input=fail --check-prefix CHECK-CHILD-JS
+CHECK-CHILD-JS: "REQ-CROSS-CHILD":
+CHECK-CHILD-JS-SAME: The cross-document child statement.
+
+RUN: %check_exists --invert "%T/html/01_cross_document_previews/standalone-relation-previews.js"

@@ -1,0 +1,22 @@
+[DOCUMENT]
+TITLE: Parent document
+
+[REQUIREMENT]
+UID: REQ-PARENT-1
+TITLE: Parent requirement
+STATEMENT: >>>
+The parent statement shall keep <tags> & **markup**.
+<<<
+
+[REQUIREMENT]
+UID: REQ-SAME-CHILD
+TITLE: Same-document child
+STATEMENT: The same-document child statement.
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-PARENT-1
+
+[REQUIREMENT]
+UID: REQ-UNRELATED
+TITLE: Unrelated requirement
+STATEMENT: The unrelated statement.

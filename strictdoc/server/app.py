@@ -38,7 +38,7 @@ LOGGER = logging.getLogger("uvicorn.error")
 
 def ignore_connection_reset_on_windows(
     loop: asyncio.AbstractEventLoop, context: Dict[str, Any]
-) -> None:  # pragma: no cover
+) -> None:
     """
     On Windows, the Proactor event loop logs a full traceback
     ("Exception in callback _ProactorBasePipeTransport._call_connection_lost")

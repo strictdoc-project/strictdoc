@@ -8,7 +8,7 @@ CHECK: Export completed.
 RUN: %check_exists --file "%T/html/_source_files/file.ml.html"
 
 RUN: %cat %T/html/80_auto_finding_of_lexers/input.sdoc.html | filecheck %s --check-prefix CHECK-HTML
-CHECK-HTML: <link rel="stylesheet" href="../_static/base.css"/>
+CHECK-HTML: <link rel="stylesheet" href="../_static/base.css?v={{.+}}"/>
 
 CHECK-HTML: href="../_source_files/file.ml.html#REQ-001#3#5"
 

@@ -4,7 +4,7 @@ CHECK: Export completed.
 RUN: %check_exists --file "%T/html/_source_files/file.py.html"
 
 RUN: %cat %T/html/04_uid_with_dot/input.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
-CHECK-HTML: <link rel="stylesheet" href="../_static/base.css"/>
+CHECK-HTML: <link rel="stylesheet" href="../_static/base.css?v={{.+}}"/>
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-001.1#2#4">
 
 RUN: %cat %T/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE

@@ -60,12 +60,14 @@ def test(project_config: ProjectConfig):
     #
     response = client.get("/_static/turbo.min.js")
     assert response.status_code == 200
+    assert response.headers["cache-control"] == "no-cache"
 
     response = client.get(
         "/_static/turbo.min.js",
         headers={"if-none-match": get_etag(path_to_turbo)},
     )
     assert response.status_code == 304
+    assert response.headers["cache-control"] == "no-cache"
 
     response = client.get(
         "/_static/turbo.min.js", headers={"if-none-match": "INVALID_ETAG"}

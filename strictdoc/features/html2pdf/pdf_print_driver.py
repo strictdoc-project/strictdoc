@@ -10,6 +10,7 @@ from html2pdf4doc.main import HPDExitCode
 
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.features.html2pdf.pdf_postprocessor import PDFPostprocessor
+from strictdoc.helpers.frozen import get_html2pdf4doc_command
 from strictdoc.helpers.timing import measure_performance
 
 
@@ -69,7 +70,9 @@ class PDFPrintDriver:
             # Switching back to calling html2pdf4doc directly because the
             # python -m doesn't work well with PyInstaller.
             # sys.executable, "-m"
-            "html2pdf4doc",
+            # A frozen binary has no html2pdf4doc on PATH, so it re-invokes
+            # itself with an internal helper command instead.
+            *get_html2pdf4doc_command(),
             "print",
             "--cache-dir",
             path_to_html2pdf4doc_cache,

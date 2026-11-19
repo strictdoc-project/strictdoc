@@ -7,7 +7,7 @@ import logging
 import os
 import sys
 import time
-from typing import Awaitable, Callable, Generator
+from typing import Any, Awaitable, Callable, Dict, Generator
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -34,6 +34,21 @@ else:
 
 
 LOGGER = logging.getLogger("uvicorn.error")
+
+
+def ignore_connection_reset_on_windows(
+    loop: asyncio.AbstractEventLoop, context: Dict[str, Any]
+) -> None:  # pragma: no cover
+    """
+    On Windows, the Proactor event loop logs a full traceback
+    ("Exception in callback _ProactorBasePipeTransport._call_connection_lost")
+    whenever a browser closes a keep-alive connection abruptly
+    (WinError 10054). The error is harmless, so do not print it.
+    See https://github.com/Kludex/uvicorn/discussions/2105.
+    """
+    if isinstance(context.get("exception"), ConnectionResetError):
+        return
+    loop.default_exception_handler(context)
 
 
 def print_welcome_message(project_config: ProjectConfig) -> None:
@@ -80,6 +95,10 @@ def create_app(*, project_config: ProjectConfig) -> FastAPI:
         DEPRECATION_ENGINE.print_all_messages()
         print_welcome_message(project_config)
         app_.state.event_loop = asyncio.get_event_loop()
+        if sys.platform == "win32":
+            app_.state.event_loop.set_exception_handler(  # pragma: no cover
+                ignore_connection_reset_on_windows
+            )
         document_watcher = getattr(app_.state, "document_watcher", None)
         if document_watcher is not None:
             document_watcher.start()

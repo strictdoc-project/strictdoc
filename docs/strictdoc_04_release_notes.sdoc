@@ -50,6 +50,22 @@ releases:
 <<<
 
 [[SECTION]]
+MID: 5913410c151d4fd097224d521904ff9f
+TITLE: Unreleased
+
+[TEXT]
+MID: bdf6cd11f3f145cfbcd078a58c6cc3ee
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) Fixed: the server now returns its 404 page for the TABLE, TRACE and
+DEEP-TRACE views of a document when the project config does not enable that
+screen. Before, the server failed with an internal server error (500).
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 780712d4d6a04ee68ef8c49b11ceb85d
 TITLE: 0.31.0 (2026-11-18)
 

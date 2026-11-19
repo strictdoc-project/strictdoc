@@ -1,0 +1,3 @@
+{% for path in paths %}
+{% with item_value=path %}{% include "components/autocomplete/item.jinja" %}{% endwith %}
+{%- endfor %}

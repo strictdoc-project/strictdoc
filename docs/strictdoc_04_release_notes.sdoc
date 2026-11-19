@@ -65,9 +65,10 @@ an export to a new output folder without a network connection failed. The
 variable still select a different cache folder.
 
 2\) Fixed: when Chrome is missing, or the ChromeDriver download fails, HTML2PDF
-now prints one clear error message and exits with a nonzero code. Before,
-HTML2PDF printed an empty ``error:`` line or a raw traceback. The ``--debug``
-option prints the full output of html2pdf4doc.
+now ends with one clear error message and exits with a nonzero code. Before,
+the output ended with an empty ``error:`` line, or with a raw traceback and no
+explanation. The output of html2pdf4doc is always shown live, so the
+``--debug`` option is no longer needed to see it.
 <<<
 
 [[/SECTION]]

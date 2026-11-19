@@ -12,6 +12,7 @@ RUN: %check_exists --file "%T/excel/input.xlsx"
 RUN: %strictdoc convert "%T/excel/input.xlsx" %T_import/ --input-format=excel
 RUN: %cat %T_import/input.sdoc | filecheck %s --check-prefix=CHECK-SDOC
 CHECK-SDOC: [GRAMMAR]
+CHECK-SDOC-NOT: [REQUIREMENT]
 CHECK-SDOC: RELATIONS:
 CHECK-SDOC-NEXT: - TYPE: Parent
 CHECK-SDOC: [REQUIREMENT]

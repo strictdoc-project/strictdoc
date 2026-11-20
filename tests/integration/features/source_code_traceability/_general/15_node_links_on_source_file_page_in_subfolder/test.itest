@@ -1,0 +1,25 @@
+#
+# This test verifies the node links on a source file page when the source file
+# is in a subfolder. The page is deeper in the export than the node's document,
+# so the links must start from the depth of the page.
+#
+# @relation(SDOC-SRS-36, scope=file)
+#
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s
+CHECK: Export completed.
+
+RUN: %check_exists --file "%T/html/_source_files/sub/file.py.html"
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: href="../_source_files/sub/file.py.html#REQ-2#1#2"
+
+RUN: %cat %T/html/_source_files/sub/file.py.html | filecheck %s --check-prefix CHECK-PARENT
+CHECK-PARENT: class="requirement__link-parent" href="../../15_node_links_on_source_file_page_in_subfolder/input.html#REQ-1"
+
+RUN: %cat %T/html/_source_files/sub/file.py.html | filecheck %s --check-prefix CHECK-FILE
+CHECK-FILE: class="requirement__link-file" href="../../_source_files/sub/file.py.html#REQ-2#1#2"
+
+RUN: %cat %T/html/_source_files/sub/file.py.html | filecheck %s --check-prefix CHECK-NO-BAD-LINK
+CHECK-NO-BAD-LINK-NOT: href="15_node_links_on_source_file_page_in_subfolder/input.html
+CHECK-NO-BAD-LINK-NOT: href="../_source_files/sub/file.py.html

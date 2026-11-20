@@ -81,14 +81,6 @@ requests it. Those files are task artifacts intended for the user;
 - Stay within the requested scope; ask before deleting files, changing public
   interfaces, or performing broad refactors.
 
-## Change scope
-
-- Do not modify shared components for a local feature unless explicitly
-  approved by the user.
-- Prefer feature-local templates, scripts, and styles.
-- If changing a shared component appears necessary, stop and request approval
-  before editing it.
-
 ## Testing
 
 - Prefer `invoke test-*` commands for all test commands. Only resort to

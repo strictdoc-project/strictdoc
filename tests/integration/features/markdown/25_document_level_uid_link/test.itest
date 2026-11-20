@@ -3,14 +3,14 @@
 RUN: %strictdoc export %S --formats=html --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Export completed.
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/input1.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOC1
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input1.md.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOC1
 
-CHECK-HTML-DOC1: <a href="../25_document_level_uid_link/input2.html#DOC-2">{{.*}}Document 2
-CHECK-HTML-DOC1: <a href="../25_document_level_uid_link/input2.html#SEC-2">{{.*}}Section B
-CHECK-HTML-DOC1: <a href="../25_document_level_uid_link/input2.html#SEC-4">{{.*}}Section D
+CHECK-HTML-DOC1: <a href="../25_document_level_uid_link/input2.md.html#DOC-2">{{.*}}Document 2
+CHECK-HTML-DOC1: <a href="../25_document_level_uid_link/input2.md.html#SEC-2">{{.*}}Section B
+CHECK-HTML-DOC1: <a href="../25_document_level_uid_link/input2.md.html#SEC-4">{{.*}}Section D
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/input2.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOC2
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input2.md.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOC2
 
-CHECK-HTML-DOC2: <a href="../25_document_level_uid_link/input1.html#DOC-1">{{.*}}Document 1
-CHECK-HTML-DOC2: <a href="../25_document_level_uid_link/input1.html#SEC-1">{{.*}}Section A
-CHECK-HTML-DOC2: <a href="../25_document_level_uid_link/input1.html#SEC-3">{{.*}}Section C
+CHECK-HTML-DOC2: <a href="../25_document_level_uid_link/input1.md.html#DOC-1">{{.*}}Document 1
+CHECK-HTML-DOC2: <a href="../25_document_level_uid_link/input1.md.html#SEC-1">{{.*}}Section A
+CHECK-HTML-DOC2: <a href="../25_document_level_uid_link/input1.md.html#SEC-3">{{.*}}Section C

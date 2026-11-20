@@ -1,7 +1,7 @@
 RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Export completed.
 
-RUN: %cat %T/html/20_field_human_titles/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %T/html/20_field_human_titles/input.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 
 CHECK-HTML:Identifier
 CHECK-HTML:ABC-123

@@ -23,22 +23,22 @@ def get_annotation_actions(path_to_pdf: str) -> list[dict]:
 
 
 index_actions = get_annotation_actions(
-    "Output/html2pdf/pdf/index.pdf"
+    "Output/html2pdf/pdf/index.sdoc.pdf"
 )
 other_actions = get_annotation_actions(
-    "Output/html2pdf/pdf/nested/other.pdf"
+    "Output/html2pdf/pdf/nested/other.sdoc.pdf"
 )
 
 assert any(
     action.get("/S") == "/GoToR"
-    and action.get("/F") == "nested/other.pdf"
+    and action.get("/F") == "nested/other.sdoc.pdf"
     and action.get("/D") == "/TARGET-333"
     for action in index_actions
 ), index_actions
 
 assert any(
     action.get("/S") == "/GoToR"
-    and action.get("/F") == "../index.pdf"
+    and action.get("/F") == "../index.sdoc.pdf"
     and action.get("/D") == "/INDEX-DOC"
     for action in other_actions
 ), other_actions

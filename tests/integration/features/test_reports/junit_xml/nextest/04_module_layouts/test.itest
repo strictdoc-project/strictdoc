@@ -6,7 +6,7 @@ RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Export completed.
 
 # Each requirement renders as satisfied by its test, resolved crate-qualified.
-RUN: %cat "%T/html/%THIS_TEST_FOLDER/docs/input.html" | filecheck %s --check-prefix CHECK-REQS
+RUN: %cat "%T/html/%THIS_TEST_FOLDER/docs/input.sdoc.html" | filecheck %s --check-prefix CHECK-REQS
 CHECK-REQS: REQ-MODULE
 CHECK-REQS: widget_lib::model::tests::model_works
 CHECK-REQS: (is satisfied by)

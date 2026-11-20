@@ -5,11 +5,11 @@ CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/_source_files/file.hpp.html"
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: <a{{.*}}href="../_source_files/file.hpp.html#REQ-1#4#5">
 
 RUN: %cat %T/html/_source_files/file.hpp.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
-CHECK-SOURCE-FILE: href="../{{.*}}/input.html#REQ-1"
+CHECK-SOURCE-FILE: href="../{{.*}}/input.sdoc.html#REQ-1"
 
 RUN: %cat %T/html/source_coverage.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-COVERAGE
 CHECK-SOURCE-COVERAGE: 33.3

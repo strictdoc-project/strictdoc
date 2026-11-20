@@ -1331,7 +1331,7 @@ def test_docker(context, image: str = "strictdoc:latest"):
         return file_owner == current_user
 
     assert check_file_owner(
-        "output/html2pdf/pdf/docs/strictdoc_01_user_guide.pdf"
+        "output/html2pdf/pdf/docs/strictdoc_01_user_guide.sdoc.pdf"
     )
 
 

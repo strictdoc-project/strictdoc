@@ -79,40 +79,40 @@ class DocumentMeta:
         return (
             f"{self.output_document_dir_full_path}"
             f"/"
-            f"{self.document_filename_base}.html"
+            f"{self.document_filename}.html"
         )
 
     def get_html_table_path(self) -> str:
         return (
             f"{self.output_document_dir_full_path}"
             f"/"
-            f"{self.document_filename_base}-TABLE.html"
+            f"{self.document_filename}-TABLE.html"
         )
 
     def get_html_traceability_path(self) -> str:
         return (
             f"{self.output_document_dir_full_path}"
             f"/"
-            f"{self.document_filename_base}-TRACE.html"
+            f"{self.document_filename}-TRACE.html"
         )
 
     def get_html_deep_traceability_path(self) -> str:
         return (
             f"{self.output_document_dir_full_path}"
             f"/"
-            f"{self.document_filename_base}-DEEP-TRACE.html"
+            f"{self.document_filename}-DEEP-TRACE.html"
         )
 
     def get_html_pdf_path(self) -> str:
         return (
             f"{self.output_document_dir_full_path}"
             f"/"
-            f"{self.document_filename_base}-PDF.html"
+            f"{self.document_filename}-PDF.html"
         )
 
     # Links
     def get_html_doc_link(self) -> str:
-        file_name_part = f"{self.document_filename_base}.html"
+        file_name_part = f"{self.document_filename}.html"
         if len(self.output_document_dir_rel_path.relative_path_posix) == 0:
             return file_name_part
         return (
@@ -122,7 +122,7 @@ class DocumentMeta:
         )
 
     def get_html_table_link(self) -> str:
-        file_name_part = f"{self.document_filename_base}-TABLE.html"
+        file_name_part = f"{self.document_filename}-TABLE.html"
         if len(self.output_document_dir_rel_path.relative_path_posix) == 0:
             return file_name_part
         return (
@@ -132,7 +132,7 @@ class DocumentMeta:
         )
 
     def get_html_traceability_link(self) -> str:
-        file_name_part = f"{self.document_filename_base}-TRACE.html"
+        file_name_part = f"{self.document_filename}-TRACE.html"
         if len(self.output_document_dir_rel_path.relative_path_posix) == 0:
             return file_name_part
         return (
@@ -142,7 +142,7 @@ class DocumentMeta:
         )
 
     def get_html_deep_traceability_link(self) -> str:
-        file_name_part = f"{self.document_filename_base}-DEEP-TRACE.html"
+        file_name_part = f"{self.document_filename}-DEEP-TRACE.html"
         if len(self.output_document_dir_rel_path.relative_path_posix) == 0:
             return file_name_part
         return (
@@ -152,7 +152,7 @@ class DocumentMeta:
         )
 
     def get_html_pdf_link(self) -> str:
-        file_name_part = f"{self.document_filename_base}-PDF.html"
+        file_name_part = f"{self.document_filename}-PDF.html"
         if len(self.output_document_dir_rel_path.relative_path_posix) == 0:
             return file_name_part
         return (

@@ -41,6 +41,6 @@ CHECK-EXPORT: Export to HTML: High-Level Requirements
 CHECK-EXPORT: Export to HTML: Low-Level Requirements
 
 RUN: %check_exists --file "%T/output/html/_source_files/src/main.c.html"
-RUN: %cat %T/output/html/project/docs/low_level_requirements.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %T/output/html/project/docs/low_level_requirements.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: class="requirement__link-parent" href="{{.*}}#HLR-1"
 CHECK-HTML: href="{{.*}}_source_files/src/main.c.html#LLR-1#1#10"

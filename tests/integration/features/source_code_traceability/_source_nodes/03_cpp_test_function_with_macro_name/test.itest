@@ -8,7 +8,7 @@ CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/_source_files/tests/file.cpp.html"
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/test_specification.html | filecheck %s --check-prefix CHECK-HTML-TESTSPEC
+RUN: %cat %T/html/%THIS_TEST_FOLDER/test_specification.sdoc.html | filecheck %s --check-prefix CHECK-HTML-TESTSPEC
 CHECK-HTML-TESTSPEC: Test specification
 CHECK-HTML-TESTSPEC: TEST(ApsDecoder, ApsUpdateFwd)
 CHECK-HTML-TESTSPEC: TEST_DOC/tests/file.cpp/TEST(ApsDecoder, ApsUpdateFwd)

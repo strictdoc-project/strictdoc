@@ -9,20 +9,20 @@ RUN: %check_exists --file "%T/html/included_documents_option_not_provided/_asset
 RUN: %check_exists --file "%T/html/included_documents_option_not_provided/nested/_assets/file.svg"
 RUN: %check_exists --file "%T/html/included_documents_option_not_provided/nested/subnested/_assets/file.svg"
 
-RUN: %check_exists --file "%T/html/included_documents_option_not_provided/input.html"
-RUN: %check_exists --invert --file "%T/html/included_documents_option_not_provided/nested/nested.html"
-RUN: %check_exists --invert --file "%T/html/included_documents_option_not_provided/nested/subnested/subnested.html"
+RUN: %check_exists --file "%T/html/included_documents_option_not_provided/input.sdoc.html"
+RUN: %check_exists --invert --file "%T/html/included_documents_option_not_provided/nested/nested.sdoc.html"
+RUN: %check_exists --invert --file "%T/html/included_documents_option_not_provided/nested/subnested/subnested.sdoc.html"
 
 RUN: %cat %T/html/index.html | filecheck %s --check-prefix CHECK-PROJECT-TREE
 CHECK-PROJECT-TREE-NOT: nested
 CHECK-PROJECT-TREE-NOT: subnested
 
-RUN: %cat %T/html/included_documents_option_not_provided/input.html | filecheck %s --check-prefix CHECK-HTML
+RUN: %cat %T/html/included_documents_option_not_provided/input.sdoc.html | filecheck %s --check-prefix CHECK-HTML
 
 CHECK-HTML-NOT: nested
 CHECK-HTML-NOT: subnested
 CHECK-HTML:data-level="0"
-CHECK-HTML:href="../included_documents_option_not_provided/input.html"
+CHECK-HTML:href="../included_documents_option_not_provided/input.sdoc.html"
 CHECK-HTML-NOT: nested
 CHECK-HTML-NOT: subnested
 CHECK-HTML:data-level="1"

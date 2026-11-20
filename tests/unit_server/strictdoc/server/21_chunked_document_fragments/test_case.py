@@ -43,7 +43,7 @@ def client() -> TestClient:
 
 
 def get_placeholder_srcs(client: TestClient) -> Tuple[str, List[str]]:
-    response = client.get("/21_chunked_document_fragments/sample.html")
+    response = client.get("/21_chunked_document_fragments/sample.sdoc.html")
     assert response.status_code == 200
     srcs = [
         src.replace("&amp;", "&")
@@ -151,7 +151,7 @@ def test_document_chunk_unknown_from_node_returns_empty_frame(
 
 
 def test_small_document_is_not_chunked(client: TestClient) -> None:
-    response = client.get("/21_chunked_document_fragments/small.html")
+    response = client.get("/21_chunked_document_fragments/small.sdoc.html")
 
     assert response.status_code == 200
     # A non-chunked document renders its nodes inline, so none of the chunk

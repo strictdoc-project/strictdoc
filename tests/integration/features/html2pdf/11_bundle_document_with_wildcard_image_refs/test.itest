@@ -6,18 +6,18 @@ RUN: %strictdoc export %S --formats=html2pdf --generate-bundle-document --output
 CHECK: html2pdf4doc: JS logs from the print session
 
 RUN: %check_exists --file %T/html2pdf/html/bundle-PDF.html
-RUN: %check_exists --file %T/html2pdf/html/%THIS_TEST_FOLDER/input-PDF.html
-RUN: %check_exists --file %T/html2pdf/html/%THIS_TEST_FOLDER/nested/input2-PDF.html
-RUN: %check_exists --file %T/html2pdf/html/%THIS_TEST_FOLDER/nested/subnested/input3-PDF.html
+RUN: %check_exists --file %T/html2pdf/html/%THIS_TEST_FOLDER/input.sdoc-PDF.html
+RUN: %check_exists --file %T/html2pdf/html/%THIS_TEST_FOLDER/nested/input2.sdoc-PDF.html
+RUN: %check_exists --file %T/html2pdf/html/%THIS_TEST_FOLDER/nested/subnested/input3.sdoc-PDF.html
 
 # Individual nested doc (one level deep): wildcard must resolve using the
 # original '../' path relative to its own location.
-RUN: %cat %T/html2pdf/html/%THIS_TEST_FOLDER/nested/input2-PDF.html | filecheck %s --check-prefix CHECK-NESTED
+RUN: %cat %T/html2pdf/html/%THIS_TEST_FOLDER/nested/input2.sdoc-PDF.html | filecheck %s --check-prefix CHECK-NESTED
 CHECK-NESTED: data="../_assets/root_image.svg"
 
 # Individual subnested doc (two levels deep): wildcard must resolve using the
 # original '../../' path relative to its own location.
-RUN: %cat %T/html2pdf/html/%THIS_TEST_FOLDER/nested/subnested/input3-PDF.html | filecheck %s --check-prefix CHECK-SUBNESTED
+RUN: %cat %T/html2pdf/html/%THIS_TEST_FOLDER/nested/subnested/input3.sdoc-PDF.html | filecheck %s --check-prefix CHECK-SUBNESTED
 CHECK-SUBNESTED: data="../../_assets/root_image.svg"
 
 # Bundle HTML: all '../' prefixes must be stripped so every image resolves

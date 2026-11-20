@@ -4,12 +4,12 @@ RUN: %strictdoc export %T --output-dir %T/output | filecheck %s --dump-input=fai
 
 # Ensure that the test report document is generated.
 CHECK: Export completed.
-RUN: %check_exists --file "%T/output/html/Output/tests_unit.pytest.junit.html"
+RUN: %check_exists --file "%T/output/html/Output/tests_unit.pytest.junit.xml.html"
 
 # Ensure that the source and test files are generated.
 RUN: %check_exists --file "%T/output/html/_source_files/src/foo.py.html"
 RUN: %check_exists --file "%T/output/html/_source_files/tests/test_foo.py.html"
 
 # Ensure that the test report document has the right content.
-RUN: %cat "%T/output/html/Output/tests_unit.pytest.junit.html" | filecheck %s --check-prefix CHECK-TEST-REPORT
+RUN: %cat "%T/output/html/Output/tests_unit.pytest.junit.xml.html" | filecheck %s --check-prefix CHECK-TEST-REPORT
 CHECK-TEST-REPORT: SKIPPED

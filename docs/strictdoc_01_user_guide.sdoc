@@ -5399,7 +5399,7 @@ documentation. This tagfile is in XML format and looks like this:
     <tagfile doxygen_version="1.9.8">
       <compound kind="file">
         <name>REQ-1</name>
-        <filename>strictdocfolder/mystrictdocreq.html#REQ-1</filename>
+        <filename>strictdocfolder/mystrictdocreq.sdoc.html#REQ-1</filename>
       </compound>
     </tagfile>
 

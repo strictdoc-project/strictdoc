@@ -9,16 +9,16 @@ RUN: %check_exists --file "%T/html/included_documents_option_provided/_assets/fi
 RUN: %check_exists --file "%T/html/included_documents_option_provided/nested/_assets/file.svg"
 RUN: %check_exists --file "%T/html/included_documents_option_provided/nested/subnested/_assets/file.svg"
 
-RUN: %check_exists --file "%T/html/included_documents_option_provided/input.html"
-RUN: %check_exists --file "%T/html/included_documents_option_provided/nested/nested.html"
-RUN: %check_exists --file "%T/html/included_documents_option_provided/nested/subnested/subnested.html"
+RUN: %check_exists --file "%T/html/included_documents_option_provided/input.sdoc.html"
+RUN: %check_exists --file "%T/html/included_documents_option_provided/nested/nested.sdoc.html"
+RUN: %check_exists --file "%T/html/included_documents_option_provided/nested/subnested/subnested.sdoc.html"
 
-RUN: %cat %T/html/included_documents_option_provided/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %T/html/included_documents_option_provided/input.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 
 CHECK-HTML:data-level="0"
-CHECK-HTML:href="../included_documents_option_provided/input.html"
-CHECK-HTML:href="../included_documents_option_provided/nested/nested.html"
-CHECK-HTML:href="../included_documents_option_provided/nested/subnested/subnested.html"
+CHECK-HTML:href="../included_documents_option_provided/input.sdoc.html"
+CHECK-HTML:href="../included_documents_option_provided/nested/nested.sdoc.html"
+CHECK-HTML:href="../included_documents_option_provided/nested/subnested/subnested.sdoc.html"
 
 CHECK-HTML:data-level="1"
 CHECK-HTML:data-level="1.1"
@@ -26,15 +26,15 @@ CHECK-HTML:data-level="1.1.1"
 CHECK-HTML:data-level="1.1.1.1"
 CHECK-HTML:data-level="1.1.1.1.1"
 
-RUN: %cat %T/html/included_documents_option_provided/nested/nested.html | filecheck %s --dump-input=fail --check-prefix CHECK-NESTED-HTML
+RUN: %cat %T/html/included_documents_option_provided/nested/nested.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-NESTED-HTML
 
-CHECK-NESTED-HTML:href="../../included_documents_option_provided/input.html"
-CHECK-NESTED-HTML:href="../../included_documents_option_provided/nested/nested.html"
-CHECK-NESTED-HTML:href="../../included_documents_option_provided/nested/subnested/subnested.html"
+CHECK-NESTED-HTML:href="../../included_documents_option_provided/input.sdoc.html"
+CHECK-NESTED-HTML:href="../../included_documents_option_provided/nested/nested.sdoc.html"
+CHECK-NESTED-HTML:href="../../included_documents_option_provided/nested/subnested/subnested.sdoc.html"
 
-RUN: %cat %T/html/included_documents_option_provided/nested/subnested/subnested.html | filecheck %s --dump-input=fail --check-prefix CHECK-SUBNESTED-HTML
+RUN: %cat %T/html/included_documents_option_provided/nested/subnested/subnested.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-SUBNESTED-HTML
 
-CHECK-SUBNESTED-HTML:href="../../../included_documents_option_provided/input.html"
-CHECK-SUBNESTED-HTML:href="../../../included_documents_option_provided/nested/nested.html"
-CHECK-SUBNESTED-HTML:href="../../../included_documents_option_provided/nested/subnested/subnested.html"
+CHECK-SUBNESTED-HTML:href="../../../included_documents_option_provided/input.sdoc.html"
+CHECK-SUBNESTED-HTML:href="../../../included_documents_option_provided/nested/nested.sdoc.html"
+CHECK-SUBNESTED-HTML:href="../../../included_documents_option_provided/nested/subnested/subnested.sdoc.html"
 

@@ -6,9 +6,9 @@ RUN: %strictdoc export %S --output-dir %T | filecheck %s
 
 CHECK: Export completed.
 
-RUN: %check_exists --file "%T/html/05_anchor_in_source_node_field/input.html"
+RUN: %check_exists --file "%T/html/05_anchor_in_source_node_field/input.sdoc.html"
 
 # The STATEMENT field of the requirement must render [LINK: IMPL-1]
 # as a hyperlink pointing to the anchor in the source node's INTENTION field.
-RUN: %cat %T/html/05_anchor_in_source_node_field/input.html | filecheck %s --check-prefix CHECK-REQ
-CHECK-REQ: description.html#IMPL-1
+RUN: %cat %T/html/05_anchor_in_source_node_field/input.sdoc.html | filecheck %s --check-prefix CHECK-REQ
+CHECK-REQ: description.sdoc.html#IMPL-1

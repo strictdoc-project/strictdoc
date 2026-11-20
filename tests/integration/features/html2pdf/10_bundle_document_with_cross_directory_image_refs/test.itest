@@ -6,13 +6,13 @@ RUN: %strictdoc export %S --formats=html2pdf --generate-bundle-document --output
 CHECK: html2pdf4doc: JS logs from the print session
 
 RUN: %check_exists --file %T/html2pdf/html/bundle-PDF.html
-RUN: %check_exists --file %T/html2pdf/html/%THIS_TEST_FOLDER/input-PDF.html
-RUN: %check_exists --file %T/html2pdf/html/%THIS_TEST_FOLDER/nested/input2-PDF.html
+RUN: %check_exists --file %T/html2pdf/html/%THIS_TEST_FOLDER/input.sdoc-PDF.html
+RUN: %check_exists --file %T/html2pdf/html/%THIS_TEST_FOLDER/nested/input2.sdoc-PDF.html
 
 # The individual nested document HTML should have the original relative path
 # (going up to the root _assets/ from the nested output location).
 # SVG images are rendered by docutils as <object data="...">.
-RUN: %cat %T/html2pdf/html/%THIS_TEST_FOLDER/nested/input2-PDF.html | filecheck %s --check-prefix CHECK-INDIVIDUAL-HTML
+RUN: %cat %T/html2pdf/html/%THIS_TEST_FOLDER/nested/input2.sdoc-PDF.html | filecheck %s --check-prefix CHECK-INDIVIDUAL-HTML
 CHECK-INDIVIDUAL-HTML: data="../_assets/root_image.svg"
 
 # The bundle HTML must NOT have the original '../_assets/' path which would

@@ -8,7 +8,7 @@ from tests.end2end.helpers.screens.document.screen_document import (
 
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
-DOC_PATH = "copy_to_clipboard/input/index.html"
+DOC_PATH = "copy_to_clipboard/input/index.sdoc.html"
 
 
 class Test(E2ECase):

@@ -12,11 +12,11 @@ CHECK: Export to HTML: Hello world doc
 
 RUN: %check_exists --file "%T/html/_source_files/src/example.c.html"
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/source_node_base.html | filecheck %s --check-prefix CHECK-HTML
+RUN: %cat %T/html/%THIS_TEST_FOLDER/source_node_base.sdoc.html | filecheck %s --check-prefix CHECK-HTML
 CHECK-HTML: Requirements from Source Nodes
 CHECK-HTML: SRC-NODES-BASE/src/example.c/example_1
 CHECK-HTML: TITLE from sdoc
-CHECK-HTML: class="requirement__link-parent" href="../30_merge_with_sdoc_by_default_uid/parent.html#REQ-1"
+CHECK-HTML: class="requirement__link-parent" href="../30_merge_with_sdoc_by_default_uid/parent.sdoc.html#REQ-1"
 CHECK-HTML: src/example.c, <i>lines: 3-14</i>, function example_1()
 CHECK-HTML-NOT: FOO text from sdoc
 CHECK-HTML: FOO text from example.c

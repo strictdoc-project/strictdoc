@@ -1,0 +1,18 @@
+RUN: %strictdoc export %S --formats=html --output-dir %T | filecheck %s --dump-input=fail --check-prefix CHECK-EXPORT
+CHECK-EXPORT: Export completed.
+
+RUN: %check_exists --file %T/html/%THIS_TEST_FOLDER/document.sdoc.html
+RUN: %check_exists --file %T/html/%THIS_TEST_FOLDER/document.md.html
+RUN: %check_exists --file %T/html/%THIS_TEST_FOLDER/document.sdoc-TABLE.html
+RUN: %check_exists --file %T/html/%THIS_TEST_FOLDER/document.md-TABLE.html
+
+RUN: %cat %T/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-INDEX
+CHECK-INDEX: <body
+CHECK-INDEX-DAG: href="{{.*}}/document.sdoc.html"
+CHECK-INDEX-DAG: href="{{.*}}/document.md.html"
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/document.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-SDOC
+CHECK-SDOC: SDoc document
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/document.md.html | filecheck %s --dump-input=fail --check-prefix CHECK-MARKDOWN
+CHECK-MARKDOWN: Markdown document

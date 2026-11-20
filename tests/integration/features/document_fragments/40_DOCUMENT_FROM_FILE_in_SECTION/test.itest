@@ -5,7 +5,7 @@
 RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Export completed.
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %T/html/%THIS_TEST_FOLDER/index.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 
 CHECK-HTML: Hello world
 CHECK-HTML: Chapter

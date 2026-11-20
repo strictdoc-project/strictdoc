@@ -7,10 +7,10 @@ CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/_source_files/file.py.html"
 
-RUN: %cat %T/html/05_multiple_files_per_requirement/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %T/html/05_multiple_files_per_requirement/input.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-001#1#2">
 CHECK-HTML: <a{{.*}}href="../_source_files/file2.py.html#REQ-001#1#2">
 
 RUN: %cat %T/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
 RUN: %cat %T/html/_source_files/file2.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
-CHECK-SOURCE-FILE: href="../05_multiple_files_per_requirement/input.html#REQ-001"
+CHECK-SOURCE-FILE: href="../05_multiple_files_per_requirement/input.sdoc.html#REQ-001"

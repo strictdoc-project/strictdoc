@@ -48,6 +48,7 @@ from strictdoc.core.file_system.source_files_finder import (
 )
 from strictdoc.core.file_system.source_tree import SourceFile, SourceTree
 from strictdoc.core.file_traceability_index import FileTraceabilityIndex
+from strictdoc.core.graph.abstract_bucket import ALL_EDGES
 from strictdoc.core.graph.many_to_many_set import ManyToManySet
 from strictdoc.core.graph.one_to_one_dictionary import OneToOneDictionary
 from strictdoc.core.graph_database import GraphDatabase
@@ -780,6 +781,10 @@ class TraceabilityIndexBuilder:
                             traceability_index.graph_database.get_link_values(
                                 link_type=GraphLinkType.NODE_TO_PARENT_NODES,
                                 lhs_node=current_node,
+                                # Relations with a role are stored under their
+                                # role as the edge. A cycle is a cycle whatever
+                                # the roles are.
+                                edge=ALL_EDGES,
                             ),
                         )
                     )
@@ -802,6 +807,10 @@ class TraceabilityIndexBuilder:
                             traceability_index.graph_database.get_link_values(
                                 link_type=GraphLinkType.NODE_TO_CHILD_NODES,
                                 lhs_node=current_node,
+                                # Relations with a role are stored under their
+                                # role as the edge. A cycle is a cycle whatever
+                                # the roles are.
+                                edge=ALL_EDGES,
                             ),
                         )
                     )

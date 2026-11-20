@@ -1,0 +1,11 @@
+[DOCUMENT]
+TITLE: Sample
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Requirement with an image
+STATEMENT: >>>
+Findme statement.
+
+.. image:: _assets/picture.png
+<<<

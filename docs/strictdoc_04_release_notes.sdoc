@@ -61,6 +61,11 @@ This release contains the following enhancements:
 1\) Fixed: on Windows, the server no longer prints a ``ConnectionResetError``
 traceback each time a browser closes a connection. The error is harmless,
 and the server now ignores it.
+
+2\) Fixed: the Search screen now shows the images of nodes in documents that
+are in a subfolder. Before, the image paths were relative to the document but
+the Search screen is at the root of the project, so the images were not found
+(404).
 <<<
 
 [[/SECTION]]

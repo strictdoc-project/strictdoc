@@ -2,6 +2,8 @@
 @relation(SDOC-SRS-155, scope=file)
 """
 
+import posixpath
+import re
 from dataclasses import dataclass
 from typing import Iterator, List, Optional, Union
 
@@ -28,6 +30,12 @@ from strictdoc.export.html.html_templates import HTMLTemplates, JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.helpers.cast import assert_cast
+
+# Matches the start of an <img> tag whose src is a relative path, i.e. not
+# absolute, not a URL with a scheme (http:, data:, ...) and not an anchor.
+RELATIVE_IMG_SRC_REGEX = re.compile(
+    r'(<img\b[^>]*?\bsrc=")(?![a-zA-Z][a-zA-Z0-9+.-]*:|/|#)'
+)
 
 
 @dataclass
@@ -79,8 +87,21 @@ class SearchScreenViewObject:
         return 0
 
     def render_truncated_node_statement(self, node: SDocNode) -> Markup:
-        return self.markup_renderer.render_truncated_node_statement(
+        statement = self.markup_renderer.render_truncated_node_statement(
             self.document_type, node
+        )
+        # Image paths such as "_assets/picture.png" are relative to the node's
+        # document, but the Search screen is at the root of the project tree.
+        document = node.get_parent_or_including_document()
+        assert document.meta is not None
+        document_folder = posixpath.dirname(document.meta.get_html_doc_link())
+        if len(document_folder) == 0:
+            return statement
+        return Markup(
+            RELATIVE_IMG_SRC_REGEX.sub(
+                lambda match_: f"{match_.group(1)}{document_folder}/",
+                statement,
+            )
         )
 
     def render_screen(self, jinja_environment: JinjaEnvironment) -> Markup:

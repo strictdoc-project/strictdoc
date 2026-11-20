@@ -10,6 +10,7 @@ from strictdoc.core.project_config import (
     ProjectFeature,
 )
 from strictdoc.features.html2pdf.html2pdf_format import HTML2PDFFormat
+from strictdoc.helpers.path_filter import PathFilter
 
 
 def test_01_default_config():
@@ -174,6 +175,31 @@ def create_config():
         path_to_config=str(path_to_config)
     )
     assert project_config.lazy_document_loading_threshold == 200
+
+
+def test_90_gitignore_with_utf8_bom(tmp_path):
+    path_to_config = tmp_path / "strictdoc_config.py"
+    path_to_config.write_text(
+        """\
+from strictdoc.core.project_config import ProjectConfig
+
+
+def create_config():
+    return ProjectConfig(project_title="Gitignore with BOM")
+"""
+    )
+    # Some editors on Windows save files as UTF-8 with a BOM.
+    (tmp_path / ".gitignore").write_bytes(b"\xef\xbb\xbf.conda-envs\nbuild/\n")
+
+    project_config = ProjectConfigLoader.load_from_path_or_get_default(
+        path_to_config=str(path_to_config)
+    )
+    project_config.input_paths = [str(tmp_path)]
+    project_config.validate_and_finalize()
+
+    assert ".conda-envs" in project_config.exclude_doc_paths
+    assert "build/" in project_config.exclude_source_paths
+    PathFilter(project_config.exclude_doc_paths, positive_or_negative=False)
 
 
 def test_82_lazy_document_loading_threshold_zero_disables():

@@ -1,0 +1,14 @@
+[DOCUMENT]
+TITLE: RST shrinking cell
+
+[REQUIREMENT]
+TITLE: Table
+STATEMENT: >>>
++-----------+---+
+| A         | B |
++===========+===+
+| long text | x |
++-----------+---+
+| y         | z |
++-----------+---+
+<<<

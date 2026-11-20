@@ -66,6 +66,11 @@ and the server now ignores it.
 are in a subfolder. Before, the image paths were relative to the document but
 the Search screen is at the root of the project, so the images were not found
 (404).
+
+3\) Fixed: after an edit made a Markdown or RST table narrower, JavaScript
+errors removed the table highlight and prevented the editor from opening again.
+Adding the first body row to a Markdown table that contained only a header
+caused another JavaScript error. Both operations now work normally.
 <<<
 
 [[/SECTION]]

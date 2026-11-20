@@ -4,11 +4,16 @@ description: |
   Rules and DO/AVOID examples for writing short, well-structured technical
   documentation: BLUF, topic sentences, short paragraphs, sentence case,
   active voice, consistent terminology, concise wording, and structure
-  over prose. Use when writing or editing technical docs, READMEs, specs,
-  or reviewing text for clarity and conciseness.
+  over prose. Also called "crystal" or "crystal clear writing". Use when
+  the user asks to "apply crystal" or to make text "crystal clear", when
+  writing or editing technical docs, READMEs, specs, or when reviewing
+  text for clarity and conciseness.
 ---
 
 # technical-writing-guide
+
+This skill is also called "crystal" (crystal clear writing). Requests such as
+"apply crystal", "use crystal" mean: apply this skill.
 
 Apply `technical_writing_guide_upstream.md` in this directory (vendored
 from github.com/strictdoc-project/technical_writing_skill). Read it in

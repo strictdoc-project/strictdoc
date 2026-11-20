@@ -10,9 +10,9 @@ Claude Code and Codex need for skill discovery by running this script locally:
 
 Convention this script relies on: each skill lives in its own directory
 under developer/skills/, and its main file is named SKILL.md, e.g.
-developer/skills/release-notes/SKILL.md. Any other files in that directory
-are supporting material the main file may reference; they are not copied
-or parsed here.
+developer/skills/technical-writing-guide/SKILL.md. Any other files in that
+directory are supporting material the main file may reference; they are not
+copied or parsed here.
 
 Safe to re-run any time: it regenerates all stubs deterministically and
 removes stale stubs for skills that no longer exist in developer/skills/,

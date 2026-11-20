@@ -964,7 +964,10 @@ class ProjectConfig:
         if os.path.isfile(path_to_gitignore):
             patterns = ["/.git/"]
 
-            with open(path_to_gitignore, encoding="utf-8") as f:
+            # utf-8-sig strips the UTF-8 BOM that some editors write at the
+            # start of the file. Without it, the first pattern starts with an
+            # invisible \ufeff and fails the path mask validation.
+            with open(path_to_gitignore, encoding="utf-8-sig") as f:
                 for line_ in f:
                     line = line_.strip()
                     if not line or line.startswith("#"):

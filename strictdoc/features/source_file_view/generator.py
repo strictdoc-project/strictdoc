@@ -38,10 +38,8 @@ from strictdoc.core.file_system.source_tree import SourceFile
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.html_templates import HTMLTemplates
+from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
-from strictdoc.features.source_file_view.link_renderer import (
-    SourceFileLinkRenderer,
-)
 from strictdoc.features.source_file_view.view_object import (
     SourceFileViewObject,
     SourceLineEntry,
@@ -135,7 +133,7 @@ class SourceFileViewHTMLGenerator:
             ) = SourceFileViewHTMLGenerator.get_pygmented_source_lines(
                 source_file, source_file_lines, trace_info
             )
-        link_renderer = SourceFileLinkRenderer(
+        link_renderer = LinkRenderer(
             root_path=source_file.path_depth_prefix,
             static_path=project_config.dir_for_sdoc_assets,
         )

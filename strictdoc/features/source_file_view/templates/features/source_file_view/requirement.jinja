@@ -3,9 +3,7 @@
     "Expected requirement"
 -%}
 {%- assert
-    view_object.link_renderer.__class__.__name__ in (
-      "LinkRenderer", "SourceFileLinkRenderer"
-    ),
+    view_object.link_renderer.__class__.__name__ == "LinkRenderer",
     "Expected link renderer"
 -%}
 

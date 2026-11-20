@@ -1227,8 +1227,9 @@
     // Returns where the last row or column starts and ends, in viewport
     // coordinates along the extend direction.
     function lastItemSpan(kind) {
-      const rect = (kind === 'row' ? bodyRows() : headerCells())
-        .at(-1).getBoundingClientRect();
+      const last = (kind === 'row' ? bodyRows() : headerCells()).at(-1) ??
+        headerCells().at(-1);
+      const rect = last.getBoundingClientRect();
       return kind === 'row' ? {
         start: rect.top,
         end: rect.bottom

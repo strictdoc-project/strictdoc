@@ -1,0 +1,16 @@
+[DOCUMENT]
+TITLE: Markdown empty cells
+OPTIONS:
+  MARKUP: Markdown
+
+[REQUIREMENT]
+TITLE: Tables
+STATEMENT: >>>
+| a   | b   | c   |
+| --- | --- | --- |
+| d   | e   | f   |
+|     |     |   123  |
+
+| one | two |
+| --- | --- |
+<<<

@@ -25,6 +25,7 @@ from strictdoc.backend.sdoc.models.document_config import (
     DocumentCustomMetadata,
     DocumentCustomMetadataKeyValuePair,
 )
+from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.model import RequirementFieldName
@@ -224,6 +225,11 @@ class SDMarkdownReader:
 
         def walk(section_contents: List[Any]) -> None:
             for node_ in section_contents:
+                # An included document is not resolved yet at this point. It
+                # is also in the document tree on its own, so it gets its own
+                # fix-up pass according to its own markup.
+                if isinstance(node_, DocumentFromFile):
+                    continue
                 if isinstance(node_, SDocNode):
                     element = grammar.elements_by_type.get(node_.node_type)
                     if element is not None and element.property_is_composite:

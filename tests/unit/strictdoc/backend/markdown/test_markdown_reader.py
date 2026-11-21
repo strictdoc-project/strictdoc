@@ -3,6 +3,7 @@ import pytest
 from strictdoc.backend.markdown.reader import SDMarkdownReader
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.models.anchor import Anchor
+from strictdoc.backend.sdoc.models.document_from_file import DocumentFromFile
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
 from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElement,
@@ -1059,3 +1060,37 @@ code
         SDMarkdownReader.collapse_redundant_empty_lines(markdown_content)
         == markdown_content
     )
+
+
+def test_040_fixup_composite_nodes_skips_unresolved_document_from_file():
+    # Regression: the included document is resolved later by the traceability
+    # index builder, so walking into it used to trip an assertion.
+    markdown_content = """\
+# Document title
+
+## Requirement
+
+**UID**: REQ-1
+
+System shall do X.
+"""
+
+    reader = SDMarkdownReader()
+    document = reader.read(markdown_content, file_path=None)
+    assert document.grammar is not None
+    document.grammar.elements_by_type[
+        "REQUIREMENT"
+    ].property_is_composite = True
+
+    requirement = document.section_contents[0]
+    assert isinstance(requirement, SDocNode)
+    assert requirement.is_composite is False
+
+    # The include goes before the requirement: the walk must continue past it.
+    document_from_file = DocumentFromFile(document, "included.sdoc")
+    assert document_from_file.resolved_document is None
+    document.section_contents.insert(0, document_from_file)
+
+    SDMarkdownReader.fixup_composite_nodes(document)
+
+    assert requirement.is_composite is True

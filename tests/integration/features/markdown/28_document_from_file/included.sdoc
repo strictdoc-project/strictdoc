@@ -1,0 +1,8 @@
+[DOCUMENT]
+TITLE: Included
+
+[REQUIREMENT]
+UID: REQ-1
+STATEMENT: >>>
+Included statement.
+<<<

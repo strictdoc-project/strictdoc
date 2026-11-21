@@ -16,3 +16,6 @@
 [submodule "submodules/strictdoc.tmbundle"]
 	path = submodules/strictdoc.tmbundle
 	url = https://github.com/strictdoc-project/strictdoc.tmbundle.git
+[submodule "submodules/strictdoc.sublime-syntax"]
+	path = submodules/strictdoc.sublime-syntax
+	url = https://github.com/strictdoc-project/strictdoc.sublime-syntax.git

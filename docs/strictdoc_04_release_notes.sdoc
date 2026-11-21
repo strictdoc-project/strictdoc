@@ -50,6 +50,27 @@ releases:
 <<<
 
 [[SECTION]]
+MID: 735851e8c0a44a4ea47cec92b16fbbc3
+TITLE: Unreleased
+
+[TEXT]
+MID: d94e12bd0dfe46019e451f799d6a6444
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) ``ALL_FEATURES`` no longer activates the deprecated features ``MATHJAX``,
+``MERMAID``, and ``SOURCE_FILE_LANGUAGE_PARSERS``. StrictDoc enables these
+features by default. As a result, a configuration with ``ALL_FEATURES`` no
+longer prints deprecation warnings for these features.
+
+RST math (``:math:``, ``:eq:``, and ``.. math::``) now always renders with
+MathJax. Before this release, RST math used MathJax only if the configuration
+listed ``MATHJAX`` or the export used ``--enable-mathjax``.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: b8c75f7ac4504af1903422167b23ba7b
 TITLE: 0.31.1 (2026-11-21)
 

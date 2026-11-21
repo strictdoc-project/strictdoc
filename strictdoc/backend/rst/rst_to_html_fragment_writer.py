@@ -32,7 +32,7 @@ from strictdoc.backend.rst.directives.wildcard_enhanced_image import (
     WildcardEnhancedImage,
 )
 from strictdoc.backend.sdoc.models.document import SDocDocument
-from strictdoc.core.project_config import ProjectConfig, ProjectFeature
+from strictdoc.core.project_config import ProjectConfig
 from strictdoc.helpers.file_system import file_open_read_bytes
 
 MAX_RETRIES_FOR_CACHE_FILESYSTEM_LOCKING = 3
@@ -108,15 +108,14 @@ class RstToHtmlFragmentWriter:
 
         self.flat_assets: bool = flat_assets
 
-        if project_config.is_feature_activated(ProjectFeature.MATHJAX):
-            if project_config.is_running_on_server:
-                roles.register_canonical_role("eq", eq_role_for_server)
-                roles.register_canonical_role("math", math_role_for_server)
-                directives.register_directive("math", MathDirectiveForServer)
-            else:
-                roles.register_canonical_role("eq", eq_role)
-                roles.register_canonical_role("math", math_role)
-                directives.register_directive("math", MathDirective)
+        if project_config.is_running_on_server:
+            roles.register_canonical_role("eq", eq_role_for_server)
+            roles.register_canonical_role("math", math_role_for_server)
+            directives.register_directive("math", MathDirectiveForServer)
+        else:
+            roles.register_canonical_role("eq", eq_role)
+            roles.register_canonical_role("math", math_role)
+            directives.register_directive("math", MathDirective)
 
     def write(self, rst_fragment: str, use_cache: bool = True) -> Markup:
         assert isinstance(rst_fragment, str), rst_fragment

@@ -5,6 +5,7 @@ import pytest
 
 from strictdoc.backend.sdoc.sdoc_format import SDocFormat
 from strictdoc.core.project_config import (
+    DEPRECATED_FEATURES,
     ProjectConfig,
     ProjectConfigLoader,
     ProjectFeature,
@@ -32,6 +33,26 @@ def test_10__project_features__accepts_strings_or_enums():
     assert project_config.is_activated_diff()
     assert project_config.is_activated_html2pdf()
     assert project_config.is_activated_reqif()
+
+
+def test_11__project_features__all_features_excludes_deprecated_features():
+    project_config = ProjectConfig(project_features=["ALL_FEATURES"])
+
+    for feature_ in ProjectFeature.all():
+        if feature_ in DEPRECATED_FEATURES:
+            assert feature_ not in project_config.project_features
+        else:
+            assert feature_ in project_config.project_features
+
+
+def test_12__project_features__all_features_keeps_explicit_deprecated_feature():
+    project_config = ProjectConfig(
+        project_features=["ALL_FEATURES", ProjectFeature.MATHJAX]
+    )
+
+    assert ProjectFeature.MATHJAX in project_config.project_features
+    assert ProjectFeature.MERMAID not in project_config.project_features
+    assert ProjectFeature.REQIF in project_config.project_features
 
 
 def test_30_include_doc_paths_bad_mask():

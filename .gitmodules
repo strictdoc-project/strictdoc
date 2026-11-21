@@ -10,3 +10,6 @@
 [submodule "submodules/strictdoc-project.github.io"]
 	path = submodules/strictdoc-project.github.io
 	url = https://github.com/strictdoc-project/strictdoc-project.github.io.git
+[submodule "submodules/strictdoc.tmLanguage"]
+	path = submodules/strictdoc.tmLanguage
+	url = https://github.com/strictdoc-project/strictdoc.tmLanguage.git

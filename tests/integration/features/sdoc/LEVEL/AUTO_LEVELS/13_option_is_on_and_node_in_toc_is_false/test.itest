@@ -1,0 +1,14 @@
+RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Export completed.
+
+RUN: %cat %T/html/13_option_is_on_and_node_in_toc_is_false/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+
+CHECK-HTML:href="#1-Level-One"
+CHECK-HTML:href="#1.1-Level-Two"
+CHECK-HTML-NOT:href="#REQ-1"
+
+CHECK-HTML:<sdoc-anchor
+CHECK-HTML-NEXT:id="1-Level-One"
+
+CHECK-HTML:<sdoc-anchor
+CHECK-HTML-NEXT:id="1.1-Level-Two"

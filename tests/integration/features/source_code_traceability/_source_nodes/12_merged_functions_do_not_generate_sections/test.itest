@@ -13,7 +13,7 @@ CHECK: Export to HTML: Hello world doc
 
 RUN: %check_exists --file "%T/html/_source_files/src/example/example.c.html"
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/source_node_base.html | filecheck %s --check-prefix CHECK-HTML
+RUN: %cat %T/html/%THIS_TEST_FOLDER/source_node_base.sdoc.html | filecheck %s --check-prefix CHECK-HTML
 CHECK-HTML: Requirements from Source Nodes
 CHECK-HTML: REQ-EXAMPLE-1
 CHECK-HTML: Title from example.c

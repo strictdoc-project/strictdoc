@@ -8,5 +8,5 @@ CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/_source_files/tests/file.c.html"
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/description.html | filecheck %s --check-prefix CHECK-SPEC
+RUN: %cat %T/html/%THIS_TEST_FOLDER/description.sdoc.html | filecheck %s --check-prefix CHECK-SPEC
 CHECK-SPEC: The document is empty.

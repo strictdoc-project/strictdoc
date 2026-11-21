@@ -7,14 +7,14 @@ CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/_source_files/file.unknown_extension.html"
 
-RUN: %cat %T/html/70_unregistered_file_extensions/input.html | filecheck %s --check-prefix CHECK-HTML
+RUN: %cat %T/html/70_unregistered_file_extensions/input.sdoc.html | filecheck %s --check-prefix CHECK-HTML
 CHECK-HTML: <link rel="stylesheet" href="../_static/base.css"/>
 
 CHECK-HTML: <a{{.*}}href="../_source_files/file.unknown_extension.html#REQ-001#2#4"
 
 RUN: %cat %T/html/_source_files/file.unknown_extension.html | filecheck %s --check-prefix CHECK-SOURCE-FILE
 
-CHECK-SOURCE-FILE: href="../70_unregistered_file_extensions/input.html#REQ-001"
+CHECK-SOURCE-FILE: href="../70_unregistered_file_extensions/input.sdoc.html#REQ-001"
 
 CHECK-SOURCE-FILE: href="../_source_files/file.unknown_extension.html#REQ-001#1#5"
 CHECK-SOURCE-FILE: <b>[ 1-5 ]</b>

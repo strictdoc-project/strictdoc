@@ -25,7 +25,7 @@ class Test(E2ECase):
             # open the project index with the target UID reference
             self.open(
                 exporter.get_output_path_as_uri()
-                + "copy_stable_link/input/index.html?a="
+                + "copy_stable_link/input/index.sdoc.html?a="
                 + target
             )
 

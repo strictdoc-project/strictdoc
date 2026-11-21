@@ -13,5 +13,5 @@ RUN: %check_exists --file "%T/html/_source_files/tests/file.c.html"
 RUN: %cat %T/html/_source_files/tests/file.c.html | filecheck %s --check-prefix CHECK-SOURCE-FILE
 
 CHECK-SOURCE-FILE: <sdoc-node-field-label>INTENTION:</sdoc-node-field-label>
-CHECK-SOURCE-FILE: input.html#REQ-1{{.*}}input.html#REQ-2
+CHECK-SOURCE-FILE: input.sdoc.html#REQ-1{{.*}}input.sdoc.html#REQ-2
 

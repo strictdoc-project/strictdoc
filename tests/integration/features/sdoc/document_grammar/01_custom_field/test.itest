@@ -1,7 +1,7 @@
 RUN: %strictdoc export %S --output-dir %T/ | filecheck %s --dump-input=fail
 CHECK: Export completed.
 
-RUN: %cat %T/html/01_custom_field/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %T/html/01_custom_field/input.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 
 CHECK-HTML:META_TEST
 CHECK-HTML:Yes

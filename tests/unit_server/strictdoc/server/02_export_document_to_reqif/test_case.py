@@ -34,7 +34,7 @@ def test_export_document_to_reqif():
     project_config.integrate_server_config(server_config)
 
     client = TestClient(create_app(project_config=project_config))
-    response = client.get("/02_export_document_to_reqif/sample.html")
+    response = client.get("/02_export_document_to_reqif/sample.sdoc.html")
     assert response.status_code == 200
 
     response_body = response.content.decode()

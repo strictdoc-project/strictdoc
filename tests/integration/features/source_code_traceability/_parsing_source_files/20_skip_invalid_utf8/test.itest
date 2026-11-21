@@ -16,5 +16,5 @@ CHECK: warning: Skip reading binary file {{.*}}invalid_file.robot
 
 RUN: %check_exists --file "%T/html/_source_files/file.py.html"
 
-RUN: %cat %T/html/20_skip_invalid_utf8/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %T/html/20_skip_invalid_utf8/input.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: href="../_source_files/file.py.html#REQ-001#1#2">

@@ -9,8 +9,8 @@ RUN: %strictdoc export %S --formats=html2pdf --chromedriver="%chromedriver" --ou
 CHECK: html2pdf4doc: JS logs from the print session
 CHECK-NOT: html2pdf4doc: ChromeDriver available at path: {{.*}}strictdoc_cache{{.*}}
 
-RUN: %check_exists --file %T/html2pdf/pdf/input.pdf
+RUN: %check_exists --file %T/html2pdf/pdf/input.sdoc.pdf
 
-RUN: %check_exists --file %T/html2pdf/html/06_system_chromedriver/input-PDF.html
+RUN: %check_exists --file %T/html2pdf/html/06_system_chromedriver/input.sdoc-PDF.html
 
 RUN: python %S/test_pdf.py

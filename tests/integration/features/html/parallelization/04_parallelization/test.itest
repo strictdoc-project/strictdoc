@@ -5,16 +5,16 @@
 RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Export to HTML: 10 tasks
 
-RUN: %check_exists --file %T/html/04_parallelization/input1.html
-RUN: %check_exists --file %T/html/04_parallelization/input2.html
-RUN: %check_exists --file %T/html/04_parallelization/input3.html
-RUN: %check_exists --file %T/html/04_parallelization/input4.html
-RUN: %check_exists --file %T/html/04_parallelization/input5.html
-RUN: %check_exists --file %T/html/04_parallelization/input6.html
-RUN: %check_exists --file %T/html/04_parallelization/input7.html
-RUN: %check_exists --file %T/html/04_parallelization/input8.html
-RUN: %check_exists --file %T/html/04_parallelization/input9.html
-RUN: %check_exists --file %T/html/04_parallelization/input10.html
+RUN: %check_exists --file %T/html/04_parallelization/input1.sdoc.html
+RUN: %check_exists --file %T/html/04_parallelization/input2.sdoc.html
+RUN: %check_exists --file %T/html/04_parallelization/input3.sdoc.html
+RUN: %check_exists --file %T/html/04_parallelization/input4.sdoc.html
+RUN: %check_exists --file %T/html/04_parallelization/input5.sdoc.html
+RUN: %check_exists --file %T/html/04_parallelization/input6.sdoc.html
+RUN: %check_exists --file %T/html/04_parallelization/input7.sdoc.html
+RUN: %check_exists --file %T/html/04_parallelization/input8.sdoc.html
+RUN: %check_exists --file %T/html/04_parallelization/input9.sdoc.html
+RUN: %check_exists --file %T/html/04_parallelization/input10.sdoc.html
 
 RUN: %cat %T/html/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: Doc 1

@@ -32,7 +32,7 @@ class Test:
             expect(page.locator("body")).to_be_visible()
 
             page.goto(
-                f"{base_url}/strictdoc-demo-project/docs/requirements.html"
+                f"{base_url}/strictdoc-demo-project/docs/requirements.sdoc.html"
             )
 
             viewtype_selector = ViewTypeSelector(page)

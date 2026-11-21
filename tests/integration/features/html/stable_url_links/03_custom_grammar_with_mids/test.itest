@@ -6,7 +6,7 @@ CHECK-HTML: Stable URI Test
 CHECK-HTML: index.sdoc
 
 RUN: %cat %T/html/_static/project_map.js | filecheck %s --dump-input=fail --check-prefix CHECK-MAP
-CHECK-MAP: "03_custom_grammar_with_mids/subfolder/file_in_subfolder.html": [
+CHECK-MAP: "03_custom_grammar_with_mids/subfolder/file_in_subfolder.sdoc.html": [
 CHECK-MAP: {"MID":"46355ead6a8b4974b134b200eec4a885","UID":"SUB-ROOT-1"
 CHECK-MAP: {"MID":"9281cd61e9954ce68ec54f95bdc7f687","UID":"SUB-REQ-WITHIN-SECTION-THAT-HAS-NO-UID"
 CHECK-MAP: {"MID":"49def62923244e118129a4888ff0ace7","UID":"SUB-SECTION-1"
@@ -15,7 +15,7 @@ CHECK-MAP: {"MID":"c1b59b53ef144d8981ce2b5e1c7ca315","UID":"SUB-REQ-WITHIN-SECTI
 CHECK-MAP: {"MID":"29718f836810479bb2f73b52df4c8968","UID":"SUB-SECTION-3"
 CHECK-MAP: {"MID":"320bba79bded44528ccddd6c8c8ff08e","UID":"SUB-SECTION-3-1"
 CHECK-MAP: {"MID":"20459e2510ac41c5b79d4c18149fc1b1","UID":"SUB-REQ-WITHIN-SECTION-3-1"
-CHECK-MAP: "03_custom_grammar_with_mids/index.html": [
+CHECK-MAP: "03_custom_grammar_with_mids/index.sdoc.html": [
 CHECK-MAP: {"MID":"7726fa20788c493ca8d02bccd2480a9c","UID":"ROOT-1"
 CHECK-MAP: {"MID":"753286690619492fa9c3ae4f9bf5368d","UID":"REQ-WITHIN-SECTION-THAT-HAS-NO-UID"
 CHECK-MAP: {"MID":"82e3eec5e08146bd8fe213f5a1d8a355","UID":"SECTION-1"

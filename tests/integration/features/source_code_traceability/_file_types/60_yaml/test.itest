@@ -7,8 +7,8 @@ CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/_source_files/file.yaml.html"
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/example.html | filecheck %s --check-prefix CHECK-HTML
+RUN: %cat %T/html/%THIS_TEST_FOLDER/example.sdoc.html | filecheck %s --check-prefix CHECK-HTML
 CHECK-HTML: <a{{.*}}href="../_source_files/file.yaml.html#REQ-001#1#5">
 
 RUN: %cat %T/html/_source_files/file.yaml.html | filecheck %s --check-prefix CHECK-SOURCE-FILE
-CHECK-SOURCE-FILE: href="../60_yaml/example.html#REQ-001"
+CHECK-SOURCE-FILE: href="../60_yaml/example.sdoc.html#REQ-001"

@@ -8,5 +8,5 @@ RUN: %cat %T/CustomDir/html/index.html | filecheck %s --dump-input=fail --check-
 CHECK-HTML: Hello world doc
 CHECK-HTML: input.sdoc
 
-RUN: %cat %T/CustomDir/html/02_output_dir_relative_path/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-CONTENT
+RUN: %cat %T/CustomDir/html/02_output_dir_relative_path/input.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-CONTENT
 CHECK-CONTENT: Hello world!

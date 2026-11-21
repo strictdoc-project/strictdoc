@@ -261,7 +261,7 @@ class DocumentFinder:
             output_document_rel_path: SDocRelativePath = SDocRelativePath(
                 os.path.join(
                     output_document_dir_rel_path.relative_path,
-                    f"{document_filename_base}.html",
+                    f"{document_filename}.html",
                 )
             )
 

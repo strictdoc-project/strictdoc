@@ -7,13 +7,13 @@ CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/_source_files/file.py.html"
 
-RUN: %cat %T/html/01_basic_req_to_file_link_full_path/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %T/html/01_basic_req_to_file_link_full_path/input.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-001#1#2">
 
 RUN: %cat %T/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
 
 # Left/aside panel: The requirement cell has a link that correctly points to the document file.
-CHECK-SOURCE-FILE: href="../01_basic_req_to_file_link_full_path/input.html#REQ-001"
+CHECK-SOURCE-FILE: href="../01_basic_req_to_file_link_full_path/input.sdoc.html#REQ-001"
 CHECK-SOURCE-FILE: ../_source_files/file.py.html#REQ-001#1#2
 
 # Central panel.

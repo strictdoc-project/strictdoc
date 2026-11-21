@@ -3,7 +3,7 @@ CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/_static/mathjax/tex-mml-chtml.js"
 
-RUN: %cat %T/html/20_math_formulas/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %T/html/20_math_formulas/input.md.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 
 CHECK-HTML: MathJax-script
 CHECK-HTML: <span class="math notranslate nohighlight">\( m_d = 120\,kg \)</span>

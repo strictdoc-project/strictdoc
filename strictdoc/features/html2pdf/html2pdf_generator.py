@@ -110,7 +110,7 @@ class HTML2PDFGenerator:
 
             path_to_output_html_doc = os.path.join(
                 path_to_output_html_doc_dir,
-                document_.meta.document_filename_base + "-PDF.html",
+                document_.meta.document_filename + "-PDF.html",
             )
 
             with open(
@@ -126,7 +126,7 @@ class HTML2PDFGenerator:
 
             path_to_output_pdf = os.path.join(
                 path_to_output_pdf_dir,
-                document_.meta.document_filename_base + ".pdf",
+                document_.meta.document_filename + ".pdf",
             )
 
             paths_to_print.append((path_to_output_html_doc, path_to_output_pdf))

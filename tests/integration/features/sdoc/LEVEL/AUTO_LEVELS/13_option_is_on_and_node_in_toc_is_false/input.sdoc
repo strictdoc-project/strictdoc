@@ -1,0 +1,19 @@
+[DOCUMENT]
+TITLE: Document 1
+OPTIONS:
+  AUTO_LEVELS: On
+  NODE_IN_TOC: False
+
+[[SECTION]]
+TITLE: Level One
+
+[[SECTION]]
+TITLE: Level Two
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Requirement title
+
+[[/SECTION]]
+
+[[/SECTION]]

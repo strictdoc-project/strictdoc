@@ -23,8 +23,12 @@ def test_gcov_html_link_uses_actual_source_file_path_for_hash():
           ]
         }
         """,
-        doc_file=None,  # type: ignore[arg-type]
-        project_config=None,  # type: ignore[arg-type]
+        doc_file=SimpleNamespace(level=1),  # type: ignore[arg-type]
+        project_config=SimpleNamespace(
+            source_root_path=None,
+            gcovr_html_report="https://ci.example.com/coverage.html",
+            export_output_html_root="/project/output/html",
+        ),  # type: ignore[arg-type]
     )
 
     source_path_hash = hashlib.md5(b"src/functions.cpp").hexdigest()
@@ -33,7 +37,42 @@ def test_gcov_html_link_uses_actual_source_file_path_for_hash():
     )
     statement = testcase_node.get_field_by_name("STATEMENT").parts[0]
 
-    assert f"coverage.functions.cpp. {source_path_hash}.html" in statement
+    assert statement.strip() == (
+        "`LINK <https://ci.example.com/"
+        f"coverage.functions.cpp.{source_path_hash}.html>`_"
+    )
+
+
+def test_gcov_report_has_no_html_link_without_gcovr_html_report():
+    document = GCovJSONReader.read_from_string(
+        """
+        {
+          "files": [
+            {
+              "file": "src/functions.cpp",
+              "functions": [
+                {
+                  "demangled_name": "test::Adder::add(int const&, int const&)",
+                  "execution_count": 1
+                }
+              ]
+            }
+          ]
+        }
+        """,
+        doc_file=SimpleNamespace(level=1),  # type: ignore[arg-type]
+        project_config=SimpleNamespace(
+            source_root_path=None,
+            gcovr_html_report=None,
+            export_output_html_root="/project/output/html",
+        ),  # type: ignore[arg-type]
+    )
+
+    testcase_node = (
+        document.section_contents[1].section_contents[1].section_contents[0]
+    )
+
+    assert "STATEMENT" not in testcase_node.ordered_fields_lookup
 
 
 def test_gcov_report_normalizes_windows_source_file_path():
@@ -53,8 +92,12 @@ def test_gcov_report_normalizes_windows_source_file_path():
           ]
         }
         """,
-        doc_file=None,  # type: ignore[arg-type]
-        project_config=None,  # type: ignore[arg-type]
+        doc_file=SimpleNamespace(level=1),  # type: ignore[arg-type]
+        project_config=SimpleNamespace(
+            source_root_path=None,
+            gcovr_html_report="https://ci.example.com/coverage.html",
+            export_output_html_root="/project/output/html",
+        ),  # type: ignore[arg-type]
     )
 
     source_path_hash = hashlib.md5(b"src/functions.cpp").hexdigest()
@@ -69,7 +112,7 @@ def test_gcov_report_normalizes_windows_source_file_path():
         "GCOV:src/functions.cpp:test::Adder::add(int const&, int const&)"
     )
     assert file_reference.g_file_entry.g_file_path == "src/functions.cpp"
-    assert f"coverage.functions.cpp. {source_path_hash}.html" in statement
+    assert f"coverage.functions.cpp.{source_path_hash}.html" in statement
 
 
 def test_gcov_report_relativizes_windows_absolute_source_file_path():
@@ -89,9 +132,11 @@ def test_gcov_report_relativizes_windows_absolute_source_file_path():
           ]
         }
         """,
-        doc_file=None,  # type: ignore[arg-type]
+        doc_file=SimpleNamespace(level=1),  # type: ignore[arg-type]
         project_config=SimpleNamespace(
-            source_root_path="D:\\a\\strictdoc\\strictdoc\\docs"
+            source_root_path="D:\\a\\strictdoc\\strictdoc\\docs",
+            gcovr_html_report="https://ci.example.com/coverage.html",
+            export_output_html_root="D:\\a\\strictdoc\\output\\html",
         ),  # type: ignore[arg-type]
     )
 
@@ -107,7 +152,7 @@ def test_gcov_report_relativizes_windows_absolute_source_file_path():
         "GCOV:src/functions.cpp:test::Adder::add(int const&, int const&)"
     )
     assert file_reference.g_file_entry.g_file_path == "src/functions.cpp"
-    assert f"coverage.functions.cpp. {source_path_hash}.html" in statement
+    assert f"coverage.functions.cpp.{source_path_hash}.html" in statement
 
 
 def test_gcov_report_prefers_demangled_name_over_name():

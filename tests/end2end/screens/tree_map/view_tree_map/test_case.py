@@ -5,7 +5,10 @@
 import os
 from urllib.parse import parse_qs, urlparse
 
-from selenium.common.exceptions import StaleElementReferenceException
+from selenium.common.exceptions import (
+    StaleElementReferenceException,
+    TimeoutException,
+)
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -172,13 +175,43 @@ class Test(E2ECase):
             assert len(requirement_actions) == 1
 
             # Holding Shift over a requirement shows its available node data.
-            # Move the pointer before pressing Shift. Otherwise, the map's
-            # keydown handler can ignore Shift because the map is not hovered.
-            ActionChains(self.driver).move_to_element(
-                requirement_element
-            ).perform()
-            ActionChains(self.driver).key_down(Keys.SHIFT).perform()
+            # The map ignores Shift until the map handles a pointermove over
+            # the node. The pointermove handler fills the hidden info panel.
+            # As a result, the test waits for the panel content, then presses
+            # Shift. A move to the same position can fire no pointermove, so
+            # each retry moves the pointer by one more pixel.
             info_panel = '[data-testid="tree-map-info-panel"]'
+            is_requirement_pointed_script = """
+                const section = document.querySelector(
+                  '[data-testid="tree-map-section"]',
+                );
+                const panel = document.querySelector(
+                  '[data-testid="tree-map-info-panel"]',
+                );
+                return (
+                  section !== null &&
+                  section.matches(":hover") &&
+                  panel !== null &&
+                  panel.textContent.includes("REQ-1")
+                );
+            """
+            is_requirement_pointed = False
+            for pointer_offset in range(5):
+                ActionChains(self.driver).move_to_element_with_offset(
+                    requirement_element, pointer_offset, pointer_offset
+                ).perform()
+                try:
+                    WebDriverWait(self.driver, 2).until(
+                        lambda driver: driver.execute_script(
+                            is_requirement_pointed_script
+                        )
+                    )
+                except TimeoutException:
+                    continue
+                is_requirement_pointed = True
+                break
+            assert is_requirement_pointed
+            ActionChains(self.driver).key_down(Keys.SHIFT).perform()
             self.assert_element(info_panel + ":not([hidden])")
             self.assert_text("Requirement 1", info_panel)
             self.assert_text("REQ-1", info_panel)

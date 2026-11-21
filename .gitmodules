@@ -1,0 +1,3 @@
+[submodule "submodules/technical_writing_skill"]
+	path = submodules/technical_writing_skill
+	url = https://github.com/strictdoc-project/technical_writing_skill.git

@@ -29,15 +29,18 @@ Follow the technical writing guidelines in the StrictDoc Developer Guide.
 
 Before presenting any text written into a project artifact (commit
 messages, PR descriptions, docs, code comments, task files, or similar),
-apply `developer/skills/technical-writing-guide/SKILL.md`. This applies
+apply `submodules/technical_writing_skill/SKILL.md`. This applies
 regardless of which skill, if any, is used for the task.
 
 ## Skills
 
 Reusable instructions for writing tasks (commit/PR text, task docs,
-feature docs) live in `developer/skills/<name>/SKILL.md`.
-After any change to a skill, regenerate the Claude/Codex pointer stubs:
+feature docs) live in `developer/skills/<name>/SKILL.md` and in the Git
+submodules under `submodules/`.
+After any change to a skill or a submodule update, regenerate the
+Claude/Codex pointer stubs:
 
+    git submodule update --init
     python developer/skills/install_skills.py
 
 ## Development tasks

@@ -6183,6 +6183,79 @@ crate-qualified path.
 
 [[/SECTION]]
 
+[[SECTION]]
+MID: 220ad8be35c646799f58357ed9c69df1
+TITLE: gcovr code coverage report
+
+[TEXT]
+MID: 58b8fc60badb404195b9fab5d182a882
+STATEMENT: >>>
+StrictDoc reads a `gcovr <https://gcovr.com>`_ JSON coverage report of C and
+C++ code as a document. The report document lists the covered and the
+non-covered functions of each source file. Each function in the report document
+links to its function in the source file.
+
+To be discovered by StrictDoc, the JSON report file must have the extension
+``.gcov.json``. The following command creates such a report:
+
+.. code:: bash
+
+    gcovr --root . --json --json-pretty -o coverage.gcov.json
+
+The JSON report contains source file paths relative to the gcovr ``--root``
+folder. StrictDoc finds the source files relative to the source root
+(``source_root_path``). As a result, the gcovr ``--root`` folder must be the
+source root.
+
+The ``gcovr_html_report`` option adds a link from each function to the gcovr
+HTML details page of its source file. gcovr creates the HTML details pages with
+the ``--html-details`` option:
+
+.. code:: bash
+
+    gcovr --root . --html --html-details -o build/coverage/coverage.html
+
+The ``gcovr_html_report`` value is the location of the main HTML report, that
+is, the ``-o`` file of gcovr. The value is one of the following:
+
+- An http(s) URL, for example,
+  ``https://ci.example.com/coverage/coverage.html``. Use a URL when a web
+  server publishes the gcovr HTML report.
+- An absolute path or a path relative to the project root, for example,
+  ``build/coverage/coverage.html``. The path must point to an existing file.
+  StrictDoc creates a link relative to the exported HTML page. As a result,
+  the link works in a static HTML export. The StrictDoc server does not serve
+  the gcovr HTML report.
+
+.. code:: python
+
+    from strictdoc.core.project_config import ProjectConfig
+
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_features=[
+                "REQUIREMENT_TO_SOURCE_TRACEABILITY",
+            ],
+            gcovr_html_report="build/coverage/coverage.html",
+        )
+        return config
+
+Run the JSON and the HTML gcovr commands with the same ``--root`` folder.
+gcovr names each HTML details page after the source file path relative to
+``--root``. StrictDoc computes the same name from the source file path in the
+JSON report.
+
+Without the ``gcovr_html_report`` option, the report document has no links to
+the gcovr HTML report.
+
+.. warning::
+
+    The gcovr code coverage report feature's status is experimental.
+<<<
+
+[[/SECTION]]
+
 [[/SECTION]]
 
 [[SECTION]]

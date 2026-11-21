@@ -725,7 +725,10 @@ class Test(E2ECase):
             )
             second_form = second_requirement.do_open_node_menu().do_node_add_requirement_above()
 
-            WebDriverWait(self.driver, 3).until(
+            # The second form comes from the server. A fixed WebDriverWait
+            # timeout is not scaled by --long-timeouts, so allow a slow CI
+            # response here, as the viewport assertions in this file do.
+            WebDriverWait(self.driver, 20).until(
                 lambda _: self.execute_script(
                     """
                     return document.querySelectorAll(

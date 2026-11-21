@@ -13,3 +13,6 @@
 [submodule "submodules/strictdoc.tmLanguage"]
 	path = submodules/strictdoc.tmLanguage
 	url = https://github.com/strictdoc-project/strictdoc.tmLanguage.git
+[submodule "submodules/strictdoc.tmbundle"]
+	path = submodules/strictdoc.tmbundle
+	url = https://github.com/strictdoc-project/strictdoc.tmbundle.git

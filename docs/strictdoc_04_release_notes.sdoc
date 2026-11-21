@@ -51,7 +51,7 @@ releases:
 
 [[SECTION]]
 MID: b8c75f7ac4504af1903422167b23ba7b
-TITLE: Unreleased
+TITLE: 0.31.1 (2026-11-21)
 
 [TEXT]
 MID: 5cdbaa80910b4eff8fb57f81062472e4
@@ -123,6 +123,18 @@ variable still select another cache folder.
 now ends with one error message that tells a user what to do. Before, a missing
 Chrome printed an empty ``error:`` line. A failed ChromeDriver download printed
 a raw traceback without an explanation.
+
+13\) Fixed: in a document with ``AUTO_LEVELS: On`` and ``NODE_IN_TOC: False``,
+sections now keep their numbers. Before, ``NODE_IN_TOC: False`` removed the
+numbers of all nodes, including sections. The option now applies only to nodes
+that are not sections.
+
+14\) Fixed: the grammar editor of the Web UI now keeps the MID field in
+documents with ``ENABLE_MID: True``. Before, a new grammar element had no MID
+field. A user could also delete the MID field of an existing grammar element.
+In both cases, StrictDoc then failed to read the saved document. The grammar
+editor now adds a MID field to each new grammar element. The grammar editor
+shows an error when a user deletes the MID field.
 <<<
 
 [[/SECTION]]

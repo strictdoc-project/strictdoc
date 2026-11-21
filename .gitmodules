@@ -1,3 +1,21 @@
 [submodule "submodules/technical_writing_skill"]
 	path = submodules/technical_writing_skill
 	url = https://github.com/strictdoc-project/technical_writing_skill.git
+[submodule "submodules/reqif"]
+	path = submodules/reqif
+	url = https://github.com/strictdoc-project/reqif.git
+[submodule "submodules/html2pdf4doc_python"]
+	path = submodules/html2pdf4doc_python
+	url = https://github.com/strictdoc-project/html2pdf4doc_python.git
+[submodule "submodules/strictdoc-project.github.io"]
+	path = submodules/strictdoc-project.github.io
+	url = https://github.com/strictdoc-project/strictdoc-project.github.io.git
+[submodule "submodules/strictdoc.tmLanguage"]
+	path = submodules/strictdoc.tmLanguage
+	url = https://github.com/strictdoc-project/strictdoc.tmLanguage.git
+[submodule "submodules/strictdoc.tmbundle"]
+	path = submodules/strictdoc.tmbundle
+	url = https://github.com/strictdoc-project/strictdoc.tmbundle.git
+[submodule "submodules/strictdoc.sublime-syntax"]
+	path = submodules/strictdoc.sublime-syntax
+	url = https://github.com/strictdoc-project/strictdoc.sublime-syntax.git

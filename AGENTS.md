@@ -43,6 +43,29 @@ Claude/Codex pointer stubs:
     git submodule update --init
     python developer/skills/install_skills.py
 
+## Git submodules
+
+The Git submodules under `submodules/` are independent projects of the
+StrictDoc organization. Each submodule has its own repository and its
+own development setup. The submodules exist to simplify development:
+a developer can work on StrictDoc and a related project in one checkout
+and keep the repositories in sync.
+
+The StrictDoc code does not use the submodules:
+
+- StrictDoc gets its runtime dependencies, for example `reqif` and
+  `html2pdf4doc`, as Python packages through uv or pip. `pyproject.toml`
+  declares these dependencies.
+- Do not import code from `submodules/` in `strictdoc/` or in the tests.
+- Do not add `submodules/` paths to `sys.path`, `PYTHONPATH`, or the
+  package build configuration.
+
+Exception: the developer tooling in `developer/skills/install_skills.py`
+reads agent skills from `submodules/`.
+
+To change a submodule project, commit the change to its own repository.
+Then update the submodule commit in this repository.
+
 ## Development tasks
 
 When requested by a user to work on a task defined in

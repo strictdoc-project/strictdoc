@@ -3,6 +3,7 @@
 """
 
 import codecs
+import io
 import os.path
 import sys
 from collections import deque
@@ -176,7 +177,13 @@ class PDFPrintDriver:
 
         stderr_tail: Deque[str] = deque(maxlen=STDERR_TAIL_MAX_LINES)
         incomplete_line = ""
-        decoder = codecs.getincrementaldecoder("utf-8")(errors="replace")
+        # On Windows, a Python child process writes \r\n to the pipe.
+        # sys.stderr adds \r again when it writes \n, so translate \r\n to
+        # \n first. The decoder also handles a \r\n split across two reads.
+        decoder = io.IncrementalNewlineDecoder(
+            codecs.getincrementaldecoder("utf-8")(errors="replace"),
+            translate=True,
+        )
         with Popen(cmd, stderr=PIPE) as process:
             assert process.stderr is not None
             while True:

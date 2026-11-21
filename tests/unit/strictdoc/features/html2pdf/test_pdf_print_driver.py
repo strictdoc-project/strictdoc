@@ -147,11 +147,13 @@ def test_23_failed_print_raises_with_the_message(monkeypatch):
 
 
 def test_30_stderr_is_passed_through_and_its_tail_is_kept(capfd):
+    # The child process writes \r\n line endings as bytes, as a Python
+    # process does on Windows, so that the test is the same on all platforms.
     script = (
         "import sys\n"
         "for i in range(150):\n"
-        "    sys.stderr.write(f'line {i}\\n')\n"
-        "sys.stderr.write('last line without a newline')\n"
+        "    sys.stderr.buffer.write(f'line {i}\\r\\n'.encode())\n"
+        "sys.stderr.buffer.write(b'last line without a newline')\n"
         "sys.exit(3)\n"
     )
     returncode, stderr_tail = PDFPrintDriver.run_html2pdf4doc(
@@ -163,7 +165,9 @@ def test_30_stderr_is_passed_through_and_its_tail_is_kept(capfd):
     assert len(tail_lines) == STDERR_TAIL_MAX_LINES
     assert tail_lines[-2] == "line 149"
     assert tail_lines[-1] == "last line without a newline"
+    assert "\r" not in stderr_tail
 
-    captured_stderr = capfd.readouterr().err
+    # sys.stderr writes the line separator of the platform.
+    captured_stderr = capfd.readouterr().err.replace(os.linesep, "\n")
     assert "line 0\n" in captured_stderr
     assert captured_stderr.endswith("line 149\nlast line without a newline")

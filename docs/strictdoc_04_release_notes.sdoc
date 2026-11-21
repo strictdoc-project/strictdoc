@@ -50,22 +50,20 @@ releases:
 <<<
 
 [[SECTION]]
-MID: 735851e8c0a44a4ea47cec92b16fbbc3
+MID: 1b13f410ce30424a9eeba5f2837c6917
 TITLE: Unreleased
 
 [TEXT]
-MID: d94e12bd0dfe46019e451f799d6a6444
+MID: 6bde927c12754ab5a60edf4b55dbe885
 STATEMENT: >>>
 This release contains the following enhancements:
 
-1\) ``ALL_FEATURES`` no longer activates the deprecated features ``MATHJAX``,
-``MERMAID``, and ``SOURCE_FILE_LANGUAGE_PARSERS``. StrictDoc enables these
-features by default. As a result, a configuration with ``ALL_FEATURES`` no
-longer prints deprecation warnings for these features.
-
-RST math (``:math:``, ``:eq:``, and ``.. math::``) now always renders with
-MathJax. Before this release, RST math used MathJax only if the configuration
-listed ``MATHJAX`` or the export used ``--enable-mathjax``.
+1\) The new ``gcovr_html_report`` config option sets the location of the gcovr
+HTML report. With this option, each function in a gcovr JSON coverage report
+links to the gcovr HTML details page of its source file. The option value is an
+http(s) URL or a file path. Before, StrictDoc linked each function to a fixed
+path that existed only in one folder layout. Without the option, the coverage
+report now has no links to the gcovr HTML report.
 <<<
 
 [[/SECTION]]

@@ -27,4 +27,6 @@ CHECK-SOURCE-FILE: 5 - 7 | function test::Adder::add()
 CHECK-SOURCE-FILE: 9 - 11 | function test::Multiplier::multiply()
 
 RUN: %cat %T/docs/output/html/docs/coverage.gcov.json.html | filecheck %s --dump-input=fail --check-prefix CHECK-GCOV-REPORT
-CHECK-GCOV-REPORT: coverage.functions.cpp.c5e71015e270864c89a8b6e26afb227b.html
+CHECK-GCOV-REPORT: href="../../../../coverage.functions.cpp.c5e71015e270864c89a8b6e26afb227b.html"
+
+RUN: %check_exists --file "%T/coverage.functions.cpp.c5e71015e270864c89a8b6e26afb227b.html"

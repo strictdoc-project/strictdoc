@@ -2,13 +2,14 @@
 @relation(SDOC-SRS-144, scope=file)
 """
 
-import hashlib
 import json
 from dataclasses import dataclass
-from pathlib import Path
 from typing import Type
 
-from strictdoc.backend.gcov.helpers import normalize_gcovr_file_path
+from strictdoc.backend.gcov.helpers import (
+    create_gcovr_html_details_link,
+    normalize_gcovr_file_path,
+)
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
@@ -50,7 +51,7 @@ class GCovJSONReader:
     def read_from_string(
         cls: Type["GCovJSONReader"],
         content: str,
-        doc_file: File,  # noqa: ARG003
+        doc_file: File,
         project_config: ProjectConfig,
     ) -> SDocDocument:
         if len(content) == 0:
@@ -82,6 +83,11 @@ class GCovJSONReader:
 
         source_root_path = (
             project_config.source_root_path
+            if project_config is not None
+            else None
+        )
+        gcovr_html_report = (
+            project_config.gcovr_html_report
             if project_config is not None
             else None
         )
@@ -181,31 +187,25 @@ class GCovJSONReader:
                     ),
                 )
 
-                gcov_path_hash = hashlib.md5(
-                    json_file_name.encode("utf-8")
-                ).hexdigest()
-                link = (
-                    "../../../../"  # noqa: ISC003
-                    + "coverage."
-                    + Path(json_file_name).name
-                    + ". "
-                    + gcov_path_hash
-                    + ".html"
-                )
-                testcase_node.set_field_value(
-                    field_name="STATEMENT",
-                    form_field_index=0,
-                    value=SDocNodeField(
-                        parent=testcase_node,
+                if gcovr_html_report is not None:
+                    gcovr_html_details_link = create_gcovr_html_details_link(
+                        gcovr_html_report=gcovr_html_report,
+                        source_file_path=json_file_name,
+                        export_output_html_root=(
+                            project_config.export_output_html_root
+                        ),
+                        document_level=doc_file.level,
+                    )
+                    testcase_node.set_field_value(
                         field_name="STATEMENT",
-                        parts=[
-                            f"""
-                            `LINK <{link}>`_
-                            """
-                        ],
-                        multiline__=None,
-                    ),
-                )
+                        form_field_index=0,
+                        value=SDocNodeField(
+                            parent=testcase_node,
+                            field_name="STATEMENT",
+                            parts=[f"`LINK <{gcovr_html_details_link}>`_"],
+                            multiline__=None,
+                        ),
+                    )
                 testcase_node.set_field_value(
                     field_name="TITLE",
                     form_field_index=0,

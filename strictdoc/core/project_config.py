@@ -43,7 +43,7 @@ from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.md5 import get_md5
 from strictdoc.helpers.module import import_from_path
-from strictdoc.helpers.net import is_valid_host
+from strictdoc.helpers.net import is_valid_host, is_valid_url
 from strictdoc.helpers.path_filter import validate_mask
 
 if TYPE_CHECKING:
@@ -194,6 +194,9 @@ class ProjectConfig:
         exclude_source_paths: Optional[List[str]] = None,
         grammars: Optional[Dict[str, str]] = None,
         test_report_root_dict: Optional[Dict[str, str]] = None,
+        # Location of the main gcovr HTML report, that is, the -o file of
+        # "gcovr --html-details": an http(s) URL or a file path.
+        gcovr_html_report: Optional[str] = None,
         source_nodes: Optional[List[SourceNodesEntry]] = None,
         html2pdf_strict: bool = False,
         html2pdf_template: Optional[str] = None,
@@ -574,6 +577,11 @@ class ProjectConfig:
         # resolved to an absolute path in validate_and_finalize().
         self.custom_css_path: Optional[str] = custom_css_path
 
+        # Optional gcovr HTML report location: an http(s) URL or a file path.
+        # A file path is validated and resolved to an absolute path in
+        # validate_and_finalize().
+        self.gcovr_html_report: Optional[str] = gcovr_html_report
+
         self.config_last_update: Optional[datetime.datetime] = (
             _config_last_update
         )
@@ -946,6 +954,26 @@ class ProjectConfig:
                     f"invalid path to a CSS file: {custom_css_path}."
                 )
             self.custom_css_path = custom_css_path
+
+        #
+        # Validate the gcovr HTML report path. A URL is used as-is.
+        #
+        if (
+            gcovr_html_report := self.gcovr_html_report
+        ) is not None and not is_valid_url(gcovr_html_report):
+            if project_path is not None and not os.path.isabs(
+                gcovr_html_report
+            ):
+                gcovr_html_report = os.path.join(
+                    project_path, gcovr_html_report
+                )
+            if not os.path.isfile(gcovr_html_report):
+                raise ValueError(
+                    "config: gcovr_html_report: "
+                    "invalid path to a gcovr HTML report file: "
+                    f"{gcovr_html_report}."
+                )
+            self.gcovr_html_report = os.path.abspath(gcovr_html_report)
 
         #
         # Validate path to Chrome Driver.

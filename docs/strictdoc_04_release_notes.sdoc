@@ -58,22 +58,58 @@ MID: 5cdbaa80910b4eff8fb57f81062472e4
 STATEMENT: >>>
 This release contains the following enhancements:
 
-1\) Fixed: on Windows, the server no longer prints a ``ConnectionResetError``
+1\) The HTML export names each document page after the full source file name,
+including the file extension. For example, StrictDoc exports
+``requirements.sdoc`` to ``requirements.sdoc.html``,
+``requirements.sdoc-TABLE.html``, and ``requirements.sdoc.pdf``. The new names
+change the URLs of all document pages. The bundle document has no source file.
+As a result, the bundle document keeps ``bundle-PDF.html`` and ``bundle.pdf``.
+
+The new names prevent a name collision. Before, StrictDoc exported two
+documents with the same name and different formats in one folder to the same
+page. For example, StrictDoc exported both ``requirements.sdoc`` and
+``requirements.md`` to ``requirements.html``. As a result, one page replaced the
+other.
+
+2\) Fixed: on Windows, the server no longer prints a ``ConnectionResetError``
 traceback each time a browser closes a connection. The error is harmless,
 and the server now ignores it.
 
-2\) Fixed: the Search screen now shows the images of nodes in documents that
+3\) Fixed: the Search screen now shows the images of nodes in documents that
 are in a subfolder. Before, the image paths were relative to the document but
 the Search screen is at the root of the project, so the images were not found
 (404).
 
-3\) Fixed: after an edit made a Markdown or RST table narrower, JavaScript
+4\) Fixed: after an edit made a Markdown or RST table narrower, JavaScript
 errors removed the table highlight and prevented the editor from opening again.
 Adding the first body row to a Markdown table that contained only a header
 caused another JavaScript error. Both operations now work normally.
 
-4\) Fixed: ``strictdoc export`` no longer fails with an ``AssertionError`` when
+5\) Fixed: ``strictdoc export`` no longer fails with an ``AssertionError`` when
 a document with ``MARKUP: Markdown`` contains a ``[DOCUMENT_FROM_FILE]`` node.
+
+6\) Fixed: the server now returns its 404 page for a TABLE, TRACE, or
+DEEP-TRACE screen that the project config does not enable. Before, the server
+failed with an internal server error (500).
+
+7\) Fixed: StrictDoc now detects a cycle of parent or child relations with a
+role. StrictDoc reports such a cycle with the same error as a cycle of
+relations without a role. Before, the HTML export failed with a maximum
+recursion depth error.
+
+8\) Fixed: StrictDoc now reads a ``.gitignore`` file that starts with a UTF-8
+byte order mark (BOM). Some editors save the ``.gitignore`` file with a BOM.
+Before, StrictDoc reported a path mask validation error for the first pattern
+of such a file.
+
+9\) Fixed: on a source file page, the parent, child, and file links in the
+fields of a node now open the correct page. Before, these links worked only
+when the source file page and the document page were at the same folder depth.
+
+10\) Fixed: the table of contents of the Deep Traceability screen now shows
+TEXT nodes with a title as plain entries, without a link. Before, the table of
+contents linked these TEXT nodes. The Deep Traceability screen does not show
+TEXT nodes. As a result, the links led nowhere.
 <<<
 
 [[/SECTION]]

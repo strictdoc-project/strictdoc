@@ -71,6 +71,9 @@ the Search screen is at the root of the project, so the images were not found
 errors removed the table highlight and prevented the editor from opening again.
 Adding the first body row to a Markdown table that contained only a header
 caused another JavaScript error. Both operations now work normally.
+
+4\) Fixed: ``strictdoc export`` no longer fails with an ``AssertionError`` when
+a document with ``MARKUP: Markdown`` contains a ``[DOCUMENT_FROM_FILE]`` node.
 <<<
 
 [[/SECTION]]

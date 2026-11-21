@@ -1,0 +1,7 @@
+[DOCUMENT]
+TITLE: Index
+OPTIONS:
+  MARKUP: Markdown
+
+[DOCUMENT_FROM_FILE]
+FILE: included.sdoc

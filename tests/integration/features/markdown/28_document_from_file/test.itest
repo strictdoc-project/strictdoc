@@ -1,0 +1,15 @@
+#
+# Verify that a document with MARKUP: Markdown can include another document
+# with [DOCUMENT_FROM_FILE]. The Markdown composite node fix-up must not step
+# into the included document before it is resolved.
+#
+# @relation(SDOC-SRS-109, scope=file)
+#
+
+RUN: %strictdoc export %S --formats=html --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Export completed.
+
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-FILE
+
+CHECK-HTML-FILE: data-uid="REQ-1"
+CHECK-HTML-FILE: Included statement.

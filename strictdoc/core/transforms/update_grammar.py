@@ -52,7 +52,10 @@ class UpdateGrammarCommand:
                 )
             else:
                 updated_grammar_elements.append(
-                    GrammarElement.create_default(form_element_name_)
+                    GrammarElement.create_default(
+                        form_element_name_,
+                        enable_mid=document.config.enable_mid is True,
+                    )
                 )
 
         new_grammar = DocumentGrammar(

@@ -712,6 +712,13 @@ class Test(E2ECase):
             (
                 first_requirement.do_open_node_menu().do_node_add_requirement_above()
             )
+            # Wait for the first form before opening the second menu. The form
+            # arrives from the server, is inserted above REQ-024, and scrolls
+            # itself into view. If it arrived during the second menu click, it
+            # would move REQ-025 and its menu away from the click point.
+            self.wait_for_element_present(
+                'form[action="/actions/document/create_requirement"]'
+            )
 
             second_requirement = screen_document.get_node_by_anchor(
                 MID_CHUNK_TARGET

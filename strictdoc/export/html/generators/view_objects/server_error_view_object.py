@@ -17,7 +17,7 @@ class ServerErrorViewObject:
         self.path_type: str = path_type
 
         link_renderer = LinkRenderer(
-            root_path="", static_path=project_config.dir_for_sdoc_assets
+            root_path=project_config.application_base_url, static_path=project_config.dir_for_sdoc_assets
         )
         self.link_renderer: LinkRenderer = link_renderer
 
@@ -58,7 +58,7 @@ class ServerErrorViewObject:
 
     def render_url(self, url: str) -> str:
         # Error pages can appear at any URL depth, so use absolute paths.
-        return "/" + url
+        return self.project_config.application_base_url + "/" + url
 
     def render_static_url_with_prefix(self, url: str) -> str:
         return self.link_renderer.render_static_url_with_prefix(url)

@@ -71,7 +71,7 @@
   {%- endif -%}
     <a
       class="field_action"
-      href="/reset_uid?reference_mid={{ text_field_row_context.reference_mid }}"
+      href="{{ application_base_url }}/reset_uid?reference_mid={{ text_field_row_context.reference_mid }}"
       mid="{{ text_field_row_context.field.field_mid }}"
       title="Generate default UID"
       data-action-type="reset"

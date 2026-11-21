@@ -7,7 +7,7 @@ Edit project title
 {% block modal_form__content %}
   <form
     id="{{ form }}"
-    action="/actions/project_index/save_project_title"
+    action="{{ application_base_url }}/actions/project_index/save_project_title"
     method="POST"
     enctype="application/x-www-form-urlencoded"
     data-turbo="true"

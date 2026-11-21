@@ -808,7 +808,7 @@ class HTMLGenerator:
                 global_map_nodes_by_mid.update(map_nodes_by_mid_)
 
         link_renderer = LinkRenderer(
-            root_path="",
+            root_path=self.project_config.application_base_url,
             static_path=self.project_config.dir_for_sdoc_assets,
         )
         for _, node_ in global_map_nodes_by_mid.items():

@@ -7,7 +7,7 @@ Add new document
 {% block modal_form__content %}
   <form
     id="{{ form }}"  {# defined in the parent template #}
-    action="/actions/project_index/create_document"
+    action="{{ application_base_url }}/actions/project_index/create_document"
     method="POST"
     data-turbo="true"
   >

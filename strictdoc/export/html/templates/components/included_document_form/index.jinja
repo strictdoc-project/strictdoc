@@ -4,7 +4,7 @@
   <form
     method="POST"
     data-turbo="true"
-    action="/actions/document/save_included_document"
+    action="{{ application_base_url }}/actions/document/save_included_document"
   >
     <input type="hidden" id="document_mid" name="document_mid" value="{{ form_object.document_mid }}"/>
     <input type="hidden" id="context_document_mid" name="context_document_mid" value="{{ form_object.context_document_mid }}"/>
@@ -33,7 +33,7 @@
 
     <sdoc-form-footer>
       {% include "components/button/submit.jinja" %}
-      {%- with cancel_href="/actions/document/cancel_edit_included_document?document_mid="~form_object.document_mid -%}
+      {%- with cancel_href=application_base_url ~ "/actions/document/cancel_edit_included_document?document_mid="~form_object.document_mid -%}
         {% include "components/button/cancel.jinja" %}
       {%- endwith -%}
     </sdoc-form-footer>

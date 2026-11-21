@@ -28,7 +28,7 @@
   Renders an autocomplete field cell.
   Initial DOM contains the display value only; the edit form (sdoc-autocompletable)
   is fetched via turbo-stream on click and injected into the cell div.
-  On blur JS saves via /actions/table/update_node_field and the turbo-stream
+  On blur JS saves via {{ application_base_url }}/actions/table/update_node_field and the turbo-stream
   response restores the display content.
 #}
 <td class="{{ td_class }}"
@@ -38,7 +38,7 @@
     data-field-type="autocomplete"
     js-table_view_edit-field="autocomplete"
     data-current-value="{{ field_value if field_value else '' }}"
-    data-url="/actions/table/get_node_autocomplete_inline?node_mid={{ requirement.reserved_mid }}&amp;field_name={{ field_title }}"
+    data-url="{{ application_base_url }}/actions/table/get_node_autocomplete_inline?node_mid={{ requirement.reserved_mid }}&amp;field_name={{ field_title }}"
     {%- endif %}
 >
   {%- if view_object.is_running_on_server %}<div class="editable-cell-indicator"></div>{%- endif %}
@@ -58,7 +58,7 @@
     data-node-mid="{{ requirement.reserved_mid }}"
     data-field-type="contenteditable"
     js-table_view_edit-field="contenteditable"
-    data-url="/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&amp;field_name={{ field_title }}"
+    data-url="{{ application_base_url }}/actions/table/get_node_contenteditable_inline?node_mid={{ requirement.reserved_mid }}&amp;field_name={{ field_title }}"
     {%- endif %}
 >
   {%- if view_object.is_running_on_server %}<div class="editable-cell-indicator"></div>{%- endif %}

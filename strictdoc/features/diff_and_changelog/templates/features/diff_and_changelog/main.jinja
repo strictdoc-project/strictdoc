@@ -9,7 +9,7 @@
 
   {% if view_object.project_config.is_running_on_server %}
     {% if view_object.error_message is none and view_object.left_revision is not none and view_object.right_revision is not none and view_object.left_revision|length > 0 and view_object.right_revision|length > 0 %}
-      <turbo-frame id="diff_result" src="/diff_result?tab={{ view_object.tab }}&left_revision={{ view_object.left_revision_urlencoded }}&right_revision={{ view_object.right_revision_urlencoded }}">
+      <turbo-frame id="diff_result" src="{{ application_base_url }}/diff_result?tab={{ view_object.tab }}&left_revision={{ view_object.left_revision_urlencoded }}&right_revision={{ view_object.right_revision_urlencoded }}">
       {% include "features/diff_and_changelog/skeleton.jinja" %}
       </turbo-frame>
     {% else %}

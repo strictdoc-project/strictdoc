@@ -2,11 +2,11 @@
 
 {%- set frame_id="article-"~form_object.section_mid %}
 {%- if is_new_section -%}
-  {%- set submit_url="/actions/document/create_section" %}
-  {%- set cancel_url="/actions/document/cancel_new_section?section_mid="~form_object.section_mid -%}
+  {%- set submit_url=application_base_url ~ "/actions/document/create_section" %}
+  {%- set cancel_url=application_base_url ~ "/actions/document/cancel_new_section?section_mid="~form_object.section_mid -%}
 {%- else -%}
-  {%- set submit_url="/actions/document/update_section" %}
-  {%- set cancel_url="/actions/document/cancel_edit_section?section_mid="~form_object.section_mid -%}
+  {%- set submit_url=application_base_url ~ "/actions/document/update_section" %}
+  {%- set cancel_url=application_base_url ~ "/actions/document/cancel_edit_section?section_mid="~form_object.section_mid -%}
 {%- endif -%}
 
 {% block form_content %}

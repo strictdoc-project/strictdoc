@@ -312,7 +312,7 @@ class TreeMapDataGenerator:
                         ),
                         document_url=get_document_view_url(node_, document_),
                         preview_url=(
-                            "/actions/show_full_node?reference_mid="
+                            project_config.application_base_url + "/actions/show_full_node?reference_mid="
                             f"{node_.reserved_mid}"
                             if project_config.is_running_on_server
                             else None

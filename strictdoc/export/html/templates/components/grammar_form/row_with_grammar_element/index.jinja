@@ -36,7 +36,7 @@
 
 {% block row_right %}
   <a
-    href="/actions/document/edit_grammar_element?document_mid={{ form_object.field.document_mid }}&element_mid={{ form_object.field.field_mid }}"
+    href="{{ application_base_url }}/actions/document/edit_grammar_element?document_mid={{ form_object.field.document_mid }}&element_mid={{ form_object.field.field_mid }}"
     data-testid="edit-link-grammar-element-{{ form_object.field.field_mid }}"
     class="field_action"
     data-action-type="action"

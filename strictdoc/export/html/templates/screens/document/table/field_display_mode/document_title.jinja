@@ -6,7 +6,7 @@
      data-field-type="contenteditable"
      js-table_view_edit-field="contenteditable"
      data-node-mid="{{ doc_mid }}"
-     data-url="/actions/table/get_document_config_field_inline?document_mid={{ doc_mid }}&amp;field_name=TITLE"
+     data-url="{{ application_base_url }}/actions/table/get_document_config_field_inline?document_mid={{ doc_mid }}&amp;field_name=TITLE"
      {%- endif %}
 >
   {%- if view_object.is_running_on_server %}<div class="editable-cell-indicator"></div>{%- endif %}

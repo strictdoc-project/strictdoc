@@ -4,7 +4,7 @@
   <form
     method="POST"
     data-turbo="true"
-    action="/actions/document/save_config"
+    action="{{ application_base_url }}/actions/document/save_config"
     data-js-tabs
     data-js-scroll-into-view
   >
@@ -137,7 +137,7 @@
 
       <a
         class="action_button"
-        href="/actions/document/new_metadata?document_mid={{ form_object.document_mid }}"
+        href="{{ application_base_url }}/actions/document/new_metadata?document_mid={{ form_object.document_mid }}"
         data-turbo-action="replace"
         data-turbo="true"
         data-action-type="add_field"
@@ -149,7 +149,7 @@
 
     <sdoc-form-footer>
       {% include "components/button/submit.jinja" %}
-      {%- with cancel_href="/actions/document/cancel_edit_config?document_mid="~form_object.document_mid -%}
+      {%- with cancel_href=application_base_url ~ "/actions/document/cancel_edit_config?document_mid="~form_object.document_mid -%}
         {% include "components/button/cancel.jinja" %}
       {%- endwith -%}
     </sdoc-form-footer>

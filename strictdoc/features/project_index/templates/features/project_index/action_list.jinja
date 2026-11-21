@@ -1,6 +1,6 @@
 <a
   class="dropdown_menu_item"
-  href="/actions/project_index/new_document"
+  href="{{ application_base_url }}/actions/project_index/new_document"
   data-turbo="true"
   title="Add new document"
   data-testid="tree-add-document-action"
@@ -9,7 +9,7 @@
 
 <a
   class="dropdown_menu_item"
-  href="/actions/project_index/edit_project_title_form"
+  href="{{ application_base_url }}/actions/project_index/edit_project_title_form"
   data-turbo="true"
   title="Edit project title"
   data-testid="project-edit-title-action"
@@ -19,7 +19,7 @@
 {%- if view_object.project_config.is_activated_reqif() -%}
 <a
   class="dropdown_menu_item"
-  href="/actions/project_index/import_reqif_document_form"
+  href="{{ application_base_url }}/actions/project_index/import_reqif_document_form"
   data-turbo="true"
   title="Import document tree from ReqIF"
   data-testid="tree-import-reqif-action"
@@ -29,7 +29,7 @@
 {%- if not view_object.is_empty_tree() -%}
 <a
   class="dropdown_menu_item"
-  href="/reqif/export_tree"
+  href="{{ application_base_url }}/reqif/export_tree"
   title="Export document tree to ReqIF"
   data-testid="tree-export-reqif-action"
   role="menuitem"

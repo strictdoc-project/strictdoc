@@ -6,7 +6,7 @@
 <script>
   var clientId = Date.now();
   var ws_protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-  var ws = new WebSocket(`${ws_protocol}//${window.location.host}/ws/${clientId}`);
+  var ws = new WebSocket(`${ws_protocol}//${window.location.host}{{ application_base_url }}/ws/${clientId}`);
   ws.onmessage = function(event) {
     if (event.data === "reload") {
       window.location.reload();

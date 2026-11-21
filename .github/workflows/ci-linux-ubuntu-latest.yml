@@ -10,6 +10,7 @@ on:
   pull_request:
     branches: [ "**" ]
 
+# One group per PR. A new push to a PR cancels the previous run of the PR.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -17,6 +18,18 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    # All PRs share one queue per matrix job. The queue starts jobs in push
+    # order. As a result, the earliest push gets all its jobs done first.
+    # Without the queue, every PR waits for the jobs of every other PR.
+    concurrency:
+      # strategy.job-index gives each matrix job its own queue.
+      group: ${{ github.workflow }}-lint_and_test-${{ strategy.job-index }}
+      # Keep up to 100 waiting jobs. The default keeps only the newest one.
+      queue: max
+      # Jobs of other PRs keep their place in the queue. A new push to the
+      # same PR still cancels the old run through the workflow-level group.
+      cancel-in-progress: false
 
     strategy:
       matrix:

@@ -52,9 +52,7 @@ class Test(E2ECase):
             mid_grammar_field: MID = (
                 form_edit_grammar_element.get_existing_mid_by_field_name("MID")
             )
-            form_edit_grammar_element.do_delete_grammar_field(
-                mid_grammar_field
-            )
+            form_edit_grammar_element.do_delete_grammar_field(mid_grammar_field)
 
             form_edit_grammar_element.do_form_submit_and_catch_error(
                 "The MID field must not be removed "

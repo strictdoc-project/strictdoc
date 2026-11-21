@@ -34,7 +34,7 @@ def test_document_views_of_non_activated_screens_return_404(
 ):
     client = TestClient(create_app(project_config=project_config))
 
-    document_url = f"/{os.path.basename(PATH_TO_THIS_TEST_FOLDER)}/sample"
+    document_url = f"/{os.path.basename(PATH_TO_THIS_TEST_FOLDER)}/sample.sdoc"
 
     response = client.get(f"{document_url}.html")
     assert response.status_code == 200

@@ -11,15 +11,15 @@ CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/_source_files/sub/file.py.html"
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHECK-HTML
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.sdoc.html | filecheck %s --check-prefix CHECK-HTML
 CHECK-HTML: href="../_source_files/sub/file.py.html#REQ-2#1#2"
 
 RUN: %cat %T/html/_source_files/sub/file.py.html | filecheck %s --check-prefix CHECK-PARENT
-CHECK-PARENT: class="requirement__link-parent" href="../../15_node_links_on_source_file_page_in_subfolder/input.html#REQ-1"
+CHECK-PARENT: class="requirement__link-parent" href="../../15_node_links_on_source_file_page_in_subfolder/input.sdoc.html#REQ-1"
 
 RUN: %cat %T/html/_source_files/sub/file.py.html | filecheck %s --check-prefix CHECK-FILE
 CHECK-FILE: class="requirement__link-file" href="../../_source_files/sub/file.py.html#REQ-2#1#2"
 
 RUN: %cat %T/html/_source_files/sub/file.py.html | filecheck %s --check-prefix CHECK-NO-BAD-LINK
-CHECK-NO-BAD-LINK-NOT: href="15_node_links_on_source_file_page_in_subfolder/input.html
+CHECK-NO-BAD-LINK-NOT: href="15_node_links_on_source_file_page_in_subfolder/input.sdoc.html
 CHECK-NO-BAD-LINK-NOT: href="../_source_files/sub/file.py.html

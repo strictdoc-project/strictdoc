@@ -2,13 +2,13 @@ RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Export completed.
 
 # The Document view renders the TEXT node, so its TOC entry is a link.
-RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-DOCUMENT
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-DOCUMENT
 CHECK-DOCUMENT: href="#0-Prose-section"
 CHECK-DOCUMENT: id="0-Prose-section"
 
 # The Deep Traceability view does not render TEXT nodes, so their TOC entries
 # are plain text, while requirements keep their links.
-RUN: %cat %T/html/%THIS_TEST_FOLDER/input-DEEP-TRACE.html | filecheck %s --dump-input=fail --check-prefix CHECK-DEEP-TRACE
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.sdoc-DEEP-TRACE.html | filecheck %s --dump-input=fail --check-prefix CHECK-DEEP-TRACE
 CHECK-DEEP-TRACE: <span class="toc-title-no-link" title="Text nodes are not shown in this view">
 CHECK-DEEP-TRACE: Prose section
 CHECK-DEEP-TRACE-NOT: href="#0-Prose-section"

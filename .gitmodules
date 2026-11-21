@@ -1,3 +1,6 @@
 [submodule "submodules/technical_writing_skill"]
 	path = submodules/technical_writing_skill
 	url = https://github.com/strictdoc-project/technical_writing_skill.git
+[submodule "submodules/reqif"]
+	path = submodules/reqif
+	url = https://github.com/strictdoc-project/reqif.git

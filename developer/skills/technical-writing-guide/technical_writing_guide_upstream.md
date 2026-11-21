@@ -518,7 +518,7 @@ Rationale: Explicit names prevent ambiguity about ownership and responsibility. 
 
 ## Avoid common AI-writing patterns
 
-LLM drafts tend to carry patterns that read as filler in technical docs. Apply the rules above and also remove the patterns below. For prose outside technical docs, the `humanizer` skill covers a broader set of patterns.
+LLM drafts tend to carry patterns that read as filler in technical docs. Apply the rules above and also remove the patterns below.
 
 - **Hedge phrases**: "it's worth noting that," "generally speaking," "in many cases." State the fact or delete the sentence.
 - **Em dash overuse**: an em dash for nearly every aside. Use a period, comma, or colon instead. Reserve the em dash for a real interruption.

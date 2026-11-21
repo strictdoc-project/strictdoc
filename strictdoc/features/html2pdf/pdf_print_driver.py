@@ -14,7 +14,6 @@ from html2pdf4doc.main import HPDExitCode
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.features.html2pdf.pdf_postprocessor import PDFPostprocessor
 from strictdoc.helpers.timing import measure_performance
-from strictdoc.helpers.user_cache_dir import get_user_cache_dir
 
 # The number of html2pdf4doc's last stderr lines that are kept to explain a
 # failure. A Python traceback ends with the exception message.
@@ -109,7 +108,7 @@ class PDFPrintDriver:
         # project config sets a cache folder, keep it in the per-user cache
         # instead of downloading it again for every output folder.
         path_to_html2pdf4doc_cache = os.path.join(
-            get_user_cache_dir()
+            project_config.environment.get_path_to_user_cache_dir()
             if project_config.is_default_dir_for_sdoc_cache
             else project_config.get_path_to_cache_dir(),
             "html2pdf",

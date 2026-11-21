@@ -13,7 +13,6 @@ from strictdoc.features.html2pdf.pdf_print_driver import (
     PDFPrintDriver,
     PDFPrintDriverException,
 )
-from strictdoc.helpers.user_cache_dir import get_user_cache_dir
 
 DOWNLOAD_FAILED_STDERR = """\
 Traceback (most recent call last):
@@ -58,35 +57,6 @@ def get_html2pdf4doc_cache_dir(
     return cmd[cmd.index("--cache-dir") + 1]
 
 
-def test_01_user_cache_dir_linux(monkeypatch, home, tmp_path):
-    monkeypatch.setattr(sys, "platform", "linux")
-    assert get_user_cache_dir() == os.path.join(home, ".cache", "strictdoc")
-
-    monkeypatch.setenv("XDG_CACHE_HOME", str(tmp_path / "xdg"))
-    assert get_user_cache_dir() == os.path.join(
-        str(tmp_path / "xdg"), "strictdoc"
-    )
-
-
-def test_02_user_cache_dir_windows(monkeypatch, home, tmp_path):
-    monkeypatch.setattr(sys, "platform", "win32")
-    assert get_user_cache_dir() == os.path.join(
-        home, "AppData", "Local", "strictdoc", "cache"
-    )
-
-    monkeypatch.setenv("LOCALAPPDATA", str(tmp_path / "local"))
-    assert get_user_cache_dir() == os.path.join(
-        str(tmp_path / "local"), "strictdoc", "cache"
-    )
-
-
-def test_03_user_cache_dir_macos(monkeypatch, home):
-    monkeypatch.setattr(sys, "platform", "darwin")
-    assert get_user_cache_dir() == os.path.join(
-        home, "Library", "Caches", "strictdoc"
-    )
-
-
 @pytest.mark.usefixtures("home")
 def test_10_default_config_uses_the_user_cache_dir(monkeypatch):
     project_config = ProjectConfig.default_config()
@@ -94,7 +64,9 @@ def test_10_default_config_uses_the_user_cache_dir(monkeypatch):
 
     assert get_html2pdf4doc_cache_dir(
         monkeypatch, project_config
-    ) == os.path.join(get_user_cache_dir(), "html2pdf")
+    ) == os.path.join(
+        project_config.environment.get_path_to_user_cache_dir(), "html2pdf"
+    )
 
 
 @pytest.mark.usefixtures("home")

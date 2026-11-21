@@ -5905,6 +5905,17 @@ default, or uses a pre installed executable if ``strictdoc export
 --chromedriver=/path/to/chromedriver`` or the equivalent ``strictdoc_config.py``
 option is given.
 
+StrictDoc keeps the downloaded chromedriver in a per-user cache folder, so that
+a new output folder does not download it again:
+
+- Linux: ``$XDG_CACHE_HOME/strictdoc`` or ``~/.cache/strictdoc``
+- Windows: ``%LOCALAPPDATA%\strictdoc\cache``
+- macOS: ``~/Library/Caches/strictdoc``
+
+If the ``dir_for_sdoc_cache`` option or the ``STRICTDOC_CACHE_DIR`` environment
+variable sets a cache folder, StrictDoc keeps chromedriver in that folder
+instead.
+
 By default, StrictDoc attempts to detect an existing Chrome/Chromium
 installation. If Chrome is installed in a non-standard location, its binary can
 be specified explicitly with ``strictdoc export

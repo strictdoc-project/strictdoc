@@ -110,6 +110,19 @@ when the source file page and the document page were at the same folder depth.
 TEXT nodes with a title as plain entries, without a link. Before, the table of
 contents linked these TEXT nodes. The Deep Traceability screen does not show
 TEXT nodes. As a result, the links led nowhere.
+
+11\) HTML2PDF now keeps the downloaded ChromeDriver in a per-user cache folder.
+The user guide lists this folder for Linux, Windows, and macOS. Before,
+HTML2PDF kept the ChromeDriver in the ``_cache`` folder of each output folder.
+As a result, each new output folder downloaded the ChromeDriver again. Without a
+network connection, an export to a new output folder failed. The
+``dir_for_sdoc_cache`` option and the ``STRICTDOC_CACHE_DIR`` environment
+variable still select another cache folder.
+
+12\) Fixed: when Chrome is missing or the ChromeDriver download fails, HTML2PDF
+now ends with one error message that tells a user what to do. Before, a missing
+Chrome printed an empty ``error:`` line. A failed ChromeDriver download printed
+a raw traceback without an explanation.
 <<<
 
 [[/SECTION]]

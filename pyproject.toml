@@ -13,6 +13,7 @@ path = "strictdoc/__init__.py"
 exclude = [
     # Without this, the folder is still included to the output tar.gz because it has a Markdown file.
     "/developer",
+    "/submodules",
 ]
 
 [tool.hatch.build.targets.sdist]

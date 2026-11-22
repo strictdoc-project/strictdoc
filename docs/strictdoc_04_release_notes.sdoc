@@ -50,6 +50,23 @@ releases:
 <<<
 
 [[SECTION]]
+MID: 7523de2c5f3549c8bfd220eb2713a4de
+TITLE: Unreleased
+
+[TEXT]
+MID: 775f7c88f6ac442382c88605860bbbc2
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) Fixed: the Markdown writer now keeps ``**Type**: SECTION`` on a section
+with a UID. Before, the writer dropped the marker if the section had no MID.
+As a result, StrictDoc read the section back as a requirement, for example
+after a save from the web interface.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 1b13f410ce30424a9eeba5f2837c6917
 TITLE: 0.32.0 (2026-11-22)
 

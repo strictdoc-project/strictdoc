@@ -1594,3 +1594,38 @@ name: example-guide
 
     assert output_markdown == expected_markdown
     _assert_markdown_roundtrip(output_markdown)
+
+
+def test_042_type_section_uid_preserved():
+    """
+    A SECTION with a UID and no MID keeps its **Type**: SECTION marker.
+    Without the marker, a re-read classifies the heading with a UID and
+    prose as a REQUIREMENT.
+    """
+    input_markdown = """\
+# Doc
+
+## Section with a UID
+
+**Type**: SECTION \\
+**UID**: SECT-1
+
+Some prose.
+
+- A list item.
+"""
+    document, _ = _assert_markdown_roundtrip(input_markdown)
+
+    section = document.section_contents[0]
+    assert isinstance(section, SDocNode)
+    assert section.node_type == "SECTION"
+    assert section.reserved_uid == "SECT-1"
+
+    output_markdown = SDMarkdownWriter.write(document)
+    document_from_output = SDMarkdownReader.read(
+        output_markdown, file_path=None
+    )
+    section_from_output = document_from_output.section_contents[0]
+    assert isinstance(section_from_output, SDocNode)
+    assert section_from_output.node_type == "SECTION"
+    assert section_from_output.reserved_uid == "SECT-1"

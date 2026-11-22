@@ -249,11 +249,14 @@ class SDMarkdownWriter:
 
         # Emit Type for every non-TEXT node when:
         # - the grammar defines element types beyond the built-in set (MD-26), OR
-        # - a SECTION node carries a MID field (MD-24): Type: SECTION must
-        #   accompany the MID on every write so the reader does not misidentify
-        #   the heading as a REQUIREMENT on re-read.
-        section_has_mid = node.node_type == "SECTION" and (
-            should_inject_mid or "MID" in node.ordered_fields_lookup
+        # - a SECTION node carries a MID field (MD-24) or a UID field: the
+        #   reader classifies a heading with a MID or a UID and a statement as
+        #   a REQUIREMENT. Type: SECTION must accompany the MID or the UID on
+        #   every write so the node stays a SECTION on re-read.
+        section_has_mid_or_uid = node.node_type == "SECTION" and (
+            should_inject_mid
+            or "MID" in node.ordered_fields_lookup
+            or "UID" in node.ordered_fields_lookup
         )
         # A SECTION whose children are titleless flat records (SDOC-MD-35)
         # must keep its own explicit **Type**: SECTION marker: without it,
@@ -275,7 +278,10 @@ class SDMarkdownWriter:
             or section_has_flat_children
             or (
                 document_grammar is not None
-                and (document_grammar.has_custom_elements() or section_has_mid)
+                and (
+                    document_grammar.has_custom_elements()
+                    or section_has_mid_or_uid
+                )
             )
         ):
             meta_fields.append(("Type", node.node_type))

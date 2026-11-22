@@ -18,9 +18,17 @@ sys.path.append(STRICTDOC_PATH)
 
 DOWNLOADED_FILES_PATH = os.path.join(STRICTDOC_PATH, "downloaded_files")
 
+# All tests that use DOWNLOADED_FILES_PATH run in this xdist group. The tests
+# delete the folder and download files with the same names, for example
+# export.reqif. See pytest_collection_modifyitems().
+DOWNLOADED_FILES_XDIST_GROUP = pytest.mark.xdist_group(name="downloaded_files")
+
 test_environment: SDocTestEnvironment = SDocTestEnvironment.create_default()
 
 
+# tryfirst: pytest-xdist reads the xdist_group markers in its own
+# pytest_collection_modifyitems hook. This hook must add the markers before.
+@pytest.hookimpl(tryfirst=True)
 def pytest_collection_modifyitems(
     session,
     config,
@@ -30,6 +38,18 @@ def pytest_collection_modifyitems(
     Called after collection has been performed, may filter or re-order
     the items in-place.
     """
+
+    # With --dist loadgroup, pytest-xdist runs all tests of one xdist group
+    # on one worker, one after another. A test without an explicit group gets
+    # the group of its file, because the tests of one file share the
+    # .sandbox folder next to the file. The tests that download files share
+    # the downloaded_files folder and have the explicit group
+    # DOWNLOADED_FILES_XDIST_GROUP.
+    for item in items:
+        if item.get_closest_marker("xdist_group") is None:
+            item.add_marker(
+                pytest.mark.xdist_group(name=item.nodeid.split("::")[0])
+            )
 
     shard = config.getoption("--strictdoc-shard")
     if shard is None:

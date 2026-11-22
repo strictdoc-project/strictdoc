@@ -364,10 +364,10 @@ def test_end2end(
             "Running parallelized end-2-end tests is supported "
             "but is not stable."
         )
-        # --dist loadfile runs all tests of one file on one worker. The tests
-        # of one file share the .sandbox folder next to the file.
+        # --dist loadgroup runs all tests of one xdist group on one worker.
+        # tests/end2end/conftest.py assigns the groups.
         parallelize_argument = (
-            "--numprocesses=2 --dist loadfile --strictdoc-parallelize"
+            "--numprocesses=2 --dist loadgroup --strictdoc-parallelize"
         )
 
     assert shard is None or re.match(r"[1-9][0-9]*/[1-9][0-9]*", shard), (

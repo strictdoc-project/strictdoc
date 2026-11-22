@@ -5,7 +5,11 @@
 import os
 import shutil
 
-from tests.end2end.conftest import DOWNLOADED_FILES_PATH, test_environment
+from tests.end2end.conftest import (
+    DOWNLOADED_FILES_PATH,
+    DOWNLOADED_FILES_XDIST_GROUP,
+    test_environment,
+)
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
@@ -18,6 +22,7 @@ path_to_expected_downloaded_file = os.path.join(
 )
 
 
+@DOWNLOADED_FILES_XDIST_GROUP
 class Test(E2ECase):
     def test(self):
         shutil.rmtree(DOWNLOADED_FILES_PATH, ignore_errors=True)

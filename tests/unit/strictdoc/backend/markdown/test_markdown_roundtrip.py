@@ -6,6 +6,9 @@ from strictdoc.backend.markdown.reader import SDMarkdownReader
 from strictdoc.backend.markdown.writer import SDMarkdownWriter
 from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.backend.sdoc.models.document import SDocDocument
+from strictdoc.backend.sdoc.models.document_config import (
+    DocumentCustomMetadataKeyValuePair,
+)
 from strictdoc.backend.sdoc.models.inline_link import InlineLink
 from strictdoc.backend.sdoc.models.node import SDocNode
 from strictdoc.backend.sdoc.reader import SDReader
@@ -1339,3 +1342,255 @@ def test_033_roundtrip_multiple_comments_roundtrip():
         "First comment.",
         "Second comment.",
     ]
+
+
+def test_034_roundtrip_front_matter():
+    input_markdown = """\
+---
+Version: 1.10
+name: example-guide
+description: Rules for writing short technical documentation - examples, checklists. Use when the user writes "example".
+Flag: true
+Empty:
+---
+
+# Document title
+
+Intro text.
+
+## Requirement title
+
+**UID**: REQ-1
+
+**Statement**: System A shall do B.
+"""
+
+    document, _ = _assert_markdown_roundtrip(input_markdown)
+
+    assert document.config.version == "1.10"
+    assert document.config.get_custom_metadata() == [
+        ("name", "example-guide"),
+        (
+            "description",
+            (
+                "Rules for writing short technical documentation - examples, "
+                'checklists. Use when the user writes "example".'
+            ),
+        ),
+        ("Flag", "true"),
+        ("Empty", ""),
+    ]
+
+
+def test_035_roundtrip_front_matter_normalizes_yaml_style():
+    input_markdown = """\
+---
+UID: "DOC-1"
+Multiline: |
+  First line.
+  Second line.
+---
+# Document title
+"""
+    expected_markdown = """\
+---
+UID: DOC-1
+Multiline: |-
+  First line.
+  Second line.
+---
+
+# Document title
+"""
+
+    _assert_markdown_roundtrip(input_markdown, expected_markdown)
+
+
+def test_036_roundtrip_front_matter_with_new_metadata_entry():
+    input_markdown = """\
+---
+name: example-guide
+---
+
+# Document title
+"""
+    expected_markdown = """\
+---
+name: example-guide
+OWNER: '[LINK: REQ-1]'
+---
+
+# Document title
+"""
+
+    document = SDMarkdownReader.read(input_markdown, file_path=None)
+    custom_metadata = document.config.custom_metadata
+    assert custom_metadata is not None
+    custom_metadata.entries.append(
+        DocumentCustomMetadataKeyValuePair(
+            parent=custom_metadata,
+            key="OWNER",
+            parts=[InlineLink(parent=None, value="REQ-1")],
+        )
+    )
+
+    output_markdown = SDMarkdownWriter.write(document)
+
+    assert output_markdown == expected_markdown
+    _assert_markdown_roundtrip(output_markdown)
+
+
+def _assert_markdown_rewrite(input_markdown: str, expected_markdown: str):
+    document = SDMarkdownReader.read(input_markdown, file_path=None)
+    output_markdown = SDMarkdownWriter.write(document)
+    assert output_markdown == expected_markdown
+    _assert_markdown_roundtrip(output_markdown)
+
+
+def test_037_h1_metadata_block_writes_reserved_fields_first():
+    # Without front matter, all fields go to the H1 metadata block. The
+    # reserved fields go first and keep their capitalization.
+    _assert_markdown_rewrite(
+        input_markdown="""\
+# Document title
+
+**Author**: Jane \\
+**Prefix**: REQ- \\
+**Version**: 1.10 \\
+**UID**: DOC-1
+""",
+        expected_markdown="""\
+# Document title
+
+**UID**: DOC-1 \\
+**Version**: 1.10 \\
+**Prefix**: REQ- \\
+**Author**: Jane
+""",
+    )
+
+
+def test_038_front_matter_writes_reserved_fields_first():
+    # With front matter and without an H1 metadata block, all fields go to
+    # the front matter. The reserved fields go first and keep their
+    # capitalization.
+    _assert_markdown_rewrite(
+        input_markdown="""\
+---
+name: example-guide
+Version: 1.10
+version: lowercase-is-custom
+UID: DOC-1
+---
+
+# Document title
+""",
+        expected_markdown="""\
+---
+UID: DOC-1
+Version: 1.10
+name: example-guide
+version: lowercase-is-custom
+---
+
+# Document title
+""",
+    )
+
+
+def test_039_front_matter_and_h1_block_write_reserved_fields_to_h1_block():
+    # With front matter and an H1 metadata block, the reserved fields go to
+    # the H1 metadata block, also the reserved fields from the front matter.
+    # Each custom field goes back to the place it was read from.
+    _assert_markdown_rewrite(
+        input_markdown="""\
+---
+name: example-guide
+UID: DOC-1
+---
+
+# Document title
+
+**Author**: Jane \\
+**Version**: 1.10
+""",
+        expected_markdown="""\
+---
+name: example-guide
+---
+
+# Document title
+
+**UID**: DOC-1 \\
+**Version**: 1.10 \\
+**Author**: Jane
+""",
+    )
+
+
+def test_040_front_matter_and_h1_block_write_new_custom_field_to_front_matter():
+    input_markdown = """\
+---
+name: example-guide
+---
+
+# Document title
+
+**UID**: DOC-1 \\
+**Author**: Jane
+"""
+    expected_markdown = """\
+---
+name: example-guide
+OWNER: Documentation team
+---
+
+# Document title
+
+**UID**: DOC-1 \\
+**Version**: 2.0 \\
+**Author**: Jane
+"""
+
+    document = SDMarkdownReader.read(input_markdown, file_path=None)
+    document.config.version = "2.0"
+    custom_metadata = document.config.custom_metadata
+    assert custom_metadata is not None
+    custom_metadata.entries.append(
+        DocumentCustomMetadataKeyValuePair(
+            parent=custom_metadata,
+            key="OWNER",
+            parts=["Documentation team"],
+        )
+    )
+
+    output_markdown = SDMarkdownWriter.write(document)
+
+    assert output_markdown == expected_markdown
+    _assert_markdown_roundtrip(output_markdown)
+
+
+def test_041_front_matter_writes_new_reserved_field_to_front_matter():
+    input_markdown = """\
+---
+name: example-guide
+---
+
+# Document title
+"""
+    expected_markdown = """\
+---
+Version: 2.0
+name: example-guide
+---
+
+# Document title
+"""
+
+    document = SDMarkdownReader.read(input_markdown, file_path=None)
+    document.config.version = "2.0"
+
+    output_markdown = SDMarkdownWriter.write(document)
+
+    assert output_markdown == expected_markdown
+    _assert_markdown_roundtrip(output_markdown)

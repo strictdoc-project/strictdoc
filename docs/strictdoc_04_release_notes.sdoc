@@ -75,6 +75,16 @@ worker processes on Windows, and the desktop launcher without a Python
 installation. The ``invoke release-pyinstaller`` task now also creates a zip
 file, and the release workflow attaches the zip files for Linux, macOS and
 Windows to each GitHub release.
+
+4\) The Markdown reader recognizes YAML front matter at the start of a
+Markdown document and reads its keys as document metadata. The keys have the
+same meaning as the keys of the metadata block after the H1 heading. A document
+can have both the front matter and the H1 metadata block. When StrictDoc writes
+the document back, for example with ``strictdoc format`` or from the web
+interface, StrictDoc writes each field to the place it was read from. One
+exception: in a document with both places, the StrictDoc fields, such as
+``UID`` and ``Version``, go to the H1 metadata block. The Markdown writer now
+writes the StrictDoc fields before the custom fields.
 <<<
 
 [[/SECTION]]

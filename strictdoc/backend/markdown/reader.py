@@ -12,8 +12,18 @@ from markdown_it.token import Token
 from strictdoc.backend.markdown.default_grammar import (
     create_markdown_default_grammar,
 )
+from strictdoc.backend.markdown.front_matter import (
+    FRONT_MATTER_TOKEN_TYPE,
+    FrontMatterError,
+    add_front_matter_rule,
+    find_front_matter_token,
+    parse_front_matter,
+)
 from strictdoc.backend.markdown.lax_heading import (
     create_lax_heading_markdown_parser,
+)
+from strictdoc.backend.markdown.metadata_layout import (
+    MarkdownMetadataLayout,
 )
 from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.backend.sdoc.document_reference import DocumentReference
@@ -82,8 +92,11 @@ class ParsedMarkdownNode:
 class SDMarkdownReader:
     # CommonMark with one deviation: ATX headings deeper than six '#'
     # characters are recognized so that documents nested deeper than six
-    # levels survive the SDoc -> Markdown -> SDoc round-trip.
-    markdown_parser = create_lax_heading_markdown_parser()
+    # levels survive the SDoc -> Markdown -> SDoc round-trip. The parser
+    # also recognizes a YAML front matter block at the start of a document.
+    markdown_parser = add_front_matter_rule(
+        create_lax_heading_markdown_parser()
+    )
     default_meta_style = "backslash"
     plain_field_pattern = re.compile(
         r"^\*\*(?P<name>[A-Za-z0-9][A-Za-z0-9 _-]*)\*\*:(?P<value>.*)$"
@@ -151,6 +164,10 @@ class SDMarkdownReader:
         heading_nodes = SDMarkdownReader._extract_heading_nodes(
             markdown_tokens, input_string
         )
+        front_matter_token = find_front_matter_token(markdown_tokens)
+        front_matter_fields = SDMarkdownReader._parse_front_matter_fields(
+            front_matter_token, file_path=file_path
+        )
 
         if len(heading_nodes) == 0 or heading_nodes[0].level != 1:
             raise StrictDocSemanticError(
@@ -165,10 +182,15 @@ class SDMarkdownReader:
                 filename=file_path,
             )
 
+        first_content_line_index = 0
+        if front_matter_token is not None:
+            assert front_matter_token.map is not None
+            first_content_line_index = front_matter_token.map[1]
         SDMarkdownReader._validate_no_content_before_h1(
             input_string=input_string,
             first_heading=heading_nodes[0],
             file_path=file_path,
+            first_content_line_index=first_content_line_index,
         )
 
         SDMarkdownReader._validate_no_redundant_empty_lines(
@@ -194,6 +216,7 @@ class SDMarkdownReader:
 
         SDMarkdownReader._parse_document_root(
             root_heading=heading_nodes[0],
+            front_matter_fields=front_matter_fields,
             document=document,
             document_reference=document_reference,
             including_document_reference=including_document_reference,
@@ -337,6 +360,7 @@ class SDMarkdownReader:
     @staticmethod
     def _parse_document_root(
         root_heading: MarkdownHeadingNode,
+        front_matter_fields: Optional[List[ParsedField]],
         document: SDocDocument,
         document_reference: DocumentReference,
         including_document_reference: DocumentReference,
@@ -348,6 +372,8 @@ class SDMarkdownReader:
         root_heading is expected to provide the first H1 heading from the md, as previously discovered by markdown-it-py.
         The caller is expected to create an empty document and document_references and pass them to any _parse_* function.
         The passed document is mutated in place to add custom metadata, section contents and freeform prose from H1.
+        front_matter_fields are the fields of the YAML front matter, or None if the document has no front matter.
+        The document metadata comes from the front matter, from the H1 meta block, or from both.
         Callers should also pass the md file_path as a hint for better error messages.
         """
         root_body_lines = root_heading.body.splitlines(keepends=True)
@@ -360,57 +386,66 @@ class SDMarkdownReader:
             root_body_lines, file_path=file_path
         )
 
-        if root_meta_valid and len(root_meta_fields) > 0:
-            root_field_names = list(
-                map(lambda field_: field_.name, root_meta_fields)
+        has_root_meta_block = root_meta_valid and len(root_meta_fields) > 0
+        if not has_root_meta_block:
+            root_meta_fields = []
+            root_body_lines_without_meta = root_body_lines
+
+        root_field_names = list(
+            map(lambda field_: field_.name, root_meta_fields)
+        )
+        if len(set(root_field_names)) != len(root_field_names):
+            raise StrictDocSemanticError(
+                title=(
+                    "Markdown parsing error: duplicate field names in "
+                    "root document metadata are not allowed."
+                ),
+                hint=None,
+                example=None,
+                line=root_heading.line_start,
+                col=1,
+                filename=file_path,
             )
-            if len(set(root_field_names)) != len(root_field_names):
+
+        front_matter_field_names = (
+            {field_.name for field_ in front_matter_fields}
+            if front_matter_fields is not None
+            else set()
+        )
+        for field_name_ in root_field_names:
+            if field_name_ in front_matter_field_names:
                 raise StrictDocSemanticError(
                     title=(
-                        "Markdown parsing error: duplicate field names in "
-                        "root document metadata are not allowed."
+                        f"Markdown parsing error: the field '{field_name_}' "
+                        "is in both the YAML front matter and the H1 "
+                        "metadata block."
                     ),
-                    hint=None,
+                    hint=(
+                        "Keep the field either in the YAML front matter or "
+                        "in the H1 metadata block."
+                    ),
                     example=None,
                     line=root_heading.line_start,
                     col=1,
                     filename=file_path,
                 )
 
-            metadata_entries = []
-            for field_ in root_meta_fields:
-                if field_.name == "Grammar":
-                    document.grammar = DocumentGrammar(
-                        parent=document,
-                        elements=[],
-                        import_from_file=field_.value,
-                    )
-                    continue
-                if field_.name == "Prefix":
-                    document.config.requirement_prefix = field_.value
-                if field_.name == "UID":
-                    document.config.uid = field_.value
-                if field_.name == "Version":
-                    document.config.version = field_.value
-                if field_.name == "Date":
-                    document.config.date = field_.value
-                if field_.name == "Classification":
-                    document.config.classification = field_.value
-                metadata_entries.append(
-                    DocumentCustomMetadataKeyValuePair(
-                        key=field_.name,
-                        parts=SDMarkdownReader._parse_text_parts(field_.value),
-                    )
-                )
-            custom_metadata = DocumentCustomMetadata(
-                parent=document.config, entries=metadata_entries
-            )
-            for entry_ in metadata_entries:
-                entry_.parent = custom_metadata
-            document.config.custom_metadata = custom_metadata
-        else:
-            root_body_lines_without_meta = root_body_lines
-            document.config.custom_metadata = None
+        SDMarkdownReader._apply_document_metadata(
+            document,
+            [
+                *(
+                    front_matter_fields
+                    if front_matter_fields is not None
+                    else []
+                ),
+                *root_meta_fields,
+            ],
+        )
+        document.ng_markdown_metadata_layout = MarkdownMetadataLayout(
+            has_front_matter=front_matter_fields is not None,
+            has_h1_metadata_block=has_root_meta_block,
+            h1_metadata_block_keys=set(root_field_names),
+        )
 
         root_text = "".join(root_body_lines_without_meta)
         if len(root_text.strip()) > 0:
@@ -431,6 +466,87 @@ class SDMarkdownReader:
                 line_start=root_heading.line_start,
             )
             document.section_contents.append(root_text_node)
+
+    @staticmethod
+    def _parse_front_matter_fields(
+        front_matter_token: Optional[Token],
+        file_path: Optional[str],
+    ) -> Optional[List[ParsedField]]:
+        """
+        Parse the YAML front matter into document metadata fields.
+
+        Return None if the document has no front matter. Return an empty
+        list if the front matter has no keys.
+        """
+        if front_matter_token is None:
+            return None
+        try:
+            front_matter_entries = parse_front_matter(front_matter_token)
+        except FrontMatterError as exception_:
+            raise StrictDocSemanticError(
+                title=(
+                    "Markdown parsing error: YAML front matter: "
+                    f"{exception_.message}"
+                ),
+                hint=None,
+                example="---\nUID: DOC-1\nVersion: 1.0\n---",
+                line=exception_.line,
+                col=1,
+                filename=file_path,
+            ) from exception_
+        return [
+            ParsedField(name=key_, value=value_)
+            for key_, value_, _ in front_matter_entries
+        ]
+
+    @staticmethod
+    def _apply_document_metadata(
+        document: SDocDocument,
+        metadata_fields: List[ParsedField],
+    ) -> None:
+        """
+        Store document metadata fields in the document config.
+
+        The Grammar field imports the document grammar from a file. The
+        UID, Version, Date, Classification, and Prefix fields also set the
+        matching document config fields. All fields except Grammar become
+        custom metadata entries.
+        """
+        if len(metadata_fields) == 0:
+            document.config.custom_metadata = None
+            return
+
+        metadata_entries = []
+        for field_ in metadata_fields:
+            if field_.name == "Grammar":
+                document.grammar = DocumentGrammar(
+                    parent=document,
+                    elements=[],
+                    import_from_file=field_.value,
+                )
+                continue
+            if field_.name == "Prefix":
+                document.config.requirement_prefix = field_.value
+            if field_.name == "UID":
+                document.config.uid = field_.value
+            if field_.name == "Version":
+                document.config.version = field_.value
+            if field_.name == "Date":
+                document.config.date = field_.value
+            if field_.name == "Classification":
+                document.config.classification = field_.value
+            metadata_entries.append(
+                DocumentCustomMetadataKeyValuePair(
+                    key=field_.name,
+                    parts=SDMarkdownReader._parse_text_parts(field_.value),
+                )
+            )
+        custom_metadata = DocumentCustomMetadata(
+            parent=document.config, entries=metadata_entries
+        )
+        for entry_ in metadata_entries:
+            entry_.parent = custom_metadata
+        document.config.custom_metadata = custom_metadata
 
     @staticmethod
     def _create_document_tree(
@@ -772,11 +888,19 @@ class SDMarkdownReader:
         input_string: str,
         first_heading: MarkdownHeadingNode,
         file_path: Optional[str],
+        first_content_line_index: int = 0,
     ) -> None:
-        """Raise if any non-empty line precedes the H1 heading."""
+        """
+        Raise if any non-empty line precedes the H1 heading.
+
+        The check starts at first_content_line_index, the 0-based index of
+        the first line after the YAML front matter.
+        """
         input_lines = input_string.splitlines()
         first_heading_line_index = first_heading.line_start - 1
-        for line_index in range(0, first_heading_line_index):
+        for line_index in range(
+            first_content_line_index, first_heading_line_index
+        ):
             if len(input_lines[line_index].strip()) == 0:
                 continue
             raise StrictDocSemanticError(
@@ -911,7 +1035,12 @@ class SDMarkdownReader:
         """Return indexes of lines where repeated empty lines are allowed."""
         exempt_line_indexes: Set[int] = set()
         for token in markdown_tokens:
-            if token.type not in ("fence", "code_block", "blockquote_open"):
+            if token.type not in (
+                "fence",
+                "code_block",
+                "blockquote_open",
+                FRONT_MATTER_TOKEN_TYPE,
+            ):
                 continue
             if token.map is None:
                 continue

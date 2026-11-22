@@ -1094,3 +1094,122 @@ System shall do X.
     SDMarkdownReader.fixup_composite_nodes(document)
 
     assert requirement.is_composite is True
+
+
+def test_041_front_matter_sets_document_metadata():
+    markdown_content = """\
+---
+name: example-guide
+Version: 1.10
+UID: DOC-1
+Prefix: REQ-
+---
+
+# Document title
+
+Intro text.
+"""
+
+    document = SDMarkdownReader.read(markdown_content, file_path=None)
+
+    assert document.title == "Document title"
+    assert document.config.uid == "DOC-1"
+    assert document.config.version == "1.10"
+    assert document.config.requirement_prefix == "REQ-"
+    # get_custom_metadata() leaves out the keys that have their own
+    # document config fields, such as UID and Version.
+    assert document.config.get_custom_metadata() == [
+        ("name", "example-guide"),
+        ("Prefix", "REQ-"),
+    ]
+    assert len(document.section_contents) == 1
+
+
+def test_042_front_matter_grammar_key_imports_grammar():
+    markdown_content = """\
+---
+Grammar: requirements.gra.md
+---
+
+# Document title
+"""
+
+    document = SDMarkdownReader.read(markdown_content, file_path=None)
+
+    assert isinstance(document.grammar, DocumentGrammar)
+    assert document.grammar.import_from_file == "requirements.gra.md"
+    assert document.config.get_custom_metadata() == []
+
+
+@pytest.mark.parametrize(
+    "front_matter, expected_error, expected_line",
+    [
+        ("key: [1, 2]\n", "must be a single value", 2),
+        ("key:\n  nested: value\n", "must be a single value", 2),
+        ("key: a\nkey: b\n", "duplicate key 'key'", 3),
+        ("- a\n- b\n", "must be a mapping", 2),
+        ("key: a\n other: : b\n", "invalid YAML", 3),
+    ],
+)
+def test_043_front_matter_rejects_invalid_yaml(
+    front_matter, expected_error, expected_line
+):
+    markdown_content = f"---\n{front_matter}---\n\n# Document title\n"
+
+    with pytest.raises(StrictDocSemanticError) as exc_info:
+        SDMarkdownReader.read(markdown_content, file_path=None)
+
+    assert expected_error in exc_info.value.title
+    assert exc_info.value.line == expected_line
+
+
+def test_044_front_matter_and_h1_meta_block_are_read_together():
+    markdown_content = """\
+---
+name: example-guide
+---
+
+# Document title
+
+**UID**: DOC-1 \\
+**Author**: Jane
+"""
+
+    document = SDMarkdownReader.read(markdown_content, file_path=None)
+
+    assert document.config.uid == "DOC-1"
+    assert document.config.get_custom_metadata() == [
+        ("name", "example-guide"),
+        ("Author", "Jane"),
+    ]
+    layout = document.ng_markdown_metadata_layout
+    assert layout is not None
+    assert layout.has_front_matter is True
+    assert layout.has_h1_metadata_block is True
+    assert layout.h1_metadata_block_keys == {"UID", "Author"}
+
+
+def test_044b_rejects_field_in_front_matter_and_h1_meta_block():
+    markdown_content = """\
+---
+UID: DOC-1
+---
+
+# Document title
+
+**UID**: DOC-2
+"""
+
+    with pytest.raises(StrictDocSemanticError) as exc_info:
+        SDMarkdownReader.read(markdown_content, file_path=None)
+
+    assert "the field 'UID' is in both" in exc_info.value.title
+
+
+def test_045_unclosed_front_matter_is_content_before_h1():
+    markdown_content = "---\nUID: DOC-1\n\n# Document title\n"
+
+    with pytest.raises(StrictDocSemanticError) as exc_info:
+        SDMarkdownReader.read(markdown_content, file_path=None)
+
+    assert "the first content of the document" in exc_info.value.title

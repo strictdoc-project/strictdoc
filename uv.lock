@@ -3311,6 +3311,7 @@ dependencies = [
     { name = "pypdf" },
     { name = "python-datauri" },
     { name = "python-multipart" },
+    { name = "pyyaml" },
     { name = "reqif" },
     { name = "robotframework" },
     { name = "spdx-tools" },
@@ -3363,6 +3364,7 @@ check = [
     { name = "requests" },
     { name = "ruff" },
     { name = "seleniumbase" },
+    { name = "types-pyyaml" },
 ]
 pyinstaller = [
     { name = "jaraco-text" },
@@ -3395,6 +3397,7 @@ release-local = [
     { name = "ruff" },
     { name = "seleniumbase" },
     { name = "twine" },
+    { name = "types-pyyaml" },
 ]
 
 [package.metadata]
@@ -3418,6 +3421,7 @@ requires-dist = [
     { name = "pypdf", specifier = "==6.*,>=6.5.0" },
     { name = "python-datauri", specifier = "==2.*,>=2.1.1" },
     { name = "python-multipart" },
+    { name = "pyyaml", specifier = "==6.*,>=6.0" },
     { name = "reqif", specifier = "==0.1.*,>=0.1.1" },
     { name = "robotframework", specifier = ">=4.0.0" },
     { name = "spdx-tools", specifier = ">=0.8.5" },
@@ -3459,6 +3463,7 @@ check = [
     { name = "requests", specifier = ">=2.27.1" },
     { name = "ruff", specifier = ">=0.9" },
     { name = "seleniumbase", specifier = ">=4" },
+    { name = "types-pyyaml" },
 ]
 development = []
 documentation = []
@@ -3491,6 +3496,7 @@ release-local = [
     { name = "ruff", specifier = ">=0.9" },
     { name = "seleniumbase", specifier = ">=4" },
     { name = "twine" },
+    { name = "types-pyyaml" },
 ]
 
 [[package]]
@@ -3792,6 +3798,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/a7/a7/e6aecc4b4eb59598829a3b5076a93aff291b4fdaa2ded25efc4e1f4d219c/typer_slim-0.24.0.tar.gz", hash = "sha256:f0ed36127183f52ae6ced2ecb2521789995992c521a46083bfcdbb652d22ad34", size = 4776, upload-time = "2026-02-16T22:08:51.2Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a7/24/5480c20380dfd18cf33d14784096dca45a24eae6102e91d49a718d3b6855/typer_slim-0.24.0-py3-none-any.whl", hash = "sha256:d5d7ee1ee2834d5020c7c616ed5e0d0f29b9a4b1dd283bdebae198ec09778d0e", size = 3394, upload-time = "2026-02-16T22:08:49.92Z" },
+]
+
+[[package]]
+name = "types-pyyaml"
+version = "6.0.12.20261113"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/4d/8b/ba599d956693dbc98e170f32097128bdea0a17f9d42b0b490fa749c12b1a/types_pyyaml-6.0.12.20261113.tar.gz", hash = "sha256:0828be2580fd94151182364f4d0158e4de62fdbeeb8d4296f7f7d2b6c22bb640", size = 19017, upload-time = "2026-11-13T08:51:21.488Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/fd/2e/36fc0941a40ef066dbc8abac41bbbefb41389f547c779aef832aea6b873d/types_pyyaml-6.0.12.20261113-py3-none-any.whl", hash = "sha256:3600749e613748afdc4327f0b17c3296cf880cdbc7335f320007abd9dd815f67", size = 21321, upload-time = "2026-11-13T08:51:20.417Z" },
 ]
 
 [[package]]

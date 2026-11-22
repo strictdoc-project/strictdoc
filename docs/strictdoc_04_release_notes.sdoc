@@ -51,7 +51,7 @@ releases:
 
 [[SECTION]]
 MID: 1b13f410ce30424a9eeba5f2837c6917
-TITLE: Unreleased
+TITLE: 0.32.0 (2026-11-22)
 
 [TEXT]
 MID: 6bde927c12754ab5a60edf4b55dbe885
@@ -65,18 +65,27 @@ http(s) URL or a file path. Before, StrictDoc linked each function to a fixed
 path that existed only in one folder layout. Without the option, the coverage
 report now has no links to the gcovr HTML report.
 
-2\) Fixed: the server and the HTML export no longer fail on every page with
+2\) ``ALL_FEATURES`` no longer activates the deprecated features ``MATHJAX``,
+``MERMAID``, and ``SOURCE_FILE_LANGUAGE_PARSERS``. StrictDoc enables these
+features by default. As a result, a configuration with ``ALL_FEATURES`` no
+longer prints deprecation warnings for these features.
+
+RST math (``:math:``, ``:eq:``, and ``.. math::``) now always renders with
+MathJax. Before this release, RST math used MathJax only if the configuration
+listed ``MATHJAX`` or the export used ``--enable-mathjax``.
+
+3\) Fixed: the server and the HTML export no longer fail on every page with
 ``TemplateNotFound`` after a run stops while it compiles the HTML templates.
 The templates are now compiled into a temporary folder that is renamed into
 place when the compile is complete.
 
-3\) The PyInstaller binary of StrictDoc now runs the HTML2PDF export, the
+4\) The PyInstaller binary of StrictDoc now runs the HTML2PDF export, the
 worker processes on Windows, and the desktop launcher without a Python
 installation. The ``invoke release-pyinstaller`` task now also creates a zip
 file, and the release workflow attaches the zip files for Linux, macOS and
 Windows to each GitHub release.
 
-4\) The Markdown reader recognizes YAML front matter at the start of a
+5\) The Markdown reader recognizes YAML front matter at the start of a
 Markdown document and reads its keys as document metadata. The keys have the
 same meaning as the keys of the metadata block after the H1 heading. A document
 can have both the front matter and the H1 metadata block. When StrictDoc writes

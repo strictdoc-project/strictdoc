@@ -65,7 +65,12 @@ http(s) URL or a file path. Before, StrictDoc linked each function to a fixed
 path that existed only in one folder layout. Without the option, the coverage
 report now has no links to the gcovr HTML report.
 
-2\) The PyInstaller binary of StrictDoc now runs the HTML2PDF export, the
+2\) Fixed: the server and the HTML export no longer fail on every page with
+``TemplateNotFound`` after a run stops while it compiles the HTML templates.
+The templates are now compiled into a temporary folder that is renamed into
+place when the compile is complete.
+
+3\) The PyInstaller binary of StrictDoc now runs the HTML2PDF export, the
 worker processes on Windows, and the desktop launcher without a Python
 installation. The ``invoke release-pyinstaller`` task now also creates a zip
 file, and the release workflow attaches the zip files for Linux, macOS and

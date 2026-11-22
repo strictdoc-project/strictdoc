@@ -1,0 +1,15 @@
+#
+# @relation(SDOC-SRS-85, scope=file)
+#
+# Verify that auto-uid writes the generated UIDs back to Markdown documents
+# and to SDoc documents in the same project tree.
+#
+
+RUN: cp %S/input.sdoc %S/input.md %T/
+RUN: %strictdoc manage auto-uid %T/
+RUN: %diff %S/input.expected.sdoc %T/input.sdoc
+RUN: %diff %S/input.expected.md %T/input.md
+
+# A second run must read the written Markdown back and leave it unchanged.
+RUN: %strictdoc manage auto-uid %T/
+RUN: %diff %S/input.expected.md %T/input.md

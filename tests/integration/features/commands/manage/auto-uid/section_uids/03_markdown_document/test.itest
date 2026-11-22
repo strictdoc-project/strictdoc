@@ -1,0 +1,15 @@
+#
+# @relation(SDOC-SRS-85, scope=file)
+#
+# Verify that auto-uid with --include-sections writes the generated section
+# UIDs back to Markdown documents.
+#
+
+RUN: cp %S/input.md %T/
+RUN: %strictdoc manage auto-uid --include-sections %T/input.md
+RUN: %diff %S/input.expected.md %T/input.md
+
+# A second run must read the sections back as sections and leave the
+# document unchanged.
+RUN: %strictdoc manage auto-uid --include-sections %T/input.md
+RUN: %diff %S/input.expected.md %T/input.md

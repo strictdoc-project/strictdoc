@@ -321,6 +321,7 @@ def test_end2end(
     focus=None,
     exit_first=False,
     parallelize=False,
+    workers: int = 4,
     long_timeouts=False,
     headless=False,
     headed=False,
@@ -330,6 +331,8 @@ def test_end2end(
 ):
     """
     @relation(SDOC-SRS-46, scope=function)
+
+    --workers sets the number of pytest-xdist workers for --parallelize.
     """
 
     environment = {}
@@ -366,8 +369,9 @@ def test_end2end(
         )
         # --dist loadgroup runs all tests of one xdist group on one worker.
         # tests/end2end/conftest.py assigns the groups.
+        assert workers >= 1, workers
         parallelize_argument = (
-            "--numprocesses=2 --dist loadgroup --strictdoc-parallelize"
+            f"--numprocesses={workers} --dist loadgroup --strictdoc-parallelize"
         )
 
     assert shard is None or re.match(r"[1-9][0-9]*/[1-9][0-9]*", shard), (

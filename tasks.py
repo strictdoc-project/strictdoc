@@ -386,6 +386,11 @@ def test_end2end(
     focus_argument = f"-k {focus}" if focus is not None else ""
     exit_first_argument = "--exitfirst" if exit_first else ""
     headless_argument = "--headless2" if headless and not headed else "--gui"
+    # pytest-xdist does not support --capture=no: the output that a worker
+    # does not capture is lost. With the default capture, the report of a
+    # failed test includes the captured output, for example the server log
+    # that SDocTestServer prints.
+    capture_argument = "" if parallelize else "--capture=no"
     windows_network_retry_arguments = (
         '--reruns=1 --only-rerun="ERR_NO_BUFFER_SPACE"'
         if os.name == "nt"
@@ -395,7 +400,7 @@ def test_end2end(
             {coverage_command_or_none}
             pytest
             --failed-first
-            --capture=no
+            {capture_argument}
             --reuse-session
             {parallelize_argument}
             {shard_argument}

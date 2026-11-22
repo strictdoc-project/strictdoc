@@ -204,6 +204,10 @@ check = [
     # modern setuptools; pip resolved a current release here, so pin the
     # floor to keep uv on the same modern branch.
     "seleniumbase>=4",
+    # invoke test-end2end --parallelize runs the end2end tests on several
+    # pytest-xdist workers (--numprocesses, --dist loadgroup). seleniumbase
+    # also depends on pytest-xdist, but StrictDoc declares it explicitly.
+    "pytest-xdist",
 
     # Screencast video generation (tests/screencast)
     "playwright",

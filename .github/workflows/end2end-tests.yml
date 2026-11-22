@@ -49,7 +49,7 @@ jobs:
 
     - name: Run end-to-end tasks
       run: |
-        invoke test-end2end --long-timeouts --shard=${{ matrix.shard }} --exit-first --headless
+        invoke test-end2end --long-timeouts --parallelize --shard=${{ matrix.shard }} --exit-first --headless
 
   tests_end2end_linux:
     name: E2E - Linux
@@ -84,7 +84,7 @@ jobs:
 
     - name: Run end-to-end tasks
       run: |
-        invoke test-end2end --long-timeouts --shard=${{ matrix.shard }} --exit-first --headless
+        invoke test-end2end --long-timeouts --parallelize --shard=${{ matrix.shard }} --exit-first --headless
 
   build:
     name: E2E - Windows
@@ -125,4 +125,4 @@ jobs:
 
     - name: Run end-to-end tasks
       run: |
-        invoke test-end2end --long-timeouts --exit-first --shard=${{ matrix.shard }} --headless
+        invoke test-end2end --long-timeouts --parallelize --exit-first --shard=${{ matrix.shard }} --headless

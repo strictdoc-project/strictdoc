@@ -369,9 +369,13 @@ def test_end2end(
         )
         # --dist loadgroup runs all tests of one xdist group on one worker.
         # tests/end2end/conftest.py assigns the groups.
+        # --verbose prints one line per test with the worker name, for
+        # example "[gw2] PASSED tests/end2end/...". pytest-xdist does not
+        # show the output that the tests print.
         assert workers >= 1, workers
         parallelize_argument = (
             f"--numprocesses={workers} --dist loadgroup --strictdoc-parallelize"
+            " --verbose"
         )
 
     assert shard is None or re.match(r"[1-9][0-9]*/[1-9][0-9]*", shard), (

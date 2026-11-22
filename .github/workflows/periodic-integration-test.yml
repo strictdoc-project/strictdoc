@@ -171,13 +171,6 @@ jobs:
         run: |
           pip install -r requirements.bootstrap.txt
 
-      - name: Install Tidy via Chocolatey and add it to $PATH
-        shell: pwsh
-        run: |
-          choco install html-tidy -y
-          $tidyPath = (Get-ChildItem "C:\ProgramData\chocolatey\lib\html-tidy" -Recurse -Filter tidy.exe | Select-Object -First 1).DirectoryName
-          echo "$tidyPath" | Out-File -Append -Encoding ascii $env:GITHUB_PATH
-
       - name: Build using PyInstaller
         run: |
           invoke release-pyinstaller --output-dir build/pyinstaller_dist

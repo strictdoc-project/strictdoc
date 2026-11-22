@@ -45,11 +45,11 @@ jobs:
       matrix:
         include:
           - os: ubuntu-latest
-            binary: build/pyinstaller_dist/strictdoc/strictdoc
+            binary: strictdoc/strictdoc
           - os: macos-latest
-            binary: build/pyinstaller_dist/strictdoc/strictdoc
+            binary: strictdoc/strictdoc
           - os: windows-latest
-            binary: build/pyinstaller_dist/strictdoc/strictdoc.exe
+            binary: strictdoc/strictdoc.exe
     defaults:
       run:
         shell: bash
@@ -71,12 +71,13 @@ jobs:
       run: |
         invoke release-pyinstaller --output-dir build/pyinstaller_dist
 
-    # The lit RUN: lines need an absolute path with forward slashes, also on
-    # Windows (Git Bash).
-    - name: Test the PyInstaller-based StrictDoc
+    # Test the zip that gets uploaded. The lit RUN: lines need an absolute
+    # path with forward slashes, also on Windows (Git Bash).
+    - name: Test the PyInstaller-based StrictDoc from the zip
       run: |
+        unzip -q build/pyinstaller_dist/strictdoc-*.zip -d build/pyinstaller_unzipped
         root="$(pwd -W 2>/dev/null || pwd)"
-        invoke test-integration --strictdoc "$root/${{ matrix.binary }}"
+        invoke test-integration --strictdoc "$root/build/pyinstaller_unzipped/${{ matrix.binary }}"
 
     - name: Attach the zip to the release
       env:

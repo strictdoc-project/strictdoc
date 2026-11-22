@@ -34,3 +34,52 @@ jobs:
         TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
       run: |
         invoke release
+
+  pyinstaller:
+    name: PyInstaller binary – ${{ matrix.os }}
+    if: github.event_name == 'release'
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            binary: build/pyinstaller_dist/strictdoc/strictdoc
+          - os: macos-latest
+            binary: build/pyinstaller_dist/strictdoc/strictdoc
+          - os: windows-latest
+            binary: build/pyinstaller_dist/strictdoc/strictdoc.exe
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    - uses: actions/checkout@v7
+
+    - name: Set up Python
+      uses: actions/setup-python@v7
+      with:
+        python-version: '3.10'
+
+    - name: Install minimal Python packages
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.bootstrap.txt
+
+    - name: Build using PyInstaller
+      run: |
+        invoke release-pyinstaller --output-dir build/pyinstaller_dist
+
+    # The lit RUN: lines need an absolute path with forward slashes, also on
+    # Windows (Git Bash).
+    - name: Test the PyInstaller-based StrictDoc
+      run: |
+        root="$(pwd -W 2>/dev/null || pwd)"
+        invoke test-integration --strictdoc "$root/${{ matrix.binary }}"
+
+    - name: Attach the zip to the release
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        gh release upload "${{ github.event.release.tag_name }}" build/pyinstaller_dist/strictdoc-*.zip --clobber

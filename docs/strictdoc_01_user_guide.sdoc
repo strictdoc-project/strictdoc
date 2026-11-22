@@ -453,6 +453,42 @@ Or you can add it to your system's packages with:
 
 [[/SECTION]]
 
+[[SECTION]]
+MID: 14d29ed55bd94f39858248860f9f8ee7
+TITLE: Running StrictDoc as a standalone binary (experimental)
+
+[TEXT]
+MID: 97deb96f348549d29f495c63c2a3e00c
+STATEMENT: >>>
+The standalone binary runs StrictDoc without a Python installation. The binary
+is built with PyInstaller.
+
+Each zip file contains the binary for one platform, for example
+``strictdoc-0.31.1-linux-x86_64.zip``. Unzip the file and run the
+``strictdoc`` executable in the ``strictdoc`` folder (``strictdoc.exe`` on
+Windows). Keep the ``_internal`` folder next to the executable.
+
+.. code:: text
+
+    strictdoc/strictdoc export docs/
+    strictdoc/strictdoc server docs/
+
+Platform notes:
+
+- The HTML2PDF export needs Google Chrome. The binary does not include Chrome.
+- The macOS binary is not signed. If macOS blocks the binary, remove the
+  quarantine attribute with
+  ``xattr -dr com.apple.quarantine strictdoc``.
+
+To build the binary and the zip file from a StrictDoc checkout, run:
+
+.. code:: text
+
+    invoke release-pyinstaller --output-dir build/pyinstaller_dist
+<<<
+
+[[/SECTION]]
+
 [[/SECTION]]
 
 [[SECTION]]

@@ -62,6 +62,10 @@ This release contains the following enhancements:
 with a UID. Before, the writer dropped the marker if the section had no MID.
 As a result, StrictDoc read the section back as a requirement, for example
 after a save from the web interface.
+
+2\) Fixed: ``strictdoc manage auto-uid`` now writes the generated UIDs to
+Markdown documents. Before, the command wrote back only SDoc documents. The
+command writes Markdown documents in the same form as the web interface.
 <<<
 
 [[/SECTION]]

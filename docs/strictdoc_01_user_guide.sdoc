@@ -3192,7 +3192,8 @@ To assign requirement UIDs automatically:
     strictdoc manage auto-uid <path-to-project-tree>
 
 The command goes over all requirements in the project tree and assigns missing
-UIDs automatically. The project tree is mutated in-place.
+UIDs automatically. The project tree is mutated in-place. The command writes the
+UIDs to SDoc (``.sdoc``) and Markdown (``.md``, ``.markdown``) documents.
 
 By default, the assignment happens based on the requirement mask ``REQ-``, so
 the requirements will get the UIDs of ``REQ-001``, ``REQ-002``, ...

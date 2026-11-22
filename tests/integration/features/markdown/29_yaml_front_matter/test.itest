@@ -1,0 +1,26 @@
+#
+# Verify MD-36: StrictDoc reads YAML front matter as document metadata and
+# writes the metadata back to the YAML front matter.
+#
+# The document has front matter and no H1 metadata block. The HTML export shows
+# the front matter keys as document metadata. A format pass leaves the document
+# unchanged: all fields stay in the front matter, the reserved fields stay first,
+# and "Version" keeps its capitalization.
+#
+
+RUN: %strictdoc export %S --formats=html --output-dir %T/html_export | filecheck %s --dump-input=fail --check-prefix CHECK-EXPORT
+CHECK-EXPORT: Export completed.
+
+RUN: %cat %T/html_export/html/%THIS_TEST_FOLDER/input.md.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+CHECK-HTML: EXAMPLE-GUIDE
+CHECK-HTML: 1.10
+CHECK-HTML: name:
+CHECK-HTML: example-writing-guide
+CHECK-HTML: description:
+CHECK-HTML: Rules and DO/AVOID examples for writing short, well-structured documentation
+CHECK-HTML: Make documentation useful.
+
+RUN: mkdir -p %T/format
+RUN: cp %S/input.md %T/format/input.md
+RUN: %strictdoc format %T/format/
+RUN: diff %S/input.md %T/format/input.md

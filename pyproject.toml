@@ -72,6 +72,8 @@ dependencies = [
 
     # Parsing Markdown in CommonMark mode. Converting Markdown to HTML.
     "markdown-it-py >= 4.0.0, == 4.*",
+    # Reading and writing the YAML front matter of Markdown documents.
+    "pyyaml >= 6.0, == 6.*",
 
     # Tree Sitter is used for language/AST-aware parsing of Python, C and other files.
     "tree-sitter == 0.25.2",
@@ -161,6 +163,7 @@ development = []
 check = [
     # Lint
     "mypy>=0.910,<2.5",
+    "types-PyYAML",
     "ruff>=0.9",
     "fixit",
 

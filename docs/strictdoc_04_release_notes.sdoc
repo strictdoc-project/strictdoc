@@ -64,6 +64,11 @@ links to the gcovr HTML details page of its source file. The option value is an
 http(s) URL or a file path. Before, StrictDoc linked each function to a fixed
 path that existed only in one folder layout. Without the option, the coverage
 report now has no links to the gcovr HTML report.
+
+2\) Fixed: the server and the HTML export no longer fail on every page with
+``TemplateNotFound`` after a run stops while it compiles the HTML templates.
+The templates are now compiled into a temporary folder that is renamed into
+place when the compile is complete.
 <<<
 
 [[/SECTION]]

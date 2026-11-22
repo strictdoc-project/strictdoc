@@ -10,6 +10,7 @@ https://stackoverflow.com/a/68564737/598057
 
 import datetime
 import os
+import re
 import shutil
 import signal
 import socket
@@ -105,10 +106,10 @@ class SDocTestServer:
         self.output_path: Optional[str] = output_path
         self.config_path: Optional[str] = config_path
         self.server_port: int = (
-            SDocTestServer._get_test_server_port()
-            if is_parallel_execution
-            else port
+            port
             if port is not None
+            else SDocTestServer._get_test_server_port()
+            if is_parallel_execution
             else 5112
         )
         if SDocTestServer.check_existing_connection(
@@ -412,13 +413,14 @@ class SDocTestServer:
 
     @staticmethod
     def _get_test_server_port() -> int:
-        # This is to avoid collisions between test processes running in
-        # parallel.
-        base_server_test_port = 5113
-        this_process_pid = os.getpid()
-        this_process_pid_hundreds = this_process_pid % 100
-        server_port = base_server_test_port + this_process_pid_hundreds
-        return server_port
+        # Each pytest-xdist worker gets its own port, derived from the worker
+        # name: gw0 -> 5200, gw1 -> 5201, and so on. The range starts above
+        # the fixed ports that some tests pass explicitly (5112, 5123).
+        base_server_test_port = 5200
+        worker_name = os.environ.get("PYTEST_XDIST_WORKER", "gw0")
+        match = re.fullmatch(r"gw(\d+)", worker_name)
+        assert match is not None, worker_name
+        return base_server_test_port + int(match.group(1))
 
     @staticmethod
     def check_existing_connection(host, port):

@@ -125,6 +125,15 @@ class ProjectFeature(str, Enum):
         return list(map(lambda c: c.value, ProjectFeature))
 
 
+# Features that are now enabled by default and are no longer needed in the
+# project configuration. ALL_FEATURES does not activate these features.
+DEPRECATED_FEATURES: List[str] = [
+    ProjectFeature.MATHJAX,
+    ProjectFeature.MERMAID,
+    ProjectFeature.SOURCE_FILE_LANGUAGE_PARSERS,
+]
+
+
 class ProjectConfigDefault:
     DEFAULT_PROJECT_TITLE = "Untitled Project"
     DEFAULT_DIR_FOR_SDOC_ASSETS = "_static"
@@ -296,12 +305,27 @@ class ProjectConfig:
             )
 
         if ProjectFeature.ALL_FEATURES in project_features_:
-            custom_features = [
-                feature
-                for feature in project_features_
-                if isinstance(feature, Feature)
+            # A deprecated feature stays active only if the user lists it
+            # explicitly. In that case, the deprecation warning is printed.
+            explicit_deprecated_features = [
+                feature_
+                for feature_ in project_features_
+                if feature_ in DEPRECATED_FEATURES
             ]
-            project_features_ = [*ProjectFeature.all(), *custom_features]
+            custom_features = [
+                feature_
+                for feature_ in project_features_
+                if isinstance(feature_, Feature)
+            ]
+            project_features_ = [
+                *(
+                    feature_
+                    for feature_ in ProjectFeature.all()
+                    if feature_ not in DEPRECATED_FEATURES
+                ),
+                *explicit_deprecated_features,
+                *custom_features,
+            ]
 
         self.project_features: List[Union[str, Feature]] = project_features_
 

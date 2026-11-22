@@ -463,10 +463,17 @@ STATEMENT: >>>
 The standalone binary runs StrictDoc without a Python installation. The binary
 is built with PyInstaller.
 
-Each zip file contains the binary for one platform, for example
-``strictdoc-0.31.1-linux-x86_64.zip``. Unzip the file and run the
-``strictdoc`` executable in the ``strictdoc`` folder (``strictdoc.exe`` on
-Windows). Keep the ``_internal`` folder next to the executable.
+The zip files are attached as assets to each release on the
+`GitHub releases page <https://github.com/strictdoc-project/strictdoc/releases>`_.
+Each zip file contains the binary for one platform:
+
+- ``strictdoc-<version>-linux-x86_64.zip``
+- ``strictdoc-<version>-darwin-arm64.zip`` (macOS on Apple Silicon only)
+- ``strictdoc-<version>-windows-amd64.zip``
+
+Unzip the file and run the ``strictdoc`` executable in the ``strictdoc`` folder
+(``strictdoc.exe`` on Windows). Keep the ``_internal`` folder next to the
+executable.
 
 .. code:: text
 

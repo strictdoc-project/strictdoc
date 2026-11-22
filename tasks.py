@@ -321,6 +321,7 @@ def test_end2end(
     focus=None,
     exit_first=False,
     parallelize=False,
+    workers: int = 4,
     long_timeouts=False,
     headless=False,
     headed=False,
@@ -330,6 +331,8 @@ def test_end2end(
 ):
     """
     @relation(SDOC-SRS-46, scope=function)
+
+    --workers sets the number of pytest-xdist workers for --parallelize.
     """
 
     environment = {}
@@ -359,12 +362,16 @@ def test_end2end(
 
     parallelize_argument = ""
     if parallelize:
-        print(  # noqa: T201
-            "warning: "
-            "Running parallelized end-2-end tests is supported "
-            "but is not stable."
+        # --dist loadgroup runs all tests of one xdist group on one worker.
+        # tests/end2end/conftest.py assigns the groups.
+        # --verbose prints one line per test with the worker name, for
+        # example "[gw2] PASSED tests/end2end/...". pytest-xdist does not
+        # show the output that the tests print.
+        assert workers >= 1, workers
+        parallelize_argument = (
+            f"--numprocesses={workers} --dist loadgroup --strictdoc-parallelize"
+            " --verbose"
         )
-        parallelize_argument = "--numprocesses=2 --strictdoc-parallelize"
 
     assert shard is None or re.match(r"[1-9][0-9]*/[1-9][0-9]*", shard), (
         f"--shard argument has an incorrect format: {shard}."
@@ -374,6 +381,11 @@ def test_end2end(
     focus_argument = f"-k {focus}" if focus is not None else ""
     exit_first_argument = "--exitfirst" if exit_first else ""
     headless_argument = "--headless2" if headless and not headed else "--gui"
+    # pytest-xdist does not support --capture=no: the output that a worker
+    # does not capture is lost. With the default capture, the report of a
+    # failed test includes the captured output, for example the server log
+    # that SDocTestServer prints.
+    capture_argument = "" if parallelize else "--capture=no"
     windows_network_retry_arguments = (
         '--reruns=1 --only-rerun="ERR_NO_BUFFER_SPACE"'
         if os.name == "nt"
@@ -383,7 +395,7 @@ def test_end2end(
             {coverage_command_or_none}
             pytest
             --failed-first
-            --capture=no
+            {capture_argument}
             --reuse-session
             {parallelize_argument}
             {shard_argument}

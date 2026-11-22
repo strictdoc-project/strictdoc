@@ -364,7 +364,11 @@ def test_end2end(
             "Running parallelized end-2-end tests is supported "
             "but is not stable."
         )
-        parallelize_argument = "--numprocesses=2 --strictdoc-parallelize"
+        # --dist loadfile runs all tests of one file on one worker. The tests
+        # of one file share the .sandbox folder next to the file.
+        parallelize_argument = (
+            "--numprocesses=2 --dist loadfile --strictdoc-parallelize"
+        )
 
     assert shard is None or re.match(r"[1-9][0-9]*/[1-9][0-9]*", shard), (
         f"--shard argument has an incorrect format: {shard}."

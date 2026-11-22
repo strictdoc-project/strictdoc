@@ -450,7 +450,9 @@ class SDocTestServer:
                         line_string = line_bytes.decode("utf-8")
                         current_expectation = expectations[0]
                         received_input.append(line_string)
-                        if line_string.rstrip() in current_expectation:
+                        # The expectation must occur in the line. The
+                        # reverse check accepted any empty line.
+                        if current_expectation in line_string:
                             expectations.pop(0)
                 except Empty:
                     pass

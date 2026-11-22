@@ -362,11 +362,6 @@ def test_end2end(
 
     parallelize_argument = ""
     if parallelize:
-        print(  # noqa: T201
-            "warning: "
-            "Running parallelized end-2-end tests is supported "
-            "but is not stable."
-        )
         # --dist loadgroup runs all tests of one xdist group on one worker.
         # tests/end2end/conftest.py assigns the groups.
         # --verbose prints one line per test with the worker name, for

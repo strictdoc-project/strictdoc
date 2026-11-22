@@ -1,4 +1,5 @@
 import os
+import platform
 import re
 import shutil
 import sys
@@ -13,6 +14,7 @@ from invoke import task
 from developer.git.commit_validator import (
     validate_commits_locally_or_ci,
 )
+from strictdoc import __version__
 from strictdoc.core.environment import (
     BINARY_HTML_STATIC_DIR,
     BINARY_HTML_TEMPLATES_DIR,
@@ -1121,8 +1123,15 @@ def release(context, test_pypi=False, username=None, password=None):
 
 
 @task
-def release_pyinstaller(context):
-    path_to_pyi_dist = "/tmp/strictdoc"
+def release_pyinstaller(context, output_dir="/tmp/strictdoc"):
+    """
+    Build a onedir StrictDoc binary with PyInstaller and zip it.
+
+    The binary is output_dir/strictdoc/strictdoc. The zip is
+    output_dir/strictdoc-<version>-<os>-<machine>.zip.
+    """
+
+    path_to_pyi_dist = os.path.abspath(output_dir)
     html_template_data_options = get_pyinstaller_html_template_data_options()
     html_static_data_options = get_pyinstaller_html_static_data_options()
 
@@ -1174,6 +1183,15 @@ def release_pyinstaller(context):
     )
 
     run_invoke_with_uv(context, UvEnvironment.PYINSTALLER, command)
+
+    platform_name = f"{platform.system()}-{platform.machine()}".lower()
+    zip_base_name = os.path.join(
+        path_to_pyi_dist, f"strictdoc-{__version__}-{platform_name}"
+    )
+    zip_path = shutil.make_archive(
+        zip_base_name, "zip", root_dir=path_to_pyi_dist, base_dir="strictdoc"
+    )
+    print(f"release-pyinstaller: {zip_path}")  # noqa: T201
 
 
 @task

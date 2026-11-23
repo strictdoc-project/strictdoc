@@ -109,7 +109,11 @@ class SourceFileViewObject:
         )
 
     def render_detailed_node_for_banner(self, node_uid: str) -> Markup:
-        node: SDocNode = self.traceability_index.get_node_by_uid(node_uid)
+        node: Optional[SDocNode] = (
+            self.traceability_index.get_node_by_uid_weak2(node_uid)
+        )
+        if node is None:
+            return self._render_missing_requirement(node_uid)
         return self.jinja_environment.render_template_as_markup(
             "components/node_content/index_extends_readonly.jinja",
             node=node,
@@ -120,7 +124,11 @@ class SourceFileViewObject:
     def render_node_title_for_banner_header(
         self, marker: Union[Any], node_uid: str
     ) -> Markup:
-        node: SDocNode = self.traceability_index.get_node_by_uid(node_uid)
+        node: Optional[SDocNode] = (
+            self.traceability_index.get_node_by_uid_weak2(node_uid)
+        )
+        if node is None:
+            return self._render_missing_requirement(node_uid)
         return self.jinja_environment.render_template_as_markup(
             "features/source_file_view/node_title_for_banner_header.jinja",
             node=node,
@@ -135,7 +143,11 @@ class SourceFileViewObject:
         range_begin: Optional[str] = None,
         range_end: Optional[str] = None,
     ) -> Markup:
-        node: SDocNode = self.traceability_index.get_node_by_uid(node_uid)
+        node: Optional[SDocNode] = (
+            self.traceability_index.get_node_by_uid_weak2(node_uid)
+        )
+        if node is None:
+            return self._render_missing_requirement(node_uid)
         return self.jinja_environment.render_template_as_markup(
             "features/source_file_view/requirement.jinja",
             requirement=node,
@@ -238,3 +250,9 @@ class SourceFileViewObject:
         to noop.
         """
         return ""
+
+    def _render_missing_requirement(self, node_uid: str) -> Markup:
+        return self.jinja_environment.render_template_as_markup(
+            "features/source_file_view/missing_requirement.jinja",
+            node_uid=node_uid,
+        )

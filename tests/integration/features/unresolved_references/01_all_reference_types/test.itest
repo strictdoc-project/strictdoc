@@ -1,0 +1,33 @@
+RUN: %strictdoc export %S --output-dir %T --relaxed-mode | filecheck %s
+CHECK: Export completed.
+
+RUN: %cat %T/html/unresolved_references.html | filecheck %s --check-prefix PAGE --dump-input=fail
+PAGE: Unresolved references
+PAGE: data-testid="unresolved-references-total">8</strong>
+PAGE: Parent and child relations (2)
+PAGE: File relations (1)
+PAGE: Source markers (3)
+PAGE: Inline links (2)
+PAGE: data-reference-type="Parent"
+PAGE: MISSING-PARENT
+PAGE: data-reference-type="Child"
+PAGE: MISSING-CHILD
+PAGE: data-reference-type="File"
+PAGE: missing.txt
+PAGE: href="_source_files/source.txt.html##1#3"
+PAGE: MISSING-RANGE
+PAGE: source.txt:4
+PAGE: MISSING-LINE
+PAGE: source.txt:6
+PAGE: MISSING-FILE
+PAGE: STATEMENT
+PAGE: MISSING-NODE
+PAGE: MISSING-ANCHOR
+PAGE: </html>
+
+RUN: %cat %T/html/index.html | filecheck %s --check-prefix NAV
+NAV: href="unresolved_references.html"
+NAV: data-testid="project-tree-link-unresolved-references"
+
+RUN: %check_exists --file %T/html/_static/unresolved_references.css
+RUN: %check_exists --file %T/html/_source_files/source.txt.html

@@ -229,16 +229,22 @@ class MarkupRenderer:
                 parts_output += part
             elif isinstance(part, InlineLink):
                 linkable_node = (
-                    self.traceability_index.get_linkable_node_by_uid(part.link)
+                    self.traceability_index.get_linkable_node_by_uid_weak(
+                        part.link
+                    )
                 )
-                href = self.link_renderer.render_node_link(
-                    linkable_node, self.context_document, document_type
-                )
-                link_title = (
-                    part.title
-                    if part.title is not None
-                    else linkable_node.get_display_title()
-                )
+                if linkable_node is not None:
+                    href = self.link_renderer.render_node_link(
+                        linkable_node, self.context_document, document_type
+                    )
+                    link_title = (
+                        part.title
+                        if part.title is not None
+                        else linkable_node.get_display_title()
+                    )
+                else:
+                    href = "#"
+                    link_title = part.link
                 with_icon = part.title is None
                 if link_placeholders is not None:
                     next_part = (

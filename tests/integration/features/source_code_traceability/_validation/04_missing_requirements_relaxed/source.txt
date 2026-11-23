@@ -1,0 +1,10 @@
+# @relation(REQ-001, REQ-RANGE, scope=range_start, role=Implementation)
+covered code
+# @relation(REQ-001, REQ-RANGE, scope=range_end)
+# @relation(REQ-LINE, scope=line)
+uncovered code
+# @relation(REQ-FILE, scope=file)
+# @relation(skip, scope=range_start)
+# @relation(REQ-SKIPPED, scope=line)
+skipped code
+# @relation(skip, scope=range_end)

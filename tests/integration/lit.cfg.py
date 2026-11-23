@@ -102,13 +102,17 @@ if "TEST_HTML2PDF" in lit_config.params:
     config.environment["ProgramW6432"] = os.environ.get("ProgramW6432", "")
 
     config.available_features.add("TEST_HTML2PDF")
-    if "CHROMEDRIVER" in lit_config.params:
-        chromedriver = lit_config.params["CHROMEDRIVER"]
-        if lit_config.isWindows:
-            # On Windows, we need to escape the backward-slashes as lit runs this through another shell
-            chromedriver = chromedriver.replace("\\", "\\\\")
-        config.substitutions.append(("%chromedriver", chromedriver))
-        config.available_features.add("SYSTEM_CHROMEDRIVER")
+
+    # The HTML2PDF tests pass this ChromeDriver with --chromedriver, so that
+    # they do not download a ChromeDriver each. tasks.py provides it.
+    assert "CHROMEDRIVER" in lit_config.params, (
+        "The HTML2PDF tests require --param CHROMEDRIVER=<path>."
+    )
+    chromedriver = lit_config.params["CHROMEDRIVER"]
+    if lit_config.isWindows:
+        # On Windows, we need to escape the backward-slashes as lit runs this through another shell
+        chromedriver = chromedriver.replace("\\", "\\\\")
+    config.substitutions.append(("%chromedriver", chromedriver))
 
 if "COVERAGE_FILE" in lit_config.params:
     config.environment["COVERAGE_FILE"] = lit_config.params["COVERAGE_FILE"]

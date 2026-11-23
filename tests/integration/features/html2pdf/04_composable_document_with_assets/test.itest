@@ -2,7 +2,7 @@
 
 REQUIRES: TEST_HTML2PDF
 
-RUN: %strictdoc export %S --formats=html2pdf --included-documents --output-dir %T | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S --formats=html2pdf --chromedriver="%chromedriver" --included-documents --output-dir %T | filecheck %s --dump-input=fail
 CHECK: html2pdf4doc: JS logs from the print session
 
 RUN: %check_exists --file %T/html2pdf/html/04_composable_document_with_assets/input.sdoc-PDF.html
@@ -21,7 +21,7 @@ CHECK-DOC-HTML:data="_assets/file.svg"
 
 RUN: python %S/test_pdf.py
 
-RUN: %strictdoc export %S --formats=html2pdf --included-documents --generate-bundle-document --output-dir %T | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S --formats=html2pdf --chromedriver="%chromedriver" --included-documents --generate-bundle-document --output-dir %T | filecheck %s --dump-input=fail
 # With --generate-bundle-document, a bundle document is generated.
 RUN: %check_exists --file %T/html2pdf/pdf/bundle.pdf
 RUN: python %S/test_bundle_pdf.py

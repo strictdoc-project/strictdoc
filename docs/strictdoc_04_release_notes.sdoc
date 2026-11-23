@@ -50,6 +50,24 @@ releases:
 <<<
 
 [[SECTION]]
+MID: 47316fcefedf4760b658efaee7230ef5
+TITLE: Unreleased
+
+[TEXT]
+MID: badd2ebb98d946668d19ce23884e6e08
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) Fixed: several HTML2PDF exports that start at the same time with an empty
+ChromeDriver cache now succeed. Before, one export could overwrite the
+ChromeDriver while another export was running it, and the export failed with
+"Text file busy" on Linux. StrictDoc now uses html2pdf4doc 0.0.36, which
+caches the downloaded ChromeDriver atomically.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 7523de2c5f3549c8bfd220eb2713a4de
 TITLE: 0.32.1 (2026-11-22)
 

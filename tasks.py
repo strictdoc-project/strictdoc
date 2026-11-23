@@ -542,6 +542,47 @@ def test_unit_report(context):
     )
 
 
+def get_path_to_test_chromedriver(
+    context, environment_type: UvEnvironment
+) -> str:
+    """
+    Return the ChromeDriver for the HTML2PDF integration tests.
+
+    All HTML2PDF tests except one get this ChromeDriver with --chromedriver,
+    so that they do not download a ChromeDriver each. The GitHub Actions
+    runners provide a ChromeDriver that matches the installed Chrome in
+    $CHROMEWEBDRIVER. Elsewhere, html2pdf4doc downloads the ChromeDriver
+    once to build/chromedriver, and later runs reuse it.
+    """
+
+    path_to_chromedriver_dir = os.environ.get("CHROMEWEBDRIVER")
+    if path_to_chromedriver_dir is not None:
+        # NOTE: isfile() check does not work on GitHub Actions / Linux,
+        #       the exists() check works.
+        assert os.path.exists(path_to_chromedriver_dir), (
+            path_to_chromedriver_dir
+        )
+        return os.path.join(
+            path_to_chromedriver_dir,
+            "chromedriver.exe" if os.name == "nt" else "chromedriver",
+        )
+
+    path_to_cache_dir = os.path.abspath(os.path.join("build", "chromedriver"))
+    result = run_invoke_with_uv(
+        context,
+        environment_type,
+        f"""
+            {uv_venv_python(environment_type)} -m html2pdf4doc.main get_driver
+                --cache-dir "{path_to_cache_dir}"
+        """,
+    )
+    match = re.search(r"ChromeDriver available at path: (.+)", result.stdout)
+    assert match is not None, result.stdout
+    path_to_chromedriver = match.group(1).strip()
+    assert os.path.isfile(path_to_chromedriver), path_to_chromedriver
+    return path_to_chromedriver
+
+
 @task(clean, aliases=["ti"])
 def test_integration(
     context,
@@ -602,29 +643,22 @@ def test_integration(
         num_shards = int(match.group(2))
         partition_opts = f"--num-shards={num_shards} --run-shard={run_shard}"
 
-    # HTML2PDF tests are running Chrome Driver which does not seem to be
-    # parallelizable, or at least not in the way StrictDoc uses it.
-    # If HTML2PDF option is provided, do not parallelize and only run the
-    # HTML2PDF-specific tests.
-    # HTML2PDF tests can be safely partitioned.
+    # If the HTML2PDF option is provided, only run the HTML2PDF-specific tests.
+    # The HTML2PDF tests run in parallel like all other tests: each Chrome
+    # instance gets its own port and profile, and the tests share one
+    # ChromeDriver that no test downloads or changes.
+    parallelize_opts = "" if not no_parallelization else "--threads 1"
     chromedriver_param = ""
     if not html2pdf:
-        parallelize_opts = "" if not no_parallelization else "--threads 1"
         html2pdf_param = ""
         test_folder = f"{cwd}/tests/integration"
         test_output_dir = "build/tests_integration"
     else:
-        parallelize_opts = "--threads 1"
         html2pdf_param = "--param TEST_HTML2PDF=1"
-        chromedriver_path = os.environ.get("CHROMEWEBDRIVER")
-        if chromedriver_path is not None:
-            # NOTE: isfile() check does not work on GitHub Actions / Linux,
-            #       the exists() check works.
-            assert os.path.exists(chromedriver_path), chromedriver_path
-            chromedriver_param = f"--param CHROMEDRIVER={os.path.join(chromedriver_path, 'chromedriver')}"
-            if os.name == "nt":
-                # On Windows, its chromdriver.exe
-                chromedriver_param = chromedriver_param + ".exe"
+        path_to_chromedriver = get_path_to_test_chromedriver(
+            context, environment
+        )
+        chromedriver_param = f'--param CHROMEDRIVER="{path_to_chromedriver}"'
         test_folder = f"{cwd}/tests/integration/features/html2pdf"
         test_output_dir = "build/tests_integration_html2pdf"
 

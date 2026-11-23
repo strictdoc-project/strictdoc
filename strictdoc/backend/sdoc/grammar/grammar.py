@@ -193,7 +193,7 @@ ReservedKeyword[noskipws]:
 ;
 
 SDocNode[noskipws]:
-  '[' !'SECTION' node_type = RequirementType ']' '\n'
+  '[' !/SECTION(?![A-Z_])/ node_type = RequirementType ']' '\n'
   fields += SDocNodeField
   (
     'RELATIONS:' '\n'

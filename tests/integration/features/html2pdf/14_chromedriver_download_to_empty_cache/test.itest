@@ -1,0 +1,18 @@
+# @relation(SDOC-SRS-51, scope=file)
+
+REQUIRES: TEST_HTML2PDF
+
+# This is the only HTML2PDF test that downloads the ChromeDriver. The other
+# tests use the ChromeDriver that tasks.py passes with --chromedriver.
+# STRICTDOC_CACHE_DIR keeps the cache in the empty output folder of this test.
+
+RUN: %strictdoc export %S --formats=html2pdf --output-dir %T | filecheck %s --dump-input=fail --check-prefix CHECK-DOWNLOAD
+CHECK-DOWNLOAD: html2pdf4doc: ChromeDriver does not exist in the local cache: {{.*}}
+CHECK-DOWNLOAD: html2pdf4doc: downloading ChromeDriver from: {{.*}}
+CHECK-DOWNLOAD: html2pdf4doc: JS logs from the print session
+
+RUN: %check_exists --file %T/html2pdf/pdf/input.sdoc.pdf
+
+RUN: %strictdoc export %S --formats=html2pdf --output-dir %T | filecheck %s --dump-input=fail --check-prefix CHECK-CACHED
+CHECK-CACHED: html2pdf4doc: ChromeDriver exists in the local cache: {{.*}}
+CHECK-CACHED: html2pdf4doc: JS logs from the print session

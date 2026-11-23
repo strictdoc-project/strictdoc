@@ -8,10 +8,10 @@
   const SEL_DONE_ICON = '[data-copy-clipboard-target="doneIcon"]';
   const SEL_COVER = '[data-copy-clipboard-target="cover"]';
 
-  // The "done" icon is not rendered with every button. It is added next to
-  // the copy icon the first time a button is clicked.
-  const DONE_ICON_SVG =
-    '<svg class="svg_icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" ><path d="M2.5,8.5 C2.5,8.5 3.5,9.5 6,12 C11,7 13.5,4.5 13.5,4.5" /></svg>';
+  // The "done" icon is not rendered with every button. It is rendered once
+  // as a <template> in the page head and cloned next to the copy icon the
+  // first time a button is clicked.
+  const SEL_DONE_ICON_TEMPLATE = 'template#copy_to_clipboard-done_icon';
 
   const SEL_FIELD = 'sdoc-field';
   const SEL_FIELD_SERVICE = 'sdoc-field-service';
@@ -74,7 +74,9 @@
       doneIcon = document.createElement('span');
       doneIcon.dataset.copyClipboardTarget = 'doneIcon';
       doneIcon.className = copyIcon.className;
-      doneIcon.innerHTML = DONE_ICON_SVG;
+      doneIcon.append(
+        document.querySelector(SEL_DONE_ICON_TEMPLATE).content.cloneNode(true)
+      );
       copyIcon.after(doneIcon);
     }
     const cover = root.querySelector(SEL_COVER);

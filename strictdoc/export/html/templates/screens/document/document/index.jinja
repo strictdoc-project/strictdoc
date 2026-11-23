@@ -43,6 +43,8 @@
   <script src="{{ view_object.render_static_url('content_viewport_restoration.js') }}"></script>
   {%- endif -%}
 
+  {#- The "done" icon for every copy button. copy_to_clipboard.js clones it on click. -#}
+  <template id="copy_to_clipboard-done_icon">{% include "icons/ico16_done.svg" %}</template>
   <script src="{{ view_object.render_static_url('copy_to_clipboard.js') }}"></script>
 
   {% include "_shared/static_search_head.jinja" %}

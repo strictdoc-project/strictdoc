@@ -643,19 +643,17 @@ def test_integration(
         num_shards = int(match.group(2))
         partition_opts = f"--num-shards={num_shards} --run-shard={run_shard}"
 
-    # HTML2PDF tests are running Chrome Driver which does not seem to be
-    # parallelizable, or at least not in the way StrictDoc uses it.
-    # If HTML2PDF option is provided, do not parallelize and only run the
-    # HTML2PDF-specific tests.
-    # HTML2PDF tests can be safely partitioned.
+    # If the HTML2PDF option is provided, only run the HTML2PDF-specific tests.
+    # The HTML2PDF tests run in parallel like all other tests: each Chrome
+    # instance gets its own port and profile, and the tests share one
+    # ChromeDriver that no test downloads or changes.
+    parallelize_opts = "" if not no_parallelization else "--threads 1"
     chromedriver_param = ""
     if not html2pdf:
-        parallelize_opts = "" if not no_parallelization else "--threads 1"
         html2pdf_param = ""
         test_folder = f"{cwd}/tests/integration"
         test_output_dir = "build/tests_integration"
     else:
-        parallelize_opts = "--threads 1"
         html2pdf_param = "--param TEST_HTML2PDF=1"
         path_to_chromedriver = get_path_to_test_chromedriver(
             context, environment

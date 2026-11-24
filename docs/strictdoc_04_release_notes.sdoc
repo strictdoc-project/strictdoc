@@ -65,17 +65,10 @@ ChromeDriver while another export was running it, and the export failed with
 caches the downloaded ChromeDriver atomically.
 
 2\) On the DOCUMENT and TRACE screens, hovering over or focusing a relation
-link now shows a card about the link target. For a Parent or Child link, with
-or without a role, the card shows the UID, title, and statement of the linked
-node. For a File link, the card shows the file path and the first lines of the
-linked range or function, highlighted as on the source file page. A range
-longer than 15 lines is cut, and the card says how many lines it shows. The
-card works in the static HTML export, also when the export is opened from
-``file://``, and on the server. The statements and the source code are not
-copied into the pages. The browser loads a small ``-relation-previews.js``
-file next to the linked document or source file page the first time such a
-link is hovered. The static export writes these files, and the server renders
-them on request.
+link shows a card with the target's UID, title and statement, or for a File
+link, the first lines of the linked range. The cards load on demand from
+small ``-relation-previews.js`` files and work in the static export, from
+``file://``, and on the server.
 <<<
 
 [[/SECTION]]

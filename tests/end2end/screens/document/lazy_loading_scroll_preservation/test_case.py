@@ -63,6 +63,10 @@ class Test(E2ECase):
     #
 
     def test_tall_chunk_replacement_has_no_paint_frame_jump(self):
+        # A chunk above the visible text loads and grows by more than 1000px.
+        # The viewport restoration code must compensate for this growth so
+        # that the visible text does not jump in any painted frame, not only
+        # in the settled state.
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
         write_long_document_with_tall_chunk_above_viewport(test_setup)
 
@@ -80,23 +84,19 @@ class Test(E2ECase):
             )
             screen_document.assert_document_chunk_loaded(CHUNK_3_ID)
             screen_document.assert_document_chunk_unloaded(CHUNK_2_ID)
-            screen_document.do_scroll_anchor_to_viewport_center(
-                CHUNK_ABOVE_TARGET
-            )
-            witness_top = screen_document.get_anchor_viewport_top(
-                CHUNK_ABOVE_TARGET
-            )
 
             # Observe every browser paint opportunity during replacement.
             # Settled equality is insufficient: no sampled frame may expose
             # the uncompensated upper height change to the user.
             (
+                witness_top,
                 frame_samples,
                 placeholder_height,
                 loaded_height,
             ) = screen_document.do_record_anchor_during_document_chunk_load(
                 chunk_id=CHUNK_2_ID,
                 witness_anchor=CHUNK_ABOVE_TARGET,
+                center_witness=True,
             )
 
             assert abs(loaded_height - placeholder_height) >= 1000
@@ -466,23 +466,19 @@ class Test(E2ECase):
             screen_document.assert_document_chunk_loaded(CHUNK_3_ID)
             screen_document.assert_document_chunk_unloaded(CHUNK_1_ID)
             screen_document.assert_document_chunk_unloaded(CHUNK_2_ID)
-            screen_document.do_scroll_anchor_to_viewport_center(
-                CHUNK_ABOVE_TARGET
-            )
-            witness_top = screen_document.get_anchor_viewport_top(
-                CHUNK_ABOVE_TARGET
-            )
 
             # Start both requests in one task. Regardless of response order,
             # each frame owns its snapshot and the two compensations must
             # compose without restoring stale state or applying a delta twice.
             (
+                witness_top,
                 frame_samples,
                 placeholder_heights,
                 loaded_heights,
             ) = screen_document.do_record_anchor_during_document_chunks_load(
                 chunk_ids=[CHUNK_1_ID, CHUNK_2_ID],
                 witness_anchor=CHUNK_ABOVE_TARGET,
+                center_witness=True,
             )
 
             cumulative_geometry_delta = sum(

@@ -265,6 +265,8 @@
 
 {% block main_content %}
   {% include "screens/document/document/main.jinja" %}
+  {#- In the body, not the head: html5lib reports unexpected </head> if <template> is in <head>. -#}
+  <template id="copy_to_clipboard-done_icon">{% include "icons/ico16_done.svg" %}</template>
   {%- if view_object.is_running_on_server %}
   {% include "components/field_widgets/icons.jinja" %}
   {% include "components/table_editor/icons.jinja" %}

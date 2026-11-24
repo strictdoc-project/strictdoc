@@ -1,5 +1,7 @@
 import os
 
+from selenium.webdriver.common.by import By
+
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.exporter import SDocTestHTMLExporter
 from tests.end2end.helpers.screens.document.screen_document import (
@@ -26,6 +28,13 @@ class Test(E2ECase):
             # Node anchor: hover reveals the anchor button; click copies the node UID.
             node.do_copy_anchor_to_buffer()
             assert self.paste_text() == "ROOT-1"
+            # The "done" icon is cloned from the page's <template> on click.
+            self.assert_element_present(
+                f'{node.node_xpath}//*[@data-testid="section-anchor-button"]'
+                '//*[@data-copy-clipboard-target="doneIcon"]'
+                '/*[local-name()="svg"]',
+                by=By.XPATH,
+            )
 
             # Inline RST anchor: hover over the TEXT node reveals the anchor button;
             # click copies the anchor ID defined with [ANCHOR: RST-ANCHOR, ...].

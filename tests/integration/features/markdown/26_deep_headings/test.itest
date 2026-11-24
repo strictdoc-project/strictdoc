@@ -6,7 +6,7 @@
 RUN: %strictdoc export %S --formats=html --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Export completed.
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-FILE
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.md.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-FILE
 
 CHECK-HTML-FILE: data-level="1.1.1.1.1.1"
 CHECK-HTML-FILE: Level 6

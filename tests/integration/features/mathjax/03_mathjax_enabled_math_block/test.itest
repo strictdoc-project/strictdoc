@@ -8,7 +8,7 @@ CHECK: Export completed.
 RUN: %check_exists --file "%T/html/_static/mathjax/tex-mml-chtml.js"
 RUN: %check_exists --file "%T/html/_static/mathjax/output/chtml/fonts/tex.js"
 
-RUN: %cat %T/html/03_mathjax_enabled_math_block/input.html | filecheck %s --check-prefix CHECK-HTML
+RUN: %cat %T/html/03_mathjax_enabled_math_block/input.sdoc.html | filecheck %s --check-prefix CHECK-HTML
 
 CHECK-HTML: window.MathJax = {
 CHECK-HTML: typeset: false,

@@ -9,7 +9,7 @@ RUN: %check_exists --file "%T/html/_source_files/inner_line_docs.rs.html"
 RUN: %check_exists --file "%T/html/_source_files/inner_block_docs.rs.html"
 RUN: %check_exists --file "%T/html/_source_files/inner_doc_attrs.rs.html"
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHECK-INPUT-HTML
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.sdoc.html | filecheck %s --check-prefix CHECK-INPUT-HTML
 
 # @relation(SDOC-LLR-166 , scope=line)
 CHECK-INPUT-HTML: href="../_source_files/inner_line_docs.rs.html#REQ-INNER-LINE-DOC#1#128"

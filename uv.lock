@@ -836,7 +836,7 @@ wheels = [
 
 [[package]]
 name = "html2pdf4doc"
-version = "0.0.35"
+version = "0.0.36"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "pypdf" },
@@ -844,9 +844,9 @@ dependencies = [
     { name = "selenium" },
     { name = "webdriver-manager" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/be/54/1faec6ac85242e2e71ef7347c306a9d6f6d39b222d73dc783d181766e523/html2pdf4doc-0.0.35.tar.gz", hash = "sha256:747cbc228295049405288801416b46558a7bed50664b12d9fd1635221864c56c", size = 62529, upload-time = "2026-09-13T13:04:07.716Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/64/84/c21555dccf53df2ab94a0d1ba59b2166cbf8dc8cd9e6093a3cd4f3f10958/html2pdf4doc-0.0.36.tar.gz", hash = "sha256:89fdba4b24bc0859d358127f46172694ff58bc16288d30d0f1d8b491544e36d6", size = 63331, upload-time = "2026-11-23T22:04:24.622Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/30/f1/6b1a7fab03a880211e58df1bdc90c388f14920227c38bc263525d6391555/html2pdf4doc-0.0.35-py3-none-any.whl", hash = "sha256:8b35b58da83b300bc6ab1eb556ef5ec703e27bc79ec2c1ffeebccbd56683544b", size = 64718, upload-time = "2026-09-13T13:04:06.465Z" },
+    { url = "https://files.pythonhosted.org/packages/80/6c/6b921d6e659d44421ae1766855ace0c9d9416fc14c2afb71012f9ad0759b/html2pdf4doc-0.0.36-py3-none-any.whl", hash = "sha256:e272bc2ea82f977f4dffa7e857b42e624feceadd4c0de581e9219d92ec1e5be4", size = 65408, upload-time = "2026-11-23T22:04:23.199Z" },
 ]
 
 [[package]]
@@ -3311,6 +3311,7 @@ dependencies = [
     { name = "pypdf" },
     { name = "python-datauri" },
     { name = "python-multipart" },
+    { name = "pyyaml" },
     { name = "reqif" },
     { name = "robotframework" },
     { name = "spdx-tools" },
@@ -3359,10 +3360,12 @@ check = [
     { name = "pytest", version = "9.1.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "pytest-rerunfailures", version = "16.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "pytest-rerunfailures", version = "16.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "pytest-xdist" },
     { name = "pytidylib" },
     { name = "requests" },
     { name = "ruff" },
     { name = "seleniumbase" },
+    { name = "types-pyyaml" },
 ]
 pyinstaller = [
     { name = "jaraco-text" },
@@ -3390,11 +3393,13 @@ release-local = [
     { name = "pytest", version = "9.1.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
     { name = "pytest-rerunfailures", version = "16.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
     { name = "pytest-rerunfailures", version = "16.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11'" },
+    { name = "pytest-xdist" },
     { name = "pytidylib" },
     { name = "requests" },
     { name = "ruff" },
     { name = "seleniumbase" },
     { name = "twine" },
+    { name = "types-pyyaml" },
 ]
 
 [package.metadata]
@@ -3402,7 +3407,7 @@ requires-dist = [
     { name = "beautifulsoup4", specifier = "==4.*,>=4.12.0" },
     { name = "docutils", specifier = "==0.*,>=0.22.2" },
     { name = "fastapi", specifier = ">=0.83.0" },
-    { name = "html2pdf4doc", specifier = "==0.0.35" },
+    { name = "html2pdf4doc", specifier = "==0.0.36" },
     { name = "html5lib", specifier = ">=1.1" },
     { name = "invoke", marker = "extra == 'development'", specifier = ">=1.4.1" },
     { name = "jinja2", specifier = ">=2.11.2" },
@@ -3418,6 +3423,7 @@ requires-dist = [
     { name = "pypdf", specifier = "==6.*,>=6.5.0" },
     { name = "python-datauri", specifier = "==2.*,>=2.1.1" },
     { name = "python-multipart" },
+    { name = "pyyaml", specifier = "==6.*,>=6.0" },
     { name = "reqif", specifier = "==0.1.*,>=0.1.1" },
     { name = "robotframework", specifier = ">=4.0.0" },
     { name = "spdx-tools", specifier = ">=0.8.5" },
@@ -3455,10 +3461,12 @@ check = [
     { name = "pypdf", specifier = "==6.21.4" },
     { name = "pytest", specifier = ">=6.2.2" },
     { name = "pytest-rerunfailures" },
+    { name = "pytest-xdist" },
     { name = "pytidylib", specifier = ">=0.3.2" },
     { name = "requests", specifier = ">=2.27.1" },
     { name = "ruff", specifier = ">=0.9" },
     { name = "seleniumbase", specifier = ">=4" },
+    { name = "types-pyyaml" },
 ]
 development = []
 documentation = []
@@ -3486,11 +3494,13 @@ release-local = [
     { name = "pypdf", specifier = "==6.21.4" },
     { name = "pytest", specifier = ">=6.2.2" },
     { name = "pytest-rerunfailures" },
+    { name = "pytest-xdist" },
     { name = "pytidylib", specifier = ">=0.3.2" },
     { name = "requests", specifier = ">=2.27.1" },
     { name = "ruff", specifier = ">=0.9" },
     { name = "seleniumbase", specifier = ">=4" },
     { name = "twine" },
+    { name = "types-pyyaml" },
 ]
 
 [[package]]
@@ -3792,6 +3802,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/a7/a7/e6aecc4b4eb59598829a3b5076a93aff291b4fdaa2ded25efc4e1f4d219c/typer_slim-0.24.0.tar.gz", hash = "sha256:f0ed36127183f52ae6ced2ecb2521789995992c521a46083bfcdbb652d22ad34", size = 4776, upload-time = "2026-02-16T22:08:51.2Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a7/24/5480c20380dfd18cf33d14784096dca45a24eae6102e91d49a718d3b6855/typer_slim-0.24.0-py3-none-any.whl", hash = "sha256:d5d7ee1ee2834d5020c7c616ed5e0d0f29b9a4b1dd283bdebae198ec09778d0e", size = 3394, upload-time = "2026-02-16T22:08:49.92Z" },
+]
+
+[[package]]
+name = "types-pyyaml"
+version = "6.0.12.20261113"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/4d/8b/ba599d956693dbc98e170f32097128bdea0a17f9d42b0b490fa749c12b1a/types_pyyaml-6.0.12.20261113.tar.gz", hash = "sha256:0828be2580fd94151182364f4d0158e4de62fdbeeb8d4296f7f7d2b6c22bb640", size = 19017, upload-time = "2026-11-13T08:51:21.488Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/fd/2e/36fc0941a40ef066dbc8abac41bbbefb41389f547c779aef832aea6b873d/types_pyyaml-6.0.12.20261113-py3-none-any.whl", hash = "sha256:3600749e613748afdc4327f0b17c3296cf880cdbc7335f320007abd9dd815f67", size = 21321, upload-time = "2026-11-13T08:51:20.417Z" },
 ]
 
 [[package]]

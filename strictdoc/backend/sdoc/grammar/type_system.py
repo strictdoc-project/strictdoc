@@ -17,8 +17,9 @@ RequirementType[noskipws]:
   !ReservedKeyword /{REGEX_NODE_NAME}/
 ;
 
+// Match a whole tag only, so that tags such as DOCUMENTATION are allowed.
 ReservedKeyword[noskipws]:
-  'DOCUMENT' | 'GRAMMAR'
+  /(DOCUMENT|GRAMMAR|DOCUMENT_FROM_FILE)(?![A-Z_])/
 ;
 
 Reference[noskipws]:

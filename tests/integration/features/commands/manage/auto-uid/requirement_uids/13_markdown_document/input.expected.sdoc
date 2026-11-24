@@ -1,0 +1,13 @@
+[DOCUMENT]
+TITLE: SDoc document
+
+[[SECTION]]
+PREFIX: SDOC-
+TITLE: Section
+
+[REQUIREMENT]
+UID: SDOC-1
+TITLE: Requirement without UID
+STATEMENT: auto-uid shall assign SDOC-1.
+
+[[/SECTION]]

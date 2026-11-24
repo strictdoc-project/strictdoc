@@ -316,13 +316,13 @@
   }
 
   function scanField(field) {
-    forgetRemovedFields();
     const state = fieldStates.get(field);
     const text = field.innerText;
     state.lines = text.split('\n');
     state.offsets = lineOffsets(state.lines);
     state.segments = textSegments(field);
     state.mapped = segmentsText(state.segments) === text;
+    forgetRemovedFields();
     widgetsFor(field).forEach(
       (widget) => widget.scan?.(field, state.lines, state.markup),
     );

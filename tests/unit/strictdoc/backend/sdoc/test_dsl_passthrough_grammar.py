@@ -565,3 +565,67 @@ the foo must bar
     writer = SDWriter(default_project_config)
     output = writer.write(document)
     assert input_sdoc == output
+
+
+@pytest.mark.parametrize(
+    "tag",
+    ["DOCUMENTATION", "DOCUMENT_TYPE", "GRAMMAR_RULE", "SECTIONAL"],
+)
+def test_200_grammar_tag_starting_with_reserved_keyword(
+    default_project_config, tag
+):
+    input_sdoc = f"""
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+- TAG: {tag}
+  FIELDS:
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+
+[{tag}]
+STATEMENT: Text
+""".lstrip()
+
+    reader = SDReader()
+
+    document = reader.read(input_sdoc)
+    assert isinstance(document, SDocDocument)
+    node = assert_cast(document.section_contents[0], SDocNode)
+    assert node.node_type == tag
+
+    writer = SDWriter(default_project_config)
+    output = writer.write(document)
+    assert input_sdoc == output
+
+
+@pytest.mark.parametrize(
+    "tag",
+    ["DOCUMENT", "GRAMMAR", "DOCUMENT_FROM_FILE"],
+)
+def test_201_grammar_tag_that_is_a_reserved_keyword_raises_exception(tag):
+    input_sdoc = f"""
+[DOCUMENT]
+TITLE: Test Doc
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: {tag}
+  FIELDS:
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+""".lstrip()
+
+    reader = SDReader()
+
+    with pytest.raises(StrictDocException):
+        _ = reader.read(input_sdoc)

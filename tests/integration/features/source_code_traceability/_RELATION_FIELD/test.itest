@@ -5,7 +5,7 @@ CHECK: Export to HTML: Hello world doc
 
 RUN: %check_exists --file "%T/html/_source_files/file.py.html"
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHECK-HTML
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.sdoc.html | filecheck %s --check-prefix CHECK-HTML
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#1#13">
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#7#9">
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-1#11#13">

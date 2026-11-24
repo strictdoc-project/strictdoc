@@ -1,0 +1,11 @@
+#
+# A deprecated feature that is listed next to ALL_FEATURES stays active, so its
+# deprecation warning is printed.
+#
+
+RUN: %strictdoc export %S --formats=html --output-dir %T | filecheck %s --dump-input=fail
+CHECK: Export completed.
+CHECK: DEPRECATION: This project has the following issues:
+CHECK: Issue #1
+CHECK: The MERMAID feature is now enabled by default
+CHECK-NOT: The MATHJAX feature

@@ -29,16 +29,42 @@ Follow the technical writing guidelines in the StrictDoc Developer Guide.
 
 Before presenting any text written into a project artifact (commit
 messages, PR descriptions, docs, code comments, task files, or similar),
-apply `developer/skills/humanizer/SKILL.md`. This applies regardless of
-which skill, if any, is used for the task.
+apply `submodules/technical_writing_skill/SKILL.md`. This applies
+regardless of which skill, if any, is used for the task.
 
 ## Skills
 
-Reusable instructions for writing tasks (release notes, commit/PR text,
-task docs, feature docs) live in `developer/skills/<name>/SKILL.md`.
-After any change to a skill, regenerate the Claude/Codex pointer stubs:
+Reusable instructions for writing tasks (commit/PR text, task docs,
+feature docs) live in `developer/skills/<name>/SKILL.md` and in the Git
+submodules under `submodules/`.
+After any change to a skill or a submodule update, regenerate the
+Claude/Codex pointer stubs:
 
+    git submodule update --init
     python developer/skills/install_skills.py
+
+## Git submodules
+
+The Git submodules under `submodules/` are independent projects of the
+StrictDoc organization. Each submodule has its own repository and its
+own development setup. The submodules exist to simplify development:
+a developer can work on StrictDoc and a related project in one checkout
+and keep the repositories in sync.
+
+The StrictDoc code does not use the submodules:
+
+- StrictDoc gets its runtime dependencies, for example `reqif` and
+  `html2pdf4doc`, as Python packages through uv or pip. `pyproject.toml`
+  declares these dependencies.
+- Do not import code from `submodules/` in `strictdoc/` or in the tests.
+- Do not add `submodules/` paths to `sys.path`, `PYTHONPATH`, or the
+  package build configuration.
+
+Exception: the developer tooling in `developer/skills/install_skills.py`
+reads agent skills from `submodules/`.
+
+To change a submodule project, commit the change to its own repository.
+Then update the submodule commit in this repository.
 
 ## Development tasks
 

@@ -198,22 +198,23 @@ class LinkRenderer:
         self.req_link_cache[link_cache_key][node] = requirement_link
         return requirement_link
 
-    @staticmethod
     def render_source_file_link(
-        requirement: SDocNode, requirement_source_path: str
+        self, requirement: SDocNode, requirement_source_path: str
     ) -> str:
+        """
+        Render a link to the source file page of a node's file relation.
+
+        The link starts from the root path of the page that is rendered, not
+        from the node's document. A source file page can be at a different
+        folder depth than the document of the node it shows.
+        """
+        assert isinstance(requirement, SDocNode), requirement
         assert isinstance(requirement_source_path, str), requirement_source_path
 
-        assert requirement.ng_document_reference is not None
-        document: SDocDocument = assert_cast(
-            requirement.ng_document_reference.get_document(), SDocDocument
-        )
-        assert document.meta is not None
-        path_prefix = document.meta.get_root_path_prefix()
-        source_file_link = (
-            f"{path_prefix}/_source_files/{requirement_source_path}.html"
-        )
-        return source_file_link
+        source_file_link = f"_source_files/{requirement_source_path}.html"
+        if len(self.root_path) == 0:
+            return source_file_link
+        return f"{self.root_path}/{source_file_link}"
 
     @staticmethod
     def render_source_file_link_from_root(requirement_source_path: str) -> str:

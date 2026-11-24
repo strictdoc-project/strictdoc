@@ -39,7 +39,7 @@ verbatim and not interpreted as document nodes.
 **Statement**:
 
 A document must begin with an H1 heading (`# Title`). No non-blank content may
-precede it.
+precede it, except an optional YAML front matter block (see MD-36).
 
 The H1 heading text becomes the document title. Exactly one H1 heading is
 allowed per file.
@@ -67,7 +67,8 @@ Level decreases and same-level headings are permitted.
 **Statement**:
 
 At most one consecutive blank line is allowed. Two or more consecutive blank
-lines are invalid, except inside fenced code blocks and blockquotes.
+lines are invalid, except inside fenced code blocks, blockquotes, and the YAML
+front matter.
 
 Whitespace-only lines are treated as blank lines.
 
@@ -82,11 +83,87 @@ Immediately after the H1 heading, an optional metadata block may appear,
 separated from the heading by one blank line and ending at the next blank line.
 Each line has the form `**Key**: value`.
 
-Recognized document-level keys are `Grammar`, `UID`, `Version`, `Date`,
-`Classification`, and `Prefix`. Any other key is stored as custom metadata.
+The reserved document-level keys are `Grammar`, `UID`, `Version`, `Date`,
+`Classification`, and `Prefix`. The reserved keys are case-sensitive. Any other
+key is stored as custom metadata.
 
 Duplicate key names are not allowed. Values may optionally be enclosed in
 backticks.
+
+A document can have both an H1 metadata block and YAML front matter (see MD-36).
+
+### Document front matter
+
+**MID**: 29ce74aef12043a3b5d73ace78938903 \
+**UID**: MD-36
+
+**Statement**:
+
+A document may start with a YAML front matter block that holds the document
+metadata. The block starts on the first line of the file with a line that
+contains only `---` and ends with the next line that contains only `---`.
+
+```markdown
+---
+UID: DOC-1
+Version: 1.10
+Owner: Documentation team
+---
+
+# Requirements specification
+```
+
+The YAML must be a mapping of unique keys to single values. Lists and nested
+mappings are not allowed. All values are read as strings: `1.10` stays `1.10`,
+and `true` stays `true`.
+
+The front matter keys have the same meaning as the keys of the H1 metadata
+block (see MD-5). The document title is always the text of the H1 heading.
+
+A document can have both YAML front matter and an H1 metadata block. A key must
+not be in both places.
+
+### Document metadata placement
+
+**MID**: a62854b204854112b5ed063264ab9226 \
+**UID**: MD-37
+
+**Statement**:
+
+The writer writes each document metadata field to the YAML front matter (see
+MD-36) or to the H1 metadata block (see MD-5). The placement depends on the
+source document:
+
+- If the source document has no YAML front matter, the writer writes all
+  fields, reserved and custom, to the H1 metadata block.
+- If the source document has YAML front matter and no H1 metadata block, the
+  writer writes all fields, reserved and custom, to the YAML front matter.
+- If the source document has YAML front matter and an H1 metadata block, the
+  writer writes all reserved fields to the H1 metadata block. This rule also
+  applies to a reserved field from the YAML front matter.
+
+In the last case, the writer writes each custom field back to the place it was
+read from. The writer writes a new custom field, for example a field added in
+the web interface, to the YAML front matter.
+
+A document that StrictDoc did not read from Markdown, for example a converted
+SDoc document, has no YAML front matter.
+
+### Document metadata order and capitalization
+
+**MID**: 9b0f4ac35c9849cbbd25fb547bee4f62 \
+**UID**: MD-38
+
+**Statement**:
+
+In the YAML front matter and in the H1 metadata block, the writer writes the
+reserved fields first, followed by the custom fields. The reserved fields
+follow the order `Grammar`, `UID`, `Version`, `Date`, `Classification`,
+`Prefix`. The custom fields keep their order.
+
+The writer writes the reserved keys with the capitalization of MD-5, for
+example `Version`. The writer writes a custom key with the capitalization of the
+source document. A key such as `version` or `VERSION` is a custom key.
 
 ### Document Prefix field
 

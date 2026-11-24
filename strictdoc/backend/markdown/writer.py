@@ -2,7 +2,12 @@ import re
 from typing import List, Optional, Sequence, Tuple
 
 from strictdoc.backend.markdown.formatter import wrap_md_text
+from strictdoc.backend.markdown.front_matter import serialize_front_matter
 from strictdoc.backend.markdown.md_pipe_table_aligner import format_pipe_tables
+from strictdoc.backend.markdown.metadata_layout import (
+    RESERVED_METADATA_KEYS,
+    place_metadata_entries,
+)
 from strictdoc.backend.markdown.reader import SDMarkdownReader
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_config import (
@@ -46,11 +51,19 @@ class SDMarkdownWriter:
         format_tables: bool = False,
     ) -> str:
         top_level_blocks: List[str] = []
-        document_meta_block = SDMarkdownWriter._serialize_document_metadata(
-            document
+        front_matter_entries, h1_metadata_block_entries = (
+            place_metadata_entries(
+                document.ng_markdown_metadata_layout,
+                SDMarkdownWriter._collect_reserved_document_metadata(document),
+                SDMarkdownWriter._collect_custom_document_metadata(document),
+            )
         )
-        if document_meta_block is not None and len(document_meta_block) > 0:
-            top_level_blocks.append(document_meta_block)
+        if len(h1_metadata_block_entries) > 0:
+            top_level_blocks.append(
+                SDMarkdownWriter._serialize_meta_fields(
+                    h1_metadata_block_entries
+                )
+            )
 
         for node in document.section_contents:
             if not isinstance(node, SDocNode):
@@ -66,7 +79,10 @@ class SDMarkdownWriter:
                 continue
             top_level_blocks.append(node_block)
 
-        output = "# " + SDMarkdownWriter._to_lf(document.title)
+        output = ""
+        if len(front_matter_entries) > 0:
+            output += serialize_front_matter(front_matter_entries) + "\n\n"
+        output += "# " + SDMarkdownWriter._to_lf(document.title)
         if len(top_level_blocks) > 0:
             output += "\n\n"
             output += "\n\n".join(top_level_blocks)
@@ -91,48 +107,52 @@ class SDMarkdownWriter:
             output_file.write(document_content)
 
     @staticmethod
-    def _serialize_document_metadata(
+    def _collect_reserved_document_metadata(
         document: SDocDocument,
-    ) -> Optional[str]:
-        metadata_entries: List[Tuple[str, str]] = []
-        seen_keys = set()
+    ) -> List[Tuple[str, str]]:
+        """
+        Collect the reserved metadata fields from the document options.
 
-        if (
-            document.grammar is not None
-            and document.grammar.import_from_file is not None
-        ):
-            metadata_entries.append(
-                ("Grammar", document.grammar.import_from_file)
-            )
-            seen_keys.add("Grammar")
+        The document options are the source of truth for the reserved
+        fields. The web interface edits the document options, not the
+        reserved entries of the custom metadata.
+        """
+        reserved_values = {
+            "Grammar": (
+                document.grammar.import_from_file
+                if document.grammar is not None
+                else None
+            ),
+            "UID": document.config.uid,
+            "Version": document.config.version,
+            "Date": document.config.date,
+            "Classification": document.config.classification,
+            "Prefix": document.config.requirement_prefix,
+        }
+        reserved_entries: List[Tuple[str, str]] = []
+        for key_ in RESERVED_METADATA_KEYS:
+            value_ = reserved_values[key_]
+            if value_ is not None:
+                reserved_entries.append((key_, value_))
+        return reserved_entries
 
+    @staticmethod
+    def _collect_custom_document_metadata(
+        document: SDocDocument,
+    ) -> List[Tuple[str, str]]:
+        custom_entries: List[Tuple[str, str]] = []
         custom_metadata = document.config.custom_metadata
-        if custom_metadata is not None:
-            for entry in custom_metadata.entries:
-                if (
-                    not isinstance(entry, DocumentCustomMetadataKeyValuePair)
-                    or entry.key is None
-                ):
-                    continue
-                metadata_entries.append((entry.key, entry.get_text_value()))
-                seen_keys.add(entry.key)
-
-        default_config_entries: Sequence[Tuple[str, Optional[str]]] = (
-            ("UID", document.config.uid),
-            ("Version", document.config.version),
-            ("Date", document.config.date),
-            ("Classification", document.config.classification),
-            ("Prefix", document.config.requirement_prefix),
-        )
-        for entry_key, entry_value in default_config_entries:
-            if entry_value is None or entry_key in seen_keys:
+        if custom_metadata is None:
+            return custom_entries
+        for entry_ in custom_metadata.entries:
+            if (
+                not isinstance(entry_, DocumentCustomMetadataKeyValuePair)
+                or entry_.key is None
+                or entry_.key in RESERVED_METADATA_KEYS
+            ):
                 continue
-            metadata_entries.append((entry_key, entry_value))
-            seen_keys.add(entry_key)
-
-        if len(metadata_entries) == 0:
-            return None
-        return SDMarkdownWriter._serialize_meta_fields(metadata_entries)
+            custom_entries.append((entry_.key, entry_.get_text_value()))
+        return custom_entries
 
     @staticmethod
     def _serialize_node(
@@ -229,11 +249,14 @@ class SDMarkdownWriter:
 
         # Emit Type for every non-TEXT node when:
         # - the grammar defines element types beyond the built-in set (MD-26), OR
-        # - a SECTION node carries a MID field (MD-24): Type: SECTION must
-        #   accompany the MID on every write so the reader does not misidentify
-        #   the heading as a REQUIREMENT on re-read.
-        section_has_mid = node.node_type == "SECTION" and (
-            should_inject_mid or "MID" in node.ordered_fields_lookup
+        # - a SECTION node carries a MID field (MD-24) or a UID field: the
+        #   reader classifies a heading with a MID or a UID and a statement as
+        #   a REQUIREMENT. Type: SECTION must accompany the MID or the UID on
+        #   every write so the node stays a SECTION on re-read.
+        section_has_mid_or_uid = node.node_type == "SECTION" and (
+            should_inject_mid
+            or "MID" in node.ordered_fields_lookup
+            or "UID" in node.ordered_fields_lookup
         )
         # A SECTION whose children are titleless flat records (SDOC-MD-35)
         # must keep its own explicit **Type**: SECTION marker: without it,
@@ -255,7 +278,10 @@ class SDMarkdownWriter:
             or section_has_flat_children
             or (
                 document_grammar is not None
-                and (document_grammar.has_custom_elements() or section_has_mid)
+                and (
+                    document_grammar.has_custom_elements()
+                    or section_has_mid_or_uid
+                )
             )
         ):
             meta_fields.append(("Type", node.node_type))

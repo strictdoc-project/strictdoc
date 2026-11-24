@@ -23,5 +23,5 @@ def test_get_document():
     project_config: ProjectConfig = ProjectConfig.default_config()
     project_config.integrate_server_config(server_config)
     client = TestClient(create_app(project_config=project_config))
-    response = client.get("/01_hello_world/sample.html")
+    response = client.get("/01_hello_world/sample.sdoc.html")
     assert response.status_code == 200

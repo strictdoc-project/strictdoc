@@ -43,7 +43,7 @@ from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.md5 import get_md5
 from strictdoc.helpers.module import import_from_path
-from strictdoc.helpers.net import is_valid_host
+from strictdoc.helpers.net import is_valid_host, is_valid_url
 from strictdoc.helpers.path_filter import validate_mask
 
 if TYPE_CHECKING:
@@ -125,6 +125,15 @@ class ProjectFeature(str, Enum):
         return list(map(lambda c: c.value, ProjectFeature))
 
 
+# Features that are now enabled by default and are no longer needed in the
+# project configuration. ALL_FEATURES does not activate these features.
+DEPRECATED_FEATURES: List[str] = [
+    ProjectFeature.MATHJAX,
+    ProjectFeature.MERMAID,
+    ProjectFeature.SOURCE_FILE_LANGUAGE_PARSERS,
+]
+
+
 class ProjectConfigDefault:
     DEFAULT_PROJECT_TITLE = "Untitled Project"
     DEFAULT_DIR_FOR_SDOC_ASSETS = "_static"
@@ -185,6 +194,9 @@ class ProjectConfig:
         exclude_source_paths: Optional[List[str]] = None,
         grammars: Optional[Dict[str, str]] = None,
         test_report_root_dict: Optional[Dict[str, str]] = None,
+        # Location of the main gcovr HTML report, that is, the -o file of
+        # "gcovr --html-details": an http(s) URL or a file path.
+        gcovr_html_report: Optional[str] = None,
         source_nodes: Optional[List[SourceNodesEntry]] = None,
         html2pdf_strict: bool = False,
         html2pdf_template: Optional[str] = None,
@@ -242,6 +254,14 @@ class ProjectConfig:
         self.project_title: str = project_title
         self.dir_for_sdoc_assets: str = dir_for_sdoc_assets
 
+        # Whether the cache folder is StrictDoc's default, i.e. neither the
+        # project config nor STRICTDOC_CACHE_DIR chose one.
+        self.is_default_dir_for_sdoc_cache: bool = (
+            dir_for_sdoc_cache
+            == ProjectConfigDefault.DEFAULT_DIR_FOR_SDOC_CACHE
+            and not os.environ.get("STRICTDOC_CACHE_DIR")
+        )
+
         if env_cache_dir := os.environ.get("STRICTDOC_CACHE_DIR"):
             # The only use case for STRICTDOC_CACHE_DIR is to make the cache
             # local to an itest folder.
@@ -285,12 +305,27 @@ class ProjectConfig:
             )
 
         if ProjectFeature.ALL_FEATURES in project_features_:
-            custom_features = [
-                feature
-                for feature in project_features_
-                if isinstance(feature, Feature)
+            # A deprecated feature stays active only if the user lists it
+            # explicitly. In that case, the deprecation warning is printed.
+            explicit_deprecated_features = [
+                feature_
+                for feature_ in project_features_
+                if feature_ in DEPRECATED_FEATURES
             ]
-            project_features_ = [*ProjectFeature.all(), *custom_features]
+            custom_features = [
+                feature_
+                for feature_ in project_features_
+                if isinstance(feature_, Feature)
+            ]
+            project_features_ = [
+                *(
+                    feature_
+                    for feature_ in ProjectFeature.all()
+                    if feature_ not in DEPRECATED_FEATURES
+                ),
+                *explicit_deprecated_features,
+                *custom_features,
+            ]
 
         self.project_features: List[Union[str, Feature]] = project_features_
 
@@ -541,6 +576,11 @@ class ProjectConfig:
         # Optional custom CSS path, project-relative. Validated and
         # resolved to an absolute path in validate_and_finalize().
         self.custom_css_path: Optional[str] = custom_css_path
+
+        # Optional gcovr HTML report location: an http(s) URL or a file path.
+        # A file path is validated and resolved to an absolute path in
+        # validate_and_finalize().
+        self.gcovr_html_report: Optional[str] = gcovr_html_report
 
         self.config_last_update: Optional[datetime.datetime] = (
             _config_last_update
@@ -916,6 +956,26 @@ class ProjectConfig:
             self.custom_css_path = custom_css_path
 
         #
+        # Validate the gcovr HTML report path. A URL is used as-is.
+        #
+        if (
+            gcovr_html_report := self.gcovr_html_report
+        ) is not None and not is_valid_url(gcovr_html_report):
+            if project_path is not None and not os.path.isabs(
+                gcovr_html_report
+            ):
+                gcovr_html_report = os.path.join(
+                    project_path, gcovr_html_report
+                )
+            if not os.path.isfile(gcovr_html_report):
+                raise ValueError(
+                    "config: gcovr_html_report: "
+                    "invalid path to a gcovr HTML report file: "
+                    f"{gcovr_html_report}."
+                )
+            self.gcovr_html_report = os.path.abspath(gcovr_html_report)
+
+        #
         # Validate path to Chrome Driver.
         #
         if (
@@ -964,7 +1024,10 @@ class ProjectConfig:
         if os.path.isfile(path_to_gitignore):
             patterns = ["/.git/"]
 
-            with open(path_to_gitignore, encoding="utf-8") as f:
+            # utf-8-sig strips the UTF-8 BOM that some editors write at the
+            # start of the file. Without it, the first pattern starts with an
+            # invisible \ufeff and fails the path mask validation.
+            with open(path_to_gitignore, encoding="utf-8-sig") as f:
                 for line_ in f:
                     line = line_.strip()
                     if not line or line.startswith("#"):

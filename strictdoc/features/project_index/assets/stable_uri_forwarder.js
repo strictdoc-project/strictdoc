@@ -3,10 +3,10 @@
 // This script is included from the project's index.html page (in static HTML export)
 // It checks for a known MID or UID in the #anchor, and then
 // redirects to the referenced section or node within the project.
-// 
-// Example: 
+//
+// Example:
 //   http://strictdoc.company.com/#SDOC_UG will redirect to
-//   http://strictdoc.company.com/strictdoc/docs/strictdoc_01_user_guide.html#SDOC_UG
+//   http://strictdoc.company.com/strictdoc/docs/strictdoc_01_user_guide.sdoc.html#SDOC_UG
 //
 // Thanks to this mechanism, it becomes possible to export stable links to
 // nodes/requirements/sections for integration with external tools.

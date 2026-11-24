@@ -667,17 +667,57 @@ class Test(E2ECase):
             )
 
     def test_create_from_second_open_form_scrolls_to_its_new_node(self):
+        # Several create forms can be open at the same time. After creation,
+        # the new node must appear at the viewport top. The controller finds
+        # that node through the submitted form: the server gives the created
+        # node the frame ID of the form that produced it. If the controller
+        # took the first open form in DOM order instead, it would wait for a
+        # node that never appears.
+        #
+        # The test opens two forms and submits the second one. Before
+        # submitting, it places the first form at the viewport top:
+        #
+        #   viewport top  [form 1, above REQ-024]
+        #                 REQ-024
+        #                 [form 2, above REQ-025]   <- submitted
+        #                 REQ-025
+        #
+        # After the server replaces the document content, both forms are gone:
+        #
+        #                 REQ-024
+        #                 Created From Second Open Form
+        #                 REQ-025
+        #
+        # Only the correct target brings the new node to the top. With the
+        # wrong target, the controller applies no correction, and REQ-024
+        # stays between the viewport top and the new node.
+        #
+        # This check depends on where the first form is. Opening form 2
+        # scrolls it into view, often to the viewport top. Passive
+        # restoration of the nodes around it would then bring the new node to
+        # the top as well, and the test would pass with the wrong target.
         test_setup = End2EndTestSetup(path_to_test_file=__file__)
         with SDocTestServer(
             input_path=test_setup.path_to_sandbox
         ) as test_server:
             self.open(test_server.get_host_and_port())
             screen_document = self._open_main_document()
-            screen_document.get_toc().do_toc_go_to_anchor(MID_CHUNK_TARGET)
+            # Load chunk 1 before opening the menus. Hovering REQ-024 scrolls
+            # up and brings chunk 1 into the preload margin; its late arrival
+            # would shift the menu between Selenium's scroll and click.
+            screen_document.do_load_document_chunks_by_scrolling(1, 2)
+            screen_document.do_scroll_anchor_to_viewport_top(MID_CHUNK_TARGET)
 
             first_requirement = screen_document.get_node_by_anchor("REQ-024")
             (
                 first_requirement.do_open_node_menu().do_node_add_requirement_above()
+            )
+            # Wait for the first form before opening the second menu. The form
+            # arrives from the server, is inserted above REQ-024, and scrolls
+            # itself into view. If it arrived during the second menu click, it
+            # would move REQ-025 and its menu away from the click point.
+            self.wait_for_element_present(
+                'form[action="/actions/document/create_requirement"]'
             )
 
             second_requirement = screen_document.get_node_by_anchor(
@@ -685,7 +725,10 @@ class Test(E2ECase):
             )
             second_form = second_requirement.do_open_node_menu().do_node_add_requirement_above()
 
-            WebDriverWait(self.driver, 3).until(
+            # The second form comes from the server. A fixed WebDriverWait
+            # timeout is not scaled by --long-timeouts, so allow a slow CI
+            # response here, as the viewport assertions in this file do.
+            WebDriverWait(self.driver, 20).until(
                 lambda _: self.execute_script(
                     """
                     return document.querySelectorAll(
@@ -715,6 +758,27 @@ class Test(E2ECase):
             second_form.do_fill_in(
                 "TITLE", "Created From Second Open Form", field_order=-1
             )
+
+            # Set up the layout shown at the top of the test.
+            first_form_top = self.execute_script(
+                """
+                const form = document.querySelector(
+                  'form[action="/actions/document/create_requirement"]'
+                );
+                window.StrictDoc.contentViewport.scrollElementToOffset(form, 0);
+                const container = document.querySelector(
+                  '[js-toc_highlighting-content_root]'
+                );
+                return (
+                  form.getBoundingClientRect().top -
+                  container.getBoundingClientRect().top
+                );
+                """
+            )
+            assert abs(first_form_top - CONTENT_VIEWPORT_TOP) <= 1, (
+                first_form_top
+            )
+
             self.execute_script(
                 """
                 const forms = document.querySelectorAll(

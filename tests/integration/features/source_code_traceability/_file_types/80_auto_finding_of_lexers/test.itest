@@ -7,7 +7,7 @@ CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/_source_files/file.ml.html"
 
-RUN: %cat %T/html/80_auto_finding_of_lexers/input.html | filecheck %s --check-prefix CHECK-HTML
+RUN: %cat %T/html/80_auto_finding_of_lexers/input.sdoc.html | filecheck %s --check-prefix CHECK-HTML
 CHECK-HTML: <link rel="stylesheet" href="../_static/base.css"/>
 
 CHECK-HTML: href="../_source_files/file.ml.html#REQ-001#3#5"
@@ -17,7 +17,7 @@ RUN: %cat %T/html/_source_files/file.ml.html | filecheck %s --check-prefix CHECK
 # Ensure that the lexer is recognized correctly.
 CHECK-SOURCE-FILE: OCaml
 
-CHECK-SOURCE-FILE: href="../80_auto_finding_of_lexers/input.html#REQ-001"
+CHECK-SOURCE-FILE: href="../80_auto_finding_of_lexers/input.sdoc.html#REQ-001"
 
 CHECK-SOURCE-FILE: href="../_source_files/file.ml.html#REQ-001#1#5"
 CHECK-SOURCE-FILE: <b>[ 1-5 ]</b>

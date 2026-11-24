@@ -2,6 +2,8 @@ import argparse
 import sys
 from typing import Dict, Optional
 
+from strictdoc.backend.markdown.markdown_format import MarkdownFormat
+from strictdoc.backend.markdown.writer import SDMarkdownWriter
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
@@ -179,21 +181,24 @@ the document's PREFIX (if provided or "REQ-" by default).
         for document in traceability_index.document_tree.document_list:
             assert document.meta is not None
 
-            # Most recently, we parse JUnit XML, Gcov JSON files or SDoc
-            # documents generated from source code comments.
-            # These must not be written back.
-            if (
-                not document.meta.document_filename.endswith(".sdoc")
-                or document.autogen
-            ):
+            # Documents generated from JUnit XML, Gcov JSON, or source code
+            # comments must not be written back.
+            if document.autogen:
                 continue
 
-            document_content = SDWriter(project_config).write(document)
-            document_meta = document.meta
-            with open(
-                document_meta.input_doc_full_path, "w", encoding="utf8"
-            ) as output_file:
-                output_file.write(document_content)
+            document_filename = document.meta.document_filename
+            if document_filename.endswith(".sdoc"):
+                document_content = SDWriter(project_config).write(document)
+                with open(
+                    document.meta.input_doc_full_path, "w", encoding="utf8"
+                ) as output_file:
+                    output_file.write(document_content)
+            elif document_filename.endswith(
+                tuple(MarkdownFormat.read_extensions())
+            ):
+                SDMarkdownWriter.write_to_file(
+                    document, line_width=project_config.document_line_width
+                )
 
     @staticmethod
     def _rewrite_source_file(

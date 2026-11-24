@@ -1,0 +1,12 @@
+#
+# ALL_FEATURES does not activate the deprecated features, so no deprecation
+# warnings are printed. MathJax is still active for RST math.
+#
+
+RUN: %strictdoc export %S --formats=html --output-dir %T | filecheck %s --dump-input=fail
+CHECK-NOT: SOURCE_FILE_LANGUAGE_PARSERS
+CHECK: Export completed.
+CHECK-NOT: DEPRECATION
+
+RUN: %cat %T/html/01_deprecated_features_not_activated/input.sdoc.html | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: <span class="math notranslate nohighlight">\( a^2 + b^2 = c^2 \)</span>

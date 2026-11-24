@@ -1,0 +1,40 @@
+[DOCUMENT]
+TITLE: Minimal example
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  PROPERTIES:
+    IS_COMPOSITE: False
+    PREFIX: None
+  FIELDS:
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+
+[TEXT]
+TITLE: Prose section
+STATEMENT: >>>
+Ordinary explanatory text.
+<<<
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Requirement title
+STATEMENT: >>>
+The system shall do something.
+<<<

@@ -9,5 +9,5 @@ RUN: %cat %T/html/index.html | filecheck %s --dump-input=fail --check-prefix CHE
 CHECK-HTML: Hello world doc
 CHECK-HTML: input.sdoc
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-CONTENT
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-CONTENT
 CHECK-CONTENT: Hello world!

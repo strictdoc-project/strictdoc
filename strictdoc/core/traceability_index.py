@@ -1579,7 +1579,9 @@ class TraceabilityIndex:
         bundle_document.meta = DocumentMeta(
             level=0,
             file_tree_mount_folder="NOT_RELEVANT",
-            document_filename="bundle.sdoc",
+            # No extension: output names are built from document_filename,
+            # so the bundle is exported as bundle-PDF.html and bundle.pdf.
+            document_filename="bundle",
             document_filename_base="bundle",
             input_doc_full_path="NOT_RELEVANT",
             input_doc_rel_path=SDocRelativePath("bundle.sdoc"),

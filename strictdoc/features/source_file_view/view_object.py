@@ -174,8 +174,8 @@ class SourceFileViewObject:
 
     def render_node_link(self, node: SDocNode) -> str:
         assert isinstance(node, SDocNode), node
-        return self.link_renderer.render_node_link(
-            node, None, DocumentType.DOCUMENT
+        return self.link_renderer.render_requirement_link_from_source_file(
+            node, self.source_file
         )
 
     def render_static_url(self, url: str) -> str:

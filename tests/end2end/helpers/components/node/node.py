@@ -188,6 +188,13 @@ class Node:  # pylint: disable=invalid-name
     # Node actions
 
     def do_open_node_menu(self) -> AddNode_Menu:
+        # The document viewport has scroll-behavior: smooth, and
+        # hover_and_click() brings an off-screen node into view with
+        # scrollIntoViewIfNeeded(). The hover and the menu click then run
+        # while the animation still moves the node, so the click can land on
+        # another element. Scroll instantly first. This also stops a smooth
+        # scroll that a newly inserted form has started.
+        self.test_case.sdoc_do_scroll_to_element_by_xpath(self.node_xpath)
         self.test_case.hover_and_click(
             hover_selector=f"{self.node_xpath}",
             click_selector=(

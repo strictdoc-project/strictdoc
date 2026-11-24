@@ -98,6 +98,37 @@ class SDocRuntimeEnvironment:
     def is_github_ci_windows(self) -> bool:
         return self.is_windows() and os.environ.get("GITHUB_ACTIONS") == "true"
 
+    @staticmethod
+    def get_path_to_user_cache_dir() -> str:
+        """
+        Return the per-user StrictDoc cache folder for downloads that do not
+        belong to one project, such as the ChromeDriver used by HTML2PDF.
+        This function does not create the folder.
+
+        - Windows: %LOCALAPPDATA%/strictdoc/cache
+        - macOS: ~/Library/Caches/strictdoc
+        - Linux and others: $XDG_CACHE_HOME/strictdoc or ~/.cache/strictdoc
+        """
+        # Keep the if/elif/else form. mypy checks only the branch of the
+        # platform that it runs on. Code after an early return in a platform
+        # branch is reported as unreachable on that platform.
+        path_to_home = os.path.expanduser("~")
+        if sys.platform == "win32":
+            path_to_base = os.environ.get("LOCALAPPDATA")
+            if path_to_base is None or len(path_to_base) == 0:
+                path_to_base = os.path.join(path_to_home, "AppData", "Local")
+            path_to_cache_dir = os.path.join(path_to_base, "strictdoc", "cache")
+        elif sys.platform == "darwin":
+            path_to_cache_dir = os.path.join(
+                path_to_home, "Library", "Caches", "strictdoc"
+            )
+        else:
+            path_to_base = os.environ.get("XDG_CACHE_HOME")
+            if path_to_base is None or len(path_to_base) == 0:
+                path_to_base = os.path.join(path_to_home, ".cache")
+            path_to_cache_dir = os.path.join(path_to_base, "strictdoc")
+        return path_to_cache_dir
+
     def get_static_files_paths(self) -> List[str]:
         if self.is_binary_dist:  # pragma: no cover
             return [

@@ -2,13 +2,13 @@
 
 REQUIRES: TEST_HTML2PDF
 
-RUN: %strictdoc export %S --formats=html2pdf --included-documents --output-dir %T | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S --formats=html2pdf --chromedriver="%chromedriver" --included-documents --output-dir %T | filecheck %s --dump-input=fail
 CHECK: html2pdf4doc: JS logs from the print session
 
-RUN: %check_exists --file %T/html2pdf/html/%THIS_TEST_FOLDER/input-PDF.html
-RUN: %check_exists --file %T/html2pdf/pdf/input.pdf
+RUN: %check_exists --file %T/html2pdf/html/%THIS_TEST_FOLDER/input.sdoc-PDF.html
+RUN: %check_exists --file %T/html2pdf/pdf/input.sdoc.pdf
 
-RUN: %cat %T/html2pdf/html/%THIS_TEST_FOLDER/input-PDF.html | filecheck %s --dump-input=fail --check-prefix CHECK-INPUT-PDF
+RUN: %cat %T/html2pdf/html/%THIS_TEST_FOLDER/input.sdoc-PDF.html | filecheck %s --dump-input=fail --check-prefix CHECK-INPUT-PDF
 CHECK-INPUT-PDF: <p>Link from included document to parent document: <a href="#PARENT-DOC">🔗&nbsp;Project Risk Management</a></p>
 CHECK-INPUT-PDF: <p>Link from included document to included document: <a href="#INCLUDED-DOC">🔗&nbsp;Included doc</a></p>
 CHECK-INPUT-PDF: <p>Link from included document to this included document's requirement: <a href="#REQ-002">🔗&nbsp;1.2. second one</a></p>
@@ -17,7 +17,7 @@ CHECK-INPUT-PDF: <p>Link from parent document to included document: <a href="#IN
 CHECK-INPUT-PDF: <p>Link from parent document to this document's requiremnt: <a href="#REQ-004">🔗&nbsp;3. fourth one</a></p>
 
 # With --generate-bundle-document, a bundle document is generated.
-RUN: %strictdoc export %S --formats=html2pdf --included-documents --generate-bundle-document --output-dir %T | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S --formats=html2pdf --chromedriver="%chromedriver" --included-documents --generate-bundle-document --output-dir %T | filecheck %s --dump-input=fail
 RUN: %check_exists --file %T/html2pdf/html/bundle-PDF.html
 RUN: %check_exists --file %T/html2pdf/pdf/bundle.pdf
 

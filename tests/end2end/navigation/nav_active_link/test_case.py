@@ -31,6 +31,7 @@ class Test(E2ECase):
                 ("project-tree-link-search", "search"),
                 ("project-tree-link-diff", "diff"),
                 ("project-tree-link-tree-map", "tree-map"),
+                ("project-configuration-link", "project-configuration"),
             ):
                 nav.do_click_link(test_id)
                 screen.assert_on_screen(viewtype)

@@ -287,21 +287,21 @@ def resolve_uploaded_asset_subfolder(
     return ""
 
 
-def resolve_asset_path(output_root: str, url_to_asset: str) -> Optional[str]:
+def resolve_path_in_output_root(
+    output_root: str, url_path: str
+) -> Optional[str]:
     # The URL can contain ".." or an absolute path. Return None if the result
     # points outside the output root, so the server cannot read other files.
     real_output_root = os.path.realpath(output_root)
-    path_to_asset = os.path.realpath(
-        os.path.join(real_output_root, url_to_asset)
-    )
+    path_to_file = os.path.realpath(os.path.join(real_output_root, url_path))
     try:
-        common_path = os.path.commonpath([real_output_root, path_to_asset])
+        common_path = os.path.commonpath([real_output_root, path_to_file])
     except ValueError:
         # On Windows, the paths can be on different drives.
         return None
     if common_path != real_output_root:
         return None
-    return path_to_asset
+    return path_to_file
 
 
 def create_main_router(
@@ -5355,10 +5355,12 @@ def create_main_router(
         document_relative_path: SDocRelativePath = SDocRelativePath.from_url(
             url_to_document
         )
-        full_path_to_document = os.path.join(
+        full_path_to_document = resolve_path_in_output_root(
             project_config.export_output_html_root,
             document_relative_path.relative_path,
         )
+        if full_path_to_document is None:
+            return _error_response(HTTP_STATUS_NOT_FOUND)
 
         def must_generate() -> bool:
             if not os.path.isfile(full_path_to_document):
@@ -5561,7 +5563,9 @@ def create_main_router(
     def get_asset(request: Request, url_to_asset: str) -> Response:
         project_output_path = project_config.export_output_html_root
 
-        static_file = resolve_asset_path(project_output_path, url_to_asset)
+        static_file = resolve_path_in_output_root(
+            project_output_path, url_to_asset
+        )
         if static_file is None:
             return _error_response(HTTP_STATUS_NOT_FOUND, path_type="asset")
         content_type, _ = guess_type(static_file)

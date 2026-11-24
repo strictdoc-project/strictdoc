@@ -1,6 +1,9 @@
+import os
+
 import pytest
 
 from strictdoc.server.routers.main_router import (
+    resolve_asset_path,
     resolve_uploaded_asset_subfolder,
 )
 
@@ -38,3 +41,39 @@ def test_resolve_uploaded_asset_subfolder(
         )
         == expected_subfolder
     )
+
+
+@pytest.mark.parametrize(
+    "url_to_asset",
+    [
+        "_static/base.css",
+        "_static/fonts/../base.css",
+    ],
+)
+def test_resolve_asset_path_inside_output_root(tmp_path, url_to_asset):
+    output_root = tmp_path / "html"
+
+    assert resolve_asset_path(str(output_root), url_to_asset) == os.path.join(
+        os.path.realpath(output_root), "_static", "base.css"
+    )
+
+
+@pytest.mark.parametrize(
+    "url_to_asset",
+    [
+        "../secret.txt",
+        "_static/../../secret.txt",
+        "../html_other/secret.txt",
+    ],
+)
+def test_resolve_asset_path_outside_output_root(tmp_path, url_to_asset):
+    output_root = tmp_path / "html"
+
+    assert resolve_asset_path(str(output_root), url_to_asset) is None
+
+
+def test_resolve_asset_path_absolute_path(tmp_path):
+    output_root = tmp_path / "html"
+    secret_file = tmp_path / "secret.txt"
+
+    assert resolve_asset_path(str(output_root), str(secret_file)) is None

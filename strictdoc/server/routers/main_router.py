@@ -287,6 +287,23 @@ def resolve_uploaded_asset_subfolder(
     return ""
 
 
+def resolve_asset_path(output_root: str, url_to_asset: str) -> Optional[str]:
+    # The URL can contain ".." or an absolute path. Return None if the result
+    # points outside the output root, so the server cannot read other files.
+    real_output_root = os.path.realpath(output_root)
+    path_to_asset = os.path.realpath(
+        os.path.join(real_output_root, url_to_asset)
+    )
+    try:
+        common_path = os.path.commonpath([real_output_root, path_to_asset])
+    except ValueError:
+        # On Windows, the paths can be on different drives.
+        return None
+    if common_path != real_output_root:
+        return None
+    return path_to_asset
+
+
 def create_main_router(
     project_config: ProjectConfig,
     *,
@@ -5544,7 +5561,9 @@ def create_main_router(
     def get_asset(request: Request, url_to_asset: str) -> Response:
         project_output_path = project_config.export_output_html_root
 
-        static_file = os.path.join(project_output_path, url_to_asset)
+        static_file = resolve_asset_path(project_output_path, url_to_asset)
+        if static_file is None:
+            return _error_response(HTTP_STATUS_NOT_FOUND, path_type="asset")
         content_type, _ = guess_type(static_file)
 
         with lock_manager.acquire_global_read():

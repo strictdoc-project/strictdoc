@@ -1,6 +1,6 @@
 import os
 from dataclasses import dataclass
-from typing import List, Optional, Tuple, Union
+from typing import List, Tuple, Union
 
 from markupsafe import Markup
 
@@ -36,6 +36,7 @@ def _feature_handle(feature: Union[str, Feature]) -> str:
 class ProjectConfigurationViewObject:
     project_config: ProjectConfig
     link_renderer: LinkRenderer
+    jinja_environment: JinjaEnvironment
 
     def __post_init__(self) -> None:
         self.strictdoc_version = __version__
@@ -45,9 +46,6 @@ class ProjectConfigurationViewObject:
 
     def default_lazy_document_loading_threshold(self) -> int:
         return ProjectConfigDefault.DEFAULT_LAZY_DOCUMENT_LOADING_THRESHOLD
-
-    def display_or_none(self, value: Optional[str]) -> str:
-        return value if value is not None and value != "" else "None"
 
     def project_features_display(self) -> Markup:
         active_features = [
@@ -68,9 +66,18 @@ class ProjectConfigurationViewObject:
             return Markup(f"<b>ALL_FEATURES:</b><br/> {remaining_text}")
         return Markup(", ".join(active_features) if active_features else "None")
 
-    def render_screen(self, jinja_environment: JinjaEnvironment) -> Markup:
-        return jinja_environment.render_template_as_markup(
+    def render_screen(self) -> Markup:
+        return self.jinja_environment.render_template_as_markup(
             "features/project_configuration/index.jinja", view_object=self
+        )
+
+    def render_path(self, path: str, testid: str) -> Markup:
+        external_path, internal_path = self.split_path_for_display(path)
+        return self.jinja_environment.render_template_as_markup(
+            "features/project_configuration/path.jinja",
+            external_path=external_path,
+            internal_path=internal_path,
+            testid=testid,
         )
 
     def render_static_url(self, url: str) -> Markup:
@@ -91,6 +98,10 @@ class ProjectConfigurationViewObject:
         )
 
     def split_path_for_display(self, path: str) -> Tuple[str, str]:
+        # Only an absolute path can disclose the user's directory layout.
+        if not os.path.isabs(path):
+            return "", path
+
         project_root_path = self.project_config.get_project_root_path()
         external_prefix = os.path.dirname(project_root_path)
         if external_prefix and path.startswith(external_prefix):

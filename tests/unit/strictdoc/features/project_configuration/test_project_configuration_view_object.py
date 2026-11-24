@@ -3,6 +3,7 @@ from strictdoc.core.project_config import (
     ProjectConfig,
     ProjectFeature,
 )
+from strictdoc.export.html.html_templates import NormalHTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.features.project_configuration.view_object import (
     ProjectConfigurationViewObject,
@@ -16,6 +17,7 @@ def create_view_object(
     return ProjectConfigurationViewObject(
         project_config=project_config,
         link_renderer=LinkRenderer(root_path="", static_path="_static"),
+        jinja_environment=NormalHTMLTemplates().jinja_environment(),
     )
 
 
@@ -63,3 +65,30 @@ def test_03_project_features_display_all_features() -> None:
     assert ProjectFeature.NESTOR.value not in displayed_features
     for feature_ in DEPRECATED_FEATURES:
         assert feature_ not in displayed_features
+
+
+def test_04_split_path_for_display_keeps_relative_path_whole() -> None:
+    project_config = ProjectConfig()
+    project_config.input_paths = ["/home/user/project"]
+
+    view_object = create_view_object(project_config)
+
+    assert view_object.split_path_for_display("./output/server") == (
+        "",
+        "./output/server",
+    )
+
+
+def test_05_split_path_for_display_hides_absolute_prefix() -> None:
+    project_config = ProjectConfig()
+    project_config.input_paths = ["/home/user/project"]
+
+    view_object = create_view_object(project_config)
+
+    assert view_object.split_path_for_display(
+        "/home/user/project/custom.css"
+    ) == ("/home/user", "/project/custom.css")
+    assert view_object.split_path_for_display("/tmp/output/server") == (
+        "/tmp/output",
+        "/server",
+    )

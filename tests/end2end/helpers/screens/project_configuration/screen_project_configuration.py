@@ -103,3 +103,20 @@ class Screen_ProjectConfiguration(Screen):  # pylint: disable=invalid-name
         self.test_case.click_xpath(
             '//*[@data-testid="project-configuration-source-root-path-external"]'
         )
+
+    def assert_dashboard_path_external_full_hidden(self, testid: str) -> None:
+        self.test_case.assert_element_not_visible(
+            f'//*[@data-testid="{testid}"]'
+            '//*[@class="dashboard-path-external-full"]',
+            by=By.XPATH,
+        )
+
+    def assert_dashboard_path_external_full_visible(self, testid: str) -> None:
+        self.test_case.assert_element_visible(
+            f'//*[@data-testid="{testid}"]'
+            '//*[@class="dashboard-path-external-full"]',
+            by=By.XPATH,
+        )
+
+    def do_click_dashboard_path_external_toggle(self, testid: str) -> None:
+        self.test_case.click_xpath(f'//*[@data-testid="{testid}-external"]')

@@ -43,3 +43,20 @@ class Test(E2ECase):
             project_configuration.assert_dashboard_source_root_path_external_full_hidden()
             project_configuration.do_click_on_dashboard_source_root_path_external_toggle()
             project_configuration.assert_dashboard_source_root_path_external_full_visible()
+
+            # Paths in the configuration table: same reveal behavior.
+            for testid in (
+                "project-configuration-config-file-path",
+                "project-configuration-output-dir-path",
+                "project-configuration-custom-css-path",
+                "project-configuration-favicon-path",
+            ):
+                project_configuration.assert_dashboard_path_external_full_hidden(
+                    testid
+                )
+                project_configuration.do_click_dashboard_path_external_toggle(
+                    testid
+                )
+                project_configuration.assert_dashboard_path_external_full_visible(
+                    testid
+                )

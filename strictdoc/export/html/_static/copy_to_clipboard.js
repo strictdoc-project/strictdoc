@@ -9,7 +9,7 @@
   const SEL_COVER = '[data-copy-clipboard-target="cover"]';
 
   // The "done" icon is not rendered with every button. It is rendered once
-  // as a <template> in the page head and cloned next to the copy icon the
+  // as a <template> in the document body and cloned next to the copy icon the
   // first time a button is clicked.
   const SEL_DONE_ICON_TEMPLATE = 'template#copy_to_clipboard-done_icon';
 

@@ -62,7 +62,7 @@ class Test(E2ECase):
 
     def check_same_and_cross_document(self, base_url: str) -> None:
         # Same document: the parent is read from the page itself.
-        self.open(base_url + "input/parent.html")
+        self.open(base_url + "input/parent.sdoc.html")
         self.assert_element_not_visible(PREVIEW)
         self.hover_on_element(parent_link_of("REQ-SAME-CHILD"), by="xpath")
         self.assert_preview_shows_parent()
@@ -72,7 +72,7 @@ class Test(E2ECase):
         self.assert_element_not_visible(PREVIEW, timeout=5)
 
         # Cross document: the parent comes from parent-relation-previews.js.
-        self.open(base_url + "input/child.html")
+        self.open(base_url + "input/child.sdoc.html")
         self.hover_on_element(parent_link_of("REQ-CROSS-CHILD"), by="xpath")
         self.assert_preview_shows_parent()
 
@@ -102,13 +102,13 @@ class Test(E2ECase):
 
     def check_child_role_and_file_links(self, base_url: str) -> None:
         # A Child link to another document.
-        self.open(base_url + "input/parent.html")
+        self.open(base_url + "input/parent.sdoc.html")
         self.show_preview_of(child_link_of("REQ-PARENT-1", "REQ-CROSS-CHILD"))
         self.assert_text("REQ-CROSS-CHILD", PREVIEW)
         self.assert_text(CHILD_STATEMENT, PREVIEW, timeout=10)
 
         # A Parent link with a custom role shows the role next to the title.
-        self.open(base_url + "input/source.html")
+        self.open(base_url + "input/source.sdoc.html")
         self.show_preview_of(parent_link_of("REQ-SOURCE"))
         self.assert_preview_shows_parent()
         self.assert_text("(Refines)", PREVIEW)
@@ -142,7 +142,7 @@ class Test(E2ECase):
             self.check_child_role_and_file_links(base_url)
 
             # The TRACE screen links to the TRACE page of another document.
-            self.open(base_url + "input/child-TRACE.html")
+            self.open(base_url + "input/child.sdoc-TRACE.html")
             self.show_preview_of(parent_link_of("REQ-CROSS-CHILD"))
             self.assert_preview_shows_parent()
             self.assert_no_js_errors()

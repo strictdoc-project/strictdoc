@@ -5,9 +5,9 @@
 RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Export completed.
 
-RUN: %check_exists --file "%T/html/02_chunked_document_keeps_same_page_nodes/document-chunk-1.js"
+RUN: %check_exists --file "%T/html/02_chunked_document_keeps_same_page_nodes/document.sdoc-chunk-1.js"
 
-RUN: %cat %T/html/02_chunked_document_keeps_same_page_nodes/document-relation-previews.js | filecheck %s --dump-input=fail --check-prefix CHECK-JS
+RUN: %cat %T/html/02_chunked_document_keeps_same_page_nodes/document.sdoc-relation-previews.js | filecheck %s --dump-input=fail --check-prefix CHECK-JS
 CHECK-JS: "REQ-PARENT":
 CHECK-JS-SAME: The parent statement.
 CHECK-JS-SAME: "REQ-CHILD":

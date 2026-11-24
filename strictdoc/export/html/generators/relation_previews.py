@@ -45,12 +45,12 @@ SOURCE_PREVIEW_MAX_LINES = 15
 
 def relation_previews_file_name(document: SDocDocument) -> str:
     assert document.meta is not None
-    return f"{document.meta.document_filename_base}{RELATION_PREVIEWS_SUFFIX}"
+    return f"{document.meta.document_filename}{RELATION_PREVIEWS_SUFFIX}"
 
 
 def document_url_for_relation_previews(previews_url: str) -> Optional[str]:
     """
-    Map "folder/doc-relation-previews.js" to "folder/doc.html", the URL of
+    Map "folder/doc.sdoc-relation-previews.js" to "folder/doc.sdoc.html", the URL of
     the document the previews belong to.
     """
     if not previews_url.endswith(RELATION_PREVIEWS_SUFFIX):

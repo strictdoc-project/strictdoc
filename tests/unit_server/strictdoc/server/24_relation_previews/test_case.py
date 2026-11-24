@@ -46,13 +46,13 @@ def test_relation_previews_are_rendered_on_request(
     # REQ-PARENT-1 has a child in child.sdoc. REQ-SAME-CHILD is only linked
     # from its own page, REQ-UNRELATED has no relations.
     previews = read_previews(
-        client.get("/24_relation_previews/parent-relation-previews.js")
+        client.get("/24_relation_previews/parent.sdoc-relation-previews.js")
     )
     assert list(previews.keys()) == ["REQ-PARENT-1"]
     assert "<strong>markup</strong>" in previews["REQ-PARENT-1"]
 
     previews = read_previews(
-        client.get("/24_relation_previews/child-relation-previews.js")
+        client.get("/24_relation_previews/child.sdoc-relation-previews.js")
     )
     assert list(previews.keys()) == ["REQ-CROSS-CHILD"]
 
@@ -61,5 +61,7 @@ def test_relation_previews_for_unknown_document_is_404(
     project_config: ProjectConfig,
 ):
     client = TestClient(create_app(project_config=project_config))
-    response = client.get("/24_relation_previews/missing-relation-previews.js")
+    response = client.get(
+        "/24_relation_previews/missing.sdoc-relation-previews.js"
+    )
     assert response.status_code == 404

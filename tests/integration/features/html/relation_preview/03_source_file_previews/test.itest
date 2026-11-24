@@ -9,11 +9,11 @@
 RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Export completed.
 
-RUN: %cat %T/html/03_source_file_previews/document.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %T/html/03_source_file_previews/document.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: _static/relation_preview.js
 CHECK-HTML: class="requirement__link-file" href="../_source_files/src/example.py.html#REQ-RANGE#1#2"
 
-RUN: %cat %T/html/03_source_file_previews/document-TRACE.html | filecheck %s --dump-input=fail --check-prefix CHECK-TRACE
+RUN: %cat %T/html/03_source_file_previews/document.sdoc-TRACE.html | filecheck %s --dump-input=fail --check-prefix CHECK-TRACE
 CHECK-TRACE: _static/relation_preview.css
 CHECK-TRACE: _static/relation_preview.js
 

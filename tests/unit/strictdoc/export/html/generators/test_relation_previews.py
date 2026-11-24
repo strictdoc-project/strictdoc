@@ -16,9 +16,9 @@ from strictdoc.features.source_file_view.view_object import SourceMarkerTuple
 def test_document_url_for_relation_previews():
     assert (
         document_url_for_relation_previews(
-            "docs/requirements-relation-previews.js"
+            "docs/requirements.sdoc-relation-previews.js"
         )
-        == "docs/requirements.html"
+        == "docs/requirements.sdoc.html"
     )
     assert document_url_for_relation_previews("docs/requirements.html") is None
     assert document_url_for_relation_previews("_static/app_core.js") is None

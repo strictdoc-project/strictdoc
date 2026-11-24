@@ -63,6 +63,12 @@ ChromeDriver cache now succeed. Before, one export could overwrite the
 ChromeDriver while another export was running it, and the export failed with
 "Text file busy" on Linux. StrictDoc now uses html2pdf4doc 0.0.36, which
 caches the downloaded ChromeDriver atomically.
+
+2\) Fixed: the HTML export now copies an asset file again if the file in the
+output folder has a different size than the source file. Before, StrictDoc
+compared only the modification times. As a result, StrictDoc kept an outdated
+file in the output folder if the source file was not newer, for example after
+an interrupted export.
 <<<
 
 [[/SECTION]]

@@ -3,6 +3,7 @@ import glob
 import hashlib
 import os.path
 import shutil
+import tempfile
 from pathlib import Path
 from typing import Any, List, Optional
 
@@ -111,15 +112,32 @@ class CompiledHTMLTemplates(HTMLTemplates):
                     return False
                 return True
 
-            Path(self.path_to_jinja_cache_bucket_dir).mkdir(
-                parents=True, exist_ok=True
+            # Compile into a temporary folder and rename it into place, so a
+            # run that stops mid-compile cannot leave a half-filled bucket.
+            path_to_parent_dir = os.path.dirname(
+                self.path_to_jinja_cache_bucket_dir
             )
-            jinja_environment.compile_templates(
-                self.path_to_jinja_cache_bucket_dir,
-                zip=None,
-                filter_func=filter_function_,
-                ignore_errors=False,
+            Path(path_to_parent_dir).mkdir(parents=True, exist_ok=True)
+            path_to_tmp_dir = tempfile.mkdtemp(
+                prefix=".tmp-", dir=path_to_parent_dir
             )
+            try:
+                jinja_environment.compile_templates(
+                    path_to_tmp_dir,
+                    zip=None,
+                    filter_func=filter_function_,
+                    ignore_errors=False,
+                )
+                try:
+                    os.rename(
+                        path_to_tmp_dir, self.path_to_jinja_cache_bucket_dir
+                    )
+                except OSError:
+                    # Another process created the bucket first. Use it.
+                    if not os.path.isdir(self.path_to_jinja_cache_bucket_dir):
+                        raise
+            finally:
+                shutil.rmtree(path_to_tmp_dir, ignore_errors=True)
 
     def jinja_environment(self) -> JinjaEnvironment:
         if self._jinja_environment is not None:

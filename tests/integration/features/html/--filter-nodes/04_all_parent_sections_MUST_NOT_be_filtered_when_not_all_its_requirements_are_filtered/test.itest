@@ -5,7 +5,7 @@ RUN: %cat %T/html/index.html | filecheck %s --dump-input=fail --check-prefix CHE
 CHECK-HTML: Hello world doc
 CHECK-HTML: input.sdoc
 
-RUN: %cat %T/html/04_all_parent_sections_MUST_NOT_be_filtered_when_not_all_its_requirements_are_filtered/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOC
+RUN: %cat %T/html/04_all_parent_sections_MUST_NOT_be_filtered_when_not_all_its_requirements_are_filtered/input.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML-DOC
 CHECK-HTML-DOC: Title #1
 CHECK-HTML-DOC: Title #2
 CHECK-HTML-DOC: Title #5

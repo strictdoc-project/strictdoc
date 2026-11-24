@@ -38,12 +38,13 @@ class SDocTestHTMLExporter:
         self.output_path: str = output_path
         self.config_path: Optional[str] = config_path
 
+        # The process ID keeps the log files of parallel test workers apart.
         path_to_tmp_dir = get_portable_temp_dir()
         self.path_to_out_log = os.path.join(
-            path_to_tmp_dir, "strictdoc_export.out.log"
+            path_to_tmp_dir, f"strictdoc_export.{os.getpid()}.out.log"
         )
         self.path_to_err_log = os.path.join(
-            path_to_tmp_dir, "strictdoc_export.err.log"
+            path_to_tmp_dir, f"strictdoc_export.{os.getpid()}.err.log"
         )
         self.exit_stack = ExitStack()
 

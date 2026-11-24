@@ -10,7 +10,7 @@ CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/_source_files/file.py.html"
 
-RUN: %cat %T/html/60_file_range_with_line_range/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %T/html/60_file_range_with_line_range/input.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: <link rel="stylesheet" href="../_static/base.css"/>
 
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-001#2#4">
@@ -18,7 +18,7 @@ CHECK-HTML: <a{{.*}}href="../_source_files/file2.py.html#REQ-001#2#4">
 
 RUN: %cat %T/html/_source_files/file.py.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
 
-CHECK-SOURCE-FILE: href="../60_file_range_with_line_range/input.html#REQ-001"
+CHECK-SOURCE-FILE: href="../60_file_range_with_line_range/input.sdoc.html#REQ-001"
 
 CHECK-SOURCE-FILE: href="../_source_files/file.py.html#REQ-001#2#4"
 CHECK-SOURCE-FILE: <b>[ 2-4 ]</b>

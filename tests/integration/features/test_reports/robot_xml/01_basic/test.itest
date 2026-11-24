@@ -5,7 +5,7 @@
 RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Export completed.
 
-RUN: %check_exists --file "%T/html/01_basic/test_report/output.robot.html"
+RUN: %check_exists --file "%T/html/01_basic/test_report/output.robot.xml.html"
 RUN: %check_exists --file "%T/html/_source_files/tests/feature1a.robot.html"
 RUN: %check_exists --file "%T/html/_source_files/tests/feature1b.robot.html"
 RUN: %check_exists --file "%T/html/_source_files/tests/feature2/feature2.robot.html"

@@ -38,6 +38,19 @@
               {# {{ section.document_is_included() }} {{ section.get_parent_or_including_document().reserved_title }}/{{ section.get_document().reserved_title }} #}
             </a>
           {%- endif -%}
+        {%- elif section.is_text_node() and view_object.is_deeptrace() -%}
+          {#
+             The Deep Traceability view does not render TEXT nodes, so a link
+             to one would point to an anchor that does not exist on the page.
+          #}
+          <span class="toc-title-no-link" title="Text nodes are not shown in this view">
+            <span class="toc-section-number">
+              {{ section.context.title_number_string if section.context.title_number_string else "&nbsp;"|safe * (node_context_.get_level() * 2 - 1) }}
+            </span>
+            {%- if section.reserved_title is not none -%}
+              {{- section.reserved_title -}}
+            {%- endif -%}
+          </span>
         {%- else -%}
         {# if requirement #}
         <a

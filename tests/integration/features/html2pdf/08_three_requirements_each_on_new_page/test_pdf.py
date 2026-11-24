@@ -5,7 +5,7 @@ import re
 
 from pypdf import PdfReader
 
-reader = PdfReader("Output/html2pdf/pdf/input.pdf")
+reader = PdfReader("Output/html2pdf/pdf/input.sdoc.pdf")
 
 assert len(reader.pages) == 5, reader.pages
 

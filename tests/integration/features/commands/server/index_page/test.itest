@@ -1,0 +1,3 @@
+RUN: python %S/server_get_index.py %S %T/output %strictdoc | filecheck %s
+
+CHECK: HTTP status: 200

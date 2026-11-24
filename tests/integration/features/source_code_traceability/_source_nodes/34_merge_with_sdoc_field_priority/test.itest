@@ -19,7 +19,7 @@ RUN: %strictdoc --debug export %S --output-dir %T | filecheck %s
 
 CHECK: Export to HTML: Requirements from Source Nodes
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/source_node_base.html | filecheck %s --check-prefix CHECK-HTML
+RUN: %cat %T/html/%THIS_TEST_FOLDER/source_node_base.sdoc.html | filecheck %s --check-prefix CHECK-HTML
 
 CHECK-HTML: <sdoc-node-title
 CHECK-HTML: example_title_fallback</sdoc-autogen>

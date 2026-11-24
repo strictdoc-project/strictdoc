@@ -102,12 +102,14 @@ class Test(E2ECase):
             modal.do_click_after("Other document requirement")
             modal.do_confirm_move()
             modal.assert_success()
-            modal.assert_go_to_new_location_href_contains("document_2.html#")
+            modal.assert_go_to_new_location_href_contains(
+                "document_2.sdoc.html#"
+            )
 
             destination_screen = modal.do_go_to_new_location()
             destination_screen.assert_on_screen_document()
             destination_screen.assert_header_document_title("Document Two")
-            self.assert_url_contains("document_2.html#")
+            self.assert_url_contains("document_2.sdoc.html#")
             destination_screen.assert_node_containing_text_in_viewport(
                 "Third requirement"
             )

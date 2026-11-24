@@ -50,15 +50,21 @@ releases:
 <<<
 
 [[SECTION]]
-MID: 6dfb5140e7a5437a83c62e7c7adc16c2
+MID: 47316fcefedf4760b658efaee7230ef5
 TITLE: Unreleased
 
 [TEXT]
-MID: 6361a90f704f48f5a020eb221e71d6bc
+MID: badd2ebb98d946668d19ce23884e6e08
 STATEMENT: >>>
 This release contains the following enhancements:
 
-1\) On the DOCUMENT and TRACE screens, hovering over or focusing a relation
+1\) Fixed: several HTML2PDF exports that start at the same time with an empty
+ChromeDriver cache now succeed. Before, one export could overwrite the
+ChromeDriver while another export was running it, and the export failed with
+"Text file busy" on Linux. StrictDoc now uses html2pdf4doc 0.0.36, which
+caches the downloaded ChromeDriver atomically.
+
+2\) On the DOCUMENT and TRACE screens, hovering over or focusing a relation
 link now shows a card about the link target. For a Parent or Child link, with
 or without a role, the card shows the UID, title, and statement of the linked
 node. For a File link, the card shows the file path and the first lines of the
@@ -70,6 +76,166 @@ copied into the pages. The browser loads a small ``-relation-previews.js``
 file next to the linked document or source file page the first time such a
 link is hovered. The static export writes these files, and the server renders
 them on request.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 7523de2c5f3549c8bfd220eb2713a4de
+TITLE: 0.32.1 (2026-11-22)
+
+[TEXT]
+MID: 775f7c88f6ac442382c88605860bbbc2
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) Fixed: the Markdown writer now keeps ``**Type**: SECTION`` on a section
+with a UID. Before, the writer dropped the marker if the section had no MID.
+As a result, StrictDoc read the section back as a requirement, for example
+after a save from the web interface.
+
+2\) Fixed: ``strictdoc manage auto-uid`` now writes the generated UIDs to
+Markdown documents. Before, the command wrote back only SDoc documents. The
+command writes Markdown documents in the same form as the web interface.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 1b13f410ce30424a9eeba5f2837c6917
+TITLE: 0.32.0 (2026-11-22)
+
+[TEXT]
+MID: 6bde927c12754ab5a60edf4b55dbe885
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) The new ``gcovr_html_report`` config option sets the location of the gcovr
+HTML report. With this option, each function in a gcovr JSON coverage report
+links to the gcovr HTML details page of its source file. The option value is an
+http(s) URL or a file path. Before, StrictDoc linked each function to a fixed
+path that existed only in one folder layout. Without the option, the coverage
+report now has no links to the gcovr HTML report.
+
+2\) ``ALL_FEATURES`` no longer activates the deprecated features ``MATHJAX``,
+``MERMAID``, and ``SOURCE_FILE_LANGUAGE_PARSERS``. StrictDoc enables these
+features by default. As a result, a configuration with ``ALL_FEATURES`` no
+longer prints deprecation warnings for these features.
+
+RST math (``:math:``, ``:eq:``, and ``.. math::``) now always renders with
+MathJax. Before this release, RST math used MathJax only if the configuration
+listed ``MATHJAX`` or the export used ``--enable-mathjax``.
+
+3\) Fixed: the server and the HTML export no longer fail on every page with
+``TemplateNotFound`` after a run stops while it compiles the HTML templates.
+The templates are now compiled into a temporary folder that is renamed into
+place when the compile is complete.
+
+4\) The PyInstaller binary of StrictDoc now runs the HTML2PDF export, the
+worker processes on Windows, and the desktop launcher without a Python
+installation. The ``invoke release-pyinstaller`` task now also creates a zip
+file, and the release workflow attaches the zip files for Linux, macOS and
+Windows to each GitHub release.
+
+5\) The Markdown reader recognizes YAML front matter at the start of a
+Markdown document and reads its keys as document metadata. The keys have the
+same meaning as the keys of the metadata block after the H1 heading. A document
+can have both the front matter and the H1 metadata block. When StrictDoc writes
+the document back, for example with ``strictdoc format`` or from the web
+interface, StrictDoc writes each field to the place it was read from. One
+exception: in a document with both places, the StrictDoc fields, such as
+``UID`` and ``Version``, go to the H1 metadata block. The Markdown writer now
+writes the StrictDoc fields before the custom fields.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: b8c75f7ac4504af1903422167b23ba7b
+TITLE: 0.31.1 (2026-11-21)
+
+[TEXT]
+MID: 5cdbaa80910b4eff8fb57f81062472e4
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) The HTML export names each document page after the full source file name,
+including the file extension. For example, StrictDoc exports
+``requirements.sdoc`` to ``requirements.sdoc.html``,
+``requirements.sdoc-TABLE.html``, and ``requirements.sdoc.pdf``. The new names
+change the URLs of all document pages. The bundle document has no source file.
+As a result, the bundle document keeps ``bundle-PDF.html`` and ``bundle.pdf``.
+
+The new names prevent a name collision. Before, StrictDoc exported two
+documents with the same name and different formats in one folder to the same
+page. For example, StrictDoc exported both ``requirements.sdoc`` and
+``requirements.md`` to ``requirements.html``. As a result, one page replaced the
+other.
+
+2\) Fixed: on Windows, the server no longer prints a ``ConnectionResetError``
+traceback each time a browser closes a connection. The error is harmless,
+and the server now ignores it.
+
+3\) Fixed: the Search screen now shows the images of nodes in documents that
+are in a subfolder. Before, the image paths were relative to the document but
+the Search screen is at the root of the project, so the images were not found
+(404).
+
+4\) Fixed: after an edit made a Markdown or RST table narrower, JavaScript
+errors removed the table highlight and prevented the editor from opening again.
+Adding the first body row to a Markdown table that contained only a header
+caused another JavaScript error. Both operations now work normally.
+
+5\) Fixed: ``strictdoc export`` no longer fails with an ``AssertionError`` when
+a document with ``MARKUP: Markdown`` contains a ``[DOCUMENT_FROM_FILE]`` node.
+
+6\) Fixed: the server now returns its 404 page for a TABLE, TRACE, or
+DEEP-TRACE screen that the project config does not enable. Before, the server
+failed with an internal server error (500).
+
+7\) Fixed: StrictDoc now detects a cycle of parent or child relations with a
+role. StrictDoc reports such a cycle with the same error as a cycle of
+relations without a role. Before, the HTML export failed with a maximum
+recursion depth error.
+
+8\) Fixed: StrictDoc now reads a ``.gitignore`` file that starts with a UTF-8
+byte order mark (BOM). Some editors save the ``.gitignore`` file with a BOM.
+Before, StrictDoc reported a path mask validation error for the first pattern
+of such a file.
+
+9\) Fixed: on a source file page, the parent, child, and file links in the
+fields of a node now open the correct page. Before, these links worked only
+when the source file page and the document page were at the same folder depth.
+
+10\) Fixed: the table of contents of the Deep Traceability screen now shows
+TEXT nodes with a title as plain entries, without a link. Before, the table of
+contents linked these TEXT nodes. The Deep Traceability screen does not show
+TEXT nodes. As a result, the links led nowhere.
+
+11\) HTML2PDF now keeps the downloaded ChromeDriver in a per-user cache folder.
+The user guide lists this folder for Linux, Windows, and macOS. Before,
+HTML2PDF kept the ChromeDriver in the ``_cache`` folder of each output folder.
+As a result, each new output folder downloaded the ChromeDriver again. Without a
+network connection, an export to a new output folder failed. The
+``dir_for_sdoc_cache`` option and the ``STRICTDOC_CACHE_DIR`` environment
+variable still select another cache folder.
+
+12\) Fixed: when Chrome is missing or the ChromeDriver download fails, HTML2PDF
+now ends with one error message that tells a user what to do. Before, a missing
+Chrome printed an empty ``error:`` line. A failed ChromeDriver download printed
+a raw traceback without an explanation.
+
+13\) Fixed: in a document with ``AUTO_LEVELS: On`` and ``NODE_IN_TOC: False``,
+sections now keep their numbers. Before, ``NODE_IN_TOC: False`` removed the
+numbers of all nodes, including sections. The option now applies only to nodes
+that are not sections.
+
+14\) Fixed: the grammar editor of the Web UI now keeps the MID field in
+documents with ``ENABLE_MID: True``. Before, a new grammar element had no MID
+field. A user could also delete the MID field of an existing grammar element.
+In both cases, StrictDoc then failed to read the saved document. The grammar
+editor now adds a MID field to each new grammar element. The grammar editor
+shows an error when a user deletes the MID field.
 <<<
 
 [[/SECTION]]

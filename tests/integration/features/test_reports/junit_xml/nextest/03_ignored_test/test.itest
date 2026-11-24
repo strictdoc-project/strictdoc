@@ -7,14 +7,14 @@ RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 
 # Ensure that the test report document is generated.
 CHECK: Export completed.
-RUN: %check_exists --file "%T/html/%THIS_TEST_FOLDER/reports/tests_unit.nextest.junit.html"
+RUN: %check_exists --file "%T/html/%THIS_TEST_FOLDER/reports/tests_unit.nextest.junit.xml.html"
 
 # Ensure that the source file is generated.
 RUN: %check_exists --file "%T/html/_source_files/src/lib.rs.html"
 
 # The test that ran is reported as PASSED and linked to its source; the
 # #[ignore]-annotated test is absent from the report.
-RUN: %cat "%T/html/%THIS_TEST_FOLDER/reports/tests_unit.nextest.junit.html" | filecheck %s --check-prefix CHECK-TEST-REPORT
+RUN: %cat "%T/html/%THIS_TEST_FOLDER/reports/tests_unit.nextest.junit.xml.html" | filecheck %s --check-prefix CHECK-TEST-REPORT
 CHECK-TEST-REPORT: hello_world_crate::tests::add_works
 CHECK-TEST-REPORT: PASSED
 CHECK-TEST-REPORT: src/lib.rs, <i>lines: 9-13</i>, function hello_world_crate::tests::add_works()

@@ -53,7 +53,7 @@ class Test:
             base_url = server.get_host_and_port()
 
             page.goto(
-                f"{base_url}/strictdoc-demo-project/docs/requirements.html"
+                f"{base_url}/strictdoc-demo-project/docs/requirements.sdoc.html"
             )
 
             viewtype_selector = ViewTypeSelector(page)

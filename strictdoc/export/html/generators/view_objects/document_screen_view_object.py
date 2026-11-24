@@ -702,10 +702,7 @@ class DocumentScreenViewObject:
         delivery path (no FastAPI server to fetch a fragment route from).
         """
         assert self.document.meta is not None
-        return (
-            f"{self.document.meta.document_filename_base}"
-            f"-chunk-{chunk.index}.js"
-        )
+        return f"{self.document.meta.document_filename}-chunk-{chunk.index}.js"
 
     def static_chunk_key(self, chunk: DocumentChunk) -> str:
         """
@@ -713,9 +710,7 @@ class DocumentScreenViewObject:
         this chunk assigns its rendered HTML to.
         """
         assert self.document.meta is not None
-        return (
-            f"{self.document.meta.document_filename_base}-chunk-{chunk.index}"
-        )
+        return f"{self.document.meta.document_filename}-chunk-{chunk.index}"
 
     def _count_content_nodes(self) -> int:
         # This is a full document walk: no precomputed node count exists on

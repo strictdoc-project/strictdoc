@@ -8,7 +8,7 @@ CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/_source_files/tests/file.c.html"
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHECK-HTML
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.sdoc.html | filecheck %s --check-prefix CHECK-HTML
 CHECK-HTML: Test specification
 CHECK-HTML: TEST_DOC/tests/file.c/test_case_1
 CHECK-HTML: TEST_DOC/tests/file2.c/test_case_1

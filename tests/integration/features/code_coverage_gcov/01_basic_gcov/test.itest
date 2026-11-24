@@ -15,3 +15,7 @@ RUN: cp -r %S/src %T/docs/
 RUN: cd %T/docs && %strictdoc export .  | filecheck %s
 
 CHECK: Export completed.
+
+RUN: %cat %T/docs/output/html/docs/coverage.gcov.json.html | filecheck %s --dump-input=fail --check-prefix CHECK-GCOV-REPORT
+CHECK-GCOV-REPORT-NOT: coverage.main.c.
+CHECK-GCOV-REPORT: </html>

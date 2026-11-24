@@ -5,11 +5,13 @@ import pytest
 
 from strictdoc.backend.sdoc.sdoc_format import SDocFormat
 from strictdoc.core.project_config import (
+    DEPRECATED_FEATURES,
     ProjectConfig,
     ProjectConfigLoader,
     ProjectFeature,
 )
 from strictdoc.features.html2pdf.html2pdf_format import HTML2PDFFormat
+from strictdoc.helpers.path_filter import PathFilter
 
 
 def test_01_default_config():
@@ -31,6 +33,26 @@ def test_10__project_features__accepts_strings_or_enums():
     assert project_config.is_activated_diff()
     assert project_config.is_activated_html2pdf()
     assert project_config.is_activated_reqif()
+
+
+def test_11__project_features__all_features_excludes_deprecated_features():
+    project_config = ProjectConfig(project_features=["ALL_FEATURES"])
+
+    for feature_ in ProjectFeature.all():
+        if feature_ in DEPRECATED_FEATURES:
+            assert feature_ not in project_config.project_features
+        else:
+            assert feature_ in project_config.project_features
+
+
+def test_12__project_features__all_features_keeps_explicit_deprecated_feature():
+    project_config = ProjectConfig(
+        project_features=["ALL_FEATURES", ProjectFeature.MATHJAX]
+    )
+
+    assert ProjectFeature.MATHJAX in project_config.project_features
+    assert ProjectFeature.MERMAID not in project_config.project_features
+    assert ProjectFeature.REQIF in project_config.project_features
 
 
 def test_30_include_doc_paths_bad_mask():
@@ -174,6 +196,31 @@ def create_config():
         path_to_config=str(path_to_config)
     )
     assert project_config.lazy_document_loading_threshold == 200
+
+
+def test_90_gitignore_with_utf8_bom(tmp_path):
+    path_to_config = tmp_path / "strictdoc_config.py"
+    path_to_config.write_text(
+        """\
+from strictdoc.core.project_config import ProjectConfig
+
+
+def create_config():
+    return ProjectConfig(project_title="Gitignore with BOM")
+"""
+    )
+    # Some editors on Windows save files as UTF-8 with a BOM.
+    (tmp_path / ".gitignore").write_bytes(b"\xef\xbb\xbf.conda-envs\nbuild/\n")
+
+    project_config = ProjectConfigLoader.load_from_path_or_get_default(
+        path_to_config=str(path_to_config)
+    )
+    project_config.input_paths = [str(tmp_path)]
+    project_config.validate_and_finalize()
+
+    assert ".conda-envs" in project_config.exclude_doc_paths
+    assert "build/" in project_config.exclude_source_paths
+    PathFilter(project_config.exclude_doc_paths, positive_or_negative=False)
 
 
 def test_82_lazy_document_loading_threshold_zero_disables():

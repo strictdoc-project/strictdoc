@@ -15,6 +15,7 @@ import toml
 
 from strictdoc import __version__
 from strictdoc.features.launcher import git_action
+from strictdoc.helpers.frozen import get_strictdoc_command
 
 STRICTDOC_RES = files("strictdoc")
 
@@ -850,9 +851,7 @@ class StrictDocLauncher(tk.Tk):
         assert self.workspace_dir is not None
         workspace_dir = self.workspace_dir
         cmd = [
-            self._python_executable(),
-            "-m",
-            "strictdoc.cli.main",
+            *get_strictdoc_command(),
             "export",
             workspace_dir,
             f"--formats={export_format}",
@@ -1425,9 +1424,6 @@ class StrictDocLauncher(tk.Tk):
         editor.bind("<Control-s>", lambda _event: on_save_advanced())
         editor.bind("<Escape>", lambda _event: on_cancel_advanced())
 
-    def _python_executable(self) -> str:
-        return sys.executable or "python"
-
     def _is_server_running(self) -> bool:
         return bool(self.server_process and self.server_process.poll() is None)
 
@@ -1546,9 +1542,7 @@ class StrictDocLauncher(tk.Tk):
         workspace_dir = self.workspace_dir
 
         cmd = [
-            self._python_executable(),
-            "-m",
-            "strictdoc.cli.main",
+            *get_strictdoc_command(),
             "manage",
             "auto-uid",
             workspace_dir,
@@ -1657,9 +1651,7 @@ class StrictDocLauncher(tk.Tk):
             return
 
         cmd: list[str] = [
-            self._python_executable(),
-            "-m",
-            "strictdoc.cli.main",
+            *get_strictdoc_command(),
             "--debug",
             "server",
             workspace_dir,

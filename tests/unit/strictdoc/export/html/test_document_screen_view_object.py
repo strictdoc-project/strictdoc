@@ -235,11 +235,15 @@ def test_static_chunk_naming_helpers_are_keyed_by_document_and_index():
 
     assert [
         view_object.static_chunk_relative_path(chunk_) for chunk_ in chunks
-    ] == ["input-chunk-0.js", "input-chunk-1.js", "input-chunk-2.js"]
+    ] == [
+        "input.sdoc-chunk-0.js",
+        "input.sdoc-chunk-1.js",
+        "input.sdoc-chunk-2.js",
+    ]
     assert [view_object.static_chunk_key(chunk_) for chunk_ in chunks] == [
-        "input-chunk-0",
-        "input-chunk-1",
-        "input-chunk-2",
+        "input.sdoc-chunk-0",
+        "input.sdoc-chunk-1",
+        "input.sdoc-chunk-2",
     ]
 
 

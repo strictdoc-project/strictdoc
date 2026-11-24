@@ -5,5 +5,5 @@ RUN: %cat %T/html/index.html | filecheck %s --dump-input=fail --check-prefix CHE
 CHECK-HTML: Hello world doc
 CHECK-HTML: input.sdoc
 
-RUN: %cat %T/html/03_input_dir_has_slash/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-CONTENT
+RUN: %cat %T/html/03_input_dir_has_slash/input.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-CONTENT
 CHECK-CONTENT: Hello world!

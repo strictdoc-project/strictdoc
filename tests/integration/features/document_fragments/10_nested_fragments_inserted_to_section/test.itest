@@ -5,7 +5,7 @@
 RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Export completed.
 
-RUN: %cat %T/html/10_nested_fragments_inserted_to_section/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %T/html/10_nested_fragments_inserted_to_section/input.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 
 CHECK-HTML:data-level="1"
 CHECK-HTML:1.&nbsp;Section that nests a fragment

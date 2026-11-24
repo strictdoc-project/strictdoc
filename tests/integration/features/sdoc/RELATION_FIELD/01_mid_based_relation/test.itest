@@ -1,7 +1,7 @@
 RUN: %strictdoc export %S --output-dir %T | filecheck %s
 CHECK: Export completed.
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHECK-HTML
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.sdoc.html | filecheck %s --check-prefix CHECK-HTML
 
 CHECK-HTML: RELATIONS (Child):
 CHECK-HTML: <a data-turbo="false" class="requirement__link-child" href="#bbbbbbbb_bbbbbbbb_bbbbbbbb_bbbbbbbb">

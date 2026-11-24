@@ -453,6 +453,49 @@ Or you can add it to your system's packages with:
 
 [[/SECTION]]
 
+[[SECTION]]
+MID: 14d29ed55bd94f39858248860f9f8ee7
+TITLE: Running StrictDoc as a standalone binary (experimental)
+
+[TEXT]
+MID: 97deb96f348549d29f495c63c2a3e00c
+STATEMENT: >>>
+The standalone binary runs StrictDoc without a Python installation. The binary
+is built with PyInstaller.
+
+The zip files are attached as assets to each release on the
+`GitHub releases page <https://github.com/strictdoc-project/strictdoc/releases>`_.
+Each zip file contains the binary for one platform:
+
+- ``strictdoc-<version>-linux-x86_64.zip``
+- ``strictdoc-<version>-darwin-arm64.zip`` (macOS on Apple Silicon only)
+- ``strictdoc-<version>-windows-amd64.zip``
+
+Unzip the file and run the ``strictdoc`` executable in the ``strictdoc`` folder
+(``strictdoc.exe`` on Windows). Keep the ``_internal`` folder next to the
+executable.
+
+.. code:: text
+
+    strictdoc/strictdoc export docs/
+    strictdoc/strictdoc server docs/
+
+Platform notes:
+
+- The HTML2PDF export needs Google Chrome. The binary does not include Chrome.
+- The macOS binary is not signed. If macOS blocks the binary, remove the
+  quarantine attribute with
+  ``xattr -dr com.apple.quarantine strictdoc``.
+
+To build the binary and the zip file from a StrictDoc checkout, run:
+
+.. code:: text
+
+    invoke release-pyinstaller --output-dir build/pyinstaller_dist
+<<<
+
+[[/SECTION]]
+
 [[/SECTION]]
 
 [[SECTION]]
@@ -3149,7 +3192,8 @@ To assign requirement UIDs automatically:
     strictdoc manage auto-uid <path-to-project-tree>
 
 The command goes over all requirements in the project tree and assigns missing
-UIDs automatically. The project tree is mutated in-place.
+UIDs automatically. The project tree is mutated in-place. The command writes the
+UIDs to SDoc (``.sdoc``) and Markdown (``.md``, ``.markdown``) documents.
 
 By default, the assignment happens based on the requirement mask ``REQ-``, so
 the requirements will get the UIDs of ``REQ-001``, ``REQ-002``, ...
@@ -5399,7 +5443,7 @@ documentation. This tagfile is in XML format and looks like this:
     <tagfile doxygen_version="1.9.8">
       <compound kind="file">
         <name>REQ-1</name>
-        <filename>strictdocfolder/mystrictdocreq.html#REQ-1</filename>
+        <filename>strictdocfolder/mystrictdocreq.sdoc.html#REQ-1</filename>
       </compound>
     </tagfile>
 
@@ -5595,6 +5639,79 @@ document-level prefix for all requirements within that section.
     **UID**: LEVEL2-REQ-001
 
     System A shall do B.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: f31d40e0cd834df68d7c691dfb55e09d
+UID: SECTION-UG-Markdown-front-matter
+TITLE: YAML front matter
+
+[TEXT]
+MID: e25de1cbe71a49778d30824814cb4b72
+STATEMENT: >>>
+A Markdown document can store its document metadata in a YAML front matter
+block, in the metadata block after the H1 heading, or in both. The front matter
+starts on the first line of the file and is enclosed in two ``---`` lines.
+
+.. code-block:: markdown
+
+    ---
+    UID: DOC-1
+    Version: 1.10
+    name: example-writing-guide
+    description: Rules for writing short documentation.
+    ---
+
+    # Example writing guide
+
+    ## Rule of thumb
+
+    **UID**: RULE-1
+
+    Make documentation useful.
+
+StrictDoc reads the front matter keys the same way as the keys of the H1
+metadata block:
+
+- ``Grammar`` attaches a grammar file or a grammar alias.
+- ``UID``, ``Version``, ``Date``, ``Classification``, and ``Prefix`` set the
+  matching document options. These reserved keys are case-sensitive.
+- Any other key, such as ``name`` and ``description`` in the example above,
+  becomes custom document metadata.
+
+The document title is always the text of the H1 heading.
+
+The front matter has the following constraints:
+
+- The YAML must be a mapping of unique keys to single values. StrictDoc
+  rejects lists and nested mappings.
+- StrictDoc reads all values as text. For example, ``1.10`` stays ``1.10``,
+  and ``true`` stays ``true``.
+- A key must not be in both the front matter and the H1 metadata block.
+
+**Metadata placement on write**
+
+StrictDoc writes a Markdown document back with ``strictdoc format`` and after an
+edit in the web interface. StrictDoc then places each metadata field according
+to the source document:
+
+- No front matter: all fields go to the H1 metadata block.
+- Front matter and no H1 metadata block: all fields go to the front matter.
+- Front matter and an H1 metadata block: the reserved fields go to the H1
+  metadata block, also a reserved field from the front matter. Each custom
+  field goes back to the place it came from. A new custom field goes to the
+  front matter.
+
+The last case suits a document that other tools also read. For example, the
+front matter holds the ``name`` and ``description`` of an agent skill, and the
+H1 metadata block holds the StrictDoc fields.
+
+In each place, the reserved fields come first, in the order ``Grammar``,
+``UID``, ``Version``, ``Date``, ``Classification``, ``Prefix``. The custom
+fields follow in their original order. The reserved keys keep their
+capitalization, for example ``Version``.
 <<<
 
 [[/SECTION]]
@@ -5905,6 +6022,17 @@ default, or uses a pre installed executable if ``strictdoc export
 --chromedriver=/path/to/chromedriver`` or the equivalent ``strictdoc_config.py``
 option is given.
 
+StrictDoc keeps the downloaded chromedriver in a per-user cache folder, so that
+a new output folder does not download it again:
+
+- Linux: ``$XDG_CACHE_HOME/strictdoc`` or ``~/.cache/strictdoc``
+- Windows: ``%LOCALAPPDATA%\strictdoc\cache``
+- macOS: ``~/Library/Caches/strictdoc``
+
+If the ``dir_for_sdoc_cache`` option or the ``STRICTDOC_CACHE_DIR`` environment
+variable sets a cache folder, StrictDoc keeps chromedriver in that folder
+instead.
+
 By default, StrictDoc attempts to detect an existing Chrome/Chromium
 installation. If Chrome is installed in a non-standard location, its binary can
 be specified explicitly with ``strictdoc export
@@ -6168,6 +6296,79 @@ crate-qualified path.
     ``<skipped>``). Running with ``--run-ignored=all`` executes them as normal
     tests instead. There is currently no cargo-nextest setting that emits
     ignored tests as JUnit ``<skipped>`` entries.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 220ad8be35c646799f58357ed9c69df1
+TITLE: gcovr code coverage report
+
+[TEXT]
+MID: 58b8fc60badb404195b9fab5d182a882
+STATEMENT: >>>
+StrictDoc reads a `gcovr <https://gcovr.com>`_ JSON coverage report of C and
+C++ code as a document. The report document lists the covered and the
+non-covered functions of each source file. Each function in the report document
+links to its function in the source file.
+
+To be discovered by StrictDoc, the JSON report file must have the extension
+``.gcov.json``. The following command creates such a report:
+
+.. code:: bash
+
+    gcovr --root . --json --json-pretty -o coverage.gcov.json
+
+The JSON report contains source file paths relative to the gcovr ``--root``
+folder. StrictDoc finds the source files relative to the source root
+(``source_root_path``). As a result, the gcovr ``--root`` folder must be the
+source root.
+
+The ``gcovr_html_report`` option adds a link from each function to the gcovr
+HTML details page of its source file. gcovr creates the HTML details pages with
+the ``--html-details`` option:
+
+.. code:: bash
+
+    gcovr --root . --html --html-details -o build/coverage/coverage.html
+
+The ``gcovr_html_report`` value is the location of the main HTML report, that
+is, the ``-o`` file of gcovr. The value is one of the following:
+
+- An http(s) URL, for example,
+  ``https://ci.example.com/coverage/coverage.html``. Use a URL when a web
+  server publishes the gcovr HTML report.
+- An absolute path or a path relative to the project root, for example,
+  ``build/coverage/coverage.html``. The path must point to an existing file.
+  StrictDoc creates a link relative to the exported HTML page. As a result,
+  the link works in a static HTML export. The StrictDoc server does not serve
+  the gcovr HTML report.
+
+.. code:: python
+
+    from strictdoc.core.project_config import ProjectConfig
+
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            project_features=[
+                "REQUIREMENT_TO_SOURCE_TRACEABILITY",
+            ],
+            gcovr_html_report="build/coverage/coverage.html",
+        )
+        return config
+
+Run the JSON and the HTML gcovr commands with the same ``--root`` folder.
+gcovr names each HTML details page after the source file path relative to
+``--root``. StrictDoc computes the same name from the source file path in the
+JSON report.
+
+Without the ``gcovr_html_report`` option, the report document has no links to
+the gcovr HTML report.
+
+.. warning::
+
+    The gcovr code coverage report feature's status is experimental.
 <<<
 
 [[/SECTION]]

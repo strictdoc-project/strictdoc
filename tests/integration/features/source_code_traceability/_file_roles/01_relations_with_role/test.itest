@@ -5,7 +5,7 @@ RUN: %check_exists --file "%T/html/_source_files/file.c.html"
 RUN: %check_exists --file "%T/html/_source_files/file.py.html"
 RUN: %check_exists --file "%T/html/_source_files/file.txt.html"
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHECK-HTML
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.sdoc.html | filecheck %s --check-prefix CHECK-HTML
 
 CHECK-HTML: <a{{.*}}href="../_source_files/file.c.html#REQ-001#1#2">
 CHECK-HTML: file.c, <i>lines: 1-2</i>, function extfoo

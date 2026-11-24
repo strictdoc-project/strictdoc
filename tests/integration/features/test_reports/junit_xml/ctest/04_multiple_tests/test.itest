@@ -5,14 +5,14 @@ RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 
 # Ensure that the test report document is generated.
 CHECK: Export completed.
-RUN: %check_exists --file "%T/html/%THIS_TEST_FOLDER/reports/tests_unit.ctest.junit.html"
+RUN: %check_exists --file "%T/html/%THIS_TEST_FOLDER/reports/tests_unit.ctest.junit.xml.html"
 
 # Ensure that the source and test files are generated.
 RUN: %check_exists --file "%T/html/_source_files/tests/test1.cpp.html"
 RUN: %check_exists --file "%T/html/_source_files/tests/test2.cpp.html"
 
 # Ensure that the test report document has the right content.
-RUN: %cat "%T/html/%THIS_TEST_FOLDER/reports/tests_unit.ctest.junit.html" | filecheck %s --check-prefix CHECK-TEST-REPORT
+RUN: %cat "%T/html/%THIS_TEST_FOLDER/reports/tests_unit.ctest.junit.xml.html" | filecheck %s --check-prefix CHECK-TEST-REPORT
 CHECK-TEST-REPORT:href="../../_source_files/tests/test1.cpp.html#Test1.TransitionDistance1#1#10">
 CHECK-TEST-REPORT: tests/test1.cpp, <i>lines: 1-10</i>, function TEST_F(Test1, TransitionDistance1)
 CHECK-TEST-REPORT:href="../../_source_files/tests/test1.cpp.html#Test1.TransitionDistance2#12#21">

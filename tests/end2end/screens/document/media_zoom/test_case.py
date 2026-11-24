@@ -11,7 +11,7 @@ from tests.end2end.helpers.screens.document.screen_document import (
 
 path_to_this_test_file_folder = os.path.dirname(os.path.abspath(__file__))
 
-DOC_PATH = "media_zoom/input/index.html"
+DOC_PATH = "media_zoom/input/index.sdoc.html"
 
 # input/index.sdoc has a small and a large image (used below to check that
 # the overlay's initial scale depends on the image's own size), plus one

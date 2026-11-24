@@ -13,7 +13,7 @@ CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/_source_files/file.st.html"
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/example.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %T/html/%THIS_TEST_FOLDER/example.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: <a{{.*}}href="../_source_files/file.st.html#REQ-001#1#18">
 CHECK-HTML: <a{{.*}}href="../_source_files/file.st.html#REQ-002#12#18">
 CHECK-HTML: <a{{.*}}href="../_source_files/file.st.html#REQ-003#2#4">
@@ -25,7 +25,7 @@ RUN: %cat %T/html/_source_files/file.st.html | filecheck %s --dump-input=fail --
 # support the ST syntax at the moment.
 CHECK-SOURCE-FILE: /* Lexer: Text only */
 # Verify that the link that points back to requirement is displayed correctly.
-CHECK-SOURCE-FILE: href="../66_st_structured_text_user_report/example.html#REQ-001"
+CHECK-SOURCE-FILE: href="../66_st_structured_text_user_report/example.sdoc.html#REQ-001"
 # Verify that the range link is displayed correctly.
 CHECK-SOURCE-FILE: href="../_source_files/file.st.html#REQ-001#1#18"
 CHECK-SOURCE-FILE: href="../_source_files/file.st.html#SF_REQ-001#1#18"

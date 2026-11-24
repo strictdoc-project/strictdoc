@@ -13,6 +13,7 @@ path = "strictdoc/__init__.py"
 exclude = [
     # Without this, the folder is still included to the output tar.gz because it has a Markdown file.
     "/developer",
+    "/submodules",
 ]
 
 [tool.hatch.build.targets.sdist]
@@ -71,6 +72,8 @@ dependencies = [
 
     # Parsing Markdown in CommonMark mode. Converting Markdown to HTML.
     "markdown-it-py >= 4.0.0, == 4.*",
+    # Reading and writing the YAML front matter of Markdown documents.
+    "pyyaml >= 6.0, == 6.*",
 
     # Tree Sitter is used for language/AST-aware parsing of Python, C and other files.
     "tree-sitter == 0.25.2",
@@ -113,7 +116,7 @@ dependencies = [
     "watchdog >= 2.1.7",
 
     # HTML2PDF dependencies
-    "html2pdf4doc == 0.0.35",
+    "html2pdf4doc == 0.0.36",
     "pypdf==6.*,>=6.5.0",
 
     # Robot Framework dependencies
@@ -160,6 +163,7 @@ development = []
 check = [
     # Lint
     "mypy>=0.910,<2.5",
+    "types-PyYAML",
     "ruff>=0.9",
     "fixit",
 
@@ -200,6 +204,10 @@ check = [
     # modern setuptools; pip resolved a current release here, so pin the
     # floor to keep uv on the same modern branch.
     "seleniumbase>=4",
+    # invoke test-end2end --parallelize runs the end2end tests on several
+    # pytest-xdist workers (--numprocesses, --dist loadgroup). seleniumbase
+    # also depends on pytest-xdist, but StrictDoc declares it explicitly.
+    "pytest-xdist",
 
     # Screencast video generation (tests/screencast)
     "playwright",

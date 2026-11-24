@@ -8,7 +8,7 @@ CHECK: Export to HTML: Hello world doc
 
 RUN: %check_exists --file "%T/html/_source_files/src/example/example.c.html"
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/requirements.html | filecheck %s --check-prefix CHECK-HTML
+RUN: %cat %T/html/%THIS_TEST_FOLDER/requirements.sdoc.html | filecheck %s --check-prefix CHECK-HTML
 CHECK-HTML: SPDX requirements
 CHECK-HTML: SPDX_DOC/src/example/example.c/example_1
 CHECK-HTML: src/example/example.c, <i>lines: 3-18</i>, function example_1()

@@ -1,7 +1,7 @@
 RUN: %strictdoc export %S --output-dir %T | filecheck %s --dump-input=fail
 CHECK: Export completed.
 
-RUN: %cat %T/html/02_options_markup_is_text/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %T/html/02_options_markup_is_text/input.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: **This text will not be converted to strong tag**
 CHECK-HTML: &lt;a href=&#34;url&#34;&gt;link&lt;/a&gt;
 

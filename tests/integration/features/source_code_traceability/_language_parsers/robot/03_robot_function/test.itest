@@ -5,7 +5,7 @@ CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/_source_files/file.robot.html"
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHECK-HTML
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.sdoc.html | filecheck %s --check-prefix CHECK-HTML
 CHECK-HTML: <a{{.*}}href="../_source_files/file.robot.html#REQ-1#5#8">
 CHECK-HTML: file.robot, <i>lines: 5-8</i>, function My Test()
 CHECK-HTML: <a{{.*}}href="../_source_files/file.robot.html#REQ-1#10#12">

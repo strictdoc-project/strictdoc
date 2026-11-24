@@ -7,8 +7,8 @@ CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/_source_files/file.js.html"
 
-RUN: %cat %T/html/50_js/example.html | filecheck %s --check-prefix CHECK-HTML
+RUN: %cat %T/html/50_js/example.sdoc.html | filecheck %s --check-prefix CHECK-HTML
 CHECK-HTML: <a{{.*}}href="../_source_files/file.js.html#REQ-001#1#8">
 
 RUN: %cat %T/html/_source_files/file.js.html | filecheck %s --check-prefix CHECK-SOURCE-FILE
-CHECK-SOURCE-FILE: href="../50_js/example.html#REQ-001"
+CHECK-SOURCE-FILE: href="../50_js/example.sdoc.html#REQ-001"

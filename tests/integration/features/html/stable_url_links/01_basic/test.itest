@@ -11,7 +11,7 @@ CHECK-HTML: Stable URI Test
 CHECK-HTML: index.sdoc
 
 RUN: %cat %T/html/_static/project_map.js | filecheck %s --dump-input=fail --check-prefix CHECK-MAP
-CHECK-MAP: "01_basic/subfolder/file_in_subfolder.html": [
+CHECK-MAP: "01_basic/subfolder/file_in_subfolder.sdoc.html": [
 CHECK-MAP: "UID":"SUB-DOC-UID"
 CHECK-MAP: "UID":"SUB-ROOT-1"
 CHECK-MAP: "UID":"SUB-REQ-WITHIN-SECTION-THAT-HAS-NO-UID"
@@ -21,7 +21,7 @@ CHECK-MAP: "UID":"SUB-REQ-WITHIN-SECTION-2"
 CHECK-MAP: "UID":"SUB-SECTION-3"
 CHECK-MAP: "UID":"SUB-SECTION-3-1"
 CHECK-MAP: "UID":"SUB-REQ-WITHIN-SECTION-3-1"
-CHECK-MAP: "01_basic/index.html": [
+CHECK-MAP: "01_basic/index.sdoc.html": [
 CHECK-MAP: "UID":"DOC-UID"
 CHECK-MAP: "UID":"ROOT-1"
 CHECK-MAP: "UID":"REQ-WITHIN-SECTION-THAT-HAS-NO-UID"
@@ -32,7 +32,7 @@ CHECK-MAP: "UID":"SECTION-3"
 CHECK-MAP: "UID":"SECTION-3-1"
 CHECK-MAP: "UID":"REQ-WITHIN-SECTION-3-1"
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/index.html | filecheck %s --dump-input=fail --check-prefix CHECK-BUTTON
+RUN: %cat %T/html/%THIS_TEST_FOLDER/index.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-BUTTON
 CHECK-BUTTON: data-path="../#ROOT-1"
 CHECK-BUTTON: data-path="../#REQ-WITHIN-SECTION-THAT-HAS-NO-UID"
 CHECK-BUTTON: data-path="../#SECTION-1"
@@ -42,7 +42,7 @@ CHECK-BUTTON: data-path="../#SECTION-3"
 CHECK-BUTTON: data-path="../#SECTION-3-1"
 CHECK-BUTTON: data-path="../#REQ-WITHIN-SECTION-3-1"
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/subfolder/file_in_subfolder.html | filecheck %s --dump-input=fail --check-prefix CHECK-SUB-BUTTON
+RUN: %cat %T/html/%THIS_TEST_FOLDER/subfolder/file_in_subfolder.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-SUB-BUTTON
 CHECK-SUB-BUTTON: data-path="../../#SUB-ROOT-1"
 CHECK-SUB-BUTTON: data-path="../../#SUB-REQ-WITHIN-SECTION-THAT-HAS-NO-UID"
 CHECK-SUB-BUTTON: data-path="../../#SUB-SECTION-1"

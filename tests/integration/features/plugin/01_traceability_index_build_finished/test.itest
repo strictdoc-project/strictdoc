@@ -14,7 +14,7 @@ RUN: %cat %T/html/index.html | filecheck %s --dump-input=fail --check-prefix CHE
 CHECK-INDEX: Hello world doc
 CHECK-INDEX: input.sdoc
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: Document has 8 issues.
 CHECK-HTML: The whole node is really bad.
 CHECK-HTML: TITLE field is really bad.

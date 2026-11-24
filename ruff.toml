@@ -2,6 +2,9 @@ target-version = "py38"
 line-length = 80
 cache-dir = "build/ruff_cache"
 
+# Git submodules are independent projects with their own lint setup.
+extend-exclude = ["submodules"]
+
 [lint]
 select = [
   "A",

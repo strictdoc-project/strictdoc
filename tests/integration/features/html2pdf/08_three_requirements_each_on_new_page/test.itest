@@ -2,13 +2,13 @@
 
 REQUIRES: TEST_HTML2PDF
 
-RUN: %strictdoc export %S --formats=html2pdf --output-dir %T | filecheck %s --dump-input=fail
+RUN: %strictdoc export %S --formats=html2pdf --chromedriver="%chromedriver" --output-dir %T | filecheck %s --dump-input=fail
 CHECK: html2pdf4doc: JS logs from the print session
 
-RUN: %check_exists --file %T/html2pdf/pdf/input.pdf
+RUN: %check_exists --file %T/html2pdf/pdf/input.sdoc.pdf
 
-RUN: %check_exists --file %T/html2pdf/html/%THIS_TEST_FOLDER/input-PDF.html
-RUN: cat %T/html2pdf/html/%THIS_TEST_FOLDER/input-PDF.html | filecheck %s --check-prefix=CHECK-HTML-PDF
+RUN: %check_exists --file %T/html2pdf/html/%THIS_TEST_FOLDER/input.sdoc-PDF.html
+RUN: cat %T/html2pdf/html/%THIS_TEST_FOLDER/input.sdoc-PDF.html | filecheck %s --check-prefix=CHECK-HTML-PDF
 CHECK-HTML-PDF:     {{<sdoc-node$}}
 CHECK-HTML-PDF-NEXT:class="sdoc-html2pdf4doc-break-before"
 CHECK-HTML-PDF:     {{<sdoc-node$}}

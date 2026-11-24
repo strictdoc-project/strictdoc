@@ -1,0 +1,32 @@
+[DOCUMENT]
+TITLE: Cycle between REQUIREMENT nodes, Parent relations with a role
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+  RELATIONS:
+  - TYPE: Parent
+    ROLE: Refines
+
+[REQUIREMENT]
+UID: REQ-001
+STATEMENT: First.
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-002
+  ROLE: Refines
+
+[REQUIREMENT]
+UID: REQ-002
+STATEMENT: Second.
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-001
+  ROLE: Refines

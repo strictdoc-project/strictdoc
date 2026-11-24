@@ -9,10 +9,10 @@ RUN: %check_exists --file "%T/html/_static/plantuml/plantuml.js"
 RUN: %check_exists --file "%T/html/_static/plantuml/plantuml-core.js"
 RUN: %check_exists --file "%T/html/_static/plantuml/viz-global.js"
 
-RUN: cat %T/html/01_enabled/input.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML-DOC
-RUN: cat %T/html/01_enabled/input-TABLE.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
-RUN: cat %T/html/01_enabled/input-TRACE.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
-RUN: cat %T/html/01_enabled/input-DEEP-TRACE.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
+RUN: cat %T/html/01_enabled/input.sdoc.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML-DOC
+RUN: cat %T/html/01_enabled/input.sdoc-TABLE.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
+RUN: cat %T/html/01_enabled/input.sdoc-TRACE.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
+RUN: cat %T/html/01_enabled/input.sdoc-DEEP-TRACE.html | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML
 CHECK-HTML: window.strictdocRenderPlantUML()
 
 The document screen defers the initial PlantUML rendering to browser idle

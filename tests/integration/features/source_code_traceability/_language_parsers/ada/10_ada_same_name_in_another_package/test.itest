@@ -6,7 +6,7 @@ CHECK: Export completed.
 RUN: %check_exists --file "%T/html/_source_files/other.ads.html"
 RUN: %check_exists --file --invert "%T/html/_source_files/file.adb.html"
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: <a{{.*}}href="../_source_files/other.ads.html#REQ-1#2#5">
 CHECK-HTML: other.ads, <i>lines: 2-5</i>, function Other.Hello_World_1
 CHECK-HTML: <a{{.*}}href="../_source_files/other.ads.html#REQ-2#7#10">

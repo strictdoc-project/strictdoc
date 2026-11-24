@@ -5,7 +5,7 @@ CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/_source_files/Rig.mo.html"
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --check-prefix CHECK-HTML
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.sdoc.html | filecheck %s --check-prefix CHECK-HTML
 CHECK-HTML: href="../_source_files/Rig.mo.html#TC-1#3#9"
 CHECK-HTML: class Rig.Check
 CHECK-HTML: href="../_source_files/Rig.mo.html#REQ-1#4#4"

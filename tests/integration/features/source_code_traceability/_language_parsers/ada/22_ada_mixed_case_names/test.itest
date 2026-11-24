@@ -6,7 +6,7 @@ CHECK: Export completed.
 RUN: %check_exists --file "%T/html/_source_files/pkg.adb.html"
 RUN: %check_exists --file "%T/html/_source_files/pkg.ads.html"
 
-RUN: %cat %T/html/%THIS_TEST_FOLDER/input.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %T/html/%THIS_TEST_FOLDER/input.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: <a{{.*}}href="../_source_files/pkg.adb.html#REQ-1#2#5">
 CHECK-HTML: pkg.adb, <i>lines: 2-5</i>, function Pkg.Foo
 CHECK-HTML: <a{{.*}}href="../_source_files/pkg.ads.html#REQ-1#2#3">

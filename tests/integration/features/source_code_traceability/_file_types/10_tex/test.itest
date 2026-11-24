@@ -7,8 +7,8 @@ CHECK: Export completed.
 
 RUN: %check_exists --file "%T/html/_source_files/file.tex.html"
 
-RUN: %cat %T/html/10_tex/example.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
+RUN: %cat %T/html/10_tex/example.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
 CHECK-HTML: <a{{.*}}href="../_source_files/file.tex.html#REQ-001#1#48">
 
 RUN: %cat %T/html/_source_files/file.tex.html | filecheck %s --dump-input=fail --check-prefix CHECK-SOURCE-FILE
-CHECK-SOURCE-FILE: href="../10_tex/example.html#REQ-001"
+CHECK-SOURCE-FILE: href="../10_tex/example.sdoc.html#REQ-001"

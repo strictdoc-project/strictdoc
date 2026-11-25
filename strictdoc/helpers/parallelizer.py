@@ -17,6 +17,15 @@ from strictdoc.helpers.exception import (
 
 MultiprocessingLambdaType = Callable[[Any], Any]
 
+# MultiprocessingParallelizer runs a call with fewer tasks than this in the
+# calling process. For a few tasks, the startup of the worker processes takes
+# longer than the parallel run saves. ProcessPoolExecutor starts its workers
+# on the first submitted task, so a small export starts no worker process at
+# all. Measured on a 12-thread laptop, `strictdoc export` with 20 requirements
+# per document: the process pool is slower up to 6 documents and faster from
+# 8 documents.
+MIN_TASKS_FOR_PROCESS_POOL = 5
+
 # Where run_parallel_with_context() cannot use the fork+copy-on-write fast
 # path (Windows, always - or a dynamic MultiprocessingParallelizer, which
 # never uses "fork" - see MultiprocessingParallelizer.__init__()), this caps
@@ -191,6 +200,11 @@ class MultiprocessingParallelizer(Parallelizer):
         processing_func: MultiprocessingLambdaType,
         on_item_complete: Optional[Callable[[int, Any], None]] = None,
     ) -> Iterable[Any]:
+        if len(contents) < MIN_TASKS_FOR_PROCESS_POOL:
+            return self._run_in_process(
+                contents, processing_func, on_item_complete
+            )
+
         try:
             future_to_index = {
                 self.executor.submit(
@@ -220,6 +234,14 @@ class MultiprocessingParallelizer(Parallelizer):
         context: Any,
         on_item_complete: Optional[Callable[[int, Any], None]] = None,
     ) -> Iterable[Any]:
+        # A small call needs no worker processes. As a result, the existing
+        # process pool stays as it is: no shutdown and no rebuild below.
+        if len(contents) < MIN_TASKS_FOR_PROCESS_POOL:
+            _init_worker_context(context)
+            return self._run_in_process(
+                contents, processing_func, on_item_complete
+            )
+
         self.executor.shutdown(wait=True)
 
         # `context` (e.g. a whole traceability index) can be large - tens to
@@ -293,6 +315,28 @@ class MultiprocessingParallelizer(Parallelizer):
 
     def shutdown(self) -> None:
         self.executor.shutdown(wait=True)
+
+    @staticmethod
+    def _run_in_process(
+        contents: List[Any],
+        processing_func: MultiprocessingLambdaType,
+        on_item_complete: Optional[Callable[[int, Any], None]],
+    ) -> List[Any]:
+        """
+        Run the tasks one after another in the calling process. A failed task
+        raises StrictDocChildProcessException, the same exception as a failed
+        task in a worker process. As a result, StrictDoc reports an error in
+        the same way for a small and a large call.
+        """
+        results: List[Any] = []
+        for index_, item_ in enumerate(contents):
+            result, exception = processing_func_wrapper(processing_func, item_)
+            if exception is not None:
+                raise exception
+            results.append(result)
+            if on_item_complete is not None:
+                on_item_complete(index_, result)
+        return results
 
 
 class NullParallelizer(Parallelizer):

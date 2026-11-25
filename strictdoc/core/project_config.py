@@ -117,6 +117,7 @@ class ProjectFeature(str, Enum):
 
     MERMAID = "MERMAID"
     NESTOR = "NESTOR"
+    STATIC_EDITING = "STATIC_EDITING"
 
     ALL_FEATURES = "ALL_FEATURES"
 
@@ -131,6 +132,12 @@ DEPRECATED_FEATURES: List[str] = [
     ProjectFeature.MATHJAX,
     ProjectFeature.MERMAID,
     ProjectFeature.SOURCE_FILE_LANGUAGE_PARSERS,
+]
+
+# Features that change the behavior of the exported HTML for its readers and
+# must be listed explicitly. ALL_FEATURES does not activate these features.
+OPT_IN_FEATURES: List[str] = [
+    ProjectFeature.STATIC_EDITING,
 ]
 
 
@@ -599,6 +606,11 @@ class ProjectConfig:
                 for feature_ in project_features
                 if feature_ in DEPRECATED_FEATURES
             ]
+            explicit_opt_in_features = [
+                feature_
+                for feature_ in project_features
+                if feature_ in OPT_IN_FEATURES
+            ]
             custom_features = [
                 feature_
                 for feature_ in project_features
@@ -609,8 +621,10 @@ class ProjectConfig:
                     feature_
                     for feature_ in ProjectFeature.all()
                     if feature_ not in DEPRECATED_FEATURES
+                    and feature_ not in OPT_IN_FEATURES
                 ),
                 *explicit_deprecated_features,
+                *explicit_opt_in_features,
                 *custom_features,
             ]
 
@@ -725,6 +739,9 @@ class ProjectConfig:
         from strictdoc.features.project_statistics.feature import (  # noqa: PLC0415
             ProjectStatisticsFeature,
         )
+        from strictdoc.features.static_editing.feature import (  # noqa: PLC0415
+            StaticEditingFeature,
+        )
         from strictdoc.features.tree_map.feature import (  # noqa: PLC0415
             TreeMapFeature,
         )
@@ -733,6 +750,7 @@ class ProjectConfig:
             feature.HANDLE: feature
             for feature in [
                 ProjectStatisticsFeature(),
+                StaticEditingFeature(),
                 TreeMapFeature(),
             ]
         }

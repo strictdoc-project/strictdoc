@@ -50,6 +50,25 @@ releases:
 <<<
 
 [[SECTION]]
+MID: 8713dc9c26724ebf92ed395400b9ff19
+TITLE: Unreleased
+
+[TEXT]
+MID: 8ff01234adca458f9095633ca20095ea
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) New experimental feature ``STATIC_EDITING``: the HTML export writes a static
+editing data file next to each document's HTML file. The file contains the
+document grammar and the source values of all nodes that have a UID or a MID
+in the source file. This is the first step towards editing a static HTML
+export in the browser. ``ALL_FEATURES`` does not activate this feature. See
+[LINK: SECTION-UG-Static-editing].
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 47316fcefedf4760b658efaee7230ef5
 TITLE: 0.32.2 (2026-11-26)
 

@@ -838,6 +838,33 @@ RELATIONS:
   VALUE: strictdoc/export/html/html_generator.py
 
 [REQUIREMENT]
+MID: 5accfebecf7343549707713a35023a35
+UID: SDOC-SRS-214
+STATUS: Active
+TITLE: Static editing data export
+STATEMENT: >>>
+Where the STATIC_EDITING feature is activated, StrictDoc shall export the
+static editing data of each document next to the document's HTML file.
+
+The static editing data shall contain the document grammar, the source values
+of the node fields, and a content hash for each node.
+
+StrictDoc shall mark a node as editable only if the node has a UID or a MID
+that is stored in the source file.
+<<<
+RATIONALE: >>>
+The static editing data enables editing of a static HTML export without a
+running StrictDoc server. A MID that StrictDoc generates at build time changes
+with every export, so it cannot identify a node when the changes are applied
+to the source files.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-30
+- TYPE: File
+  VALUE: strictdoc/features/static_editing/edit_data.py
+
+[REQUIREMENT]
 MID: 37399be2a8ac46889e3437209f9dffa9
 UID: SDOC-SRS-50
 STATUS: Active

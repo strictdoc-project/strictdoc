@@ -1,0 +1,11 @@
+#
+# Without the STATIC_EDITING feature, the export writes no static editing data.
+#
+# @relation(SDOC-SRS-214, scope=file)
+#
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s
+CHECK: Export completed.
+
+RUN: %check_exists --file "%T/html/02_edit_data_is_not_exported_without_feature/input.sdoc.html"
+RUN: %check_exists --invert "%T/html/02_edit_data_is_not_exported_without_feature/input.sdoc.edit.json"

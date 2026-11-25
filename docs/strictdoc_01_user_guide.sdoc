@@ -6056,7 +6056,13 @@ The static editor works on the document screen of the static HTML export:
 
    The form shows the fields of the document grammar. A custom grammar
    needs a ``COMMENT`` field in the element, otherwise the form offers no
-   comments. Export the documentation again after changing the grammar.
+   comments.
+
+   The incremental export does not notice a change in a grammar file that a
+   document imports. It regards the documents as up-to-date and keeps the
+   old editor data. After changing a grammar file, delete the cache folder
+   of the output folder, for example ``output/_cache``, and export the
+   documentation again.
 
    A new comment starts with the name or initials of its author, for example
    ``[bob] Please clarify the timing.``. Enter the name in the "Name" field of

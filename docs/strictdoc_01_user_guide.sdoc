@@ -6054,6 +6054,10 @@ The static editor works on the document screen of the static HTML export:
    read-only. Click "Add comment" to add another COMMENT field. Clear an
    existing COMMENT field to remove it.
 
+   The form shows the fields of the document grammar. A custom grammar
+   needs a ``COMMENT`` field in the element, otherwise the form offers no
+   comments. Export the documentation again after changing the grammar.
+
    A new comment starts with the name or initials of its author, for example
    ``[bob] Please clarify the timing.``. Enter the name in the "Name" field of
    the panel at the bottom right before adding a comment. The browser keeps

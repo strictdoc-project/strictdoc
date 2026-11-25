@@ -42,8 +42,8 @@ class Test(E2ECase):
                 )
                 == 1
             )
-            self.assert_element_not_visible(
-                '[data-testid="static-editing-panel"]'
+            self.assert_element_not_present(
+                '[data-testid="static-editing-change-count"]'
             )
 
             # Edit the STATEMENT and save the change.
@@ -69,6 +69,14 @@ class Test(E2ECase):
                 "Second comment.",
                 by=By.XPATH,
             )
+            self.click('[data-testid="form-submit-action"]')
+
+            # A new comment needs the name of the author.
+            self.assert_text(
+                "Enter your name or initials",
+                "sdoc-form-error",
+            )
+            self.type('[data-testid="static-editing-author"]', "bob")
             self.click('[data-testid="form-submit-action"]')
 
             self.assert_element('[data-testid="static-editing-preview"]')
@@ -112,13 +120,13 @@ class Test(E2ECase):
                     "name": "COMMENT",
                     "index": None,
                     "old_value": None,
-                    "new_value": "First comment.",
+                    "new_value": "[bob] First comment.",
                 },
                 {
                     "name": "COMMENT",
                     "index": None,
                     "old_value": None,
-                    "new_value": "Second comment.",
+                    "new_value": "[bob] Second comment.",
                 },
             ]
 
@@ -129,7 +137,13 @@ class Test(E2ECase):
             self.assert_element_not_present(
                 '[data-testid="static-editing-preview"]'
             )
-            self.assert_element_not_visible(
-                '[data-testid="static-editing-panel"]'
+            self.assert_element_not_present(
+                '[data-testid="static-editing-change-count"]'
+            )
+
+            # The browser keeps the name of the author.
+            self.refresh()
+            self.assert_attribute(
+                '[data-testid="static-editing-author"]', "value", "bob"
             )
             assert len(self.find_elements("sdoc-node", by=By.CSS_SELECTOR)) > 0

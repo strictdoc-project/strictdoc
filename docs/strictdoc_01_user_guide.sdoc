@@ -6053,10 +6053,17 @@ The static editor works on the document screen of the static HTML export:
 2. Edit the fields in the form and click "Save". The UID and MID fields are
    read-only. Click "Add comment" to add another COMMENT field. Clear an
    existing COMMENT field to remove it.
+
+   A new comment starts with the name or initials of its author, for example
+   ``[bob] Please clarify the timing.``. Enter the name in the "Name" field of
+   the panel at the bottom right before adding a comment. The browser keeps
+   the name for the next visits. Other fields and edited comments get no
+   name.
 3. The node shows the changed fields below its content. The browser stores the
    change, so the change survives a page reload.
-4. The panel at the bottom right shows the number of changes in the project.
-   Click "Export changes as JSON" to download all changes as one file.
+4. The panel at the bottom right shows the name field and the number of
+   changes in the project. Click "Export changes as JSON" to download all
+   changes as one file.
 5. Click "Discard all" twice to delete all stored changes.
 
 The browser stores the changes in its IndexedDB, separately for each project.

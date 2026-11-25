@@ -51,8 +51,29 @@ sdoc-static-editing-panel {
   box-shadow: 0 4px 16px rgba(0, 0, 0, .15);
 }
 
-sdoc-static-editing-panel[hidden] {
+sdoc-static-editing-panel-changes {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--base-rhythm) * 2);
+}
+
+sdoc-static-editing-panel-changes:empty {
   display: none;
+}
+
+sdoc-static-editing-panel label {
+  display: flex;
+  align-items: center;
+  gap: var(--base-rhythm);
+  font-size: .9em;
+}
+
+sdoc-static-editing-panel input {
+  width: calc(var(--base-rhythm) * 18);
+  padding: 4px var(--base-rhythm);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  font: inherit;
 }
 
 sdoc-static-editing-panel-count {

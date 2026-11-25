@@ -1,5 +1,5 @@
 import re
-from typing import List
+from typing import List, Optional
 
 REGEX_NAME_PART = r"[A-Za-z0-9-_\.() ]*"
 REGEX_FILENAME = rf"{REGEX_NAME_PART}"
@@ -87,6 +87,41 @@ class PathFilter:
             compiled_masks.append(re.compile(regex))
 
         self.compiled_masks: List[re.Pattern[str]] = compiled_masks
+
+        # A path matches an anchored mask, for example "/docs/**.sdoc", only if
+        # it starts with the text of the mask before its first wildcard, here
+        # "docs/". may_match_inside() uses these prefixes to skip folders. A
+        # mask that is not anchored, or that uses Windows separators, can
+        # match in any folder, so then no folder is skipped (None).
+        self.anchored_prefixes: Optional[List[str]] = None
+        if len(filtered_paths) > 0 and all(
+            path_.startswith("/") and "\\" not in path_
+            for path_ in filtered_paths
+        ):
+            self.anchored_prefixes = [
+                path_[1:].split("*", 1)[0] for path_ in filtered_paths
+            ]
+
+    def may_match_inside(self, folder_path: str) -> bool:
+        """
+        Return False only if no path inside the folder can match the filter.
+
+        folder_path is a POSIX path relative to the root, with a trailing "/",
+        for example "docs/" or "docs/subfolder/".
+        """
+        assert folder_path.endswith("/"), folder_path
+
+        if self.anchored_prefixes is None:
+            return True
+
+        for prefix_ in self.anchored_prefixes:
+            # The folder is on the way to the prefix, or inside it.
+            if prefix_.startswith(folder_path) or folder_path.startswith(
+                prefix_
+            ):
+                return True
+
+        return False
 
     def match(self, found_path: str) -> bool:
         # If this is an empty positive filter, we want to match everything

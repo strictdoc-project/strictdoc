@@ -342,3 +342,81 @@ def test_case_82_windows_hidden_files_with_dollar_are_supported():
     assert path_filter.match("foo/bar/~$ProjectPlan.docx")
 
     assert not path_filter.match("$ProjectPlan.docx")
+
+
+def test_case_90_may_match_inside_anchored_masks():
+    path_filter = PathFilter(
+        ["/strictdoc/**.py", "/tests/integration/**itest", "/LICENSE"],
+        positive_or_negative=True,
+    )
+
+    # POSITIVE: the folder is on the way to an included path, or inside it.
+    assert path_filter.may_match_inside("strictdoc/")
+    assert path_filter.may_match_inside("strictdoc/core/")
+    assert path_filter.may_match_inside("tests/")
+    assert path_filter.may_match_inside("tests/integration/")
+    assert path_filter.may_match_inside("tests/integration/commands/")
+    # "/LICENSE" also matches the files inside a folder called LICENSE.
+    assert path_filter.may_match_inside("LICENSE/")
+
+    # NEGATIVE
+    assert not path_filter.may_match_inside("build/")
+    assert not path_filter.may_match_inside(".venv/")
+    assert not path_filter.may_match_inside("tests/unit/")
+    assert not path_filter.may_match_inside("docs/strictdoc/")
+
+
+def test_case_91_may_match_inside_skips_no_folder_for_other_masks():
+    # An empty filter, a mask that is not anchored, and a mask with Windows
+    # separators can match in any folder.
+    for masks in (
+        [],
+        ["docs/"],
+        ["/docs/", "*.sdoc"],
+        ["/docs/", "**/requirements/"],
+        ["/docs\\sub"],
+    ):
+        path_filter = PathFilter(masks, positive_or_negative=True)
+        assert path_filter.may_match_inside("build/"), masks
+        assert path_filter.may_match_inside("build/docs/"), masks
+
+
+def test_case_92_may_match_inside_agrees_with_match():
+    """
+    If match() accepts a path, may_match_inside() accepts every folder of the
+    path.
+    """
+    masks = [
+        "/docs/",
+        "/docs/*.sdoc",
+        "/strictdoc/**.py",
+        "/src/*/module/**",
+        "/str*/x.py",
+        "/LICENSE",
+        "/**.md",
+        "/sub(2)/",
+    ]
+    paths = [
+        "docs/a.sdoc",
+        "docs/sub/b.sdoc",
+        "docs/x.sdoc/inner.txt",
+        "strictdoc/core/file.py",
+        "strictdoc/file.py",
+        "src/lib/module/a/b.c",
+        "stringutils/x.py",
+        "LICENSE",
+        "LICENSE/file.txt",
+        "deep/folder/readme.md",
+        "sub(2)/input.sdoc",
+        "build/docs/a.sdoc",
+        ".venv/lib/strictdoc/file.py",
+    ]
+    for mask_ in masks:
+        path_filter = PathFilter([mask_], positive_or_negative=True)
+        for path_ in paths:
+            if not path_filter.match(path_):
+                continue
+            parts = path_.split("/")[:-1]
+            for index_ in range(1, len(parts) + 1):
+                folder = "/".join(parts[:index_]) + "/"
+                assert path_filter.may_match_inside(folder), (mask_, path_)

@@ -5960,7 +5960,8 @@ The typical use case is a static HTML export published with GitHub Pages or
 GitLab Pages. The readers, for example project managers, can access the Git
 repository, but editing SDoc files in the web editor of GitHub or GitLab is
 hard to use. With static editing, these readers edit the requirements in the
-familiar document view of the published export. The JSON file then goes into
+familiar document view of the published export. They do not need to run a
+StrictDoc server or to edit SDoc files in a text editor. The JSON file then goes into
 the usual review and approval workflow, for example a pull request.
 
 .. note::

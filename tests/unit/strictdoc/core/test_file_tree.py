@@ -263,3 +263,76 @@ def test_60_find_directories_with_include_paths_and_windows_separators():
             )
 
         assert directories == [assets_dir]
+
+
+def test_56_include_paths_skip_folders_without_included_files():
+    """
+    The walk does not enter the folders that cannot contain an included file,
+    so these folders are not in the file tree.
+    """
+
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        path_to_included_file1 = os.path.join(
+            tmp_dir, "tests", "integration", "a.itest"
+        )
+        path_to_included_file2 = os.path.join(
+            tmp_dir, "tests", "integration", "sub", "b.itest"
+        )
+        path_to_skipped_file1 = os.path.join(
+            tmp_dir, "tests", "unit", "c.itest"
+        )
+        path_to_skipped_file2 = os.path.join(tmp_dir, "build", "d.itest")
+        for path_ in (
+            path_to_included_file1,
+            path_to_included_file2,
+            path_to_skipped_file1,
+            path_to_skipped_file2,
+        ):
+            Path(path_).parent.mkdir(parents=True, exist_ok=True)
+            Path(path_).touch()
+
+        file_tree = FileFinder.find_files_with_extensions(
+            root_path=tmp_dir,
+            ignored_dirs=[],
+            extensions=None,
+            include_paths=["/tests/integration/**.itest"],
+            exclude_paths=[],
+        )
+
+        found_files = [file_.full_path for _, file_, _ in file_tree.iterate()]
+        assert found_files == [path_to_included_file1, path_to_included_file2]
+
+        root_folder = file_tree.root_folder_or_file
+        assert isinstance(root_folder, Folder)
+        assert [f.folder_name for f in root_folder.subfolder_trees] == ["tests"]
+        tests_folder = root_folder.subfolder_trees[0]
+        assert [f.folder_name for f in tests_folder.subfolder_trees] == [
+            "integration"
+        ]
+
+
+def test_57_include_paths_not_anchored_keep_all_folders():
+    """
+    A mask that does not start with "/" can match in any folder, so the walk
+    enters all folders.
+    """
+
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        path_to_file1 = os.path.join(tmp_dir, "docs", "a.sdoc")
+        path_to_file2 = os.path.join(tmp_dir, "build", "docs", "b.sdoc")
+        for path_ in (path_to_file1, path_to_file2):
+            Path(path_).parent.mkdir(parents=True, exist_ok=True)
+            Path(path_).touch()
+
+        file_tree = FileFinder.find_files_with_extensions(
+            root_path=tmp_dir,
+            ignored_dirs=[],
+            extensions=[".sdoc"],
+            include_paths=["docs/"],
+            exclude_paths=[],
+        )
+
+        found_files = sorted(
+            file_.full_path for _, file_, _ in file_tree.iterate()
+        )
+        assert found_files == sorted([path_to_file1, path_to_file2])

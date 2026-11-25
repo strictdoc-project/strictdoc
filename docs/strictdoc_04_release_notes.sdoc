@@ -81,6 +81,14 @@ half as long as before.
 five documents in its own process. Before, StrictDoc started a worker process
 for each CPU core, even for a single document. The start of these worker
 processes took longer than the parallel export saved.
+
+5\) StrictDoc finds documents and source files faster in a large project
+folder. If all paths in ``include_doc_paths`` or ``include_source_paths``
+start with ``/``, StrictDoc no longer searches the folders outside these paths,
+for example ``build/``, ``.venv/``, or ``node_modules/``. In a development
+checkout of StrictDoc with build output, the search for source files now checks
+about 7,500 files instead of more than 200,000. StrictDoc finds the same files
+as before.
 <<<
 
 [[/SECTION]]

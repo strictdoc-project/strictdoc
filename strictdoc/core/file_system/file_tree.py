@@ -149,7 +149,16 @@ class FileFinder:
 
             count += 1
 
-            dirs[:] = [d for d in dirs if d not in ("output", "Output")]
+            # Skip the folders that cannot contain an included file, for
+            # example build/ or .venv/ when only /docs/ is included.
+            dirs[:] = [
+                d
+                for d in dirs
+                if d not in ("output", "Output")
+                and path_filter_includes.may_match_inside(
+                    f"{current_dir_rel_path.relative_path_posix}{d}/"
+                )
+            ]
             dirs.sort(key=alphanumeric_sort)
 
             current_root_path_level: int = (
@@ -171,15 +180,6 @@ class FileFinder:
                 ):
                     continue
 
-                full_file_path = os.path.join(current_dir_full_path_, file)
-
-                # A known edge case: A file is found by os.walk(), but it is a
-                # Linux pipe file which fails an os.path.isfile() check.
-                # It seems to be safe to ignore this and possibly other cases
-                # here without writing any test for this case.
-                if not os.path.isfile(full_file_path):  # pragma: no cover
-                    continue
-
                 rel_file_path = SDocRelativePath(
                     os.path.join(current_dir_rel_path.relative_path, file)
                 )
@@ -192,6 +192,17 @@ class FileFinder:
                 if path_filter_includes.match(
                     rel_file_path.relative_path_posix
                 ):
+                    full_file_path = os.path.join(current_dir_full_path_, file)
+
+                    # A known edge case: A file is found by os.walk(), but it
+                    # is a Linux pipe file which fails an os.path.isfile()
+                    # check. It seems to be safe to ignore this and possibly
+                    # other cases here without writing any test for this case.
+                    # The check runs after the path filters, so only the
+                    # included files cost a stat() call.
+                    if not os.path.isfile(full_file_path):  # pragma: no cover
+                        continue
+
                     # TODO: For now, ignore the binary files but one day a user
                     # might want to create a Relation to a binary file like a
                     # published PDF.

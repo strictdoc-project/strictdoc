@@ -130,10 +130,19 @@ class Test(E2ECase):
                 },
             ]
 
-            # Discarding needs a confirmation click.
+            # Discarding needs a confirmation. "No" keeps the changes.
             self.click('[data-testid="static-editing-discard-action"]')
+            self.assert_text(
+                "Discard all changes?",
+                '[data-testid="static-editing-discard-confirm"]',
+            )
+            self.click('[data-testid="static-editing-discard-cancel-action"]')
+            self.assert_element_not_visible(
+                '[data-testid="static-editing-discard-confirm"]'
+            )
             self.assert_element('[data-testid="static-editing-preview"]')
             self.click('[data-testid="static-editing-discard-action"]')
+            self.click('[data-testid="static-editing-discard-confirm-action"]')
             self.assert_element_not_present(
                 '[data-testid="static-editing-preview"]'
             )

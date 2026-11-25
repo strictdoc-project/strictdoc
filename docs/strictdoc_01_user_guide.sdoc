@@ -6064,7 +6064,13 @@ The static editor works on the document screen of the static HTML export:
 4. The panel at the bottom right shows the name field and the number of
    changes in the project. Click "Export changes as JSON" to download all
    changes as one file.
-5. Click "Discard all" twice to delete all stored changes.
+5. Use the up and down buttons in the panel to jump to the previous or the
+   next changed node of the document. The panel shows the position, for
+   example ``2 / 5``. The navigation wraps around at the first and the last
+   change. A large document loads its content in parts. The navigation only
+   reaches the changed nodes of the loaded parts.
+6. Click "Discard all" and confirm with "Yes" to delete all stored changes.
+   "No" keeps the changes.
 
 The browser stores the changes in its IndexedDB, separately for each project.
 The changes stay on the computer and in the browser that the reader used.

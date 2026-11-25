@@ -447,6 +447,7 @@
     const change = documentChanges.get(changeKey(node));
     if (!change) {
       nodeElement.removeAttribute('data-static-editing-modified');
+      nodeElement.removeAttribute('data-static-editing-current');
       return;
     }
     nodeElement.setAttribute('data-static-editing-modified', '');
@@ -587,28 +588,122 @@
       );
       exportButton.addEventListener('click', downloadExport);
 
-      // Discarding needs a second click. A browser dialog would block the
-      // page for automated tests.
+      // Discarding asks for confirmation in the panel. A browser dialog would
+      // block the page for automated tests.
       const discardButton = createElement(
         'button',
         { type: 'button', class: 'action_button', 'data-testid': 'static-editing-discard-action' },
         ['Discard all'],
       );
+      const confirmYesButton = createElement(
+        'button',
+        { type: 'button', class: 'action_button', 'data-testid': 'static-editing-discard-confirm-action' },
+        ['Yes'],
+      );
+      const confirmNoButton = createElement(
+        'button',
+        { type: 'button', class: 'action_button', 'data-testid': 'static-editing-discard-cancel-action' },
+        ['No'],
+      );
+      const discardConfirm = createElement(
+        'sdoc-static-editing-discard-confirm',
+        { 'data-testid': 'static-editing-discard-confirm', hidden: '' },
+        ['Discard all changes? ', confirmYesButton, confirmNoButton],
+      );
       discardButton.addEventListener('click', () => {
-        if (discardButton.dataset.confirm === 'true') {
-          discardAll();
-          return;
-        }
-        discardButton.dataset.confirm = 'true';
-        discardButton.textContent = 'Click again to discard all changes';
+        discardButton.hidden = true;
+        discardConfirm.hidden = false;
+        confirmNoButton.focus();
       });
+      confirmNoButton.addEventListener('click', () => {
+        discardConfirm.hidden = true;
+        discardButton.hidden = false;
+      });
+      confirmYesButton.addEventListener('click', discardAll);
 
       panelChanges.append(
         createElement('sdoc-static-editing-panel-count', { 'data-testid': 'static-editing-change-count' }, [countText]),
+        ...createNavigation(),
         exportButton,
         discardButton,
+        discardConfirm,
       );
     });
+  }
+
+  //
+  // The navigation between the changed nodes of the document, similar to the
+  // search of a browser. It wraps around at the first and the last node.
+  //
+
+  let currentChangedNode = null;
+  let navigationPosition = null;
+
+  function changedNodeElements() {
+    // Nodes of chunks that are not loaded yet are not part of the list.
+    return Array.from(document.querySelectorAll('sdoc-node[data-static-editing-modified]'));
+  }
+
+  function renderNavigationPosition() {
+    if (navigationPosition === null) return;
+    const nodes = changedNodeElements();
+    const index = nodes.indexOf(currentChangedNode);
+    navigationPosition.textContent = `${index < 0 ? '–' : index + 1} / ${nodes.length}`;
+  }
+
+  function jumpToChange(step) {
+    const nodes = changedNodeElements();
+    if (nodes.length === 0) return;
+    const index = nodes.indexOf(currentChangedNode);
+    let nextIndex;
+    if (index < 0) nextIndex = step > 0 ? 0 : nodes.length - 1;
+    else nextIndex = (index + step + nodes.length) % nodes.length;
+
+    if (currentChangedNode) currentChangedNode.removeAttribute('data-static-editing-current');
+    currentChangedNode = nodes[nextIndex];
+    currentChangedNode.setAttribute('data-static-editing-current', '');
+    currentChangedNode.scrollIntoView({ block: 'center' });
+    renderNavigationPosition();
+  }
+
+  function createNavigation() {
+    navigationPosition = null;
+    if (documentChanges.size === 0) return [];
+    navigationPosition = createElement('sdoc-static-editing-navigation-position', {
+      'data-testid': 'static-editing-navigation-position',
+    });
+    const previousButton = createElement(
+      'button',
+      {
+        type: 'button',
+        class: 'action_button',
+        title: 'Previous change',
+        'aria-label': 'Previous change',
+        'data-testid': 'static-editing-previous-change-action',
+      },
+      ['\u25B2'],
+    );
+    const nextButton = createElement(
+      'button',
+      {
+        type: 'button',
+        class: 'action_button',
+        title: 'Next change',
+        'aria-label': 'Next change',
+        'data-testid': 'static-editing-next-change-action',
+      },
+      ['\u25BC'],
+    );
+    previousButton.addEventListener('click', () => jumpToChange(-1));
+    nextButton.addEventListener('click', () => jumpToChange(1));
+    renderNavigationPosition();
+    return [
+      createElement('sdoc-static-editing-navigation', { 'data-testid': 'static-editing-navigation' }, [
+        previousButton,
+        navigationPosition,
+        nextButton,
+      ]),
+    ];
   }
 
   //

@@ -84,3 +84,26 @@ sdoc-static-editing-preview-field[data-removed] pre {
   text-decoration: line-through;
   color: var(--color-fg-secondary);
 }
+
+sdoc-node[data-static-editing-current] {
+  outline: 2px solid var(--color-action);
+  outline-offset: 4px;
+}
+
+sdoc-static-editing-navigation,
+sdoc-static-editing-discard-confirm {
+  display: flex;
+  align-items: center;
+  gap: var(--base-rhythm);
+  white-space: nowrap;
+}
+
+sdoc-static-editing-navigation-position {
+  min-width: 4em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+sdoc-static-editing-panel [hidden] {
+  display: none !important;
+}

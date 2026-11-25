@@ -1,0 +1,6 @@
+<code class="dashboard-path" data-js-path-reveal data-testid="{{ testid }}">
+  {%- if external_path -%}
+    <span class="dashboard-path-external" data-js-path-reveal-control data-testid="{{ testid }}-external" aria-expanded="false" role="button" tabindex="0" title="Click to reveal">…</span><span class="dashboard-path-external-full">{{ external_path }}</span>
+  {%- endif -%}
+  <span class="dashboard-path-internal">{{ internal_path }}</span>
+</code>

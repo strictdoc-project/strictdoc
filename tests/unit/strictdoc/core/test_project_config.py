@@ -116,6 +116,31 @@ def test_33_exclude_source_paths_bad_mask():
         _ = ProjectConfig(exclude_source_paths=[" "])
 
 
+def test_34_exclude_paths_from_gitignore_tracked_separately(tmp_path):
+    (tmp_path / ".gitignore").write_text(
+        "output/\n# a comment\n\nbuild/\n",
+        encoding="utf8",
+    )
+    project_config = ProjectConfig(exclude_doc_paths=["/docs/drafts/"])
+    project_config.input_paths = [str(tmp_path)]
+    project_config.validate_and_finalize()
+
+    assert project_config.exclude_paths_from_gitignore == [
+        "/.git/",
+        "output/",
+        "build/",
+    ]
+    # The explicitly configured exclude is not mistaken for a gitignore one.
+    assert "/docs/drafts/" not in project_config.exclude_paths_from_gitignore
+    # Both still end up in the merged list used for actual filtering.
+    assert project_config.exclude_doc_paths == [
+        "/docs/drafts/",
+        "/.git/",
+        "output/",
+        "build/",
+    ]
+
+
 #
 # Editable document extensions.
 #
@@ -203,6 +228,49 @@ def create_config():
         assert config.project_title == "NonCanonical"
     finally:
         os.unlink(path)
+
+
+def test_72_config_path_prefers_python_config_in_directory(tmp_path):
+    (tmp_path / "strictdoc_config.py").write_text(
+        """\
+from strictdoc.core.project_config import ProjectConfig
+
+def create_config():
+    return ProjectConfig(project_title="Python config")
+"""
+    )
+    (tmp_path / "strictdoc.toml").write_text(
+        '[project]\ntitle = "TOML config"\n'
+    )
+
+    config = ProjectConfigLoader.load_from_path_or_get_default(
+        path_to_config=str(tmp_path)
+    )
+
+    assert config.project_title == "Python config"
+    assert config.config_path == str(tmp_path / "strictdoc_config.py")
+
+
+def test_73_config_path_points_to_toml_config_in_directory(tmp_path):
+    (tmp_path / "strictdoc.toml").write_text(
+        '[project]\ntitle = "TOML config"\n'
+    )
+
+    config = ProjectConfigLoader.load_from_path_or_get_default(
+        path_to_config=str(tmp_path)
+    )
+
+    assert config.project_title == "TOML config"
+    assert config.config_path == str(tmp_path / "strictdoc.toml")
+
+
+def test_74_config_path_without_config_file_in_directory(tmp_path):
+    config = ProjectConfigLoader.load_from_path_or_get_default(
+        path_to_config=str(tmp_path)
+    )
+
+    assert config.project_title == ProjectConfig().project_title
+    assert config.config_path is None
 
 
 def test_80_lazy_document_loading_threshold_from_config(tmp_path):

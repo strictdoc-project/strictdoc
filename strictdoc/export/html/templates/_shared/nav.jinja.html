@@ -98,4 +98,15 @@
     {% include tree_map_feature.screen_icon() %}
   </a>
 {%- endif -%}
+
+  <a
+    data-link="project_configuration"
+    class="nav_button nav_bottom_group"
+    {% if nav_active_view == 'project-configuration' %}aria-current="page"{% endif %}
+    href="{{ view_object.render_url('project_configuration.html') }}"
+    title="Project configuration"
+    data-testid="project-configuration-link"
+  >
+    {% include "icons/ico16_gear.svg" %}
+  </a>
 </div>

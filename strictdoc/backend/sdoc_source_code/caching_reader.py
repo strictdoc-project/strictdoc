@@ -2,7 +2,7 @@
 @relation(SDOC-SRS-33, SDOC-SRS-142, scope=file)
 """
 
-from typing import Optional, Union
+from typing import TYPE_CHECKING, Optional, Union
 
 from strictdoc.backend.sdoc.pickle_cache import PickleCache
 from strictdoc.backend.sdoc_source_code.models.source_file_info import (
@@ -11,28 +11,32 @@ from strictdoc.backend.sdoc_source_code.models.source_file_info import (
 from strictdoc.backend.sdoc_source_code.reader import (
     SourceFileTraceabilityReader,
 )
-from strictdoc.backend.sdoc_source_code.reader_ada import (
-    SourceFileTraceabilityReader_Ada,
-)
-from strictdoc.backend.sdoc_source_code.reader_c import (
-    SourceFileTraceabilityReader_C,
-)
-from strictdoc.backend.sdoc_source_code.reader_modelica import (
-    SourceFileTraceabilityReader_Modelica,
-)
-from strictdoc.backend.sdoc_source_code.reader_python import (
-    SourceFileTraceabilityReader_Python,
-)
 from strictdoc.backend.sdoc_source_code.reader_registry import (
     SourceCodeReaderRegistry,
 )
-from strictdoc.backend.sdoc_source_code.reader_robot import (
-    SourceFileTraceabilityReader_Robot,
-)
-from strictdoc.backend.sdoc_source_code.reader_rust import (
-    SourceFileTraceabilityReader_Rust,
-)
 from strictdoc.core.project_config import ProjectConfig
+
+# SourceCodeReaderRegistry imports a language reader only when a file of that
+# language is read. Import the readers here for type checking only.
+if TYPE_CHECKING:
+    from strictdoc.backend.sdoc_source_code.reader_ada import (
+        SourceFileTraceabilityReader_Ada,
+    )
+    from strictdoc.backend.sdoc_source_code.reader_c import (
+        SourceFileTraceabilityReader_C,
+    )
+    from strictdoc.backend.sdoc_source_code.reader_modelica import (
+        SourceFileTraceabilityReader_Modelica,
+    )
+    from strictdoc.backend.sdoc_source_code.reader_python import (
+        SourceFileTraceabilityReader_Python,
+    )
+    from strictdoc.backend.sdoc_source_code.reader_robot import (
+        SourceFileTraceabilityReader_Robot,
+    )
+    from strictdoc.backend.sdoc_source_code.reader_rust import (
+        SourceFileTraceabilityReader_Rust,
+    )
 
 
 class SourceFileTraceabilityCachingReader:
@@ -79,12 +83,12 @@ class SourceFileTraceabilityCachingReader:
         source_node_tags: Optional[set[str]] = None,
     ) -> Union[
         SourceFileTraceabilityReader,
-        SourceFileTraceabilityReader_Python,
-        SourceFileTraceabilityReader_C,
-        SourceFileTraceabilityReader_Robot,
-        SourceFileTraceabilityReader_Rust,
-        SourceFileTraceabilityReader_Ada,
-        SourceFileTraceabilityReader_Modelica,
+        "SourceFileTraceabilityReader_Python",
+        "SourceFileTraceabilityReader_C",
+        "SourceFileTraceabilityReader_Robot",
+        "SourceFileTraceabilityReader_Rust",
+        "SourceFileTraceabilityReader_Ada",
+        "SourceFileTraceabilityReader_Modelica",
     ]:
         return SourceCodeReaderRegistry.get_reader(
             path_to_file, project_config, source_node_tags

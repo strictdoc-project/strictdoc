@@ -5,7 +5,6 @@ from strictdoc.cli.base_command import BaseCommand, CLIValidationError
 from strictdoc.commands.server_config import ServerCommandConfig
 from strictdoc.core.project_config import ProjectConfigLoader
 from strictdoc.helpers.parallelizer import Parallelizer
-from strictdoc.server.server import run_strictdoc_server
 
 
 class ServerCommand(BaseCommand):
@@ -64,6 +63,13 @@ class ServerCommand(BaseCommand):
         project_config = ProjectConfigLoader.load_using_server_config(
             server_config
         )
+
+        # Imported here so that the other commands do not load the web server
+        # stack (FastAPI, Starlette, Uvicorn).
+        from strictdoc.server.server import (  # noqa: PLC0415
+            run_strictdoc_server,
+        )
+
         run_strictdoc_server(
             server_config=server_config, project_config=project_config
         )

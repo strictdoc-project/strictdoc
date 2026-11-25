@@ -2,7 +2,6 @@ import os
 from pathlib import Path
 from typing import List
 
-from strictdoc.backend.spdx.spdx_generator import SPDXGenerator
 from strictdoc.core.format import ExportContext, Format
 
 
@@ -37,6 +36,12 @@ class SPDXFormat(Format):
 
     def export_complete_tree(self, context: ExportContext, handle: str) -> None:
         assert handle in self.handles(), handle
+
+        # Imported here so that only an SPDX export loads spdx_tools.
+        from strictdoc.backend.spdx.spdx_generator import (  # noqa: PLC0415
+            SPDXGenerator,
+        )
+
         output_spdx_root = os.path.join(
             context.project_config.output_dir, "spdx"
         )

@@ -1,13 +1,17 @@
 import argparse
 import os
-from typing import List
+from typing import TYPE_CHECKING, List
 
-from strictdoc.backend.excel.excel_import import ExcelImport, ExcelImportOptions
-from strictdoc.backend.excel.export.excel_generator import ExcelGenerator
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.commands.convert_config import ConvertCommandConfig
 from strictdoc.core.format import ExportContext, Format
 from strictdoc.core.project_config import ProjectConfig
+
+# The Excel import and export modules load openpyxl, xlrd, and xlsxwriter.
+# The methods below import them on first use, so that a project without
+# Excel files does not pay for these imports.
+if TYPE_CHECKING:
+    from strictdoc.backend.excel.excel_import import ExcelImportOptions
 
 EXCEL_PARSERS = ["basic"]
 
@@ -64,6 +68,11 @@ class ExcelFormat(Format):
 
     def export_complete_tree(self, context: ExportContext, handle: str) -> None:
         assert handle in self.handles(), handle
+
+        from strictdoc.backend.excel.export.excel_generator import (  # noqa: PLC0415
+            ExcelGenerator,
+        )
+
         output_excel_root = f"{context.project_config.output_dir}/excel"
         ExcelGenerator.export_tree(
             context.traceability_index,
@@ -74,7 +83,11 @@ class ExcelFormat(Format):
     @classmethod
     def build_import_options(
         cls, args: argparse.Namespace
-    ) -> ExcelImportOptions:
+    ) -> "ExcelImportOptions":
+        from strictdoc.backend.excel.excel_import import (  # noqa: PLC0415
+            ExcelImportOptions,
+        )
+
         return ExcelImportOptions(
             input_path=args.input_path,
             excel_parser=args.excel_parser,
@@ -82,9 +95,13 @@ class ExcelFormat(Format):
 
     def import_file(  # type: ignore[override]
         self,
-        import_options: ExcelImportOptions,
+        import_options: "ExcelImportOptions",
         project_config: ProjectConfig,  # noqa: ARG002
     ) -> SDocDocument:
+        from strictdoc.backend.excel.excel_import import (  # noqa: PLC0415
+            ExcelImport,
+        )
+
         return ExcelImport.import_from_file(import_options)
 
     def import_output_filename_stem(

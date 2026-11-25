@@ -11,7 +11,6 @@ from strictdoc.commands._shared import (
 )
 from strictdoc.commands.export_config import ExportCommandConfig
 from strictdoc.core.project_config import ProjectConfigLoader
-from strictdoc.features.export.export_action import ExportAction
 from strictdoc.helpers.parallelizer import Parallelizer
 
 EXPORT_FORMATS = [
@@ -296,6 +295,12 @@ class ExportCommand(BaseCommand):
         print(  # noqa: T201
             f"Parallelization: {parallelization_value}", flush=True
         )
+        # Imported here so that the other commands do not load the export
+        # code.
+        from strictdoc.features.export.export_action import (  # noqa: PLC0415
+            ExportAction,
+        )
+
         export_action = ExportAction(
             project_config=project_config,
             parallelizer=parallelizer,

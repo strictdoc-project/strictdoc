@@ -6067,8 +6067,9 @@ The static editor works on the document screen of the static HTML export:
 5. Use the up and down buttons in the panel to jump to the previous or the
    next changed node of the document. The panel shows the position, for
    example ``2 / 5``. The navigation wraps around at the first and the last
-   change. A large document loads its content in parts. The navigation only
-   reaches the changed nodes of the loaded parts.
+   change. The browser storage defines the list of changes, so the
+   navigation also reaches a change in a part of a large document that is
+   not loaded yet.
 6. Click "Discard all" and confirm with "Yes" to delete all stored changes.
    "No" keeps the changes.
 

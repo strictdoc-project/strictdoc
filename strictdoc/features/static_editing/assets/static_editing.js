@@ -497,6 +497,7 @@
       openForm(nodeElement, node);
     });
     renderNodeState(nodeElement, node);
+    if (node.html_mid === currentChangedMid) showCurrentChange();
   }
 
   //
@@ -636,34 +637,70 @@
   // search of a browser. It wraps around at the first and the last node.
   //
 
-  let currentChangedNode = null;
+  // The stored changes, not the DOM, define the list of changed nodes. A
+  // large document loads its content in chunks, so the node of a change can
+  // be missing from the DOM.
+  let currentChangedMid = null;
   let navigationPosition = null;
 
-  function changedNodeElements() {
-    // Nodes of chunks that are not loaded yet are not part of the list.
-    return Array.from(document.querySelectorAll('sdoc-node[data-static-editing-modified]'));
+  function changedNodes() {
+    // DATA.nodes is in document order.
+    return DATA.nodes.filter((node_) => documentChanges.has(changeKey(node_)));
+  }
+
+  function nodeElementForMid(htmlMid) {
+    const button = document.querySelector(`[data-static-editing-node="${CSS.escape(htmlMid)}"]`);
+    return button ? button.closest('sdoc-node') : null;
+  }
+
+  // Each unloaded chunk placeholder lists the MIDs and the anchors of its
+  // nodes position for position (see document_chunk_lazy_placeholder).
+  function anchorOfUnloadedNode(htmlMid) {
+    for (const placeholder_ of document.querySelectorAll('[data-node-mids][data-anchors]')) {
+      const index = placeholder_.dataset.nodeMids.split(' ').indexOf(htmlMid);
+      if (index >= 0) return placeholder_.dataset.anchors.split(' ')[index] || null;
+    }
+    return null;
+  }
+
+  function showCurrentChange() {
+    document
+      .querySelectorAll('sdoc-node[data-static-editing-current]')
+      .forEach((node_) => node_.removeAttribute('data-static-editing-current'));
+    if (currentChangedMid === null) return true;
+    const nodeElement = nodeElementForMid(currentChangedMid);
+    if (!nodeElement) return false;
+    nodeElement.setAttribute('data-static-editing-current', '');
+    nodeElement.scrollIntoView({ block: 'center' });
+    return true;
   }
 
   function renderNavigationPosition() {
     if (navigationPosition === null) return;
-    const nodes = changedNodeElements();
-    const index = nodes.indexOf(currentChangedNode);
+    const nodes = changedNodes();
+    const index = nodes.findIndex((node_) => node_.html_mid === currentChangedMid);
     navigationPosition.textContent = `${index < 0 ? '–' : index + 1} / ${nodes.length}`;
   }
 
   function jumpToChange(step) {
-    const nodes = changedNodeElements();
+    const nodes = changedNodes();
     if (nodes.length === 0) return;
-    const index = nodes.indexOf(currentChangedNode);
+    const index = nodes.findIndex((node_) => node_.html_mid === currentChangedMid);
     let nextIndex;
     if (index < 0) nextIndex = step > 0 ? 0 : nodes.length - 1;
     else nextIndex = (index + step + nodes.length) % nodes.length;
-
-    if (currentChangedNode) currentChangedNode.removeAttribute('data-static-editing-current');
-    currentChangedNode = nodes[nextIndex];
-    currentChangedNode.setAttribute('data-static-editing-current', '');
-    currentChangedNode.scrollIntoView({ block: 'center' });
+    currentChangedMid = nodes[nextIndex].html_mid;
     renderNavigationPosition();
+    if (showCurrentChange()) return;
+
+    // The node is in a chunk that is not loaded yet. The chunk navigation of
+    // the document screen (toc_chunk_navigation.js) loads the chunk on a
+    // hashchange. replaceState keeps the browser history free of the jumps.
+    // setUpEditButton() marks the node once the chunk is inserted.
+    const anchor = anchorOfUnloadedNode(currentChangedMid);
+    if (anchor === null) return;
+    window.history.replaceState(null, '', `#${encodeURIComponent(anchor)}`);
+    window.dispatchEvent(new HashChangeEvent('hashchange'));
   }
 
   function createNavigation() {

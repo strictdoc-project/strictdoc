@@ -8,6 +8,7 @@ https://stackoverflow.com/a/68564737/598057
 @relation(SDOC-SRS-46, scope=file)
 """
 
+import atexit
 import datetime
 import os
 import re
@@ -22,7 +23,7 @@ from contextlib import ExitStack, closing
 from queue import Empty, Queue
 from threading import Thread
 from time import sleep
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple, Union
 
 import psutil
 from psutil import NoSuchProcess
@@ -30,6 +31,36 @@ from psutil import NoSuchProcess
 from strictdoc import environment
 from strictdoc.helpers.file_system import get_portable_temp_dir
 from tests.end2end.conftest import test_environment
+from tests.end2end.fork_server import ForkedServerProcess, ForkServerClient
+
+# One fork server per pytest process (see fork_server.py). Set
+# STRICTDOC_E2E_NO_FORK_SERVER=1 to start every server with subprocess.Popen.
+_FORK_SERVER: Optional[ForkServerClient] = None
+
+
+def _get_fork_server(
+    strictdoc_env: Dict[str, str],
+) -> Optional[ForkServerClient]:
+    global _FORK_SERVER  # noqa: PLW0603
+
+    if (
+        sys.platform == "win32"
+        or test_environment.coverage
+        or os.environ.get("STRICTDOC_E2E_NO_FORK_SERVER") == "1"
+    ):
+        return None
+
+    if _FORK_SERVER is not None and not _FORK_SERVER.is_alive():
+        _FORK_SERVER.close()
+        _FORK_SERVER = None
+
+    if _FORK_SERVER is None:
+        _FORK_SERVER = ForkServerClient(strictdoc_env)
+        atexit.register(_FORK_SERVER.close)
+
+    if not _FORK_SERVER.is_compatible(strictdoc_env):
+        return None
+    return _FORK_SERVER
 
 
 class ReadTimeout(Exception):
@@ -187,14 +218,28 @@ class SDocTestServer:
 
         strictdoc_args, strictdoc_env = self._get_strictdoc_command()
 
-        process = subprocess.Popen(
-            strictdoc_args,
-            stdout=self.log_file_out.fileno(),
-            stderr=subprocess.PIPE,
-            shell=False,
-            cwd=self.cwd,
-            env=strictdoc_env,
-        )
+        fork_server = _get_fork_server(strictdoc_env)
+        process: Union[subprocess.Popen, ForkedServerProcess]
+        if fork_server is not None:
+            # The fork server runs "python -m strictdoc.cli.main <args>" in
+            # a forked child. With "-m", sys.argv[0] is the module's path.
+            assert strictdoc_args[1:3] == ["-m", "strictdoc.cli.main"], (
+                strictdoc_args
+            )
+            process = fork_server.start_server(
+                args=[self.path_to_strictdoc, *strictdoc_args[3:]],
+                cwd=self.cwd,
+                stdout_fd=self.log_file_out.fileno(),
+            )
+        else:
+            process = subprocess.Popen(
+                strictdoc_args,
+                stdout=self.log_file_out.fileno(),
+                stderr=subprocess.PIPE,
+                shell=False,
+                cwd=self.cwd,
+                env=strictdoc_env,
+            )
         self.process = process
 
         self.server_stderr_capture_thread = ServerStderrReadThread(

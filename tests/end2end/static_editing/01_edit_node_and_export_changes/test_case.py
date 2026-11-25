@@ -57,6 +57,18 @@ class Test(E2ECase):
                 '[data-testid="form-field-STATEMENT"]',
                 "System X shall do Z.",
             )
+
+            # The node has no COMMENT yet. Add a second COMMENT instance.
+            self.update_text(
+                '[data-testid="form-field-COMMENT"]',
+                "First comment.",
+            )
+            self.click('[data-testid="form-add-field-COMMENT"]')
+            self.update_text(
+                '(//*[@data-static-editing-field="COMMENT"])[2]',
+                "Second comment.",
+                by=By.XPATH,
+            )
             self.click('[data-testid="form-submit-action"]')
 
             self.assert_element('[data-testid="static-editing-preview"]')
@@ -92,9 +104,22 @@ class Test(E2ECase):
             assert change["fields"] == [
                 {
                     "name": "STATEMENT",
+                    "index": 0,
                     "old_value": "System X shall do Y.",
                     "new_value": "System X shall do Z.",
-                }
+                },
+                {
+                    "name": "COMMENT",
+                    "index": None,
+                    "old_value": None,
+                    "new_value": "First comment.",
+                },
+                {
+                    "name": "COMMENT",
+                    "index": None,
+                    "old_value": None,
+                    "new_value": "Second comment.",
+                },
             ]
 
             # Discarding needs a confirmation click.

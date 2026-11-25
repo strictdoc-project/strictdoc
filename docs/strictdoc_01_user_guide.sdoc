@@ -6051,8 +6051,8 @@ The static editor works on the document screen of the static HTML export:
 1. Hover over a node and click the edit button. The button is grayed out for
    a read-only node. Its tooltip names the reason.
 2. Edit the fields in the form and click "Save". The UID and MID fields are
-   read-only. A field with several values, for example COMMENT, is read-only
-   as well.
+   read-only. Click "Add comment" to add another COMMENT field. Clear an
+   existing COMMENT field to remove it.
 3. The node shows the changed fields below its content. The browser stores the
    change, so the change survives a page reload.
 4. The panel at the bottom right shows the number of changes in the project.

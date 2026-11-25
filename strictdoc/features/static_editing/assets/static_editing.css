@@ -58,3 +58,8 @@ sdoc-static-editing-panel[hidden] {
 sdoc-static-editing-panel-count {
   font-weight: bold;
 }
+
+sdoc-static-editing-preview-field[data-removed] pre {
+  text-decoration: line-through;
+  color: var(--color-fg-secondary);
+}

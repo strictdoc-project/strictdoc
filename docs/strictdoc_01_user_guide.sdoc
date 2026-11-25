@@ -5965,10 +5965,9 @@ StrictDoc server or to edit SDoc files in a text editor. The JSON file then goes
 the usual review and approval workflow, for example a pull request.
 
 .. note::
-    The static editing feature is under development. The current version
-    exports the static editing data only. The editor in the browser, the JSON
-    change export, and the command that applies the changes follow in later
-    versions.
+    The static editing feature is under development. The command that applies
+    the exported JSON file to the SDoc source files follows in a later
+    version.
 
 The feature can be activated as follows:
 
@@ -6036,6 +6035,42 @@ Example of a grammar element with the ``MID`` field:
         REQUIRED: False
 
 See [LINK: SECTION-UG-Machine-identifiers-MID] for more details about MIDs.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 3673baa4c9504211a2920840473a7ba1
+TITLE: Editing in the browser
+
+[TEXT]
+MID: 9d095bd21985438a9e97352bf3e1f7c9
+STATEMENT: >>>
+The static editor works on the document screen of the static HTML export:
+
+1. Hover over a node and click the edit button. The button is grayed out for
+   a read-only node. Its tooltip names the reason.
+2. Edit the fields in the form and click "Save". The UID and MID fields are
+   read-only. A field with several values, for example COMMENT, is read-only
+   as well.
+3. The node shows the changed fields below its content. The browser stores the
+   change, so the change survives a page reload.
+4. The panel at the bottom right shows the number of changes in the project.
+   Click "Export changes as JSON" to download all changes as one file.
+5. Click "Discard all" twice to delete all stored changes.
+
+The browser stores the changes in its IndexedDB, separately for each project.
+The changes stay on the computer and in the browser that the reader used.
+Clearing the browser data deletes the changes. If the browser offers no
+IndexedDB, the changes are lost when the page reloads.
+
+Limitations of the current version:
+
+- Only existing nodes can be edited. Creating, deleting, and moving nodes is
+  not supported.
+- The form checks required fields and the values of choice fields. The markup
+  syntax (RST or Markdown) is checked only when the changes are applied.
+- Images cannot be pasted into a field.
 <<<
 
 [[/SECTION]]

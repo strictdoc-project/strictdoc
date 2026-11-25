@@ -1,0 +1,10 @@
+{#
+  Included in the <head> of the static document screen when the
+  STATIC_EDITING feature is active.
+  @relation(SDOC-SRS-215, scope=file)
+#}
+<meta name="strictdoc-static-editing" content="on">
+<link rel="stylesheet" href="{{ view_object.render_static_url('static_editing.css') }}"/>
+<script src="{{ view_object.document.meta.document_filename }}.edit.js"></script>
+<script src="{{ view_object.render_static_url('editable_field.js') }}"></script>
+<script src="{{ view_object.render_static_url('static_editing.js') }}" defer></script>

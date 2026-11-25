@@ -37,3 +37,13 @@ CHECK-JSON-NEXT: "mid": null
 CHECK-JSON-NEXT: "editable": false
 CHECK-JSON-NEXT: "not_editable_reason": "no_stable_identifier"
 CHECK-JSON-NOT: "fields"
+
+RUN: %check_exists --file "%T/html/01_edit_data_is_exported/input.sdoc.edit.js"
+RUN: %cat "%T/html/01_edit_data_is_exported/input.sdoc.edit.js" | filecheck %s --check-prefix CHECK-JS
+CHECK-JS: window.StrictDocStaticEditingData = {"schema":"strictdoc-static-editing-data"
+
+RUN: %cat "%T/html/01_edit_data_is_exported/input.sdoc.html" | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: <meta name="strictdoc-static-editing" content="on">
+CHECK-HTML: <script src="input.sdoc.edit.js"></script>
+CHECK-HTML: static_editing.js
+CHECK-HTML: data-testid="node-static-edit-action"

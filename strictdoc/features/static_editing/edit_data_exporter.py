@@ -14,6 +14,8 @@ from strictdoc.features.static_editing.edit_data import (
 from strictdoc.helpers.cast import assert_cast
 
 STATIC_EDITING_DATA_FILE_SUFFIX = ".edit.json"
+STATIC_EDITING_SCRIPT_FILE_SUFFIX = ".edit.js"
+STATIC_EDITING_SCRIPT_GLOBAL = "StrictDocStaticEditingData"
 
 
 def get_static_editing_data_path(document: SDocDocument) -> str:
@@ -21,11 +23,16 @@ def get_static_editing_data_path(document: SDocDocument) -> str:
     The static editing data file is placed next to the document's HTML file,
     so that the document page can load it with a relative URL.
     """
-    document_meta: DocumentMeta = assert_cast(document.meta, DocumentMeta)
-    output_document_path_base, _ = os.path.splitext(
-        document_meta.output_document_full_path
-    )
-    return output_document_path_base + STATIC_EDITING_DATA_FILE_SUFFIX
+    return _get_output_path_base(document) + STATIC_EDITING_DATA_FILE_SUFFIX
+
+
+def get_static_editing_script_path(document: SDocDocument) -> str:
+    """
+    The script file contains the same data as the data file. The document
+    page loads the script with a <script> tag because a browser blocks
+    fetch() between file:// URLs.
+    """
+    return _get_output_path_base(document) + STATIC_EDITING_SCRIPT_FILE_SUFFIX
 
 
 def export_static_editing_data(
@@ -47,3 +54,21 @@ def export_static_editing_data(
                 ensure_ascii=False,
                 indent=2,
             )
+
+        serialized_data = json.dumps(
+            document_edit_data, ensure_ascii=False, separators=(",", ":")
+        )
+        with open(
+            get_static_editing_script_path(document_), "w", encoding="utf8"
+        ) as output_file:
+            output_file.write(
+                f"window.{STATIC_EDITING_SCRIPT_GLOBAL} = {serialized_data};\n"
+            )
+
+
+def _get_output_path_base(document: SDocDocument) -> str:
+    document_meta: DocumentMeta = assert_cast(document.meta, DocumentMeta)
+    output_document_path_base, _ = os.path.splitext(
+        document_meta.output_document_full_path
+    )
+    return output_document_path_base

@@ -1,0 +1,15 @@
+{#
+  The edit control of a node in the static HTML export.
+  static_editing.js enables the control if the node is editable.
+  @relation(SDOC-SRS-215, scope=file)
+#}
+{%- if sdoc_entity.get_type_string() != 'document' and not sdoc_entity.is_root_included_document -%}
+<sdoc-node-controls>
+  <a
+    class="action_button action_button--disabled"
+    data-static-editing-node="{{ sdoc_entity.reserved_mid }}"
+    title="Editing is not available"
+    data-testid="node-static-edit-action"
+  >{% include "icons/ico16_edit.svg" %}</a>
+</sdoc-node-controls>
+{%- endif -%}

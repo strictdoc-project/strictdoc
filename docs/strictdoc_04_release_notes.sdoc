@@ -58,12 +58,11 @@ MID: 8ff01234adca458f9095633ca20095ea
 STATEMENT: >>>
 This release contains the following enhancements:
 
-1\) New experimental feature ``STATIC_EDITING``: the HTML export writes a static
-editing data file next to each document's HTML file. The file contains the
-document grammar and the source values of all nodes that have a UID or a MID
-in the source file. This is the first step towards editing a static HTML
-export in the browser. ``ALL_FEATURES`` does not activate this feature. See
-[LINK: SECTION-UG-Static-editing].
+1\) New experimental feature ``STATIC_EDITING``: readers of a static HTML
+export can edit nodes in the browser, without a StrictDoc server. The browser
+stores the changes and exports them as one JSON file. Only nodes with a UID or
+a MID in the source file are editable. ``ALL_FEATURES`` does not activate this
+feature. See [LINK: SECTION-UG-Static-editing].
 <<<
 
 [[/SECTION]]

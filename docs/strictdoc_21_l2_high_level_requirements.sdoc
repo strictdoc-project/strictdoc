@@ -865,6 +865,34 @@ RELATIONS:
   VALUE: strictdoc/features/static_editing/edit_data.py
 
 [REQUIREMENT]
+MID: 21edcac72b3645228255326c3d446649
+UID: SDOC-SRS-215
+STATUS: Active
+TITLE: Static editor
+STATEMENT: >>>
+Where the STATIC_EDITING feature is activated, the DOCUMENT screen of a static
+HTML export shall provide an edit action for each editable node.
+
+The edit action shall open a form with the source values of the node fields.
+StrictDoc shall store a saved change in the browser, so that the change
+survives a page reload.
+
+StrictDoc shall export all stored changes of the project as one JSON file and
+shall allow discarding all stored changes.
+<<<
+RATIONALE: >>>
+Readers of a published static HTML export, for example project managers, can
+edit requirements in the browser without a running StrictDoc server and
+without editing SDoc files in a text editor. The JSON file feeds the changes
+into the usual review and approval workflow.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-30
+- TYPE: File
+  VALUE: strictdoc/features/static_editing/assets/static_editing.js
+
+[REQUIREMENT]
 MID: 37399be2a8ac46889e3437209f9dffa9
 UID: SDOC-SRS-50
 STATUS: Active

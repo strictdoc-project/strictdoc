@@ -45,7 +45,7 @@ from strictdoc.core.document_iterator import DocumentIterationContext
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.document_tree_iterator import DocumentTreeIterator
 from strictdoc.core.file_system.file_tree import File, FileOrFolderEntry, Folder
-from strictdoc.core.project_config import ProjectConfig
+from strictdoc.core.project_config import ProjectConfig, ProjectFeature
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
 from strictdoc.export.html.generators.view_objects.document_chunks import (
@@ -560,6 +560,21 @@ class DocumentScreenViewObject:
     ) -> Iterator[Tuple[SDocElementIF, DocumentIterationContext]]:
         yield from self.document_iterator.all_content(
             print_fragments=True,
+        )
+
+    def is_static_editing_active(self) -> bool:
+        """
+        The static editor works on the DOCUMENT screen of a static HTML export
+        only. The web server has its own editing.
+
+        @relation(SDOC-SRS-215, scope=function)
+        """
+        return (
+            not self.is_running_on_server
+            and self.document_type.is_document()
+            and self.project_config.is_feature_activated(
+                ProjectFeature.STATIC_EDITING
+            )
         )
 
     def is_chunked_rendering(self) -> bool:

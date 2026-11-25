@@ -89,6 +89,12 @@ for example ``build/``, ``.venv/``, or ``node_modules/``. In a development
 checkout of StrictDoc with build output, the search for source files now checks
 about 7,500 files instead of more than 200,000. StrictDoc finds the same files
 as before.
+
+6\) The ``server`` command starts faster. The server now imports the packages
+for ReqIF, HTML2PDF, and the Markdown writer only when a user first imports or
+exports ReqIF, exports a PDF, or saves a Markdown document. Before, the server
+imported these packages at startup, which took about a fifth of its startup
+time.
 <<<
 
 [[/SECTION]]

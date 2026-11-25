@@ -22,9 +22,6 @@ from fastapi import (
 from fastapi import (
     Query as FastAPIQuery,
 )
-from reqif.models.error_handling import ReqIFXMLParsingError
-from reqif.parser import ReqIFParser
-from reqif.unparser import ReqIFUnparser
 from starlette.background import BackgroundTask
 from starlette.datastructures import FormData
 from starlette.requests import Request
@@ -38,13 +35,6 @@ from starlette.responses import (
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
 from strictdoc.backend.json.json_generator import JSONGenerator
-from strictdoc.backend.markdown.writer import SDMarkdownWriter
-from strictdoc.backend.reqif.p01_sdoc.reqif_to_sdoc_converter import (
-    P01_ReqIFToSDocConverter,
-)
-from strictdoc.backend.reqif.p01_sdoc.sdoc_to_reqif_converter import (
-    P01_SDocToReqIFObjectConverter,
-)
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -146,10 +136,6 @@ from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.features.export.export_action import ExportAction
 from strictdoc.features.html2pdf.generator import (
     DocumentHTML2PDFGenerator,
-)
-from strictdoc.features.html2pdf.pdf_print_driver import (
-    PDFPrintDriver,
-    PDFPrintDriverException,
 )
 from strictdoc.features.nestor.view_object import (
     NestorViewObject,
@@ -394,6 +380,10 @@ def create_main_router(
                 (".md", ".markdown")
             )
         ):
+            from strictdoc.backend.markdown.writer import (  # noqa: PLC0415
+                SDMarkdownWriter,
+            )
+
             SDMarkdownWriter.write_to_file(
                 document, line_width=project_config.document_line_width
             )
@@ -4541,6 +4531,15 @@ def create_main_router(
         "/actions/project_index/import_document_reqif", response_class=Response
     )
     def import_document_reqif(reqif_file: UploadFile) -> Response:
+        from reqif.models.error_handling import (  # noqa: PLC0415
+            ReqIFXMLParsingError,
+        )
+        from reqif.parser import ReqIFParser  # noqa: PLC0415
+
+        from strictdoc.backend.reqif.p01_sdoc.reqif_to_sdoc_converter import (  # noqa: PLC0415
+            P01_ReqIFToSDocConverter,
+        )
+
         contents = reqif_file.file.read().decode()
 
         error_object = ErrorObject()
@@ -4708,6 +4707,11 @@ def create_main_router(
         Path(path_to_output_html).parent.mkdir(parents=True, exist_ok=True)
         Path(path_to_output_pdf).parent.mkdir(parents=True, exist_ok=True)
 
+        from strictdoc.features.html2pdf.pdf_print_driver import (  # noqa: PLC0415
+            PDFPrintDriver,
+            PDFPrintDriverException,
+        )
+
         # FIXME: Add this print driver to a service bus object to make it
         #        unit-testable.
         pdf_print_driver = PDFPrintDriver()
@@ -4757,6 +4761,12 @@ def create_main_router(
 
     @read_router.get("/reqif/export_tree", response_class=Response)
     def get_reqif_export_tree() -> Response:
+        from reqif.unparser import ReqIFUnparser  # noqa: PLC0415
+
+        from strictdoc.backend.reqif.p01_sdoc.sdoc_to_reqif_converter import (  # noqa: PLC0415
+            P01_SDocToReqIFObjectConverter,
+        )
+
         reqif_bundle = P01_SDocToReqIFObjectConverter.convert_document_tree(
             document_tree=export_action.traceability_index.document_tree,
             multiline_is_xhtml=project_config.reqif_multiline_is_xhtml,

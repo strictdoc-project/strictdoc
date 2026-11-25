@@ -60,6 +60,38 @@ def test_02_format_and_feature_registries_do_not_import_optional_packages():
     assert imported_packages == []
 
 
+def test_03_server_startup_imports_only_the_server_packages():
+    """
+    The server routers import the packages of ReqIF, HTML2PDF, and the
+    Markdown writer only in the routes that use them.
+    """
+    # The server and its HTML rendering need these packages at startup.
+    # "html2pdf4doc" here is only the package itself, which provides the path
+    # to its JavaScript files. html2pdf4doc.main imports selenium and pypdf.
+    server_packages = {
+        "docutils",
+        "fastapi",
+        "html2pdf4doc",
+        "jinja2",
+        "markdown_it",
+        "PIL",
+        "pygments",
+        "starlette",
+        "uvicorn",
+    }
+    imported_packages = _get_imported_optional_packages(
+        "import strictdoc.cli.main\n"
+        "import strictdoc.server.app\n"
+        "import strictdoc.server.routers.main_router\n"
+        "import strictdoc.server.routers.other_router\n"
+    )
+    assert [
+        package_
+        for package_ in imported_packages
+        if package_.split(" ")[0] not in server_packages
+    ] == []
+
+
 def _get_imported_optional_packages(code: str) -> List[str]:
     path_to_strictdoc_root = os.path.dirname(
         os.path.dirname(os.path.abspath(strictdoc.__file__))

@@ -5957,11 +5957,11 @@ locally and exports them as a JSON file. A StrictDoc command then applies the
 JSON file to the SDoc source files.
 
 The typical use case is a static HTML export published with GitHub Pages or
-GitLab Pages. The readers, for example project managers, have only read access
-to the Git repository. With static editing, these readers can propose changes
-in the browser and pass the JSON file to a developer. The developer applies the
-changes and feeds them into the usual review and approval workflow, for example
-a pull request.
+GitLab Pages. The readers, for example project managers, can access the Git
+repository, but editing SDoc files in the web editor of GitHub or GitLab is
+hard to use. With static editing, these readers edit the requirements in the
+familiar document view of the published export. The JSON file then goes into
+the usual review and approval workflow, for example a pull request.
 
 .. note::
     The static editing feature is under development. The current version

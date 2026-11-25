@@ -5958,16 +5958,15 @@ JSON file to the SDoc source files.
 
 The typical use case is a static HTML export published with GitHub Pages or
 GitLab Pages. The readers, for example project managers, can access the Git
-repository, but editing SDoc files in the web editor of GitHub or GitLab is
-hard to use. With static editing, these readers edit the requirements in the
-familiar document view of the published export. They do not need to run a
-StrictDoc server or to edit SDoc files in a text editor. The JSON file then goes into
-the usual review and approval workflow, for example a pull request.
+repository, but editing SDoc files in the web editor of GitHub or GitLab is hard
+to use. With static editing, these readers edit the requirements in the familiar
+document view of the published export. They do not need to run a StrictDoc
+server or to edit SDoc files in a text editor. The JSON file then goes into the
+usual review and approval workflow, for example a pull request.
 
 .. note::
-    The static editing feature is under development. The command that applies
-    the exported JSON file to the SDoc source files follows in a later
-    version.
+    The static editing feature is under development. Creating, deleting, and
+    moving nodes is not supported yet.
 
 The feature can be activated as follows:
 
@@ -6092,8 +6091,9 @@ Limitations of the current version:
 
 - Only existing nodes can be edited. Creating, deleting, and moving nodes is
   not supported.
-- The form checks required fields and the values of choice fields. The markup
-  syntax (RST or Markdown) is checked only when the changes are applied.
+- The form checks required fields and the values of choice fields. The
+  ``apply-changes`` command does not check the markup syntax (RST or
+  Markdown). Export the documentation after applying the changes to check it.
 - Images cannot be pasted into a field.
 <<<
 
@@ -6122,9 +6122,70 @@ For each editable node, the file also contains:
 - the source values of all fields,
 - a content hash over the node type and the field values.
 
-The content hash detects a node whose source has changed since the export. The
-command that applies the changes will skip a node whose content hash does not
-match and report a conflict.
+The content hash detects a node whose source has changed since the export.
+The ``apply-changes`` command then merges the changes field by field, see
+[LINK: SECTION-UG-Static-editing-apply-changes].
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 9d9fc225d2424b73980fe4cfd1ef7ec4
+UID: SECTION-UG-Static-editing-apply-changes
+TITLE: Applying the changes
+
+[TEXT]
+MID: 694f9b9a53594f89891eee9f3e115dd6
+STATEMENT: >>>
+The ``apply-changes`` command writes the changes of one or more exported JSON
+files to the SDoc source files:
+
+.. code-block:: text
+
+    strictdoc apply-changes <path to the project> changes.json [more.json ...]
+
+The ``--dry-run`` option reports the result without writing any file:
+
+.. code-block:: text
+
+    strictdoc apply-changes docs/ changes.json --dry-run
+
+The command applies the changes on the current state of the documents, which
+can be newer than the exported HTML. For each node, the command reports one
+of these results:
+
+- ``applied``: StrictDoc has changed the node.
+- ``already applied``: The document already contains the changes, for example
+  when the same file is applied twice.
+- ``conflict``: A changed field has a different value than at the time of the
+  export, or the node does not exist anymore. StrictDoc leaves the node
+  unchanged.
+- ``error``: The change is invalid, for example a value that is not an
+  option of a choice field. StrictDoc leaves the node unchanged.
+
+The changes of one node are applied together or not at all. Changes of other
+nodes are applied even if a node has a conflict. The command exits with the
+code 1 if a node has a conflict or an error, so that a CI job fails and a
+developer can resolve the conflict.
+
+StrictDoc merges the changes of several reviewers field by field. Two
+reviewers can change different fields of the same node or add comments to the
+same node without a conflict. A conflict only occurs when a reviewer changes a
+field that another change has already changed. Each change stores the old
+value of a field, so StrictDoc also finds a comment whose position has changed
+because another reviewer has added or removed a comment.
+
+The command writes a changed document with the SDoc writer, the same way as
+the ``format`` command. If a document has the ``ENABLE_MID: True`` option,
+the writer also adds a MID to each node that has none.
+
+A typical review workflow:
+
+1. A reviewer edits the published export and exports the changes.
+2. The reviewer uploads the JSON file to a new branch, for example in the web
+   interface of GitHub or GitLab.
+3. A CI job runs ``apply-changes`` and commits the changed SDoc files.
+4. The changes are reviewed and merged as a pull request or merge request.
 <<<
 
 [[/SECTION]]

@@ -893,6 +893,31 @@ RELATIONS:
   VALUE: strictdoc/features/static_editing/assets/static_editing.js
 
 [REQUIREMENT]
+MID: 8a00e30dedb440cb9e3e1f8bd05e6c33
+UID: SDOC-SRS-216
+STATUS: Active
+TITLE: Apply the changes of the static editor
+STATEMENT: >>>
+StrictDoc shall provide a command that applies the changes exported by the
+static editor to the documents of a project.
+
+The command shall apply the changes of one node together or not at all. If a
+field of the node has changed since the export in a conflicting way, the
+command shall report a conflict instead of overwriting the field.
+
+The command shall provide a dry-run mode that reports the result without
+writing any file.
+<<<
+RATIONALE: >>>
+The changes from the browser reach the source files without manual editing.
+Several reviewers can edit the same export: the command merges their changes
+field by field and reports real conflicts to a developer.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-30
+
+[REQUIREMENT]
 MID: 37399be2a8ac46889e3437209f9dffa9
 UID: SDOC-SRS-50
 STATUS: Active

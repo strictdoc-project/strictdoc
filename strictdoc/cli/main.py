@@ -10,6 +10,7 @@ from strictdoc.cli.cli_arg_parser import (
     SDocArgsParser,
 )
 from strictdoc.commands.about_command import AboutCommand
+from strictdoc.commands.apply_changes_command import ApplyChangesCommand
 from strictdoc.commands.convert import ConvertCommand
 from strictdoc.commands.export import ExportCommand
 from strictdoc.commands.format_command import FormatCommand
@@ -36,6 +37,7 @@ from strictdoc.helpers.timing import SimpleNominalExit, measure_performance
 def create_command_registry() -> Dict[str, Any]:
     command_registry: Dict[str, Any] = {
         "about": AboutCommand,
+        "apply-changes": ApplyChangesCommand,
         "convert": ConvertCommand,
         "export": ExportCommand,
         "format": FormatCommand,

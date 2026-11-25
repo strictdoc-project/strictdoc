@@ -1,0 +1,21 @@
+[DOCUMENT]
+MID: 5b0c6f3a2e9d4c7a8f1e2d3c4b5a6978
+TITLE: Static editing document
+OPTIONS:
+  ENABLE_MID: True
+
+[REQUIREMENT]
+MID: 0f1e2d3c4b5a69788796a5b4c3d2e1f0
+UID: REQ-1
+TITLE: Requirement with UID
+STATEMENT: System X shall do Y within 10 ms.
+COMMENT: Existing comment, clarified.
+COMMENT: >>>
+[bob] Please check the timing.
+The second line.
+<<<
+
+[REQUIREMENT]
+MID: 7d3e4a6f0b2c4e5d9a8b1c2d3e4f5a6b
+TITLE: Requirement identified by MID
+STATEMENT: System X shall do Z.

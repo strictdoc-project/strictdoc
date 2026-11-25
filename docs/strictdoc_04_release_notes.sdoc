@@ -76,6 +76,11 @@ an HTML export no longer loads the packages of the Excel, SPDX, ReqIF, and
 HTML2PDF formats. The commands other than ``server`` no longer load the web
 server packages. On a project with one document, an HTML export takes about
 half as long as before.
+
+4\) A small project exports faster. StrictDoc now reads and exports fewer than
+five documents in its own process. Before, StrictDoc started a worker process
+for each CPU core, even for a single document. The start of these worker
+processes took longer than the parallel export saved.
 <<<
 
 [[/SECTION]]

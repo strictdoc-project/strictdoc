@@ -8,10 +8,16 @@ import pytest
 
 from strictdoc.helpers.exception import StrictDocChildProcessException
 from strictdoc.helpers.parallelizer import (
+    MIN_TASKS_FOR_PROCESS_POOL,
     MultiprocessingParallelizer,
     NullParallelizer,
     get_worker_context,
 )
+
+# The smallest calls that still run in worker processes, and the largest calls
+# that run in the calling process.
+POOL_SIZED_ITEMS = list(range(1, MIN_TASKS_FOR_PROCESS_POOL + 1))
+IN_PROCESS_SIZED_ITEMS = list(range(1, MIN_TASKS_FOR_PROCESS_POOL))
 
 # MultiprocessingParallelizer(dynamic=False) always forks (see its
 # docstring), which is correct for the real, genuinely single-threaded CLI
@@ -43,6 +49,10 @@ def child_process_that_reads_the_worker_context(_):
     return get_worker_context()
 
 
+def child_process_that_returns_its_process_id(_):
+    return os.getpid()
+
+
 class ExceptionWithKeywordOnlyInit(Exception):
     """
     Mirrors StrictDocSemanticError's shape: a keyword-only __init__ that
@@ -63,14 +73,12 @@ def child_process_that_raises_an_unpicklable_exception(_):
 def test_nominal_use_case():
     parallelizer = MultiprocessingParallelizer()
 
-    input_items = [1, 2, 3]
-
     try:
         output_items = parallelizer.run_parallel(
-            input_items, child_process_that_multiplies_by_two
+            POOL_SIZED_ITEMS, child_process_that_multiplies_by_two
         )
 
-        assert list(output_items) == [2, 4, 6]
+        assert list(output_items) == [item_ * 2 for item_ in POOL_SIZED_ITEMS]
     finally:
         parallelizer.shutdown()
 
@@ -78,11 +86,11 @@ def test_nominal_use_case():
 def test_if_child_process_fails_then_parallelizer_exits_with_non_zero():
     parallelizer = MultiprocessingParallelizer()
 
-    input_items = ["FAKE_INPUT"]
-
     try:
         with pytest.raises(Exception) as exc_info:
-            parallelizer.run_parallel(input_items, child_process_that_fails)
+            parallelizer.run_parallel(
+                POOL_SIZED_ITEMS, child_process_that_fails
+            )
 
         assert exc_info.type is StrictDocChildProcessException
         assert exc_info.value.args[0].exception_message == (
@@ -102,12 +110,11 @@ def test_if_child_process_raises_an_exception_with_a_non_standard_init_it_still_
     """
     parallelizer = MultiprocessingParallelizer()
 
-    input_items = ["FAKE_INPUT"]
-
     try:
         with pytest.raises(Exception) as exc_info:
             parallelizer.run_parallel(
-                input_items, child_process_that_raises_an_unpicklable_exception
+                POOL_SIZED_ITEMS,
+                child_process_that_raises_an_unpicklable_exception,
             )
 
         assert exc_info.type is StrictDocChildProcessException
@@ -123,12 +130,12 @@ def test_run_parallel_with_context_sends_context_once_per_worker():
 
     try:
         output_items = parallelizer.run_parallel_with_context(
-            [1, 2, 3],
+            POOL_SIZED_ITEMS,
             child_process_that_reads_the_worker_context,
             "shared-context",
         )
 
-        assert list(output_items) == ["shared-context"] * 3
+        assert list(output_items) == ["shared-context"] * len(POOL_SIZED_ITEMS)
     finally:
         parallelizer.shutdown()
 
@@ -138,14 +145,18 @@ def test_run_parallel_with_context_can_be_called_again_with_a_new_context():
 
     try:
         first_result = parallelizer.run_parallel_with_context(
-            [1], child_process_that_reads_the_worker_context, "first"
+            POOL_SIZED_ITEMS,
+            child_process_that_reads_the_worker_context,
+            "first",
         )
         second_result = parallelizer.run_parallel_with_context(
-            [1], child_process_that_reads_the_worker_context, "second"
+            POOL_SIZED_ITEMS,
+            child_process_that_reads_the_worker_context,
+            "second",
         )
 
-        assert list(first_result) == ["first"]
-        assert list(second_result) == ["second"]
+        assert list(first_result) == ["first"] * len(POOL_SIZED_ITEMS)
+        assert list(second_result) == ["second"] * len(POOL_SIZED_ITEMS)
     finally:
         parallelizer.shutdown()
 
@@ -177,12 +188,14 @@ def test_run_parallel_with_context_falls_back_when_dynamic():
 
     try:
         output_items = parallelizer.run_parallel_with_context(
-            [1, 2, 3],
+            POOL_SIZED_ITEMS,
             child_process_that_reads_the_worker_context,
             "fallback-context",
         )
 
-        assert list(output_items) == ["fallback-context"] * 3
+        assert list(output_items) == ["fallback-context"] * len(
+            POOL_SIZED_ITEMS
+        )
         assert parallelizer.executor._mp_context.get_start_method() != "fork"
     finally:
         parallelizer.shutdown()
@@ -228,17 +241,95 @@ def test_run_parallel_with_context_null_parallelizer():
 def test_use_case_when_interrupted_with_sigterm():
     parallelizer = MultiprocessingParallelizer()
 
-    input_items = ["FAKE_INPUT"]
-
     try:
         with pytest.raises(Exception) as exc_info:
             parallelizer.run_parallel(
-                input_items, child_that_sigterms_itself_and_hangs
+                POOL_SIZED_ITEMS, child_that_sigterms_itself_and_hangs
             )
 
         assert exc_info.type is BrokenProcessPool
         assert exc_info.value.args[0] == (
             "A process in the process pool was terminated abruptly while the future was running or pending."
         )
+    finally:
+        parallelizer.shutdown()
+
+
+def test_run_parallel_uses_worker_processes_from_the_threshold():
+    parallelizer = MultiprocessingParallelizer()
+
+    try:
+        process_ids = parallelizer.run_parallel(
+            POOL_SIZED_ITEMS, child_process_that_returns_its_process_id
+        )
+
+        assert os.getpid() not in process_ids
+    finally:
+        parallelizer.shutdown()
+
+
+def test_run_parallel_runs_in_process_below_the_threshold():
+    parallelizer = MultiprocessingParallelizer()
+
+    try:
+        completed_indexes = []
+        process_ids = parallelizer.run_parallel(
+            IN_PROCESS_SIZED_ITEMS,
+            child_process_that_returns_its_process_id,
+            lambda index_, _: completed_indexes.append(index_),
+        )
+
+        assert process_ids == [os.getpid()] * len(IN_PROCESS_SIZED_ITEMS)
+        assert completed_indexes == list(range(len(IN_PROCESS_SIZED_ITEMS)))
+    finally:
+        parallelizer.shutdown()
+
+
+def test_run_parallel_below_the_threshold_raises_the_child_process_exception():
+    """
+    A failed task in the calling process raises the same exception as a
+    failed task in a worker process.
+    """
+    parallelizer = MultiprocessingParallelizer()
+
+    try:
+        with pytest.raises(StrictDocChildProcessException) as exc_info:
+            parallelizer.run_parallel(
+                IN_PROCESS_SIZED_ITEMS, child_process_that_fails
+            )
+
+        assert exc_info.value.args[0].exception_message == (
+            "This child process always fails."
+        )
+    finally:
+        parallelizer.shutdown()
+
+
+@pytest.mark.parametrize("dynamic", [False, True])
+def test_run_parallel_with_context_runs_in_process_below_the_threshold(
+    dynamic,
+):
+    parallelizer = MultiprocessingParallelizer(dynamic=dynamic)
+
+    try:
+        executor_before = parallelizer.executor
+
+        output_items = parallelizer.run_parallel_with_context(
+            IN_PROCESS_SIZED_ITEMS,
+            child_process_that_reads_the_worker_context,
+            "in-process-context",
+        )
+        process_ids = parallelizer.run_parallel_with_context(
+            IN_PROCESS_SIZED_ITEMS,
+            child_process_that_returns_its_process_id,
+            "in-process-context",
+        )
+
+        assert output_items == ["in-process-context"] * len(
+            IN_PROCESS_SIZED_ITEMS
+        )
+        assert process_ids == [os.getpid()] * len(IN_PROCESS_SIZED_ITEMS)
+        # The in-process path neither shuts down nor rebuilds the pool.
+        assert parallelizer.executor is executor_before
     finally:
         parallelizer.shutdown()

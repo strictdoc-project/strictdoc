@@ -9,7 +9,6 @@ from strictdoc.commands._shared import (
     add_config_argument,
 )
 from strictdoc.commands.convert_config import ConvertCommandConfig
-from strictdoc.core.actions.convert_action import ConvertAction
 from strictdoc.core.project_config import ProjectConfig, ProjectConfigLoader
 from strictdoc.helpers.parallelizer import Parallelizer
 
@@ -157,5 +156,11 @@ class ConvertCommand(BaseCommand):
         project_config = ProjectConfigLoader.load_using_convert_config(
             self.config
         )
+        # Imported here so that the other commands do not load the convert
+        # code.
+        from strictdoc.core.actions.convert_action import (  # noqa: PLC0415
+            ConvertAction,
+        )
+
         convert_action = ConvertAction()
         convert_action.do_convert(self.args, self.config, project_config)

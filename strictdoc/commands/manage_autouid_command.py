@@ -3,7 +3,6 @@ import sys
 from typing import Dict, Optional
 
 from strictdoc.backend.markdown.markdown_format import MarkdownFormat
-from strictdoc.backend.markdown.writer import SDMarkdownWriter
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
@@ -196,6 +195,10 @@ the document's PREFIX (if provided or "REQ-" by default).
             elif document_filename.endswith(
                 tuple(MarkdownFormat.read_extensions())
             ):
+                from strictdoc.backend.markdown.writer import (  # noqa: PLC0415
+                    SDMarkdownWriter,
+                )
+
                 SDMarkdownWriter.write_to_file(
                     document, line_width=project_config.document_line_width
                 )

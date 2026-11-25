@@ -3,7 +3,6 @@ import os
 import sys
 from typing import Optional, Union
 
-from strictdoc.backend.markdown.writer import SDMarkdownWriter
 from strictdoc.backend.sdoc.document_reference import DocumentReference
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -320,6 +319,10 @@ added to that document's root level.
             ) as output_file:
                 output_file.write(document_content)
         elif doc_filename.endswith(".md"):
+            from strictdoc.backend.markdown.writer import (  # noqa: PLC0415
+                SDMarkdownWriter,
+            )
+
             SDMarkdownWriter.write_to_file(document)
         else:
             print(  # noqa: T201

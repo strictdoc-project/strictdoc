@@ -1,9 +1,6 @@
 import argparse
-from typing import List
+from typing import TYPE_CHECKING, List
 
-from strictdoc.backend.reqif.reqif_export import ReqIFExport
-from strictdoc.backend.reqif.reqif_import import ReqIFImport, ReqIFImportOptions
-from strictdoc.backend.reqif.reqif_reader import ReqIFReader
 from strictdoc.backend.reqif.sdoc_reqif_fields import ReqIFProfile
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.commands._shared import (
@@ -13,6 +10,12 @@ from strictdoc.commands._shared import (
 from strictdoc.core.file_system.file_tree import File
 from strictdoc.core.format import ExportContext, Format
 from strictdoc.core.project_config import ProjectConfig
+
+# The ReqIF import, export, and reader modules load the reqif package and
+# lxml. The methods below import them on first use, so that a project without
+# ReqIF files does not pay for these imports.
+if TYPE_CHECKING:
+    from strictdoc.backend.reqif.reqif_import import ReqIFImportOptions
 
 
 class ReqIFFormat(Format):
@@ -81,6 +84,10 @@ class ReqIFFormat(Format):
         doc_file: File,
         project_config: ProjectConfig,  # noqa: ARG002
     ) -> SDocDocument:
+        from strictdoc.backend.reqif.reqif_reader import (  # noqa: PLC0415
+            ReqIFReader,
+        )
+
         reqif_documents = ReqIFReader.read_from_file(doc_file.full_path)
         assert len(reqif_documents) >= 0
         return reqif_documents[0]
@@ -91,6 +98,11 @@ class ReqIFFormat(Format):
 
     def export_complete_tree(self, context: ExportContext, handle: str) -> None:
         assert handle in self.handles(), handle
+
+        from strictdoc.backend.reqif.reqif_export import (  # noqa: PLC0415
+            ReqIFExport,
+        )
+
         output_reqif_root = f"{context.project_config.output_dir}/reqif"
         ReqIFExport.export(
             project_config=context.project_config,
@@ -102,7 +114,11 @@ class ReqIFFormat(Format):
     @classmethod
     def build_import_options(
         cls, args: argparse.Namespace
-    ) -> ReqIFImportOptions:
+    ) -> "ReqIFImportOptions":
+        from strictdoc.backend.reqif.reqif_import import (  # noqa: PLC0415
+            ReqIFImportOptions,
+        )
+
         return ReqIFImportOptions(
             input_path=args.input_path,
             reqif_profile=args.reqif_profile,
@@ -112,7 +128,11 @@ class ReqIFFormat(Format):
 
     def import_file(  # type: ignore[override]
         self,
-        import_options: ReqIFImportOptions,
+        import_options: "ReqIFImportOptions",
         project_config: ProjectConfig,
     ) -> List[SDocDocument]:
+        from strictdoc.backend.reqif.reqif_import import (  # noqa: PLC0415
+            ReqIFImport,
+        )
+
         return ReqIFImport.import_from_file(import_options, project_config)

@@ -69,6 +69,13 @@ output folder has a different size than the source file. Before, StrictDoc
 compared only the modification times. As a result, StrictDoc kept an outdated
 file in the output folder if the source file was not newer, for example after
 an interrupted export.
+
+3\) StrictDoc starts faster. StrictDoc now imports the Python packages of an
+export format, a project feature, or a command only on first use. For example,
+an HTML export no longer loads the packages of the Excel, SPDX, ReqIF, and
+HTML2PDF formats. The commands other than ``server`` no longer load the web
+server packages. On a project with one document, an HTML export takes about
+half as long as before.
 <<<
 
 [[/SECTION]]

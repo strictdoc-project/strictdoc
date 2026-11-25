@@ -3,7 +3,6 @@ from pathlib import Path
 from typing import List
 
 from strictdoc.core.format import ExportContext, Format
-from strictdoc.features.html2pdf.html2pdf_generator import HTML2PDFGenerator
 
 
 class HTML2PDFFormat(Format):
@@ -38,6 +37,12 @@ class HTML2PDFFormat(Format):
     def export_complete_tree(self, context: ExportContext, handle: str) -> None:
         assert handle in self.handles(), handle
         assert context.html_templates is not None
+
+        # Imported here so that only an html2pdf export loads Selenium and
+        # pypdf.
+        from strictdoc.features.html2pdf.html2pdf_generator import (  # noqa: PLC0415
+            HTML2PDFGenerator,
+        )
 
         output_html2pdf_root = os.path.join(
             context.project_config.output_dir, "html2pdf"

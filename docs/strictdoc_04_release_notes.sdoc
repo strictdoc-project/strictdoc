@@ -95,6 +95,12 @@ for ReqIF, HTML2PDF, and the Markdown writer only when a user first imports or
 exports ReqIF, exports a PDF, or saves a Markdown document. Before, the server
 imported these packages at startup, which took about a fifth of its startup
 time.
+
+7\) On the DOCUMENT and TRACE screens, hovering over or focusing a relation
+link shows a card with the target's UID, title and statement, or for a File
+link, the first lines of the linked range. The cards load on demand from
+small ``-relation-previews.js`` files and work in the static export, from
+``file://``, and on the server.
 <<<
 
 [[/SECTION]]

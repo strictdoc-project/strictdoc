@@ -51,7 +51,7 @@ releases:
 
 [[SECTION]]
 MID: 47316fcefedf4760b658efaee7230ef5
-TITLE: Unreleased
+TITLE: 0.32.2 (2026-11-26)
 
 [TEXT]
 MID: badd2ebb98d946668d19ce23884e6e08
@@ -109,6 +109,33 @@ release 0.4.0. The HTML2PDF export gets the following fixes:
   other resources to load.
 
 Some documents can get different page breaks and a different page count.
+
+8\) StrictDoc has a new read-only Project configuration page. The left
+navigation links to the page in the server and in the static HTML export. The
+page shows the settings of the project configuration, for example the
+configuration file, the output folder, and the active project features.
+
+The input paths and the included and excluded document and source file paths
+move from the project index page to the Project configuration page. The page
+lists the paths that StrictDoc excludes because of ``.gitignore`` separately
+from the configured excluded paths. The page hides the absolute prefix of each
+path. A click on "…" shows the full path.
+
+9\) Fixed: the web server serves only files inside its HTML output folder.
+Before, a URL with ``..`` or with an absolute path returned any file that the
+server process could read. The server now returns 404 for such a URL.
+
+10\) Fixed: a grammar element tag can now start with ``DOCUMENT``, ``GRAMMAR``,
+or ``SECTION``, for example ``DOCUMENTATION`` or ``SECTIONAL``. Before,
+StrictDoc failed to parse a document with such a tag. The whole tags
+``DOCUMENT``, ``GRAMMAR``, ``SECTION``, and ``DOCUMENT_FROM_FILE`` stay
+reserved.
+
+11\) Fixed: StrictDoc expands ``ALL_FEATURES`` to all project features if
+``create_config()`` assigns ``config.project_features`` after it creates the
+``ProjectConfig`` object. Before, StrictDoc expanded ``ALL_FEATURES`` only if
+``create_config()`` passed ``project_features`` to the ``ProjectConfig``
+constructor.
 <<<
 
 [[/SECTION]]

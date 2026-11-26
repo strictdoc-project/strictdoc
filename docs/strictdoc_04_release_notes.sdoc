@@ -95,6 +95,20 @@ for ReqIF, HTML2PDF, and the Markdown writer only when a user first imports or
 exports ReqIF, exports a PDF, or saves a Markdown document. Before, the server
 imported these packages at startup, which took about a fifth of its startup
 time.
+
+7\) StrictDoc now uses html2pdf4doc 0.1.0, which contains the html2pdf4doc JS
+release 0.4.0. The HTML2PDF export gets the following fixes:
+
+- No empty pages when several page break rules match one element, when the
+  content starts with a zero-height element, or when a hidden element follows
+  a page break.
+- A table row taller than a page no longer hangs the export.
+- A table footer appears once, in the last part of the table.
+- Images at the start of a page no longer overflow the page.
+- Before the page layout, html2pdf4doc waits up to 2 seconds for images and
+  other resources to load.
+
+Some documents can get different page breaks and a different page count.
 <<<
 
 [[/SECTION]]

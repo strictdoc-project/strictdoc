@@ -2,7 +2,6 @@ import os
 from typing import List
 
 from strictdoc.core.format import ExportContext, Format
-from strictdoc.features.doxygen.generator import DoxygenGenerator
 
 
 class DoxygenFormat(Format):
@@ -36,6 +35,11 @@ class DoxygenFormat(Format):
 
     def export_complete_tree(self, context: ExportContext, handle: str) -> None:
         assert handle in self.handles(), handle
+
+        from strictdoc.features.doxygen.generator import (  # noqa: PLC0415
+            DoxygenGenerator,
+        )
+
         output_doxygen_root = os.path.join(
             context.project_config.output_dir, "doxygen"
         )

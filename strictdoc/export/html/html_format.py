@@ -2,10 +2,6 @@ from typing import List, Optional, Tuple
 
 from strictdoc.core.format import ExportContext, Format
 from strictdoc.export.html.document_type import DocumentType
-from strictdoc.export.html.html_generator import HTMLGenerator
-from strictdoc.features.diff_and_changelog.change_generator import (
-    ChangeGenerator,
-)
 
 
 class HTMLFormat(Format):
@@ -41,6 +37,13 @@ class HTMLFormat(Format):
         assert handle in self.handles(), handle
         assert context.html_templates is not None
 
+        # The HTML generator imports the generators of all HTML screens.
+        # Imported here so that a command or export without HTML does not
+        # load them.
+        from strictdoc.export.html.html_generator import (  # noqa: PLC0415
+            HTMLGenerator,
+        )
+
         html_generator = HTMLGenerator(
             context.project_config, context.html_templates
         )
@@ -61,6 +64,10 @@ class HTMLFormat(Format):
         if (
             diff_git_revisions := context.project_config.diff_git_revisions
         ) is not None:
+            from strictdoc.features.diff_and_changelog.change_generator import (  # noqa: PLC0415
+                ChangeGenerator,
+            )
+
             ChangeGenerator().generate_from_revisions(
                 diff_git_revisions,
                 project_config=context.project_config,
@@ -69,6 +76,10 @@ class HTMLFormat(Format):
         if (
             diff_dir_revisions := context.project_config.diff_dir_revisions
         ) is not None:
+            from strictdoc.features.diff_and_changelog.change_generator import (  # noqa: PLC0415
+                ChangeGenerator,
+            )
+
             ChangeGenerator().generate_from_paths(
                 path_to_lhs_tree=diff_dir_revisions[0],
                 path_to_rhs_tree=diff_dir_revisions[1],
@@ -83,6 +94,11 @@ class HTMLFormat(Format):
         specific_documents: Optional[Tuple[DocumentType, ...]] = None,
     ) -> None:
         assert context.html_templates is not None
+
+        from strictdoc.export.html.html_generator import (  # noqa: PLC0415
+            HTMLGenerator,
+        )
+
         html_generator = HTMLGenerator(
             context.project_config, context.html_templates
         )

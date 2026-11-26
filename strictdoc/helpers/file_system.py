@@ -2,6 +2,7 @@ import codecs
 import os
 import platform
 import shutil
+import stat
 import tempfile
 from contextlib import contextmanager
 from io import BufferedReader, TextIOWrapper
@@ -55,15 +56,12 @@ def sync_dir(src_dir: str, dst_dir: str, message: Optional[str]) -> None:
             full_path_to_destination_dir, filename
         )
 
-        # StrictDoc: We don't want to copy files if they are not newer.
-        if not os.path.isfile(
-            full_path_to_destination_file
-        ) or os.path.getmtime(full_path_to_file) > os.path.getmtime(
-            full_path_to_destination_file
+        if _is_destination_file_up_to_date(
+            full_path_to_file, full_path_to_destination_file
         ):
-            shutil.copyfile(full_path_to_file, full_path_to_destination_file)
-        else:
             skipped += 1
+        else:
+            shutil.copyfile(full_path_to_file, full_path_to_destination_file)
 
     if message is not None:
         if skipped > 0:
@@ -72,6 +70,28 @@ def sync_dir(src_dir: str, dst_dir: str, message: Optional[str]) -> None:
             )
         else:
             print(".", flush=True)  # noqa: T201
+
+
+def _is_destination_file_up_to_date(src_file: str, dst_file: str) -> bool:
+    """
+    Check if the destination file can be kept instead of copying the source.
+
+    The destination file is up to date if it is not older than the source file
+    and has the same size. The size check catches an outdated destination file
+    that is newer than the source file, for example after an interrupted copy
+    or after a restore of a source file with its original modification time.
+    """
+    try:
+        dst_stat = os.stat(dst_file)
+    except FileNotFoundError:
+        return False
+    if not stat.S_ISREG(dst_stat.st_mode):
+        return False
+    src_stat = os.stat(src_file)
+    return (
+        src_stat.st_mtime <= dst_stat.st_mtime
+        and src_stat.st_size == dst_stat.st_size
+    )
 
 
 def get_portable_temp_dir() -> Path:

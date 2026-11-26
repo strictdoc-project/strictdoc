@@ -8,6 +8,11 @@
   const SEL_DONE_ICON = '[data-copy-clipboard-target="doneIcon"]';
   const SEL_COVER = '[data-copy-clipboard-target="cover"]';
 
+  // The "done" icon is not rendered with every button. It is rendered once
+  // as a <template> in the document body and cloned next to the copy icon the
+  // first time a button is clicked.
+  const SEL_DONE_ICON_TEMPLATE = 'template#copy_to_clipboard-done_icon';
+
   const SEL_FIELD = 'sdoc-field';
   const SEL_FIELD_SERVICE = 'sdoc-field-service';
   const SEL_FIELD_CONTENT = 'sdoc-field-content';
@@ -64,7 +69,16 @@
 
   function feedback(root, button) {
     const copyIcon = root.querySelector(SEL_COPY_ICON);
-    const doneIcon = root.querySelector(SEL_DONE_ICON);
+    let doneIcon = root.querySelector(SEL_DONE_ICON);
+    if (!doneIcon && copyIcon) {
+      doneIcon = document.createElement('span');
+      doneIcon.dataset.copyClipboardTarget = 'doneIcon';
+      doneIcon.className = copyIcon.className;
+      doneIcon.append(
+        document.querySelector(SEL_DONE_ICON_TEMPLATE).content.cloneNode(true)
+      );
+      copyIcon.after(doneIcon);
+    }
     const cover = root.querySelector(SEL_COVER);
 
     // make button visible

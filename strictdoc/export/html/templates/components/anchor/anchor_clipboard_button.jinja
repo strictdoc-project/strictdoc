@@ -8,7 +8,7 @@
 
   Expected targets inside this element (used by the feedback() function in copy_to_clipboard.js):
     data-copy-clipboard-target="copyIcon"
-    data-copy-clipboard-target="doneIcon"
+    data-copy-clipboard-target="doneIcon"     — added by the script on first use
     data-copy-clipboard-target="cover"
 
   Requires: anchor_button_text
@@ -20,20 +20,9 @@
   data-copy-clipboard-target="button"
   data-anchor-id="{{ anchor_button_text }}"
 >
-  <span
-    class="anchor_base_icon"
-    style="display: contents; line-height: 0.1;"
-    data-copy-clipboard-target="copyIcon"
-  >
+  <span class="anchor_base_icon" data-copy-clipboard-target="copyIcon">
     <span class="svg_icon_not_hover_visible">{% include "icons/ico16_anchor.svg" %}</span>
     <span class="svg_icon_hover_visible">{% include "icons/ico16_copy.svg" %}</span>
-  </span>
-  <span
-    class="anchor_check_icon"
-    style="display: none; line-height: 0.1;"
-    data-copy-clipboard-target="doneIcon"
-  >
-    {% include "icons/ico16_done.svg" %}
   </span>
   <div class="copy_to_clipboard-cover" data-copy-clipboard-target="cover"></div>
   <span class="anchor_button_text">{{ anchor_button_text }}</span>

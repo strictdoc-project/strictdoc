@@ -11,7 +11,6 @@ from starlette.datastructures import FormData
 from strictdoc.backend.markdown.markdown_to_html_fragment_writer import (
     MarkdownToHtmlFragmentWriter,
 )
-from strictdoc.backend.markdown.reader import SDMarkdownReader
 from strictdoc.backend.rst.rst_to_html_fragment_writer import (
     RstToHtmlFragmentWriter,
 )
@@ -394,6 +393,10 @@ class RequirementFormObject(ErrorObject):
                 # collapsing it here changes no output and lets the reader
                 # parse the saved file.
                 if multiline and is_markdown_file:
+                    from strictdoc.backend.markdown.reader import (  # noqa: PLC0415
+                        SDMarkdownReader,
+                    )
+
                     sanitized_field_value = (
                         SDMarkdownReader.collapse_redundant_empty_lines(
                             sanitized_field_value

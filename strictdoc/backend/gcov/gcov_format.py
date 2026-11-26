@@ -1,6 +1,5 @@
 from typing import List
 
-from strictdoc.backend.gcov.reader import GCovJSONReader
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.core.file_system.file_tree import File
 from strictdoc.core.format import ExportContext, Format
@@ -46,6 +45,10 @@ class GCovJSONFormat(Format):
     def read_from_file(
         self, doc_file: File, project_config: ProjectConfig
     ) -> SDocDocument:
+        from strictdoc.backend.gcov.reader import (  # noqa: PLC0415
+            GCovJSONReader,
+        )
+
         return GCovJSONReader.read_from_file(doc_file, project_config)
 
     @staticmethod

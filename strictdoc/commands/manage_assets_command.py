@@ -5,9 +5,6 @@ import sys
 from pathlib import Path
 from typing import Set
 
-from strictdoc.backend.rst.directives.wildcard_enhanced_image import (
-    WildcardEnhancedImage,
-)
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.cli.base_command import BaseCommand, CLIValidationError
@@ -15,7 +12,6 @@ from strictdoc.commands.manage_assets_config import ManageAssetsCommandConfig
 from strictdoc.core.asset_manager import AssetManager
 from strictdoc.core.project_config import ProjectConfig, ProjectConfigLoader
 from strictdoc.core.traceability_index import TraceabilityIndex
-from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
 from strictdoc.helpers.parallelizer import Parallelizer
 
 
@@ -65,6 +61,12 @@ and optionally delete them to keep the repository clean.
 
         project_config = ProjectConfigLoader.load_using_manage_assets_config(
             self.config
+        )
+
+        # Imported here so that the other commands do not load the document
+        # tree builder.
+        from strictdoc.core.traceability_index_builder import (  # noqa: PLC0415
+            TraceabilityIndexBuilder,
         )
 
         try:
@@ -181,6 +183,11 @@ and optionally delete them to keep the repository clean.
 
     def _find_physical_assets(self, asset_manager: AssetManager) -> Set[str]:
         """Finds image files in asset directories registered for the project."""
+        # Imported here so that the other commands do not load Docutils.
+        from strictdoc.backend.rst.directives.wildcard_enhanced_image import (  # noqa: PLC0415
+            WildcardEnhancedImage,
+        )
+
         physical_assets: Set[str] = set()
 
         # Scan registered _assets directories

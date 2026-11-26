@@ -22,9 +22,6 @@ from fastapi import (
 from fastapi import (
     Query as FastAPIQuery,
 )
-from reqif.models.error_handling import ReqIFXMLParsingError
-from reqif.parser import ReqIFParser
-from reqif.unparser import ReqIFUnparser
 from starlette.background import BackgroundTask
 from starlette.datastructures import FormData
 from starlette.requests import Request
@@ -38,13 +35,6 @@ from starlette.responses import (
 from starlette.websockets import WebSocket, WebSocketDisconnect
 
 from strictdoc.backend.json.json_generator import JSONGenerator
-from strictdoc.backend.markdown.writer import SDMarkdownWriter
-from strictdoc.backend.reqif.p01_sdoc.reqif_to_sdoc_converter import (
-    P01_ReqIFToSDocConverter,
-)
-from strictdoc.backend.reqif.p01_sdoc.sdoc_to_reqif_converter import (
-    P01_SDocToReqIFObjectConverter,
-)
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -152,10 +142,6 @@ from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
 from strictdoc.features.export.export_action import ExportAction
 from strictdoc.features.html2pdf.generator import (
     DocumentHTML2PDFGenerator,
-)
-from strictdoc.features.html2pdf.pdf_print_driver import (
-    PDFPrintDriver,
-    PDFPrintDriverException,
 )
 from strictdoc.features.nestor.view_object import (
     NestorViewObject,
@@ -296,6 +282,23 @@ def resolve_uploaded_asset_subfolder(
     return ""
 
 
+def resolve_path_in_output_root(
+    output_root: str, url_path: str
+) -> Optional[str]:
+    # The URL can contain ".." or an absolute path. Return None if the result
+    # points outside the output root, so the server cannot read other files.
+    real_output_root = os.path.realpath(output_root)
+    path_to_file = os.path.realpath(os.path.join(real_output_root, url_path))
+    try:
+        common_path = os.path.commonpath([real_output_root, path_to_file])
+    except ValueError:
+        # On Windows, the paths can be on different drives.
+        return None
+    if common_path != real_output_root:
+        return None
+    return path_to_file
+
+
 def create_main_router(
     project_config: ProjectConfig,
     *,
@@ -386,6 +389,10 @@ def create_main_router(
                 (".md", ".markdown")
             )
         ):
+            from strictdoc.backend.markdown.writer import (  # noqa: PLC0415
+                SDMarkdownWriter,
+            )
+
             SDMarkdownWriter.write_to_file(
                 document, line_width=project_config.document_line_width
             )
@@ -4533,6 +4540,15 @@ def create_main_router(
         "/actions/project_index/import_document_reqif", response_class=Response
     )
     def import_document_reqif(reqif_file: UploadFile) -> Response:
+        from reqif.models.error_handling import (  # noqa: PLC0415
+            ReqIFXMLParsingError,
+        )
+        from reqif.parser import ReqIFParser  # noqa: PLC0415
+
+        from strictdoc.backend.reqif.p01_sdoc.reqif_to_sdoc_converter import (  # noqa: PLC0415
+            P01_ReqIFToSDocConverter,
+        )
+
         contents = reqif_file.file.read().decode()
 
         error_object = ErrorObject()
@@ -4700,6 +4716,11 @@ def create_main_router(
         Path(path_to_output_html).parent.mkdir(parents=True, exist_ok=True)
         Path(path_to_output_pdf).parent.mkdir(parents=True, exist_ok=True)
 
+        from strictdoc.features.html2pdf.pdf_print_driver import (  # noqa: PLC0415
+            PDFPrintDriver,
+            PDFPrintDriverException,
+        )
+
         # FIXME: Add this print driver to a service bus object to make it
         #        unit-testable.
         pdf_print_driver = PDFPrintDriver()
@@ -4749,6 +4770,12 @@ def create_main_router(
 
     @read_router.get("/reqif/export_tree", response_class=Response)
     def get_reqif_export_tree() -> Response:
+        from reqif.unparser import ReqIFUnparser  # noqa: PLC0415
+
+        from strictdoc.backend.reqif.p01_sdoc.sdoc_to_reqif_converter import (  # noqa: PLC0415
+            P01_SDocToReqIFObjectConverter,
+        )
+
         reqif_bundle = P01_SDocToReqIFObjectConverter.convert_document_tree(
             document_tree=export_action.traceability_index.document_tree,
             multiline_is_xhtml=project_config.reqif_multiline_is_xhtml,
@@ -5423,10 +5450,12 @@ def create_main_router(
         document_relative_path: SDocRelativePath = SDocRelativePath.from_url(
             url_to_document
         )
-        full_path_to_document = os.path.join(
+        full_path_to_document = resolve_path_in_output_root(
             project_config.export_output_html_root,
             document_relative_path.relative_path,
         )
+        if full_path_to_document is None:
+            return _error_response(HTTP_STATUS_NOT_FOUND)
 
         def must_generate() -> bool:
             if not os.path.isfile(full_path_to_document):
@@ -5498,6 +5527,11 @@ def create_main_router(
                     html_generator.export_project_tree_screen(
                         traceability_index=export_action.traceability_index,
                     )
+                elif (
+                    document_relative_path.relative_path
+                    == "project_configuration.html"
+                ):
+                    html_generator.export_project_configuration_screen()
                 elif (
                     document_relative_path.relative_path
                     == "traceability_matrix.html"
@@ -5629,7 +5663,11 @@ def create_main_router(
     def get_asset(request: Request, url_to_asset: str) -> Response:
         project_output_path = project_config.export_output_html_root
 
-        static_file = os.path.join(project_output_path, url_to_asset)
+        static_file = resolve_path_in_output_root(
+            project_output_path, url_to_asset
+        )
+        if static_file is None:
+            return _error_response(HTTP_STATUS_NOT_FOUND, path_type="asset")
         content_type, _ = guess_type(static_file)
 
         with lock_manager.acquire_global_read():

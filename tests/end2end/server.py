@@ -20,7 +20,7 @@ import tempfile
 import time
 from contextlib import ExitStack, closing
 from queue import Empty, Queue
-from threading import Event, Thread
+from threading import Thread
 from time import sleep
 from typing import Dict, List, Optional, Tuple
 
@@ -51,21 +51,26 @@ class ServerStderrReadThread(Thread):
 
 
 class TestStderrLogThread(Thread):
+    """
+    Writes the server's stderr lines to the log file until it gets the
+    STOP_MARKER. SDocTestServer.close() puts the marker into the queue after
+    the last stderr line, so the thread writes all lines and then exits at
+    once.
+    """
+
+    STOP_MARKER = None
+
     def __init__(self, server: "SDocTestServer"):
         super().__init__()
         self.server: SDocTestServer = server
         self.stderr_queue = server.stderr_queue
-        self.stop_event = Event()
 
     def run(self):
         stderr_log_file = self.server.log_file_err
-        while not self.stop_event.is_set():
-            try:
-                line_bytes = self.stderr_queue.get(
-                    timeout=test_environment.poll_timeout_seconds
-                )
-            except Empty:
-                continue
+        while True:
+            line_bytes = self.stderr_queue.get()
+            if line_bytes is TestStderrLogThread.STOP_MARKER:
+                break
             stderr_log_file.write(line_bytes)
             stderr_log_file.flush()
 
@@ -319,12 +324,15 @@ class SDocTestServer:
             self.server_stderr_capture_thread, ServerStderrReadThread
         ), self.server_stderr_capture_thread
 
-        if self.test_stderr_log_thread is not None:
-            self.test_stderr_log_thread.stop_event.set()
-            self.test_stderr_log_thread.join()
-
+        # The read thread ends when the stopped server closes its stderr. After
+        # that, the queue holds all stderr lines, and the stop marker goes
+        # after the last line.
         if self.server_stderr_capture_thread is not None:
             self.server_stderr_capture_thread.join()
+
+        if self.test_stderr_log_thread is not None:
+            self.stderr_queue.put(TestStderrLogThread.STOP_MARKER)
+            self.test_stderr_log_thread.join()
 
         self.exit_stack.close()
 

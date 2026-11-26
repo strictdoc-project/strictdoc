@@ -5,8 +5,6 @@
 name: "StrictDoc on Windows (Powershell)"
 
 on:
-  push:
-    branches: [ "master" ]
   pull_request:
     branches: [ "**" ]
 

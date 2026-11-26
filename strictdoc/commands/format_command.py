@@ -1,7 +1,6 @@
 import argparse
 import sys
 
-from strictdoc.backend.markdown.writer import SDMarkdownWriter
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.writer import SDWriter
 from strictdoc.cli.base_command import BaseCommand, CLIValidationError
@@ -86,6 +85,10 @@ If `document_line_width` is not configured, the command does not wrap the text.
                 ) as output_file:
                     output_file.write(document_content)
             elif filename.endswith(".md"):
+                from strictdoc.backend.markdown.writer import (  # noqa: PLC0415
+                    SDMarkdownWriter,
+                )
+
                 SDMarkdownWriter.write_to_file(
                     document, line_width=line_width, format_tables=True
                 )

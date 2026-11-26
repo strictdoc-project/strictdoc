@@ -716,23 +716,27 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
         *,
         chunk_id: str,
         witness_anchor: str,
-    ) -> tuple[list[float], float, float]:
+        center_witness: bool = False,
+    ) -> tuple[float, list[float], float, float]:
         (
+            witness_top,
             samples,
             placeholder_heights,
             loaded_heights,
         ) = self.do_record_anchor_during_document_chunks_load(
             chunk_ids=[chunk_id],
             witness_anchor=witness_anchor,
+            center_witness=center_witness,
         )
-        return samples, placeholder_heights[0], loaded_heights[0]
+        return witness_top, samples, placeholder_heights[0], loaded_heights[0]
 
     def do_record_anchor_during_document_chunks_load(
         self,
         *,
         chunk_ids: list[str],
         witness_anchor: str,
-    ) -> tuple[list[float], list[float], list[float]]:
+        center_witness: bool = False,
+    ) -> tuple[float, list[float], list[float], list[float]]:
         # Post-load assertions can miss a one-frame jump that is corrected
         # before Selenium observes the settled DOM. Sample after every paint
         # opportunity from before the request through two frames after
@@ -747,6 +751,22 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
         # Every frame is switched to eager loading in the same JavaScript task.
         # Their responses may finish in either order, which exercises
         # per-frame snapshot isolation and cumulative geometry compensation.
+        #
+        # With center_witness, the witness node is scrolled to the viewport
+        # center in the same JavaScript task, right before the witness top
+        # and the placeholder heights are measured. Centering can move a
+        # placeholder into the preload range of toc_chunk_navigation.js, and
+        # a separate WebDriver call would leave time for that preload to
+        # start and finish before the turbo:frame-load listener exists.
+        # IntersectionObserver callbacks run only after this task.
+        centered_node = (
+            self.test_case.wait_for_element_visible(
+                f"//sdoc-node[.//*[@id='{witness_anchor}']]",
+                by=By.XPATH,
+            )
+            if center_witness
+            else None
+        )
         self.test_case.execute_script(
             """
             const frames = arguments[0].map(
@@ -756,8 +776,17 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
             const container = document.querySelector(
               "[js-toc_highlighting-content_root]"
             );
+            if (arguments[2] !== null) {
+              arguments[2].scrollIntoView({
+                behavior: "instant",
+                block: "center"
+              });
+            }
             const state = {
               complete: false,
+              witnessTop:
+                target.getBoundingClientRect().top -
+                container.getBoundingClientRect().top,
               placeholderHeights: frames.map(
                 (frame) => frame.getBoundingClientRect().height
               ),
@@ -808,6 +837,7 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
             """,
             chunk_ids,
             witness_anchor,
+            centered_node,
         )
 
         state = WebDriverWait(self.test_case.driver, 20).until(
@@ -823,6 +853,7 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
             for loaded_height in state["loadedHeights"]
         )
         return (
+            state["witnessTop"],
             state["samples"],
             state["placeholderHeights"],
             state["loadedHeights"],

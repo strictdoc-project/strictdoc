@@ -3,9 +3,6 @@ import sys
 from pathlib import Path
 from typing import List
 
-from strictdoc.backend.markdown.grammar_reader import MarkdownGrammarReader
-from strictdoc.backend.markdown.reader import SDMarkdownReader
-from strictdoc.backend.markdown.writer import SDMarkdownWriter
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
@@ -49,6 +46,13 @@ class MarkdownFormat(Format):
     def read_from_file(
         self, doc_file: File, project_config: ProjectConfig
     ) -> SDocDocument:
+        # The Markdown reader, grammar reader, and writer load markdown-it-py
+        # and PyYAML. They are imported on first use, so that a project
+        # without Markdown documents does not pay for these imports.
+        from strictdoc.backend.markdown.reader import (  # noqa: PLC0415
+            SDMarkdownReader,
+        )
+
         return SDMarkdownReader().read_from_file(
             doc_file.full_path, project_config
         )
@@ -64,6 +68,10 @@ class MarkdownFormat(Format):
     def read_grammar(
         self, doc_file: File, project_config: ProjectConfig
     ) -> DocumentGrammar:
+        from strictdoc.backend.markdown.grammar_reader import (  # noqa: PLC0415
+            MarkdownGrammarReader,
+        )
+
         return MarkdownGrammarReader().read_from_file(
             doc_file.full_path, project_config
         )
@@ -84,6 +92,10 @@ class MarkdownFormat(Format):
             sys.exit(1)
         else:
             assert traceability_index.document_tree
+
+        from strictdoc.backend.markdown.writer import (  # noqa: PLC0415
+            SDMarkdownWriter,
+        )
 
         writer = SDMarkdownWriter()
 

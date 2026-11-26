@@ -1,7 +1,7 @@
 from strictdoc.core.feature import Feature, FeatureContext
-from strictdoc.features.project_statistics.screen import (
-    render_project_statistics_screen,
-)
+
+# The methods below import the screen code on first use, so that a project
+# without this feature does not load it.
 
 
 class ProjectStatisticsFeature(Feature):
@@ -12,6 +12,10 @@ class ProjectStatisticsFeature(Feature):
         return True
 
     def export(self, context: FeatureContext) -> None:
+        from strictdoc.features.project_statistics.screen import (  # noqa: PLC0415
+            render_project_statistics_screen,
+        )
+
         render_project_statistics_screen(
             context.project_config,
             context.traceability_index,
@@ -26,6 +30,10 @@ class ProjectStatisticsFeature(Feature):
         return "project_statistics.html"
 
     def render_screen(self, context: FeatureContext) -> None:
+        from strictdoc.features.project_statistics.screen import (  # noqa: PLC0415
+            render_project_statistics_screen,
+        )
+
         render_project_statistics_screen(
             context.project_config,
             context.traceability_index,

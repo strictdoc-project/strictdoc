@@ -64,7 +64,39 @@ ChromeDriver while another export was running it, and the export failed with
 "Text file busy" on Linux. StrictDoc now uses html2pdf4doc 0.0.36, which
 caches the downloaded ChromeDriver atomically.
 
-2\) On the DOCUMENT and TRACE screens, hovering over or focusing a relation
+2\) Fixed: the HTML export now copies an asset file again if the file in the
+output folder has a different size than the source file. Before, StrictDoc
+compared only the modification times. As a result, StrictDoc kept an outdated
+file in the output folder if the source file was not newer, for example after
+an interrupted export.
+
+3\) StrictDoc starts faster. StrictDoc now imports the Python packages of an
+export format, a project feature, or a command only on first use. For example,
+an HTML export no longer loads the packages of the Excel, SPDX, ReqIF, and
+HTML2PDF formats. The commands other than ``server`` no longer load the web
+server packages. On a project with one document, an HTML export takes about
+half as long as before.
+
+4\) A small project exports faster. StrictDoc now reads and exports fewer than
+five documents in its own process. Before, StrictDoc started a worker process
+for each CPU core, even for a single document. The start of these worker
+processes took longer than the parallel export saved.
+
+5\) StrictDoc finds documents and source files faster in a large project
+folder. If all paths in ``include_doc_paths`` or ``include_source_paths``
+start with ``/``, StrictDoc no longer searches the folders outside these paths,
+for example ``build/``, ``.venv/``, or ``node_modules/``. In a development
+checkout of StrictDoc with build output, the search for source files now checks
+about 7,500 files instead of more than 200,000. StrictDoc finds the same files
+as before.
+
+6\) The ``server`` command starts faster. The server now imports the packages
+for ReqIF, HTML2PDF, and the Markdown writer only when a user first imports or
+exports ReqIF, exports a PDF, or saves a Markdown document. Before, the server
+imported these packages at startup, which took about a fifth of its startup
+time.
+
+7\) On the DOCUMENT and TRACE screens, hovering over or focusing a relation
 link shows a card with the target's UID, title and statement, or for a File
 link, the first lines of the linked range. The cards load on demand from
 small ``-relation-previews.js`` files and work in the static export, from

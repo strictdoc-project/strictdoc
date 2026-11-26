@@ -1,9 +1,6 @@
 from typing import List
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
-from strictdoc.backend.sdoc_source_code.test_reports.junit_xml_reader import (
-    JUnitXMLReader,
-)
 from strictdoc.core.file_system.file_tree import File
 from strictdoc.core.format import ExportContext, Format
 from strictdoc.core.project_config import ProjectConfig
@@ -48,6 +45,12 @@ class JUnitXMLFormat(Format):
     def read_from_file(
         self, doc_file: File, project_config: ProjectConfig
     ) -> SDocDocument:
+        # Imported here so that only a project with JUnit XML files loads
+        # BeautifulSoup.
+        from strictdoc.backend.sdoc_source_code.test_reports.junit_xml_reader import (  # noqa: PLC0415
+            JUnitXMLReader,
+        )
+
         return JUnitXMLReader.read_from_file(doc_file, project_config)
 
     @staticmethod

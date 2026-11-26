@@ -290,44 +290,9 @@ class ProjectConfig:
             if project_features is not None
             else list(ProjectConfigDefault.DEFAULT_FEATURES)
         )
-
-        assert isinstance(project_features_, list), (
-            f"config: project_features: parameter must be an "
-            f"array: '{project_features_}'."
+        self.project_features: List[Union[str, Feature]] = (
+            ProjectConfig._normalize_project_features(project_features_)
         )
-
-        for feature in project_features_:
-            if isinstance(feature, Feature):
-                continue
-            assert feature in ProjectFeature.all(), (
-                f"config: project_features: unknown feature declared: "
-                f"'{feature}'."
-            )
-
-        if ProjectFeature.ALL_FEATURES in project_features_:
-            # A deprecated feature stays active only if the user lists it
-            # explicitly. In that case, the deprecation warning is printed.
-            explicit_deprecated_features = [
-                feature_
-                for feature_ in project_features_
-                if feature_ in DEPRECATED_FEATURES
-            ]
-            custom_features = [
-                feature_
-                for feature_ in project_features_
-                if isinstance(feature_, Feature)
-            ]
-            project_features_ = [
-                *(
-                    feature_
-                    for feature_ in ProjectFeature.all()
-                    if feature_ not in DEPRECATED_FEATURES
-                ),
-                *explicit_deprecated_features,
-                *custom_features,
-            ]
-
-        self.project_features: List[Union[str, Feature]] = project_features_
 
         #
         # server_host and server_port
@@ -435,6 +400,11 @@ class ProjectConfig:
                     f"config: exclude_source_paths: {exception_}"
                 ) from exception_
         self.exclude_source_paths: List[str] = exclude_source_paths
+
+        # Populated by validate_and_finalize() with the patterns read from
+        # .gitignore, if any, so templates can tell those apart from the
+        # excludes declared explicitly in the config.
+        self.exclude_paths_from_gitignore: List[str] = []
 
         #
         # source_root_path
@@ -585,12 +555,66 @@ class ProjectConfig:
         self.config_last_update: Optional[datetime.datetime] = (
             _config_last_update
         )
+        # Set by ProjectConfigLoader to the configuration file path resolved
+        # from the --config option or the project directory.
+        self.config_path: Optional[str] = None
         self.is_running_on_server: bool = False
         self.watch_enabled: bool = False
 
     @staticmethod
     def default_config() -> "ProjectConfig":
         return ProjectConfig()
+
+    @staticmethod
+    def _normalize_project_features(
+        project_features: List[Union[str, Feature]],
+    ) -> List[Union[str, Feature]]:
+        """
+        Validate project_features and expand the ALL_FEATURES sentinel into
+        the ProjectFeature list without DEPRECATED_FEATURES, preserving any
+        explicitly listed deprecated features and custom Feature instances.
+        Called both from __init__ (a project_features constructor argument)
+        and from validate_and_finalize() (a project_features attribute
+        assigned after construction, as done by an extending create_config()
+        function), since assigning the attribute directly bypasses __init__.
+        """
+        assert isinstance(project_features, list), (
+            f"config: project_features: parameter must be an "
+            f"array: '{project_features}'."
+        )
+
+        for feature in project_features:
+            if isinstance(feature, Feature):
+                continue
+            assert feature in ProjectFeature.all(), (
+                f"config: project_features: unknown feature declared: "
+                f"'{feature}'."
+            )
+
+        if ProjectFeature.ALL_FEATURES in project_features:
+            # A deprecated feature stays active only if the user lists it
+            # explicitly. In that case, the deprecation warning is printed.
+            explicit_deprecated_features = [
+                feature_
+                for feature_ in project_features
+                if feature_ in DEPRECATED_FEATURES
+            ]
+            custom_features = [
+                feature_
+                for feature_ in project_features
+                if isinstance(feature_, Feature)
+            ]
+            return [
+                *(
+                    feature_
+                    for feature_ in ProjectFeature.all()
+                    if feature_ not in DEPRECATED_FEATURES
+                ),
+                *explicit_deprecated_features,
+                *custom_features,
+            ]
+
+        return project_features
 
     def resolve_custom_node_prefix(
         self,
@@ -872,6 +896,15 @@ class ProjectConfig:
             self.reqif_enable_mid = export_config.reqif_enable_mid
 
     def validate_and_finalize(self) -> None:
+        # project_features may have been reassigned after __init__ (an
+        # extending create_config() function commonly does
+        # `config.project_features = [...]`), which bypasses the
+        # ALL_FEATURES expansion normally done in __init__. Re-normalize it
+        # here so every loading path ends up with the same expanded state.
+        self.project_features = ProjectConfig._normalize_project_features(
+            self.project_features
+        )
+
         project_path = self.get_project_root_path()
 
         #
@@ -1038,6 +1071,7 @@ class ProjectConfig:
                         continue
                     patterns.append(line)
 
+            self.exclude_paths_from_gitignore = patterns
             self.exclude_doc_paths.extend(patterns)
             self.exclude_source_paths.extend(patterns)
 
@@ -1389,9 +1423,11 @@ class ProjectConfigLoader:
             return ProjectConfig.default_config()
 
         if path_to_config.endswith(".py"):
-            return ProjectConfigLoader.load_from_python(
+            project_config = ProjectConfigLoader.load_from_python(
                 config_py_path=path_to_config
             )
+            project_config.config_path = os.path.abspath(path_to_config)
+            return project_config
 
         try:
             config_content = toml.load(path_to_config)
@@ -1415,10 +1451,12 @@ class ProjectConfigLoader:
 
         config_last_update = get_file_modification_time(path_to_config)
 
-        return ProjectConfigLoader._load_from_dictionary(
+        project_config = ProjectConfigLoader._load_from_dictionary(
             config_dict=config_content,
             config_last_update=config_last_update,
         )
+        project_config.config_path = os.path.abspath(path_to_config)
+        return project_config
 
     @staticmethod
     def load_from_python(*, config_py_path: str) -> ProjectConfig:

@@ -1,5 +1,7 @@
 from strictdoc.core.feature import Feature, FeatureContext
-from strictdoc.features.tree_map.screen import render_tree_map_screen
+
+# The methods below import the screen code on first use, so that a project
+# without this feature does not load it.
 
 
 class TreeMapFeature(Feature):
@@ -10,6 +12,10 @@ class TreeMapFeature(Feature):
         return True
 
     def export(self, context: FeatureContext) -> None:
+        from strictdoc.features.tree_map.screen import (  # noqa: PLC0415
+            render_tree_map_screen,
+        )
+
         render_tree_map_screen(
             project_config=context.project_config,
             traceability_index=context.traceability_index,
@@ -24,6 +30,10 @@ class TreeMapFeature(Feature):
         return "tree_map.html"
 
     def render_screen(self, context: FeatureContext) -> None:
+        from strictdoc.features.tree_map.screen import (  # noqa: PLC0415
+            render_tree_map_screen,
+        )
+
         render_tree_map_screen(
             project_config=context.project_config,
             traceability_index=context.traceability_index,

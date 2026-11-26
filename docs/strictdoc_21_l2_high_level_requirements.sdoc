@@ -931,6 +931,42 @@ RELATIONS:
   VALUE: SDOC-SSS-30
 
 [REQUIREMENT]
+MID: fb008e0e8f1e421a9b313bb38dd6e453
+UID: SDOC-SRS-217
+STATUS: Active
+TITLE: Single-file HTML export
+STATEMENT: >>>
+StrictDoc shall export the static HTML documentation of a project as one HTML
+file that a browser opens from the local file system.
+
+The file shall provide the pages, the navigation, the search and the static
+editor of the static HTML export.
+
+StrictDoc shall leave out the source file pages unless the user includes them.
+
+For Mermaid, MathJax and PlantUML, the user shall be able to choose:
+
+- embed the library only if the content uses it (default),
+- always embed the library,
+- load the library from a CDN.
+
+For the fonts, the user shall be able to choose between embedded fonts and
+the fonts of the reader's system.
+<<<
+RATIONALE: >>>
+A single file is easy to send to readers, for example project managers, who
+have no access to a web server with the exported documentation. The library
+options trade the size of the file against working offline.
+<<<
+RELATIONS:
+- TYPE: Parent
+  VALUE: SDOC-SSS-30
+- TYPE: File
+  VALUE: strictdoc/features/html_single/html_single_exporter.py
+- TYPE: File
+  VALUE: strictdoc/features/html_single/assets/html_single_loader.js
+
+[REQUIREMENT]
 MID: 37399be2a8ac46889e3437209f9dffa9
 UID: SDOC-SRS-50
 STATUS: Active

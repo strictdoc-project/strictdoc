@@ -1,0 +1,18 @@
+#
+# With --html-single-libraries cdn, the single-file export loads Mermaid,
+# MathJax and PlantUML from a CDN, with pinned versions and integrity hashes.
+#
+# @relation(SDOC-SRS-217, scope=file)
+#
+
+RUN: %strictdoc export %S --formats html-single --html-single-libraries cdn --output-dir %T | filecheck %s
+CHECK: Single-file HTML export: libraries:
+CHECK-NEXT:   embedded: -
+CHECK-NEXT:   loaded from CDN: mathjax, mermaid, plantuml
+CHECK-NEXT:   left out: -
+
+RUN: %cat "%T/html-single/Untitled_Project.html" | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: "_static/mathjax/tex-mml-chtml.js":{"library":"mathjax","action":"cdn","url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha384-
+CHECK-HTML-SAME: "_static/mermaid/mermaid.min.js":{"library":"mermaid","action":"cdn","url":"https://cdn.jsdelivr.net/npm/mermaid@11.12.2/dist/mermaid.min.js","integrity":"sha384-
+CHECK-HTML-SAME: "_static/plantuml/plantuml-core.js":{"library":"plantuml","action":"cdn","url":"https://cdn.jsdelivr.net/npm/@plantuml/core@1.2026.7/plantuml.js","integrity":"sha384-{{.*}}","module_global":"PlantUMLCore"}
+CHECK-HTML-NOT: "_static/mermaid/mermaid.min.js":["text/javascript"

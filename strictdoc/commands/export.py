@@ -11,11 +11,17 @@ from strictdoc.commands._shared import (
 )
 from strictdoc.commands.export_config import ExportCommandConfig
 from strictdoc.core.project_config import ProjectConfigLoader
+from strictdoc.features.html_single.html_single_config import (
+    HTML_SINGLE_HANDLE,
+    HTMLSingleFontsMode,
+    HTMLSingleLibraryMode,
+)
 from strictdoc.helpers.parallelizer import Parallelizer
 
 EXPORT_FORMATS = [
     "html",
     "html2pdf",
+    HTML_SINGLE_HANDLE,
     "markdown",
     "rst",
     "json",
@@ -268,6 +274,36 @@ class ExportCommand(BaseCommand):
             help=(
                 "Disable SSL certificate verification for HTML2PDF's "
                 "HTTP downloads."
+            ),
+        )
+        command_parser_export.add_argument(
+            "--html-single-libraries",
+            choices=HTMLSingleLibraryMode.ALL,
+            default=None,
+            help=(
+                "Single-file HTML export: embed Mermaid, MathJax and "
+                "PlantUML only if the content uses them (auto), always "
+                "(embed), or load them from a CDN (cdn). "
+                "Overrides the project config."
+            ),
+        )
+        command_parser_export.add_argument(
+            "--html-single-fonts",
+            choices=HTMLSingleFontsMode.ALL,
+            default=None,
+            help=(
+                "Single-file HTML export: embed StrictDoc's fonts (embed) "
+                "or use the fonts of the reader's system (system). "
+                "Overrides the project config."
+            ),
+        )
+        command_parser_export.add_argument(
+            "--html-single-include-source-files",
+            action="store_true",
+            default=False,
+            help=(
+                "Single-file HTML export: include the source file pages of "
+                "the requirements-to-source traceability."
             ),
         )
         command_parser_export.add_argument(

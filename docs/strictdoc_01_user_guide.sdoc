@@ -6271,6 +6271,150 @@ A typical review workflow:
 [[/SECTION]]
 
 [[SECTION]]
+MID: 8b05a93cbe994d08aebd6142cac83337
+UID: SECTION-UG-Single-file-HTML-export
+TITLE: Single-file HTML export
+
+[TEXT]
+MID: a818721b18fe4f1b927c48e668f926cf
+STATEMENT: >>>
+The ``html-single`` export format packs the static HTML export into one HTML
+file. A reader opens the file in a browser from the local file system. No web
+server is needed.
+
+Use the single-file export to send the documentation to readers who cannot
+access the published export, for example by email or through a file share.
+
+.. code:: text
+
+    strictdoc export . --formats html-single
+
+The export writes the file to
+``<output-dir>/html-single/<project title>.html``. It also writes the regular
+HTML export to ``<output-dir>/html``, because the single-file export packs these
+files.
+
+The file contains:
+
+- all pages of the HTML export: documents, table, traceability, project index,
+  traceability matrix, source coverage, and the other activated screens,
+- the navigation between the pages,
+- the search,
+- the static editor, if ``STATIC_EDITING`` is activated (see
+  [LINK: SECTION-UG-Static-editing]).
+
+The address of the file shows the current page, for example
+``My_project.html#/docs/requirements.sdoc.html#REQ-1``. The back button and
+bookmarks work. A stable link ``My_project.html?a=REQ-1`` opens the page of a
+node by its UID or MID. The "Copy stable link" button copies such a link.
+<<<
+
+[[SECTION]]
+MID: 54b031956ff743d28d817da514173a64
+TITLE: Libraries and fonts
+
+[TEXT]
+MID: f3c55a91b61f4a98a6b719638687ef5a
+STATEMENT: >>>
+Mermaid, MathJax, PlantUML and the fonts are the largest part of the file. The
+single-file export offers three modes for the libraries:
+
+.. list-table::
+   :header-rows: 1
+
+   * - Mode
+     - Behavior
+   * - ``auto`` (default)
+     - Embeds a library only if the exported content uses it.
+   * - ``embed``
+     - Always embeds the library.
+   * - ``cdn``
+     - Loads the library from a CDN when a reader opens the file.
+
+In the ``cdn`` mode, the file stays small, but the reader needs an internet
+connection to see diagrams and formulas. The file loads the same library
+versions that StrictDoc embeds, and the browser checks each file against an
+integrity hash. Without a connection, the page shows the source text of the
+diagrams and a notice.
+
+The fonts can be embedded (default) or replaced with the fonts of the reader's
+system. The embedded fonts add about 5 MB to the file.
+
+The project config sets the modes:
+
+.. code:: python
+
+    from strictdoc.core.project_config import ProjectConfig
+
+
+    def create_config() -> ProjectConfig:
+        config = ProjectConfig(
+            # Mode for Mermaid, MathJax and PlantUML: auto, embed or cdn.
+            html_single_libraries="auto",
+            # Optional: mode for single libraries.
+            html_single_library_modes={"plantuml": "cdn"},
+            # Fonts: embed or system.
+            html_single_fonts="system",
+            # Optional: a CDN or a company mirror with the npm package layout.
+            html_single_cdn_url="https://cdn.jsdelivr.net/npm",
+        )
+        return config
+
+The command-line options override the project config:
+
+.. code:: text
+
+    strictdoc export . --formats html-single \
+        --html-single-libraries cdn \
+        --html-single-fonts system
+
+``--html-single-libraries`` sets the mode of all three libraries and ignores
+``html_single_library_modes``.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 71065a72cddf42f88b1ed9e6a7e6a936
+TITLE: Source file pages
+
+[TEXT]
+MID: eda29b875d9f41ddbec61603d064b267
+STATEMENT: >>>
+With ``REQUIREMENT_TO_SOURCE_TRACEABILITY``, the HTML export contains a page for
+each source file. The single-file export leaves these pages out by default,
+because they make the file much larger. A link to a source file page then shows
+a notice.
+
+The ``html_single_include_source_files=True`` config option or the
+``--html-single-include-source-files`` command-line option includes the pages.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 7e13051969524406af7da60425bc0c3e
+TITLE: Limitations
+
+[TEXT]
+MID: e3c0cb52406ad7fa60442596915031e7
+STATEMENT: >>>
+- The single-file export is tested with Chrome and Edge.
+- Email gateways may block HTML attachments with scripts. Send the file as a
+  ZIP archive or share it through a file share.
+- The file preview of SharePoint, OneDrive or Outlook does not run scripts. The
+  reader must download the file and open it in a browser.
+- The browser stores the changes of the static editor per browser and per
+  file location. Export the changes as JSON before moving or deleting the file.
+- Ctrl+P prints the current page. The print command of the browser menu prints
+  only the visible part of the page.
+<<<
+
+[[/SECTION]]
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: aa7ebc36cd2947ac9aa293d6c76d8848
 UID: SECTION-UG-Diff-changelog-screen
 TITLE: Diff/changelog screen

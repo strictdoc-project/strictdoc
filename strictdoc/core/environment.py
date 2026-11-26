@@ -34,6 +34,7 @@ HTML_STATIC_DIRS = [
     HTML_STATIC_DIR,
     os.path.join("strictdoc", "features", "diff_and_changelog", "assets"),
     os.path.join("strictdoc", "features", "html2pdf", "assets"),
+    os.path.join("strictdoc", "features", "html_single", "assets"),
     os.path.join("strictdoc", "features", "mathjax", "assets"),
     os.path.join("strictdoc", "features", "mermaid", "assets"),
     os.path.join("strictdoc", "features", "nestor", "assets"),

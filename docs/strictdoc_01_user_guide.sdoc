@@ -6072,7 +6072,11 @@ The static editor works on the document screen of the static HTML export:
    change, so the change survives a page reload.
 4. The panel at the bottom right shows the name field and the number of
    changes in the project. Click "Export changes as JSON" to download all
-   changes as one file.
+   changes as one file. The file name contains the name from the "Name" field
+   and the time of the export, for example
+   ``strictdoc-changes-bob-2026-11-26T10-15-00-000Z.json``. The file name
+   leaves out the characters that Windows, Linux, or macOS do not allow in a
+   file name.
 5. Use the up and down buttons in the panel to jump to the previous or the
    next changed node of the document. The panel shows the position, for
    example ``2 / 5``. The navigation wraps around at the first and the last

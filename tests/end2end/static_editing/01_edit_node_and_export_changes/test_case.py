@@ -156,3 +156,22 @@ class Test(E2ECase):
                 '[data-testid="static-editing-author"]', "value", "bob"
             )
             assert len(self.find_elements("sdoc-node", by=By.CSS_SELECTOR)) > 0
+
+            # The file name of the export contains the name of the author
+            # without the characters that a file system forbids.
+            file_name = self.execute_script(
+                "return window.StrictDoc.staticEditing.getExportFileName();"
+            )
+            assert file_name.startswith("strictdoc-changes-bob-"), file_name
+            assert file_name.endswith(".json"), file_name
+
+            self.update_text(
+                '[data-testid="static-editing-author"]',
+                'Bob <QA>: "Team"/1?',
+            )
+            file_name = self.execute_script(
+                "return window.StrictDoc.staticEditing.getExportFileName();"
+            )
+            assert file_name.startswith("strictdoc-changes-Bob-QA-Team1-"), (
+                file_name
+            )

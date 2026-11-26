@@ -523,13 +523,31 @@
     };
   }
 
+  // The name of the author becomes part of the file name. The name loses
+  // the characters that Windows, Linux, or macOS forbid in a file name:
+  // < > : " / \ | ? * and control characters. Whitespace becomes a dash.
+  function fileNamePart(text) {
+    return text
+      .replace(/[<>:"/\\|?*\u0000-\u001F\u007F]/g, '')
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/^[.-]+|[.-]+$/g, '');
+  }
+
+  function exportFileName() {
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const author = fileNamePart(authorName);
+    return author.length > 0
+      ? `strictdoc-changes-${author}-${timestamp}.json`
+      : `strictdoc-changes-${timestamp}.json`;
+  }
+
   function downloadExport() {
     store.getAll().then((changes) => {
       const content = JSON.stringify(buildExport(changes), null, 2);
       const blob = new Blob([content], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
-      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-      const link = createElement('a', { href: url, download: `strictdoc-changes-${timestamp}.json` });
+      const link = createElement('a', { href: url, download: exportFileName() });
       document.body.append(link);
       link.click();
       link.remove();
@@ -766,5 +784,6 @@
   window.StrictDoc.staticEditing = {
     getExport: () => store.getAll().then(buildExport),
     getChangeCount: () => allChanges.length,
+    getExportFileName: exportFileName,
   };
 })();

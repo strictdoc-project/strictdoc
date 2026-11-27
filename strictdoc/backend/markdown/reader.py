@@ -52,7 +52,7 @@ from strictdoc.backend.sdoc_source_code.reader_registry import (
     SourceCodeReaderRegistry,
 )
 from strictdoc.core.project_config import ProjectConfig
-from strictdoc.helpers.cast import assert_cast
+from strictdoc.helpers.cast import assert_cast, assert_optional_cast
 from strictdoc.helpers.mid import MID
 from strictdoc.helpers.string import strip_bom
 
@@ -261,17 +261,29 @@ class SDMarkdownReader:
 
         walk(document.section_contents)
 
+    @staticmethod
+    def read_from_cache(
+        file_path: str, project_config: ProjectConfig
+    ) -> Optional[SDocDocument]:
+        """
+        Return the document from the cache, or None if the cache has no
+        up-to-date entry for the file.
+        """
+        cached_content: Optional[SDocDocument] = assert_optional_cast(
+            PickleCache.read_from_cache(file_path, project_config, "markdown"),
+            SDocDocument,
+        )
+        return cached_content
+
     def read_from_file(
         self, file_path: str, project_config: ProjectConfig
     ) -> SDocDocument:
         """Read and parse a .md file, with pickle-cache support for fast reloads."""
-        unpickled_content = PickleCache.read_from_cache(
-            file_path,
-            project_config,
-            "markdown",
+        cached_document = SDMarkdownReader.read_from_cache(
+            file_path, project_config
         )
-        if unpickled_content is not None:
-            return assert_cast(unpickled_content, SDocDocument)
+        if cached_document is not None:
+            return cached_document
 
         # Keep original line endings in fields; writer normalizes to LF.
         with open(file_path, encoding="utf-8-sig", newline="") as file:

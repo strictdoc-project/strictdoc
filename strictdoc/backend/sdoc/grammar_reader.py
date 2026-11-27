@@ -60,15 +60,28 @@ class SDocGrammarReader:
 
         return grammar
 
-    def read_from_file(
-        self, file_path: str, project_config: ProjectConfig
-    ) -> DocumentGrammar:
-        unpickled_content: Optional[DocumentGrammar] = assert_optional_cast(
+    @staticmethod
+    def read_from_cache(
+        file_path: str, project_config: ProjectConfig
+    ) -> Optional[DocumentGrammar]:
+        """
+        Return the grammar from the cache, or None if the cache has no
+        up-to-date entry for the file.
+        """
+        cached_content: Optional[DocumentGrammar] = assert_optional_cast(
             PickleCache.read_from_cache(file_path, project_config, "grammar"),
             DocumentGrammar,
         )
-        if unpickled_content is not None:
-            return unpickled_content
+        return cached_content
+
+    def read_from_file(
+        self, file_path: str, project_config: ProjectConfig
+    ) -> DocumentGrammar:
+        cached_grammar = SDocGrammarReader.read_from_cache(
+            file_path, project_config
+        )
+        if cached_grammar is not None:
+            return cached_grammar
 
         with file_open_read_utf8(file_path) as file:
             grammar_content = file.read()

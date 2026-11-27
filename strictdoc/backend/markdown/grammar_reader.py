@@ -21,7 +21,7 @@ from strictdoc.backend.sdoc.models.grammar_element import (
 )
 from strictdoc.backend.sdoc.pickle_cache import PickleCache
 from strictdoc.core.project_config import ProjectConfig
-from strictdoc.helpers.cast import assert_cast
+from strictdoc.helpers.cast import assert_optional_cast
 from strictdoc.helpers.string import strip_bom
 
 
@@ -205,16 +205,30 @@ class MarkdownGrammarReader:
         grammar.is_default = False
         return grammar
 
+    @staticmethod
+    def read_from_cache(
+        file_path: str, project_config: ProjectConfig
+    ) -> Optional[DocumentGrammar]:
+        """
+        Return the grammar from the cache, or None if the cache has no
+        up-to-date entry for the file.
+        """
+        cached_content: Optional[DocumentGrammar] = assert_optional_cast(
+            PickleCache.read_from_cache(
+                file_path, project_config, "markdown_grammar"
+            ),
+            DocumentGrammar,
+        )
+        return cached_content
+
     def read_from_file(
         self, file_path: str, project_config: ProjectConfig
     ) -> DocumentGrammar:
-        unpickled_content = PickleCache.read_from_cache(
-            file_path,
-            project_config,
-            "markdown_grammar",
+        cached_grammar = MarkdownGrammarReader.read_from_cache(
+            file_path, project_config
         )
-        if unpickled_content is not None:
-            return assert_cast(unpickled_content, DocumentGrammar)
+        if cached_grammar is not None:
+            return cached_grammar
 
         with open(file_path, encoding="utf-8-sig", newline="") as file:
             grammar_content = file.read()

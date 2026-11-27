@@ -91,6 +91,18 @@ class Format(ABC):
             f"{self.__class__.__name__} does not support reading."
         )
 
+    def read_from_cache(
+        self,
+        doc_file: "File",  # noqa: ARG002
+        project_config: "ProjectConfig",  # noqa: ARG002
+    ) -> Optional["SDocDocument"]:
+        """
+        Return the document from the cache of this format, or None if the
+        cache has no up-to-date entry for the file. A format without a cache
+        returns None, and the document is read with read_from_file().
+        """
+        return None
+
     @staticmethod
     @abstractmethod
     def supports_grammar() -> bool:
@@ -106,6 +118,18 @@ class Format(ABC):
         raise NotImplementedError(
             f"{self.__class__.__name__} does not support reading a grammar."
         )
+
+    def read_grammar_from_cache(
+        self,
+        doc_file: "File",  # noqa: ARG002
+        project_config: "ProjectConfig",  # noqa: ARG002
+    ) -> Optional["DocumentGrammar"]:
+        """
+        Return the grammar from the cache of this format, or None if the
+        cache has no up-to-date entry for the file. A format without a cache
+        returns None, and the grammar is read with read_grammar().
+        """
+        return None
 
     @abstractmethod
     def export_complete_tree(self, context: ExportContext, handle: str) -> None:

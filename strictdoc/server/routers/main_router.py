@@ -5604,10 +5604,17 @@ def create_main_router(
             if not os.path.isfile(static_file):
                 return _error_response(HTTP_STATUS_NOT_FOUND, path_type="asset")
 
-            if request_is_for_non_modified_file(request, static_file):
-                return Response(status_code=304)
+            # The browser validates a cached asset before it uses it. Without
+            # this header, the browser can use a cached asset of an older
+            # StrictDoc version without asking the server.
+            headers = {"Cache-Control": "no-cache"}
 
-            response = FileResponse(static_file, media_type=content_type)
+            if request_is_for_non_modified_file(request, static_file):
+                return Response(status_code=304, headers=headers)
+
+            response = FileResponse(
+                static_file, media_type=content_type, headers=headers
+            )
             return response
 
     def _compute_document_mid_lock_key(document_mid: str) -> str:

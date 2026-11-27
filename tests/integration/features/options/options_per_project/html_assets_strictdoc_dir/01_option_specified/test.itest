@@ -6,7 +6,7 @@ RUN: %check_exists --file "%T/html/assets/base.css"
 RUN: %check_exists --file "%T/html/assets/pan_with_space.js"
 
 RUN: %cat "%T/html/index.html" | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML-TREE
-CHECK-HTML-TREE: <link rel="stylesheet" href="assets/base.css"/>
+CHECK-HTML-TREE: <link rel="stylesheet" href="assets/base.css?v={{.+}}"/>
 
 RUN: %cat "%T/html/01_option_specified/input.sdoc.html" | filecheck %s --dump-input=fail --check-prefix=CHECK-HTML-DOC
-CHECK-HTML-DOC: <link rel="stylesheet" href="../assets/base.css"/>
+CHECK-HTML-DOC: <link rel="stylesheet" href="../assets/base.css?v={{.+}}"/>

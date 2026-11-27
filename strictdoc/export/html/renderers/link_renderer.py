@@ -1,6 +1,7 @@
 import html
 from typing import Any, Dict, Optional, Tuple, Union
 
+from strictdoc import __version__
 from strictdoc.backend.sdoc.models.anchor import Anchor
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.node import SDocNode
@@ -37,14 +38,17 @@ class LinkRenderer:
             return url
         return self.root_path + "/" + url
 
+    # The version in the URL makes the browser load the static files of a new
+    # StrictDoc version instead of the cached files of an older one. The
+    # scripts depend on each other, and a mix of versions breaks them.
     def render_static_url(self, url: str) -> str:
-        return self.static_path + "/" + url
+        return self.static_path + "/" + url + "?v=" + __version__
 
     # This rarely used helper adds slashes to the import statements within
     # <script type="module">, for example project_index/index.jinja.
     # Otherwise, scripts are not imported correctly.
     def render_static_url_with_prefix(self, url: str) -> str:
-        static_url = "/" + self.static_path + "/" + url
+        static_url = "/" + self.static_path + "/" + url + "?v=" + __version__
         return static_url
 
     def render_local_anchor(

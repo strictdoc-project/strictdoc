@@ -11,7 +11,7 @@ CHECK: Export completed.
 RUN: %check_exists --file "%T/html/_source_files/file.py.html"
 
 RUN: %cat %T/html/60_file_range_with_line_range/input.sdoc.html | filecheck %s --dump-input=fail --check-prefix CHECK-HTML
-CHECK-HTML: <link rel="stylesheet" href="../_static/base.css"/>
+CHECK-HTML: <link rel="stylesheet" href="../_static/base.css?v={{.+}}"/>
 
 CHECK-HTML: <a{{.*}}href="../_source_files/file.py.html#REQ-001#2#4">
 CHECK-HTML: <a{{.*}}href="../_source_files/file2.py.html#REQ-001#2#4">

@@ -4,6 +4,7 @@
 
 import os
 
+from strictdoc import __version__
 from tests.end2end.e2e_case import E2ECase
 from tests.end2end.helpers.screens.project_index.screen_project_index import (
     Screen_ProjectIndex,
@@ -41,9 +42,12 @@ class Test(E2ECase):
 
             assert '"GET / HTTP/1.1" 200 OK' in logs
             assert '"GET / HTTP/1.1" 304 Not Modified' not in logs
-            assert '"GET /_static/turbo.min.js HTTP/1.1" 200 OK' in logs
             assert (
-                '"GET /_static/turbo.min.js HTTP/1.1" 304 Not Modified'
+                f'"GET /_static/turbo.min.js?v={__version__} HTTP/1.1" 200 OK'
+                in logs
+            )
+            assert (
+                f'"GET /_static/turbo.min.js?v={__version__} HTTP/1.1" 304 Not Modified'
                 not in logs
             )
 
@@ -58,7 +62,11 @@ class Test(E2ECase):
             # The HTML pages as well as the assets get cached.
             assert '"GET / HTTP/1.1" 200 OK' in logs
             assert '"GET / HTTP/1.1" 304 Not Modified' in logs
-            assert '"GET /_static/turbo.min.js HTTP/1.1" 200 OK' in logs
             assert (
-                '"GET /_static/turbo.min.js HTTP/1.1" 304 Not Modified' in logs
+                f'"GET /_static/turbo.min.js?v={__version__} HTTP/1.1" 200 OK'
+                in logs
+            )
+            assert (
+                f'"GET /_static/turbo.min.js?v={__version__} HTTP/1.1" 304 Not Modified'
+                in logs
             )

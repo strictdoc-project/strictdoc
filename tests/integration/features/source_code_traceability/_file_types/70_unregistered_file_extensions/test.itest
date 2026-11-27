@@ -8,7 +8,7 @@ CHECK: Export completed.
 RUN: %check_exists --file "%T/html/_source_files/file.unknown_extension.html"
 
 RUN: %cat %T/html/70_unregistered_file_extensions/input.sdoc.html | filecheck %s --check-prefix CHECK-HTML
-CHECK-HTML: <link rel="stylesheet" href="../_static/base.css"/>
+CHECK-HTML: <link rel="stylesheet" href="../_static/base.css?v={{.+}}"/>
 
 CHECK-HTML: <a{{.*}}href="../_source_files/file.unknown_extension.html#REQ-001#2#4"
 

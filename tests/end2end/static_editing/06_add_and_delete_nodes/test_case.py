@@ -124,7 +124,8 @@ class Test(E2ECase):
             self.assert_attribute(
                 _node_action(1, "delete"),
                 "title",
-                "Deleting is not available for nodes that other nodes refer to",
+                "Other nodes refer to this node with relations: REQ-2. "
+                "Remove the relations first.",
                 by="xpath",
             )
 

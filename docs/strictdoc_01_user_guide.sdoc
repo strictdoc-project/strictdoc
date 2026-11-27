@@ -6057,6 +6057,12 @@ The static editor works on the document screen of the static HTML export:
    grammar. An optional field has an empty entry. A ``MultipleChoice`` field
    is a group of checkboxes, one for each option.
 
+   The form also shows the Parent and Child relations of the node. Click
+   "Add relation" to add a relation, select its type and role, and enter the
+   UID of the related node. Click "Remove" next to a relation to remove it.
+   The form offers the relation types and roles of the grammar. File
+   relations are read-only.
+
    The form shows the fields of the document grammar. A custom grammar
    needs a ``COMMENT`` field in the element, otherwise the form offers no
    comments.
@@ -6141,7 +6147,9 @@ node.
 
 The delete button is grayed out for a node that contains other nodes and for a
 node that other nodes refer to with a relation or a LINK. Its tooltip names
-the reason.
+the reason. A relation of another node no longer blocks the deletion once you
+remove the relation in the form of the other node or mark the other node for
+deletion. A LINK in a text field still blocks the deletion.
 
 A new node is always placed after an existing node. As a result, the static
 editor cannot add the first node to an empty section.
@@ -6168,12 +6176,14 @@ The static editing data file contains:
 - for each grammar element: whether the static editor can create such a node,
   and the UID prefix of a new node,
 - for each node: the node type, UID, MID, and whether the node is editable,
+- for each grammar element: the relation types and roles of the grammar,
 - for each UID prefix of the project: the next free number.
 
 For each editable node, the file also contains:
 
 - the source values of all fields,
 - a content hash over the node type and the field values,
+- the relations of the node and the relations of other nodes to the node,
 - whether the static editor can mark the node for deletion.
 
 The content hash detects a node whose source has changed since the export.
@@ -6220,6 +6230,11 @@ of these results:
 A new node is created after the node that the change names. If that node does
 not exist anymore, the command reports a conflict. A new node whose UID
 already exists is an error, unless the existing node has the same values.
+
+A relation is added only if the related node exists and the grammar allows
+the relation type and role. A relation that creates a cycle is an error. A
+relation that the node already has, or a removed relation that the node no
+longer has, counts as already applied.
 
 A node marked for deletion is deleted only if it has not changed since the
 export. Otherwise, the command reports a conflict. The command does not delete

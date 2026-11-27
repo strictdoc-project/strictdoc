@@ -445,8 +445,112 @@ def test_11_does_not_delete_a_changed_or_referenced_node() -> None:
 
     referenced = applier.apply_change(_delete_change(parent_requirement))
     assert referenced.status == ChangeStatus.ERROR
-    assert "incoming relations" in referenced.messages[0]
+    assert referenced.messages == [
+        "Other nodes refer to the node with relations: REQ-002."
+    ]
 
     document = document_builder.build()
     assert len(document.section_contents) == 2
     assert len(applier.modified_documents) == 0
+
+
+def _relation(
+    action: str, relation_type: str, value: str, role: Optional[str] = None
+) -> Dict[str, Any]:
+    return {
+        "action": action,
+        "type": relation_type,
+        "value": value,
+        "role": role,
+    }
+
+
+def test_12_removes_a_relation_and_then_deletes_the_parent() -> None:
+    document_builder = DocumentBuilder()
+    parent_requirement = document_builder.add_requirement("REQ-001")
+    child_requirement = document_builder.add_requirement("REQ-002")
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-002",
+        target_requirement_id="REQ-001",
+        role=None,
+    )
+    applier = ChangeApplier(_build_traceability_index(document_builder))
+    update = _change(child_requirement, [], None)
+    update["relations"] = [_relation("remove", "Parent", "REQ-001")]
+
+    assert applier.apply_change(update).status == ChangeStatus.APPLIED
+    assert child_requirement.relations == []
+    assert (
+        applier.apply_change(_delete_change(parent_requirement)).status
+        == ChangeStatus.APPLIED
+    )
+    assert applier.apply_change(update).status == ChangeStatus.ALREADY_APPLIED
+
+
+def test_13_adds_relations() -> None:
+    document_builder = DocumentBuilder()
+    document_builder.add_requirement("REQ-001")
+    requirement = document_builder.add_requirement("REQ-002")
+    applier = ChangeApplier(_build_traceability_index(document_builder))
+    update = _change(requirement, [], None)
+    update["relations"] = [_relation("add", "Parent", "REQ-001")]
+
+    assert applier.apply_change(update).status == ChangeStatus.APPLIED
+    assert [
+        (relation_.ref_type, relation_.ref_uid)
+        for relation_ in requirement.relations
+    ] == [("Parent", "REQ-001")]
+    assert applier.apply_change(update).status == ChangeStatus.ALREADY_APPLIED
+
+    # A new node can have relations.
+    create = _create_change("REQ-002", [{"name": "UID", "value": "REQ-003"}])
+    create["relations"] = [{"type": "Parent", "value": "REQ-002", "role": None}]
+    assert applier.apply_change(create).status == ChangeStatus.APPLIED
+    document = document_builder.build()
+    assert [
+        (relation_.ref_type, relation_.ref_uid)
+        for relation_ in document.section_contents[2].relations
+    ] == [("Parent", "REQ-002")]
+
+
+def test_14_rejects_invalid_relations() -> None:
+    document_builder = DocumentBuilder()
+    parent_requirement = document_builder.add_requirement("REQ-001")
+    document_builder.add_requirement("REQ-002")
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-002",
+        target_requirement_id="REQ-001",
+        role=None,
+    )
+    applier = ChangeApplier(_build_traceability_index(document_builder))
+
+    def apply_relation(relation: Dict[str, Any]) -> Any:
+        update = _change(
+            parent_requirement,
+            [_field("TITLE", 0, "Requirement title", "Changed title")],
+            None,
+        )
+        update["relations"] = [relation]
+        return applier.apply_change(update)
+
+    missing_node = apply_relation(_relation("add", "Parent", "REQ-404"))
+    assert missing_node.status == ChangeStatus.CONFLICT
+    assert missing_node.messages[-1] == (
+        "The node of the relation Parent REQ-404 does not exist."
+    )
+
+    cycle = apply_relation(_relation("add", "Parent", "REQ-002"))
+    assert cycle.status == ChangeStatus.ERROR
+    assert cycle.messages[-1] == "The new relations of the node form a cycle."
+
+    unknown_role = apply_relation(_relation("add", "Parent", "REQ-002", "R"))
+    assert unknown_role.status == ChangeStatus.ERROR
+
+    file_relation = apply_relation(_relation("add", "File", "file.py"))
+    assert file_relation.status == ChangeStatus.ERROR
+
+    # A rejected relation leaves the fields unchanged as well.
+    assert _values(parent_requirement, "TITLE") == ["Requirement title"]
+    assert parent_requirement.relations == []

@@ -161,3 +161,29 @@ sdoc-form-field sdoc-static-editing-choices label {
   text-transform: none;
   color: inherit;
 }
+
+sdoc-static-editing-relation {
+  display: flex;
+  align-items: center;
+  gap: var(--base-rhythm);
+  font-weight: normal;
+}
+
+sdoc-form-field sdoc-static-editing-relation select {
+  width: auto;
+  flex: 0 0 auto;
+}
+
+sdoc-static-editing-relation input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0 .5em;
+  border: 1px solid var(--color-placeholder);
+  border-radius: 6px;
+  font: inherit;
+  line-height: inherit;
+}
+
+sdoc-static-editing-relations {
+  display: block;
+}

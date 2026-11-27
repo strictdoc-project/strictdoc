@@ -10,7 +10,7 @@ to detect nodes whose source has changed since the export.
 """
 
 import json
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, Iterator, List, Optional, Tuple
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
@@ -18,9 +18,16 @@ from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElement,
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldSingleChoice,
+    ReferenceType,
 )
 from strictdoc.backend.sdoc.models.model import RequirementFieldName
 from strictdoc.backend.sdoc.models.node import SDocNode
+from strictdoc.backend.sdoc.models.reference import (
+    ChildReqReference,
+    FileReference,
+    ParentReqReference,
+    Reference,
+)
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.helpers.cast import assert_cast
@@ -42,7 +49,12 @@ class NotEditableReason:
 
 class NotDeletableReason:
     HAS_CHILD_NODES = "has_child_nodes"
-    HAS_INCOMING_RELATIONS = "has_incoming_relations"
+    HAS_INCOMING_LINKS = "has_incoming_links"
+
+
+# The relation types that the static editor can add and remove. A File
+# relation is shown, but stays unchanged.
+EDITABLE_RELATION_TYPES = (ReferenceType.PARENT, ReferenceType.CHILD)
 
 
 def compute_node_content_hash(node: SDocNode) -> str:
@@ -90,30 +102,75 @@ def get_node_not_deletable_reason(
     Return None if the static editor can mark the node for deletion,
     otherwise the reason why it cannot. The static editor does not delete
     nodes that contain other nodes, and nodes that other nodes refer to with
-    a relation or a LINK.
+    a LINK.
+
+    The relations of other nodes to the node are not checked here: the
+    static editor lets the user remove them first, see
+    collect_incoming_relations().
     """
     if len(node.section_contents) > 0:
         return NotDeletableReason.HAS_CHILD_NODES
-    if len(traceability_index.get_children_requirements(node)) > 0:
-        return NotDeletableReason.HAS_INCOMING_RELATIONS
     if traceability_index.get_incoming_links(node) is not None:
-        return NotDeletableReason.HAS_INCOMING_RELATIONS
+        return NotDeletableReason.HAS_INCOMING_LINKS
     for anchor_ in node.get_anchors():
         if traceability_index.get_incoming_links(anchor_) is not None:
-            return NotDeletableReason.HAS_INCOMING_RELATIONS
+            return NotDeletableReason.HAS_INCOMING_LINKS
     return None
+
+
+def iterate_project_nodes(
+    traceability_index: TraceabilityIndex,
+) -> Iterator[SDocNode]:
+    for document_ in traceability_index.document_tree.document_list:
+        document_iterator = traceability_index.get_document_iterator(document_)
+        for node_, _ in document_iterator.all_content(print_fragments=False):
+            if isinstance(node_, SDocNode):
+                yield node_
+
+
+def collect_incoming_relations(
+    traceability_index: TraceabilityIndex,
+) -> Dict[str, List[Tuple[SDocNode, Reference]]]:
+    """
+    Map the value of each Parent or Child relation, for example a UID, to the
+    nodes whose relations contain it. A node with incoming relations cannot
+    be deleted until the relations are removed.
+    """
+    incoming_relations: Dict[str, List[Tuple[SDocNode, Reference]]] = {}
+    for node_ in iterate_project_nodes(traceability_index):
+        for relation_ in node_.relations:
+            if isinstance(relation_, (ParentReqReference, ChildReqReference)):
+                incoming_relations.setdefault(relation_.ref_uid, []).append(
+                    (node_, relation_)
+                )
+    return incoming_relations
+
+
+def relation_to_dict(relation: Reference) -> Dict[str, Any]:
+    if isinstance(relation, (ParentReqReference, ChildReqReference)):
+        value = relation.ref_uid
+    else:
+        value = assert_cast(relation, FileReference).get_posix_path()
+    return {"type": relation.ref_type, "value": value, "role": relation.role}
 
 
 def build_document_edit_data(
     document: SDocDocument,
     traceability_index: TraceabilityIndex,
     next_uid_numbers: Optional[Dict[str, int]] = None,
+    incoming_relations: Optional[
+        Dict[str, List[Tuple[SDocNode, Reference]]]
+    ] = None,
 ) -> Dict[str, Any]:
     """
     next_uid_numbers maps each UID prefix of the project to the next free
     number, see compute_next_uid_numbers(). The static editor suggests the
-    UID of a new node with it.
+    UID of a new node with it. incoming_relations is the result of
+    collect_incoming_relations(). Both are computed once for all documents
+    of an export.
     """
+    if incoming_relations is None:
+        incoming_relations = collect_incoming_relations(traceability_index)
     document_meta: DocumentMeta = assert_cast(document.meta, DocumentMeta)
     document_grammar: DocumentGrammar = assert_cast(
         document.grammar, DocumentGrammar
@@ -126,7 +183,9 @@ def build_document_edit_data(
             continue
         if node_.get_document() is not document:
             continue
-        nodes_data.append(_build_node_edit_data(node_, traceability_index))
+        nodes_data.append(
+            _build_node_edit_data(node_, traceability_index, incoming_relations)
+        )
 
     return {
         "schema": STATIC_EDITING_DATA_SCHEMA,
@@ -163,23 +222,23 @@ def compute_next_uid_numbers(
     "SYSR-WX-" for "SYSR-WX-012".
     """
     next_uid_numbers: Dict[str, int] = {}
-    for document_ in traceability_index.document_tree.document_list:
-        document_iterator = traceability_index.get_document_iterator(document_)
-        for node_, _ in document_iterator.all_content(print_fragments=False):
-            if not isinstance(node_, SDocNode) or node_.reserved_uid is None:
-                continue
-            uid_prefix = extract_numeric_uid_prefix_part(node_.reserved_uid)
-            if uid_prefix is None:
-                continue
-            uid_number = int(extract_last_numeric_part(node_.reserved_uid))
-            next_uid_numbers[uid_prefix] = max(
-                next_uid_numbers.get(uid_prefix, 1), uid_number + 1
-            )
+    for node_ in iterate_project_nodes(traceability_index):
+        if node_.reserved_uid is None:
+            continue
+        uid_prefix = extract_numeric_uid_prefix_part(node_.reserved_uid)
+        if uid_prefix is None:
+            continue
+        uid_number = int(extract_last_numeric_part(node_.reserved_uid))
+        next_uid_numbers[uid_prefix] = max(
+            next_uid_numbers.get(uid_prefix, 1), uid_number + 1
+        )
     return next_uid_numbers
 
 
 def _build_node_edit_data(
-    node: SDocNode, traceability_index: TraceabilityIndex
+    node: SDocNode,
+    traceability_index: TraceabilityIndex,
+    incoming_relations: Dict[str, List[Tuple[SDocNode, Reference]]],
 ) -> Dict[str, Any]:
     not_editable_reason = get_node_not_editable_reason(node, traceability_index)
     node_data: Dict[str, Any] = {
@@ -199,10 +258,41 @@ def _build_node_edit_data(
             for field_ in node.enumerate_fields()
             if field_.is_document_origin()
         ]
+        node_data["relations"] = [
+            relation_to_dict(relation_) for relation_ in node.relations
+        ]
         node_data["not_deletable_reason"] = get_node_not_deletable_reason(
             node, traceability_index
         )
+        relation_value = get_relation_value(node)
+        node_data["relation_value"] = relation_value
+        node_data["incoming_relations"] = [
+            {
+                "uid": source_node_.reserved_uid,
+                "mid": source_node_.reserved_mid.get_string_value()
+                if source_node_.mid_permanent
+                else None,
+                "type": relation_.ref_type,
+                "role": relation_.role,
+            }
+            for source_node_, relation_ in (
+                incoming_relations.get(relation_value, [])
+                if relation_value is not None
+                else []
+            )
+        ]
     return node_data
+
+
+def get_relation_value(node: SDocNode) -> Optional[str]:
+    """
+    The value with which other nodes refer to the node: the UID, or the MID
+    if the document config sets RELATION_FIELD to MID.
+    """
+    document = assert_cast(node.get_document(), SDocDocument)
+    if document.config.get_relation_field() == RequirementFieldName.MID:
+        return node.reserved_mid.get_string_value()
+    return node.reserved_uid
 
 
 def _build_grammar_element_data(
@@ -233,6 +323,11 @@ def _build_grammar_element_data(
         # The static editor creates only nodes that a UID identifies.
         "creatable": RequirementFieldName.UID in element.fields_map,
         "uid_prefix": None,
+        "relations": [
+            {"type": relation_.relation_type, "role": relation_.relation_role}
+            for relation_ in element.relations
+            if relation_.relation_type in EDITABLE_RELATION_TYPES
+        ],
     }
     # Like the server, the static editor suggests no UID for TEXT and SECTION
     # nodes.

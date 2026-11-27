@@ -18,7 +18,7 @@ CHECK:   Created the node after REQ-4.
 CHECK: REQ-3 (input.sdoc): applied
 CHECK:   Deleted the node.
 CHECK: REQ-1 (input.sdoc): error
-CHECK:   Cannot remove node '1. Parent requirement' with incoming relations from: '2. Child requirement'.
+CHECK:   Other nodes refer to the node with relations: REQ-2.
 CHECK: Applied 3 change(s) to 1 document(s). Already applied: 0. Conflicts: 0. Errors: 1.
 RUN: %diff %S/expected.sdoc %T/input/input.sdoc
 

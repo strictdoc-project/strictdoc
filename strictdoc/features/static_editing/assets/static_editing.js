@@ -50,7 +50,7 @@
 
   const NOT_DELETABLE_MESSAGES = {
     has_child_nodes: 'Deleting is not available for nodes that contain other nodes',
-    has_incoming_relations: 'Deleting is not available for nodes that other nodes refer to',
+    has_incoming_links: 'Deleting is not available for nodes that other nodes refer to with a LINK',
   };
 
   const NOT_EDITABLE_MESSAGES = {
@@ -499,6 +499,206 @@
     return document.querySelector('sdoc-form[data-static-editing-form]') !== null;
   }
 
+  //
+  // Relations. The form edits the Parent and Child relations of a node. A
+  // File relation is shown, but stays unchanged.
+  //
+
+  const EDITABLE_RELATION_TYPES = new Set(['Parent', 'Child']);
+
+  function relationKey(relation) {
+    return `${relation.type}|${relation.role || ''}|${relation.value}`;
+  }
+
+  function relationLabel(relation) {
+    return relation.role ? `${relation.type} (${relation.role})` : relation.type;
+  }
+
+  // The relations of a node with the stored relation changes applied.
+  function currentRelations(node, change) {
+    const relations = (node.relations || []).filter((relation_) => EDITABLE_RELATION_TYPES.has(relation_.type));
+    if (!change || !change.relations) return relations;
+    const removedKeys = new Set(
+      change.relations.filter((relation_) => relation_.action === 'remove').map(relationKey),
+    );
+    return relations
+      .filter((relation_) => !removedKeys.has(relationKey(relation_)))
+      .concat(change.relations.filter((relation_) => relation_.action === 'add'));
+  }
+
+  function createRelationRow(element, relation, datalistId) {
+    const typeSelect = createElement('select', {
+      'data-testid': 'form-relation-type',
+      'aria-label': 'Relation type',
+    });
+    const options = element.relations.map((relation_) => ({ type: relation_.type, role: relation_.role }));
+    if (relation && !options.some((option_) => option_.type === relation.type && (option_.role || null) === (relation.role || null))) {
+      options.unshift({ type: relation.type, role: relation.role });
+    }
+    options.forEach((option_) =>
+      typeSelect.append(
+        createElement('option', { value: `${option_.type}|${option_.role || ''}` }, [relationLabel(option_)]),
+      ),
+    );
+    if (relation) typeSelect.value = `${relation.type}|${relation.role || ''}`;
+
+    const valueInput = createElement('input', {
+      type: 'text',
+      list: datalistId,
+      value: relation ? relation.value : '',
+      placeholder: 'UID of the related node',
+      'aria-label': 'UID of the related node',
+      'data-testid': 'form-relation-value',
+    });
+    const removeButton = createButton('form-relation-remove-action', 'Remove', 'Remove relation');
+    const row = createElement('sdoc-form-row', { 'data-static-editing-relation': '' }, [
+      createElement('sdoc-form-row-aside'),
+      createElement('sdoc-form-row-main', {}, [
+        createElement('sdoc-form-field', { 'field-type': 'select' }, [
+          createElement('label', {}, ['RELATION']),
+          createElement('sdoc-static-editing-relation', {}, [typeSelect, valueInput, removeButton]),
+        ]),
+      ]),
+      createElement('sdoc-form-row-aside'),
+    ]);
+    removeButton.addEventListener('click', () => row.remove());
+    return row;
+  }
+
+  // The relation rows of a form: one row per relation and a button that
+  // adds a row. A File relation is a read-only row.
+  function createRelationRows(element, relations, fileRelations) {
+    const grid = createElement('sdoc-form-grid', { 'data-static-editing-relations': '' });
+    const datalistId = `static_editing_uids_${createLocalId()}`;
+    grid.append(
+      createElement(
+        'datalist',
+        { id: datalistId },
+        Array.from(knownUids()).map((uid_) => createElement('option', { value: uid_ })),
+      ),
+    );
+    fileRelations.forEach((relation_) => {
+      grid.append(
+        createElement('sdoc-form-row', {}, [
+          createElement('sdoc-form-row-aside'),
+          createElement('sdoc-form-row-main', {}, [
+            createElement('sdoc-form-field', { 'field-type': 'select' }, [
+              createElement('label', {}, ['RELATION (READ-ONLY)']),
+              createElement('sdoc-static-editing-relation', {}, [`${relationLabel(relation_)}: ${relation_.value}`]),
+            ]),
+          ]),
+          createElement('sdoc-form-row-aside'),
+        ]),
+      );
+    });
+    relations.forEach((relation_) => grid.append(createRelationRow(element, relation_, datalistId)));
+    if (element.relations.length > 0) {
+      const addButton = createButton('form-add-relation', 'Add relation');
+      const addRow = createElement('sdoc-form-row', {}, [
+        createElement('sdoc-form-row-aside'),
+        createElement('sdoc-form-row-main', {}, [addButton]),
+        createElement('sdoc-form-row-aside'),
+      ]);
+      addButton.addEventListener('click', () => {
+        const newRow = createRelationRow(element, null, datalistId);
+        addRow.before(newRow);
+        newRow.querySelector('input').focus();
+      });
+      grid.append(addRow);
+    }
+    return grid;
+  }
+
+  // Validates the relation rows of a form and returns the relations, or
+  // null if a row has an error. Rows without a UID are ignored.
+  function collectRelations(form, ownUid) {
+    const relations = [];
+    const keys = new Set();
+    let hasErrors = false;
+    form.querySelectorAll('[data-static-editing-relation]').forEach((row_) => {
+      const [type, role] = row_.querySelector('select').value.split('|');
+      const valueInput = row_.querySelector('input');
+      const value = valueInput.value.trim();
+      let error = null;
+      if (value.length === 0) error = null;
+      else if (/\s/.test(value)) error = 'The UID must not contain whitespace.';
+      else if (value === ownUid) error = 'A node cannot refer to itself.';
+      showFieldError(valueInput, error);
+      if (error !== null) {
+        hasErrors = true;
+        return;
+      }
+      if (value.length === 0) return;
+      const relation = { type, value, role: role.length > 0 ? role : null };
+      if (keys.has(relationKey(relation))) return;
+      keys.add(relationKey(relation));
+      relations.push(relation);
+    });
+    return hasErrors ? null : relations;
+  }
+
+  // The relation changes that turn the source relations of a node into the
+  // given relations.
+  function relationChanges(node, relations) {
+    const originalRelations = (node.relations || []).filter((relation_) => EDITABLE_RELATION_TYPES.has(relation_.type));
+    const originalKeys = new Set(originalRelations.map(relationKey));
+    const newKeys = new Set(relations.map(relationKey));
+    return [
+      ...originalRelations
+        .filter((relation_) => !newKeys.has(relationKey(relation_)))
+        .map((relation_) => ({ action: 'remove', ...relation_ })),
+      ...relations
+        .filter((relation_) => !originalKeys.has(relationKey(relation_)))
+        .map((relation_) => ({ action: 'add', ...relation_ })),
+    ];
+  }
+
+  // The stored change of a node of any document, found by its identity.
+  function storedChangeOfNode(identity) {
+    const changes = Array.from(documentChanges.values()).concat(allChanges);
+    return (
+      changes.find(
+        (change_) =>
+          change_.node &&
+          ((identity.uid && change_.node.uid === identity.uid) || (identity.mid && change_.node.mid === identity.mid)),
+      ) || null
+    );
+  }
+
+  // Returns why the node cannot be marked for deletion, or null. A relation
+  // of another node to this node blocks the deletion until the user removes
+  // the relation or marks the other node for deletion.
+  function deletionBlocker(node) {
+    if (node.not_deletable_reason) {
+      return NOT_DELETABLE_MESSAGES[node.not_deletable_reason] || 'Deleting is not available';
+    }
+    const blockingNodes = (node.incoming_relations || [])
+      .filter((relation_) => {
+        const change = storedChangeOfNode(relation_);
+        if (change === null) return true;
+        if (change.op === 'delete_node') return false;
+        return !(change.relations || []).some(
+          (relationChange_) =>
+            relationChange_.action === 'remove' &&
+            relationChange_.type === relation_.type &&
+            (relationChange_.role || null) === (relation_.role || null) &&
+            relationChange_.value === node.relation_value,
+        );
+      })
+      .map((relation_) => relation_.uid || relation_.mid);
+    Array.from(documentChanges.values())
+      .concat(allChanges)
+      .filter((change_) => change_.op === 'create_node')
+      .forEach((change_) => {
+        if ((change_.relations || []).some((relation_) => relation_.value === node.relation_value)) {
+          blockingNodes.push(newNodeValue(change_, UID_FIELD));
+        }
+      });
+    const uniqueNodes = Array.from(new Set(blockingNodes));
+    if (uniqueNodes.length === 0) return null;
+    return `Other nodes refer to this node with relations: ${uniqueNodes.join(', ')}. Remove the relations first.`;
+  }
+
   function openForm(nodeElement, node) {
     if (isFormOpen()) return;
     const change = documentChanges.get(changeKey(node));
@@ -510,12 +710,18 @@
 
     const grid = createElement('sdoc-form-grid');
     appendFieldRows(grid, element, instances, fieldChanges, (grammarField_) => !READ_ONLY_FIELDS.has(grammarField_.title));
+    const relationRows = createRelationRows(
+      element,
+      currentRelations(node, change),
+      (node.relations || []).filter((relation_) => !EDITABLE_RELATION_TYPES.has(relation_.type)),
+    );
 
     const formContainer = createForm(
-      [grid],
+      [grid, relationRows],
       (form) => {
         const values = collectFieldValues(form, element);
-        if (values === null) return null;
+        const relations = collectRelations(form, node.uid);
+        if (values === null || relations === null) return null;
         const changedFields = [];
         values.forEach(({ name, index, value }) => {
           if (index === null) {
@@ -526,7 +732,7 @@
           if (value === originalValue) return;
           changedFields.push({ name, index, old_value: originalValue, new_value: value });
         });
-        return saveUpdateChange(node, changedFields);
+        return saveUpdateChange(node, changedFields, relationChanges(node, relations));
       },
       () => {
         nodeElement.style.display = '';
@@ -535,9 +741,9 @@
     showForm(formContainer, nodeElement, nodeElement);
   }
 
-  function saveUpdateChange(node, changedFields) {
+  function saveUpdateChange(node, changedFields, changedRelations) {
     const key = changeKey(node);
-    if (changedFields.length === 0) {
+    if (changedFields.length === 0 && changedRelations.length === 0) {
       documentChanges.delete(key);
       return store.delete(key);
     }
@@ -551,6 +757,7 @@
       node_type: node.node_type,
       base_hash: node.content_hash,
       fields: changedFields,
+      relations: changedRelations,
       created_at: previous && previous.created_at ? previous.created_at : now,
       updated_at: now,
     };
@@ -712,7 +919,15 @@
         if (uid.length > 0) instances.set(UID_FIELD, [uid]);
       }
       appendFieldRows(grid, element, instances, [], () => true, READ_ONLY_FIELDS_OF_NEW_NODES);
+
+      // The relations that the user has entered survive a change of the
+      // type.
+      const enteredRelations = relationsHolder.firstChild ? collectRelations(relationsHolder, null) : null;
+      relationsHolder.replaceChildren(
+        createRelationRows(element, enteredRelations || (change && change.relations) || [], []),
+      );
     };
+    const relationsHolder = createElement('sdoc-static-editing-relations');
     renderFields();
 
     const formRows = [];
@@ -742,13 +957,15 @@
         ]),
       );
     }
-    formRows.push(grid);
+    formRows.push(grid, relationsHolder);
 
     const formContainer = createForm(
       formRows,
       (form) => {
         const values = collectFieldValues(form, element);
-        if (values === null) return null;
+        const uidControl = form.querySelector(`[data-static-editing-field="${UID_FIELD}"]`);
+        const relations = collectRelations(form, uidControl ? fieldValue(uidControl).trim() : null);
+        if (values === null || relations === null) return null;
         const uidValue = values.find((value_) => value_.name === UID_FIELD);
         if (!uidValue || uidValue.value.trim().length === 0) {
           const uidControl = form.querySelector(`[data-static-editing-field="${UID_FIELD}"]`);
@@ -760,7 +977,7 @@
         const fields = values
           .filter((value_) => value_.value.trim().length > 0)
           .map(({ name, value }) => ({ name, value }));
-        return saveNewNode(change, after, element.tag, fields);
+        return saveNewNode(change, after, element.tag, fields, relations);
       },
       () => {
         if (hiddenElement !== null) hiddenElement.style.display = '';
@@ -770,11 +987,11 @@
     showForm(formContainer, hiddenElement, placeAfter);
   }
 
-  function saveNewNode(change, after, nodeType, fields) {
+  function saveNewNode(change, after, nodeType, fields, relations) {
     const now = new Date().toISOString();
     let newChange;
     if (change) {
-      newChange = { ...change, node_type: nodeType, fields, updated_at: now };
+      newChange = { ...change, node_type: nodeType, fields, relations, updated_at: now };
     } else {
       const localId = createLocalId();
       newChange = {
@@ -785,6 +1002,7 @@
         node_type: nodeType,
         after,
         fields,
+        relations,
         created_at: now,
         updated_at: now,
       };
@@ -806,6 +1024,14 @@
     return Promise.all(savings).then(refreshAll);
   }
 
+  function createRelationPreview(relation, label, removed = false) {
+    return createElement(
+      'sdoc-static-editing-preview-field',
+      { 'data-field': 'RELATION', 'data-removed': removed ? '' : null },
+      [createElement('b', {}, [label]), createElement('pre', {}, [`${relationLabel(relation)}: ${relation.value}`])],
+    );
+  }
+
   function createNewNodeElement(change, rootMid) {
     const element = createElement('sdoc-static-editing-new-node', {
       'data-static-editing-new-node': change.local_id,
@@ -823,6 +1049,7 @@
         ]),
       );
     });
+    (change.relations || []).forEach((relation_) => element.append(createRelationPreview(relation_, 'RELATION')));
 
     const editButton = createButton('static-editing-new-node-edit-action', 'Edit');
     const addButton = createButton('static-editing-new-node-add-action', 'Add node below');
@@ -863,6 +1090,7 @@
   function renderNodeState(nodeElement, node) {
     nodeElement.querySelectorAll(':scope > sdoc-static-editing-preview').forEach((preview_) => preview_.remove());
     renderNewNodes(nodeElement, node);
+    renderDeleteButton(node);
     const change = documentChanges.get(changeKey(node));
     if (!change) {
       nodeElement.removeAttribute('data-static-editing-modified');
@@ -901,10 +1129,26 @@
           ),
         );
       });
+      (change.relations || []).forEach((relation_) => {
+        const removed = relation_.action === 'remove';
+        preview.append(createRelationPreview(relation_, removed ? 'RELATION (removed)' : 'RELATION (added)', removed));
+      });
     }
     const controls = nodeElement.querySelector(':scope > sdoc-node-controls');
     if (controls) controls.before(preview);
     else nodeElement.append(preview);
+  }
+
+  // The delete buttons by the HTML MID of their node. The state of a delete
+  // button changes when the user removes a relation to its node.
+  const deleteButtons = new Map();
+
+  function renderDeleteButton(node) {
+    const deleteButton = deleteButtons.get(node.html_mid);
+    if (!deleteButton) return;
+    const blocker = deletionBlocker(node);
+    deleteButton.classList.toggle('action_button--disabled', blocker !== null);
+    deleteButton.title = blocker !== null ? blocker : 'Mark for deletion';
   }
 
   function setUpEditButton(button) {
@@ -938,13 +1182,12 @@
       );
     }
     if (deleteButton) {
-      if (node.not_deletable_reason) {
-        deleteButton.title = NOT_DELETABLE_MESSAGES[node.not_deletable_reason] || 'Deleting is not available';
-      } else {
-        enableButton(deleteButton, 'Mark for deletion', () => {
-          if (!isFormOpen()) markForDeletion(node);
-        });
-      }
+      deleteButtons.set(node.html_mid, deleteButton);
+      deleteButton.href = '#';
+      deleteButton.addEventListener('click', (event) => {
+        event.preventDefault();
+        if (!isFormOpen() && deletionBlocker(node) === null) markForDeletion(node);
+      });
     }
     renderNodeState(nodeElement, node);
     if (currentChangeId !== null && !document.querySelector('[data-static-editing-current]')) showCurrentChange();
@@ -966,9 +1209,12 @@
       .filter(([nodeElement_, node_]) => nodeElement_ && node_ && node_.editable);
   }
 
+  // The panel reads all changes of the project first: the state of a delete
+  // button depends on the changes of other documents.
   function refreshAll() {
-    readyNodes().forEach(([nodeElement_, node_]) => renderNodeState(nodeElement_, node_));
-    return renderPanel();
+    return renderPanel().then(() =>
+      readyNodes().forEach(([nodeElement_, node_]) => renderNodeState(nodeElement_, node_)),
+    );
   }
 
   //
@@ -1009,6 +1255,7 @@
             node_type: change_.node_type,
             position: { after },
             fields: change_.fields,
+            relations: (change_.relations || []).map(({ type, value, role }) => ({ type, value, role })),
           };
         }
         if (change_.op === 'delete_node') {
@@ -1027,6 +1274,7 @@
           node_type: change_.node_type,
           base_hash: change_.base_hash,
           fields: change_.fields,
+          relations: change_.relations || [],
         };
       }),
     };
@@ -1293,6 +1541,7 @@
   store
     .getAll()
     .then((changes) => {
+      allChanges = changes;
       changes
         .filter((change_) => change_.document_path === DATA.document.path)
         .forEach((change_) => documentChanges.set(change_.key, change_));

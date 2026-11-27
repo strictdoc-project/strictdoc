@@ -875,8 +875,9 @@ HTML export shall provide an edit action for each editable node.
 
 The edit action shall open a form with the source values of the node fields.
 The form shall offer the options of a SingleChoice or MultipleChoice field for
-selection. StrictDoc shall store a saved change in the browser, so that the
-change survives a page reload.
+selection. The form shall allow adding and removing the Parent and Child
+relations of the node. StrictDoc shall store a saved change in the browser, so
+that the change survives a page reload.
 
 The DOCUMENT screen shall also provide an action that adds a new node after an
 editable node, and an action that marks an editable node for deletion.
@@ -908,6 +909,10 @@ static editor to the documents of a project.
 The command shall apply the changes of one node together or not at all. If a
 field of the node has changed since the export in a conflicting way, the
 command shall report a conflict instead of overwriting the field.
+
+The command shall add and remove the relations of a node. The command shall
+not add a relation to a node that does not exist or a relation that creates a
+cycle.
 
 The command shall create the new nodes and delete the nodes that are marked
 for deletion. The command shall not delete a node that has changed since the

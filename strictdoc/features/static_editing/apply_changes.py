@@ -10,6 +10,10 @@ Otherwise, the node has changed in a conflicting way since the export, and
 the change is reported as a conflict instead of overwriting the current
 value.
 
+A change can also add and remove Parent and Child relations of a node. The
+command checks that the related node exists and that the relations form no
+cycle.
+
 A new node is placed after an existing node, or after a node that an earlier
 change of the same run creates. A deleted node must not have changed since
 the export.
@@ -30,20 +34,25 @@ from strictdoc.backend.sdoc.models.grammar_element import (
     GrammarElementField,
     GrammarElementFieldMultipleChoice,
     GrammarElementFieldSingleChoice,
+    ReferenceType,
 )
 from strictdoc.backend.sdoc.models.model import RequirementFieldName
 from strictdoc.backend.sdoc.models.node import SDocNode, SDocNodeField
+from strictdoc.backend.sdoc.models.reference import (
+    ChildReqReference,
+    ParentReqReference,
+    Reference,
+)
 from strictdoc.core.document_meta import DocumentMeta
 from strictdoc.core.traceability_index import TraceabilityIndex
-from strictdoc.core.transforms.delete_requirement import (
-    DeleteRequirementCommand,
-)
-from strictdoc.core.transforms.validation_error import (
-    MultipleValidationErrorAsList,
-)
 from strictdoc.features.static_editing.edit_data import (
+    EDITABLE_RELATION_TYPES,
+    collect_incoming_relations,
     compute_node_content_hash,
+    get_node_not_deletable_reason,
     get_node_not_editable_reason,
+    get_relation_value,
+    iterate_project_nodes,
 )
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.mid import MID
@@ -206,8 +215,14 @@ class ChangeApplier:
                 "The node has changed since the export. The changed "
                 "fields are merged."
             )
+        # The relations are checked before any field changes, so that a
+        # rejected relation leaves the whole node unchanged.
+        new_relations = self._plan_relations(node, change.get("relations"))
         changed_field_names = self._apply_fields(node, change, result)
-        if len(changed_field_names) == 0:
+        if new_relations is not None:
+            node.relations = new_relations
+            result.messages.append("Changed relations.")
+        if len(changed_field_names) == 0 and new_relations is None:
             result.status = ChangeStatus.ALREADY_APPLIED
         return node
 
@@ -341,6 +356,23 @@ class ChangeApplier:
                         for value_ in values_by_field[field_name_]
                     ],
                 )
+        relations = change.get("relations", [])
+        if not isinstance(relations, list):
+            raise _ChangeRejected(
+                ChangeStatus.ERROR,
+                "The relations of the change are not a list.",
+            )
+        new_relations = self._plan_relations(
+            node,
+            [
+                {**relation_, "action": "add"}
+                if isinstance(relation_, dict)
+                else relation_
+                for relation_ in relations
+            ],
+        )
+        if new_relations is not None:
+            node.relations = new_relations
         parent.section_contents.insert(
             parent.section_contents.index(previous_node) + 1, node
         )
@@ -372,26 +404,176 @@ class ChangeApplier:
                 ChangeStatus.ERROR,
                 "The node contains other nodes and cannot be deleted.",
             )
-        delete_command = DeleteRequirementCommand(
-            requirement=node, traceability_index=self.traceability_index
-        )
-        try:
-            delete_command.validate()
-        except MultipleValidationErrorAsList as exception_:
+        if (
+            get_node_not_deletable_reason(node, self.traceability_index)
+            is not None
+        ):
             raise _ChangeRejected(
                 ChangeStatus.ERROR,
-                " ".join(
-                    error_.replace("\n", " ") for error_ in exception_.errors
-                ),
-            ) from exception_
+                "Other nodes refer to the node with a LINK.",
+            )
+        relation_value = get_relation_value(node)
+        incoming_relations = [
+            source_node_
+            for source_node_, _ in collect_incoming_relations(
+                self.traceability_index
+            ).get(relation_value if relation_value is not None else "", [])
+            if source_node_ is not node
+        ]
+        if len(incoming_relations) > 0:
+            raise _ChangeRejected(
+                ChangeStatus.ERROR,
+                "Other nodes refer to the node with relations: "
+                + ", ".join(
+                    self._node_label(source_node_)
+                    for source_node_ in incoming_relations
+                )
+                + ".",
+            )
         # The node is removed from the tree, so its document is determined
         # first.
         document: SDocDocument = assert_cast(node.get_document(), SDocDocument)
-        delete_command.perform()
+        self.traceability_index.delete_requirement(node)
+        node.parent.section_contents.remove(node)
         result.messages.append("Deleted the node.")
         document_meta: DocumentMeta = assert_cast(document.meta, DocumentMeta)
         self.modified_documents[document_meta.input_doc_full_path] = document
         return node
+
+    def _plan_relations(
+        self, node: SDocNode, relation_changes: Any
+    ) -> Optional[List[Reference]]:
+        """
+        Return the new relations of the node after the relation changes, or
+        None if the node already has them. A relation change is
+        {"action": "add" or "remove", "type", "value", "role"}.
+        """
+        if relation_changes is None:
+            return None
+        if not isinstance(relation_changes, list):
+            raise _ChangeRejected(
+                ChangeStatus.ERROR,
+                "The relations of the change are not a list.",
+            )
+        document: SDocDocument = assert_cast(node.get_document(), SDocDocument)
+        grammar: DocumentGrammar = assert_cast(
+            document.grammar, DocumentGrammar
+        )
+        element: GrammarElement = grammar.elements_by_type[node.node_type]
+
+        relations: List[Reference] = list(node.relations)
+        changed = False
+        for relation_change_ in relation_changes:
+            action, relation_type, value, role = _parse_relation_change(
+                relation_change_
+            )
+            matching_relations = [
+                relation_
+                for relation_ in relations
+                if isinstance(
+                    relation_, (ParentReqReference, ChildReqReference)
+                )
+                and relation_.ref_type == relation_type
+                and relation_.ref_uid == value
+                and relation_.role == role
+            ]
+            if action == "remove":
+                if len(matching_relations) > 0:
+                    relations.remove(matching_relations[0])
+                    changed = True
+                continue
+            if len(matching_relations) > 0:
+                continue
+
+            relation_label = _relation_label(relation_type, value, role)
+            if not element.has_relation_type_role(relation_type, role):
+                raise _ChangeRejected(
+                    ChangeStatus.ERROR,
+                    f"The grammar element {node.node_type} does not allow the "
+                    f"relation {relation_label}.",
+                )
+            target_node = self._find_relation_target(document, value)
+            if target_node is None:
+                raise _ChangeRejected(
+                    ChangeStatus.CONFLICT,
+                    f"The node of the relation {relation_label} does not "
+                    "exist.",
+                )
+            if target_node is node:
+                raise _ChangeRejected(
+                    ChangeStatus.ERROR,
+                    f"The relation {relation_label} refers to the node itself.",
+                )
+            relations.append(
+                ParentReqReference(node, value, role)
+                if relation_type == ReferenceType.PARENT
+                else ChildReqReference(node, value, role)  # type: ignore[arg-type]
+            )
+            changed = True
+
+        if not changed:
+            return None
+        if self._has_relation_cycle(node, relations):
+            raise _ChangeRejected(
+                ChangeStatus.ERROR,
+                "The new relations of the node form a cycle.",
+            )
+        return relations
+
+    def _find_relation_target(
+        self, document: SDocDocument, value: str
+    ) -> Optional[SDocNode]:
+        target: Any
+        if document.config.get_relation_field() == RequirementFieldName.MID:
+            target = self.traceability_index.get_node_by_mid_weak(MID(value))
+        else:
+            target = self.traceability_index.get_node_by_uid_weak2(value)
+        return target if isinstance(target, SDocNode) else None
+
+    def _has_relation_cycle(
+        self, node: SDocNode, node_relations: List[Reference]
+    ) -> bool:
+        """
+        Check whether the node is its own ancestor when it has the given
+        relations. A Parent relation of A to B makes B a parent of A. A Child
+        relation of A to B makes A a parent of B.
+        """
+        nodes = list(iterate_project_nodes(self.traceability_index))
+        if node not in nodes:
+            nodes.append(node)
+        nodes_by_value: Dict[str, SDocNode] = {}
+        for node_ in nodes:
+            if node_.reserved_uid is not None:
+                nodes_by_value[node_.reserved_uid] = node_
+            nodes_by_value[node_.reserved_mid.get_string_value()] = node_
+
+        parents: Dict[int, List[SDocNode]] = {}
+        for node_ in nodes:
+            relations = node_relations if node_ is node else node_.relations
+            for relation_ in relations:
+                if not isinstance(
+                    relation_, (ParentReqReference, ChildReqReference)
+                ):
+                    continue
+                related_node = nodes_by_value.get(relation_.ref_uid)
+                if related_node is None:
+                    continue
+                if isinstance(relation_, ParentReqReference):
+                    parents.setdefault(id(node_), []).append(related_node)
+                else:
+                    parents.setdefault(id(related_node), []).append(node_)
+
+        visited: set[int] = set()
+        stack = list(parents.get(id(node), []))
+        while len(stack) > 0:
+            ancestor = stack.pop()
+            if ancestor is node:
+                return True
+            if id(ancestor) in visited:
+                continue
+            visited.add(id(ancestor))
+            stack.extend(parents.get(id(ancestor), []))
+        return False
 
     @staticmethod
     def _node_has_values(
@@ -685,6 +867,48 @@ class ChangeApplier:
                 field_name=field_name, form_field_index=0, value=new_fields[0]
             )
         node.ordered_fields_lookup[field_name] = new_fields
+
+
+def _parse_relation_change(
+    relation_change: Any,
+) -> Tuple[str, str, str, Optional[str]]:
+    if not isinstance(relation_change, dict):
+        raise _ChangeRejected(
+            ChangeStatus.ERROR, "A relation change is not a JSON object."
+        )
+    action = relation_change.get("action")
+    relation_type = relation_change.get("type")
+    value = relation_change.get("value")
+    role = relation_change.get("role")
+    if action not in ("add", "remove"):
+        raise _ChangeRejected(
+            ChangeStatus.ERROR, f"Unsupported relation action: {action}."
+        )
+    if relation_type not in EDITABLE_RELATION_TYPES:
+        raise _ChangeRejected(
+            ChangeStatus.ERROR,
+            f"Unsupported relation type: {relation_type}.",
+        )
+    if not isinstance(value, str) or len(value.strip()) == 0:
+        raise _ChangeRejected(
+            ChangeStatus.ERROR, "A relation change has no value."
+        )
+    if role is not None and not isinstance(role, str):
+        raise _ChangeRejected(
+            ChangeStatus.ERROR, "A relation change has an invalid role."
+        )
+    return (
+        action,
+        relation_type,
+        value.strip(),
+        role if role is not None and len(role) > 0 else None,
+    )
+
+
+def _relation_label(relation_type: str, value: str, role: Optional[str]) -> str:
+    if role is not None:
+        return f"{relation_type} ({role}) {value}"
+    return f"{relation_type} {value}"
 
 
 def _validate_value(grammar_field: GrammarElementField, value: str) -> None:

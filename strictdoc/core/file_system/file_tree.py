@@ -118,6 +118,10 @@ class FileFinder:
             exclude_paths, positive_or_negative=False
         )
         root_level: int = root_path.count(os.sep)
+        # A Windows drive root, for example "C:\\", ends with a separator.
+        root_prefix: str = (
+            root_path if root_path.endswith(os.sep) else root_path + os.sep
+        )
 
         root_folder: Folder = Folder(root_path, ".", 0)
         folder_map: Dict[str, Folder] = {root_path: root_folder}
@@ -131,12 +135,13 @@ class FileFinder:
                 dirs[:] = []
                 continue
 
-            current_dir_rel_path_ = os.path.relpath(
-                current_dir_full_path_, start=root_path
-            )
+            # os.walk() joins the root path and the folder names, so every
+            # folder path below the root starts with the root prefix. Cutting
+            # it off gives the same result as os.path.relpath(), without the
+            # cost of normalizing both paths for every folder.
             current_dir_rel_path_ = (
-                (current_dir_rel_path_ + "/")
-                if current_dir_rel_path_ != "."
+                (current_dir_full_path_[len(root_prefix) :] + "/")
+                if current_dir_full_path_ != root_path
                 else ""
             )
             current_dir_rel_path = SDocRelativePath(current_dir_rel_path_)
@@ -180,8 +185,10 @@ class FileFinder:
                 ):
                     continue
 
+                # The folder path is empty or ends with "/", so concatenation
+                # gives the same result as os.path.join(), but faster.
                 rel_file_path = SDocRelativePath(
-                    os.path.join(current_dir_rel_path.relative_path, file)
+                    current_dir_rel_path.relative_path + file
                 )
 
                 if path_filter_excludes.match(

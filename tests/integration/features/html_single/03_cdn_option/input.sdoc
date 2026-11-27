@@ -1,0 +1,7 @@
+[DOCUMENT]
+TITLE: Single file document
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: First requirement
+STATEMENT: System X shall do Y.

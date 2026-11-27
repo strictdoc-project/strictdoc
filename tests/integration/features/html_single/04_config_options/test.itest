@@ -1,0 +1,25 @@
+#
+# The project config sets the mode of all libraries, the mode of single
+# libraries, the fonts and the CDN URL. The command-line options override
+# the project config.
+#
+# @relation(SDOC-SRS-217, scope=file)
+#
+
+RUN: %strictdoc export %S --formats html-single --output-dir %T/config | filecheck %s --check-prefix CHECK-CONFIG
+CHECK-CONFIG: Single-file HTML export: libraries:
+CHECK-CONFIG-NEXT:   embedded: plantuml
+CHECK-CONFIG-NEXT:   loaded from CDN: mathjax, mermaid
+CHECK-CONFIG-NEXT:   left out: -
+CHECK-CONFIG-NEXT: Single-file HTML export: fonts: system
+
+RUN: %cat "%T/config/html-single/Untitled_Project.html" | filecheck %s --check-prefix CHECK-CONFIG-HTML
+CHECK-CONFIG-HTML: "url":"https://npm.example.com/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"
+CHECK-CONFIG-HTML-NOT: "_static/fonts/
+
+RUN: %strictdoc export %S --formats html-single --html-single-libraries auto --html-single-fonts embed --output-dir %T/cli | filecheck %s --check-prefix CHECK-CLI
+CHECK-CLI: Single-file HTML export: libraries:
+CHECK-CLI-NEXT:   embedded: mermaid
+CHECK-CLI-NEXT:   loaded from CDN: -
+CHECK-CLI-NEXT:   left out: mathjax, plantuml
+CHECK-CLI-NEXT: Single-file HTML export: fonts: embed

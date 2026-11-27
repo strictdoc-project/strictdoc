@@ -9,6 +9,9 @@ from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
 from strictdoc.export.html.html_templates import HTMLTemplates
+from strictdoc.features.html_single.html_single_config import (
+    HTML_SINGLE_HANDLE,
+)
 from strictdoc.helpers.parallelizer import Parallelizer
 from strictdoc.helpers.timing import timing_decorator
 
@@ -115,3 +118,14 @@ class ExportAction:
                     )
                     continue
                 feature_.export(feature_context)
+
+        # The single-file HTML export packs the files that the HTML export
+        # and the features wrote above. It must run after both.
+        if HTML_SINGLE_HANDLE in requested_handles:
+            # Imported here so that an export without html-single does not
+            # load the packer.
+            from strictdoc.features.html_single.html_single_exporter import (  # noqa: PLC0415
+                export_html_single,
+            )
+
+            export_html_single(self.project_config)

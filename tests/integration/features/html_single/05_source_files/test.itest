@@ -1,0 +1,18 @@
+#
+# The single-file export leaves out the source file pages unless
+# --html-single-include-source-files includes them.
+#
+# @relation(SDOC-SRS-217, scope=file)
+#
+
+RUN: %strictdoc export %S --formats html-single --output-dir %T/default | filecheck %s
+CHECK: Single-file HTML export completed
+
+RUN: %check_exists --file "%T/default/html/_source_files/src/file.py.html"
+RUN: %cat "%T/default/html-single/Untitled_Project.html" | filecheck %s --check-prefix CHECK-DEFAULT
+CHECK-DEFAULT: "source_coverage.html":["text/html"
+CHECK-DEFAULT-NOT: "_source_files/
+
+RUN: %strictdoc export %S --formats html-single --html-single-include-source-files --output-dir %T/included | filecheck %s
+RUN: %cat "%T/included/html-single/Untitled_Project.html" | filecheck %s --check-prefix CHECK-INCLUDED
+CHECK-INCLUDED: "_source_files/src/file.py.html":["text/html"

@@ -1,0 +1,14 @@
+[DOCUMENT]
+TITLE: Diagram document
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Diagram
+STATEMENT: >>>
+.. raw:: html
+
+    <pre class="mermaid">
+    graph TD
+      A --> B
+    </pre>
+<<<

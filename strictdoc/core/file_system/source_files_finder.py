@@ -1,5 +1,4 @@
 import os
-from pathlib import Path
 from typing import List
 
 from strictdoc.core.file_system.file_tree import File, FileFinder
@@ -59,10 +58,10 @@ class SourceFilesFinder:
                 if file.folder_path != doctree_root_abs_path
                 else "."
             )
+            # The page writer creates this folder when it writes the page.
             output_dir_full_path: str = os.path.join(
                 source_files_output_dir, last_folder_in_path
             )
-            Path(output_dir_full_path).mkdir(parents=True, exist_ok=True)
 
             output_file_name = f"{file.file_name}.html"
             output_file_full_path = os.path.join(

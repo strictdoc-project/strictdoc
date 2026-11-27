@@ -5317,16 +5317,25 @@ def create_main_router(
                 > output_file_mtime
             )
 
+        # The search index changes only when the traceability index changes.
+        # If the file is newer than the traceability index, the server sends
+        # the existing file. A new file would have the same content but a new
+        # modification time, so the ETag of the browser would never match.
         with lock_manager.acquire_global_read():
-            if not must_generate() and request_is_for_non_modified_file(
+            is_up_to_date = not must_generate()
+            if is_up_to_date and request_is_for_non_modified_file(
                 request, static_file
             ):
                 return Response(status_code=304)
 
-        with lock_manager.acquire_global_write():
-            html_generator.export_static_html_search_index(
-                traceability_index=export_action.traceability_index
-            )
+        if not is_up_to_date:
+            with lock_manager.acquire_global_write():
+                # Another request can generate the file while this request
+                # waits for the write lock.
+                if must_generate():
+                    html_generator.export_static_html_search_index(
+                        traceability_index=export_action.traceability_index
+                    )
 
         return FileResponse(
             static_file,

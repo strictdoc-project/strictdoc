@@ -169,7 +169,16 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
         WebDriverWait(self.test_case.driver, 20).until(_form_top)
 
     def get_node_containing_text_viewport_top(self, text: str) -> float:
-        top = self.test_case.execute_script(
+        top = self._measure_node_containing_text_viewport_top(text)
+        assert top is not None, (
+            f"Could not measure viewport top for node containing '{text}'."
+        )
+        return top
+
+    def _measure_node_containing_text_viewport_top(
+        self, text: str
+    ) -> float | None:
+        return self.test_case.execute_script(
             """
             const node = [...document.querySelectorAll("sdoc-node")]
               .find((item) => item.textContent.includes(arguments[0]));
@@ -184,10 +193,6 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
             """,
             text,
         )
-        assert top is not None, (
-            f"Could not measure viewport top for node containing '{text}'."
-        )
-        return top
 
     def get_stable_node_containing_text_viewport_top(
         self,
@@ -205,7 +210,18 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
         # against. Wait until consecutive samples stop moving instead of
         # relying on a single read.
         start_time = datetime.now()
-        last_top = self.get_node_containing_text_viewport_top(text)
+        # A full content replacement can turn the node's chunk back into a
+        # lazy placeholder, so the node may not be rendered yet. Wait for it
+        # to appear. Once it has appeared, a missing node is a failure.
+        while (
+            last_top := self._measure_node_containing_text_viewport_top(text)
+        ) is None:
+            if (datetime.now() - start_time).total_seconds() >= timeout:
+                raise AssertionError(
+                    f"Node containing '{text}' did not appear within "
+                    f"{timeout}s."
+                )
+            self.test_case.sleep(sample_interval)
         stable_since = datetime.now()
 
         while True:
@@ -218,7 +234,10 @@ class Screen_Document(Screen):  # pylint: disable=invalid-name
                 return current_top
             last_top = current_top
             if (now - start_time).total_seconds() >= timeout:
-                return current_top
+                raise AssertionError(
+                    f"Viewport top of node containing '{text}' did not "
+                    f"settle within {timeout}s; last top was {current_top}."
+                )
 
     def assert_anchor_viewport_top_close(
         self,

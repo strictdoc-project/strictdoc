@@ -2,10 +2,13 @@
 @relation(SDOC-SRS-34, SDOC-SRS-141, scope=file)
 """
 
-from typing import Any, List, Optional
+import threading
+from typing import Any, Callable, List, Optional
 
-from lark import Token, Tree
+import pytest
+from lark import Lark, Token, Tree
 
+from strictdoc.backend.sdoc_source_code.comment_parser import marker_lexer
 from strictdoc.backend.sdoc_source_code.comment_parser.marker_lexer import (
     MarkerLexer,
 )
@@ -610,3 +613,122 @@ SPDX-Text: This
             "           And this is the same statement's another paragraph.",
         ],
     )
+
+
+def count_built_parsers(monkeypatch: pytest.MonkeyPatch) -> List[Lark]:
+    """
+    Start each test with an empty parser cache and record each parser that
+    MarkerLexer builds.
+    """
+    built_parsers: List[Lark] = []
+
+    def lark_(*args: Any, **kwargs: Any) -> Lark:
+        parser = Lark(*args, **kwargs)
+        built_parsers.append(parser)
+        return parser
+
+    monkeypatch.setattr(marker_lexer, "Lark", lark_)
+    monkeypatch.setattr(MarkerLexer, "_parsers", {})
+    return built_parsers
+
+
+def test_90_reuses_parser_for_same_grammar(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    built_parsers = count_built_parsers(monkeypatch)
+
+    tree_1 = MarkerLexer.parse("@relation(REQ-1, scope=function)")
+    tree_2 = MarkerLexer.parse("@relation(REQ-2, scope=file)")
+
+    assert len(built_parsers) == 1
+    assert_relation_marker(
+        next(tree_1.find_data("relation_marker")), ["REQ-1"], "function"
+    )
+    assert_relation_marker(
+        next(tree_2.find_data("relation_marker")), ["REQ-2"], "file"
+    )
+
+
+def test_91_builds_one_parser_per_grammar(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    built_parsers = count_built_parsers(monkeypatch)
+
+    MarkerLexer.parse("@relation(REQ-1, scope=function)")
+    tree = MarkerLexer.parse("ID: REQ-1\n", custom_tags={"ID"})
+    MarkerLexer.parse("ID: REQ-2\n", custom_tags={"ID"})
+
+    assert len(built_parsers) == 2
+    assert_node_field(next(tree.find_data("node_field")), "ID", ["REQ-1"])
+
+
+def test_92_builds_one_parser_per_tag_set(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    built_parsers = count_built_parsers(monkeypatch)
+    custom_tags = {"ID", "STATUS"}
+
+    MarkerLexer.parse("ID: REQ-1\n", custom_tags=custom_tags)
+    # A caller can change its set after the parse.
+    custom_tags.add("TITLE")
+    tree = MarkerLexer.parse("ID: REQ-2\n", custom_tags={"STATUS", "ID"})
+    MarkerLexer.parse("@relation(REQ-1, scope=file)", custom_tags=set())
+    MarkerLexer.parse("@relation(REQ-1, scope=file)", custom_tags=None)
+
+    assert len(built_parsers) == 3
+    assert_node_field(next(tree.find_data("node_field")), "ID", ["REQ-2"])
+
+
+def run_in_threads(function: Callable[[int], None], count: int) -> None:
+    """
+    Start the threads together and raise the first error of any thread.
+    """
+    barrier = threading.Barrier(count)
+    errors: List[BaseException] = []
+
+    def target_(index_: int) -> None:
+        try:
+            barrier.wait()
+            function(index_)
+        except BaseException as exception_:  # noqa: BLE001
+            errors.append(exception_)
+
+    threads = [
+        threading.Thread(target=target_, args=(index_,))
+        for index_ in range(count)
+    ]
+    for thread_ in threads:
+        thread_.start()
+    for thread_ in threads:
+        thread_.join()
+    if len(errors) > 0:
+        raise errors[0]
+
+
+def test_93_threads_share_parser(monkeypatch: pytest.MonkeyPatch) -> None:
+    built_parsers = count_built_parsers(monkeypatch)
+    MarkerLexer.parse("@relation(REQ-1, scope=function)")
+
+    def parse_(index_: int) -> None:
+        tree = MarkerLexer.parse(f"@relation(REQ-{index_}, scope=file)")
+        assert_relation_marker(
+            next(tree.find_data("relation_marker")), [f"REQ-{index_}"], "file"
+        )
+
+    run_in_threads(parse_, count=2)
+
+    assert len(built_parsers) == 1
+
+
+def test_94_threads_parse_with_shared_parser_at_once() -> None:
+    def parse_(index_: int) -> None:
+        for line_ in range(200):
+            uid = f"REQ-{index_}-{line_}"
+            tree = MarkerLexer.parse(
+                f"Text {index_}\n@relation({uid}, scope=line)\nText {line_}"
+            )
+            assert_relation_marker(
+                next(tree.find_data("relation_marker")), [uid], "line"
+            )
+
+    run_in_threads(parse_, count=8)

@@ -4,18 +4,15 @@
 
   {% include "features/source_file_view/file_stats.jinja" %}
 
-  {%- if view_object.pygmented_source_file_lines|length > 0 -%}
+  {%- if view_object.source_lines|length > 0 -%}
   <div id="source" class="source">
-    {%- set ns = namespace(prev_line = none) -%}
-    {%- for line in view_object.pygmented_source_file_lines -%}
-      {%- set is_marker = (line.__class__.__name__ == "SourceMarkerTuple") -%}
-      {%- set is_markup = (line.__class__.__name__ == "Markup") -%}
-
-      {#-- a range that covers one line has its begin and end markers on the same line --#}
-      {%- if is_marker and (not line.is_end() or line.ng_range_line_begin == line.ng_range_line_end) -%}
-        {%- set current_marker_link = view_object.render_marker_range_link(line) -%}
-        {%- set current_range_begin = line.ng_range_line_begin -%}
-        {%- set current_range_end = line.ng_range_line_end -%}
+    {#-- SourceLine records come from create_source_lines() in Python. --#}
+    {%- for line in view_object.source_lines -%}
+      {%- if line.range_opener is not none -%}
+        {%- set opener = line.range_opener -%}
+        {%- set current_marker_link = view_object.render_marker_range_link(opener) -%}
+        {%- set current_range_begin = opener.ng_range_line_begin -%}
+        {%- set current_range_end = opener.ng_range_line_end -%}
         <div
           class="source__range collapsed"
           data-begin="{{ current_range_begin }}"
@@ -27,7 +24,7 @@
               begin=current_range_begin,
               end=current_range_end,
               href=current_marker_link,
-              scope=line.markers[0].get_description()
+              scope=opener.markers[0].get_description()
             -%}
               {% include "features/source_file_view/range_button.jinja" %}
             {%- endwith -%}
@@ -42,7 +39,7 @@
           </div>
           <div class="source__range-cell">
             <ul class="source__range-titles-list">
-              {%- for marker_ in line.markers -%}
+              {%- for marker_ in opener.markers -%}
                 {%- for req in marker_.reqs_objs -%}
                 <li>
                   {{ view_object.render_node_title_for_banner_header(marker_, req.uid) }}
@@ -51,7 +48,7 @@
               {%- endfor -%}
             </ul>
             <div class="source__range-banner source__range-start">
-              {%- for marker_ in line.markers -%}
+              {%- for marker_ in opener.markers -%}
                 {%- for req in marker_.reqs_objs -%}
                   {{ view_object.render_detailed_node_for_banner(req.uid) }}
                 {%- endfor -%}
@@ -61,50 +58,30 @@
         </div>
       {% endif %}
 
-      <div data-line="{{ loop.index }}" class="source__line">
-        <div data-line="{{ loop.index }}" id="line-{{ loop.index }}" class="source__line-number"><pre>{{ loop.index }}</pre></div>
-        <div data-line="{{ loop.index }}" class="source__line-content">
-          {%- if line.__class__.__name__ == "SourceMarkerTuple" -%}
+      <div data-line="{{ line.number }}" class="source__line">
+        <div data-line="{{ line.number }}" id="line-{{ line.number }}" class="source__line-number"><pre>{{ line.number }}</pre></div>
+        <div data-line="{{ line.number }}" class="source__line-content">
+          {%- if not line.is_empty -%}
             {# Note: Cannot format HTML/Jinja blocks within 'pre' tags! #}
-            <pre class="highlight">{{ line.source_line }}</pre>
-          {%- elif line != "" -%}
-            {# <!-- Pygments --> #}
-            <pre class="highlight">{{ line }}</pre>
+            <pre class="highlight">{{ line.content }}</pre>
           {%- else -%}
             <pre data-state="empty" style="user-select: none">&nbsp;</pre>
           {%- endif -%}
         </div>
       </div>
 
-      {#-- keep begin marker to close on the next non-marker line --#}
-      {%- if is_marker and line.is_line_marker() -%}
-        {%- set ns.prev_line = line -%}
-      {%- endif -%}
-
-      {#-- decide closer candidate: explicit end vs implicit close --#}
-      {%- set marker_is_end = (is_marker and line.is_range_marker() and line.is_end()) -%}
-      {%- set implicit_close = (is_markup and ns.prev_line != none and ns.prev_line.ng_range_line_end == loop.index) -%}
-
-      {%- if marker_is_end -%}
-        {%- set range_closer_line = line -%}
-      {%- elif implicit_close -%}
-        {%- set range_closer_line = ns.prev_line -%}
-        {%- set ns.prev_line = none -%}
-      {%- else -%}
-        {%- set range_closer_line = none -%}
-      {%- endif -%}
-
-      {% if range_closer_line != None %}
+      {%- if line.range_closer is not none %}
+        {%- set closer_marker = line.range_closer.markers[0] %}
         <div
           class="source__range-closer"
-          data-end="{{ range_closer_line.markers[0].ng_range_line_end }}"
+          data-end="{{ closer_marker.ng_range_line_end }}"
         >
           <div class="source__range-closer-label">
             {%- with
-              begin=range_closer_line.markers[0].ng_range_line_begin,
-              end=range_closer_line.markers[0].ng_range_line_end,
-              href=view_object.render_marker_range_link(range_closer_line),
-              scope=range_closer_line.markers[0].get_description()
+              begin=closer_marker.ng_range_line_begin,
+              end=closer_marker.ng_range_line_end,
+              href=view_object.render_marker_range_link(line.range_closer),
+              scope=closer_marker.get_description()
             -%}
               {% include "features/source_file_view/range_button.jinja" %}
             {%- endwith -%}

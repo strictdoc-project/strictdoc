@@ -63,6 +63,83 @@ SourceLineEntry = Union[
 
 
 @dataclass
+class SourceLine:
+    """
+    One line of the source file page, ready for main.jinja to print.
+
+    create_source_lines() decides in Python where the ranges open and close,
+    so main.jinja only prints the records. The decisions are easier to read,
+    test, and debug in Python than in Jinja.
+    """
+
+    # The line number, counted from 1.
+    number: int
+    # The line highlighted by Pygments.
+    content: Markup
+    # True for an empty line without markers. main.jinja prints a placeholder.
+    is_empty: bool
+    # The markers whose range header main.jinja prints above the line.
+    range_opener: Optional[SourceMarkerTuple]
+    # The markers whose range closer main.jinja prints below the line.
+    range_closer: Optional[SourceMarkerTuple]
+
+
+def create_source_lines(entries: List[SourceLineEntry]) -> List[SourceLine]:
+    """
+    Create one SourceLine per entry and decide where the ranges open and close.
+
+    A range opens above a line with markers, unless the markers only end
+    ranges. A range that covers one line has its begin and end markers on the
+    same line, so this line opens the range too.
+
+    A range closes below one of these lines:
+    - A line with a marker that ends a range.
+    - The last line of a line marker: the first line without markers whose
+      number is the end of the latest line marker.
+    """
+    source_lines: List[SourceLine] = []
+    # The latest line marker whose range has not closed yet.
+    open_line_marker: Optional[SourceMarkerTuple] = None
+    for number, entry in enumerate(entries, start=1):
+        if isinstance(entry, SourceMarkerTuple):
+            opens_range = (
+                not entry.is_end()
+                or entry.ng_range_line_begin == entry.ng_range_line_end
+            )
+            closes_range = entry.is_range_marker() and entry.is_end()
+            if entry.is_line_marker():
+                open_line_marker = entry
+            source_lines.append(
+                SourceLine(
+                    number=number,
+                    content=entry.source_line,
+                    is_empty=False,
+                    range_opener=entry if opens_range else None,
+                    range_closer=entry if closes_range else None,
+                )
+            )
+            continue
+
+        range_closer: Optional[SourceMarkerTuple] = None
+        if (
+            open_line_marker is not None
+            and open_line_marker.ng_range_line_end == number
+        ):
+            range_closer = open_line_marker
+            open_line_marker = None
+        source_lines.append(
+            SourceLine(
+                number=number,
+                content=entry,
+                is_empty=entry == "",
+                range_opener=None,
+                range_closer=range_closer,
+            )
+        )
+    return source_lines
+
+
+@dataclass
 class SourceFileViewObject:
     def __init__(
         self,
@@ -86,9 +163,16 @@ class SourceFileViewObject:
         self.text_renderer: MarkupRenderer = text_renderer
         self.source_file: SourceFile = source_file
         self.pygments_styles: Markup = pygments_styles
-        self.pygmented_source_file_lines: List[SourceLineEntry] = (
+        self.source_lines: List[SourceLine] = create_source_lines(
             pygmented_source_file_lines
         )
+        # The lines that the "Ranges" tab of aside.jinja lists: the lines with
+        # markers that begin a range.
+        self.range_begin_lines: List[SourceMarkerTuple] = [
+            entry_
+            for entry_ in pygmented_source_file_lines
+            if isinstance(entry_, SourceMarkerTuple) and not entry_.is_end()
+        ]
         self.jinja_environment: JinjaEnvironment = jinja_environment
 
         self.current_view = NullViewElement()

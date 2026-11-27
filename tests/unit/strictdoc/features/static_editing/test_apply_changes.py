@@ -264,3 +264,293 @@ def test_07_load_changes_file_checks_the_schema(tmp_path) -> None:
     broken_path.write_text("{", encoding="utf8")
     with pytest.raises(ChangesFileError):
         load_changes_file(str(broken_path))
+
+
+def _create_change(
+    after_uid: str, fields: List[Dict[str, str]], node_type: str = "REQUIREMENT"
+) -> Dict[str, Any]:
+    return {
+        "op": "create_node",
+        "document_path": "input.sdoc",
+        "node_type": node_type,
+        "position": {"after": {"uid": after_uid, "mid": None}},
+        "fields": fields,
+    }
+
+
+def _delete_change(
+    node: SDocNode, base_hash: Optional[str] = None
+) -> Dict[str, Any]:
+    return {
+        "op": "delete_node",
+        "document_path": "input.sdoc",
+        "node": {"uid": node.reserved_uid, "mid": None},
+        "node_type": node.node_type,
+        "base_hash": base_hash
+        if base_hash is not None
+        else compute_node_content_hash(node),
+    }
+
+
+def test_08_creates_a_node_after_an_existing_node() -> None:
+    document_builder = DocumentBuilder()
+    document_builder.add_requirement("REQ-001")
+    document_builder.add_requirement("REQ-002")
+    traceability_index = _build_traceability_index(document_builder)
+    applier = ChangeApplier(traceability_index)
+    first_change = _create_change(
+        "REQ-001",
+        [
+            {"name": "UID", "value": "REQ-003"},
+            {"name": "TITLE", "value": "New requirement"},
+            {"name": "STATEMENT", "value": "System X shall do W."},
+        ],
+    )
+    # A new node can be placed after a new node of an earlier change.
+    second_change = _create_change(
+        "REQ-003",
+        [
+            {"name": "UID", "value": "REQ-004"},
+            {"name": "COMMENT", "value": "[bob] First."},
+            {"name": "COMMENT", "value": "[bob] Second."},
+        ],
+    )
+
+    assert applier.apply_change(first_change).status == ChangeStatus.APPLIED
+    assert applier.apply_change(second_change).status == ChangeStatus.APPLIED
+
+    document = document_builder.build()
+    assert [node_.reserved_uid for node_ in document.section_contents] == [
+        "REQ-001",
+        "REQ-003",
+        "REQ-004",
+        "REQ-002",
+    ]
+    new_node = traceability_index.get_node_by_uid("REQ-003")
+    assert _values(new_node, "TITLE") == ["New requirement"]
+    assert _values(new_node, "STATEMENT") == ["System X shall do W."]
+    assert _values(
+        traceability_index.get_node_by_uid("REQ-004"), "COMMENT"
+    ) == ["[bob] First.", "[bob] Second."]
+    assert len(applier.modified_documents) == 1
+
+    # Applying the change again finds the node with the same values.
+    again = applier.apply_change(first_change)
+    assert again.status == ChangeStatus.ALREADY_APPLIED
+
+
+def test_09_rejects_invalid_new_nodes() -> None:
+    document_builder = DocumentBuilder()
+    document_builder.add_requirement("REQ-001")
+    applier = ChangeApplier(_build_traceability_index(document_builder))
+
+    existing_uid = applier.apply_change(
+        _create_change(
+            "REQ-001",
+            [
+                {"name": "UID", "value": "REQ-001"},
+                {"name": "TITLE", "value": "Other title"},
+            ],
+        )
+    )
+    assert existing_uid.status == ChangeStatus.ERROR
+    assert existing_uid.messages == [
+        "A node with the UID REQ-001 exists already."
+    ]
+
+    no_uid = applier.apply_change(
+        _create_change("REQ-001", [{"name": "TITLE", "value": "Title"}])
+    )
+    assert no_uid.status == ChangeStatus.ERROR
+    assert no_uid.messages == ["The new node must have one UID."]
+
+    unknown_field = applier.apply_change(
+        _create_change(
+            "REQ-001",
+            [
+                {"name": "UID", "value": "REQ-002"},
+                {"name": "UNKNOWN", "value": "Value"},
+            ],
+        )
+    )
+    assert unknown_field.status == ChangeStatus.ERROR
+
+    unknown_type = applier.apply_change(
+        _create_change(
+            "REQ-001", [{"name": "UID", "value": "REQ-002"}], "UNKNOWN"
+        )
+    )
+    assert unknown_type.status == ChangeStatus.ERROR
+
+    unknown_position = applier.apply_change(
+        _create_change("REQ-UNKNOWN", [{"name": "UID", "value": "REQ-002"}])
+    )
+    assert unknown_position.status == ChangeStatus.CONFLICT
+    assert unknown_position.messages == [
+        "The node after which the new node is placed does not exist anymore."
+    ]
+
+    document = document_builder.build()
+    document.grammar.elements_by_type["REQUIREMENT"].fields_map[
+        "TITLE"
+    ].required = True
+    missing_required = applier.apply_change(
+        _create_change("REQ-001", [{"name": "UID", "value": "REQ-002"}])
+    )
+    assert missing_required.status == ChangeStatus.ERROR
+    assert missing_required.messages == ["The field TITLE is required."]
+
+    assert len(document.section_contents) == 1
+    assert len(applier.modified_documents) == 0
+
+
+def test_10_deletes_a_node() -> None:
+    document_builder = DocumentBuilder()
+    document_builder.add_requirement("REQ-001")
+    requirement = document_builder.add_requirement("REQ-002")
+    traceability_index = _build_traceability_index(document_builder)
+    applier = ChangeApplier(traceability_index)
+    change = _delete_change(requirement)
+
+    result = applier.apply_change(change)
+
+    assert result.status == ChangeStatus.APPLIED
+    document = document_builder.build()
+    assert [node_.reserved_uid for node_ in document.section_contents] == [
+        "REQ-001"
+    ]
+    assert traceability_index.get_node_by_uid_weak2("REQ-002") is None
+    assert len(applier.modified_documents) == 1
+
+    again = applier.apply_change(change)
+    assert again.status == ChangeStatus.ALREADY_APPLIED
+
+
+def test_11_does_not_delete_a_changed_or_referenced_node() -> None:
+    document_builder = DocumentBuilder()
+    parent_requirement = document_builder.add_requirement("REQ-001")
+    child_requirement = document_builder.add_requirement("REQ-002")
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-002",
+        target_requirement_id="REQ-001",
+        role=None,
+    )
+    applier = ChangeApplier(_build_traceability_index(document_builder))
+
+    changed = applier.apply_change(
+        _delete_change(child_requirement, base_hash="sha256:outdated")
+    )
+    assert changed.status == ChangeStatus.CONFLICT
+
+    referenced = applier.apply_change(_delete_change(parent_requirement))
+    assert referenced.status == ChangeStatus.ERROR
+    assert referenced.messages == [
+        "Other nodes refer to the node with relations: REQ-002."
+    ]
+
+    document = document_builder.build()
+    assert len(document.section_contents) == 2
+    assert len(applier.modified_documents) == 0
+
+
+def _relation(
+    action: str, relation_type: str, value: str, role: Optional[str] = None
+) -> Dict[str, Any]:
+    return {
+        "action": action,
+        "type": relation_type,
+        "value": value,
+        "role": role,
+    }
+
+
+def test_12_removes_a_relation_and_then_deletes_the_parent() -> None:
+    document_builder = DocumentBuilder()
+    parent_requirement = document_builder.add_requirement("REQ-001")
+    child_requirement = document_builder.add_requirement("REQ-002")
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-002",
+        target_requirement_id="REQ-001",
+        role=None,
+    )
+    applier = ChangeApplier(_build_traceability_index(document_builder))
+    update = _change(child_requirement, [], None)
+    update["relations"] = [_relation("remove", "Parent", "REQ-001")]
+
+    assert applier.apply_change(update).status == ChangeStatus.APPLIED
+    assert child_requirement.relations == []
+    assert (
+        applier.apply_change(_delete_change(parent_requirement)).status
+        == ChangeStatus.APPLIED
+    )
+    assert applier.apply_change(update).status == ChangeStatus.ALREADY_APPLIED
+
+
+def test_13_adds_relations() -> None:
+    document_builder = DocumentBuilder()
+    document_builder.add_requirement("REQ-001")
+    requirement = document_builder.add_requirement("REQ-002")
+    applier = ChangeApplier(_build_traceability_index(document_builder))
+    update = _change(requirement, [], None)
+    update["relations"] = [_relation("add", "Parent", "REQ-001")]
+
+    assert applier.apply_change(update).status == ChangeStatus.APPLIED
+    assert [
+        (relation_.ref_type, relation_.ref_uid)
+        for relation_ in requirement.relations
+    ] == [("Parent", "REQ-001")]
+    assert applier.apply_change(update).status == ChangeStatus.ALREADY_APPLIED
+
+    # A new node can have relations.
+    create = _create_change("REQ-002", [{"name": "UID", "value": "REQ-003"}])
+    create["relations"] = [{"type": "Parent", "value": "REQ-002", "role": None}]
+    assert applier.apply_change(create).status == ChangeStatus.APPLIED
+    document = document_builder.build()
+    assert [
+        (relation_.ref_type, relation_.ref_uid)
+        for relation_ in document.section_contents[2].relations
+    ] == [("Parent", "REQ-002")]
+
+
+def test_14_rejects_invalid_relations() -> None:
+    document_builder = DocumentBuilder()
+    parent_requirement = document_builder.add_requirement("REQ-001")
+    document_builder.add_requirement("REQ-002")
+    document_builder.add_requirement_relation(
+        relation_type="Parent",
+        source_requirement_id="REQ-002",
+        target_requirement_id="REQ-001",
+        role=None,
+    )
+    applier = ChangeApplier(_build_traceability_index(document_builder))
+
+    def apply_relation(relation: Dict[str, Any]) -> Any:
+        update = _change(
+            parent_requirement,
+            [_field("TITLE", 0, "Requirement title", "Changed title")],
+            None,
+        )
+        update["relations"] = [relation]
+        return applier.apply_change(update)
+
+    missing_node = apply_relation(_relation("add", "Parent", "REQ-404"))
+    assert missing_node.status == ChangeStatus.CONFLICT
+    assert missing_node.messages[-1] == (
+        "The node of the relation Parent REQ-404 does not exist."
+    )
+
+    cycle = apply_relation(_relation("add", "Parent", "REQ-002"))
+    assert cycle.status == ChangeStatus.ERROR
+    assert cycle.messages[-1] == "The new relations of the node form a cycle."
+
+    unknown_role = apply_relation(_relation("add", "Parent", "REQ-002", "R"))
+    assert unknown_role.status == ChangeStatus.ERROR
+
+    file_relation = apply_relation(_relation("add", "File", "file.py"))
+    assert file_relation.status == ChangeStatus.ERROR
+
+    # A rejected relation leaves the fields unchanged as well.
+    assert _values(parent_requirement, "TITLE") == ["Requirement title"]
+    assert parent_requirement.relations == []

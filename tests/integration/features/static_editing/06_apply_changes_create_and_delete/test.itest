@@ -1,0 +1,30 @@
+#
+# The apply-changes command creates the new nodes of a changes file after the
+# given nodes and deletes the nodes marked for deletion. A node that other
+# nodes refer to is not deleted. Applying the same file a second time changes
+# nothing.
+#
+# @relation(SDOC-SRS-216, scope=file)
+#
+
+RUN: mkdir -p %T/input
+RUN: cp %S/input/input.sdoc %T/input/input.sdoc
+
+RUN: %expect_exit 1 %strictdoc apply-changes %T/input %S/changes.json | filecheck %s
+CHECK: new node REQ-4 (input.sdoc): applied
+CHECK:   Created the node after REQ-1.
+CHECK: new node REQ-5 (input.sdoc): applied
+CHECK:   Created the node after REQ-4.
+CHECK: REQ-3 (input.sdoc): applied
+CHECK:   Deleted the node.
+CHECK: REQ-1 (input.sdoc): error
+CHECK:   Other nodes refer to the node with relations: REQ-2.
+CHECK: Applied 3 change(s) to 1 document(s). Already applied: 0. Conflicts: 0. Errors: 1.
+RUN: %diff %S/expected.sdoc %T/input/input.sdoc
+
+RUN: %expect_exit 1 %strictdoc apply-changes %T/input %S/changes.json | filecheck %s --check-prefix CHECK-AGAIN
+CHECK-AGAIN: new node REQ-4 (input.sdoc): already applied
+CHECK-AGAIN: new node REQ-5 (input.sdoc): already applied
+CHECK-AGAIN: REQ-3 (input.sdoc): already applied
+CHECK-AGAIN: Applied 0 change(s) to 0 document(s). Already applied: 3. Conflicts: 0. Errors: 1.
+RUN: %diff %S/expected.sdoc %T/input/input.sdoc

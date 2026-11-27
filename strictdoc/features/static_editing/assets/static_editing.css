@@ -107,3 +107,83 @@ sdoc-static-editing-navigation-position {
 sdoc-static-editing-panel [hidden] {
   display: none !important;
 }
+
+sdoc-node[data-static-editing-deleted] > :not(sdoc-static-editing-preview):not(sdoc-node-controls) {
+  text-decoration: line-through;
+  opacity: .5;
+}
+
+sdoc-node[data-static-editing-deleted] {
+  box-shadow: inset 3px 0 0 var(--color-danger, #c00);
+}
+
+sdoc-static-editing-new-node {
+  display: block;
+  margin: calc(var(--base-rhythm) * 2) 0;
+  padding: var(--base-rhythm) calc(var(--base-rhythm) * 2);
+  border: 1px dashed var(--color-action);
+  border-radius: 4px;
+  background: var(--color-bg-accent);
+  box-shadow: inset 3px 0 0 var(--color-action);
+}
+
+sdoc-static-editing-new-node[data-static-editing-current] {
+  outline: 2px solid var(--color-action);
+  outline-offset: 4px;
+}
+
+sdoc-static-editing-new-node pre {
+  margin: 0 0 var(--base-rhythm);
+  white-space: pre-wrap;
+  font-family: inherit;
+}
+
+sdoc-static-editing-actions {
+  display: flex;
+  gap: var(--base-rhythm);
+}
+
+sdoc-static-editing-choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--base-rhythm) calc(var(--base-rhythm) * 3);
+  padding-top: var(--base-rhythm);
+  font-weight: normal;
+}
+
+sdoc-form-field sdoc-static-editing-choices label {
+  position: static;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: inherit;
+  font-size: inherit;
+  text-transform: none;
+  color: inherit;
+}
+
+sdoc-static-editing-relation {
+  display: flex;
+  align-items: center;
+  gap: var(--base-rhythm);
+  font-weight: normal;
+}
+
+sdoc-form-field sdoc-static-editing-relation select {
+  width: auto;
+  flex: 0 0 auto;
+}
+
+sdoc-static-editing-relation input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 0 .5em;
+  border: 1px solid var(--color-placeholder);
+  border-radius: 6px;
+  font: inherit;
+  line-height: inherit;
+}
+
+sdoc-static-editing-relations {
+  display: block;
+}

@@ -1,6 +1,7 @@
 {#
-  The edit control of a node in the static HTML export.
-  static_editing.js enables the control if the node is editable.
+  The controls of a node in the static HTML export: edit the node, add a node
+  below it, and mark it for deletion. static_editing.js enables the controls
+  if the node is editable.
   @relation(SDOC-SRS-215, scope=file)
 #}
 {%- if sdoc_entity.get_type_string() != 'document' and not sdoc_entity.is_root_included_document -%}
@@ -11,5 +12,17 @@
     title="Editing is not available"
     data-testid="node-static-edit-action"
   >{% include "icons/ico16_edit.svg" %}</a>
+  <a
+    class="action_button action_button--disabled"
+    data-static-editing-add
+    title="Adding nodes is not available"
+    data-testid="node-static-add-action"
+  >{% include "icons/ico16_add_below.svg" %}</a>
+  <a
+    class="action_button action_button--disabled"
+    data-static-editing-delete
+    title="Deleting is not available"
+    data-testid="node-static-delete-action"
+  >{% include "icons/ico16_delete.svg" %}</a>
 </sdoc-node-controls>
 {%- endif -%}

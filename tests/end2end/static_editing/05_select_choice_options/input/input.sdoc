@@ -1,0 +1,34 @@
+[DOCUMENT]
+TITLE: Static editing document
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATUS
+    TYPE: SingleChoice(Draft, Active, Obsolete)
+    REQUIRED: False
+  - TITLE: PLATFORM
+    TYPE: MultipleChoice(Linux, Windows, macOS)
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+
+[REQUIREMENT]
+UID: REQ-1
+STATUS: Draft
+PLATFORM: Linux, macOS
+TITLE: Requirement with choices
+STATEMENT: System X shall do Y.
+
+[REQUIREMENT]
+UID: REQ-2
+TITLE: Requirement without choices
+STATEMENT: System X shall do Z.

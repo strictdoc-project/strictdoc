@@ -60,9 +60,10 @@ This release contains the following enhancements:
 
 1\) New experimental feature ``STATIC_EDITING``: readers of a static HTML
 export can edit nodes in the browser, without a StrictDoc server. The browser
-stores the changes and exports them as one JSON file. Only nodes with a UID or
-a MID in the source file are editable. The new ``apply-changes`` command
-writes the JSON file to the SDoc source files and reports conflicts.
+stores the changes and exports them as one JSON file. Readers can also add
+new nodes and mark nodes for deletion. Only nodes with a UID or a MID in the
+source file are editable. The new ``apply-changes`` command writes the JSON
+file to the SDoc source files and reports conflicts.
 ``ALL_FEATURES`` does not activate this feature. See
 [LINK: SECTION-UG-Static-editing].
 <<<

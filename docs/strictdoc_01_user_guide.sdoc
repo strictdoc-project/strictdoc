@@ -5965,8 +5965,8 @@ server or to edit SDoc files in a text editor. The JSON file then goes into the
 usual review and approval workflow, for example a pull request.
 
 .. note::
-    The static editing feature is under development. Creating, deleting, and
-    moving nodes is not supported yet.
+    The static editing feature is under development. Moving nodes is not
+    supported yet.
 
 The feature can be activated as follows:
 
@@ -6053,6 +6053,10 @@ The static editor works on the document screen of the static HTML export:
    read-only. Click "Add comment" to add another COMMENT field. Clear an
    existing COMMENT field to remove it.
 
+   A ``SingleChoice`` field is a dropdown list with the options of the
+   grammar. An optional field has an empty entry. A ``MultipleChoice`` field
+   is a group of checkboxes, one for each option.
+
    The form shows the fields of the document grammar. A custom grammar
    needs a ``COMMENT`` field in the element, otherwise the form offers no
    comments.
@@ -6093,12 +6097,54 @@ IndexedDB, the changes are lost when the page reloads.
 
 Limitations of the current version:
 
-- Only existing nodes can be edited. Creating, deleting, and moving nodes is
-  not supported.
+- Moving nodes is not supported.
 - The form checks required fields and the values of choice fields. The
   ``apply-changes`` command does not check the markup syntax (RST or
   Markdown). Export the documentation after applying the changes to check it.
 - Images cannot be pasted into a field.
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
+MID: 07072b9709c24baba00429d73a890203
+TITLE: Adding and deleting nodes
+
+[TEXT]
+MID: e1a058f6795249c685092eb449669dee
+STATEMENT: >>>
+The static editor can add a new node after an editable node and mark an
+editable node for deletion. Both are local changes like the edited fields.
+The ``apply-changes`` command creates and deletes the nodes in the source
+files.
+
+To add a node:
+
+1. Hover over a node and click the "Add node below" button.
+2. Select the node type in the form if the grammar has several node types.
+   The form offers only node types with a ``UID`` field.
+3. Check the suggested UID. The form suggests the next free number of the UID
+   prefix in the project, for example ``REQ-12`` after ``REQ-11``. The prefix
+   comes from the UID of the node above if both nodes have the same type.
+   Otherwise, the prefix comes from the document or grammar settings. The UID
+   must not exist in the project.
+4. Fill in the fields and click "Save".
+
+The new node appears below the node, with the buttons "Edit", "Add node
+below", and "Remove". "Remove" discards the new node. The new node that was
+added last appears directly below the node, and ``apply-changes`` creates the
+nodes in the same order.
+
+To delete a node, hover over the node and click the delete button. The node
+appears struck through. "Undo" restores the node and a pending edit of the
+node.
+
+The delete button is grayed out for a node that contains other nodes and for a
+node that other nodes refer to with a relation or a LINK. Its tooltip names
+the reason.
+
+A new node is always placed after an existing node. As a result, the static
+editor cannot add the first node to an empty section.
 <<<
 
 [[/SECTION]]
@@ -6119,12 +6165,16 @@ The static editing data file contains:
 
 - the document path, title, MID, and markup,
 - the document grammar with the fields of each element,
-- for each node: the node type, UID, MID, and whether the node is editable.
+- for each grammar element: whether the static editor can create such a node,
+  and the UID prefix of a new node,
+- for each node: the node type, UID, MID, and whether the node is editable,
+- for each UID prefix of the project: the next free number.
 
 For each editable node, the file also contains:
 
 - the source values of all fields,
-- a content hash over the node type and the field values.
+- a content hash over the node type and the field values,
+- whether the static editor can mark the node for deletion.
 
 The content hash detects a node whose source has changed since the export.
 The ``apply-changes`` command then merges the changes field by field, see
@@ -6158,7 +6208,7 @@ The command applies the changes on the current state of the documents, which
 can be newer than the exported HTML. For each node, the command reports one
 of these results:
 
-- ``applied``: StrictDoc has changed the node.
+- ``applied``: StrictDoc has changed, created, or deleted the node.
 - ``already applied``: The document already contains the changes, for example
   when the same file is applied twice.
 - ``conflict``: A changed field has a different value than at the time of the
@@ -6166,6 +6216,15 @@ of these results:
   unchanged.
 - ``error``: The change is invalid, for example a value that is not an
   option of a choice field. StrictDoc leaves the node unchanged.
+
+A new node is created after the node that the change names. If that node does
+not exist anymore, the command reports a conflict. A new node whose UID
+already exists is an error, unless the existing node has the same values.
+
+A node marked for deletion is deleted only if it has not changed since the
+export. Otherwise, the command reports a conflict. The command does not delete
+a node that contains other nodes or that other nodes refer to with a relation
+or a LINK. A node that does not exist anymore counts as already deleted.
 
 The changes of one node are applied together or not at all. Changes of other
 nodes are applied even if a node has a conflict. The command exits with the

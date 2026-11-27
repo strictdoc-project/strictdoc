@@ -45,6 +45,13 @@ from strictdoc.features.source_coverage.generator import (
 )
 from strictdoc.features.source_file_view.generator import (
     SourceFileViewHTMLGenerator,
+    export_source_file_view_object_worker,
+)
+from strictdoc.features.source_file_view.view_data import (
+    SourceFileViewDataCollector,
+)
+from strictdoc.features.source_file_view.view_object import (
+    SourceFileViewObject,
 )
 from strictdoc.features.trace.generator import (
     DocumentTraceHTMLGenerator,
@@ -246,6 +253,7 @@ class HTMLGenerator:
         ):
             self.export_source_files_screens(
                 traceability_index=traceability_index,
+                parallelizer=parallelizer,
             )
             self.export_source_coverage_screen(
                 traceability_index=traceability_index,
@@ -620,7 +628,12 @@ class HTMLGenerator:
         self,
         *,
         traceability_index: TraceabilityIndex,
+        parallelizer: Parallelizer,
     ) -> None:
+        """
+        Use case: static export of all source file pages through the
+        parallelizer. See source_file_view/generator.py.
+        """
         assert isinstance(
             traceability_index.document_tree.source_tree, SourceTree
         ), traceability_index.document_tree.source_tree
@@ -649,23 +662,56 @@ class HTMLGenerator:
                         continue
                 source_files_to_export.append(source_file)
 
-        if len(source_files_to_export) > 0:
-            with measure_performance_loop(
-                "File", len(source_files_to_export)
-            ) as report_progress:
-                for source_file in source_files_to_export:
-                    with report_progress(
-                        source_file.in_doctree_source_file_rel_path,
-                        short_title=shorten_path(
-                            source_file.in_doctree_source_file_rel_path
-                        ),
-                    ):
-                        SourceFileViewHTMLGenerator.export_to_file(
-                            project_config=self.project_config,
-                            source_file=source_file,
-                            traceability_index=traceability_index,
-                            html_templates=self.html_templates,
-                        )
+        if len(source_files_to_export) == 0:
+            return
+
+        # The view objects hold only plain data. One collector creates the
+        # data of each document node once for all pages.
+        data_collector = SourceFileViewDataCollector(
+            traceability_index=traceability_index,
+            project_config=self.project_config,
+            html_templates=self.html_templates,
+        )
+        view_objects = [
+            SourceFileViewObject.create(
+                source_file=source_file_, data_collector=data_collector
+            )
+            for source_file_ in source_files_to_export
+        ]
+
+        # The parallelizer sends each view object to a worker process. A view
+        # object holds only the plain data of its page: the markers of the
+        # source file and a NodeData record for each node that the page
+        # shows. A worker process does not need the traceability index, which
+        # would be too large to send to every worker process for a large
+        # project. Without fork (spawn, for example on Windows), a worker
+        # process gets nothing from the main process except its tasks, and
+        # the pages still render in parallel.
+        #
+        # With NullParallelizer, or with fewer source files than the
+        # parallelizer sends to worker processes, the pages render in this
+        # process.
+        with measure_performance_loop(
+            "File", len(view_objects)
+        ) as report_progress:
+
+            def on_item_complete(_: int, result: Tuple[str, float]) -> None:
+                title, elapsed_time = result
+                with report_progress(
+                    title,
+                    short_title=shorten_path(title),
+                    elapsed_time=elapsed_time,
+                ):
+                    pass
+
+            parallelizer.run_parallel(
+                [
+                    (self.html_templates, view_object_)
+                    for view_object_ in view_objects
+                ],
+                export_source_file_view_object_worker,
+                on_item_complete,
+            )
 
     def export_source_coverage_screen(
         self,
@@ -693,6 +739,10 @@ class HTMLGenerator:
         traceability_index: TraceabilityIndex,
         path_to_source_file: str,
     ) -> None:
+        """
+        Use case: server. Render one source file page on demand. See
+        source_file_view/generator.py.
+        """
         assert isinstance(
             traceability_index.document_tree.source_tree, SourceTree
         ), traceability_index.document_tree.source_tree

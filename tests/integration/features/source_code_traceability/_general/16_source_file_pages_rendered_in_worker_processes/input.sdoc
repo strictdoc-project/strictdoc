@@ -1,0 +1,15 @@
+[DOCUMENT]
+TITLE: Hello world doc
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Parent requirement
+STATEMENT: The parent requirement.
+
+[REQUIREMENT]
+UID: REQ-2
+TITLE: Child requirement
+STATEMENT: The child requirement links to [LINK: REQ-1].
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-1

@@ -1,0 +1,29 @@
+#
+# This test verifies the source file pages when there are enough source files
+# for the parallelizer to render them in worker processes. A worker receives
+# only the view object of a page, not the traceability index, so the pages
+# must still show the nodes and the links for the depth of each page.
+#
+# @relation(SDOC-SRS-36, scope=file)
+#
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s
+CHECK: Export completed.
+
+RUN: %cat %T/html/_source_files/a.py.html | filecheck %s --check-prefix CHECK-LEVEL-0
+CHECK-LEVEL-0: data-reqid="REQ-2"
+CHECK-LEVEL-0: class="requirement__link-parent" href="../16_source_file_pages_rendered_in_worker_processes/input.sdoc.html#REQ-1"
+
+RUN: %cat %T/html/_source_files/b.py.html | filecheck %s --check-prefix CHECK-LEVEL-0
+
+RUN: %cat %T/html/_source_files/sub/c.py.html | filecheck %s --check-prefix CHECK-LEVEL-1
+CHECK-LEVEL-1: data-reqid="REQ-2"
+CHECK-LEVEL-1: class="requirement__link-parent" href="../../16_source_file_pages_rendered_in_worker_processes/input.sdoc.html#REQ-1"
+
+RUN: %cat %T/html/_source_files/sub/d.py.html | filecheck %s --check-prefix CHECK-LEVEL-1
+
+RUN: %cat %T/html/_source_files/sub/deep/e.py.html | filecheck %s --check-prefix CHECK-LEVEL-2
+CHECK-LEVEL-2: data-reqid="REQ-2"
+CHECK-LEVEL-2: class="requirement__link-parent" href="../../../16_source_file_pages_rendered_in_worker_processes/input.sdoc.html#REQ-1"
+
+RUN: %cat %T/html/_source_files/sub/deep/f.py.html | filecheck %s --check-prefix CHECK-LEVEL-2

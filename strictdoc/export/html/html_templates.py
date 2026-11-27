@@ -5,7 +5,7 @@ import os.path
 import shutil
 import tempfile
 from pathlib import Path
-from typing import Any, List, Optional
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 from jinja2 import (
     Environment,
@@ -40,7 +40,34 @@ class JinjaEnvironment:
         )
 
 
+# The HTMLTemplates object of each kind of templates in this process, by
+# key. See HTMLTemplates for how worker processes use it.
+_html_templates_of_this_process: Dict[str, "HTMLTemplates"] = {}
+
+_NORMAL_HTML_TEMPLATES_KEY = "normal"
+
+
 class HTMLTemplates:
+    """
+    The Jinja templates of the HTML export.
+
+    An HTMLTemplates object can be sent to a worker process, for example in
+    a task of the parallelizer. A Jinja environment cannot be pickled, and
+    loading the templates again for every task would be slow. As a result,
+    an HTMLTemplates object is pickled as a reference: the kind of the
+    templates and, for compiled templates, their cache folder. Unpickling
+    the reference returns the HTMLTemplates object of the same kind in the
+    receiving process:
+
+    - In the main process and in a forked worker process, this is the
+      object that the main process created last for these templates. Each
+      HTMLTemplates object registers itself when it is created.
+    - In a worker process that is not forked (spawn, for example on
+      Windows), the first task creates the object, and later tasks reuse
+      it. Compiled templates are read from the cache folder that the main
+      process has filled.
+    """
+
     @staticmethod
     def create(
         project_config: ProjectConfig,
@@ -74,9 +101,22 @@ class NormalHTMLTemplates(HTMLTemplates):
                 autoescape=True,
             )
         )
+        _html_templates_of_this_process[_NORMAL_HTML_TEMPLATES_KEY] = self
+
+    def __reduce__(self) -> Tuple[Callable[[], HTMLTemplates], Tuple[()]]:
+        return _get_normal_html_templates_of_this_process, ()
 
     def jinja_environment(self) -> JinjaEnvironment:
         return self._jinja_environment
+
+
+def _get_normal_html_templates_of_this_process() -> HTMLTemplates:
+    html_templates = _html_templates_of_this_process.get(
+        _NORMAL_HTML_TEMPLATES_KEY
+    )
+    if html_templates is not None:
+        return html_templates
+    return NormalHTMLTemplates()
 
 
 class CompiledHTMLTemplates(HTMLTemplates):
@@ -84,12 +124,28 @@ class CompiledHTMLTemplates(HTMLTemplates):
         path_to_output_dir_hash = hashlib.md5(
             project_config.output_dir.encode("utf-8")
         ).hexdigest()
-        self.path_to_jinja_cache_bucket_dir = os.path.join(
-            project_config.get_path_to_cache_dir(),
-            "jinja",
-            path_to_output_dir_hash,
+        self._initialize(
+            os.path.join(
+                project_config.get_path_to_cache_dir(),
+                "jinja",
+                path_to_output_dir_hash,
+            )
+        )
+
+    def _initialize(self, path_to_jinja_cache_bucket_dir: str) -> None:
+        self.path_to_jinja_cache_bucket_dir: str = (
+            path_to_jinja_cache_bucket_dir
         )
         self._jinja_environment: Optional[JinjaEnvironment] = None
+        _html_templates_of_this_process[
+            _get_compiled_html_templates_key(path_to_jinja_cache_bucket_dir)
+        ] = self
+
+    def __reduce__(self) -> Tuple[Callable[[str], HTMLTemplates], Tuple[str]]:
+        return (
+            _get_compiled_html_templates_of_this_process,
+            (self.path_to_jinja_cache_bucket_dir,),
+        )
 
     def compile_jinja_templates(self) -> None:
         if os.path.isdir(self.path_to_jinja_cache_bucket_dir):
@@ -171,3 +227,26 @@ class CompiledHTMLTemplates(HTMLTemplates):
             if strictdoc_last_update > jinja_cache_mtime:
                 self._jinja_environment = None
                 shutil.rmtree(self.path_to_jinja_cache_bucket_dir)
+
+
+def _get_compiled_html_templates_key(
+    path_to_jinja_cache_bucket_dir: str,
+) -> str:
+    return f"compiled:{path_to_jinja_cache_bucket_dir}"
+
+
+def _get_compiled_html_templates_of_this_process(
+    path_to_jinja_cache_bucket_dir: str,
+) -> HTMLTemplates:
+    html_templates = _html_templates_of_this_process.get(
+        _get_compiled_html_templates_key(path_to_jinja_cache_bucket_dir)
+    )
+    if html_templates is not None:
+        return html_templates
+    # Without a ProjectConfig: the cache folder is all that the compiled
+    # templates need in a worker process.
+    compiled_html_templates = CompiledHTMLTemplates.__new__(
+        CompiledHTMLTemplates
+    )
+    compiled_html_templates._initialize(path_to_jinja_cache_bucket_dir)  # noqa: SLF001
+    return compiled_html_templates

@@ -7,13 +7,12 @@
   <div class="source-file__refer" id="referContainer">
   <sdoc-tab-content id="Nodes" active>
     <div class="source-file__toc">
-      {%- set source_file_range_reqs =
-        view_object.traceability_index.get_source_file_reqs(view_object.source_file.in_doctree_source_file_rel_path_posix) -%}
+      {%- set source_file_node_uids = view_object.get_source_file_node_uids() -%}
 
-      {%- if source_file_range_reqs -%}
-        {%- for requirement in source_file_range_reqs -%}
+      {%- if source_file_node_uids -%}
+        {%- for node_uid_ in source_file_node_uids -%}
           <div class="source-file__toc-node">
-            {{ view_object.render_aside_requirement(requirement.reserved_uid) }}
+            {{ view_object.render_aside_requirement(node_uid_) }}
           </div>
         {%- endfor -%}
       {%- endif -%}

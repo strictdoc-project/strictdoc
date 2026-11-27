@@ -933,6 +933,10 @@ class Test(E2ECase):
             form.do_fill_in_field_title("Created Before Last Chunk Node")
             form.do_form_submit()
             self.assert_text("Created Before Last Chunk Node")
+            # The create response replaces the whole content and turns chunk 3
+            # back into a placeholder, while the new title already appears in
+            # the TOC. Wait until chunk 3 loads again with the new node.
+            screen_document.assert_document_chunk_loaded(CHUNK_3_ID)
             # Wait for the create operation's own restoration to settle
             # before treating the current position as the reference. Reading
             # it immediately can race the async setTimeout()+rAF correction

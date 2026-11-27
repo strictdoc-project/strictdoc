@@ -33,6 +33,9 @@ class ExportCommandConfig:
         chromedriver: Optional[str],
         chrome_binary: Optional[str],
         disable_ssl_check: bool,
+        html_single_libraries: Optional[str] = None,
+        html_single_fonts: Optional[str] = None,
+        html_single_include_source_files: bool = False,
     ):
         assert isinstance(input_paths, list), f"{input_paths}"
         self.debug: bool = debug
@@ -58,6 +61,11 @@ class ExportCommandConfig:
         self.chromedriver: Optional[str] = chromedriver
         self.chrome_binary: Optional[str] = chrome_binary
         self.disable_ssl_check: bool = disable_ssl_check
+        self.html_single_libraries: Optional[str] = html_single_libraries
+        self.html_single_fonts: Optional[str] = html_single_fonts
+        self.html_single_include_source_files: bool = (
+            html_single_include_source_files
+        )
 
     def get_path_to_config(self) -> str:
         # FIXME: The control flow can be improved.

@@ -6,6 +6,7 @@ import pytest
 from strictdoc.backend.sdoc.sdoc_format import SDocFormat
 from strictdoc.core.project_config import (
     DEPRECATED_FEATURES,
+    OPT_IN_FEATURES,
     ProjectConfig,
     ProjectConfigLoader,
     ProjectFeature,
@@ -39,7 +40,7 @@ def test_11__project_features__all_features_excludes_deprecated_features():
     project_config = ProjectConfig(project_features=["ALL_FEATURES"])
 
     for feature_ in ProjectFeature.all():
-        if feature_ in DEPRECATED_FEATURES:
+        if feature_ in DEPRECATED_FEATURES or feature_ in OPT_IN_FEATURES:
             assert feature_ not in project_config.project_features
         else:
             assert feature_ in project_config.project_features
@@ -55,12 +56,29 @@ def test_12__project_features__all_features_keeps_explicit_deprecated_feature():
     assert ProjectFeature.REQIF in project_config.project_features
 
 
+def test_15__project_features__all_features_excludes_static_editing():
+    project_config = ProjectConfig(project_features=["ALL_FEATURES"])
+
+    assert ProjectFeature.STATIC_EDITING not in project_config.project_features
+    assert project_config.get_feature("STATIC_EDITING") is None
+
+
+def test_16__project_features__all_features_keeps_explicit_static_editing():
+    project_config = ProjectConfig(
+        project_features=["ALL_FEATURES", ProjectFeature.STATIC_EDITING]
+    )
+
+    assert ProjectFeature.STATIC_EDITING in project_config.project_features
+    assert project_config.get_feature("STATIC_EDITING") is not None
+
+
 def test_13__project_features__all_features_expands_via_constructor():
     project_config = ProjectConfig(project_features=["ALL_FEATURES", "SEARCH"])
     assert project_config.project_features == [
         feature_
         for feature_ in ProjectFeature.all()
         if feature_ not in DEPRECATED_FEATURES
+        and feature_ not in OPT_IN_FEATURES
     ]
 
 
@@ -93,6 +111,7 @@ def create_config() -> ProjectConfig:
         feature_
         for feature_ in ProjectFeature.all()
         if feature_ not in DEPRECATED_FEATURES
+        and feature_ not in OPT_IN_FEATURES
     ]
 
 

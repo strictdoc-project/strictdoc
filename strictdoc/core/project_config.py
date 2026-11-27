@@ -37,6 +37,13 @@ from strictdoc.commands.server_config import ServerCommandConfig
 from strictdoc.core.environment import SDocRuntimeEnvironment
 from strictdoc.core.feature import Feature
 from strictdoc.core.plugin import StrictDocPlugin
+from strictdoc.features.html_single.html_single_config import (
+    HTML_SINGLE_DEFAULT_CDN_URL,
+    HTML_SINGLE_HANDLE,
+    HTMLSingleFontsMode,
+    HTMLSingleLibraryMode,
+    validate_html_single_config,
+)
 from strictdoc.helpers.auto_described import auto_described
 from strictdoc.helpers.deprecation_engine import DEPRECATION_ENGINE
 from strictdoc.helpers.exception import StrictDocException
@@ -117,6 +124,7 @@ class ProjectFeature(str, Enum):
 
     MERMAID = "MERMAID"
     NESTOR = "NESTOR"
+    STATIC_EDITING = "STATIC_EDITING"
 
     ALL_FEATURES = "ALL_FEATURES"
 
@@ -131,6 +139,12 @@ DEPRECATED_FEATURES: List[str] = [
     ProjectFeature.MATHJAX,
     ProjectFeature.MERMAID,
     ProjectFeature.SOURCE_FILE_LANGUAGE_PARSERS,
+]
+
+# Features that change the behavior of the exported HTML for its readers and
+# must be listed explicitly. ALL_FEATURES does not activate these features.
+OPT_IN_FEATURES: List[str] = [
+    ProjectFeature.STATIC_EDITING,
 ]
 
 
@@ -202,6 +216,11 @@ class ProjectConfig:
         html2pdf_template: Optional[str] = None,
         html2pdf_forced_page_break_nodes: Optional[List[str]] = None,
         html2pdf_disable_ssl_check: bool = False,
+        html_single_libraries: str = HTMLSingleLibraryMode.AUTO,
+        html_single_library_modes: Optional[Dict[str, str]] = None,
+        html_single_fonts: str = HTMLSingleFontsMode.EMBED,
+        html_single_cdn_url: str = HTML_SINGLE_DEFAULT_CDN_URL,
+        html_single_include_source_files: bool = False,
         bundle_document_uid: Optional[str] = None,
         bundle_document_version: Optional[
             str
@@ -462,6 +481,25 @@ class ProjectConfig:
         )
         self.html2pdf_disable_ssl_check: bool = html2pdf_disable_ssl_check
 
+        validate_html_single_config(
+            libraries=html_single_libraries,
+            library_modes=html_single_library_modes,
+            fonts=html_single_fonts,
+            cdn_url=html_single_cdn_url,
+            include_source_files=html_single_include_source_files,
+        )
+        self.html_single_libraries: str = html_single_libraries
+        self.html_single_library_modes: Dict[str, str] = (
+            dict(html_single_library_modes)
+            if html_single_library_modes is not None
+            else {}
+        )
+        self.html_single_fonts: str = html_single_fonts
+        self.html_single_cdn_url: str = html_single_cdn_url.rstrip("/")
+        self.html_single_include_source_files: bool = (
+            html_single_include_source_files
+        )
+
         self.bundle_document_uid: Optional[str] = bundle_document_uid
         self.bundle_document_version: Optional[str] = bundle_document_version
         self.bundle_document_date: Optional[str] = bundle_document_date
@@ -599,6 +637,11 @@ class ProjectConfig:
                 for feature_ in project_features
                 if feature_ in DEPRECATED_FEATURES
             ]
+            explicit_opt_in_features = [
+                feature_
+                for feature_ in project_features
+                if feature_ in OPT_IN_FEATURES
+            ]
             custom_features = [
                 feature_
                 for feature_ in project_features
@@ -609,8 +652,10 @@ class ProjectConfig:
                     feature_
                     for feature_ in ProjectFeature.all()
                     if feature_ not in DEPRECATED_FEATURES
+                    and feature_ not in OPT_IN_FEATURES
                 ),
                 *explicit_deprecated_features,
+                *explicit_opt_in_features,
                 *custom_features,
             ]
 
@@ -725,6 +770,9 @@ class ProjectConfig:
         from strictdoc.features.project_statistics.feature import (  # noqa: PLC0415
             ProjectStatisticsFeature,
         )
+        from strictdoc.features.static_editing.feature import (  # noqa: PLC0415
+            StaticEditingFeature,
+        )
         from strictdoc.features.tree_map.feature import (  # noqa: PLC0415
             TreeMapFeature,
         )
@@ -733,6 +781,7 @@ class ProjectConfig:
             feature.HANDLE: feature
             for feature in [
                 ProjectStatisticsFeature(),
+                StaticEditingFeature(),
                 TreeMapFeature(),
             ]
         }
@@ -856,7 +905,13 @@ class ProjectConfig:
             )
 
         self.export_output_html_root = os.path.join(self.output_dir, "html")
-        self.export_formats = export_config.formats
+        self.export_formats = list(export_config.formats)
+        # The single-file export packs the files of the HTML export.
+        if (
+            HTML_SINGLE_HANDLE in self.export_formats
+            and "html" not in self.export_formats
+        ):
+            self.export_formats.insert(0, "html")
         self.export_included_documents = export_config.included_documents
         self.generate_bundle_document = export_config.generate_bundle_document
         self.filter_nodes = export_config.filter_nodes
@@ -877,6 +932,16 @@ class ProjectConfig:
         # requested via CLI (which can only enable it as well).
         if export_config.disable_ssl_check:
             self.html2pdf_disable_ssl_check = True
+
+        # The command-line options of the single-file export override the
+        # project config.
+        if export_config.html_single_libraries is not None:
+            self.html_single_libraries = export_config.html_single_libraries
+            self.html_single_library_modes = {}
+        if export_config.html_single_fonts is not None:
+            self.html_single_fonts = export_config.html_single_fonts
+        if export_config.html_single_include_source_files:
+            self.html_single_include_source_files = True
 
         if (
             export_config.enable_mathjax
@@ -1176,6 +1241,15 @@ class ProjectConfig:
         # flag, since Mermaid is now a stable feature that is always included
         # in the static assets.
         return True
+
+    def get_html_single_library_mode(self, library: str) -> str:
+        """
+        Return the mode of a library in the single-file HTML export: the
+        per-library mode if configured, else the mode for all libraries.
+        """
+        return self.html_single_library_modes.get(
+            library, self.html_single_libraries
+        )
 
     def is_activated_plantuml(self) -> bool:
         # FIXME: Refactor Jinja templates to not rely on the PlantUML feature

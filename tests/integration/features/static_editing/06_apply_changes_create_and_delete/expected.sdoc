@@ -1,0 +1,61 @@
+[DOCUMENT]
+TITLE: Static editing document
+
+[GRAMMAR]
+ELEMENTS:
+- TAG: TEXT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: False
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: True
+- TAG: REQUIREMENT
+  FIELDS:
+  - TITLE: UID
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATUS
+    TYPE: SingleChoice(Draft, Active)
+    REQUIRED: False
+  - TITLE: TITLE
+    TYPE: String
+    REQUIRED: True
+  - TITLE: STATEMENT
+    TYPE: String
+    REQUIRED: False
+  - TITLE: COMMENT
+    TYPE: String
+    REQUIRED: False
+  RELATIONS:
+  - TYPE: Parent
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Parent requirement
+STATEMENT: System X shall do Y.
+
+[REQUIREMENT]
+UID: REQ-4
+STATUS: Draft
+TITLE: New requirement
+STATEMENT: >>>
+System X shall do W.
+In two lines.
+<<<
+
+[REQUIREMENT]
+UID: REQ-5
+TITLE: Second new requirement
+COMMENT: >>>
+[bob] Added in review.
+<<<
+
+[REQUIREMENT]
+UID: REQ-2
+TITLE: Child requirement
+STATEMENT: System X shall do Z.
+RELATIONS:
+- TYPE: Parent
+  VALUE: REQ-1

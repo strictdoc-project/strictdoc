@@ -50,6 +50,33 @@ releases:
 <<<
 
 [[SECTION]]
+MID: 8713dc9c26724ebf92ed395400b9ff19
+TITLE: Unreleased
+
+[TEXT]
+MID: 8ff01234adca458f9095633ca20095ea
+STATEMENT: >>>
+This release contains the following enhancements:
+
+1\) New experimental feature ``STATIC_EDITING``: readers of a static HTML export
+can edit nodes in the browser, without a StrictDoc server. The browser stores
+the changes and exports them as one JSON file. Readers can also add and remove
+relations, add new nodes, and mark nodes for deletion. Only nodes with a UID or
+a MID in the source file are editable. The new ``apply-changes`` command writes
+the JSON file to the SDoc source files and reports conflicts. ``ALL_FEATURES``
+does not activate this feature. See [LINK: SECTION-UG-Static-editing].
+
+2\) New export format ``html-single``: StrictDoc packs the static HTML export
+into one HTML file that a browser opens from the local file system. The file
+contains the pages, the navigation, the search and the static editor. Mermaid,
+MathJax and PlantUML can be embedded only if used (default), always embedded,
+or loaded from a CDN. The fonts can be embedded or taken from the reader's
+system. See [LINK: SECTION-UG-Single-file-HTML-export].
+<<<
+
+[[/SECTION]]
+
+[[SECTION]]
 MID: 47316fcefedf4760b658efaee7230ef5
 TITLE: 0.32.2 (2026-11-26)
 

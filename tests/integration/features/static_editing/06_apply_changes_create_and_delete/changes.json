@@ -1,0 +1,44 @@
+{
+  "schema": "strictdoc-static-editing-changes",
+  "version": 1,
+  "exported_at": "2026-11-27T10:00:00.000Z",
+  "changes": [
+    {
+      "op": "create_node",
+      "document_path": "input.sdoc",
+      "node_type": "REQUIREMENT",
+      "position": { "after": { "uid": "REQ-1", "mid": null } },
+      "fields": [
+        { "name": "UID", "value": "REQ-4" },
+        { "name": "STATUS", "value": "Draft" },
+        { "name": "TITLE", "value": "New requirement" },
+        { "name": "STATEMENT", "value": "System X shall do W.\nIn two lines." }
+      ]
+    },
+    {
+      "op": "create_node",
+      "document_path": "input.sdoc",
+      "node_type": "REQUIREMENT",
+      "position": { "after": { "uid": "REQ-4", "mid": null } },
+      "fields": [
+        { "name": "UID", "value": "REQ-5" },
+        { "name": "TITLE", "value": "Second new requirement" },
+        { "name": "COMMENT", "value": "[bob] Added in review." }
+      ]
+    },
+    {
+      "op": "delete_node",
+      "document_path": "input.sdoc",
+      "node": { "uid": "REQ-3", "mid": null },
+      "node_type": "REQUIREMENT",
+      "base_hash": "sha256:3459d4a6078393bedd90546a78bf67a4e065cffe864427df5bcf1f5f7d353e71"
+    },
+    {
+      "op": "delete_node",
+      "document_path": "input.sdoc",
+      "node": { "uid": "REQ-1", "mid": null },
+      "node_type": "REQUIREMENT",
+      "base_hash": "sha256:64b5f07a032ac0098277fa2a61113c8f583ff087d7bb13e5960ef905f7815c1d"
+    }
+  ]
+}

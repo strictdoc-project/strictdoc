@@ -1,0 +1,10 @@
+#
+# ALL_FEATURES does not activate STATIC_EDITING. The feature must be listed
+# explicitly because it changes the exported HTML for its readers.
+#
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s
+CHECK: Export completed.
+
+RUN: %check_exists --file "%T/html/03_all_features_does_not_activate_static_editing/input.sdoc.html"
+RUN: %check_exists --invert "%T/html/03_all_features_does_not_activate_static_editing/input.sdoc.edit.json"

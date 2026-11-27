@@ -1,0 +1,49 @@
+#
+# The STATIC_EDITING feature exports the static editing data of each document
+# next to the document's HTML file. Only nodes with a UID or a MID from the
+# source file are editable.
+#
+# @relation(SDOC-SRS-214, scope=file)
+#
+
+RUN: %strictdoc export %S --output-dir %T | filecheck %s
+CHECK: Export completed.
+
+RUN: %check_exists --file "%T/html/01_edit_data_is_exported/input.sdoc.edit.json"
+
+RUN: %cat "%T/html/01_edit_data_is_exported/input.sdoc.edit.json" | filecheck %s --check-prefix CHECK-JSON
+CHECK-JSON: "schema": "strictdoc-static-editing-data"
+CHECK-JSON: "version": 1
+CHECK-JSON: "path": "input.sdoc"
+CHECK-JSON: "title": "Static editing document"
+CHECK-JSON: "grammar": {
+CHECK-JSON: "tag": "REQUIREMENT"
+CHECK-JSON: "nodes": [
+CHECK-JSON: "node_type": "REQUIREMENT"
+CHECK-JSON-NEXT: "uid": "REQ-1"
+CHECK-JSON-NEXT: "mid": null
+CHECK-JSON-NEXT: "editable": true
+CHECK-JSON-NEXT: "not_editable_reason": null
+CHECK-JSON-NEXT: "content_hash": "sha256:
+CHECK-JSON: "name": "STATEMENT"
+CHECK-JSON-NEXT: "value": "System X shall do Y."
+CHECK-JSON: "node_type": "REQUIREMENT"
+CHECK-JSON-NEXT: "uid": null
+CHECK-JSON-NEXT: "mid": "7d3e4a6f0b2c4e5d9a8b1c2d3e4f5a6b"
+CHECK-JSON-NEXT: "editable": true
+CHECK-JSON: "node_type": "TEXT"
+CHECK-JSON-NEXT: "uid": null
+CHECK-JSON-NEXT: "mid": null
+CHECK-JSON-NEXT: "editable": false
+CHECK-JSON-NEXT: "not_editable_reason": "no_stable_identifier"
+CHECK-JSON-NOT: "fields"
+
+RUN: %check_exists --file "%T/html/01_edit_data_is_exported/input.sdoc.edit.js"
+RUN: %cat "%T/html/01_edit_data_is_exported/input.sdoc.edit.js" | filecheck %s --check-prefix CHECK-JS
+CHECK-JS: window.StrictDocStaticEditingData = {"schema":"strictdoc-static-editing-data"
+
+RUN: %cat "%T/html/01_edit_data_is_exported/input.sdoc.html" | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: <meta name="strictdoc-static-editing" content="on">
+CHECK-HTML: <script src="input.sdoc.edit.js"></script>
+CHECK-HTML: static_editing.js
+CHECK-HTML: data-testid="node-static-edit-action"

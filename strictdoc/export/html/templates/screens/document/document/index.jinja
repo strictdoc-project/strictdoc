@@ -16,6 +16,10 @@
   {# Load StrictDoc core before local feature scripts. #}
   <script src="{{ view_object.render_static_url('app_core.js') }}"></script>
 
+  {%- if view_object.is_static_editing_active() %}
+  {% include "features/static_editing/head.jinja" %}
+  {%- endif %}
+
   <script src="{{ view_object.render_static_url('media_zoom.js') }}"></script>
 
   <script src="{{ view_object.render_static_url('dropdown_menu.js') }}"></script>

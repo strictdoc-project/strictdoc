@@ -1,0 +1,12 @@
+[DOCUMENT]
+TITLE: Static editing document
+OPTIONS:
+  ENABLE_MID: True
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Requirement with UID
+STATEMENT: System X shall do Y.
+
+[TEXT]
+STATEMENT: Text node without UID and MID.

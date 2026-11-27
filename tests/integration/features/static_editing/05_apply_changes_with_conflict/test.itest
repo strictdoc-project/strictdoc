@@ -1,0 +1,18 @@
+#
+# A field that has changed since the export is a conflict. The command leaves
+# the node with the conflict unchanged, applies the other nodes, and exits
+# with the code 1.
+#
+# @relation(SDOC-SRS-216, scope=file)
+#
+
+RUN: mkdir -p %T/input
+RUN: cp %S/input/input.sdoc %T/input/input.sdoc
+
+RUN: %expect_exit 1 %strictdoc apply-changes %T/input %S/changes.json | filecheck %s
+CHECK: REQ-1 (input/input.sdoc): conflict
+CHECK:   The node has changed since the export. The changed fields are merged.
+CHECK:   The field STATEMENT has changed since the export.
+CHECK: MID 7d3e4a6f0b2c4e5d9a8b1c2d3e4f5a6b (input/input.sdoc): applied
+CHECK: Applied 1 change(s) to 1 document(s). Already applied: 0. Conflicts: 1. Errors: 0.
+RUN: %diff %S/expected.sdoc %T/input/input.sdoc

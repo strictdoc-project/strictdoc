@@ -1,0 +1,28 @@
+{
+  "schema": "strictdoc-static-editing-changes",
+  "version": 1,
+  "exported_at": "2026-11-25T12:00:00.000Z",
+  "changes": [
+    {
+      "op": "update_node",
+      "document_path": "input/input.sdoc",
+      "node": {"uid": "REQ-1", "mid": null},
+      "node_type": "REQUIREMENT",
+      "base_hash": "sha256:outdated",
+      "fields": [
+        {"name": "COMMENT", "index": null, "old_value": null, "new_value": "[bob] Please check the timing."},
+        {"name": "STATEMENT", "index": 0, "old_value": "System X shall do X.", "new_value": "System X shall do Y within 10 ms."}
+      ]
+    },
+    {
+      "op": "update_node",
+      "document_path": "input/input.sdoc",
+      "node": {"uid": null, "mid": "7d3e4a6f0b2c4e5d9a8b1c2d3e4f5a6b"},
+      "node_type": "REQUIREMENT",
+      "base_hash": "sha256:abde3d33cb010fa666ef4c5efddec3f22b78150d7b4fe87d39cae746e2a4c86f",
+      "fields": [
+        {"name": "TITLE", "index": 0, "old_value": "Requirement with MID only", "new_value": "Requirement identified by MID"}
+      ]
+    }
+  ]
+}

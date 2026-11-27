@@ -1,0 +1,15 @@
+#
+# In the default mode "auto", the single-file export embeds only the
+# libraries that the exported content uses.
+#
+# @relation(SDOC-SRS-217, scope=file)
+#
+
+RUN: %strictdoc export %S --formats html-single --output-dir %T | filecheck %s
+CHECK: Single-file HTML export: libraries:
+CHECK-NEXT:   embedded: mermaid
+CHECK-NEXT:   loaded from CDN: -
+CHECK-NEXT:   left out: mathjax, plantuml
+
+RUN: %cat "%T/html-single/Untitled_Project.html" | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: "_static/mermaid/mermaid.min.js":["text/javascript"

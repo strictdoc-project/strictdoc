@@ -1,0 +1,29 @@
+#
+# The html-single format packs the HTML export into one HTML file. It also
+# writes the HTML export, even if --formats does not list html. The content
+# uses no library, so the default mode "auto" leaves all libraries out.
+#
+# @relation(SDOC-SRS-217, scope=file)
+#
+
+RUN: %strictdoc export %S --formats html-single --output-dir %T | filecheck %s
+CHECK: Export completed.
+CHECK: Single-file HTML export: libraries:
+CHECK-NEXT:   embedded: -
+CHECK-NEXT:   loaded from CDN: -
+CHECK-NEXT:   left out: mathjax, mermaid, plantuml
+CHECK-NEXT: Single-file HTML export: fonts: embed
+CHECK-NEXT: Single-file HTML export completed
+
+RUN: %check_exists --file "%T/html/index.html"
+RUN: %check_exists --file "%T/html-single/Single_file_test.html"
+
+RUN: %cat "%T/html-single/Single_file_test.html" | filecheck %s --check-prefix CHECK-HTML
+CHECK-HTML: <title>Single file test</title>
+CHECK-HTML: <script type="application/json" id="strictdoc-html-single-data">
+CHECK-HTML-SAME: "start":"index.html"
+CHECK-HTML-SAME: "_static/mathjax/tex-mml-chtml.js":{"library":"mathjax","action":"stub"
+CHECK-HTML-SAME: "_static/fonts/NotoSans-VariableFont_wdth,wght.ttf":["font/ttf"
+CHECK-HTML-SAME: "01_export_single_file/input.sdoc.html":["text/html"
+CHECK-HTML-SAME: "index.html":["text/html"
+CHECK-HTML: html_single_loader.js

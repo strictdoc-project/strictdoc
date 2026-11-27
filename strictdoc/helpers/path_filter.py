@@ -93,6 +93,17 @@ class PathFilter:
 
         self.compiled_masks: List[re.Pattern[str]] = compiled_masks
 
+        # All masks as one regex. match() runs on every found file and
+        # folder, and most paths match no mask. One regex call that tries
+        # each mask in C is faster than a Python loop over the masks.
+        self.combined_mask: Optional[re.Pattern[str]] = (
+            re.compile(
+                "|".join(f"(?:{mask_.pattern})" for mask_ in compiled_masks)
+            )
+            if len(compiled_masks) > 0
+            else None
+        )
+
         # A path matches an anchored mask, for example "/docs/**.sdoc", only if
         # it starts with the text of the mask before its first wildcard, here
         # "docs/". may_match_inside() uses these prefixes to skip folders. A
@@ -132,14 +143,10 @@ class PathFilter:
         # If this is an empty positive filter, we want to match everything
         # positively. If this is an empty negative filter, we want to match
         # everything negatively.
-        if len(self.filtered_paths) == 0:
+        if self.combined_mask is None:
             return self.positive_or_negative
 
-        for rx in self.compiled_masks:
-            if rx.match(found_path):
-                return True
-
-        return False
+        return self.combined_mask.match(found_path) is not None
 
     def dump(self) -> str:
         return "\n".join(

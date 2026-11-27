@@ -43,6 +43,11 @@ from strictdoc.features.project_index.project_map_generator import (
 from strictdoc.features.source_coverage.generator import (
     SourceFileCoverageHTMLGenerator,
 )
+from strictdoc.features.source_coverage.source_files_snapshot import (
+    create_source_files_snapshot,
+    read_previous_source_files_snapshot,
+    save_source_files_snapshot,
+)
 from strictdoc.features.source_file_view.generator import (
     SourceFileViewHTMLGenerator,
     export_source_file_view_object_worker,
@@ -233,7 +238,15 @@ class HTMLGenerator:
         self.export_project_configuration_screen()
 
         # Export JavaScript map of the document tree (project map)
-        self.export_project_map(traceability_index=traceability_index)
+        if self._is_project_page_up_to_date(
+            traceability_index, self._get_project_map_path()
+        ):
+            print(  # noqa: T201
+                "All documents are up-to-date. "
+                "Skipping the generation of the project map."
+            )
+        else:
+            self.export_project_map(traceability_index=traceability_index)
 
         # Project statistics is exported by the ExportAction class via the
         # Feature abstraction (see the ProjectStatisticsFeature class), not
@@ -243,9 +256,17 @@ class HTMLGenerator:
         if self.project_config.is_feature_activated(
             ProjectFeature.TRACEABILITY_MATRIX_SCREEN
         ):
-            self.export_requirements_coverage_screen(
-                traceability_index=traceability_index,
-            )
+            if self._is_project_page_up_to_date(
+                traceability_index, self._get_traceability_matrix_path()
+            ):
+                print(  # noqa: T201
+                    "All documents are up-to-date. "
+                    "Skipping the generation of the traceability matrix."
+                )
+            else:
+                self.export_requirements_coverage_screen(
+                    traceability_index=traceability_index,
+                )
 
         # Export source coverage.
         if self.project_config.is_feature_activated(
@@ -255,9 +276,30 @@ class HTMLGenerator:
                 traceability_index=traceability_index,
                 parallelizer=parallelizer,
             )
-            self.export_source_coverage_screen(
-                traceability_index=traceability_index,
+            # The source coverage page also lists the source files without
+            # markers, which the file dependency manager does not track. See
+            # source_files_snapshot.py.
+            source_files_snapshot = create_source_files_snapshot(
+                assert_cast(
+                    traceability_index.document_tree.source_tree, SourceTree
+                ).source_files
             )
+            if self._is_project_page_up_to_date(
+                traceability_index, self._get_source_coverage_path()
+            ) and source_files_snapshot == read_previous_source_files_snapshot(
+                self.project_config
+            ):
+                print(  # noqa: T201
+                    "All documents and source files are up-to-date. "
+                    "Skipping the generation of the source coverage."
+                )
+            else:
+                self.export_source_coverage_screen(
+                    traceability_index=traceability_index,
+                )
+                save_source_files_snapshot(
+                    self.project_config, source_files_snapshot
+                )
 
         print(  # noqa: T201
             "Export completed. Documentation tree can be found at:\n"
@@ -590,11 +632,7 @@ class HTMLGenerator:
         *,
         traceability_index: TraceabilityIndex,
     ) -> None:
-        assets_dir = os.path.join(
-            self.project_config.export_output_html_root,
-            self.project_config.dir_for_sdoc_assets,
-        )
-        output_file = os.path.join(assets_dir, "project_map.js")
+        output_file = self._get_project_map_path()
         writer = ProjectMapGenerator()
         output = writer.export(
             self.project_config,
@@ -614,14 +652,59 @@ class HTMLGenerator:
             traceability_index=traceability_index,
             html_templates=self.html_templates,
         )
-        output_html_requirements_coverage = os.path.join(
+        with open(
+            self._get_traceability_matrix_path(), "w", encoding="utf8"
+        ) as file:
+            file.write(requirements_coverage_content)
+
+    def _get_project_map_path(self) -> str:
+        return os.path.join(
+            self.project_config.export_output_html_root,
+            self.project_config.dir_for_sdoc_assets,
+            "project_map.js",
+        )
+
+    def _get_traceability_matrix_path(self) -> str:
+        return os.path.join(
             self.project_config.export_output_html_root,
             "traceability_matrix.html",
         )
-        with open(
-            output_html_requirements_coverage, "w", encoding="utf8"
-        ) as file:
-            file.write(requirements_coverage_content)
+
+    def _get_source_coverage_path(self) -> str:
+        return os.path.join(
+            self.project_config.export_output_html_root, "source_coverage.html"
+        )
+
+    @staticmethod
+    def _is_project_page_up_to_date(
+        traceability_index: TraceabilityIndex, path_to_page: str
+    ) -> bool:
+        """
+        Use case: static export.
+
+        A project page shows data of all documents, for example the project
+        map. The page is up to date if it exists, no document must be
+        generated again, and the page is not older than any document page.
+
+        A change to a source file with markers also makes the documents of
+        its nodes be generated again, see TraceabilityIndexBuilder. The last
+        condition covers an export that stopped after it wrote the document
+        pages and before it wrote the project page.
+        """
+        if not os.path.isfile(path_to_page):
+            return False
+        if not traceability_index.is_up_to_date():
+            return False
+        page_mtime_ns = os.stat(path_to_page).st_mtime_ns
+        for document_ in traceability_index.document_tree.document_list:
+            assert document_.meta is not None
+            path_to_document_page = document_.meta.output_document_full_path
+            if (
+                os.path.isfile(path_to_document_page)
+                and os.stat(path_to_document_page).st_mtime_ns > page_mtime_ns
+            ):
+                return False
+        return True
 
     @timing_decorator("Export source file pages")
     def export_source_files_screens(
@@ -727,10 +810,9 @@ class HTMLGenerator:
             traceability_index=traceability_index,
             html_templates=self.html_templates,
         )
-        output_html_source_coverage = os.path.join(
-            self.project_config.export_output_html_root, "source_coverage.html"
-        )
-        with open(output_html_source_coverage, "w", encoding="utf8") as file:
+        with open(
+            self._get_source_coverage_path(), "w", encoding="utf8"
+        ) as file:
             file.write(source_coverage_content)
 
     def export_single_source_file_screen(

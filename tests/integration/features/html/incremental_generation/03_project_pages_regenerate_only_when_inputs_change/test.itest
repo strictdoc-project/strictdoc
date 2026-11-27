@@ -1,0 +1,62 @@
+#
+# This test verifies that an export without changes skips the project map,
+# the traceability matrix, and the source coverage page, and that a change
+# to an input generates them again. The source coverage page lists all
+# source files, so it also depends on the source files without markers.
+#
+# The test copies the project to %T because it adds and deletes files.
+#
+# @relation(SDOC-SRS-2, scope=file)
+#
+
+RUN: rm -rf %T/project %T/output
+RUN: %mkdir %T/project/src
+RUN: %cp %S/project/strictdoc_config.py %T/project/strictdoc_config.py
+RUN: %cp %S/project/input.sdoc %T/project/input.sdoc
+RUN: %cp %S/project/src/with_marker.py %T/project/src/with_marker.py
+RUN: %cp %S/project/src/plain.py %T/project/src/plain.py
+
+RUN: %strictdoc export %T/project --output-dir %T/output --no-parallelization | filecheck %s --check-prefix=CHECK-FIRST
+CHECK-FIRST-NOT: Skipping the generation of the
+CHECK-FIRST: Export completed.
+
+RUN: %strictdoc export %T/project --output-dir %T/output --no-parallelization | filecheck %s --check-prefix=CHECK-SECOND
+CHECK-SECOND: Skipping the generation of the project map.
+CHECK-SECOND: Skipping the generation of the traceability matrix.
+CHECK-SECOND: Skipping the generation of the source coverage.
+
+# A changed source file without markers changes only the source coverage.
+RUN: %cp %S/changes/plain.py %T/project/src/plain.py
+RUN: %strictdoc export %T/project --output-dir %T/output --no-parallelization | filecheck %s --check-prefix=CHECK-THIRD
+CHECK-THIRD: Skipping the generation of the project map.
+CHECK-THIRD: Skipping the generation of the traceability matrix.
+CHECK-THIRD-NOT: Skipping the generation of the source coverage.
+CHECK-THIRD: Export completed.
+
+RUN: %cat %T/output/html/source_coverage.html | filecheck %s --check-prefix=CHECK-THIRD-HTML
+CHECK-THIRD-HTML: title="src/plain.py"
+CHECK-THIRD-HTML: data-id="lines_total" data-value="7"
+
+# A new source file without markers.
+RUN: %cp %S/changes/new_file.py %T/project/src/new_file.py
+RUN: %strictdoc export %T/project --output-dir %T/output --no-parallelization | filecheck %s --check-prefix=CHECK-FOURTH
+CHECK-FOURTH-NOT: Skipping the generation of the source coverage.
+CHECK-FOURTH: Export completed.
+
+RUN: %cat %T/output/html/source_coverage.html | filecheck %s --check-prefix=CHECK-FOURTH-HTML
+CHECK-FOURTH-HTML: title="src/new_file.py"
+
+# A deleted source file without markers.
+RUN: %rm %T/project/src/new_file.py
+RUN: %strictdoc export %T/project --output-dir %T/output --no-parallelization | filecheck %s --check-prefix=CHECK-FIFTH
+CHECK-FIFTH-NOT: Skipping the generation of the source coverage.
+CHECK-FIFTH: Export completed.
+
+RUN: %cat %T/output/html/source_coverage.html | filecheck %s --check-prefix=CHECK-FIFTH-HTML
+CHECK-FIFTH-HTML-NOT: src/new_file.py
+
+# A changed document changes all project pages.
+RUN: %touch %T/project/input.sdoc
+RUN: %strictdoc export %T/project --output-dir %T/output --no-parallelization | filecheck %s --check-prefix=CHECK-SIXTH
+CHECK-SIXTH-NOT: Skipping the generation of the
+CHECK-SIXTH: Export completed.

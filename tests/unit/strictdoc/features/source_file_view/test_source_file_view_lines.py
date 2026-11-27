@@ -9,20 +9,18 @@ from strictdoc.backend.sdoc_source_code.reader import (
     SourceFileTraceabilityReader,
 )
 from strictdoc.core.file_system.source_tree import SourceFile
-from strictdoc.features.source_file_view.generator import (
-    SourceFileViewHTMLGenerator,
-)
 from strictdoc.features.source_file_view.view_object import (
     SourceLine,
     SourceMarkerTuple,
     create_source_lines,
+    highlight_source_file_lines,
 )
 
 
 def create_lines(tmp_path: Path, source_input: str) -> List[SourceLine]:
     """
     Read the markers of the source input and create the lines of its page,
-    the same way as SourceFileViewHTMLGenerator.export().
+    the same way as SourceFileViewObject.render_screen().
     """
     path_to_file = tmp_path / "file.txt"
     path_to_file.write_text(source_input)
@@ -34,7 +32,7 @@ def create_lines(tmp_path: Path, source_input: str) -> List[SourceLine]:
         output_file_full_path=str(tmp_path / "output" / "file.txt.html"),
     )
     trace_info = SourceFileTraceabilityReader().read(source_input)
-    entries, _ = SourceFileViewHTMLGenerator.get_pygmented_source_lines(
+    entries, _ = highlight_source_file_lines(
         source_file, source_input.splitlines(keepends=True), trace_info
     )
     return create_source_lines(entries)

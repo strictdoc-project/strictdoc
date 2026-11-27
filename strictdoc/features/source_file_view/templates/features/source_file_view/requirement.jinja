@@ -1,12 +1,3 @@
-{%- assert
-    requirement.__class__.__name__ in ("SDocNode", "SDocCompositeNode"),
-    "Expected requirement"
--%}
-{%- assert
-    view_object.link_renderer.__class__.__name__ == "LinkRenderer",
-    "Expected link renderer"
--%}
-
 {% set ranged = false %}
 {% if range_begin is not none and range_end is not none %}
   {% set ranged = true %}

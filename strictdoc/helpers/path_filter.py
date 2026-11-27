@@ -1,15 +1,20 @@
 import re
 from typing import List, Optional
 
-REGEX_NAME_PART = r"[A-Za-z0-9-_\.() ]*"
+REGEX_NAME_CHARACTERS = r"A-Za-z0-9-_\.() "
+REGEX_NAME_PART = rf"[{REGEX_NAME_CHARACTERS}]*"
 REGEX_FILENAME = rf"{REGEX_NAME_PART}"
 REGEX_FOLDER = rf"{REGEX_NAME_PART}"
 
 REGEX_WILDCARD = REGEX_FILENAME
-# FIXME: This does the job but most probably could be simplified.
-REGEX_DOUBLE_WILDCARD = (
-    rf"(\\|\/)?({REGEX_NAME_PART})?((\\|\/){REGEX_NAME_PART})*(\\|\/)?"
-)
+# "**" matches any sequence of name characters and path separators, also an
+# empty one. The regex is one character class on purpose. The earlier form
+# with nested groups, "(sep)?(name)?((sep)(name))*(sep)?", matched the same
+# paths, but it was slow: before the regex engine rejected a path, it tried
+# many ways to split the path into names and separators. Most paths match no
+# exclude mask, so every mask runs on almost every path. A mask with a leading
+# "**", or without a leading "/", took about 90 times longer than other masks.
+REGEX_DOUBLE_WILDCARD = rf"[{REGEX_NAME_CHARACTERS}\\/]*"
 
 REGEX_MASK_VALIDATION = rf"[^(\\|\/)]{REGEX_DOUBLE_WILDCARD}"
 

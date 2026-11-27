@@ -274,6 +274,51 @@ def test_case_23_wildcards_match_parentheses_in_paths():
     assert not path_filter.match("docs\\input(1).sdoc")
 
 
+def test_case_24_double_wildcard_matches_any_depth_and_separators():
+    mask = "**.test.py"
+    path_filter = PathFilter([mask], positive_or_negative=True)
+
+    # POSITIVE
+    assert path_filter.match(".test.py")
+    assert path_filter.match("file.test.py")
+    assert path_filter.match("/file.test.py")
+    assert path_filter.match("folder/subfolder/file.test.py")
+    assert path_filter.match("folder\\subfolder\\file.test.py")
+    assert path_filter.match("folder/subfolder\\file.test.py")
+    assert path_filter.match("folder//file.test.py")
+
+    # NEGATIVE
+    assert not path_filter.match("folder/subfolder/file.py")
+    assert not path_filter.match("folder/subfolder/file.test.pyc")
+    assert not path_filter.match("folder/file.test.py.bak")
+
+
+def test_case_25_double_wildcard_matches_only_name_characters():
+    mask = "/docs/**.sdoc"
+    path_filter = PathFilter([mask], positive_or_negative=True)
+
+    # POSITIVE
+    assert path_filter.match("docs/a b/(c)/file-1_2.sdoc")
+
+    # NEGATIVE
+    # "**" matches the characters that "*" matches, and path separators.
+    assert not path_filter.match("docs/a+b/file.sdoc")
+    assert not path_filter.match("docs/a/fil\u00e9.sdoc")
+
+
+def test_case_26_double_wildcard_in_unanchored_folder_mask():
+    mask = "__pycache__"
+    path_filter = PathFilter([mask], positive_or_negative=False)
+
+    # POSITIVE
+    assert path_filter.match("__pycache__")
+    assert path_filter.match("strictdoc/__pycache__/module.cpython-310.pyc")
+
+    # NEGATIVE
+    assert not path_filter.match("strictdoc/not__pycache__/module.pyc")
+    assert not path_filter.match("strictdoc/__pycache__2/module.pyc")
+
+
 def test_case_40_root_slash():
     mask = "/build"
     path_filter = PathFilter([mask], positive_or_negative=False)

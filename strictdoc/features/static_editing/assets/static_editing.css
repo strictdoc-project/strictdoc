@@ -174,8 +174,16 @@ sdoc-form-field sdoc-static-editing-relation select {
   flex: 0 0 auto;
 }
 
-sdoc-static-editing-relation input {
+sdoc-static-editing-uid-input {
+  position: relative;
+  display: block;
   flex: 1 1 auto;
+  min-width: 0;
+}
+
+sdoc-static-editing-relation input {
+  box-sizing: border-box;
+  width: 100%;
   min-width: 0;
   padding: 0 .5em;
   border: 1px solid var(--color-placeholder);
@@ -186,4 +194,48 @@ sdoc-static-editing-relation input {
 
 sdoc-static-editing-relations {
   display: block;
+}
+
+sdoc-static-editing-autocomplete {
+  position: absolute;
+  top: calc(100% + 2px);
+  left: 0;
+  right: 0;
+  z-index: 20;
+  display: block;
+  max-height: calc(var(--base-rhythm) * 40);
+  overflow-y: auto;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  background: var(--color-bg-contrast);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .15);
+  font-size: .9em;
+}
+
+sdoc-static-editing-autocomplete[hidden] {
+  display: none;
+}
+
+sdoc-static-editing-autocomplete-option {
+  display: flex;
+  gap: var(--base-rhythm);
+  padding: 4px var(--base-rhythm);
+  cursor: pointer;
+}
+
+sdoc-static-editing-autocomplete-option span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--color-fg-secondary);
+}
+
+sdoc-static-editing-autocomplete-option:hover,
+sdoc-static-editing-autocomplete-option[aria-selected="true"] {
+  background: var(--color-bg-accent);
+}
+
+sdoc-static-editing-autocomplete-option mark {
+  background: none;
+  color: var(--color-action);
 }

@@ -6059,7 +6059,10 @@ The static editor works on the document screen of the static HTML export:
 
    The form also shows the Parent and Child relations of the node. Click
    "Add relation" to add a relation, select its type and role, and enter the
-   UID of the related node. Click "Remove" next to a relation to remove it.
+   UID of the related node. While you type, a list shows the UIDs of the
+   project that contain the text anywhere, for example ``SYSR-WX-012`` for
+   ``012``. The list also shows the nodes whose title contains the text.
+   Select a UID with the mouse, or with the arrow keys and Enter. Click "Remove" next to a relation to remove it.
    The form offers the relation types and roles of the grammar. File
    relations are read-only.
 
@@ -6177,7 +6180,8 @@ The static editing data file contains:
   and the UID prefix of a new node,
 - for each node: the node type, UID, MID, and whether the node is editable,
 - for each grammar element: the relation types and roles of the grammar,
-- for each UID prefix of the project: the next free number.
+- for each UID prefix of the project: the next free number,
+- the UID and the title of each node of the project with a UID.
 
 For each editable node, the file also contains:
 

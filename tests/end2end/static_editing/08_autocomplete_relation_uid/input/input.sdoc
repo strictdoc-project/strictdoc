@@ -1,0 +1,9 @@
+[DOCUMENT]
+TITLE: Static editing document
+
+[REQUIREMENT]
+UID: REQ-1
+TITLE: Requirement without relations
+STATEMENT: >>>
+System X shall do Y.
+<<<

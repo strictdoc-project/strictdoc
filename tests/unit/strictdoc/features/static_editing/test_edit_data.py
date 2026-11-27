@@ -10,6 +10,7 @@ from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
 from strictdoc.features.static_editing.edit_data import (
     NotEditableReason,
     collect_incoming_relations,
+    collect_project_uids,
     compute_next_uid_numbers,
     compute_node_content_hash,
     get_node_not_deletable_reason,
@@ -146,3 +147,14 @@ def test_30_next_uid_numbers_continue_each_prefix() -> None:
         "REQ-": 11,
         "SYSR-WX-": 8,
     }
+
+
+def test_31_project_uids_list_uid_and_title() -> None:
+    document_builder = DocumentBuilder()
+    document_builder.add_requirement("REQ-1")
+    document_builder.add_requirement(None)
+    traceability_index = _build_traceability_index(document_builder)
+
+    assert collect_project_uids(traceability_index) == [
+        {"uid": "REQ-1", "title": "Requirement title"}
+    ]

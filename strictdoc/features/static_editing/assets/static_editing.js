@@ -526,7 +526,147 @@
       .concat(change.relations.filter((relation_) => relation_.action === 'add'));
   }
 
-  function createRelationRow(element, relation, datalistId) {
+  //
+  // The autocompletion of the UID of a related node. Typing shows the UIDs
+  // that contain the entered text anywhere, for example SYSR-WX-012 for
+  // "012". A UID that starts with the text comes first. The title of a node
+  // matches as well.
+  //
+
+  const AUTOCOMPLETE_LIMIT = 20;
+
+  function uidChoices() {
+    const titles = new Map();
+    (DATA.project_uids || []).forEach((entry_) => titles.set(entry_.uid, entry_.title));
+    DATA.nodes.forEach((node_) => {
+      if (node_.uid !== null && !titles.has(node_.uid)) titles.set(node_.uid, '');
+    });
+    allChanges
+      .concat(Array.from(documentChanges.values()))
+      .filter((change_) => change_.op === 'create_node')
+      .forEach((change_) => titles.set(newNodeValue(change_, UID_FIELD), `${newNodeValue(change_, 'TITLE')} (new)`.trim()));
+    return Array.from(titles, ([uid, title]) => ({ uid, title }));
+  }
+
+  function matchUidChoices(text) {
+    const query = text.trim().toLowerCase();
+    if (query.length === 0) return [];
+    const rank = (choice) => {
+      const uid = choice.uid.toLowerCase();
+      if (uid.startsWith(query)) return 0;
+      if (uid.includes(query)) return 1;
+      if (choice.title.toLowerCase().includes(query)) return 2;
+      return -1;
+    };
+    return uidChoices()
+      .map((choice_) => ({ choice: choice_, rank: rank(choice_) }))
+      .filter((entry_) => entry_.rank >= 0)
+      .sort((lhs_, rhs_) => lhs_.rank - rhs_.rank || lhs_.choice.uid.localeCompare(rhs_.choice.uid, undefined, { numeric: true }))
+      .slice(0, AUTOCOMPLETE_LIMIT)
+      .map((entry_) => entry_.choice);
+  }
+
+  // The UID with the matched text in a <mark> element.
+  function highlightMatch(uid, text) {
+    const query = text.trim().toLowerCase();
+    const index = uid.toLowerCase().indexOf(query);
+    if (query.length === 0 || index < 0) return [uid];
+    return [
+      uid.slice(0, index),
+      createElement('mark', {}, [uid.slice(index, index + query.length)]),
+      uid.slice(index + query.length),
+    ];
+  }
+
+  // Adds the choice list to a UID input and returns the element that holds
+  // both.
+  function createUidAutocomplete(input) {
+    const listId = `static_editing_uid_choices_${createLocalId()}`;
+    const list = createElement('sdoc-static-editing-autocomplete', {
+      id: listId,
+      role: 'listbox',
+      hidden: '',
+      'data-testid': 'form-relation-autocomplete',
+    });
+    input.setAttribute('role', 'combobox');
+    input.setAttribute('autocomplete', 'off');
+    input.setAttribute('aria-autocomplete', 'list');
+    input.setAttribute('aria-controls', listId);
+    input.setAttribute('aria-expanded', 'false');
+
+    let choices = [];
+    let activeIndex = -1;
+
+    const close = () => {
+      list.hidden = true;
+      activeIndex = -1;
+      input.setAttribute('aria-expanded', 'false');
+    };
+    const choose = (uid) => {
+      input.value = uid;
+      close();
+    };
+    const render = () => {
+      list.replaceChildren(
+        ...choices.map((choice_, index_) => {
+          const option = createElement(
+            'sdoc-static-editing-autocomplete-option',
+            {
+              role: 'option',
+              'aria-selected': index_ === activeIndex ? 'true' : 'false',
+              'data-uid': choice_.uid,
+              'data-testid': 'form-relation-autocomplete-option',
+            },
+            [
+              createElement('b', {}, highlightMatch(choice_.uid, input.value)),
+              choice_.title.length > 0 ? createElement('span', {}, [choice_.title]) : '',
+            ],
+          );
+          // mousedown instead of click: the input must not lose the focus
+          // and close the list before the choice is taken.
+          option.addEventListener('mousedown', (event) => {
+            event.preventDefault();
+            choose(choice_.uid);
+          });
+          return option;
+        }),
+      );
+      list.hidden = choices.length === 0;
+      input.setAttribute('aria-expanded', choices.length > 0 ? 'true' : 'false');
+      const activeOption = list.children[activeIndex];
+      if (activeOption) activeOption.scrollIntoView({ block: 'nearest' });
+    };
+    const update = () => {
+      choices = matchUidChoices(input.value);
+      activeIndex = -1;
+      // An exact match needs no list.
+      if (choices.length === 1 && choices[0].uid === input.value.trim()) choices = [];
+      render();
+    };
+
+    input.addEventListener('input', update);
+    input.addEventListener('focus', update);
+    input.addEventListener('blur', close);
+    input.addEventListener('keydown', (event) => {
+      if (list.hidden) return;
+      if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+        event.preventDefault();
+        const step = event.key === 'ArrowDown' ? 1 : -1;
+        activeIndex = (activeIndex + step + choices.length + 1) % (choices.length + 1);
+        if (activeIndex === choices.length) activeIndex = -1;
+        render();
+      } else if (event.key === 'Enter' && activeIndex >= 0) {
+        event.preventDefault();
+        choose(choices[activeIndex].uid);
+      } else if (event.key === 'Escape') {
+        event.preventDefault();
+        close();
+      }
+    });
+    return createElement('sdoc-static-editing-uid-input', {}, [input, list]);
+  }
+
+  function createRelationRow(element, relation) {
     const typeSelect = createElement('select', {
       'data-testid': 'form-relation-type',
       'aria-label': 'Relation type',
@@ -544,7 +684,6 @@
 
     const valueInput = createElement('input', {
       type: 'text',
-      list: datalistId,
       value: relation ? relation.value : '',
       placeholder: 'UID of the related node',
       'aria-label': 'UID of the related node',
@@ -556,7 +695,7 @@
       createElement('sdoc-form-row-main', {}, [
         createElement('sdoc-form-field', { 'field-type': 'select' }, [
           createElement('label', {}, ['RELATION']),
-          createElement('sdoc-static-editing-relation', {}, [typeSelect, valueInput, removeButton]),
+          createElement('sdoc-static-editing-relation', {}, [typeSelect, createUidAutocomplete(valueInput), removeButton]),
         ]),
       ]),
       createElement('sdoc-form-row-aside'),
@@ -569,14 +708,6 @@
   // adds a row. A File relation is a read-only row.
   function createRelationRows(element, relations, fileRelations) {
     const grid = createElement('sdoc-form-grid', { 'data-static-editing-relations': '' });
-    const datalistId = `static_editing_uids_${createLocalId()}`;
-    grid.append(
-      createElement(
-        'datalist',
-        { id: datalistId },
-        Array.from(knownUids()).map((uid_) => createElement('option', { value: uid_ })),
-      ),
-    );
     fileRelations.forEach((relation_) => {
       grid.append(
         createElement('sdoc-form-row', {}, [
@@ -591,7 +722,7 @@
         ]),
       );
     });
-    relations.forEach((relation_) => grid.append(createRelationRow(element, relation_, datalistId)));
+    relations.forEach((relation_) => grid.append(createRelationRow(element, relation_)));
     if (element.relations.length > 0) {
       const addButton = createButton('form-add-relation', 'Add relation');
       const addRow = createElement('sdoc-form-row', {}, [
@@ -600,7 +731,7 @@
         createElement('sdoc-form-row-aside'),
       ]);
       addButton.addEventListener('click', () => {
-        const newRow = createRelationRow(element, null, datalistId);
+        const newRow = createRelationRow(element, null);
         addRow.before(newRow);
         newRow.querySelector('input').focus();
       });
@@ -836,8 +967,10 @@
     return field ? field.value : '';
   }
 
+  // The UIDs of all documents of the project and of all new nodes.
   function knownUids(exceptChange = null) {
     const uids = new Set(DATA.nodes.filter((node_) => node_.uid !== null).map((node_) => node_.uid));
+    (DATA.project_uids || []).forEach((entry_) => uids.add(entry_.uid));
     allChanges
       .concat(Array.from(documentChanges.values()))
       .filter((change_) => change_.op === 'create_node' && change_.key !== (exceptChange && exceptChange.key))

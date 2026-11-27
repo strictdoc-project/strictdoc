@@ -1,7 +1,7 @@
 import os
 import sys
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.document import SDocDocument
@@ -57,6 +57,17 @@ class MarkdownFormat(Format):
             doc_file.full_path, project_config
         )
 
+    def read_from_cache(
+        self, doc_file: File, project_config: ProjectConfig
+    ) -> Optional[SDocDocument]:
+        from strictdoc.backend.markdown.reader import (  # noqa: PLC0415
+            SDMarkdownReader,
+        )
+
+        return SDMarkdownReader.read_from_cache(
+            doc_file.full_path, project_config
+        )
+
     @staticmethod
     def supports_grammar() -> bool:
         return True
@@ -73,6 +84,17 @@ class MarkdownFormat(Format):
         )
 
         return MarkdownGrammarReader().read_from_file(
+            doc_file.full_path, project_config
+        )
+
+    def read_grammar_from_cache(
+        self, doc_file: File, project_config: ProjectConfig
+    ) -> Optional[DocumentGrammar]:
+        from strictdoc.backend.markdown.grammar_reader import (  # noqa: PLC0415
+            MarkdownGrammarReader,
+        )
+
+        return MarkdownGrammarReader.read_from_cache(
             doc_file.full_path, project_config
         )
 

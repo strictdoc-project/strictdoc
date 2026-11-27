@@ -6,7 +6,7 @@ import os
 import sys
 import time
 from functools import partial
-from typing import Dict, List, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
@@ -148,6 +148,47 @@ class DocumentFinder:
         )
 
     @staticmethod
+    def _read_document_from_cache(
+        document_triple: Tuple[Union[Folder, File], File, str],
+        extension_dispatch_table: List[FormatDispatchEntry],
+        project_config: ProjectConfig,
+    ) -> Optional[
+        Tuple[File, str, Union[SDocDocument, DocumentGrammar], float]
+    ]:
+        """
+        Return the document or grammar from the cache of its format, in the
+        same form as _process_worker_parse_document(). Return None if the
+        format has no up-to-date cache entry for the file, or no cache.
+        """
+        _, doc_file, file_tree_mount_folder = document_triple
+        doc_full_path = doc_file.full_path
+
+        time_start = time.time()
+
+        for (
+            extension_,
+            format_,
+            is_grammar_,
+        ) in extension_dispatch_table:
+            if not doc_full_path.endswith(extension_):
+                continue
+            document_or_grammar: Union[SDocDocument, DocumentGrammar, None] = (
+                format_.read_grammar_from_cache(doc_file, project_config)
+                if is_grammar_
+                else format_.read_from_cache(doc_file, project_config)
+            )
+            if document_or_grammar is None:
+                return None
+            drop_textx_meta(document_or_grammar)
+            return (
+                doc_file,
+                file_tree_mount_folder,
+                document_or_grammar,
+                time.time() - time_start,
+            )
+        return None
+
+    @staticmethod
     def _build_document_tree(
         file_trees: List[FileTree],
         project_config: ProjectConfig,
@@ -193,14 +234,53 @@ class DocumentFinder:
                     with report_progress(title, elapsed_time=elapsed_time):
                         pass
 
-                found_documents = parallelizer.run_parallel(
-                    file_tree_list,
+                # The documents and grammars whose cache entries are up to
+                # date are read in this process. Reading them in worker
+                # processes would cost more: the parallelizer would start
+                # the worker processes, and each document would be unpickled
+                # from the cache in a worker, pickled again, and unpickled
+                # once more in this process. Only the documents that must be
+                # parsed go to the parallelizer.
+                extension_dispatch_table = _build_extension_dispatch_table(
+                    project_config
+                )
+                found_documents: List[
+                    Optional[
+                        Tuple[
+                            File,
+                            str,
+                            Union[SDocDocument, DocumentGrammar],
+                            float,
+                        ]
+                    ]
+                ] = [None] * len(file_tree_list)
+                indexes_to_parse: List[int] = []
+                for index_, document_triple_ in enumerate(file_tree_list):
+                    cached_result = DocumentFinder._read_document_from_cache(
+                        document_triple_,
+                        extension_dispatch_table,
+                        project_config,
+                    )
+                    if cached_result is None:
+                        indexes_to_parse.append(index_)
+                        continue
+                    found_documents[index_] = cached_result
+                    on_item_complete(index_, cached_result)
+
+                parsed_results = parallelizer.run_parallel(
+                    [file_tree_list[index_] for index_ in indexes_to_parse],
                     process_document_binding,
                     on_item_complete,
                 )
+                for index_, parsed_result_ in zip(
+                    indexes_to_parse, parsed_results
+                ):
+                    found_documents[index_] = parsed_result_
 
         doc_file: File
-        for doc_file, file_tree_mount_folder, document, _ in found_documents:
+        for found_document_ in found_documents:
+            assert found_document_ is not None
+            doc_file, file_tree_mount_folder, document, _ = found_document_
             assert isinstance(file_tree_mount_folder, str), (
                 file_tree_mount_folder
             )

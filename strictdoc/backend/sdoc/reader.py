@@ -19,7 +19,7 @@ from strictdoc.backend.sdoc.models.node import (
 from strictdoc.backend.sdoc.pickle_cache import PickleCache
 from strictdoc.backend.sdoc.processor import ParseContext, SDocParsingProcessor
 from strictdoc.core.project_config import ProjectConfig
-from strictdoc.helpers.cast import assert_cast
+from strictdoc.helpers.cast import assert_cast, assert_optional_cast
 from strictdoc.helpers.exception import StrictDocException
 from strictdoc.helpers.file_system import file_open_read_utf8
 from strictdoc.helpers.string import strip_bom
@@ -81,6 +81,20 @@ class SDReader:
 
         return document, parse_context
 
+    @staticmethod
+    def read_from_cache(
+        file_path: str, project_config: ProjectConfig
+    ) -> Optional[SDocDocument]:
+        """
+        Return the document from the cache, or None if the cache has no
+        up-to-date entry for the file.
+        """
+        cached_content: Optional[SDocDocument] = assert_optional_cast(
+            PickleCache.read_from_cache(file_path, project_config, "sdoc"),
+            SDocDocument,
+        )
+        return cached_content
+
     def read_from_file(
         self, file_path: str, project_config: ProjectConfig
     ) -> SDocDocument:
@@ -88,11 +102,9 @@ class SDReader:
         Parse a provided .sdoc file and convert it into a Document object.
         """
 
-        unpickled_content = PickleCache.read_from_cache(
-            file_path, project_config, "sdoc"
-        )
-        if unpickled_content:
-            return assert_cast(unpickled_content, SDocDocument)
+        cached_document = SDReader.read_from_cache(file_path, project_config)
+        if cached_document is not None:
+            return cached_document
 
         with file_open_read_utf8(file_path) as file:
             sdoc_content = file.read()

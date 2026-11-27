@@ -1,7 +1,7 @@
 import os
 import sys
 from pathlib import Path
-from typing import List
+from typing import List, Optional
 
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.grammar_reader import SDocGrammarReader
@@ -70,6 +70,11 @@ class SDocFormat(Format):
     ) -> SDocDocument:
         return SDReader().read_from_file(doc_file.full_path, project_config)
 
+    def read_from_cache(
+        self, doc_file: File, project_config: ProjectConfig
+    ) -> Optional[SDocDocument]:
+        return SDReader.read_from_cache(doc_file.full_path, project_config)
+
     @staticmethod
     def supports_grammar() -> bool:
         return True
@@ -82,6 +87,13 @@ class SDocFormat(Format):
         self, doc_file: File, project_config: ProjectConfig
     ) -> DocumentGrammar:
         return SDocGrammarReader().read_from_file(
+            doc_file.full_path, project_config
+        )
+
+    def read_grammar_from_cache(
+        self, doc_file: File, project_config: ProjectConfig
+    ) -> Optional[DocumentGrammar]:
+        return SDocGrammarReader.read_from_cache(
             doc_file.full_path, project_config
         )
 

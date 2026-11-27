@@ -2,10 +2,12 @@
 @relation(SDOC-SRS-142, scope=file)
 """
 
+import threading
 from functools import partial
-from typing import Optional, TypedDict
+from typing import ClassVar, Optional, TypedDict
 
 from textx import get_location, metamodel_from_str
+from textx.metamodel import TextXMetaModel
 
 from strictdoc.backend.sdoc_source_code.grammar import SOURCE_FILE_GRAMMAR
 from strictdoc.backend.sdoc_source_code.models.language_item_marker import (
@@ -168,16 +170,42 @@ class SourceFileTraceabilityReader:
         RangeMarker,
     ]
 
+    # Building a textX metamodel from SOURCE_FILE_GRAMMAR takes about 4.5 ms,
+    # and a project can have thousands of source files. As a result, all
+    # readers share one metamodel, which is built on first use.
+    #
+    # Source files are read when the traceability index is built:
+    # - Export reads source files in its main thread.
+    # - The server reads source files when it rebuilds the traceability index:
+    #   at startup, in request handlers, and in the file watcher thread. The
+    #   global write lock of the server lets only one rebuild run at a time.
+    #
+    # The reader does not rely on the callers to read one file at a time. The
+    # lock lets only one thread at a time build the metamodel, register
+    # processors, and parse, because textX is not thread-safe in three places:
+    # - metamodel_from_str() parses the grammar with one parser that textX
+    #   caches at module level and shares between all calls.
+    # - The metamodel holds the object processors. read() registers new
+    #   processors for each file because the processors write to the
+    #   ParseContext of that file. Without the lock, a second thread can
+    #   replace the processors while the first thread parses. The markers of
+    #   one file then end up in the ParseContext of the other file.
+    # - During each parse, textX replaces __setattr__, __getattribute__ and
+    #   __delattr__ of the user classes (SOURCE_FILE_MODELS) and restores them
+    #   at the end. textX tracks this with a counter on each class and no lock.
+    #   Two parallel parses can restore the methods while one parse still needs
+    #   them, or keep the replaced methods after both parses end. This risk
+    #   exists even with one metamodel per thread, because all metamodels use
+    #   the same user classes.
+    #
+    # With the current callers, no thread ever waits for the lock, so the lock
+    # costs almost nothing.
+    _meta_model: ClassVar[Optional[TextXMetaModel]] = None
+    _meta_model_lock: ClassVar[threading.Lock] = threading.Lock()
+
     @staticmethod
     def supported_elements() -> list[str]:
         return []
-
-    def __init__(self) -> None:
-        self.meta_model = metamodel_from_str(
-            SOURCE_FILE_GRAMMAR,
-            classes=SourceFileTraceabilityReader.SOURCE_FILE_MODELS,
-            use_regexp_group=True,
-        )
 
     def read(
         self, input_string: str, file_path: Optional[str] = None
@@ -213,11 +241,12 @@ class SourceFileTraceabilityReader:
             "SourceFileTraceabilityInfo": parse_source_traceability_processor,
         }
 
-        self.meta_model.register_obj_processors(obj_processors)
-
-        source_file_traceability_info: SourceFileTraceabilityInfo = (
-            self.meta_model.model_from_str(input_string, file_name=file_path)
-        )
+        with SourceFileTraceabilityReader._meta_model_lock:
+            meta_model = SourceFileTraceabilityReader._get_meta_model()
+            meta_model.register_obj_processors(obj_processors)
+            source_file_traceability_info: SourceFileTraceabilityInfo = (
+                meta_model.model_from_str(input_string, file_name=file_path)
+            )
         source_file_traceability_info.ng_map_reqs_to_markers = (
             parse_context.map_reqs_to_markers
         )
@@ -228,6 +257,24 @@ class SourceFileTraceabilityReader:
         # are not used anyway.
         drop_textx_meta(source_file_traceability_info)
         return source_file_traceability_info
+
+    @staticmethod
+    def _get_meta_model() -> TextXMetaModel:
+        """
+        Return the shared metamodel. The caller must hold _meta_model_lock.
+
+        The metamodel is built on the first read, not at import time. Every
+        export and every server start imports this module, also for projects
+        without source files. A build at import time would add about 5-13 ms
+        to each of these processes.
+        """
+        if SourceFileTraceabilityReader._meta_model is None:
+            SourceFileTraceabilityReader._meta_model = metamodel_from_str(
+                SOURCE_FILE_GRAMMAR,
+                classes=SourceFileTraceabilityReader.SOURCE_FILE_MODELS,
+                use_regexp_group=True,
+            )
+        return SourceFileTraceabilityReader._meta_model
 
     def read_from_file(self, file_path: str) -> SourceFileTraceabilityInfo:
         with file_open_read_utf8(file_path) as file:

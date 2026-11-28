@@ -34,6 +34,7 @@ class SourceFilesFinder:
             extensions=None,
             include_paths=project_config.include_source_paths,
             exclude_paths=project_config.exclude_source_paths,
+            path_to_cache_dir=project_config.get_path_to_cache_dir(),
         )
         root_level = doctree_root_abs_path.count(os.sep)
         # The found paths start with the root prefix because FileFinder joins

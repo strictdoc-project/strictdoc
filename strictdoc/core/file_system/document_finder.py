@@ -422,6 +422,7 @@ class DocumentFinder:
                     extensions=get_document_extensions(project_config),
                     include_paths=project_config.include_doc_paths,
                     exclude_paths=project_config.exclude_doc_paths,
+                    path_to_cache_dir=project_config.get_path_to_cache_dir(),
                 )
             root_trees.append(file_tree_structure)
 

@@ -1,10 +1,17 @@
 import os
+import stat
 from operator import attrgetter
-from typing import Dict, Iterator, List, Optional, Tuple, Union
+from typing import Dict, Iterator, List, Optional, Set, Tuple, Union
 
 from typing_extensions import TypeAlias
 
-from strictdoc.helpers.file_system import is_binary_file
+from strictdoc.core.file_system.file_listing_cache import (
+    CACHE_FORMAT_VERSION,
+    CachedFile,
+    CachedFolder,
+    FileListingCache,
+    create_cached_file,
+)
 from strictdoc.helpers.path_filter import PathFilter
 from strictdoc.helpers.paths import SDocRelativePath, path_to_posix_path
 from strictdoc.helpers.sorting import alphanumeric_sort
@@ -111,7 +118,15 @@ class FileFinder:
         extensions: Optional[List[str]],
         include_paths: List[str],
         exclude_paths: List[str],
+        path_to_cache_dir: Optional[str] = None,
     ) -> FileTree:
+        """
+        Find the files below root_path that pass the filters.
+
+        With path_to_cache_dir, the scan of each folder is stored, and a later
+        search reuses the scans of the unchanged folders. See
+        file_listing_cache.py.
+        """
         assert os.path.isdir(root_path)
         assert os.path.isabs(root_path), root_path
         assert not root_path.endswith("/"), root_path
@@ -124,6 +139,19 @@ class FileFinder:
         path_filter_excludes = PathFilter(
             exclude_paths, positive_or_negative=False
         )
+        listing_cache = FileListingCache.create(
+            path_to_cache_dir,
+            root_path,
+            extensions,
+            key=(
+                CACHE_FORMAT_VERSION,
+                root_path,
+                tuple(ignored_dirs),
+                extensions_tuple,
+                tuple(include_paths),
+                tuple(exclude_paths),
+            ),
+        )
         root_level: int = root_path.count(os.sep)
         # A Windows drive root, for example "C:\\", ends with a separator.
         root_prefix: str = (
@@ -135,17 +163,24 @@ class FileFinder:
 
         count = 0
 
-        for current_dir_full_path_, dirs, files in os.walk(
-            root_path, topdown=True
-        ):
-            if current_dir_full_path_ in ignored_dirs:
-                dirs[:] = []
-                continue
+        # The scan of a folder leaves out its ignored and excluded subfolders,
+        # so a folder from the cache needs no filter check. Only the root
+        # folder is checked here.
+        folders_to_walk: List[str] = (
+            [root_path]
+            if root_path not in ignored_dirs
+            and not path_filter_excludes.match("")
+            else []
+        )
 
-            # os.walk() joins the root path and the folder names, so every
-            # folder path below the root starts with the root prefix. Cutting
-            # it off gives the same result as os.path.relpath(), without the
-            # cost of normalizing both paths for every folder.
+        # Depth-first, with the subfolders in their sorted order, as
+        # os.walk(topdown=True) walks.
+        while len(folders_to_walk) > 0:
+            current_dir_full_path_ = folders_to_walk.pop()
+
+            # Every folder path below the root starts with the root prefix.
+            # Cutting it off gives the same result as os.path.relpath(),
+            # without the cost of normalizing both paths for every folder.
             current_dir_rel_path_ = (
                 (current_dir_full_path_[len(root_prefix) :] + "/")
                 if current_dir_full_path_ != root_path
@@ -153,28 +188,26 @@ class FileFinder:
             )
             current_dir_rel_path = SDocRelativePath(current_dir_rel_path_)
 
-            if path_filter_excludes.match(
-                current_dir_rel_path.relative_path_posix
-            ):
-                dirs[:] = []
-                continue
+            scanned_folder = listing_cache.get(current_dir_full_path_)
+            if scanned_folder is None:
+                scan_result = FileFinder._scan_folder(
+                    current_dir_full_path_,
+                    current_dir_rel_path.relative_path_posix,
+                    ignored_dirs=ignored_dirs,
+                    extensions_tuple=extensions_tuple,
+                    path_filter_includes=path_filter_includes,
+                    path_filter_excludes=path_filter_excludes,
+                )
+                if scan_result is None:
+                    # Like os.walk(), skip a folder that cannot be listed.
+                    continue
+                scanned_folder, can_be_cached = scan_result
+                if can_be_cached:
+                    listing_cache.put(current_dir_full_path_, scanned_folder)
+            else:
+                listing_cache.put(current_dir_full_path_, scanned_folder)
 
             count += 1
-
-            # Skip the folders that cannot contain an included file, for
-            # example build/ or .venv/ when only /docs/ is included.
-            dirs[:] = [
-                d
-                for d in dirs
-                if d not in ("output", "Output")
-                and path_filter_includes.may_match_inside(
-                    f"{current_dir_rel_path.relative_path_posix}{d}/"
-                )
-            ]
-            # Most folders have at most one subfolder, and the sort key is a
-            # regex split of each name.
-            if len(dirs) > 1:
-                dirs.sort(key=alphanumeric_sort)
 
             current_root_path_level: int = (
                 current_dir_full_path_.count(os.sep) - root_level
@@ -189,55 +222,28 @@ class FileFinder:
                 ),
             )
 
-            for file in files:
-                if len(extensions_tuple) > 0 and not file.endswith(
-                    extensions_tuple
-                ):
-                    continue
-
-                # The folder path is empty or ends with "/", so concatenation
-                # gives the same result as os.path.join(), but faster. The
-                # POSIX path of the folder is already converted, so only the
-                # file name needs the conversion.
-                rel_file_path_posix = (
-                    current_dir_rel_path.relative_path_posix
-                    + path_to_posix_path(file)
+            for file_ in scanned_folder.files:
+                full_file_path = os.path.join(
+                    current_dir_full_path_, file_.name
                 )
-
-                # Most found files are not included, so the include filter
-                # runs first. The exclude filter then runs only for the
-                # included files.
-                if not path_filter_includes.match(
-                    rel_file_path_posix
-                ) or path_filter_excludes.match(rel_file_path_posix):
-                    continue
-
-                full_file_path = os.path.join(current_dir_full_path_, file)
-
-                # A known edge case: A file is found by os.walk(), but it
-                # is a Linux pipe file which fails an os.path.isfile()
-                # check. It seems to be safe to ignore this and possibly
-                # other cases here without writing any test for this case.
-                # The check runs after the path filters, so only the
-                # included files cost a stat() call.
-                if not os.path.isfile(full_file_path):  # pragma: no cover
-                    continue
 
                 # TODO: For now, ignore the binary files but one day a user
                 # might want to create a Relation to a binary file like a
                 # published PDF.
-                if is_binary_file(full_file_path):
+                if file_.is_binary:
                     print(  # noqa: T201
                         f"warning: Skip reading binary file {full_file_path}"
                     )
                     continue
 
+                # The folder path is empty or ends with "/", so concatenation
+                # gives the same result as os.path.join(), but faster.
                 current_tree.files.append(
                     File(
                         current_tree.level + 1,
                         full_file_path,
                         SDocRelativePath(
-                            current_dir_rel_path.relative_path + file
+                            current_dir_rel_path.relative_path + file_.name
                         ),
                     )
                 )
@@ -246,6 +252,11 @@ class FileFinder:
 
             if len(current_tree.files) > 0:
                 current_tree.has_sdoc_content = True
+
+            for subfolder_ in reversed(scanned_folder.subfolders):
+                folders_to_walk.append(
+                    os.path.join(current_dir_full_path_, subfolder_)
+                )
 
             if current_dir_full_path_ == root_path:
                 continue
@@ -273,10 +284,122 @@ class FileFinder:
 
         print(f"Scanned {count} directories.")  # noqa: T201
 
+        listing_cache.save()
+
         file_tree_structure = FileTree(
             root_folder_or_file=folder_map[root_path]
         )
         return file_tree_structure
+
+    @staticmethod
+    def _scan_folder(
+        folder_path: str,
+        folder_rel_path_posix: str,
+        *,
+        ignored_dirs: List[str],
+        extensions_tuple: Tuple[str, ...],
+        path_filter_includes: PathFilter,
+        path_filter_excludes: PathFilter,
+    ) -> Optional[Tuple[CachedFolder, bool]]:
+        """
+        List a folder and apply the filters to its entries.
+
+        Return the scan and whether the cache can store it, or None if the
+        folder cannot be listed. The scan does not depend on anything outside
+        the folder's entries and the search settings, except for a symbolic
+        link, so a folder with a symbolic link is not stored.
+        """
+        try:
+            folder_mtime_ns = os.stat(folder_path).st_mtime_ns
+            entries = list(os.scandir(folder_path))
+        except OSError:
+            return None
+
+        can_be_cached = True
+        dirs: List[str] = []
+        linked_dirs: Set[str] = set()
+        files: List[str] = []
+        for entry_ in entries:
+            try:
+                is_symlink = entry_.is_symlink()
+                is_dir = entry_.is_dir()
+            except OSError:
+                is_symlink = False
+                is_dir = False
+            if is_symlink:
+                can_be_cached = False
+            if is_dir:
+                dirs.append(entry_.name)
+                if is_symlink:
+                    linked_dirs.add(entry_.name)
+            else:
+                files.append(entry_.name)
+
+        # Skip the folders that cannot contain an included file, for example
+        # build/ or .venv/ when only /docs/ is included. Like os.walk(), do
+        # not walk into a symbolic link to a folder.
+        subfolders = [
+            d
+            for d in dirs
+            if d not in ("output", "Output")
+            and d not in linked_dirs
+            and path_filter_includes.may_match_inside(
+                f"{folder_rel_path_posix}{d}/"
+            )
+            and os.path.join(folder_path, d) not in ignored_dirs
+            and not path_filter_excludes.match(
+                f"{folder_rel_path_posix}{path_to_posix_path(d)}/"
+            )
+        ]
+        # Most folders have at most one subfolder, and the sort key is a
+        # regex split of each name.
+        if len(subfolders) > 1:
+            subfolders.sort(key=alphanumeric_sort)
+
+        cached_files: List[CachedFile] = []
+        for file_ in files:
+            if len(extensions_tuple) > 0 and not file_.endswith(
+                extensions_tuple
+            ):
+                continue
+
+            # The folder path is empty or ends with "/". The POSIX path of the
+            # folder is already converted, so only the file name needs the
+            # conversion.
+            rel_file_path_posix = folder_rel_path_posix + path_to_posix_path(
+                file_
+            )
+
+            # Most found files are not included, so the include filter runs
+            # first. The exclude filter then runs only for the included files.
+            if not path_filter_includes.match(
+                rel_file_path_posix
+            ) or path_filter_excludes.match(rel_file_path_posix):
+                continue
+
+            # A known edge case: a found file is a Linux pipe file, which is
+            # not a regular file. The check runs after the path filters, so
+            # only the included files cost a stat() call.
+            full_file_path = os.path.join(folder_path, file_)
+            try:
+                file_stat = os.stat(full_file_path)
+            except OSError:  # pragma: no cover
+                continue
+            if not stat.S_ISREG(file_stat.st_mode):  # pragma: no cover
+                continue
+
+            cached_files.append(
+                create_cached_file(full_file_path, file_, file_stat)
+            )
+
+        return (
+            CachedFolder(
+                mtime_ns=folder_mtime_ns,
+                subfolders=subfolders,
+                files=cached_files,
+            ),
+            can_be_cached,
+        )
 
 
 class PathFinder:

@@ -257,14 +257,14 @@
 {% block header_content %}
   {%- with
       header__items=header_items,
-      header__last="screens/document/document/actions.jinja"
+      header__last="features/document/actions.jinja"
   -%}
     {% include "components/header/index.jinja" %}
   {%- endwith -%}
 {% endblock header_content %}
 
 {% block main_content %}
-  {% include "screens/document/document/main.jinja" %}
+  {% include "features/document/main.jinja" %}
   {#- In the body, not the head: html5lib reports unexpected </head> if <template> is in <head>. -#}
   <template id="copy_to_clipboard-done_icon">{% include "icons/ico16_done.svg" %}</template>
   {%- if view_object.is_running_on_server %}

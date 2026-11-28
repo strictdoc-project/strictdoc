@@ -587,9 +587,7 @@ def create_main_router(
             context_document=document,
         )
         output = env().render_template_as_markup(
-            "actions/"
-            "document/"
-            "create_requirement/"
+            "features/document/actions/create_requirement/"
             "stream_new_requirement.jinja.html",
             is_new_requirement=True,
             renderer=markup_renderer,
@@ -705,9 +703,7 @@ def create_main_router(
             context_document=document,
         )
         output = env().render_template_as_markup(
-            "actions/"
-            "document/"
-            "create_requirement/"
+            "features/document/actions/create_requirement/"
             "stream_new_requirement.jinja.html",
             is_new_requirement=True,
             renderer=markup_renderer,
@@ -802,9 +798,7 @@ def create_main_router(
                 context_document=document,
             )
             output = env().render_template_as_markup(
-                "actions/"
-                "document/"
-                "create_requirement/"
+                "features/document/actions/create_requirement/"
                 "stream_new_requirement.jinja.html",
                 is_new_requirement=True,
                 renderer=markup_renderer,
@@ -917,9 +911,7 @@ def create_main_router(
             context_document=document,
         )
         output = env().render_template_as_markup(
-            "actions/"
-            "document/"
-            "edit_requirement/"
+            "features/document/actions/edit_requirement/"
             "stream_edit_requirement.jinja.html",
             is_new_requirement=False,
             renderer=markup_renderer,
@@ -1063,9 +1055,7 @@ def create_main_router(
                 context_document=document,
             )
             output = env().render_template_as_markup(
-                "actions/"
-                "document/"
-                "edit_requirement/"
+                "features/document/actions/edit_requirement/"
                 "stream_edit_requirement.jinja.html",
                 is_new_requirement=False,
                 renderer=markup_renderer,
@@ -2583,9 +2573,7 @@ def create_main_router(
     )
     def cancel_new_requirement(requirement_mid: str) -> Response:
         output = env().render_template_as_markup(
-            "actions/"
-            "document/"
-            "create_requirement/"
+            "features/document/actions/create_requirement/"
             "stream_cancel_new_requirement.jinja.html",
             requirement_mid=requirement_mid,
         )
@@ -2680,7 +2668,7 @@ def create_main_router(
                 errors = error_.errors
 
             output = env().render_template_as_markup(
-                "actions/document/delete_requirement/"
+                "features/document/actions/delete_requirement/"
                 "stream_confirm_delete_requirement.jinja",
                 requirement_mid=node_id,
                 context_document_mid=context_document_mid,
@@ -2743,7 +2731,7 @@ def create_main_router(
             git_client=html_generator.git_client,
         )
         output = env().render_template_as_markup(
-            "actions/document/delete_requirement/"
+            "features/document/actions/delete_requirement/"
             "stream_delete_requirement.jinja.html",
             view_object=view_object,
         )
@@ -2754,7 +2742,7 @@ def create_main_router(
         )
 
         output += env().render_template_as_markup(
-            "actions/document/_shared/stream_updated_viewtype_menu.jinja.html",
+            "features/document/actions/_shared/stream_updated_viewtype_menu.jinja.html",
             view_object=view_object,
         )
 
@@ -3148,7 +3136,7 @@ def create_main_router(
                     grammar_incompatibilities
                 )
         output = env().render_template_as_markup(
-            "actions/document/move_node/stream_show_move_node.jinja",
+            "features/document/actions/move_node/stream_show_move_node.jinja",
             view_object=view_object,
             moved_node=moved_node,
             subtree_mids=subtree_mids,
@@ -3193,7 +3181,7 @@ def create_main_router(
             command.perform()
         except SingleValidationError as exception_:
             error_output = env().render_template_as_markup(
-                "actions/document/move_node/stream_move_node_error.jinja.html",
+                "features/document/actions/move_node/stream_move_node_error.jinja.html",
                 error_message=exception_.args[0],
             )
             return HTMLResponse(
@@ -3206,7 +3194,7 @@ def create_main_router(
 
         if not command.move_was_performed:
             no_change_output = env().render_template_as_markup(
-                "actions/document/move_node/"
+                "features/document/actions/move_node/"
                 "stream_move_node_no_change.jinja.html",
             )
             return HTMLResponse(
@@ -3250,7 +3238,7 @@ def create_main_router(
             git_client=html_generator.git_client,
         )
         output = env().render_template_as_markup(
-            "actions/document/move_node/"
+            "features/document/actions/move_node/"
             "stream_move_node_across_documents.jinja.html",
             view_object=view_object,
             new_location_href=view_object.render_node_link(moved_node),
@@ -3654,7 +3642,7 @@ def create_main_router(
 
         if not confirmed:
             output = env().render_template_as_markup(
-                "actions/document/delete_document/"
+                "features/document/actions/delete_document/"
                 "stream_confirm_delete_document.jinja",
                 document_mid=document_mid,
                 errors=errors,
@@ -3669,7 +3657,7 @@ def create_main_router(
 
         if len(errors) > 0:
             output = env().render_template_as_markup(
-                "actions/document/delete_document/"
+                "features/document/actions/delete_document/"
                 "stream_confirm_delete_document.jinja",
                 document_mid=document_mid,
                 errors=errors,
@@ -3846,9 +3834,7 @@ def create_main_router(
         )
 
         output = env().render_template_as_markup(
-            "actions/"
-            "document/"
-            "edit_document_config/"
+            "features/document/actions/edit_document_config/"
             "stream_edit_document_config.jinja.html",
             form_object=form_object,
             document=document,
@@ -3881,9 +3867,7 @@ def create_main_router(
         )
 
         output = env().render_template_as_markup(
-            "actions/"
-            "document/"
-            "add_document_metadata/"
+            "features/document/actions/add_document_metadata/"
             "stream_add_document_metadata.jinja.html",
             form_object=form_object,
             field=DocumentMetadataFormField(
@@ -3959,9 +3943,7 @@ def create_main_router(
                 for error in errors:
                     form_object.add_error(error_key, error)
             html_output = env().render_template_as_markup(
-                "actions/"
-                "document/"
-                "edit_document_config/"
+                "features/document/actions/edit_document_config/"
                 "stream_edit_document_config.jinja.html",
                 form_object=form_object,
                 document=document,
@@ -4006,9 +3988,7 @@ def create_main_router(
             git_client=html_generator.git_client,
         )
         html_output = env().render_template_as_markup(
-            "actions/"
-            "document/"
-            "edit_document_config/"
+            "features/document/actions/edit_document_config/"
             "stream_save_document_config.jinja.html",
             view_object=view_object,
         )
@@ -4137,9 +4117,7 @@ def create_main_router(
             git_client=html_generator.git_client,
         )
         output = env().render_template_as_markup(
-            "actions/"
-            "document/"
-            "edit_document_config/"
+            "features/document/actions/edit_document_config/"
             "stream_cancel_edit_document_config.jinja.html",
             view_object=view_object,
             document=document,
@@ -4184,7 +4162,7 @@ def create_main_router(
             git_client=html_generator.git_client,
         )
         output = env().render_template_as_markup(
-            "actions/document/edit_section/stream_updated_section.jinja.html",
+            "features/document/actions/edit_section/stream_updated_section.jinja.html",
             view_object=view_object,
             document=document,
             node=document,
@@ -4296,7 +4274,7 @@ def create_main_router(
         output = (
             form_object.render_close_form()
             + env().render_template_as_markup(
-                "actions/document/_shared/stream_refresh_document.jinja.html",
+                "features/document/actions/_shared/stream_refresh_document.jinja.html",
                 view_object=view_object,
             )
         )
@@ -4441,7 +4419,7 @@ def create_main_router(
         output = (
             form_object.render_close_form()
             + env().render_template_as_markup(
-                "actions/document/_shared/stream_refresh_document.jinja.html",
+                "features/document/actions/_shared/stream_refresh_document.jinja.html",
                 view_object=view_object,
             )
         )
@@ -5257,7 +5235,7 @@ def create_main_router(
         # lets Turbo replace the lazy placeholder with the empty frame
         # instead of leaving the placeholder loading forever.
         output = env().render_template_as_markup(
-            "screens/document/document/document_chunk.jinja.html",
+            "features/document/document_chunk.jinja.html",
             view_object=view_object,
             chunk_index=chunk,
             from_node=from_node,

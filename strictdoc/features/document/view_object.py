@@ -183,7 +183,7 @@ class DocumentScreenViewObject:
                     "website/document/index.jinja", view_object=self
                 )
             return self.jinja_environment.render_template_as_markup(
-                "screens/document/document/index.jinja", view_object=self
+                "features/document/index.jinja", view_object=self
             )
         elif self.document_type.is_table():
             return self.jinja_environment.render_template_as_markup(
@@ -207,9 +207,7 @@ class DocumentScreenViewObject:
 
     def render_updated_screen(self) -> Markup:
         output = self.jinja_environment.render_template_as_markup(
-            "actions/"
-            "document/"
-            "create_requirement/"
+            "features/document/actions/create_requirement/"
             "stream_created_requirement.jinja.html",
             view_object=self,
         )
@@ -220,7 +218,7 @@ class DocumentScreenViewObject:
         )
 
         output += self.jinja_environment.render_template_as_markup(
-            "actions/document/_shared/stream_updated_viewtype_menu.jinja.html",
+            "features/document/actions/_shared/stream_updated_viewtype_menu.jinja.html",
             view_object=self,
         )
 
@@ -296,7 +294,7 @@ class DocumentScreenViewObject:
         self, moved_node: Any
     ) -> Markup:
         content = self.jinja_environment.render_template_as_markup(
-            "screens/document/document/frame_document_content.jinja.html",
+            "features/document/frame_document_content.jinja.html",
             view_object=self,
         )
         output = render_turbo_stream(
@@ -316,7 +314,7 @@ class DocumentScreenViewObject:
         )
 
         output += self.jinja_environment.render_template_as_markup(
-            "actions/document/_shared/stream_updated_viewtype_menu.jinja.html",
+            "features/document/actions/_shared/stream_updated_viewtype_menu.jinja.html",
             view_object=self,
         )
 

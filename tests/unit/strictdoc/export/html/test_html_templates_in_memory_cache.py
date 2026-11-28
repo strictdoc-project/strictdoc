@@ -12,7 +12,7 @@ from strictdoc.export.html.html_templates import (
     NormalHTMLTemplates,
 )
 
-TEMPLATE = "screens/document/document/index.jinja"
+TEMPLATE = "features/document/index.jinja"
 
 
 def _assert_unbounded_cache(environment: Environment) -> None:

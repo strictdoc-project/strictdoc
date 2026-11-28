@@ -1150,7 +1150,7 @@ def create_main_router(
                 errors = error_.errors
 
             output = env().render_template_as_markup(
-                "actions/table/delete_node/stream_confirm.jinja",
+                "features/table/actions/delete_node/stream_confirm.jinja",
                 node_mid=node_id,
                 context_document_mid=context_document_mid,
                 errors=errors,
@@ -1535,7 +1535,7 @@ def create_main_router(
                 else []
             )
             output = env().render_template_as_markup(
-                "actions/table/update_node_field/stream_update_title_field.jinja.html",
+                "features/table/actions/update_node_field/stream_update_title_field.jinja.html",
                 view_object=table_view_object,
                 node=node,
                 field_value=sanitized_value,
@@ -1544,7 +1544,7 @@ def create_main_router(
             )
         else:
             output = env().render_template_as_markup(
-                "actions/table/update_node_field/stream_update_node_field.jinja.html",
+                "features/table/actions/update_node_field/stream_update_node_field.jinja.html",
                 view_object=table_view_object,
                 node=node,
                 field_name=field_name,
@@ -1573,7 +1573,7 @@ def create_main_router(
             )
         )
         output = env().render_template_as_markup(
-            "actions/table/get_node_comments_inline/stream_inline_form.jinja.html",
+            "features/table/actions/get_node_comments_inline/stream_inline_form.jinja.html",
             form_object=form_object,
         )
         return HTMLResponse(
@@ -1629,7 +1629,7 @@ def create_main_router(
             ),
         )
         output = env().render_template_as_markup(
-            "actions/table/get_node_relations_inline/stream_inline_form.jinja.html",
+            "features/table/actions/get_node_relations_inline/stream_inline_form.jinja.html",
             form_object=form_object,
             derived_nodes=derived_nodes,
             view_object=view_object_stub,
@@ -1680,7 +1680,7 @@ def create_main_router(
                 current_value = deduplicate_comma_separated_value(current_value)
 
         output = env().render_template_as_markup(
-            "actions/table/get_node_autocomplete_inline/stream_inline_form.jinja.html",
+            "features/table/actions/get_node_autocomplete_inline/stream_inline_form.jinja.html",
             node_mid=node_mid,
             cell_field_name=field_name,
             current_value=current_value,
@@ -1729,7 +1729,7 @@ def create_main_router(
             form_action = "/actions/table/update_node_field"
 
         output = env().render_template_as_markup(
-            "actions/table/get_node_contenteditable_inline/stream_inline_form.jinja.html",
+            "features/table/actions/get_node_contenteditable_inline/stream_inline_form.jinja.html",
             node_mid=node_mid,
             field_name=field_name,
             current_value=current_value,
@@ -1781,7 +1781,7 @@ def create_main_router(
             current_value = document.config.requirement_prefix or ""
 
         output = env().render_template_as_markup(
-            "actions/table/get_document_config_field_inline/stream_inline_form.jinja.html",
+            "features/table/actions/get_document_config_field_inline/stream_inline_form.jinja.html",
             document_mid=document_mid,
             field_name=field_name,
             current_value=current_value,
@@ -1872,7 +1872,7 @@ def create_main_router(
         )
 
         output = env().render_template_as_markup(
-            "actions/table/update_document_config_field/stream_update.jinja.html",
+            "features/table/actions/update_document_config_field/stream_update.jinja.html",
             document=document,
             field_name=field_name,
             display_value=display_value,
@@ -1929,7 +1929,7 @@ def create_main_router(
             )
 
         output = env().render_template_as_markup(
-            "actions/table/get_document_custom_meta_inline/stream_inline_form.jinja.html",
+            "features/table/actions/get_document_custom_meta_inline/stream_inline_form.jinja.html",
             form_key=form_key,
             field_name=field_name,
             field_label=metadata_field.field_name,
@@ -1967,7 +1967,7 @@ def create_main_router(
             f"new_custom_meta_{len(document.config.get_custom_metadata())}"
         )
         output = env().render_template_as_markup(
-            "actions/table/get_document_custom_meta_new_inline/stream_inline_form.jinja.html",
+            "features/table/actions/get_document_custom_meta_new_inline/stream_inline_form.jinja.html",
             form_key=form_key,
             field_name="",
             field_value="",
@@ -2071,7 +2071,7 @@ def create_main_router(
                 # the transform or writing the document; partially filled rows
                 # continue through normal validation.
                 output = env().render_template_as_markup(
-                    "actions/table/update_document_custom_meta/stream_skip_empty_new.jinja.html",
+                    "features/table/actions/update_document_custom_meta/stream_skip_empty_new.jinja.html",
                     doc_mid=document_mid,
                 )
                 return HTMLResponse(
@@ -2115,7 +2115,7 @@ def create_main_router(
             ]
             if active_field_is_new:
                 output = env().render_template_as_markup(
-                    "actions/table/get_document_custom_meta_new_inline/stream_inline_form.jinja.html",
+                    "features/table/actions/get_document_custom_meta_new_inline/stream_inline_form.jinja.html",
                     form_key=active_form_key,
                     field_name=active_metadata_field.field_name,
                     field_value=active_metadata_field.field_value,
@@ -2129,7 +2129,7 @@ def create_main_router(
                     headers={"Content-Type": "text/vnd.turbo-stream.html"},
                 )
             output = env().render_template_as_markup(
-                "actions/table/get_document_custom_meta_inline/stream_inline_form.jinja.html",
+                "features/table/actions/get_document_custom_meta_inline/stream_inline_form.jinja.html",
                 form_key=active_form_key,
                 field_name=active_field_name,
                 field_label=active_metadata_field.field_name,
@@ -2172,7 +2172,7 @@ def create_main_router(
         )
         if is_block_action:
             stream_template = (
-                "actions/table/update_document_custom_meta/"
+                "features/table/actions/update_document_custom_meta/"
                 f"stream_{action}.jinja.html"
             )
             output = env().render_template_as_markup(
@@ -2192,7 +2192,7 @@ def create_main_router(
             # normalize it to the positional key used by existing display rows.
             form_key = f"custom_meta_{active_metadata_index}"
             output = env().render_template_as_markup(
-                "actions/table/update_document_custom_meta/stream_add.jinja.html",
+                "features/table/actions/update_document_custom_meta/stream_add.jinja.html",
                 doc_mid=document_mid,
                 field_content=view_object.render_metadata_value(
                     active_metadata_field.field_value
@@ -2208,7 +2208,7 @@ def create_main_router(
                 headers={"Content-Type": "text/vnd.turbo-stream.html"},
             )
         output = env().render_template_as_markup(
-            "actions/table/update_document_custom_meta/stream_update.jinja.html",
+            "features/table/actions/update_document_custom_meta/stream_update.jinja.html",
             active_field_name=active_field_name,
             field_content=view_object.render_metadata_value(
                 active_metadata_field.field_value
@@ -2332,7 +2332,7 @@ def create_main_router(
             rendered_content = ""
 
         output = env().render_template_as_markup(
-            "actions/table/update_node_field_multiline/stream_update.jinja.html",
+            "features/table/actions/update_node_field_multiline/stream_update.jinja.html",
             node_mid=node_mid_str,
             field_name=field_name,
             rendered_content=rendered_content,
@@ -2375,7 +2375,7 @@ def create_main_router(
         )
         if form_object.any_errors():
             error_output = env().render_template_as_markup(
-                "actions/table/get_node_comments_inline/stream_inline_form.jinja.html",
+                "features/table/actions/get_node_comments_inline/stream_inline_form.jinja.html",
                 form_object=form_object,
             )
             return HTMLResponse(
@@ -2418,7 +2418,7 @@ def create_main_router(
                 )
 
         output = env().render_template_as_markup(
-            "actions/table/update_node_comments/stream_update.jinja.html",
+            "features/table/actions/update_node_comments/stream_update.jinja.html",
             node_mid=node_mid_str,
             rendered_comments=rendered_comments,
         )
@@ -2494,7 +2494,7 @@ def create_main_router(
                 ),
             )
             error_output = env().render_template_as_markup(
-                "actions/table/get_node_relations_inline/stream_inline_form.jinja.html",
+                "features/table/actions/get_node_relations_inline/stream_inline_form.jinja.html",
                 form_object=form_object,
                 derived_nodes=derived_nodes,
                 view_object=view_object_stub,
@@ -2556,7 +2556,7 @@ def create_main_router(
         )
 
         output = env().render_template_as_markup(
-            "actions/table/update_node_relations/stream_update.jinja.html",
+            "features/table/actions/update_node_relations/stream_update.jinja.html",
             node_mid=node_mid_str,
             requirement=node,
             affected_related_nodes=affected_related_nodes,

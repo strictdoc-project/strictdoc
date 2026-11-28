@@ -123,9 +123,6 @@ from strictdoc.export.html.form_objects.requirement_form_object import (
 from strictdoc.export.html.generators.view_objects.document_chunks import (
     CHUNK_SIZE,
 )
-from strictdoc.export.html.generators.view_objects.document_screen_view_object import (
-    DocumentScreenViewObject,
-)
 from strictdoc.export.html.generators.view_objects.server_error_view_object import (
     ServerErrorViewObject,
 )
@@ -133,6 +130,9 @@ from strictdoc.export.html.html_generator import HTMLGenerator
 from strictdoc.export.html.html_templates import HTMLTemplates, JinjaEnvironment
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
+from strictdoc.features.document.view_object import (
+    DocumentScreenViewObject,
+)
 from strictdoc.features.export.export_action import ExportAction
 from strictdoc.features.html2pdf.generator import (
     DocumentHTML2PDFGenerator,

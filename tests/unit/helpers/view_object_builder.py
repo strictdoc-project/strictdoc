@@ -4,12 +4,12 @@ from typing import Optional
 from strictdoc.core.document_tree import DocumentTree
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
 from strictdoc.export.html.document_type import DocumentType
-from strictdoc.export.html.generators.view_objects.document_screen_view_object import (
-    DocumentScreenViewObject,
-)
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
+from strictdoc.features.document.view_object import (
+    DocumentScreenViewObject,
+)
 from strictdoc.helpers.git_client import GitClient
 from tests.unit.helpers.document_builder import DocumentBuilder
 

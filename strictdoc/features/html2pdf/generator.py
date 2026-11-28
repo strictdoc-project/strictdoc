@@ -8,12 +8,12 @@ from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
-from strictdoc.export.html.generators.view_objects.document_screen_view_object import (
-    DocumentScreenViewObject,
-)
 from strictdoc.export.html.html_templates import HTMLTemplates
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
 from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
+from strictdoc.features.document.view_object import (
+    DocumentScreenViewObject,
+)
 from strictdoc.helpers.git_client import GitClient
 
 

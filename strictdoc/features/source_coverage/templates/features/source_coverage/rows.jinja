@@ -1,0 +1,67 @@
+{#
+  The rows of the source coverage table. SourceCoverageViewObject.get_rows()
+  prepares all values, so the loop needs no include and no helper call per
+  row. The icons are rendered once.
+#}
+
+{%- set folder_icon -%}
+  {%- include "icons/ico16_folder.svg" -%}
+{%- endset -%}
+{%- set file_icon -%}
+  {%- include "icons/ico16_file.svg" -%}
+{%- endset -%}
+
+{% for row_ in view_object.get_rows() %}
+{% if row_.is_folder %}
+<tr class="project_coverage-folder">
+  <td colspan="99" style="padding-left:{{ row_.level }}0px">
+    <div class="project_coverage-folder-title">
+      {{- folder_icon -}}
+      {{ row_.folder_name }}/
+    </div>
+
+  </td>
+</tr>
+{% else %}
+<tr class="project_coverage-file {% if row_.lines_covered == '0' %}project_coverage-file_uncovered{% endif %}">
+  <td>
+    <a
+      class="project_coverage-file-link"
+      {% if row_.link is not none -%}
+        href="{{ row_.link }}"
+      {%- endif -%}
+      title="{{ row_.path }}"
+    >
+      <div class="project_coverage-file-indent" style="padding-left:{{ row_.indent }}0px"></div>
+      <div class="project_coverage-file-details">
+        <div class="project_coverage-file-title">
+          <span class="project_coverage-file-icon">
+            {{- file_icon -}}
+          </span>
+          {{ row_.file_name }}
+        </div>
+        <div class="project_coverage-file-path">
+          {{ row_.path }}
+        </div>
+      </div>
+
+    </a>
+  </td>
+
+  {#
+    * strictdoc/export/html/_static/source_coverage_screen.js
+    Each TD needs:
+    - a data-id corresponding to a `TH > .project_coverage-sort_handler` to sort correctly
+    - data-value, expect a value to be converted to a number
+  #}
+
+  <td data-id="lines_percent" data-value="{{ row_.lines_percent }}"><span class="value_extended {% if row_.lines_covered == '0' %}color-uncovered{% endif %}" data-ext="%">{{ row_.lines_percent }}</span></td>
+  <td data-id="lines_covered" data-value="{{ row_.lines_covered }}"><span class="value_extended {% if row_.lines_covered == '0' %}color-uncovered{% endif %}">{{ row_.lines_covered }}</span></td>
+  <td data-id="lines_total" data-value="{{ row_.lines_total }}"><span class="value_extended">{{ row_.lines_total }}</span></td>
+  <td data-id="lines_all" data-value="{{ row_.lines_all }}"><span class="value_extended color-secondary">{{ row_.lines_all }}</span></td>
+  <td data-id="func_percent" data-value="{{ row_.func_percent }}"><span class="value_extended" data-ext="%">{{ row_.func_percent }}</span></td>
+  <td data-id="func_covered" data-value="{{ row_.func_covered }}"><span class="value_extended">{{ row_.func_covered }}</span></td>
+  <td data-id="func_total" data-value="{{ row_.func_total }}"><span class="value_extended">{{ row_.func_total }}</span></td>
+</tr>
+{% endif %}
+{% endfor %}

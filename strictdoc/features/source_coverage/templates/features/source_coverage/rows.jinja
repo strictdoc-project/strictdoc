@@ -1,3 +1,43 @@
+{#
+  The rows of the source coverage table, as macros.
+
+  The table has a row for every folder and every source file, and macros are
+  much cheaper than an {% include %} per row: each include creates a new
+  context and looks up the template again. The icons are rendered once.
+#}
+
+{%- set folder_icon -%}
+  {%- include "icons/ico16_folder.svg" -%}
+{%- endset -%}
+{%- set file_icon -%}
+  {%- include "icons/ico16_file.svg" -%}
+{%- endset -%}
+
+{% macro folder_rows(folder) %}
+<tr class="project_coverage-folder">
+  <td colspan="99" style="padding-left:{{ folder.level }}0px">
+    <div class="project_coverage-folder-title">
+      {{- folder_icon -}}
+      {{ folder.folder_name }}/
+    </div>
+
+  </td>
+</tr>
+
+{% for folder_ in folder.subfolder_trees %}
+  {#- has_sdoc_content is the same as has_content(), but FileFinder already
+      computed it for the whole tree. -#}
+  {% if folder_.has_sdoc_content %}
+    {{- folder_rows(folder_) -}}
+  {% endif %}
+{% endfor %}
+
+{% for file_ in folder.files %}
+  {{- file_row(file_, folder) -}}
+{% endfor %}
+{% endmacro %}
+
+{% macro file_row(file, folder) %}
 {%- set source_file = view_object.traceability_index.document_tree.source_tree.get_source_for_file(file) -%}
 
 {% set lines_all = view_object.get_file_stats_lines_total(source_file) %}
@@ -21,7 +61,7 @@
       <div class="project_coverage-file-details">
         <div class="project_coverage-file-title">
           <span class="project_coverage-file-icon">
-            {%- include "icons/ico16_file.svg" -%}
+            {{- file_icon -}}
           </span>
           {{ file.file_name }}
         </div>
@@ -47,29 +87,5 @@
   <td data-id="func_percent" data-value="{{ func_percent }}"><span class="value_extended" data-ext="%">{{ func_percent }}</span></td>
   <td data-id="func_covered" data-value="{{ func_covered }}"><span class="value_extended">{{ func_covered }}</span></td>
   <td data-id="func_total" data-value="{{ func_total }}"><span class="value_extended">{{ func_total }}</span></td>
-
-  {# <td>
-      {%- if source_file.is_referenced -%}
-        {%- set range_reqs =
-          view_object.traceability_index.get_source_file_reqs(source_file.in_doctree_source_file_rel_path_posix) -%}
-
-        {%- if range_reqs -%}
-          {%- set coverage_info =
-            view_object.traceability_index.get_coverage_info(source_file.in_doctree_source_file_rel_path_posix) -%}
-          {% with coverage_value = coverage_info.get_coverage() %}
-            {% include "features/source_coverage/value_bar.jinja" %}
-          {% endwith %}
-
-        {%- else -%}
-          {% with coverage_value = none %}
-            {% include "features/source_coverage/value_bar.jinja" %}
-          {% endwith %}
-        {%- endif -%}
-
-      {%- else -%}
-        {% with coverage_value = none %}
-          {% include "features/source_coverage/value_bar.jinja" %}
-        {% endwith %}
-      {%- endif -%}
-    </td> #}
 </tr>
+{% endmacro %}

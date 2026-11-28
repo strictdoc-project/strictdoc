@@ -56,11 +56,11 @@ from strictdoc.helpers.timing import (
 
 # The modules that export_single_document() imports.
 DOCUMENT_PAGE_GENERATOR_MODULES = (
-    "strictdoc.export.html.generators.document_table",
     "strictdoc.export.html.renderers.markup_renderer",
     "strictdoc.features.deep_trace.generator",
     "strictdoc.features.document.generator",
     "strictdoc.features.html2pdf.generator",
+    "strictdoc.features.table.generator",
     "strictdoc.features.trace.generator",
 )
 
@@ -468,9 +468,6 @@ class HTMLGenerator:
         specific_documents: Optional[Tuple[DocumentType, ...]] = None,
     ) -> SDocDocument:
         # See the comment at the imports.
-        from strictdoc.export.html.generators.document_table import (  # noqa: PLC0415
-            DocumentTableHTMLGenerator,
-        )
         from strictdoc.export.html.renderers.markup_renderer import (  # noqa: PLC0415
             MarkupRenderer,
         )
@@ -482,6 +479,9 @@ class HTMLGenerator:
         )
         from strictdoc.features.html2pdf.generator import (  # noqa: PLC0415
             DocumentHTML2PDFGenerator,
+        )
+        from strictdoc.features.table.generator import (  # noqa: PLC0415
+            DocumentTableHTMLGenerator,
         )
         from strictdoc.features.trace.generator import (  # noqa: PLC0415
             DocumentTraceHTMLGenerator,

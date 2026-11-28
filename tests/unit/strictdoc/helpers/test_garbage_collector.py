@@ -6,6 +6,7 @@ import pytest
 from strictdoc.helpers.garbage_collector import (
     LONG_LIVED_OBJECTS_GC_THRESHOLD,
     create_long_lived_objects,
+    run_fewer_garbage_collections,
 )
 
 
@@ -53,3 +54,15 @@ def test_03_restores_thresholds_and_freezes_nothing_on_exception() -> None:
 
     assert gc.get_threshold() == threshold_before
     assert gc.get_freeze_count() == 0
+
+
+def test_04_run_fewer_garbage_collections_does_not_freeze() -> None:
+    threshold_before = gc.get_threshold()
+
+    with run_fewer_garbage_collections():
+        assert gc.get_threshold() == LONG_LIVED_OBJECTS_GC_THRESHOLD
+        objects: List[List[int]] = [[index_] for index_ in range(1000)]
+
+    assert gc.get_threshold() == threshold_before
+    assert gc.get_freeze_count() == 0
+    assert len(objects) == 1000

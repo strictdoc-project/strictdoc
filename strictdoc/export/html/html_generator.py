@@ -67,6 +67,7 @@ from strictdoc.features.traceability_matrix.generator import (
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.file_system import sync_dir
+from strictdoc.helpers.garbage_collector import run_fewer_garbage_collections
 from strictdoc.helpers.git_client import GitClient
 from strictdoc.helpers.mid import MID
 from strictdoc.helpers.parallelizer import Parallelizer, get_worker_context
@@ -920,12 +921,16 @@ class HTMLGenerator:
         global_index: Dict[str, Set[int]] = defaultdict(set)
         global_map_nodes_by_mid: Dict[int, Dict[str, str]] = {}
 
-        document_index_list: List[Dict[str, Set[str]]] = []
+        document_index_list: List[Dict[str, Tuple[str, ...]]] = []
         document_map_list: List[Dict[int, Dict[str, str]]] = []
 
         map_mid_to_numbers: Dict[str, int] = {}
 
-        with measure_performance("Build search index"):
+        # The documents from the cache unpickle their search index data here,
+        # on the first access.
+        with run_fewer_garbage_collections(), measure_performance(
+            "Build search index"
+        ):
             for document_ in traceability_index.document_tree.document_list:
                 assert document_.meta is not None
                 document_index_list.append(

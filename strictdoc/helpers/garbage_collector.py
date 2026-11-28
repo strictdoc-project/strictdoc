@@ -56,10 +56,26 @@ def create_long_lived_objects() -> Iterator[None]:
     gc.freeze() also freezes the garbage that the collector has not freed
     yet. The amount of such garbage is limited by the thresholds above.
     """
+    with run_fewer_garbage_collections():
+        yield
+    gc.freeze()
+
+
+@contextmanager
+def run_fewer_garbage_collections() -> Iterator[None]:
+    """
+    Use case: static export and server.
+
+    Run the block with the thresholds above, and restore the previous
+    thresholds after the block. Use this context manager for a block that
+    creates many objects that live longer than the block, for example the
+    search index data that the export of the static search index unpickles
+    from the document cache. Without this context manager, these objects
+    trigger full collections that traverse them again and again.
+    """
     previous_threshold = gc.get_threshold()
     gc.set_threshold(*LONG_LIVED_OBJECTS_GC_THRESHOLD)
     try:
         yield
     finally:
         gc.set_threshold(*previous_threshold)
-    gc.freeze()

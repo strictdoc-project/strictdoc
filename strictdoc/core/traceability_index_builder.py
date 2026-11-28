@@ -7,7 +7,7 @@ import glob
 import os
 import posixpath
 import sys
-from typing import Any, Dict, Iterator, List, Optional, Set, Union
+from typing import Any, Dict, Iterator, List, Optional, Set, Tuple, Union
 
 from textx import TextXSyntaxError
 
@@ -308,6 +308,13 @@ class TraceabilityIndexBuilder:
         # FIXME: Too many things going on below. Would be great to simplify this
         # workflow.
         d_01_document_iterators: Dict[SDocDocument, SDocDocumentIterator] = {}
+        # The SDoc nodes of each document with their UIDs, collected in the
+        # first pass. The second and third passes iterate over these lists,
+        # not over the document tree again. Reading reserved_uid looks up the
+        # document config every time, so each node reads it only once.
+        sdoc_nodes_with_uids: Dict[
+            SDocDocument, List[Tuple[SDocNode, Optional[str]]]
+        ] = {}
         d_07_file_traceability_index = FileTraceabilityIndex()
 
         graph_database = GraphDatabase(
@@ -516,6 +523,8 @@ class TraceabilityIndexBuilder:
 
             document_iterator = SDocDocumentIterator(document)
             d_01_document_iterators[document] = document_iterator
+            document_sdoc_nodes: List[Tuple[SDocNode, Optional[str]]] = []
+            sdoc_nodes_with_uids[document] = document_sdoc_nodes
 
             for node, _ in document_iterator.all_content(
                 print_fragments=False,
@@ -557,16 +566,17 @@ class TraceabilityIndexBuilder:
                     rhs_node=node,
                 )
 
-                if node.reserved_uid is not None:
+                node_uid = node.reserved_uid
+                if node_uid is not None:
                     # @relation(SDOC-SRS-29, scope=range_start)
                     if traceability_index.graph_database.has_any_link(
                         link_type=GraphLinkType.UID_TO_NODE,
-                        lhs_node=node.reserved_uid,
+                        lhs_node=node_uid,
                     ):
                         already_existing_node: SDocNode = (
                             traceability_index.graph_database.get_link_value(
                                 link_type=GraphLinkType.UID_TO_NODE,
-                                lhs_node=node.reserved_uid,
+                                lhs_node=node_uid,
                             )
                         )
                         other_req_doc = assert_cast(
@@ -577,14 +587,14 @@ class TraceabilityIndexBuilder:
                                 "error: DocumentIndex: "
                                 "two nodes with the same UID "
                                 "exist in the same document: "
-                                f'{node.reserved_uid} in "{document.title}".'
+                                f'{node_uid} in "{document.title}".'
                             )
                         else:
                             print(  # noqa: T201
                                 "error: DocumentIndex: "
                                 "two nodes with the same UID "
                                 "exist in two different documents: "
-                                f'{node.reserved_uid} in "{other_req_doc.title}" '
+                                f'{node_uid} in "{other_req_doc.title}" '
                                 f'and "{document.title}".'
                             )
                         sys.exit(1)
@@ -592,12 +602,13 @@ class TraceabilityIndexBuilder:
 
                     traceability_index.graph_database.create_link(
                         link_type=GraphLinkType.UID_TO_NODE,
-                        lhs_node=node.reserved_uid,
+                        lhs_node=node_uid,
                         rhs_node=node,
                     )
 
                 if isinstance(node, SDocNode):
                     requirement_node: SDocNode = assert_cast(node, SDocNode)
+                    document_sdoc_nodes.append((requirement_node, node_uid))
                     if requirement_node.reserved_tags is not None:
                         for tag in requirement_node.reserved_tags:
                             document_tags.setdefault(tag, 0)
@@ -628,26 +639,18 @@ class TraceabilityIndexBuilder:
         for document in document_tree.document_list:
             assert document.meta is not None
 
-            document_iterator = d_01_document_iterators[document]
-
             if document.config.custom_metadata is not None:
                 for metadata_entry_ in document.config.custom_metadata.entries:
                     for part in metadata_entry_.parts:
                         if isinstance(part, InlineLink):
                             traceability_index.pending_inline_links.append(part)
 
-            for node, _ in document_iterator.all_content(
-                print_fragments=False,
-            ):
-                if not isinstance(node, SDocNode):
-                    continue
-
-                requirement = assert_cast(node, SDocNode)
+            for requirement, requirement_uid in sdoc_nodes_with_uids[document]:
                 for node_field_ in requirement.enumerate_fields():
                     for part in node_field_.parts:
                         if isinstance(part, InlineLink):
                             traceability_index.pending_inline_links.append(part)
-                if requirement.reserved_uid is None:
+                if requirement_uid is None:
                     continue
 
                 # Now it is possible to resolve parents first checking if they
@@ -758,17 +761,8 @@ class TraceabilityIndexBuilder:
         parents_cycle_detector = TreeCycleDetector()
         children_cycle_detector = TreeCycleDetector()
         for document in document_tree.document_list:
-            document_iterator = d_01_document_iterators[document]
-
-            for node, _ in document_iterator.all_content(
-                print_fragments=False,
-            ):
-                if not isinstance(node, SDocNode):
-                    continue
-
-                requirement = assert_cast(node, SDocNode)
-
-                if requirement.reserved_uid is None:
+            for _, requirement_uid in sdoc_nodes_with_uids[document]:
+                if requirement_uid is None:
                     continue
 
                 # @relation(SDOC-SRS-30, scope=range_start)
@@ -795,7 +789,7 @@ class TraceabilityIndexBuilder:
                     )
 
                 parents_cycle_detector.check_node(
-                    requirement.reserved_uid,
+                    requirement_uid,
                     parent_cycle_traverse_,
                 )
 
@@ -821,7 +815,7 @@ class TraceabilityIndexBuilder:
                     )
 
                 children_cycle_detector.check_node(
-                    requirement.reserved_uid,
+                    requirement_uid,
                     child_cycle_traverse_,
                 )
                 # @relation(SDOC-SRS-30, scope=range_end)

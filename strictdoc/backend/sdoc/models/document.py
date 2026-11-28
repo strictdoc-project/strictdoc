@@ -2,11 +2,10 @@
 @relation(SDOC-SRS-98, SDOC-SRS-109, scope=file)
 """
 
+import pickle
 from collections import defaultdict
-from dataclasses import dataclass
 from typing import (
     TYPE_CHECKING,
-    DefaultDict,
     Dict,
     Generator,
     List,
@@ -52,16 +51,75 @@ if TYPE_CHECKING:
     )
 
 
-@dataclass
+SearchIndexData = Tuple[Dict[str, Tuple[str, ...]], Dict[str, Dict[str, str]]]
+
+
 class SDocDocumentSearchIndex:
-    document_index: DefaultDict[str, Set[str]]
-    map_nodes_by_mid: Dict[str, Dict[str, str]]
+    """
+    Search index of one document, pickled as one bytes object.
+
+    Use case: static export with the document cache. The index maps each
+    prefix and suffix of each token to the MIDs of the nodes that contain
+    the token, so a document has thousands of entries. Unpickling these
+    entries took most of the time of reading a document from the cache. But
+    only the export of the static search index reads the index, and only
+    when a document has changed. The index therefore pickles its data as one
+    nested pickle, and unpickles the nested pickle on the first access to
+    the data.
+
+    The MIDs of an entry are a tuple, not a set. A tuple unpickles in about
+    half the time of a set. Also, the garbage collector stops tracking a
+    tuple of strings after the first collection, so the later collections
+    and the exit of the process take less time.
+    """
+
+    def __init__(
+        self,
+        document_index: Dict[str, Tuple[str, ...]],
+        map_nodes_by_mid: Dict[str, Dict[str, str]],
+    ) -> None:
+        self._data: Optional[SearchIndexData] = (
+            document_index,
+            map_nodes_by_mid,
+        )
+        self._pickled_data: Optional[bytes] = None
 
     @classmethod
     def create_empty(cls) -> "SDocDocumentSearchIndex":
-        return SDocDocumentSearchIndex(
-            document_index=defaultdict(set), map_nodes_by_mid={}
-        )
+        return SDocDocumentSearchIndex(document_index={}, map_nodes_by_mid={})
+
+    @property
+    def document_index(self) -> Dict[str, Tuple[str, ...]]:
+        return self._get_data()[0]
+
+    @property
+    def map_nodes_by_mid(self) -> Dict[str, Dict[str, str]]:
+        return self._get_data()[1]
+
+    def _get_data(self) -> SearchIndexData:
+        if self._data is None:
+            assert self._pickled_data is not None
+            self._data = pickle.loads(self._pickled_data)
+        return self._data
+
+    def __getstate__(self) -> Dict[str, bytes]:
+        # A cold run pickles a document twice: for the cache, and for the
+        # transfer from a worker process to the main process. The data does
+        # not change after the index is built, so it is pickled only once.
+        if self._pickled_data is None:
+            self._pickled_data = pickle.dumps(
+                self._data, pickle.HIGHEST_PROTOCOL
+            )
+        return {"pickled_data": self._pickled_data}
+
+    def __setstate__(self, state: Dict[str, bytes]) -> None:
+        # A cache entry from an earlier StrictDoc build has the fields of the
+        # earlier search index class instead. pickle_load() treats an
+        # AttributeError as a cache miss, so the document is parsed again.
+        if "pickled_data" not in state:
+            raise AttributeError("pickled_data")
+        self._data = None
+        self._pickled_data = state["pickled_data"]
 
 
 @auto_described
@@ -403,5 +461,6 @@ class SDocDocument(SDocDocumentIF):
                             )
 
         self.search_index = SDocDocumentSearchIndex(
-            document_index, map_nodes_by_mid
+            {token_: tuple(mids_) for token_, mids_ in document_index.items()},
+            map_nodes_by_mid,
         )

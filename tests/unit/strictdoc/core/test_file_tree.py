@@ -336,3 +336,57 @@ def test_57_include_paths_not_anchored_keep_all_folders():
             file_.full_path for _, file_, _ in file_tree.iterate()
         )
         assert found_files == sorted([path_to_file1, path_to_file2])
+
+
+def test_58_subfolders_and_files_are_sorted():
+    """
+    Subfolders are in alphanumeric order, so "folder2" comes before
+    "folder10". Files are in the order of their names.
+    """
+
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        for folder_name_ in ("folder10", "folder2", "folder1"):
+            for file_name_ in ("b.sdoc", "a.sdoc"):
+                path_to_file = os.path.join(tmp_dir, folder_name_, file_name_)
+                Path(path_to_file).parent.mkdir(parents=True, exist_ok=True)
+                Path(path_to_file).touch()
+
+        file_tree = FileFinder.find_files_with_extensions(
+            root_path=tmp_dir,
+            ignored_dirs=[],
+            extensions=[".sdoc"],
+            include_paths=[],
+            exclude_paths=[],
+        )
+
+        root_folder = file_tree.root_folder_or_file
+        assert isinstance(root_folder, Folder)
+        assert [f.folder_name for f in root_folder.subfolder_trees] == [
+            "folder1",
+            "folder2",
+            "folder10",
+        ]
+        for subfolder_ in root_folder.subfolder_trees:
+            assert [f.file_name for f in subfolder_.files] == [
+                "a.sdoc",
+                "b.sdoc",
+            ]
+
+
+def test_59_folder_name_of_paths_that_need_normalization():
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        path_to_folder = os.path.join(tmp_dir, "folder")
+        Path(path_to_folder, "subfolder").mkdir(parents=True)
+
+        assert Folder(path_to_folder, ".", 0).folder_name == "folder"
+        assert Folder(path_to_folder + os.sep, ".", 0).folder_name == "folder"
+        assert (
+            Folder(os.path.join(path_to_folder, "."), ".", 0).folder_name
+            == "folder"
+        )
+        assert (
+            Folder(
+                os.path.join(path_to_folder, "subfolder", ".."), ".", 0
+            ).folder_name
+            == "folder"
+        )

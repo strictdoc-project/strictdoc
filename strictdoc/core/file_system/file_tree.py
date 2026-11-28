@@ -1,12 +1,12 @@
-import functools
 import os
+from operator import attrgetter
 from typing import Dict, Iterator, List, Optional, Tuple, Union
 
 from typing_extensions import TypeAlias
 
 from strictdoc.helpers.file_system import is_binary_file
 from strictdoc.helpers.path_filter import PathFilter
-from strictdoc.helpers.paths import SDocRelativePath
+from strictdoc.helpers.paths import SDocRelativePath, path_to_posix_path
 from strictdoc.helpers.sorting import alphanumeric_sort
 
 FileOrFolderEntry: TypeAlias = Union["File", "Folder"]
@@ -42,8 +42,15 @@ class Folder:
 
         self.full_path: str = full_path
         self.rel_path: str = rel_path if rel_path != "." else ""
-        self.folder_name: str = os.path.basename(os.path.normpath(full_path))
         self.mount_folder: str = os.path.basename(self.full_path)
+        # os.path.normpath() changes the last component of a path only if
+        # the path ends with a separator, ".", or "..". For other paths, for
+        # example all folders that os.walk() finds, skip the slow call.
+        self.folder_name: str = (
+            self.mount_folder
+            if self.mount_folder not in ("", ".", "..")
+            else os.path.basename(os.path.normpath(full_path))
+        )
         self.level: int = level
         self.files: List[File] = []
         self.subfolder_trees: List[Folder] = []
@@ -164,7 +171,10 @@ class FileFinder:
                     f"{current_dir_rel_path.relative_path_posix}{d}/"
                 )
             ]
-            dirs.sort(key=alphanumeric_sort)
+            # Most folders have at most one subfolder, and the sort key is a
+            # regex split of each name.
+            if len(dirs) > 1:
+                dirs.sort(key=alphanumeric_sort)
 
             current_root_path_level: int = (
                 current_dir_full_path_.count(os.sep) - root_level
@@ -186,54 +196,53 @@ class FileFinder:
                     continue
 
                 # The folder path is empty or ends with "/", so concatenation
-                # gives the same result as os.path.join(), but faster.
-                rel_file_path = SDocRelativePath(
-                    current_dir_rel_path.relative_path + file
+                # gives the same result as os.path.join(), but faster. The
+                # POSIX path of the folder is already converted, so only the
+                # file name needs the conversion.
+                rel_file_path_posix = (
+                    current_dir_rel_path.relative_path_posix
+                    + path_to_posix_path(file)
                 )
 
-                if path_filter_excludes.match(
-                    rel_file_path.relative_path_posix
-                ):
+                # Most found files are not included, so the include filter
+                # runs first. The exclude filter then runs only for the
+                # included files.
+                if not path_filter_includes.match(
+                    rel_file_path_posix
+                ) or path_filter_excludes.match(rel_file_path_posix):
                     continue
 
-                if path_filter_includes.match(
-                    rel_file_path.relative_path_posix
-                ):
-                    full_file_path = os.path.join(current_dir_full_path_, file)
+                full_file_path = os.path.join(current_dir_full_path_, file)
 
-                    # A known edge case: A file is found by os.walk(), but it
-                    # is a Linux pipe file which fails an os.path.isfile()
-                    # check. It seems to be safe to ignore this and possibly
-                    # other cases here without writing any test for this case.
-                    # The check runs after the path filters, so only the
-                    # included files cost a stat() call.
-                    if not os.path.isfile(full_file_path):  # pragma: no cover
-                        continue
+                # A known edge case: A file is found by os.walk(), but it
+                # is a Linux pipe file which fails an os.path.isfile()
+                # check. It seems to be safe to ignore this and possibly
+                # other cases here without writing any test for this case.
+                # The check runs after the path filters, so only the
+                # included files cost a stat() call.
+                if not os.path.isfile(full_file_path):  # pragma: no cover
+                    continue
 
-                    # TODO: For now, ignore the binary files but one day a user
-                    # might want to create a Relation to a binary file like a
-                    # published PDF.
-                    if is_binary_file(full_file_path):
-                        print(  # noqa: T201
-                            f"warning: Skip reading binary file {full_file_path}"
-                        )
-                        continue
-
-                    current_tree.files.append(
-                        File(
-                            current_tree.level + 1,
-                            full_file_path,
-                            rel_file_path,
-                        )
+                # TODO: For now, ignore the binary files but one day a user
+                # might want to create a Relation to a binary file like a
+                # published PDF.
+                if is_binary_file(full_file_path):
+                    print(  # noqa: T201
+                        f"warning: Skip reading binary file {full_file_path}"
                     )
+                    continue
 
-            def file_path_sort_key(lhs: File, rhs: File) -> int:
-                return (rhs.file_name < lhs.file_name) - (
-                    lhs.file_name < rhs.file_name
+                current_tree.files.append(
+                    File(
+                        current_tree.level + 1,
+                        full_file_path,
+                        SDocRelativePath(
+                            current_dir_rel_path.relative_path + file
+                        ),
+                    )
                 )
 
-            sort_key = functools.cmp_to_key(file_path_sort_key)
-            current_tree.files.sort(key=sort_key)
+            current_tree.files.sort(key=attrgetter("file_name"))
 
             if len(current_tree.files) > 0:
                 current_tree.has_sdoc_content = True

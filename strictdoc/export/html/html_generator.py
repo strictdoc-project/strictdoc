@@ -947,11 +947,9 @@ class HTMLGenerator:
                 document_map_list.append(map_nodes_by_numbers)
             for document_index_ in document_index_list:
                 for term_, document_mids_ in document_index_.items():
-                    document_mid_numbers = set()
-                    for document_mid_ in document_mids_:
-                        document_mid_number = map_mid_to_numbers[document_mid_]
-                        document_mid_numbers.add(document_mid_number)
-                    global_index[term_].update(document_mid_numbers)
+                    global_index[term_].update(
+                        map(map_mid_to_numbers.__getitem__, document_mids_)
+                    )
             for map_nodes_by_mid_ in document_map_list:
                 global_map_nodes_by_mid.update(map_nodes_by_mid_)
 

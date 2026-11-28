@@ -13,7 +13,7 @@
       field_content=view_object.document.title,
       document_title_wrap=true
     -%}
-      {%- include "screens/document/table/field_display_mode/document_title.jinja" -%}
+      {%- include "features/table/field_display_mode/document_title.jinja" -%}
     {%- endwith %}
     {%- with local_anchor = view_object.render_local_anchor(view_object.document) -%}
       {% include "components/anchor_document/index.jinja" %}
@@ -30,7 +30,7 @@
       field_name="UID",
       field_testid="uid"
     -%}
-      {%- include "screens/document/table/field_display_mode/document_config_field.jinja" -%}
+      {%- include "features/table/field_display_mode/document_config_field.jinja" -%}
     {%- endwith -%}
 
     {# -- VERSION ------------------------------------------------ #}
@@ -40,7 +40,7 @@
       field_name="VERSION",
       field_testid="version"
     -%}
-      {%- include "screens/document/table/field_display_mode/document_config_field.jinja" -%}
+      {%- include "features/table/field_display_mode/document_config_field.jinja" -%}
     {%- endwith -%}
 
     {# -- DATE (read-only) --------------------------------------- #}
@@ -51,7 +51,7 @@
         field_name="DATE",
         field_testid="date"
       -%}
-        {%- include "screens/document/table/field_display_mode/document_meta_readonly_field.jinja" -%}
+        {%- include "features/table/field_display_mode/document_meta_readonly_field.jinja" -%}
       {%- endwith -%}
     {%- endif -%}
 
@@ -62,7 +62,7 @@
       field_name="CLASSIFICATION",
       field_testid="classification"
     -%}
-      {%- include "screens/document/table/field_display_mode/document_config_field.jinja" -%}
+      {%- include "features/table/field_display_mode/document_config_field.jinja" -%}
     {%- endwith -%}
 
     {# -- PREFIX ------------------------------------------------- #}
@@ -72,11 +72,11 @@
       field_name="PREFIX",
       field_testid="prefix"
     -%}
-      {%- include "screens/document/table/field_display_mode/document_config_field.jinja" -%}
+      {%- include "features/table/field_display_mode/document_config_field.jinja" -%}
     {%- endwith -%}
 
     {# -- CUSTOM METADATA ---------------------------------------- #}
-    {%- include "screens/document/table/field_display_mode/document_custom_meta.jinja" -%}
+    {%- include "features/table/field_display_mode/document_custom_meta.jinja" -%}
 
   </sdoc-meta>
 

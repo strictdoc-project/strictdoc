@@ -22,8 +22,8 @@
   <input type="hidden" name="document[CLASSIFICATION]" value="{{ document_config.classification or '' }}"/>
   <input type="hidden" name="document[PREFIX]" value="{{ document_config.requirement_prefix or '' }}"/>
 
-  {%- include "screens/document/table/field_display_mode/document_custom_meta_value.jinja" -%}
+  {%- include "features/table/field_display_mode/document_custom_meta_value.jinja" -%}
 </form>
 {%- else %}
-  {%- include "screens/document/table/field_display_mode/document_custom_meta_value.jinja" -%}
+  {%- include "features/table/field_display_mode/document_custom_meta_value.jinja" -%}
 {%- endif %}

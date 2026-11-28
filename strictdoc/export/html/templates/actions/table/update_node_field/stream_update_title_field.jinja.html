@@ -5,7 +5,7 @@
         {% include "components/anchor/index.jinja" %}
       {%- endwith %}
       {%- with field_content = field_value %}
-        {%- include "screens/document/table/field_display_mode/title.jinja" -%}
+        {%- include "features/table/field_display_mode/title.jinja" -%}
       {%- endwith -%}
     {%- endif -%}
   </template>
@@ -19,7 +19,7 @@
       {%- set requirement = entry_node -%}
       <turbo-stream action="replace" target="cell-{{ requirement.reserved_mid }}-LEVEL">
         <template>
-          {%- include "screens/document/table/type_level.jinja" -%}
+          {%- include "features/table/type_level.jinja" -%}
         </template>
       </turbo-stream>
     {%- endif -%}

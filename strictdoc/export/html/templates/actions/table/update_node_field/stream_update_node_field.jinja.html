@@ -5,11 +5,11 @@
         {% include "components/anchor/index.jinja" %}
       {%- endwith %}
       {%- with field_content = field_value %}
-        {%- include "screens/document/table/field_display_mode/title.jinja" -%}
+        {%- include "features/table/field_display_mode/title.jinja" -%}
       {%- endwith -%}
     {%- elif field_value -%}
       {%- with field_content = field_value %}
-        {%- include "screens/document/table/field_display_mode/_base_field_component.jinja" -%}
+        {%- include "features/table/field_display_mode/_base_field_component.jinja" -%}
       {%- endwith -%}
     {%- endif -%}
   </template>

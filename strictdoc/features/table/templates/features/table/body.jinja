@@ -16,7 +16,7 @@
     prev_node=none,
     next_node=content_entries[0][0] if content_entries else none
   -%}
-    {%- include "screens/document/table/row_add_new_node.jinja" -%}
+    {%- include "features/table/row_add_new_node.jinja" -%}
   {%- endwith -%}
   {%- endif %}
 
@@ -29,8 +29,8 @@
     {%- set requirement = node %}
     <tr data-row-type="{{ node.node_type }}" data-node-mid="{{ requirement.reserved_mid }}">
 
-      {%- include "screens/document/table/type_cell.jinja" %}
-      {%- include "screens/document/table/type_level.jinja" %}
+      {%- include "features/table/type_cell.jinja" %}
+      {%- include "features/table/type_level.jinja" %}
 
       {%- set ns = namespace(past_reserved=false) %}
       {%- for column in view_object.enumerate_table_columns() %}
@@ -49,7 +49,7 @@
           >
             {%- if is_server %}<div class="editable-cell-indicator"></div>{%- endif %}
             <div id="cell-{{ requirement.reserved_mid }}-RELATIONS" wrapper-field-type="contenteditable">
-              {%- include "screens/document/table/field_display_mode/relations.jinja" %}
+              {%- include "features/table/field_display_mode/relations.jinja" %}
             </div>
           </td>
           {%- else %}
@@ -78,7 +78,7 @@
                   {% include "components/anchor/index.jinja" %}
                 {%- endwith %}
                 {%- with field_content = requirement.reserved_title %}
-                  {%- include "screens/document/table/field_display_mode/title.jinja" -%}
+                  {%- include "features/table/field_display_mode/title.jinja" -%}
                 {%- endwith -%}
               {%- endif -%}
             </div>
@@ -106,7 +106,7 @@
             <div id="cell-{{ requirement.reserved_mid }}-STATEMENT" wrapper-field-type="contenteditable">
               {%- if requirement.has_reserved_statement() -%}
                 {%- with field_content = view_object.render_node_statement(requirement) %}
-                  {%- include "screens/document/table/field_display_mode/statement.jinja" -%}
+                  {%- include "features/table/field_display_mode/statement.jinja" -%}
                 {%- endwith -%}
               {%- endif -%}
             </div>
@@ -134,7 +134,7 @@
             <div id="cell-{{ requirement.reserved_mid }}-RATIONALE" wrapper-field-type="contenteditable">
               {%- if requirement.rationale -%}
                 {%- with field_content = view_object.render_node_rationale(requirement) %}
-                  {%- include "screens/document/table/field_display_mode/rationale.jinja" -%}
+                  {%- include "features/table/field_display_mode/rationale.jinja" -%}
                 {%- endwith -%}
               {%- endif -%}
             </div>
@@ -162,7 +162,7 @@
             <div id="cell-{{ requirement.reserved_mid }}-COMMENT" wrapper-field-type="comments">
               {%- for comment_field_ in requirement.get_comment_fields() -%}
               {%- with field_content = view_object.render_node_field(comment_field_) %}
-                {%- include "screens/document/table/field_display_mode/comment.jinja" -%}
+                {%- include "features/table/field_display_mode/comment.jinja" -%}
               {%- endwith -%}
               {%- endfor -%}
             </div>
@@ -183,7 +183,7 @@
           {%- else %}
             {%- set td_class = "content-view-td content-view-td-meta" %}
           {%- endif %}
-          {%- include "screens/document/table/td_by_edit_mode.jinja" %}
+          {%- include "features/table/td_by_edit_mode.jinja" %}
         {%- endif %}
 
       {%- endfor %}
@@ -195,7 +195,7 @@
       prev_node=node,
       next_node=loop.nextitem[0] if loop.nextitem is defined else none
     -%}
-      {%- include "screens/document/table/row_add_new_node.jinja" -%}
+      {%- include "features/table/row_add_new_node.jinja" -%}
     {%- endwith -%}
     {%- endif %}
 
@@ -216,7 +216,7 @@
 
     <tr data-row-type="SECTION" data-node-mid="{{ section.reserved_mid }}">
       {%- with node=section -%}
-        {%- include "screens/document/table/type_cell.jinja" %}
+        {%- include "features/table/type_cell.jinja" %}
       {%- endwith -%}
       <td class="content-view-td content-view-td-meta">{{ section.context.title_number_string }}</td>
 
@@ -232,7 +232,7 @@
               {%- endwith %}
               <sdoc-node-title>
                 {%- with field_content = section.title %}
-                  {%- include "screens/document/table/field_display_mode/_base_field_component.jinja" -%}
+                  {%- include "features/table/field_display_mode/_base_field_component.jinja" -%}
                 {%- endwith -%}
               </sdoc-node-title>
             {%- endif -%}
@@ -249,7 +249,7 @@
       prev_node=node,
       next_node=loop.nextitem[0] if loop.nextitem is defined else none
     -%}
-      {%- include "screens/document/table/row_add_new_node.jinja" -%}
+      {%- include "features/table/row_add_new_node.jinja" -%}
     {%- endwith -%}
     {%- endif %}
 

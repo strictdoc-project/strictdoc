@@ -44,7 +44,7 @@
   >
     {%- if view_object.is_running_on_server %}<div class="editable-cell-indicator"></div>{%- endif %}
     <div id="document-custom-meta-name-{{ form_key }}">
-      {%- include "screens/document/table/field_display_mode/document_custom_meta_field_name.jinja" -%}
+      {%- include "features/table/field_display_mode/document_custom_meta_field_name.jinja" -%}
     </div>
 
   </sdoc-meta-label>
@@ -59,7 +59,7 @@
   >
     {%- if view_object.is_running_on_server %}<div class="editable-cell-indicator"></div>{%- endif %}
     <div id="document-custom-meta-value-{{ form_key }}">
-      {%- include "screens/document/table/field_display_mode/document_custom_meta_field_value.jinja" -%}
+      {%- include "features/table/field_display_mode/document_custom_meta_field_value.jinja" -%}
     </div>
 
   </sdoc-meta-field>

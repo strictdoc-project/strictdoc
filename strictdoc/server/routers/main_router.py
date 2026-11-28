@@ -1207,7 +1207,7 @@ def create_main_router(
         )
         output = render_turbo_stream(
             content=env().render_template_as_markup(
-                "screens/document/table/body.jinja",
+                "features/table/body.jinja",
                 view_object=table_view_object,
                 content_entries=list(
                     table_view_object.document_content_iterator()
@@ -1419,7 +1419,7 @@ def create_main_router(
         )
         output = render_turbo_stream(
             content=env().render_template_as_markup(
-                "screens/document/table/body.jinja",
+                "features/table/body.jinja",
                 view_object=table_view_object,
                 content_entries=list(
                     table_view_object.document_content_iterator()

@@ -80,14 +80,14 @@
         "screens/document/_shared/frame_header_document_title.jinja",
         "screens/document/_shared/frame_viewtype_menu.jinja"
       ],
-      header__last="screens/document/table/filter.jinja"
+      header__last="features/table/filter.jinja"
   -%}
     {% include "components/header/index.jinja" %}
   {%- endwith -%}
 {% endblock header_content %}
 
 {% block main_content %}
-  {% include "screens/document/table/main.jinja" %}
+  {% include "features/table/main.jinja" %}
   {%- if view_object.is_running_on_server %}
   {% include "components/field_widgets/icons.jinja" %}
   {% include "components/table_editor/icons.jinja" %}

@@ -1,6 +1,8 @@
-from typing import Optional
+import threading
+from typing import ClassVar, Optional
 
 from textx import metamodel_from_str
+from textx.metamodel import TextXMetaModel
 
 from strictdoc.backend.sdoc.grammar.grammar_builder import SDocGrammarBuilder
 from strictdoc.backend.sdoc.models.constants import GRAMMAR_MODELS
@@ -20,27 +22,42 @@ from strictdoc.helpers.textx import (
 
 
 class SDocGrammarReader:
-    meta_model = metamodel_from_str(
-        SDocGrammarBuilder.create_grammar_grammar(),
-        classes=GRAMMAR_MODELS + [DocumentGrammarWrapper],
-        use_regexp_group=True,
-    )
+    # All readers share one metamodel, which is built on the first parse, not
+    # at import time. Every export imports this module. On an export without
+    # changes, all grammars come from the cache, and nothing is parsed. A
+    # build at import time would add about 20 ms to such an export.
+    #
+    # The lock lets only one thread at a time build the metamodel, as the
+    # import lock of Python did before. textX is not thread-safe while it
+    # builds a metamodel, see SourceFileTraceabilityReader.
+    _meta_model: ClassVar[Optional[TextXMetaModel]] = None
+    _meta_model_lock: ClassVar[threading.Lock] = threading.Lock()
+
+    @staticmethod
+    def _get_meta_model() -> TextXMetaModel:
+        with SDocGrammarReader._meta_model_lock:
+            if SDocGrammarReader._meta_model is None:
+                SDocGrammarReader._meta_model = metamodel_from_str(
+                    SDocGrammarBuilder.create_grammar_grammar(),
+                    classes=GRAMMAR_MODELS + [DocumentGrammarWrapper],
+                    use_regexp_group=True,
+                )
+            return SDocGrammarReader._meta_model
 
     @staticmethod
     def read(
         input_string: str, file_path: Optional[str] = None
     ) -> DocumentGrammar:
-        SDocGrammarReader.meta_model.register_obj_processors(
+        meta_model = SDocGrammarReader._get_meta_model()
+        meta_model.register_obj_processors(
             {
                 "GrammarElement": preserve_source_location_data,
             }
         )
 
         try:
-            grammar_wrapper: DocumentGrammarWrapper = (
-                SDocGrammarReader.meta_model.model_from_str(
-                    input_string, file_name=file_path
-                )
+            grammar_wrapper: DocumentGrammarWrapper = meta_model.model_from_str(
+                input_string, file_name=file_path
             )
         except Exception as exc_:  # pylint: disable=broad-except
             raise StrictDocException(

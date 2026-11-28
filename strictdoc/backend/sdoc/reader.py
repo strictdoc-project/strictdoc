@@ -2,10 +2,12 @@
 @relation(SDOC-SRS-105, scope=file)
 """
 
+import threading
 from copy import copy
-from typing import Optional, Tuple
+from typing import ClassVar, Optional, Tuple
 
 from textx import TextXSemanticError, TextXSyntaxError, metamodel_from_str
+from textx.metamodel import TextXMetaModel
 
 from strictdoc.backend.sdoc.grammar.grammar_builder import SDocGrammarBuilder
 from strictdoc.backend.sdoc.models.constants import DOCUMENT_MODELS
@@ -27,11 +29,27 @@ from strictdoc.helpers.textx import drop_textx_meta
 
 
 class SDReader:
-    meta_model = metamodel_from_str(
-        SDocGrammarBuilder.create_grammar(),
-        classes=DOCUMENT_MODELS,
-        use_regexp_group=True,
-    )
+    # All readers share one metamodel, which is built on the first parse, not
+    # at import time. Every export imports this module. On an export without
+    # changes, all documents come from the cache, and nothing is parsed. A
+    # build at import time would add about 40 ms to such an export.
+    #
+    # The lock lets only one thread at a time build the metamodel, as the
+    # import lock of Python did before. textX is not thread-safe while it
+    # builds a metamodel, see SourceFileTraceabilityReader.
+    _meta_model: ClassVar[Optional[TextXMetaModel]] = None
+    _meta_model_lock: ClassVar[threading.Lock] = threading.Lock()
+
+    @staticmethod
+    def _get_meta_model() -> TextXMetaModel:
+        with SDReader._meta_model_lock:
+            if SDReader._meta_model is None:
+                SDReader._meta_model = metamodel_from_str(
+                    SDocGrammarBuilder.create_grammar(),
+                    classes=DOCUMENT_MODELS,
+                    use_regexp_group=True,
+                )
+            return SDReader._meta_model
 
     @staticmethod
     def _read(
@@ -42,12 +60,11 @@ class SDReader:
 
         parse_context = ParseContext(path_to_sdoc_file=file_path)
         processor = SDocParsingProcessor(parse_context=parse_context)
-        SDReader.meta_model.register_obj_processors(
-            processor.get_default_processors()
-        )
+        meta_model = SDReader._get_meta_model()
+        meta_model.register_obj_processors(processor.get_default_processors())
 
         try:
-            document: SDocDocument = SDReader.meta_model.model_from_str(
+            document: SDocDocument = meta_model.model_from_str(
                 input_string, file_name=file_path
             )
         except (TextXSyntaxError, TextXSemanticError) as syntax_error_:

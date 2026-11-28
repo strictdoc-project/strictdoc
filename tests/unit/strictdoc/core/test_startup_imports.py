@@ -148,6 +148,56 @@ def test_05_markdown_document_from_cache_does_not_import_the_parser(
     assert "markdown_it (Markdown format)" not in imported_packages
 
 
+def test_06_export_without_changes_does_not_import_the_page_generators(
+    tmp_path: Path,
+):
+    """
+    An export without changes writes no pages, so it does not need the page
+    generators of the HTML export and the packages of MarkupRenderer.
+    """
+    path_to_input = tmp_path / "input"
+    path_to_input.mkdir()
+    (path_to_input / "document.sdoc").write_text(
+        "[DOCUMENT]\n"
+        "TITLE: Document\n"
+        "\n"
+        "[REQUIREMENT]\n"
+        "UID: REQ-1\n"
+        "STATEMENT: Statement\n"
+    )
+    # The export prints to the standard output, which the check of the
+    # imported packages reads. The output of the export goes to os.devnull.
+    export_code = (
+        "import os, sys\n"
+        "from strictdoc.cli.main import main\n"
+        "sys.argv = [\n"
+        "    'strictdoc', 'export', "
+        f"{str(path_to_input)!r}, '--output-dir', "
+        f"{str(tmp_path / 'output')!r},\n"
+        "]\n"
+        "stdout_fd = os.dup(1)\n"
+        "os.dup2(os.open(os.devnull, os.O_WRONLY), 1)\n"
+        "try:\n"
+        "    main()\n"
+        "except SystemExit:\n"
+        "    pass\n"
+        "finally:\n"
+        "    sys.stdout.flush()\n"
+        "    os.dup2(stdout_fd, 1)\n"
+    )
+    # The first export writes the pages and the caches.
+    imported_packages = _get_imported_optional_packages(export_code)
+    assert "docutils (HTML and RST export)" in imported_packages
+
+    imported_packages = _get_imported_optional_packages(export_code)
+
+    for package_ in ("docutils", "pygments", "PIL"):
+        assert all(
+            not imported_package_.startswith(f"{package_} ")
+            for imported_package_ in imported_packages
+        ), imported_packages
+
+
 def _get_imported_optional_packages(code: str) -> List[str]:
     path_to_strictdoc_root = os.path.dirname(
         os.path.dirname(os.path.abspath(strictdoc.__file__))

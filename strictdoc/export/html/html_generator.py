@@ -1,3 +1,4 @@
+import importlib
 import os
 import shutil
 import time
@@ -15,54 +16,21 @@ from strictdoc.core.file_system.source_tree import SourceFile, SourceTree
 from strictdoc.core.project_config import ProjectConfig, ProjectFeature
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.export.html.document_type import DocumentType
-from strictdoc.export.html.generators.document import DocumentHTMLGenerator
-from strictdoc.export.html.generators.document_table import (
-    DocumentTableHTMLGenerator,
-)
 from strictdoc.export.html.html_templates import (
     HTMLTemplates,
     NormalHTMLTemplates,
 )
 from strictdoc.export.html.renderers.link_renderer import LinkRenderer
-from strictdoc.export.html.renderers.markup_renderer import MarkupRenderer
-from strictdoc.features.deep_trace.generator import (
-    DocumentDeepTraceHTMLGenerator,
-)
-from strictdoc.features.html2pdf.generator import (
-    DocumentHTML2PDFGenerator,
-)
 from strictdoc.features.project_configuration.generator import (
     ProjectConfigurationHTMLGenerator,
 )
 from strictdoc.features.project_index.generator import (
     DocumentTreeHTMLGenerator,
 )
-from strictdoc.features.project_index.project_map_generator import (
-    ProjectMapGenerator,
-)
-from strictdoc.features.source_coverage.generator import (
-    SourceFileCoverageHTMLGenerator,
-)
 from strictdoc.features.source_coverage.source_files_snapshot import (
     create_source_files_snapshot,
     read_previous_source_files_snapshot,
     save_source_files_snapshot,
-)
-from strictdoc.features.source_file_view.generator import (
-    SourceFileViewHTMLGenerator,
-    export_source_file_view_object_worker,
-)
-from strictdoc.features.source_file_view.view_data import (
-    SourceFileViewDataCollector,
-)
-from strictdoc.features.source_file_view.view_object import (
-    SourceFileViewObject,
-)
-from strictdoc.features.trace.generator import (
-    DocumentTraceHTMLGenerator,
-)
-from strictdoc.features.traceability_matrix.generator import (
-    TraceabilityMatrixHTMLGenerator,
 )
 from strictdoc.helpers.cast import assert_cast
 from strictdoc.helpers.file_modification_time import get_file_modification_time
@@ -81,6 +49,25 @@ from strictdoc.helpers.timing import (
     measure_performance_loop,
     timing_decorator,
 )
+
+# The page generators and MarkupRenderer are imported in the methods that
+# write the pages. Together with docutils, pygments, and PIL, they take about
+# 60 ms to import, and an export without changes writes no pages.
+
+# The modules that export_single_document() imports.
+DOCUMENT_PAGE_GENERATOR_MODULES = (
+    "strictdoc.export.html.generators.document",
+    "strictdoc.export.html.generators.document_table",
+    "strictdoc.export.html.renderers.markup_renderer",
+    "strictdoc.features.deep_trace.generator",
+    "strictdoc.features.html2pdf.generator",
+    "strictdoc.features.trace.generator",
+)
+
+
+def import_document_page_generators() -> None:
+    for module_name_ in DOCUMENT_PAGE_GENERATOR_MODULES:
+        importlib.import_module(module_name_)
 
 
 def render_favicon_svg(
@@ -211,6 +198,11 @@ class HTMLGenerator:
                     documents_to_export.append(document_)
 
         if len(documents_to_export) > 0:
+            # The parallelizer forks the worker processes for this call. The
+            # workers inherit the page generators that this process imports
+            # here, instead of each worker importing them again.
+            import_document_page_generators()
+
             with measure_performance_loop(
                 "Export to HTML", len(documents_to_export)
             ) as report_progress:
@@ -475,6 +467,26 @@ class HTMLGenerator:
         traceability_index: TraceabilityIndex,
         specific_documents: Optional[Tuple[DocumentType, ...]] = None,
     ) -> SDocDocument:
+        # See the comment at the imports.
+        from strictdoc.export.html.generators.document import (  # noqa: PLC0415
+            DocumentHTMLGenerator,
+        )
+        from strictdoc.export.html.generators.document_table import (  # noqa: PLC0415
+            DocumentTableHTMLGenerator,
+        )
+        from strictdoc.export.html.renderers.markup_renderer import (  # noqa: PLC0415
+            MarkupRenderer,
+        )
+        from strictdoc.features.deep_trace.generator import (  # noqa: PLC0415
+            DocumentDeepTraceHTMLGenerator,
+        )
+        from strictdoc.features.html2pdf.generator import (  # noqa: PLC0415
+            DocumentHTML2PDFGenerator,
+        )
+        from strictdoc.features.trace.generator import (  # noqa: PLC0415
+            DocumentTraceHTMLGenerator,
+        )
+
         if document.config.layout == "Website":
             specific_documents = (DocumentType.DOCUMENT,)
         elif specific_documents is None:
@@ -633,6 +645,11 @@ class HTMLGenerator:
         *,
         traceability_index: TraceabilityIndex,
     ) -> None:
+        # See the comment at the imports.
+        from strictdoc.features.project_index.project_map_generator import (  # noqa: PLC0415
+            ProjectMapGenerator,
+        )
+
         output_file = self._get_project_map_path()
         writer = ProjectMapGenerator()
         output = writer.export(
@@ -648,6 +665,11 @@ class HTMLGenerator:
         *,
         traceability_index: TraceabilityIndex,
     ) -> None:
+        # See the comment at the imports.
+        from strictdoc.features.traceability_matrix.generator import (  # noqa: PLC0415
+            TraceabilityMatrixHTMLGenerator,
+        )
+
         requirements_coverage_content = TraceabilityMatrixHTMLGenerator.export(
             project_config=self.project_config,
             traceability_index=traceability_index,
@@ -749,6 +771,18 @@ class HTMLGenerator:
         if len(source_files_to_export) == 0:
             return
 
+        # See the comment at the imports. The imports are after the check
+        # above, so that an export without changes does not run them.
+        from strictdoc.features.source_file_view.generator import (  # noqa: PLC0415
+            export_source_file_view_object_worker,
+        )
+        from strictdoc.features.source_file_view.view_data import (  # noqa: PLC0415
+            SourceFileViewDataCollector,
+        )
+        from strictdoc.features.source_file_view.view_object import (  # noqa: PLC0415
+            SourceFileViewObject,
+        )
+
         # The view objects hold only plain data. One collector creates the
         # data of each document node once for all pages.
         data_collector = SourceFileViewDataCollector(
@@ -806,6 +840,11 @@ class HTMLGenerator:
             traceability_index.document_tree.source_tree, SourceTree
         ), traceability_index.document_tree.source_tree
 
+        # See the comment at the imports.
+        from strictdoc.features.source_coverage.generator import (  # noqa: PLC0415
+            SourceFileCoverageHTMLGenerator,
+        )
+
         source_coverage_content = SourceFileCoverageHTMLGenerator.export(
             project_config=self.project_config,
             traceability_index=traceability_index,
@@ -826,6 +865,11 @@ class HTMLGenerator:
         Use case: server. Render one source file page on demand. See
         source_file_view/generator.py.
         """
+        # See the comment at the imports.
+        from strictdoc.features.source_file_view.generator import (  # noqa: PLC0415
+            SourceFileViewHTMLGenerator,
+        )
+
         assert isinstance(
             traceability_index.document_tree.source_tree, SourceTree
         ), traceability_index.document_tree.source_tree

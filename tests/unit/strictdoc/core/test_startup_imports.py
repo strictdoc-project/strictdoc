@@ -92,6 +92,22 @@ def test_03_server_startup_imports_only_the_server_packages():
     ] == []
 
 
+def test_04_api_imports_excel_export_on_first_access():
+    """
+    Every export loads the project config, which usually imports
+    strictdoc.api. The Excel export of strictdoc.api loads only on access.
+    """
+    imported_packages = _get_imported_optional_packages(
+        "import strictdoc.api\nfrom strictdoc.api import ProjectConfig\n"
+    )
+    assert "xlsxwriter (Excel format)" not in imported_packages
+
+    imported_packages = _get_imported_optional_packages(
+        "from strictdoc.api import ExcelGenerator\n"
+    )
+    assert "xlsxwriter (Excel format)" in imported_packages
+
+
 def _get_imported_optional_packages(code: str) -> List[str]:
     path_to_strictdoc_root = os.path.dirname(
         os.path.dirname(os.path.abspath(strictdoc.__file__))

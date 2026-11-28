@@ -6,11 +6,13 @@ from typing import List, Optional
 from strictdoc.backend.sdoc.errors.document_tree_error import DocumentTreeError
 from strictdoc.backend.sdoc.models.document import SDocDocument
 from strictdoc.backend.sdoc.models.document_grammar import DocumentGrammar
+from strictdoc.backend.sdoc.pickle_cache import PickleCache
 from strictdoc.core.file_system.file_tree import File
 from strictdoc.core.format import ExportContext, Format
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.core.traceability_index_builder import TraceabilityIndexBuilder
+from strictdoc.helpers.cast import assert_optional_cast
 from strictdoc.helpers.parallelizer import NullParallelizer
 
 
@@ -60,13 +62,17 @@ class MarkdownFormat(Format):
     def read_from_cache(
         self, doc_file: File, project_config: ProjectConfig
     ) -> Optional[SDocDocument]:
-        from strictdoc.backend.markdown.reader import (  # noqa: PLC0415
-            SDMarkdownReader,
+        # Read the entry that SDMarkdownReader writes, without importing
+        # SDMarkdownReader. A document from the cache does not need the
+        # Markdown parser, and the reader module imports PyYAML, which takes
+        # about 11 ms.
+        cached_document: Optional[SDocDocument] = assert_optional_cast(
+            PickleCache.read_from_cache(
+                doc_file.full_path, project_config, "markdown"
+            ),
+            SDocDocument,
         )
-
-        return SDMarkdownReader.read_from_cache(
-            doc_file.full_path, project_config
-        )
+        return cached_document
 
     @staticmethod
     def supports_grammar() -> bool:
@@ -90,13 +96,16 @@ class MarkdownFormat(Format):
     def read_grammar_from_cache(
         self, doc_file: File, project_config: ProjectConfig
     ) -> Optional[DocumentGrammar]:
-        from strictdoc.backend.markdown.grammar_reader import (  # noqa: PLC0415
-            MarkdownGrammarReader,
+        # Read the entry that MarkdownGrammarReader writes, without importing
+        # MarkdownGrammarReader. Its module imports SDMarkdownReader (see
+        # read_from_cache()).
+        cached_grammar: Optional[DocumentGrammar] = assert_optional_cast(
+            PickleCache.read_from_cache(
+                doc_file.full_path, project_config, "markdown_grammar"
+            ),
+            DocumentGrammar,
         )
-
-        return MarkdownGrammarReader.read_from_cache(
-            doc_file.full_path, project_config
-        )
+        return cached_grammar
 
     def export_complete_tree(self, context: ExportContext, handle: str) -> None:
         assert handle in self.handles(), handle

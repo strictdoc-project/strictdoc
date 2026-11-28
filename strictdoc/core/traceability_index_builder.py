@@ -11,6 +11,7 @@ from typing import Any, Dict, Iterator, List, Optional, Set, Tuple, Union
 
 from textx import TextXSyntaxError
 
+from strictdoc.backend.markdown.composite_nodes import fixup_composite_nodes
 from strictdoc.backend.sdoc.constants import SDocMarkup
 from strictdoc.backend.sdoc.error_handling import StrictDocSemanticError
 from strictdoc.backend.sdoc.models.anchor import Anchor
@@ -469,13 +470,7 @@ class TraceabilityIndexBuilder:
             document.grammar.parent = document
 
             if document.config.markup == SDocMarkup.MARKDOWN:
-                # Imported here so that a project without Markdown documents
-                # does not load markdown-it-py and PyYAML.
-                from strictdoc.backend.markdown.reader import (  # noqa: PLC0415
-                    SDMarkdownReader,
-                )
-
-                SDMarkdownReader.fixup_composite_nodes(document)
+                fixup_composite_nodes(document)
 
             try:
                 SDocValidator.validate_document(document)

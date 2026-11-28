@@ -9,9 +9,11 @@ most of these packages through other tests.
 import os
 import subprocess
 import sys
+from pathlib import Path
 from typing import Dict, List
 
 import strictdoc
+from strictdoc.core.project_config import ProjectConfig
 
 # The package and the format, feature, or command that needs it.
 OPTIONAL_PACKAGES: Dict[str, str] = {
@@ -106,6 +108,44 @@ def test_04_api_imports_excel_export_on_first_access():
         "from strictdoc.api import ExcelGenerator\n"
     )
     assert "xlsxwriter (Excel format)" in imported_packages
+
+
+def test_05_markdown_document_from_cache_does_not_import_the_parser(
+    tmp_path: Path,
+):
+    """
+    An export without changes reads the Markdown documents from the cache.
+    The cache entry does not need the Markdown parser or PyYAML.
+    """
+    from strictdoc.backend.markdown.reader import (  # noqa: PLC0415
+        SDMarkdownReader,
+    )
+
+    path_to_document = tmp_path / "document.md"
+    path_to_document.write_text("# Document\n\nText.\n")
+    project_config = ProjectConfig.default_config()
+    project_config.output_dir = str(tmp_path / "output")
+    project_config.dir_for_sdoc_cache = str(tmp_path / "cache")
+    # The first read parses the document and saves it to the cache.
+    SDMarkdownReader().read_from_file(str(path_to_document), project_config)
+
+    imported_packages = _get_imported_optional_packages(
+        "from strictdoc.backend.markdown.markdown_format import MarkdownFormat\n"
+        "from strictdoc.core.file_system.file_tree import File\n"
+        "from strictdoc.core.project_config import ProjectConfig\n"
+        "from strictdoc.helpers.paths import SDocRelativePath\n"
+        "project_config = ProjectConfig.default_config()\n"
+        f"project_config.output_dir = {project_config.output_dir!r}\n"
+        f"project_config.dir_for_sdoc_cache = {project_config.dir_for_sdoc_cache!r}\n"
+        "document = MarkdownFormat().read_from_cache(\n"
+        f"    File(1, {str(path_to_document)!r}, SDocRelativePath('document.md')),\n"
+        "    project_config,\n"
+        ")\n"
+        "assert document is not None\n"
+    )
+
+    assert "yaml (Markdown format)" not in imported_packages
+    assert "markdown_it (Markdown format)" not in imported_packages
 
 
 def _get_imported_optional_packages(code: str) -> List[str]:

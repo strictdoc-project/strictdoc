@@ -242,7 +242,7 @@ ${SEL_ITEM}[draggable="true"] .dragIndicator::before {
     formData.append('target_mid', dropReference.dataset.nodeid);
     formData.append('whereto', whereto);
 
-    fetch('/actions/document/move_node', {
+    fetch(application_url_prefix()+'/actions/document/move_node', {
         body: formData,
         method: 'post',
         headers: {

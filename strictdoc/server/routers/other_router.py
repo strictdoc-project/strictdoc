@@ -52,6 +52,8 @@ def create_other_router(
         strictdoc_last_update=datetime.today(),
     )
 
+    html_templates.jinja_environment().environment.globals["application_url_prefix"] = project_config.application_url_prefix
+
     @router.get("/diff")
     def get_git_diff(
         left_revision: Optional[str] = None,

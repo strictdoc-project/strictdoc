@@ -3,28 +3,28 @@
         class="content"
       >
         {# FIXME: Task #1229 / Uncomment when validation logic is implemented: #}
-        {# {% include "screens/document/document/frame_document_issues.jinja" %} #}
+        {# {% include "features/document/frame_document_issues.jinja" %} #}
 
-        {% include "screens/document/document/frame_document_config.jinja.html" %}
+        {% include "features/document/frame_document_config.jinja.html" %}
 
         {%- if view_object.is_chunked_rendering() %}
           {%- for chunk in view_object.document_content_chunks() %}
             {%- if loop.first %}
               {%- with chunk_index = chunk.index, from_node = chunk.first_node_mid, count = chunk.size %}
-                {% include "screens/document/document/document_chunk.jinja.html" %}
+                {% include "features/document/document_chunk.jinja.html" %}
               {%- endwith %}
             {%- else %}
               {%- if view_object.is_running_on_server %}
-                {% include "screens/document/document/document_chunk_lazy_placeholder.jinja.html" %}
+                {% include "features/document/document_chunk_lazy_placeholder.jinja.html" %}
               {%- else %}
-                {% include "screens/document/document/document_chunk_lazy_placeholder_static.jinja.html" %}
+                {% include "features/document/document_chunk_lazy_placeholder_static.jinja.html" %}
               {%- endif %}
             {%- endif %}
           {%- endfor %}
         {%- else %}
 
         {%- for node, _ in view_object.document_content_iterator() %}
-        {%- include "screens/document/document/_node_dispatch.jinja.html" %}
+        {%- include "features/document/_node_dispatch.jinja.html" %}
         {%- endfor %}
         {%- endif %}
 

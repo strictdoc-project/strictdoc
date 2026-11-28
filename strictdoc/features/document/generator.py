@@ -70,7 +70,7 @@ class DocumentHTMLGenerator:
         for chunk in view_object.document_content_chunks()[1:]:
             chunk_html = (
                 view_object.jinja_environment.render_template_as_markup(
-                    "screens/document/document/document_chunk.jinja.html",
+                    "features/document/document_chunk.jinja.html",
                     view_object=view_object,
                     chunk_index=chunk.index,
                     from_node=chunk.first_node_mid,

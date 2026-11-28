@@ -13,7 +13,7 @@ from jinja2 import Environment
 from strictdoc.core.project_config import ProjectConfig
 from strictdoc.export.html.html_templates import CompiledHTMLTemplates
 
-TEMPLATE = "screens/document/document/index.jinja"
+TEMPLATE = "features/document/index.jinja"
 
 
 def _templates(tmp_path) -> CompiledHTMLTemplates:

@@ -9,6 +9,7 @@ from strictdoc.core.project_config import (
     ProjectConfig,
     ProjectConfigLoader,
     ProjectFeature,
+    SourceNodesEntry,
 )
 from strictdoc.features.html2pdf.html2pdf_format import HTML2PDFFormat
 from strictdoc.helpers.path_filter import PathFilter
@@ -355,3 +356,53 @@ def test_85_lazy_document_loading_compress_chunks_disabled():
 def test_86_lazy_document_loading_compress_chunks_non_bool_rejected():
     with pytest.raises(AssertionError):
         _ = ProjectConfig(lazy_document_loading_compress_chunks=1)  # type: ignore[arg-type]
+
+
+#
+# Source nodes.
+#
+def test_90_relevant_source_nodes_entry_without_source_nodes():
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        project_config = ProjectConfig.default_config()
+        project_config.source_root_path = tmp_dir
+
+        assert (
+            project_config.get_relevant_source_nodes_entry(
+                os.path.join(tmp_dir, "src", "file.c")
+            )
+            is None
+        )
+        assert (
+            project_config.get_relevant_source_nodes_entry("src/file.c") is None
+        )
+
+
+def test_91_relevant_source_nodes_entry_with_source_nodes():
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        source_nodes_entry = SourceNodesEntry(
+            path="src", uid="SRC", node_type="REQUIREMENT"
+        )
+        project_config = ProjectConfig.default_config()
+        project_config.source_root_path = tmp_dir
+        project_config.source_nodes = [source_nodes_entry]
+
+        assert (
+            project_config.get_relevant_source_nodes_entry(
+                os.path.join(tmp_dir, "src", "file.c")
+            )
+            is source_nodes_entry
+        )
+        assert (
+            project_config.get_relevant_source_nodes_entry("src/file.c")
+            is source_nodes_entry
+        )
+        assert (
+            project_config.get_relevant_source_nodes_entry(
+                os.path.join(tmp_dir, "tests", "file.c")
+            )
+            is None
+        )
+        assert (
+            project_config.get_relevant_source_nodes_entry("tests/file.c")
+            is None
+        )

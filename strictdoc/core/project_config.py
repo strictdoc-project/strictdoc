@@ -1213,6 +1213,13 @@ class ProjectConfig:
 
         source_root_path = self.source_root_path
         assert source_root_path is not None
+
+        # Without source nodes, no entry can match. The export calls this
+        # method for every source file, and the path checks below cost about
+        # 7 ms for the 1,564 source files of the StrictDoc repository.
+        if len(self.source_nodes) == 0:
+            return None
+
         assert os.path.exists(source_root_path), source_root_path
 
         source_file_path = Path(path_to_file)

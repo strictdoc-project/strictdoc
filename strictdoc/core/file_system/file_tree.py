@@ -1,5 +1,5 @@
-import functools
 import os
+from operator import attrgetter
 from typing import Dict, Iterator, List, Optional, Tuple, Union
 
 from typing_extensions import TypeAlias
@@ -171,7 +171,10 @@ class FileFinder:
                     f"{current_dir_rel_path.relative_path_posix}{d}/"
                 )
             ]
-            dirs.sort(key=alphanumeric_sort)
+            # Most folders have at most one subfolder, and the sort key is a
+            # regex split of each name.
+            if len(dirs) > 1:
+                dirs.sort(key=alphanumeric_sort)
 
             current_root_path_level: int = (
                 current_dir_full_path_.count(os.sep) - root_level
@@ -239,13 +242,7 @@ class FileFinder:
                     )
                 )
 
-            def file_path_sort_key(lhs: File, rhs: File) -> int:
-                return (rhs.file_name < lhs.file_name) - (
-                    lhs.file_name < rhs.file_name
-                )
-
-            sort_key = functools.cmp_to_key(file_path_sort_key)
-            current_tree.files.sort(key=sort_key)
+            current_tree.files.sort(key=attrgetter("file_name"))
 
             if len(current_tree.files) > 0:
                 current_tree.has_sdoc_content = True

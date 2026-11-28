@@ -80,7 +80,9 @@ class SourceFile:
         output_file_full_path: str,
     ) -> None:
         assert isinstance(level, int)
-        assert os.path.exists(full_path)
+        # No check that the path exists: the callers pass paths that they
+        # found on disk, and a check would cost a stat() call for every
+        # source file on every export.
 
         self.level = level
         self.full_path = full_path

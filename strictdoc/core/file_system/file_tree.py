@@ -14,7 +14,9 @@ FileOrFolderEntry: TypeAlias = Union["File", "Folder"]
 
 class File:
     def __init__(self, level: int, full_path: str, rel_path: SDocRelativePath):
-        assert os.path.isfile(full_path)
+        # No check that the path exists: the callers pass paths that they
+        # found on disk, and a check would cost a stat() call for every file
+        # on every export.
         assert os.path.isabs(full_path)
         assert isinstance(rel_path, SDocRelativePath)
 
@@ -36,7 +38,9 @@ class File:
 
 class Folder:
     def __init__(self, full_path: str, rel_path: str, level: int) -> None:
-        assert os.path.isdir(full_path)
+        # No check that the path exists: the callers pass paths that they
+        # found on disk, and a check would cost a stat() call for every folder
+        # on every export.
         assert os.path.isabs(full_path)
         assert isinstance(rel_path, str)
 

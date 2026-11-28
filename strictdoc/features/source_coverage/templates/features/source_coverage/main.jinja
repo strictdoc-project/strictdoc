@@ -21,14 +21,7 @@ todo: automate thead.jinja and file.jinja th/td generation
     <table class="project_coverage" js-project_coverage>
       {% include "features/source_coverage/thead.jinja" %}
       <tbody>
-        {% from "features/source_coverage/rows.jinja" import folder_rows, file_row with context %}
-        {% if root_tree_.root_folder_or_file.is_folder() %}
-          {% if root_tree_.root_folder_or_file.has_content() %}
-            {{ folder_rows(root_tree_.root_folder_or_file) }}
-          {% endif %}
-        {% else %}
-          {{ file_row(root_tree_.root_folder_or_file, none) }}
-        {% endif %}
+        {% include "features/source_coverage/rows.jinja" %}
       </tbody>
     </table>
   {%- else -%}

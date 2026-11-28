@@ -1,9 +1,7 @@
 {#
-  The rows of the source coverage table, as macros.
-
-  The table has a row for every folder and every source file, and macros are
-  much cheaper than an {% include %} per row: each include creates a new
-  context and looks up the template again. The icons are rendered once.
+  The rows of the source coverage table. SourceCoverageViewObject.get_rows()
+  prepares all values, so the loop needs no include and no helper call per
+  row. The icons are rendered once.
 #}
 
 {%- set folder_icon -%}
@@ -13,60 +11,37 @@
   {%- include "icons/ico16_file.svg" -%}
 {%- endset -%}
 
-{% macro folder_rows(folder) %}
+{% for row_ in view_object.get_rows() %}
+{% if row_.is_folder %}
 <tr class="project_coverage-folder">
-  <td colspan="99" style="padding-left:{{ folder.level }}0px">
+  <td colspan="99" style="padding-left:{{ row_.level }}0px">
     <div class="project_coverage-folder-title">
       {{- folder_icon -}}
-      {{ folder.folder_name }}/
+      {{ row_.folder_name }}/
     </div>
 
   </td>
 </tr>
-
-{% for folder_ in folder.subfolder_trees %}
-  {#- has_sdoc_content is the same as has_content(), but FileFinder already
-      computed it for the whole tree. -#}
-  {% if folder_.has_sdoc_content %}
-    {{- folder_rows(folder_) -}}
-  {% endif %}
-{% endfor %}
-
-{% for file_ in folder.files %}
-  {{- file_row(file_, folder) -}}
-{% endfor %}
-{% endmacro %}
-
-{% macro file_row(file, folder) %}
-{%- set source_file = view_object.traceability_index.document_tree.source_tree.get_source_for_file(file) -%}
-
-{% set lines_all = view_object.get_file_stats_lines_total(source_file) %}
-{% set lines_total = view_object.get_file_stats_lines_total_non_empty(source_file) %}
-{% set lines_covered = view_object.get_file_stats_non_empty_lines_covered(source_file) %}
-{% set lines_percent = view_object.get_file_stats_non_empty_lines_covered_percentage(source_file) %}
-{% set func_total = view_object.get_file_stats_functions_total(source_file) %}
-{% set func_covered = view_object.get_file_stats_functions_covered(source_file) %}
-{% set func_percent = view_object.get_file_stats_functions_covered_percentage(source_file) %}
-
-<tr class="project_coverage-file {% if lines_covered == '0' %}project_coverage-file_uncovered{% endif %}">
+{% else %}
+<tr class="project_coverage-file {% if row_.lines_covered == '0' %}project_coverage-file_uncovered{% endif %}">
   <td>
     <a
       class="project_coverage-file-link"
-      {% if source_file.is_referenced -%}
-        href="{{ view_object.link_renderer.render_source_file_link_from_root_2(source_file) }}"
+      {% if row_.link is not none -%}
+        href="{{ row_.link }}"
       {%- endif -%}
-      title="{{ source_file.in_doctree_source_file_rel_path_posix }}"
+      title="{{ row_.path }}"
     >
-      <div class="project_coverage-file-indent" style="padding-left:{{ folder.level }}0px"></div>
+      <div class="project_coverage-file-indent" style="padding-left:{{ row_.indent }}0px"></div>
       <div class="project_coverage-file-details">
         <div class="project_coverage-file-title">
           <span class="project_coverage-file-icon">
             {{- file_icon -}}
           </span>
-          {{ file.file_name }}
+          {{ row_.file_name }}
         </div>
         <div class="project_coverage-file-path">
-          {{ source_file.in_doctree_source_file_rel_path_posix }}
+          {{ row_.path }}
         </div>
       </div>
 
@@ -80,12 +55,13 @@
     - data-value, expect a value to be converted to a number
   #}
 
-  <td data-id="lines_percent" data-value="{{ lines_percent }}"><span class="value_extended {% if lines_covered == '0' %}color-uncovered{% endif %}" data-ext="%">{{ lines_percent }}</span></td>
-  <td data-id="lines_covered" data-value="{{ lines_covered }}"><span class="value_extended {% if lines_covered == '0' %}color-uncovered{% endif %}">{{ lines_covered }}</span></td>
-  <td data-id="lines_total" data-value="{{ lines_total }}"><span class="value_extended">{{ lines_total }}</span></td>
-  <td data-id="lines_all" data-value="{{ lines_all }}"><span class="value_extended color-secondary">{{ lines_all }}</span></td>
-  <td data-id="func_percent" data-value="{{ func_percent }}"><span class="value_extended" data-ext="%">{{ func_percent }}</span></td>
-  <td data-id="func_covered" data-value="{{ func_covered }}"><span class="value_extended">{{ func_covered }}</span></td>
-  <td data-id="func_total" data-value="{{ func_total }}"><span class="value_extended">{{ func_total }}</span></td>
+  <td data-id="lines_percent" data-value="{{ row_.lines_percent }}"><span class="value_extended {% if row_.lines_covered == '0' %}color-uncovered{% endif %}" data-ext="%">{{ row_.lines_percent }}</span></td>
+  <td data-id="lines_covered" data-value="{{ row_.lines_covered }}"><span class="value_extended {% if row_.lines_covered == '0' %}color-uncovered{% endif %}">{{ row_.lines_covered }}</span></td>
+  <td data-id="lines_total" data-value="{{ row_.lines_total }}"><span class="value_extended">{{ row_.lines_total }}</span></td>
+  <td data-id="lines_all" data-value="{{ row_.lines_all }}"><span class="value_extended color-secondary">{{ row_.lines_all }}</span></td>
+  <td data-id="func_percent" data-value="{{ row_.func_percent }}"><span class="value_extended" data-ext="%">{{ row_.func_percent }}</span></td>
+  <td data-id="func_covered" data-value="{{ row_.func_covered }}"><span class="value_extended">{{ row_.func_covered }}</span></td>
+  <td data-id="func_total" data-value="{{ row_.func_total }}"><span class="value_extended">{{ row_.func_total }}</span></td>
 </tr>
-{% endmacro %}
+{% endif %}
+{% endfor %}

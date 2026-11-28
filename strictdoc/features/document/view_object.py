@@ -187,7 +187,7 @@ class DocumentScreenViewObject:
             )
         elif self.document_type.is_table():
             return self.jinja_environment.render_template_as_markup(
-                "screens/document/table/index.jinja", view_object=self
+                "features/table/index.jinja", view_object=self
             )
         elif self.document_type.is_trace():
             return self.jinja_environment.render_template_as_markup(

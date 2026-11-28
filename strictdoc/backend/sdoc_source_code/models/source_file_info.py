@@ -69,6 +69,20 @@ class SourceFileTraceabilityInfo:
 
         self.markers: List[RelationMarkerType] = []
 
+    def __getstate__(self) -> Dict[str, Any]:
+        """
+        Leave g_parts out of the pickled state.
+
+        The pickled state goes to the source file cache, and in a parallel
+        export also from a worker process to the main process. g_parts holds
+        every line of the source file, but no code reads g_parts after the
+        parse (see above). On the StrictDoc repository, g_parts made up
+        10.4 MB of the 12.7 MB of the source file cache.
+        """
+        state = self.__dict__.copy()
+        state.pop("g_parts", None)
+        return state
+
     def is_document_node(self) -> bool:
         return False
 

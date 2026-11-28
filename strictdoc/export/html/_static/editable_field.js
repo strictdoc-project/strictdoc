@@ -725,7 +725,7 @@
     }
 
     const uploadUrl =
-      '/actions/document/upload_asset' +
+      application_url_prefix()+'/actions/document/upload_asset' +
       `?document_mid=${encodeURIComponent(documentMid)}` +
       `&requirement_mid=${encodeURIComponent(requirementMid)}`;
 

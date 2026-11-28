@@ -37,6 +37,11 @@
   {% endif %}
   {% endblock head_custom_css %}
 
+  <script>
+    function application_url_prefix() {
+        return "{{ application_url_prefix }}";
+    }
+  </script>
   {% block head_scripts %}
   {# moved to docs templates #}
   {% endblock head_scripts %}

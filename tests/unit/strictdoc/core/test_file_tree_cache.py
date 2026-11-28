@@ -34,8 +34,10 @@ def find_files(
     if cached:
         arguments["path_to_cache_dir"] = str(root / "cache")
     found_tree = FileFinder.find_files_with_extensions(**arguments)
+    # POSIX paths, so that the expected paths below are the same on Windows.
     return [
-        file_.rel_path.relative_path for _, file_, _ in found_tree.iterate()
+        file_.rel_path.relative_path_posix
+        for _, file_, _ in found_tree.iterate()
     ]
 
 

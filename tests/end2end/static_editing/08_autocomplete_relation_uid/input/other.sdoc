@@ -1,0 +1,16 @@
+[DOCUMENT]
+TITLE: Other document
+
+[REQUIREMENT]
+UID: SYSR-WX-012
+TITLE: Wind speed sensor
+STATEMENT: >>>
+System X shall measure the wind speed.
+<<<
+
+[REQUIREMENT]
+UID: SYSR-WX-120
+TITLE: Temperature sensor
+STATEMENT: >>>
+System X shall measure the temperature.
+<<<

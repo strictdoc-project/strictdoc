@@ -161,13 +161,15 @@ def build_document_edit_data(
     incoming_relations: Optional[
         Dict[str, List[Tuple[SDocNode, Reference]]]
     ] = None,
+    project_uids: Optional[List[Dict[str, str]]] = None,
 ) -> Dict[str, Any]:
     """
     next_uid_numbers maps each UID prefix of the project to the next free
     number, see compute_next_uid_numbers(). The static editor suggests the
     UID of a new node with it. incoming_relations is the result of
-    collect_incoming_relations(). Both are computed once for all documents
-    of an export.
+    collect_incoming_relations(). project_uids is the result of
+    collect_project_uids(), the choices of the UID autocompletion. These
+    values are computed once for all documents of an export.
     """
     if incoming_relations is None:
         incoming_relations = collect_incoming_relations(traceability_index)
@@ -210,7 +212,34 @@ def build_document_edit_data(
         "next_uid_numbers": next_uid_numbers
         if next_uid_numbers is not None
         else {},
+        "project_uids": project_uids
+        if project_uids is not None
+        else collect_project_uids(traceability_index),
     }
+
+
+def collect_project_uids(
+    traceability_index: TraceabilityIndex,
+) -> List[Dict[str, str]]:
+    """
+    List the UID and the title of each node of the project that has a UID.
+    The static editor offers them when the user enters the UID of a related
+    node.
+    """
+    project_uids: List[Dict[str, str]] = []
+    for node_ in iterate_project_nodes(traceability_index):
+        if node_.reserved_uid is None:
+            continue
+        title_fields = node_.ordered_fields_lookup.get(
+            RequirementFieldName.TITLE, []
+        )
+        title = (
+            title_fields[0].get_text_value().strip().split("\n")[0]
+            if len(title_fields) > 0
+            else ""
+        )
+        project_uids.append({"uid": node_.reserved_uid, "title": title})
+    return project_uids
 
 
 def compute_next_uid_numbers(

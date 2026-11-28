@@ -11,6 +11,7 @@ from strictdoc.core.traceability_index import TraceabilityIndex
 from strictdoc.features.static_editing.edit_data import (
     build_document_edit_data,
     collect_incoming_relations,
+    collect_project_uids,
     compute_next_uid_numbers,
 )
 from strictdoc.helpers.cast import assert_cast
@@ -43,6 +44,7 @@ def export_static_editing_data(
     # The next free UID numbers are counted over all documents.
     next_uid_numbers = compute_next_uid_numbers(traceability_index)
     incoming_relations = collect_incoming_relations(traceability_index)
+    project_uids = collect_project_uids(traceability_index)
     for document_ in traceability_index.document_tree.document_list:
         if document_.document_is_included():
             continue
@@ -52,6 +54,7 @@ def export_static_editing_data(
             traceability_index,
             next_uid_numbers,
             incoming_relations,
+            project_uids,
         )
         output_path = get_static_editing_data_path(document_)
         os.makedirs(os.path.dirname(output_path), exist_ok=True)

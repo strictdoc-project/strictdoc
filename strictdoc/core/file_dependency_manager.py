@@ -7,15 +7,13 @@ It provides answers to whether a given artifact has to be re-generated or not.
 """
 
 import datetime
-import os.path
+import os
+import stat
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Dict, Optional, Set
 
 from strictdoc.core.project_config import ProjectConfig
-from strictdoc.helpers.file_modification_time import (
-    get_file_modification_time,
-)
 from strictdoc.helpers.pickle import pickle_dump, pickle_load
 
 
@@ -98,9 +96,16 @@ class FileDependencyManager:
 
         def get_modification_time(path: str) -> Optional[datetime.datetime]:
             if path not in modification_times:
+                # One stat() call tells both whether the path is a file and
+                # its modification time. os.path.isfile() and
+                # os.path.getmtime() would call stat() twice.
+                try:
+                    path_stat: Optional[os.stat_result] = os.stat(path)
+                except OSError:
+                    path_stat = None
                 modification_times[path] = (
-                    get_file_modification_time(path)
-                    if os.path.isfile(path)
+                    datetime.datetime.fromtimestamp(path_stat.st_mtime)
+                    if path_stat is not None and stat.S_ISREG(path_stat.st_mode)
                     else None
                 )
             return modification_times[path]

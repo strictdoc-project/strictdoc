@@ -29,11 +29,15 @@ class PickleCache:
         path_to_cached_file: str = PickleCache.get_cached_file_path(
             file_path, project_config, content_kind
         )
-        if not os.path.isfile(path_to_cached_file):
+        # A missing cache file is a cache miss. Opening the file directly
+        # saves the stat() call of an os.path.isfile() check. An export
+        # without changes reads a cache file for every document and every
+        # source file.
+        try:
+            with open(path_to_cached_file, "rb") as cache_file:
+                pickled_entry = cache_file.read()
+        except FileNotFoundError:
             return None
-
-        with open(path_to_cached_file, "rb") as cache_file:
-            pickled_entry = cache_file.read()
         try:
             entry = pickle_load(pickled_entry)
         except Exception as exception_:

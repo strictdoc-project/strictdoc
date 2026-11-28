@@ -107,7 +107,7 @@ def test_06_previous_dependencies_are_a_copy(tmp_path: Path) -> None:
     assert manager.dependencies_prev == {input_file: {output_file}}
 
 
-def test_07_each_file_is_checked_once(
+def test_07_each_file_is_checked_with_one_stat_call(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     input_file_1 = create_file(tmp_path / "input_1.sdoc", TIME_1)
@@ -127,19 +127,13 @@ def test_07_each_file_is_checked_once(
         manager.add_dependency(input_file_2, output_file_)
 
     checked_files: List[str] = []
-    get_file_modification_time = (
-        file_dependency_module.get_file_modification_time
-    )
+    stat = file_dependency_module.os.stat
 
-    def get_file_modification_time_(path: str) -> Any:
+    def stat_(path: Any, *args: Any, **kwargs: Any) -> Any:
         checked_files.append(path)
-        return get_file_modification_time(path)
+        return stat(path, *args, **kwargs)
 
-    monkeypatch.setattr(
-        file_dependency_module,
-        "get_file_modification_time",
-        get_file_modification_time_,
-    )
+    monkeypatch.setattr(file_dependency_module.os, "stat", stat_)
 
     manager.resolve_modification_dates(TIME_1)
 

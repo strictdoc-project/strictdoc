@@ -42,8 +42,15 @@ class Folder:
 
         self.full_path: str = full_path
         self.rel_path: str = rel_path if rel_path != "." else ""
-        self.folder_name: str = os.path.basename(os.path.normpath(full_path))
         self.mount_folder: str = os.path.basename(self.full_path)
+        # os.path.normpath() changes the last component of a path only if
+        # the path ends with a separator, ".", or "..". For other paths, for
+        # example all folders that os.walk() finds, skip the slow call.
+        self.folder_name: str = (
+            self.mount_folder
+            if self.mount_folder not in ("", ".", "..")
+            else os.path.basename(os.path.normpath(full_path))
+        )
         self.level: int = level
         self.files: List[File] = []
         self.subfolder_trees: List[Folder] = []

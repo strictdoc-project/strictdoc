@@ -336,3 +336,22 @@ def test_57_include_paths_not_anchored_keep_all_folders():
             file_.full_path for _, file_, _ in file_tree.iterate()
         )
         assert found_files == sorted([path_to_file1, path_to_file2])
+
+
+def test_59_folder_name_of_paths_that_need_normalization():
+    with tempfile.TemporaryDirectory() as tmp_dir:
+        path_to_folder = os.path.join(tmp_dir, "folder")
+        Path(path_to_folder, "subfolder").mkdir(parents=True)
+
+        assert Folder(path_to_folder, ".", 0).folder_name == "folder"
+        assert Folder(path_to_folder + os.sep, ".", 0).folder_name == "folder"
+        assert (
+            Folder(os.path.join(path_to_folder, "."), ".", 0).folder_name
+            == "folder"
+        )
+        assert (
+            Folder(
+                os.path.join(path_to_folder, "subfolder", ".."), ".", 0
+            ).folder_name
+            == "folder"
+        )

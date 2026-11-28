@@ -22,6 +22,17 @@ from strictdoc.export.html.jinja.assert_extension import AssertExtension
 from strictdoc.helpers.file_modification_time import get_file_modification_time
 from strictdoc.helpers.timing import measure_performance
 
+# The size of the cache of loaded templates in each Jinja environment. -1
+# means no limit: Jinja then uses a plain dict.
+#
+# The default cache is an LRU cache of 400 templates. Every cache hit moves
+# the template to the end of a deque with deque.remove(), which scans all
+# loaded templates. Every {% include %} is a cache hit, and a document page
+# runs thousands of includes. StrictDoc has about 300 templates, so the LRU
+# cache never evicts a template, and the reordering is wasted work. Without
+# the limit, the export of the StrictDoc documentation is about 6% faster.
+JINJA_TEMPLATE_CACHE_SIZE = -1
+
 
 class JinjaEnvironment:
     environment: Environment
@@ -99,6 +110,7 @@ class NormalHTMLTemplates(HTMLTemplates):
                 undefined=StrictUndefined,
                 extensions=[AssertExtension],
                 autoescape=True,
+                cache_size=JINJA_TEMPLATE_CACHE_SIZE,
             )
         )
         _html_templates_of_this_process[_NORMAL_HTML_TEMPLATES_KEY] = self
@@ -155,6 +167,7 @@ class CompiledHTMLTemplates(HTMLTemplates):
             undefined=StrictUndefined,
             extensions=[AssertExtension],
             autoescape=True,
+            cache_size=JINJA_TEMPLATE_CACHE_SIZE,
         )
         # TODO: Check if this line is still needed (might be some older workaround).
         jinja_environment.globals.update(isinstance=isinstance)
@@ -205,6 +218,7 @@ class CompiledHTMLTemplates(HTMLTemplates):
                 undefined=StrictUndefined,
                 extensions=[AssertExtension],
                 autoescape=True,
+                cache_size=JINJA_TEMPLATE_CACHE_SIZE,
             )
         )
         return self._jinja_environment
